@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_ArticuloInterface;
 use App\Http\Requests\Register_movement_ArticuloRequest;
 use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleInterface;
+use App\Http\Recopro\Register_Transfer_Articulo\Register_Transfer_ArticuloInterface;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Lot\LotInterface;
 use Carbon\Carbon;
@@ -33,7 +34,7 @@ class Register_movement_ArticuloController extends Controller
         return parseList($repo->search($s), $request, 'idCategoria', $params);
     }
 
-   public function createUpdate($id, Register_movement_ArticuloInterface $repo, Request $request,LotInterface $lorepo,Register_movement_DetalleInterface $redm,SerieInterface $seri)
+   public function createUpdate($id, Register_movement_ArticuloInterface $repo, Request $request,LotInterface $lorepo,Register_movement_DetalleInterface $redm,SerieInterface $seri,Register_Transfer_ArticuloInterface $vali)
     {
        
         try {
@@ -57,6 +58,12 @@ class Register_movement_ArticuloController extends Controller
 
             $costo_total = $data['costo_total'];
             $costo_total = explode(',', $costo_total);
+
+            $precio = $data['precio'];
+            $precio = explode(',', $precio);
+
+            $precio_total = $data['precio_total'];
+            $precio_total = explode(',', $precio_total);
            
             $idLote = $data['idLote'];
             $idLote = explode(',', $idLote);
@@ -102,90 +109,147 @@ class Register_movement_ArticuloController extends Controller
 
             $colorNs = $data['colorNs'];
             $colorNs = explode(',', $colorNs);
-            $repo->delete_detalle($id);
-            $repo->delete_articulo_detalle($id);
-            if ($idArticulo != '') {
-                for ($i=0; $i < count($idArticulo) ; $i++) { 
-                        $idLB=$idLote[$i];
-                        if($idLote[$i]==""){
-                          if($dataLote[$i]!=""){
-                             $lotn = explode('*',$dataLote[$i]);
-                             $tablelot="ERP_Lote";
-                             $idtlote='idLote';
-                             $datosLote['Lote'] = strtoupper($lotn[2]);
-                             $datosLote['fechaIngreso'] =$lotn[3];
-                             $datosLote['fechaVencimiento'] =$lotn[4];
-                             $datosLote['cantidad'] =$lotn[1];
-                             $datosLote['idArticulo'] = $lotn[0];
-                             $datosLote['idLote'] = $lorepo->get_consecutivo($tablelot,$idtlote);
-                             $contLot=$lorepo->create($datosLote);
-                             $idLB=$contLot->idLote;
-                          }else{
-                              $idLB=null;
-                          }
-                        }
-                        $tablelMd="ERP_Movimiento_Detalle";
-                        $idtMd="consecutivo";
-                       $varinfo=$repo->create([
-                        'idMovimiento' => $id,
-                        'idArticulo' => $idArticulo[$i],
-                        'idAlmacen' => $idAlmacen[$i],
-                        'idLocalizacion' =>$idLocalizacion[$i],
-                        'consecutivo'=> $lorepo->get_consecutivo($tablelMd,$idtMd),
-                        'idLote' =>$idLB,
-                        'cantidad' =>  $cantidad[$i],
-                        'costo' => $costo[$i], 
-                        'costo_total' => $costo_total[$i],
 
-                    ]);
-                        $tipo=$repo->traerTipo($idArticulo[$i]);
-                        $conse=$varinfo->idMovimiento; 
-                        if($tipo[0]->serie=="1"){
-                            if ($idProductoSe != '') {
-                                for ($j=0; $j < count($idProductoSe) ; $j++) { 
-                                    if($ident_serie_bd_serie[$j]==$identificador_serie_bd[$i]){
-                                         $redm->create([
-                                            'idMovimiento' => $id,
-                                            'idArticulo' => $idProductoSe[$j],
-                                            'consecutivo' => $conse,
-                                            'serie' =>$idSerieSe[$j],
-                                         ]);
+            $valida="ha";
+            for ($i=0; $i < count($idArticulo) ; $i++) { 
+                if($data['naturaleza']!="C"){
+                    $tipo=$vali->traerKit($idArticulo[$i]);
+                $tipoSe=$vali->traerTipo($idArticulo[$i]);
+                $tipoLo=$vali->traerTipoLo($idArticulo[$i]);
+                $valoSrie=0;
+                $valotLote=0;
+                $idAl=$idAlmacen[$i];
+                $idLoca=$idLocalizacion[$i];
+                $idAr=$idArticulo[$i];
+                $cant=$cantidad[$i];
+                if($tipo[0]->type_id=="3"){
+                $valida=$vali->validarStockKit($idAl,$idLoca,$idAr,$cant);
+                }else{
+                    if($tipoSe[0]->serie=='1'){
+                        $valoSrie=1;
+                    }else if($tipoLo[0]->lote=="1"){
+                        $valotLote=1;
+                    }
+                $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);    
+                }
+                $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
+                $descripcion=$descripcionArticuloGet[0]->description;
+                $valida2=$valida[0]->Mensaje;
+                if($data['naturaleza']=="S"){
+                   if($valida2!="OK"){
+                     throw new \Exception($valida2."  ".$descripcion);
+                    } 
+                    }
+                }
+                
+            }
+
+            if ($idArticulo != '') {
+                $repo->delete_detalle($id);
+                $repo->delete_articulo_detalle($id);
+                if($data['naturaleza']=="S"){
+                    for ($i=0; $i < count($idArticulo) ; $i++) {
+                        $tablelMd="ERP_Movimiento_Articulo";
+                        $idtMd="consecutivo";
+                        $repo->create([
+                            'idArticulo' => $idArticulo[$i],
+                            'idMovimiento' => $id,
+                            'consecutivo'=> $lorepo->get_consecutivo($tablelMd,$idtMd),
+                            'costo' => $costo[$i], 
+                            ]);
+                    }
+                }else{
+                for ($i=0; $i < count($idArticulo) ; $i++) { 
+                            $idLB=$idLote[$i];
+                            if($idLote[$i]==""){
+                              if($dataLote[$i]!=""){
+                                 $lotn = explode('*',$dataLote[$i]);
+                                 $tablelot="ERP_Lote";
+                                 $idtlote='idLote';
+                                 $datosLote['Lote'] = strtoupper($lotn[2]);
+                                 $datosLote['fechaIngreso'] =$lotn[3];
+                                 $datosLote['fechaVencimiento'] =$lotn[4];
+                                 $datosLote['cantidad'] =$lotn[1];
+                                 $datosLote['idArticulo'] = $lotn[0];
+                                 $datosLote['idLote'] = $lorepo->get_consecutivo($tablelot,$idtlote);
+                                 $contLot=$lorepo->create($datosLote);
+                                 $idLB=$contLot->idLote;
+                                }else{
+                                  $idLB=null;
+                                }
+                            }
+                            $tablelMd="ERP_Movimiento_Articulo";
+                            $idtMd="consecutivo";
+                            $preciot="";
+                            $precio_totalt="";
+                            if($precio[$i]==""){
+                                $preciot=null;
+                                $precio_totalt=null;
+                            }else{
+                                $preciot=$precio[$i];
+                                $precio_totalt=$precio_total[$i]; 
+                            };
+                           $varinfo=$repo->create([
+                            'idMovimiento' => $id,
+                            'idArticulo' => $idArticulo[$i],
+                            'idAlmacen' => $idAlmacen[$i],
+                            'idLocalizacion' =>$idLocalizacion[$i],
+                            'consecutivo'=> $lorepo->get_consecutivo($tablelMd,$idtMd),
+                            'idLote' =>$idLB,
+                            'cantidad' =>  $cantidad[$i],
+                            'costo' => $costo[$i], 
+                            'costo_total' => $costo_total[$i],
+                            'precio' => $preciot, 
+                            'precio_total'=> $precio_totalt,
+
+                            ]);
+                            $tipo=$repo->traerTipo($idArticulo[$i]);
+                            $conse=$varinfo->consecutivo; 
+                            if($tipo[0]->serie=="1"){
+                                if ($idProductoSe != '') {
+                                    for ($j=0; $j < count($idProductoSe) ; $j++) { 
+                                        if($ident_serie_bd_serie[$j]==$identificador_serie_bd[$i]){
+                                             $redm->create([
+                                                'idMovimiento' => $id,
+                                                'idArticulo' => $idProductoSe[$j],
+                                                'consecutivo' => $conse,
+                                                'serie' =>$idSerieSe[$j],
+                                             ]);
+                                        }
+                                       
                                     }
-                                   
+
+                                }
+                                $tablese="ERP_Serie";
+                                $idtse='idSerie';
+                                for ($k=0; $k < count($serieNenv) ; $k++) { 
+                                        if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
+                                                $contserie = $seri->create([
+                                                'idSerie' => $seri->get_consecutivo($tablese,$idtse),
+                                                'nombreSerie' => strtoupper($serieNenv[$k]),
+                                                'idArticulo' => $idProductoSeN[$k],
+                                                'chasis' =>strtoupper($chasiNs[$k]),
+                                                'motor' =>strtoupper($motorNs[$k]),
+                                                'anio_fabricacion' => $anioNFs[$k],
+                                                'anio_modelo' => $anioNVs[$k],
+                                                'color' => strtoupper($colorNs[$k]),
+                                                 ]);
+                                                $conseSn=$varinfo->consecutivo;
+                                                $redm->create([
+                                                'idMovimiento' => $id,
+                                                'idArticulo' => $idProductoSeN[$k],
+                                                'consecutivo' => $conseSn,
+                                                'serie' =>$contserie->idSerie,
+                                                    ]);  
+                                        }
                                 }
 
-                            }
-                            $tablese="ERP_Serie";
-                            $idtse='idSerie';
-                            for ($k=0; $k < count($serieNenv) ; $k++) { 
-                               $contserie = $seri->create([
-                                'idSerie' => $seri->get_consecutivo($tablese,$idtse),
-                                'nombreSerie' => strtoupper($serieNenv[$k]),
-                                'idArticulo' => $idProductoSeN[$k],
-                                'chasis' =>strtoupper($chasiNs[$k]),
-                                'motor' =>strtoupper($motorNs[$k]),
-                                'anio_fabricacion' => $anioNFs[$k],
-                                'anio_modelo' => $anioNVs[$k],
-                                'color' => strtoupper($colorNs[$k]),
-                             ]);
 
-                             if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
-                                    $conseSn=$varinfo->consecutivo;
-                                    $redm->create([
-                                    'idMovimiento' => $id,
-                                    'idArticulo' => $idProductoSeN[$k],
-                                    'consecutivo' => $conseSn,
-                                    'serie' =>$contserie->idSerie,
-                                        ]);  
-                                    }
-                            }
+                            } 
 
-
-                    } 
-
-                    }
-
-                }
+                }//FIND FOR
+              }
+            }
 
                 
             //    if ($idProductoSeN != '') {

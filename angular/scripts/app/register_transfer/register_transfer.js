@@ -1762,10 +1762,28 @@
         }, true);
          $('#ProcesarTransferenciaBoton').click(function(e){
                     if(articulo_mov_det.html()!=""){
-                            var ide = idMovimiento.val();
-                            idTransferenciaProcesar.val(ide);
-                            modalProcesarTransferencia.modal("show");
-                            e.preventDefault();
+                        var id=idMovimiento.val();
+                        RESTService.get('register_transfers/validaDetalle', id, function(response) {
+                         if (!_.isUndefined(response.status) && response.status) {
+                                var ide = idMovimiento.val();
+                                idTransferenciaProcesar.val(ide);
+                                modalProcesarTransferencia.modal("show");
+                                e.preventDefault();
+                                
+                         }else {
+                            var msg_ = (_.isUndefined(response.message)) ?
+                                    'No se pudo procesar la transferencia. Intente nuevamente.' : response.message;
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: msg_,
+                                    type: 'info'
+                                });
+                        }
+
+                       });
+                           
+
+
                     }else{
                          AlertFactory.textType({
                         title: '',

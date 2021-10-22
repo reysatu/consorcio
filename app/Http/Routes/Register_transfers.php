@@ -12,6 +12,7 @@ Route::get('register_transfers/delete/{id}', ['as' => 'register_transfers.delete
 
 Route::get('register_transfers/procesarTransferencia/{id}', ['as' => 'register_transfers.procesarTransferencia', 'uses' => 'Register_transferController@procesarTransferencia']);
 
+Route::get('register_transfers/validaDetalle/{id}', ['as' => 'register_transfers.validaDetalle', 'uses' => 'Register_transferController@validaDetalle']);
 
 Route::post('register_transfers/update', ['as' => 'register_transfers.update', 'uses' => 'Register_transferController@update']);
 Route::get('register_transfers/excel', ['as' => 'register_transfers.excel', 'uses' => 'Register_transferController@excel']);

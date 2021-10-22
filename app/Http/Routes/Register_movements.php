@@ -38,6 +38,9 @@ Route::get('register_movements/validateCantSerie/{id}', ['as' => 'register_movem
 
 Route::put('register_movements/saveMovimientArticulo/{id}', ['as' => 'register_movements.saveMovimientArticulo', 'uses' => 'Register_movement_ArticuloController@createUpdate']);
 
+Route::get('register_movements/validaDetalle/{id}', ['as' => 'register_movements.validaDetalle', 'uses' => 'Register_movementController@validaDetalle']);
+
+
 Route::get('register_movements/valida_series_serve/{id}', ['as' => 'register_movements.valida_series_serve', 'uses' => 'Register_movementController@valida_series_serve']);
 
 Route::get('register_movements/find/{id}', ['as' => 'register_movements.find', 'uses' => 'Register_movementController@find']);

@@ -38,7 +38,7 @@ class Register_movementRepository implements Register_movementInterface
          return $mostrar; 
     }
     public function get_movemen_Serie($id){
-        $mostrar=DB::select("select ma.consecutivo as identificador,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie inner join ERP_Movimiento_Articulo as ma on ma.idMovimiento=md.idMovimiento where md.idMovimiento='$id'");
+        $mostrar=DB::select("select ma.consecutivo as identificador,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie inner join ERP_Movimiento_Articulo as ma on ma.consecutivo=md.consecutivo where md.idMovimiento='$id'");
          return $mostrar; 
     }
     public function allActive()
@@ -92,10 +92,18 @@ class Register_movementRepository implements Register_movementInterface
     }
     public function getStockLoc($idl,$idArl){
          $mostrar=DB::select("select total from ERP_almacen_stock_localizacion where idArticulo=$idArl and idLocalizacion=$idl");
-         return $mostrar;
+         return $mostrar; 
     }
     public function getLocaStock($idAlmacen){
          $mostrar=DB::select("select lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen");
+         return $mostrar;
+    }
+     public function getLocalizacioAlmacen($idAlmacen){
+         $mostrar=DB::select("SELECT * FROM ERP_Localizacion where idAlmacen='$idAlmacen' AND estado='A'");
+         return $mostrar;
+    }
+    public function getDetalle($idMovimiento){
+         $mostrar=DB::select("select * from ERP_Movimiento_Articulo where idMovimiento=$idMovimiento");
          return $mostrar;
     }
 

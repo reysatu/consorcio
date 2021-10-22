@@ -102,5 +102,9 @@ select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Tran
          $mostrar=DB::select("SELECT * FROM ERP_Localizacion where idAlmacen='$idAlmacen' AND estado='A'");
          return $mostrar;
     }
+    public function getDetalle($idTransferencia){
+         $mostrar=DB::select("select * from ERP_TransferenciaProducto where idTransferencia=$idTransferencia");
+         return $mostrar;
+    }
 
 }

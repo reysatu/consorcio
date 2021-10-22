@@ -21,7 +21,7 @@ class Register_movement_Articulo extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento', 'idArticulo','idAlmacen','idLocalizacion','idLote','cantidad','costo','costo_total','user_created','user_updated','consecutivo'];
+    protected $fillable = ['idMovimiento', 'idArticulo','idAlmacen','idLocalizacion','idLote','cantidad','costo','costo_total','user_created','user_updated','consecutivo','precio','precio_total'];
     
      public function user_c()
     {

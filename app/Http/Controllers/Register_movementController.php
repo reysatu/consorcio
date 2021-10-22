@@ -343,10 +343,31 @@ class Register_movementController extends Controller
 
         try {
             $data = $repo->getLocaStock($id);
+            $LocalizacionAlmacen=$repo->getLocalizacioAlmacen($id);
             return response()->json([
                 'status' => true,
                 'data' => $data,
-               
+                'LocalizacionAlmacen'=>$LocalizacionAlmacen,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function validaDetalle($id, Register_movementInterface $repo){
+        try {
+            $data = $repo->getDetalle($id);
+            if(empty($data)){
+                 throw new \Exception("Debe registrar los artículos del movimiento");
+            }
+
+             DB::commit();
+            return response()->json([
+                'status' => true,
             ]);
 
         } catch (\Exception $e) {

@@ -110,7 +110,25 @@ class Register_transferController extends Controller
             ]);
         }
     }
-    
+    public function validaDetalle($id, Register_transferInterface $repo){
+        try {
+            $data = $repo->getDetalle($id);
+            if(empty($data)){
+                 throw new \Exception("Debe registrar los articulos de la transferencia");
+            }
+
+             DB::commit();
+            return response()->json([
+                'status' => true,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function createUpdate($id, Register_transferInterface $repo, Request $request, OperationInterface $opRepo)
     {
        
@@ -468,8 +486,7 @@ class Register_transferController extends Controller
             $colorNs = $data['colorNs'];
             $colorNs = explode(',', $colorNs);
            
-            $repo->delete_detalle($id);
-            $repo->delete_articulo_detalle($id);
+          
             $valida="ha";
             for ($i=0; $i < count($idArticulo) ; $i++) { 
                 $tipo=$repo->traerKit($idArticulo[$i]);
@@ -499,6 +516,8 @@ class Register_transferController extends Controller
                 }
             }
             $contv=-1;
+            $repo->delete_detalle($id);
+            $repo->delete_articulo_detalle($id);
             if ($idArticulo != '') {
                 for ($i=0; $i < count($idArticulo) ; $i++) { 
                         $idLB=$idLote[$i];
