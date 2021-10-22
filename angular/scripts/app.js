@@ -1,0 +1,303 @@
+/**
+ * Created by JAIR on 4/4/2017.
+ */
+
+(function () {
+    'use strict';
+
+    angular.module('sys', [
+        //dependencies
+        'ui.router',
+        'sys.utils.libraries',
+        //'sys.templates',
+        'sys.utils.services',
+        'sys.utils.utils',
+        'angucomplete-alt',
+        'sys.utils.widgets',
+        'sys.utils.filters',
+        'sys.api',
+        'sys.app.extends',
+        'sys.app.home',
+        // Seguridad
+        'sys.app.profiles',
+        'sys.app.modules',
+        'sys.app.users',
+        'sys.app.permissions',
+        'sys.app.configs',
+        'sys.app.params',
+        'sys.app.approvers_projects',
+        // Maestros
+        'sys.app.brands',
+        'sys.app.currencys',
+        'sys.app.measures',
+        'sys.app.entities',
+        'sys.app.products',
+        'sys.app.resources',
+        'sys.app.typechanges',
+        'sys.app.warehouses',
+        'sys.app.fronts',
+        'sys.app.buyers',
+        'sys.app.payment_condition',
+        'sys.app.categories',
+        'sys.app.operations',
+        'sys.app.head_accountans',
+        'sys.app.families',
+        'sys.app.subfamilies',
+        'sys.app.lots',
+        'sys.app.modelos',
+        'sys.app.accoudets',
+        'sys.app.shops',
+        'sys.app.series',
+      
+        // Compras
+        'sys.app.requirements',
+        'sys.app.requirements_contests',
+        'sys.app.approval_requirements',
+        'sys.app.assignment_requirements',
+        'sys.app.quotations',
+        'sys.app.approval_contests',
+        'sys.app.purchase_orders',
+        'sys.app.approval_purchase_orders',
+        'sys.app.approval_autonomy',
+        'sys.app.accounts_pay',
+        // Almacen
+        'sys.app.receptions',
+        'sys.app.transfers',
+        'sys.app.receptiontransfers',
+        'sys.app.entrys',
+        'sys.app.consumptions',
+        'sys.app.referral_guides',
+        'sys.app.departures',
+        'sys.app.consumer_returns',
+        'sys.app.register_movements',
+        'sys.app.register_transfers',
+        'sys.app.generation_remisions',
+        'sys.app.query_stocks',
+        'sys.app.query_movements',
+        'sys.app.report_stocks',
+        'sys.app.report_movements',
+        // Proyectos
+        'sys.app.projects',
+        'sys.app.direct_billing',
+        'sys.app.valorizations',
+        'sys.app.consolidated_projects',
+        'sys.app.project_approval',
+        // Tesoreria
+        'sys.app.cash_expense_girls',
+        'sys.app.replenishment_cashs',
+        'sys.app.sales_charges',
+        'sys.app.purchase_payments',
+        'sys.app.writing_checks',
+        'sys.app.petty_cash',
+        // Reportes
+        'sys.app.stocks'
+    ]).run(Run)
+        .controller('OverloadCtrl', OverloadCtrl)
+        .config(Config);
+
+    Config.$inject = [
+        '$interpolateProvider',
+        '$httpProvider',
+        '$locationProvider',
+        '$stateProvider',
+        '$urlRouterProvider',
+        '$resourceProvider'
+    ];
+
+    OverloadCtrl.$inject = ['$scope', '_', 'AlertFactory', 'RESTService'];
+    Run.$inject = ['$rootScope', '$state', '$window', 'RESTService'];
+
+    function Run($rootScope, $state, $window, RESTService) {
+
+        $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
+            if (toState.name !== 'home') {
+              
+                RESTService.all('validate', 'url=' + toState.name, function (response) {
+                    if (!response.status) {
+                        $state.go('home', {location: true});
+                        location.reload();
+                    }
+                }, function () {
+                    $state.go('home', {location: true});
+                    location.reload();
+                });
+            }
+        });
+
+        //region verify internet
+        $rootScope.online = navigator.onLine;
+
+        $window.addEventListener("offline", function () {
+            $rootScope.$apply(function () {
+                $rootScope.online = false;
+            });
+        }, false);
+
+        $window.addEventListener("online", function () {
+            $rootScope.$apply(function () {
+                $rootScope.online = true;
+            });
+        }, false);
+        //endregion
+    }
+
+    function Config($interpolateProvider, $httpProvider, $locationProvider,
+                    $stateProvider, $urlRouterProvider, $resourceProvider) {
+        // The alternative is using {% verbatim %}
+        $interpolateProvider.startSymbol('[[').endSymbol(']]');
+
+        // CSRF Support
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+        // This only works in angular 3!
+        // It makes dealing with Django slashes at the end of everything easier.
+        $resourceProvider.defaults.stripTrailingSlashes = false;
+
+        //add loading
+        $httpProvider.interceptors.push(['$q', '$rootScope', function ($q, $rootScope) {
+            var numLoadings = 0;
+            return {
+                'request': function (config) {
+                    // intercepts the request
+                    numLoadings++;
+
+                    // Show loader
+                    $rootScope.$broadcast("loader_show");
+
+                    return config;
+                },
+                'requestError': function (rejection) {
+                    if (!(--numLoadings)) {
+                        // Hide loader
+                        $rootScope.$broadcast("loader_hide");
+                    }
+                    return $q.reject(rejection);
+                },
+                'response': function (response) {
+                    if ((--numLoadings) === 0) {
+                        // Hide loader
+                        $rootScope.$broadcast("loader_hide");
+                    }
+                    return response;
+                    // intercepts the response. you can examine things like status codes
+                },
+                'responseError': function (rejection) {
+                    if (!(--numLoadings)) {
+                        // Hide loader
+                        $rootScope.$broadcast("loader_hide");
+                    }
+                    // intercepts the response when the response was an error
+                    return $q.reject(rejection);
+                }
+            }
+
+        }]);
+
+        $urlRouterProvider.otherwise('/home');
+
+        // use the HTML5 History API
+        $locationProvider.html5Mode(true);
+    }
+
+    function OverloadCtrl($scope, _, AlertFactory, RESTService) {
+        $scope.$on("loader_show", function () {
+            $scope.show_loading = true;
+        });
+
+        $scope.$on("loader_hide", function () {
+            $scope.show_loading = false;
+        });
+
+        $scope.openDoc = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                cache: false,
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    // createExcel(response.file, response.name);
+                    var a = document.createElement("a");
+                    a.href = response.file;
+                    a.download = response.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: "Hubo un error",
+                        message: ajaxContext.responseText
+                    });
+                }
+            });
+        };
+
+        $scope.loadPDF = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                        create_pdf(response);
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+
+        $scope.loadVouchersPDF = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                        create_vouchers_pdf(response);
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+
+        $scope.showAlert = function (title, msg, type) {
+            AlertFactory.textType({
+                title: title,
+                message: msg,
+                type: type
+            });
+        };
+
+        $scope.showConfirm = function (title, msg, callback) {
+            AlertFactory.confirm({
+                title: title,
+                message: msg,
+                confirm: 'Si',
+                cancel: 'No'
+            }, function(){
+                callback();
+            });
+        };
+    }
+})();

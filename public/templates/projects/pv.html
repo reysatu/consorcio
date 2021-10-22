@@ -1,0 +1,145 @@
+<button class="btn btn-sm btn-success hide new_edit_act" type="button" ng-click="editActivityPV()">
+    <span class="fa fa-edit"></span>
+    Editar Actividad
+</button>
+<button class="btn btn-sm btn-danger hide new_edit_act" type="button" ng-click="deleteActivityPV()">
+    <span class="fa fa-close"></span>
+    Eliminar Actividad
+</button>
+<div class="separator hide new_edit_act"></div>
+<button class="btn btn-sm btn-success new_edit_mat hide" type="button" ng-click="addLevelMatAct(1)">
+    <span class="fa fa-plus"></span>
+    Agregar Material
+</button>
+<div class="separator new_edit_mat hide"></div>
+<div class="table-responsive hide info_income_1">
+    <table class="table table-bordered table-hovered table-striped">
+        <thead>
+        <tr>
+            <th class="new_edit_mat hide" rowspan="2" width="40px"></th>
+            <th class="text-center" rowspan="2">Item</th>
+            <th class="text-center" rowspan="2">Código</th>
+            <th class="text-center" rowspan="2">Descripcion</th>
+            <th class="text-center" rowspan="2">UND</th>
+            <th class="text-center" colspan="3">LB (Linea Base)</th>
+            <th class="text-center show_edit_level show_edit_meta hide" colspan="3">PV (Replanteo)</th>
+        </tr>
+        <tr>
+            <th class="text-center" width="80px">CANT</th>
+            <th class="text-center" width="80px">PU</th>
+            <th class="text-center" width="70px">TOTAL</th>
+            <th class="text-center show_edit_level show_edit_meta hide" width="80px">CANT</th>
+            <th class="text-center show_edit_level show_edit_meta hide" width="80px">PU</th>
+            <th class="text-center show_edit_level show_edit_meta hide" width="70px">TOTAL</th>
+        </tr>
+        </thead>
+        <tbody id="p_income_list_materials"></tbody>
+        <tfoot>
+        <tr>
+            <th class="new_edit_mat hide"></th>
+            <th colspan="6" class="text-right">Total Material</th>
+            <th class="text-right" id="p_income_total_materials"></th>
+            <th colspan="2" class="text-right show_edit_level show_edit_meta hide">Total Material</th>
+            <th class="text-right show_edit_level show_edit_meta hide" id="p_income_total_materials_pv"></th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<div class="hide info_income_2">
+    <div class="table-responsive">
+        <table class="table table-bordered p_inc_table_activity">
+            <thead>
+            <tr>
+                <th colspan="4">LB (Linea Base)</th>
+                <th class="show_edit_level show_edit_meta hide" colspan="4">PV (Replanteo)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th width="120px">UND</th>
+                <th>CANT</th>
+                <th>PU</th>
+                <th>TOTAL</th>
+                <th class="show_edit_level show_edit_meta hide" width="120px">UND</th>
+                <th class="show_edit_level show_edit_meta hide">CANT</th>
+                <th class="show_edit_level show_edit_meta hide">PU</th>
+                <th class="show_edit_level show_edit_meta hide">TOTAL</th>
+            </tr>
+            <tr>
+                <td><select class="form-control input-sm inp_show_approval inpProjectISPV inpProjectIsMeta" id="p_inc_u_lb_activity"></select></td>
+                <td><input type="text" class="form-control input-sm text-right inp_show_approval inpProjectISPV inpProjectIsMeta"
+                           id="p_inc_q_lb_activity" onblur="roundDecimals(this, 2)"
+                           onkeypress="return validDecimals(event, this, 3)" onclick="this.select()" /></td>
+                <td><input type="text" class="form-control input-sm text-right" readonly id="p_inc_p_lb_activity" /></td>
+                <td><input type="text" class="form-control input-sm text-right" readonly id="p_inc_t_lb_activity" /></td>
+
+                <td class="show_edit_level show_edit_meta hide">
+                    <select class="form-control input-sm inp_show_approval inpProjectIsMeta" id="p_inc_u_pv_activity"></select></td>
+                <td class="show_edit_level hide show_edit_meta">
+                    <input type="text" class="form-control input-sm text-right inp_show_approval inpProjectIsMeta"
+                           id="p_inc_q_pv_activity" onblur="roundDecimals(this, 2)"
+                           onkeypress="return validDecimals(event, this, 3)" onclick="this.select()" /></td>
+                <td class="show_edit_level show_edit_meta hide">
+                    <input type="text" class="form-control input-sm text-right" readonly id="p_inc_p_pv_activity" /></td>
+                <td class="show_edit_level show_edit_meta hide">
+                    <input type="text" class="form-control input-sm text-right" readonly id="p_inc_t_pv_activity" /></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered table-hovered table-striped">
+            <tbody>
+            <tr>
+                <th>HH. (Totales)</th>
+                <th>HM. (Totales)</th>
+                <th class="show_edit_level show_edit_meta hide">HH. (Totales)</th>
+                <th class="show_edit_level show_edit_meta hide">HM. (Totales)</th>
+            </tr>
+            <tr>
+                <td class="text-right" id="p_inc_p_hh_lb"></td>
+                <td class="text-right" id="p_inc_p_hm_lb"></td>
+                <td class="text-right show_edit_level show_edit_meta hide" id="p_inc_p_hh_pv"></td>
+                <td class="text-right show_edit_level show_edit_meta hide" id="p_inc_p_hm_pv"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-right">
+        <button class="btn btn-sm btn-primary" type="button" ng-click="showAnalysis('inc')">
+            Análisis de precios unitarios
+        </button>
+    </div>
+    <div class="separator"></div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hovered table-striped">
+            <thead>
+            <tr>
+                <th colspan="7">SUBTOTALES</th>
+            </tr>
+            <tr>
+                <th colspan="3">CANTIDADES</th>
+                <th colspan="4">MONTOS</th>
+            </tr>
+            <tr>
+                <th>REND.</th>
+                <th>HH.</th>
+                <th>HM.</th>
+                <th>MO.</th>
+                <th>MAT.</th>
+                <th>EQ.</th>
+                <th>SC.</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="p_inc_show_totals_apu">
+                <td class="text-right" id="p_inc_p_rend"></td>
+                <td class="text-right" id="p_inc_p_hh"></td>
+                <td class="text-right" id="p_inc_p_hm"></td>
+                <td class="text-right" id="p_inc_p_mo"></td>
+                <td class="text-right" id="p_inc_p_mat"></td>
+                <td class="text-right" id="p_inc_p_eq"></td>
+                <td class="text-right" id="p_inc_p_sc"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

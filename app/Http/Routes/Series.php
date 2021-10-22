@@ -1,0 +1,23 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: JAIR
+ * Date: 4/5/2017
+ * Time: 6:59 PM
+ */
+
+Route::post('series/list', ['as' => 'series.list', 'uses' => 'SerieController@all']);
+Route::post('series/create', ['as' => 'series.create', 'uses' => 'SerieController@create']);
+Route::post('series/delete', ['as' => 'series.delete', 'uses' => 'SerieController@destroy']);
+Route::post('series/update', ['as' => 'series.update', 'uses' => 'SerieController@update']);
+Route::get('series/excel', ['as' => 'series.excel', 'uses' => 'SerieController@excel']);
+
+
+
+Route::post('series/getArticulos', 'ProductController@getAll'); 
+Route::post('series/getArticulosSelect', ['as' => 'series.getArticulosSelect', 'uses' => 'ProductController@traeAll']);
+
+Route::post('series/getArticulosSerie', ['as' => 'series.getArticulosSerie', 'uses' => 'ProductController@traeAllSerie']);
+
+Route::put('series/createserie/{id}', ['as' => 'series.createserie', 'uses' => 'SerieController@createUpdate']);
+Route::get('series/find/{id}', ['as' => 'series.find', 'uses' => 'SerieController@find']);
