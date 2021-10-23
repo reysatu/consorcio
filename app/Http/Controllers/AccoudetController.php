@@ -45,9 +45,9 @@ class AccoudetController extends Controller
             'Record' => []
         ]);
     }
-
+    
     public function update(AccoudetInterface $repo, Request $request)
-    {
+    { 
         $data = $request->all();
 
         $idA = $data['idgrup'];

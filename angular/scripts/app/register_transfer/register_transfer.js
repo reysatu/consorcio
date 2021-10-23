@@ -570,7 +570,8 @@
                                      stock=Math.trunc(item.total);
                                   }
                               });
-                              if (stock>0){
+                              if (stock>0 || p_state.val()=="PROCESADO"){
+
                                  if(itemdos.idLocalizacion==idLocalizacion){
                                   idLocali.append('<option selected value="'+itemdos.idLocalizacion+'" >'+itemdos.descripcion+' / '+stock+'</option>'); 
                                   }else{
@@ -578,17 +579,14 @@
                                   }
                                  cont=cont+1 
                               }
-                              if(cont<1){
+                        });
+                       if(cont<1){
                                 AlertFactory.textType({
                                         title: '',
                                         message: 'No existe stock de artículos en las localizaciones. Intente nuevamente.',
                                         type: 'info'
                                 });
-                              }
-                              
-
-                        });
-                       
+                        }
                     //   _.each(response.data, function(item) {
                     //     if(idPrAl==item.idArticulo || item.idArticulo==null ){
                     //         var stock=0;
@@ -634,20 +632,6 @@
                               }
                             
                         });
-                    //   _.each(response.data, function(item) {
-                    //     if(idPrAl==item.idArticulo || item.idArticulo==null ){
-                    //         var stock=0;
-                    //         if(item.idArticulo!=null){
-                    //             stock=Math.trunc(item.total);
-                    //         }
-                    //         if(idLocalizacion==item.idLocalizacion){
-                    //             idLocali.append('<option selected value="'+item.idLocalizacion+'" >'+item.descripcion+' / '+stock+'</option>');
-                    //         }else{
-                    //            idLocali.append('<option value="'+item.idLocalizacion+'" >'+item.descripcion+' / '+stock+'</option>'); 
-                    //         }
-                            
-                    //     }
-                    // }); 
                  }else {
                     AlertFactory.textType({
                         title: '',
@@ -1294,17 +1278,16 @@
                             message: 'El registro se procesó con exitó',
                             type: 'success'
                         });
-                        p_state.val("PROCESADO");
-                        if(p_state.val()=="PROCESADO"){
-                            procesarTransfBoton.prop('disabled',true);
-                            procesarTransfBoton.trigger('change');
-                            btnguardarMovimiento.prop('disabled',true);
-                            btnguardarMovimiento.trigger('change');
-                            btn_movimiento_detalle.prop('disabled',true);
-                            btn_movimiento_detalle.trigger('change');
-                        }
+                       
+                        procesarTransfBoton.prop('disabled',true);
+                        procesarTransfBoton.trigger('change');
+                        btnguardarMovimiento.prop('disabled',true);
+                        btnguardarMovimiento.trigger('change');
+                        btn_movimiento_detalle.prop('disabled',true);
+                        btn_movimiento_detalle.trigger('change');
+                     
                         modalProcesarTransferencia.modal("hide"); 
-                        LoadRecordsButtonRegister_Movement.click(); 
+                        LoadRecordsButtonRegister_Trasnfer.click(); 
 
                     }else{
                         $("#msg_cont_ProcesarTransferencia p").html(dta[0]['Mensaje']);

@@ -57,6 +57,9 @@ class WarehouseController extends Controller
             $local_estadot=$data['local_estado'];
             $local_estado=explode(',', $local_estadot);
 
+            $idLocalizacion_v=$data['idLocalizacion_v'];
+            $idLocalizacion_v=explode(',', $idLocalizacion_v);
+
             $data['idTienda']=$data['idTienda'];
             $w = $repo->findByCode($data['code_internal']);
             unset($data['id'], $data['users']);
@@ -84,19 +87,19 @@ class WarehouseController extends Controller
                 }
             }
             $cont=0;
-            $lorepo->deleteBywarehose($id);
             $va=count($local_codigo);
-            for ($i=0; $i < count($local_codigo) ; $i++) { 
-                    $table="ERP_Localizacion";
-                    $idta='idLocalizacion';
-                    $datoLo=[];
-                    $datoLo['idLocalizacion']=$lorepo->get_consecutivo($table,$idta);
-                    $datoLo['codigo'] = $local_codigo[$i];
-                    $datoLo['descripcion'] = $local_descripcion[$i];
-                    $datoLo['estado']= $local_estado[$i];
-                    $datoLo['idAlmacen']=$id;
-                    $lorepo->create($datoLo);
-
+            for ($i=0; $i < count($local_codigo) ; $i++) {
+                    if($idLocalizacion_v[$i]=="N"){
+                        $table="ERP_Localizacion";
+                        $idta='idLocalizacion';
+                        $datoLo=[];
+                        $datoLo['idLocalizacion']=$lorepo->get_consecutivo($table,$idta);
+                        $datoLo['codigo'] = $local_codigo[$i];
+                        $datoLo['descripcion'] = $local_descripcion[$i];
+                        $datoLo['estado']= $local_estado[$i];
+                        $datoLo['idAlmacen']=$id;
+                        $lorepo->create($datoLo);
+                    } 
             }
            
             DB::commit();

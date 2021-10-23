@@ -99,7 +99,7 @@
                     data_moneda.prop('disabled', true);
                 }
                 
-                generateSarkDecimal();
+                // generateSarkDecimal();
             },
             formSubmitting: function (event, data) {
                 var bval = true;

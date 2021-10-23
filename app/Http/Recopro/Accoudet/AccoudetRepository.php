@@ -60,5 +60,10 @@ class AccoudetRepository implements AccoudetInterface
    public function deleteByContable($id){
         $this->model->where('idGrupoContableCabecera',$id)->delete();
     }
+    public function getGrupoDet($idOperacion,$idGrupo){
+         $mostrar=DB::select("select * from ERP_GruContableDetalle where idGrupoContableCabecera='$idGrupo' and idTipoOperacion=$idOperacion");
+         return $mostrar;
+
+    }
 
 }

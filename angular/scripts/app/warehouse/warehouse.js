@@ -156,11 +156,12 @@
                 w_description_localizacion=$("#w_description_localizacion").val();
                 p_state_localizacion= ((p_state_localizacion.prop('checked')) ? 'A' : 'I');
                 var codigo=Math.random().toString(36).substr(2, 18);
-                addToLoca(codigo,w_code_localizacion,w_description_localizacion,p_state_localizacion);
+                var codigoLocali='N';//PARA VERIFICAR SI ES UN NUEVA LOCALIZACION
+                addToLoca(codigo,w_code_localizacion,w_description_localizacion,p_state_localizacion,codigoLocali);
             }
         };
 
-        function addToLoca(codigo,code, username, estado) {
+        function addToLoca(codigo,code, username, estado,codigoLocali) {
             console.log(code);
             var estado_t="";
             if(estado=="I"){
@@ -172,10 +173,11 @@
             var td1 = $('<td>' + code + '</td>');
             var td2 = $('<td>' + username + '</td>');
             var td3 = $('<td>' + estado_t + '</td>');
+            var inpcodigo = $('<input type="hidden" class="idLocalizacion_v" value="' + codigoLocali + '" />');
             var inp = $('<input type="hidden" class="w_locali_co" value="' + code + '" />');
             var inp2 = $('<input type="hidden" class="w_locali_des" value="' + username + '" />');
             var inp3 = $('<input type="hidden" class="w_locali_est" value="' + estado + '" />');
-            td1.append(inp);
+            td1.append(inp).append(inpcodigo);
             td2.append(inp2);
             td3.append(inp3);
             var td4 = $('<td class="text-center"></td>');
@@ -229,7 +231,7 @@
                     });
 
                     _.each(data_p.localizacion, function (c) {
-                        addToLoca(c.idLocalizacion,c.codigo, c.descripcion, c.estado);
+                        addToLoca(c.idLocalizacion,c.codigo, c.descripcion, c.estado,c.idLocalizacion);
                     });
                 } else {
                     AlertFactory.textType({
@@ -286,6 +288,16 @@
                 });
                 loca_codigo = loca_codigo.join(',');
 
+
+                var idLocalizacion_v =[];
+                $.each($('.idLocalizacion_v'), function (idx, item) {
+                    idLocalizacion_v[idx] = $(item).val();
+                });
+                
+                idLocalizacion_v = idLocalizacion_v.join(',');
+
+
+
                 var loca_descr =[];
                 $.each($('.w_locali_des'), function (idx, item) {
                     loca_descr[idx] = $(item).val();
@@ -315,6 +327,7 @@
                     'local_codigo': loca_codigo,
                     'local_descripcion': loca_descr,
                     'local_estado': loca_esta,
+                    'idLocalizacion_v':idLocalizacion_v,
                    
                 };
                 var w_id = (warehouse_id.val() === '') ? 0 : warehouse_id.val();

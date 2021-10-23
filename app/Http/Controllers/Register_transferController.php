@@ -465,8 +465,8 @@ class Register_transferController extends Controller
             $cantSe = $data['cantSe'];
             $cantSe = explode(',', $cantSe);
 
-            $serieNenv = $data['serieNenv'];
-            $serieNenv = explode(',', $serieNenv);
+            // $serieNenv = $data['serieNenv'];
+            // $serieNenv = explode(',', $serieNenv);
 
             $idProductoSeN = $data['idProductoSeN'];
             $idProductoSeN = explode(',', $idProductoSeN);
@@ -502,16 +502,40 @@ class Register_transferController extends Controller
                 $valida=$repo->validarStockKit($idAl,$idLoca,$idAr,$cant);
                 }else{
                     if($tipoSe[0]->serie=='1'){
-                        $valoSrie=1;
+                       for ($se=0; $se < count($idSerieSe) ; $se++) {
+                            $contaCant=0;
+                              for ($sa=0; $sa < count($idSerieSe) ; $sa++) {
+                                    if($idSerieSe[$se]==$idSerieSe[$sa]){
+                                         $contaCant=$contaCant+1;
+                                    }
+                            };
+                            $valoSrie=$idSerieSe[$se];
+                            $valotLote=0;
+                            $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
+                            if($valida[0]->Mensaje!="OK"){
+                                break;
+                            }
+                        }
                     }else if($tipoLo[0]->lote=="1"){
-                        $valotLote=1;
+                        for ($lo=0; $lo < count($idLote) ; $lo++) {
+                            $valoSrie=0;
+                            $valotLote=$idLote[$lo];
+                            $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);
+                            if($valida[0]->Mensaje!="OK"){
+                                break;
+                            }
+                        }
+                    }else{
+                        $valoSrie=0;
+                        $valotLote=0;
+                        $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);
                     }
-                $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);    
+                   
                 }
-                $descripcionArticuloGet=$repo->traerDescripcionArticulo($idArticulo[$i]);
-                $descripcion=$descripcionArticuloGet[0]->description;
                 $valida2=$valida[0]->Mensaje;
                 if($valida2!="OK"){
+                     $descripcionArticuloGet=$repo->traerDescripcionArticulo($idArticulo[$i]);
+                     $descripcion=$descripcionArticuloGet[0]->description;
                      throw new \Exception($valida2."  ".$descripcion);
                 }
             }

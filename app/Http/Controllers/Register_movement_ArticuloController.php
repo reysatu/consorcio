@@ -126,20 +126,44 @@ class Register_movement_ArticuloController extends Controller
                 $valida=$vali->validarStockKit($idAl,$idLoca,$idAr,$cant);
                 }else{
                     if($tipoSe[0]->serie=='1'){
-                        $valoSrie=1;
+                        for ($se=0; $se < count($idSerieSe) ; $se++) {
+                            $contaCant=0;
+                              for ($sa=0; $sa < count($idSerieSe) ; $sa++) {
+                                    if($idSerieSe[$se]==$idSerieSe[$sa]){
+                                         $contaCant=$contaCant+1;
+                                    }
+                            };
+                            $valoSrie=$idSerieSe[$se];
+                            $valotLote=0;
+                            $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
+                            if($valida[0]->Mensaje!="OK"){
+                                break;
+                            }
+                        }
                     }else if($tipoLo[0]->lote=="1"){
-                        $valotLote=1;
+                       for ($lo=0; $lo < count($idLote) ; $lo++) {
+                            $valoSrie=0;
+                            $valotLote=$idLote[$lo];
+                            $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);
+                            if($valida[0]->Mensaje!="OK"){
+                                break;
+                            }
+                        }
+                    }else{
+                        $valoSrie=0;
+                        $valotLote=0;
+                        $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);
+                        
                     }
-                $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$cant);    
                 }
-                $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
-                $descripcion=$descripcionArticuloGet[0]->description;
                 $valida2=$valida[0]->Mensaje;
                 if($data['naturaleza']=="S"){
                    if($valida2!="OK"){
+                     $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
+                     $descripcion=$descripcionArticuloGet[0]->description;
                      throw new \Exception($valida2."  ".$descripcion);
-                    } 
-                    }
+                     } 
+                  }
                 }
                 
             }
@@ -261,7 +285,6 @@ class Register_movement_ArticuloController extends Controller
             DB::commit();
             return response()->json([
                 'status' => true,
-                'dato'=>$conse,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

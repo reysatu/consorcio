@@ -66,6 +66,7 @@ class HeadAccountanRepository implements HeadAccountanInterface
         $model->delete();
      
     }
+    
      public function find($id)
     {
         return $this->model->find($id);

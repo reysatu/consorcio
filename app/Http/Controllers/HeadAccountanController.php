@@ -66,8 +66,7 @@ class HeadAccountanController extends Controller
                 $grup=$repo->create($data);
                 $id=$grup->idGrupoContableCabecera;
             };
-            if (isset($data['contable_idoperacion'])) {
-                $repoDet->deleteByContable($id);
+          
                 
                 $idOperaciont=$data['contable_idoperacion'];
                 $idOperacion = explode(',', $idOperaciont);
@@ -80,16 +79,18 @@ class HeadAccountanController extends Controller
 
                 for ($i=0; $i < count($idOperacion) ; $i++) { 
                         $datoLo=[];
-                        $datoLo['idGrupoContableCabecera']=$id;
-                        $datoLo['idTipoOperacion'] = $idOperacion[$i];
-                        $datoLo['cuenta'] = $cuenta[$i];
-                        $datoLo['centrocosto']= $centrocosto[$i];
-                        $repoDet->create($datoLo);
-
+                        $dato=[];
+                        $var=$repoDet->getGrupoDet($idOperacion[$i],$id);
+                        if(empty($var)){
+                                $datoLo['idGrupoContableCabecera']=$id;
+                                $datoLo['idTipoOperacion'] = $idOperacion[$i];
+                                $datoLo['cuenta'] = $cuenta[$i];
+                                $datoLo['centrocosto']= $centrocosto[$i];
+                                $repoDet->create($datoLo);
+                        }
                 }
              
-            }
-
+       
 
            
            
