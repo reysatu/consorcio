@@ -13,6 +13,7 @@ Route::post('series/update', ['as' => 'series.update', 'uses' => 'SerieControlle
 Route::get('series/excel', ['as' => 'series.excel', 'uses' => 'SerieController@excel']);
 
 
+Route::get('series/data_form', ['as' => 'series.data_form', 'uses' => 'SerieController@data_form']);
 
 Route::post('series/getArticulos', 'ProductController@getAll'); 
 Route::post('series/getArticulosSelect', ['as' => 'series.getArticulosSelect', 'uses' => 'ProductController@traeAll']);

@@ -329,6 +329,29 @@ class Register_transferController extends Controller
     //         ]);
     //     }
     // }
+    public function pdf(Request $request, Register_transferInterface $repo)
+    {
+            $id = $request->input('id');
+            $data = $repo->find($id);
+            $data_movimiento_Articulo =$repo->get_movement_articulo($id);
+            $data_movimiento_lote=$repo->get_movemen_lote($id);
+            $data_movimiento_serie=$repo->get_movemen_Serie($id);
+            $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
+            $img='logo.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'movimiento_Ar'=>$data_movimiento_Articulo,
+                'data_movimiento_lote'=>$data_movimiento_lote,
+                'data_movimiento_serie'=>$data_movimiento_serie,
+                'estado'=>$data,
+                'img'=>$image,
+            ]);
+    }
 
     public function find($id, Register_transferInterface $repo)
     {

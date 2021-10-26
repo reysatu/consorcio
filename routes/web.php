@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Generation_remisions.php';
 
-    require app_path() . '\Http\Routes\Query_stocks.php';
+    require app_path() . '\Http\Routes\Query_Stock.php';
 
     require app_path() . '\Http\Routes\Query_movements.php';
 

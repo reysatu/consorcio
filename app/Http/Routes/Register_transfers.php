@@ -14,6 +14,8 @@ Route::get('register_transfers/procesarTransferencia/{id}', ['as' => 'register_t
 
 Route::get('register_transfers/validaDetalle/{id}', ['as' => 'register_transfers.validaDetalle', 'uses' => 'Register_transferController@validaDetalle']);
 
+Route::get('register_transfers/pdf', 'Register_transferController@pdf');
+
 Route::post('register_transfers/update', ['as' => 'register_transfers.update', 'uses' => 'Register_transferController@update']);
 Route::get('register_transfers/excel', ['as' => 'register_transfers.excel', 'uses' => 'Register_transferController@excel']);
 

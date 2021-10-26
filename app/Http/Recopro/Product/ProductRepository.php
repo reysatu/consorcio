@@ -47,9 +47,9 @@ class ProductRepository implements ProductInterface
     public function search3($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('description_detail', 'LIKE', '%'.$s.'%')->where('type_id','==',1);
-            $q->Where('serie','==',0);
-            $q->Where('lote','==',0);
+            $q->where('description_detail', 'LIKE', '%'.$s.'%')->where('type_id','=',1);
+            $q->Where('serie','=',0);
+            $q->Where('lote','=',0);
 
         });
     }
@@ -187,8 +187,8 @@ class ProductRepository implements ProductInterface
             $l->where('type_gt', $type);
         });
     }
-    public function getDetalleKit($idkit,$id){
-          $mostrar2=DB::select("select  * from ERP_Articulo_kit as ak inner join ERP_Productos as pr on ak.idArticulo=pr.id  where idArticuloKit=$idkit and idArticulo !=$id");
+    public function getDetalleKit($idkit){
+          $mostrar2=DB::select("select  * from ERP_Articulo_kit as ak inner join ERP_Productos as pr on ak.idArticulo=pr.id  where idArticuloKit=$idkit");
           return $mostrar2;
     }
     public function getidArticuloKit($id){

@@ -182,11 +182,13 @@
             RESTService.get('register_movements/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
+                    titlemodalMovimieto.html('Editar Movimiento '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
+                    naturalezaGeneral=data_p.naturaleza;
                     if(lotE!=''){
                          lotE.map(function(index) {
                                 var grubLE={
@@ -709,11 +711,14 @@
                               }
                         });
                  }else {
+                    if(naturalezaGeneral!='C'){
+                   
                     AlertFactory.textType({
                         title: '',
                         message: 'No se pudo obtener las Localizaciones. Intente nuevamente.',
                         type: 'info'
                     });
+                  }
                 }
 
                });
@@ -1556,8 +1561,12 @@
                  if (!_.isUndefined(response.status) && response.status) {
                     var dta=response.data;
                     if(dta[0]['Mensaje']!=""){
-                        $("#msg_cont_EliminarMovimiento p").html(dta[0]['Mensaje']);
-                        msg_cont_EliminarMovimiento.addClass("show");
+                         AlertFactory.textType({
+                                title: '',
+                                message: dta[0]['Mensaje'],
+                                type: 'info'
+                        }); 
+                        modalDeleteMovimiento.modal("hide"); 
                     }else{
                          AlertFactory.textType({
                             title: '',
@@ -1831,6 +1840,7 @@
 
                 RESTService.updated('register_movements/saveMovimiento', movimiento_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
+                        titlemodalMovimieto.html('Nuevo Movimiento '+'['+ response.code+ ']');
                         AlertFactory.textType({
                             title: '',
                             message: 'El registro se guardó correctamente',

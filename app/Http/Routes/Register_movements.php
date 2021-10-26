@@ -31,6 +31,7 @@ Route::post('register_movements/getArticulosSelect', ['as' => 'register_movement
 Route::post('register_movements/getArticulosMinKit', ['as' => 'register_movements.getArticulosMinKit', 'uses' => 'ProductController@traeAllMinKit']);
 
 Route::post('register_movements/getProductoSerie', ['as' => 'register_movements.getProductoSerie', 'uses' => 'SerieController@traerSeries']);
+Route::post('register_movements/getProductoSerieStock', ['as' => 'register_movements.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
 
 Route::get('register_movements/validateLote/{id}', ['as' => 'register_movements.validateLote', 'uses' => 'Register_movementController@validateLote']);
 

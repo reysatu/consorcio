@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Articulo_Kit;
+namespace App\Http\Recopro\Query_stock;
 use Illuminate\Support\Facades\DB;
 
-class Articulo_KitRepository implements Articulo_KitInterface
+class Query_stockRepository implements Query_stockInterface
 {
     protected $model;
- private static $_ACTIVE = 'A';
-    public function __construct(Articulo_Kit $model)
+    private static $_ACTIVE = 'A';
+    public function __construct(Query_stock $model)
     {
         $this->model = $model; 
        
@@ -26,8 +26,9 @@ class Articulo_KitRepository implements Articulo_KitInterface
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->where('Articulo', 'LIKE', '%'.$s.'%')->orderByRaw('Articulo DESC');
+            $q->orWhere('Almacen', 'LIKE', '%'.$s.'%');
+            $q->orWhere('Categoria', 'LIKE', '%'.$s.'%');
         });
 
     }
@@ -59,8 +60,11 @@ class Articulo_KitRepository implements Articulo_KitInterface
         $model->update($attributes);
     }
     public function destroy($id)
-    { 
-        $mostrar=DB::table('ERP_Articulo_kit')->where('idArticuloKit', $id)->delete();
+    {
+        $attributes = [];
+        $model = $this->model->findOrFail($id);
+        $model->update($attributes);
+        $model->delete();
      
     }
 

@@ -66,33 +66,23 @@ class ProductController extends Controller
                 $repo->update($id, $data);
                 $product = $repo->find($id);
                 $code = $product->code_article;
+                $ide = $product->id;
 
             } else {
                 $product = $repo->create($data);
-                $id = $product->id;
+                $ide = $product->id;
                 $code = $product->code_article;
             }
-            if ($data['idKit'] != 0) {
-                $kitrepo->destroy($data['idKit']);
-            };
-            if (isset($data['cantidadKit'])) {
-                    $datoLo=[];
-                    $idt='idArticuloKit';
-                    $table="ERP_Articulo_kit";
-                    $datoLo['idArticuloKit'] = $kitrepo->get_consecutivo($table,$idt);
-                    $datoLo['idArticulo'] = $id ;
-                    $datoLo['cantidad'] =1;
-                    $valor=$kitrepo->create($datoLo);
-                    $idKit = $valor->idArticuloKit;
+           
+            if ($data['cantidadKit']!='N') {
+                    $kitrepo->destroy($id);
                     $idArticuloKitT=$data['idArticuloKit'];
                     $idArticuloKit=explode(',', $idArticuloKitT);
-
                     $cantidadKitT=$data['cantidadKit'];
                     $cantidadKit=explode(',', $cantidadKitT);
-
                     for ($i=0; $i < count($idArticuloKit) ; $i++) { 
                         $datKit=[];
-                        $datKit['idArticuloKit'] =$idKit;
+                        $datKit['idArticuloKit'] =$ide;
                         $datKit['idArticulo'] = $idArticuloKit[$i] ;
                         $datKit['cantidad'] =$cantidadKit[$i];
                         $kitrepo->create($datKit);
@@ -166,11 +156,7 @@ class ProductController extends Controller
             $data = $repo->find($id);
 
             if($data['type_id']==3){
-                    $info=$repo->getidArticuloKit($id);
-                    $idkit=$info[0]->idArticuloKit;
-                    $data['cantidad']=$info[0]->cantidad;
-                    $data['idKit']=$info[0]->idArticuloKit;
-                    $datosKit=$repo->getDetalleKit($idkit,$id);
+                    $datosKit=$repo->getDetalleKit($id);
                     $grupoKit = [];
                     foreach ($datosKit as $bp) {
                              $grupoKit[] = [
@@ -183,10 +169,6 @@ class ProductController extends Controller
                     }
                     $data['GrupoKit'] = $grupoKit;
             }
-
-            
-
-
             return response()->json([
                 'status' => true,
                 'data' => $data,

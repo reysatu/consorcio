@@ -801,6 +801,40 @@ function create_vouchers_pdf(response) {
     }
 
 }
+function create_pdf_transfer(response) {
+    var data = [];
+    var array_head = [];
+    var array_dataBody = [];
+    var array_dataHead = [];
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            content: [
+                       {
+            table: {
+                body: [
+                    [{style: 'tableHeader',image: response.img,rowSpan: 6, colSpan: 2, alignment: 'center',width:100,height:50},{},{ text:'Transferencia N° [ ]',alignment: 'center', colSpan: 9},{}, {}, {},{}, {}, {},{}, {}],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
+                ]
+            }
+        },
+                    ]
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
 
 
 function create_receptionTransfer_pdf(response) {

@@ -171,7 +171,7 @@ class Register_movement_ArticuloController extends Controller
             if ($idArticulo != '') {
                 $repo->delete_detalle($id);
                 $repo->delete_articulo_detalle($id);
-                if($data['naturaleza']=="S"){
+                if($data['naturaleza']=="C"){
                     for ($i=0; $i < count($idArticulo) ; $i++) {
                         $tablelMd="ERP_Movimiento_Articulo";
                         $idtMd="consecutivo";

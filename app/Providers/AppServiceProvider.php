@@ -139,6 +139,14 @@ use App\Http\Recopro\Register_movement_Articulo\Register_movement_Articulo;
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_ArticuloInterface;
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_ArticuloRepository;
 
+use App\Http\Recopro\Query_stock\Query_stock;
+use App\Http\Recopro\Query_stock\Query_stockInterface;
+use App\Http\Recopro\Query_stock\Query_stockRepository;
+
+use App\Http\Recopro\Query_movements\Query_movements;
+use App\Http\Recopro\Query_movements\Query_movementsInterface;
+use App\Http\Recopro\Query_movements\Query_movementsRepository;
+
 use App\Http\Recopro\Register_movement_Detalle\Register_movement_Detalle;
 use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleInterface;
 use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleRepository;
@@ -396,6 +404,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerModelo();
         $this->registerRegister_Transfer_Articulo();
         $this->registerRegister_Transfer_Detalle();
+        $this->registerQuery_stock();
+		$this->registerQuery_movements();
         $this->registerOperation_Usuario();
         $this->registerAccoudet();
         $this->registerUbigeo();
@@ -1024,6 +1034,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(Register_transferInterface::class, function ($app) {
             return new Register_transferRepository(new Register_transfer());
+        });
+    }
+    public function registerQuery_stock()
+    {
+        $app = $this->app;
+
+        $app->bind(Query_stockInterface::class, function ($app) {
+            return new Query_stockRepository(new Query_stock());
+        });
+    }
+    public function registerQuery_movements()
+    {
+        $app = $this->app;
+
+        $app->bind(Query_movementsInterface::class, function ($app) {
+            return new Query_movementsRepository(new Query_movements());
         });
     }
     public function registerGeneration_remision()

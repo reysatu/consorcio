@@ -31,7 +31,7 @@
         var modalArticulo = $('#modalArticulo');
         var p_code_article = $("#code_article");
         var p_code_matrix = $("#code_matrix");
-
+        var table_container_cc2=$("#table_container_cc2");
         var motor = $("#motor");
         var chasis = $("#chasis");
         var anio_modelo = $("#anio_modelo");
@@ -89,7 +89,8 @@
             cleanRequired();
             titleModalProduct.html('');
             p_id.val('');
-            p_image.val('');
+            p_image.val("");
+            $(".imgMinPhoto").html("");
             p_state.prop('checked', true).iCheck('update');
             state_text.html('Activo');
             p_description.val('');
@@ -287,6 +288,7 @@
             modalArticulo.modal('show');
             $('#search_cc2').val('');
             $('#LoadRecordsButtonCC2').click();
+            $("#table_container_cc2 .jtable-main-container .jtable-bottom-panel .jtable-left-area .jtable-goto-page select ").val("1").trigger("change");
         };
 
         $scope.saveProduct = function()
@@ -338,33 +340,6 @@
             
             if (bval) {
                 var kitid = (idKit.val() === '') ? 0 : idKit.val();
-                var params = {
-                    'id': p_id.val(),
-                    'state': ((p_state.prop('checked')) ? 1 : 0),
-                    'description': p_description.val(),
-                    'description_detail': p_description_detail.val(),
-                    'serie': ((p_serie.prop('checked')) ? 1 : 0),
-                    'lote': ((p_lote.prop('checked')) ? 1 : 0),
-                    'disponible_venta': ((p_disponible_venta.prop('checked')) ? 1 : 0),
-                    'impuesto': ((p_impuesto.prop('checked')) ? 1 : 0),
-                    'code_article': p_code_article.val(),
-                    'code_matrix': p_code_matrix.val(),
-                    'motor': motor.val(),
-                    'chasis': chasis.val(),
-                    'anio_modelo': anio_modelo.val(),
-                    'anio_fabricacion': anio_fabricacion.val(),
-                    'color': color.val(),
-                    'idModelo': p_id_modelo.val(),
-                    'type_id': p_id_tipo.val(),
-                    'idCategoria': p_id_categoria.val(),
-                    'idFamilia': p_id_familia.val(),
-                    'idSubFamilia': p_id_subfamilia.val(),
-                    'idMarca': p_id_marca.val(),
-                    'idGrupoContableCabecera': p_id_grupocontable.val(),
-                    'um_id':p_id_unidad_medidad.val(),//cambiar unidad
-                    'image':p_image.val(),
-                    'idKit':kitid,
-                };
                if(articulo_kit_det.html() != ''){
                     var articulosKit = [];
                     $.each($('.id_p_kit'), function (idx, item) {
@@ -379,6 +354,10 @@
                         cantidadKit[idx] = $(item).val();
                     });
                      cantidadKit = cantidadKit.join(',');
+                 }else{
+                    articulosKit='N';
+                    cantidadKit='N';
+                 };
                      var params = {
                     'id': p_id.val(),
                     'state': ((p_state.prop('checked')) ? 1 : 0),
@@ -406,8 +385,9 @@
                     'idArticuloKit':articulosKit,
                     'cantidadKit':cantidadKit,
                     'idKit':kitid,
+                    'um_id':p_id_unidad_medidad.val(),
                 };
-               }
+             
                
                 var product_id = (p_id.val() === '') ? 0 : p_id.val();
 

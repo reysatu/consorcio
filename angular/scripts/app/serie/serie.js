@@ -24,6 +24,10 @@
         var chasis = $('#chasis');
         var motor = $('#motor');
         var color = $('#color');
+        var tipoCompra=$("#tipoCompra");
+        var nrPoliza=$("#nrPoliza");
+        var nrLote=$("#nrLote");
+
         var anio_fabricacion = $('#anio_fabricacion');
         var anio_modelo = $('#anio_modelo');
 
@@ -38,7 +42,9 @@
             serie_id.val('');
             p_product_name.val('');
             msg_cont.addClass('hide');
-
+            tipoCompra.val('');
+            nrPoliza.val('');
+            nrLote.val('');
             serie.val('');
             chasis.val('');
             motor.val('');
@@ -64,7 +70,7 @@
             modalCC.modal('show');
             $('#search_cc2').val('');
             $('#LoadRecordsButtonCC2').click();
-        };
+        }; 
          $scope.clearCC = function(type) {
                 producto.val('');
                 p_product_name.val('');
@@ -79,11 +85,11 @@
                 return false;
             }
             bval = bval && serie.required();
-            bval = bval && chasis.required();
-            bval = bval && motor.required();
-            bval = bval && color.required();
-            bval = bval && anio_fabricacion.required();
-            bval = bval && anio_modelo.required();
+            // bval = bval && chasis.required();
+            // bval = bval && motor.required();
+            // bval = bval && color.required();
+            // bval = bval && anio_fabricacion.required();
+            // bval = bval && anio_modelo.required();
             if(bval){
                  var params = {
                     'idArticulo': producto.val(),
@@ -93,6 +99,9 @@
                     'color': color.val(),
                     'anio_modelo': anio_modelo.val(),
                     'anio_fabricacion': anio_fabricacion.val(),
+                    'idTipoCompraVenta':tipoCompra.val(),
+                    'nPoliza':nrPoliza.val(),
+                    'nLoteCompra':nrLote.val(),
                  };
                 var serieIde_id = (serie_id.val() === '') ? 0 : serie_id.val();
 
@@ -135,6 +144,9 @@
                     color.val(data_p[0].color);
                     anio_fabricacion.val(data_p[0].anio_fabricacion);
                     anio_modelo.val(data_p[0].anio_modelo);
+                    tipoCompra.val(data_p[0].idTipoCompraVenta).trigger('change');;
+                    nrPoliza.val(data_p[0].nPoliza);
+                    nrLote.val(data_p[0].nLoteCompra)
                     modalSerie.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -150,7 +162,22 @@
        
         var table_container_Serie = $("#table_container_Serie");
         
-
+         function getDataFormSerie () {
+            RESTService.all('series/data_form', '', function(response) {
+                console.log("ddd");
+                if (!_.isUndefined(response.status) && response.status) {
+                    tipoCompra.append('<option value="" selected>Seleccionar</option>');
+                    console.log(response.tipoCompra);
+                    console.log("eee");
+                     _.each(response.tipoCompra, function(item) {
+                        tipoCompra.append('<option value="'+item.idTipoCompraVenta+'">'+item.descripcion+'</option>');
+                    });
+                }
+            }, function() {
+                getDataFormSerie();
+            });
+        }
+        getDataFormSerie();
 
         table_container_Serie.jtable({
             title: "Lista de Series",

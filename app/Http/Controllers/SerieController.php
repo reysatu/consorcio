@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Requests\SerieRequest;
 use Carbon\Carbon;
-use DB;
+use DB; 
 class SerieController extends Controller
 {
      use SerieTrait;
@@ -26,7 +26,7 @@ class SerieController extends Controller
     public function all(Request $request, SerieInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];
+        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo','idTipoCompraVenta','nPoliza','nLoteCompra'];
         return parseList($repo->search($s), $request, 'idSerie', $params);
     }
 
@@ -66,6 +66,15 @@ class SerieController extends Controller
 
         return response()->json(['Result' => 'OK']);
     }
+    public function data_form(SerieInterface $repo,Request $request)
+    {
+        $tipocompra =$repo->get_tipoCompraVenta();
+        return response()->json([
+            'status' => true,
+            'tipoCompra' => $tipocompra,
+            
+        ]);
+    }
 
     public function destroy(SerieInterface $repo, Request $request)
     {
@@ -75,6 +84,12 @@ class SerieController extends Controller
     }
 
     public function traerSeries(Request $request, SerieInterface $repo){
+        $idProducto = $request->input('idProducto');
+        $s = $request->input('search', '');
+        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];
+        return parseList($repo->searchMovi($s,$idProducto), $request, 'idSerie', $params);
+    }
+    public function traerSeriesStock(Request $request, SerieInterface $repo){
         $idProducto = $request->input('idProducto');
         $s = $request->input('search', '');
         $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];

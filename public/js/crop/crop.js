@@ -214,7 +214,7 @@ function uploadMorePicture() {
         var div_pict = $('<div class="'+class_img_crop+'" id="'+pict_val+'"></div>');
         var div = $('<div class="view_image"></div>');
         var span = $('<span class="fa fa-trash color-white delItemCrop"></span>');
-        var img = $('<img src="'+url_image+'" class="img-thumbnail" alt="" />');
+        var img = $('<img id="img_produc" src="'+url_image+'" class="img-thumbnail" alt="" />');
         div.append(span);
         div.append(img);
         div_pict.append(div);

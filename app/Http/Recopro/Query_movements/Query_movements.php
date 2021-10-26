@@ -1,7 +1,6 @@
-<?php namespace App\Http\Recopro\Serie;
+<?php namespace App\Http\Recopro\Query_movements;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Recopro\Product\Product;
 use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Created by PhpStorm.
@@ -9,20 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class Serie extends Model
+class Query_movements extends Model
 {
   
-    protected $table = 'ERP_Serie';
+    protected $table = 'ERP_VWTransaccionDetalle';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'idSerie';
+    protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['idSerie', 'nombreSerie','idArticulo','chasis','motor','anio_fabricacion','anio_modelo','color','user_created','user_updated','idTipoCompraVenta','nPoliza','nLoteCompra'];
+    protected $fillable = ['idTransaccion','id','fecha_registro','fecha_proceso_s','fecha_registro_s','idArticulo','Articulo','Unidad','Categoria','Tipo_Operacion','Naturaleza','Origen','idOrigen','Almacen','Localizacion','Cantidad','Costo_Unitario','Precio_Unitario','Costo_Total','Precio_Total','Lote','Serie'];
     
      public function user_c()
     {
@@ -32,10 +31,6 @@ class Serie extends Model
     public function user_u()
     {
         return $this->belongsTo(User::class, 'user_updated');
-    } 
-    public function Product_d()
-    {
-        return $this->belongsTo(Product::class,'idArticulo');
     }
 
 }

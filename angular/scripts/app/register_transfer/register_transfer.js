@@ -126,7 +126,7 @@
         var btn_movimiento_detalle=$("#btn_movimiento_detalle");
         var modalProcesarTransferencia=$("#modalProcesarTransferencia");
         var msg_cont_ProcesarTransferencia=$("#msg_cont_ProcesarTransferencia");
-
+        var btn_imprimirTransferencia=$("#btn_imprimirTransferencia");
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
         }).on('ifChanged', function (event) {
@@ -134,7 +134,17 @@
             $scope.chkState();
         });
 
-
+        btn_imprimirTransferencia.click(function(e){
+            // var data = {
+            //                     referral_guide_id:1,
+                               
+            // };
+            // // window.open(base_url + '/templates/register_transfers/reporte.html', 'name'); 
+            // localStorage.setItem('Nombre', 'Miguel Antonio')
+            //  $scope.loadTransferPDF('referral_guides/referralGuidePDF', data);
+            var id= idMovimiento.val();
+             $scope.loadTransferPDF('register_transfers/pdf', id);
+        });
         modalMovimietoArticulo.on('hidden.bs.modal', function (e) {
             cleanMovimientoArticulo();
         });
@@ -174,14 +184,14 @@
         });
          function findRegister_Trasnfer(id)
         {
-            titlemodalMovimieto.html('Editar Transferencia');
+            
        
             RESTService.get('register_transfers/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
-
+                    titlemodalMovimieto.html('Editar Transferencia '+'['+ data_p.idTransferencia+ ']');
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
@@ -1247,8 +1257,12 @@
                  if (!_.isUndefined(response.status) && response.status) {
                     var dta=response.data;
                     if(dta[0]['Mensaje']!=""){
-                        $("#msg_cont_EliminarMovimiento p").html(dta[0]['Mensaje']);
-                        msg_cont_EliminarMovimiento.addClass("show");
+                        AlertFactory.textType({
+                                title: '',
+                                message: dta[0]['Mensaje'],
+                                type: 'info'
+                        }); 
+                        modalDeleteMovimiento.modal("hide"); 
                     }else{
                          AlertFactory.textType({
                             title: '',
@@ -1554,6 +1568,7 @@
 
                 RESTService.updated('register_transfers/saveMovimiento', movimiento_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
+                        titlemodalMovimieto.html('Nueva Transferencia '+'['+ response.code+ ']');
                         AlertFactory.textType({
                             title: '',
                             message: 'El registro se guardó correctamente',
@@ -1686,17 +1701,15 @@
                     create: false,
                 },
                 tipoTransferencia: {
-                    title: 'Estado',
+                    title: 'Tipo Transferencia',
                     values: { 'N': 'Sin recepción', 'R': 'Con recepción' },
                     type: 'checkbox',
-                    defaultValue: 'A',
-                   
                 },
                 estado: {
                     title: 'Estado',
                     values: { '0': 'Registrado', '1': 'Procesado' },
                     type: 'checkbox',
-                    defaultValue: 'A',
+                    
                    
                 },edit: {
                     width: '1%',
@@ -1814,6 +1827,10 @@
                     create: false,
                     edit: false,
                     list: false
+                },
+                code_article: {
+                    title: 'Código'
+
                 },
                 description: {
                     title: 'Articulos'
@@ -2121,6 +2138,10 @@
                     create: false,
                     edit: false,
                     list: false
+                },
+                 code_article: {
+                    title: 'Código'
+
                 },
                 description: {
                     title: 'Articulos'
