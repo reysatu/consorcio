@@ -1304,8 +1304,12 @@
                         LoadRecordsButtonRegister_Trasnfer.click(); 
 
                     }else{
-                        $("#msg_cont_ProcesarTransferencia p").html(dta[0]['Mensaje']);
-                        msg_cont_ProcesarTransferencia.addClass("show");
+                         AlertFactory.textType({
+                                title: '',
+                                message: dta[0]['Mensaje'],
+                                type: 'info'
+                        }); 
+                        modalProcesarTransferencia.modal("hide"); 
                        
                     }
                   
@@ -2087,107 +2091,107 @@
             }, true);
         }
 
-        var search_cc3 = getFormSearch('frm-search-cc3', 'search_cc3', 'LoadRecordsButtonCC3');
-        var table_container_cc3 = $("#table_container_Almacen_Articulo");
-        table_container_cc3.jtable({
-            title: "Lista de Articulos",
-            paging: true,
-            sorting: true,
-            actions: {
-                listAction: function (postData, jtParams) {
-                    return $.Deferred(function ($dfd) {
-                        $.ajax({  
-                            url: base_url + '/lots/getArticulosSelect?jtStartIndex=' + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting,
-                            type: 'POST',
-                            dataType: 'json',
-                            data: postData,
-                            success: function (data) {
-                                $dfd.resolve(data);
-                            },
-                            error: function () {
-                                $dfd.reject();
-                            }
-                        });
-                    });
-                },
-            },
-            toolbar: {
-                items: [{
-                    cssClass: 'buscador',
-                    text: search_cc3
-                }]
-            },
-            fields: {
-                id: {
-                    key: true,
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                type_id: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                serie: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                lote: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                 code_article: {
-                    title: 'Código'
+        // var search_cc3 = getFormSearch('frm-search-cc3', 'search_cc3', 'LoadRecordsButtonCC3');
+        // var table_container_cc3 = $("#table_container_Almacen_Articulo");
+        // table_container_cc3.jtable({
+        //     title: "Lista de Articulos",
+        //     paging: true,
+        //     sorting: true,
+        //     actions: {
+        //         listAction: function (postData, jtParams) {
+        //             return $.Deferred(function ($dfd) {
+        //                 $.ajax({  
+        //                     url: base_url + '/lots/getArticulosSelect?jtStartIndex=' + jtParams.jtStartIndex + '&jtPageSize=' + jtParams.jtPageSize + '&jtSorting=' + jtParams.jtSorting,
+        //                     type: 'POST',
+        //                     dataType: 'json',
+        //                     data: postData,
+        //                     success: function (data) {
+        //                         $dfd.resolve(data);
+        //                     },
+        //                     error: function () {
+        //                         $dfd.reject();
+        //                     }
+        //                 });
+        //             });
+        //         },
+        //     },
+        //     toolbar: {
+        //         items: [{
+        //             cssClass: 'buscador',
+        //             text: search_cc3
+        //         }]
+        //     },
+        //     fields: {
+        //         id: {
+        //             key: true,
+        //             create: false,
+        //             edit: false,
+        //             list: false
+        //         },
+        //         type_id: {
+        //             create: false,
+        //             edit: false,
+        //             list: false
+        //         },
+        //         serie: {
+        //             create: false,
+        //             edit: false,
+        //             list: false
+        //         },
+        //         lote: {
+        //             create: false,
+        //             edit: false,
+        //             list: false
+        //         },
+        //          code_article: {
+        //             title: 'Código'
 
-                },
-                description: {
-                    title: 'Articulos'
+        //         },
+        //         description: {
+        //             title: 'Articulos'
 
-                },
-                select: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center',
-                    display: function (data) {
-                        return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-name="'+
-                            data.record.description+'" data-type="'+data.record.type_id+'"  data-serie="'+data.record.serie+'" data-lote="'+data.record.lote+'" data-code="'+data.record.id+'"><i class="fa fa-'+
-                            icon_select+' fa-1-5x"></i></a>';
-                   }
-                }
-            },
-            recordsLoaded: function(event, data) {
-                $('.select_cc').click(function(e){
-                    var codigo = $(this).attr('data-code');
-                    var descripcionArt = $(this).attr('data-name');
-                    var idTipoArt = $(this).attr('data-type');
-                    var serie = $(this).attr('data-serie');
-                    var lote = $(this).attr('data-lote');
-                    var costo=$(this).attr('data-lote');
-                    if(idArtSerie.val()!=''){
-                         AlertFactory.textType({
-                            title: '',
-                            message: 'Ya seleccionó un artículo serie',
-                            type: 'error'
-                        });
-                    }else{
-                         seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
-                    }
+        //         },
+        //         select: {
+        //             width: '1%',
+        //             sorting: false,
+        //             edit: false,
+        //             create: false,
+        //             listClass: 'text-center',
+        //             display: function (data) {
+        //                 return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-name="'+
+        //                     data.record.description+'" data-type="'+data.record.type_id+'"  data-serie="'+data.record.serie+'" data-lote="'+data.record.lote+'" data-code="'+data.record.id+'"><i class="fa fa-'+
+        //                     icon_select+' fa-1-5x"></i></a>';
+        //            }
+        //         }
+        //     },
+        //     recordsLoaded: function(event, data) {
+        //         $('.select_cc').click(function(e){
+        //             var codigo = $(this).attr('data-code');
+        //             var descripcionArt = $(this).attr('data-name');
+        //             var idTipoArt = $(this).attr('data-type');
+        //             var serie = $(this).attr('data-serie');
+        //             var lote = $(this).attr('data-lote');
+        //             var costo=$(this).attr('data-lote');
+        //             if(idArtSerie.val()!=''){
+        //                  AlertFactory.textType({
+        //                     title: '',
+        //                     message: 'Ya seleccionó un artículo serie',
+        //                     type: 'error'
+        //                 });
+        //             }else{
+        //                  seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
+        //             }
                    
-                    e.preventDefault();
-                });
-            }
-        });
+        //             e.preventDefault();
+        //         });
+        //     }
+        // });
 
-        generateSearchForm('frm-search-cc3', 'LoadRecordsButtonCC3', function(){
-            table_container_cc3.jtable('load', {
-                search: $('#search_cc3').val()
-            });
-        }, false);
+        // generateSearchForm('frm-search-cc3', 'LoadRecordsButtonCC3', function(){
+        //     table_container_cc3.jtable('load', {
+        //         search: $('#search_cc3').val()
+        //     });
+        // }, false);
     }
 
     function Config($stateProvider, $urlRouterProvider) {

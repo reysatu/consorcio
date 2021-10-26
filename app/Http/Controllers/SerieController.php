@@ -13,7 +13,8 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Requests\SerieRequest;
 use Carbon\Carbon;
-use DB; 
+use DB;
+use App\Http\Recopro\Stock_Serie\Stock_SerieInterface;
 class SerieController extends Controller
 {
      use SerieTrait;
@@ -89,7 +90,7 @@ class SerieController extends Controller
         $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];
         return parseList($repo->searchMovi($s,$idProducto), $request, 'idSerie', $params);
     }
-    public function traerSeriesStock(Request $request, SerieInterface $repo){
+    public function traerSeriesStock(Request $request, Stock_SerieInterface $repo){
         $idProducto = $request->input('idProducto');
         $s = $request->input('search', '');
         $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];

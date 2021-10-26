@@ -39,6 +39,8 @@ class SerieRepository implements SerieInterface
             $q->orWhere('chasis', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
             $q->orWhere('motor', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
             $q->orWhere('anio_fabricacion', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
+            $q->orWhere('anio_modelo', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
+            $q->orWhere('color', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
 
         });
 

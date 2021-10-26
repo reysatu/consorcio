@@ -18,7 +18,7 @@
         var  alotML=[];
         var  afinML=[];
         var  avenML=[];
-
+        var  tipoCompra; //variable que contendrá los tipos de  compras
         var aartMK=[]; //arrays de id kits 
         var aartMLE=[];//arrays lotes exis
         var naturalezaGeneral;
@@ -505,6 +505,7 @@
                         var ide = idMovimiento.val();
                         idTransferenciaProcesar.val(ide);
                         modalProcesarTransferencia.modal("show");
+
                         e.preventDefault();
                  }else {
                     var msg_ = (_.isUndefined(response.message)) ?
@@ -551,9 +552,12 @@
                         modalProcesarTransferencia.modal("hide");
                         LoadRecordsButtonRegister_Movement.click(); 
                     }else{
-                         console.log(dta[0]['Mensaje']);
-                        $("#msg_cont_ProcesarTransferencia p").html(dta[0]['Mensaje']);
-                        msg_cont_ProcesarTransferencia.addClass("show");
+                        AlertFactory.textType({
+                                title: '',
+                                message: dta[0]['Mensaje'],
+                                type: 'info'
+                        }); 
+                        modalProcesarTransferencia.modal("hide"); 
                        
                     }
                   
@@ -905,6 +909,9 @@
                 var anioNFs=[];
                 var anioNVs=[];
                 var colorNs=[];
+                var idTipoCompraVenta=[];
+                var nPoliza=[];
+                var nLoteCompra=[];
                 var cont2=0;
                 var ident_serie_bd_serie2=[];
                 aartMSN.map(function(index) {
@@ -916,6 +923,9 @@
                         anioNFs[cont2] = index.anio_fabricacion;
                         anioNVs[cont2] = index.anio_modelo;
                         colorNs[cont2] = index.color;
+                        idTipoCompraVenta[cont2]=index.idTipoCompraVenta;
+                        nPoliza[cont2]=index.nPoliza;
+                        nLoteCompra[cont2]=index.nLoteCompra;
                          cont2=cont2+1;
                       })
                 serieNenv = serieNenv.join(',');
@@ -925,6 +935,9 @@
                 anioNFs = anioNFs.join(',');
                 anioNVs = anioNVs.join(',');
                 colorNs = colorNs.join(',');
+                idTipoCompraVenta=idTipoCompraVenta.join(',');
+                nPoliza=nPoliza.join(',');
+                nLoteCompra=nLoteCompra.join(',');
                 ident_serie_bd_serie2=ident_serie_bd_serie2.join(",");
                 var ident_det="";
                 if(articulo_mov_det.html() !=''){
@@ -955,6 +968,9 @@
                     'anioNVs':anioNVs,
                     'colorNs':colorNs,
                     'ident_detalle':ident_det,
+                    'idTipoCompraVenta':idTipoCompraVenta,
+                    'nPoliza':nPoliza,
+                    'nLoteCompra':nLoteCompra,
                     'identificador_serie_bd':identificador_serie_bd,
                     'ident_serie_bd_serie2':ident_serie_bd_serie2,
                     'ident_serie_bd_serie':ident_serie_bd_serie,
@@ -1288,10 +1304,13 @@
                 html+="<th width='250px'>Artículo</th>";
                 html+="<th width='250px' height='20px'>Nr° Serie</th>";
                 html+=" <th width='250px' height='20px'>Chasis</th>";
-                html+="<th width='250px' height='20px'>Motor</th>";
+                html+="<th width='200px' height='20px'>Motor</th>";
                 html+="<th width='100px' height='20px'>Color</th>";
-                html+="<th width='150px' height='20px'>Año fabricación</th>";
+                html+="<th width='100px' height='20px'>Año fabricación</th>";
                 html+="<th width='100px' height='20px'>Año Modelo</th>";
+                html+="<th width='200px' height='20px'>Tipo Compra</th>";
+                html+="<th width='100px' height='20px'>N° Poliza</th>";
+                html+="<th width='100px' height='20px'>N° Lote</th>";
                 html+="</tr>";
                 table_serie_cabecera.append(html);
         }
@@ -1458,6 +1477,9 @@
                                 'anio_fabricacion':$("#s_aniof"+i).val(),
                                 'anio_modelo':$("#s_aniom"+i).val(),
                                 'color':$("#s_color"+i).val(),
+                                'idTipoCompraVenta':$("#s_tipoCompra"+i).val(),
+                                'nPoliza':$("#s_nroPoliza"+i).val(),
+                                'nLoteCompra':$("#s_nroLote"+i).val(),
                                 }
                                 aartMSN.push(grubSN);
                             }
@@ -1480,6 +1502,9 @@
                         'anio_fabricacion':$("#s_aniof"+i).val(),
                         'anio_modelo':$("#s_aniom"+i).val(),
                         'color':$("#s_color"+i).val(),
+                        'idTipoCompraVenta':$("#s_tipoCompra"+i).val(),
+                        'nPoliza':$("#s_nroPoliza"+i).val(),
+                        'nLoteCompra':$("#s_nroLote"+i).val(),
                         }
                         aartMSN.push(grubSN);
                         }  
@@ -1789,9 +1814,16 @@
                 html2+="<td><input type='text' id='s_color"+i+"' class='s_color form-control input-sm'/></td>";
                 html2+="<td><input type='text' id='s_aniof"+i+"' class='s_aniof form-control input-sm' onkeypress='return soloNumeros(event)' maxlength='4' /></td>";
                 html2+="<td><input type='text' id='s_aniom"+i+"' class='s_aniom form-control input-sm' onkeypress='return soloNumeros(event)' maxlength='4'/></td>";
+                html2+="<td><select id='s_tipoCompra"+i+"' class='form-control input-sm'></select></td>";
+                html2+="<td><input type='text' id='s_nroPoliza"+i+"' class='s_motor form-control input-sm'/></td>";
+                html2+="<td><input type='text' id='s_nroLote"+i+"' class='s_color form-control input-sm'/></td>";
                 html2+="</tr>";
                 articulo_serie_det.append(html2);
                 cont_table= cont_table+1;
+                $("#s_tipoCompra"+i).append('<option value="" selected>Seleccionar</option>');
+                 _.each(tipoCompra, function(item) {
+                        $("#s_tipoCompra"+i).append('<option value="'+item.idTipoCompraVenta+'">'+item.descripcion+'</option>');
+                });
              }
 
         }
@@ -1807,10 +1839,25 @@
                                 html2+="<td><input type='text' id='s_color"+contuni+"' class='s_color form-control input-sm' value='"+index.color+"'/></td>";
                                 html2+="<td><input type='text' id='s_aniof"+contuni+"' class='s_aniof form-control input-sm' value='"+index.anio_fabricacion+"' onkeypress='return soloNumeros(event)' maxlength='4' /></td>";
                                 html2+="<td><input type='text' id='s_aniom"+contuni+"' class='s_aniom form-control input-sm' value='"+index.anio_modelo+"' onkeypress='return soloNumeros(event)' maxlength='4'/></td>";
+
+                                html2+="<td><select id='s_tipoCompra"+contuni+"' class='form-control input-sm'></select></td>";
+
+
+                                html2+="<td><input type='text' id='s_nroPoliza"+contuni+"' class='s_motor form-control input-sm' value='"+index.nPoliza+"'/></td>";
+                                html2+="<td><input type='text' id='s_nroLote"+contuni+"' class='s_color form-control input-sm' value='"+index.nLoteCompra+"'/></td>";
                                 html2+="</tr>";
+
                                 articulo_serie_det.append(html2);
+                                  $("#s_tipoCompra"+contuni).append('<option value="" selected>Seleccionar</option>');
+                                 _.each(tipoCompra, function(item) {
+                                        $("#s_tipoCompra"+contuni).append('<option value="'+item.idTipoCompraVenta+'">'+item.descripcion+'</option>');
+                                });
+                                 $("#s_tipoCompra"+contuni).val(index.idTipoCompraVenta).trigger('change');
                                 cont_table= cont_table+1;
-                                contuni=contuni+1
+                                contuni=contuni+1;
+                               
+
+
                             }
             });
         }
@@ -1962,7 +2009,20 @@
             });
         }
         getDataFormMovement();
-
+        function getDataFormSerie () {
+            RESTService.all('series/data_form', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    tipoCompra=response.tipoCompra
+                    //  _.each(response.tipoCompra, function(item) {
+                    //     tipoCompra.append('<option value="'+item.idTipoCompraVenta+'">'+item.descripcion+'</option>');
+                    // });
+                    
+                }
+            }, function() {
+                getDataFormSerie();
+            });
+        }
+        getDataFormSerie();
 
         var search = getFormSearch('frm-search-Register_Movement', 'search_b', 'LoadRecordsButtonRegister_Movement');
 
@@ -2098,6 +2158,10 @@
                     edit: false,
                     list: false
                 },
+                 code_article: {
+                    title: 'Código'
+
+                },
                 description: {
                     title: 'Articulos'
 
@@ -2180,10 +2244,15 @@
                     edit: false,
                     list: false
                 },
+                code_article: {
+                    title: 'Código'
+
+                },
                 description: {
                     title: 'Articulos'
 
                 },
+
                 costo: {
                     title: 'costo'
 
@@ -2230,6 +2299,10 @@
             identiSelec="A";
             var search_cc4 = getFormSearch('frm-search-cc4', 'search_cc4', 'LoadRecordsButtonCC4');
             table_container_cc4 = $("#table_container_Series_Articulo");
+            var url='getProductoSerie';
+            if(naturalezaGeneral=="S"){
+                url='getProductoSerieStock';
+            };
             table_container_cc4.jtable({
                 title: "Lista de Series",
                 paging: true,
@@ -2238,7 +2311,7 @@
                     listAction: function (postData, jtParams) {
                     return $.Deferred(function ($dfd) {
                         $.ajax({
-                            url:  base_url + '/register_movements/getProductoSerie',
+                            url:  base_url + '/register_movements/'+url,
                             type: 'POST',
                             dataType: 'json',
                             data:{postData: postData,idProducto:idProducto},

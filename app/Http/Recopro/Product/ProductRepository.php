@@ -30,18 +30,21 @@ class ProductRepository implements ProductInterface
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id','!=',3)->where('type_id','!=',2);
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%');
         });
     }
      public function search2($s)
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description', 'LIKE', '%'.$s.'%');
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%');
         });
     }
       public function searchMinKit($s)
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id','!=',3);
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%');
         });
     }
     public function search3($s)

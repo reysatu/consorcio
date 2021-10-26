@@ -62,6 +62,17 @@ class Register_movement_ArticuloController extends Controller
             $precio = $data['precio'];
             $precio = explode(',', $precio);
 
+
+            $idTipoCompraVenta = $data['idTipoCompraVenta'];
+            $idTipoCompraVenta = explode(',', $idTipoCompraVenta);
+
+            $nPoliza = $data['nPoliza'];
+            $nPoliza = explode(',', $nPoliza);
+
+            $nLoteCompra = $data['nLoteCompra'];
+            $nLoteCompra = explode(',', $nLoteCompra);
+
+
             $precio_total = $data['precio_total'];
             $precio_total = explode(',', $precio_total);
            
@@ -257,6 +268,9 @@ class Register_movement_ArticuloController extends Controller
                                                 'anio_fabricacion' => $anioNFs[$k],
                                                 'anio_modelo' => $anioNVs[$k],
                                                 'color' => strtoupper($colorNs[$k]),
+                                                'idTipoCompraVenta' => strtoupper($idTipoCompraVenta[$k]),
+                                                'nPoliza' => strtoupper($nPoliza[$k]),
+                                                'nLoteCompra' => strtoupper($nLoteCompra[$k]),
                                                  ]);
                                                 $conseSn=$varinfo->consecutivo;
                                                 $redm->create([

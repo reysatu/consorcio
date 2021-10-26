@@ -131,6 +131,10 @@ use App\Http\Recopro\Naturaleza\Naturaleza;
 use App\Http\Recopro\Naturaleza\NaturalezaInterface;
 use App\Http\Recopro\Naturaleza\NaturalezaRepository;
 
+use App\Http\Recopro\Stock_Serie\Stock_Serie;
+use App\Http\Recopro\Stock_Serie\Stock_SerieInterface;
+use App\Http\Recopro\Stock_Serie\Stock_SerieRepository;
+
 use App\Http\Recopro\Articulo_Kit\Articulo_Kit;
 use App\Http\Recopro\Articulo_Kit\Articulo_KitInterface;
 use App\Http\Recopro\Articulo_Kit\Articulo_KitRepository;
@@ -414,6 +418,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerRegister_transfer();
         $this->registerGeneration_remision();
         $this->registerNaturaleza();
+        $this->registerStock_Serie();
         $this->registerArticulo_Kit();
         $this->registerRegister_movement_Articulo();
         $this->registerRegister_movement_Detalle();
@@ -1066,6 +1071,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(NaturalezaInterface::class, function ($app) {
             return new NaturalezaRepository(new Naturaleza());
+        });
+    }
+    public function registerStock_Serie()
+    {
+        $app = $this->app;
+
+        $app->bind(Stock_SerieInterface::class, function ($app) {
+            return new Stock_SerieRepository(new Stock_Serie());
         });
     }
     public function registerArticulo_Kit()

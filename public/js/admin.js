@@ -809,18 +809,19 @@ function create_pdf_transfer(response) {
    var docDefinition = {
             pageOrientation: 'landscape',
             content: [
-                       {
+            {
             table: {
                 body: [
-                    [{style: 'tableHeader',image: response.img,rowSpan: 6, colSpan: 2, alignment: 'center',width:100,height:50},{},{ text:'Transferencia N° [ ]',alignment: 'center', colSpan: 9},{}, {}, {},{}, {}, {},{}, {}],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2'],
-                ]
-            }
-        },
+                    // [{style: 'tableHeader',image: response.img,rowSpan: 6, colSpan: 2, alignment: 'center',width:100,height:50},{},{ text:'Transferencia N° [ ]',alignment: 'center', colSpan: 9},{}, {}, {},{}, {}, {},{}, {}],
+                    [{style: 'tableHeader',image: response.img,rowSpan: 3, colSpan: 2, alignment: 'center',width:100,height:50}, {}, {text:'Movimiento de Transferencia',alignment: 'center', colSpan: 11},{}, {}, {},{}, {}, {},{}, {},{}, {}],
+                    [{}, {}, {text:'N° Transferencia [1]',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {},'Column 1', 'Column 2'],
+                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
+                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
+                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
+                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
+                    ]
+                }
+            },
                     ]
                 };
 
