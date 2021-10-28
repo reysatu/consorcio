@@ -23,12 +23,79 @@ class Query_movementsRepository implements Query_movementsInterface
     {
         return $this->model->get();
     }
-     public function search($s)
+      public function allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin)
     {
-        return $this->model->where(function($q) use ($s){
+           $dato=$this->model;
+            if(!empty($fecha_inicio) and !empty($fecha_fin) ){
+                $dato=$dato->whereDate('fecha_registro','>=',$fecha_inicio);
+                $dato=$dato->whereDate('fecha_registro','<=',$fecha_fin);
+            }
+            if(!empty($filtro_art)){
+            $dato=$dato->Where('Articulo',$filtro_art);
+            }
+            if(!empty($filtro_idAlm)){
+             $dato=$dato->Where('Almacen',$filtro_idAlm);
+            }
+            if(!empty($filtro_idLoc)){
+             $dato=$dato->Where('Localizacion',$filtro_idLoc);
+            }
+            if(!empty($filtro_cate)){
+             $dato=$dato->Where('Categoria',$filtro_cate);
+            }
+            if(!empty($filtro_nat)){
+              $dato=$dato->Where('Naturaleza',$filtro_nat);
+            }
+            if(!empty($filtro_oper)){
+              $dato=$dato->Where('Tipo_Operacion',$filtro_oper);
+            }
+            if(!empty($n_movimiento)){
+              $dato=$dato->Where('idOrigen',$n_movimiento);
+            }
+            if(!empty($cod_lote)){
+              $dato=$dato->Where('Lote',$cod_lote);
+            }
+             if(!empty($cod_serie)){
+              $dato=$dato->Where('Serie',$cod_serie);
+            }
+
+           return $dato->get();
+    }
+     public function search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin)
+    {
+        return $this->model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin){
             $q->where('Articulo', 'LIKE', '%'.$s.'%')->orderByRaw('fecha_registro DESC');
-            $q->orWhere('Almacen', 'LIKE', '%'.$s.'%');
-            $q->orWhere('Categoria', 'LIKE', '%'.$s.'%');
+            if(!empty($fecha_inicio) and !empty($fecha_fin) ){
+                $q->whereDate('fecha_registro','>=',$fecha_inicio);
+                $q->whereDate('fecha_registro','<=',$fecha_fin);
+            }
+            if(!empty($filtro_art)){
+             $q->Where('Articulo',$filtro_art);
+            }
+            if(!empty($filtro_idAlm)){
+             $q->Where('Almacen',$filtro_idAlm);
+            }
+            if(!empty($filtro_idLoc)){
+             $q->Where('Localizacion',$filtro_idLoc);
+            }
+            if(!empty($filtro_cate)){
+             $q->Where('Categoria',$filtro_cate);
+            }
+            if(!empty($filtro_nat)){
+             $q->Where('Naturaleza',$filtro_nat);
+            }
+            if(!empty($filtro_oper)){
+             $q->Where('Tipo_Operacion',$filtro_oper);
+            }
+            if(!empty($n_movimiento)){
+             $q->Where('idOrigen',$n_movimiento);
+            }
+            if(!empty($cod_lote)){
+             $q->Where('Lote',$cod_lote);
+            }
+             if(!empty($cod_serie)){
+             $q->Where('Serie',$cod_serie);
+            }
+           
         });
 
     }
@@ -66,6 +133,30 @@ class Query_movementsRepository implements Query_movementsInterface
         $model->update($attributes);
         $model->delete();
      
+    }
+    public function get_almacen(){
+          $mostrar2=DB::select("select * from ERP_Almacen");
+          return $mostrar2;
+    }
+    public function get_localizacion(){
+          $mostrar2=DB::select("select * from ERP_Localizacion");
+          return $mostrar2;
+    }
+     public function get_categoria(){
+          $mostrar2=DB::select("select * from ERP_Categoria");
+          return $mostrar2;
+    }
+     public function get_articulo(){
+          $mostrar2=DB::select("select * from ERP_Productos");
+          return $mostrar2;
+    }
+    public function get_tipoOperacion(){
+          $mostrar2=DB::select("select * from ERP_TipoOperacion");
+          return $mostrar2;
+    }
+    public function get_naturaleza(){
+          $mostrar2=DB::select("select * from ERP_Naturaleza_Operacion");
+          return $mostrar2;
     }
 
 }

@@ -9,9 +9,9 @@
         .controller('Query_StockCtrl', Query_StockCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    Query_StockCtrl.$inject = ['$scope'];
+    Query_StockCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify'];
 
-    function Query_StockCtrl($scope)
+    function Query_StockCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
         
          $scope.chkState = function () {
@@ -19,9 +19,16 @@
             state_state.html(txt_state2);
         };
         
-        var search = getFormSearch('frm-search-Query_Stock', 'search_b', 'LoadRecordsButtonQuery_Stock');
+        var search = getFormSearch2('frm-search-Query_Stock', 'search_b', 'LoadRecordsButtonQuery_Stock');
 
         var table_container_Query_Stock = $("#table_container_Query_Stock");
+        var filtro_idAlm= '<select id="filtro_idAlm" class="form-control input-sm""><option value="">Almacen</option></select>';
+        var filtro_idLoc = '<select id="filtro_idLoc" class="form-control input-sm""><option value="">Localizacion</option></select>';
+        var filtro_cate = '<select id="filtro_cate" class="form-control input-sm""><option value="">Categoría</option></select>';
+        var filtro_art = '<select id="filtro_art" class="form-control input-sm""><option value="">Árticulo</option></select>';
+        
+        // var data_stock={Almacen: "Piso N° 1",Articulo: "MOTOCAR NL 150",Categoria: "TRIMOVIL",Costo_Promedio_Unitario: "6400.00",Costo_Total: "6400.00",Disponible: "1.0000",Localizacion: "E-F1-C1",Lote: "",Remitido: ".0000",Serie: "8WAKRFS51ML048094",Total: "1.0000",Transito: ".0000",Unidad: "UND",id: "6524" };
+        var btn_exportar_QS=$("#btn_exportar_QS");
 
         table_container_Query_Stock.jtable({
             title: "Lista de Articulos con Stock",
@@ -38,15 +45,10 @@
                 editRecord: 'Editar Categoría',
             },
             toolbar: {
-                items: [{
+                items: [
+                {
                     cssClass: 'buscador',
                     text: search
-                },{
-                    cssClass: 'btn-primary',
-                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
-                    click: function () {
-                        $scope.openDoc('query_stocks/excel', {});
-                    }
                 }]
             },
             fields: {
@@ -141,9 +143,73 @@
 
         generateSearchForm('frm-search-Query_Stock', 'LoadRecordsButtonQuery_Stock', function(){
             table_container_Query_Stock.jtable('load', {
-                search: $('#search_b').val()
+                search: '',
+                filtro_art: $('#filtro_art').val(),
+                filtro_idAlm: $('#filtro_idAlm').val(),
+                filtro_idLoc: $('#filtro_idLoc').val(),
+                filtro_cate: $('#filtro_cate').val(),
+
             });
         }, true);
+
+        getDataFiltro();
+
+        function getDataFiltro() {
+            filtro_idAlm = $('#filtro_idAlm');
+            filtro_idLoc = $('#filtro_idLoc');
+            filtro_cate=$('#filtro_cate');
+            filtro_art=$('#filtro_art');
+            
+            // filtro_idAlm.empty().change(function () {
+            //     $('#LoadRecordsButtonQuery_Stock').click();
+            // });
+            RESTService.all('query_stocks/getDataFiltro', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    // matrix = response.levels;
+                    // matrix_apu = response.apu;
+                    filtro_idAlm.append('<option value="">Almacén</option>');
+                    _.each(response.d_Almacen, function (item) {
+                        filtro_idAlm.append('<option value="'+item.description+'">' + item.description + '</option>');
+                    });
+                    filtro_idLoc.append('<option value="">Localización</option>');
+                    _.each(response.d_localizacion, function (item) {
+                        filtro_idLoc.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                    filtro_cate.append('<option value="">Categoría</option>');
+                    _.each(response.d_categoria, function (item) {
+                        filtro_cate.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                    filtro_art.append('<option value="">Artículo</option>');
+                    _.each(response.d_articulo, function (item) {
+                        filtro_art.append('<option value="' + item.description + '">' + item.description + '</option>');
+                    });
+                    // data_stock=response.data_complete;
+                    // console.log(data_stock);
+                    // project_unities = response.unity;
+                    // generateSearchProject();
+                } else {
+                    getDataFiltro();
+                }
+            }, function () {
+                getDataFiltro();
+            });
+        }
+         $("#btn_exportar_QS").click(function(e){
+            var data_excel = {
+                            filtro_idAlm: $('#filtro_idAlm').val(),
+                            filtro_idLoc: $('#filtro_idLoc').val(),
+                            filtro_cate: $('#filtro_cate').val(),
+                            filtro_art: $('#filtro_art').val(),
+                            search: '',
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+              $scope.openDoc('query_stocks/excel',data_excel);
+        });
+        $(".jtable-title-text").removeClass('col-md-4');
+        $(".jtable-title-text").addClass('col-md-3');
+
+        $(".jtable-toolbar").removeClass('col-md-8');
+        $(".jtable-toolbar").addClass('col-md-9');
     }
 
     function Config($stateProvider, $urlRouterProvider) {

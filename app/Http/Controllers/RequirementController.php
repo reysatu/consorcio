@@ -276,7 +276,7 @@ class RequirementController extends Controller
     }
 
     public function excel(RequirementInterface $repo, Request $request)
-    {
+    { 
         $filter = $request->all();
         $data = $repo->search($filter)->get();
         return generateExcel($this->generateDataExcel($data), 'LISTA DE REQUERIMIENTOS', 'Requerimientos');

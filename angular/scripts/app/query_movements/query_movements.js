@@ -9,9 +9,9 @@
         .controller('Query_MovementCtrl', Query_MovementCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    Query_MovementCtrl.$inject = ['$scope'];
+    Query_MovementCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify'];
 
-    function Query_MovementCtrl($scope)
+    function Query_MovementCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
         
         
@@ -29,11 +29,18 @@
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_state.html(txt_state2);
         };
+        var filtro_idAlm= '<select id="filtro_idAlm" class="form-control input-sm""><option value="">Almacen</option></select>';
+        var filtro_idLoc = '<select id="filtro_idLoc" class="form-control input-sm""><option value="">Localizacion</option></select>';
+        var filtro_cate = '<select id="filtro_cate" class="form-control input-sm""><option value="">Categoría</option></select>';
+        var filtro_art = '<select id="filtro_art" class="form-control input-sm""><option value="">Árticulo</option></select>';
+        var filtro_nat = '<select id="filtro_nat" class="form-control input-sm""><option value="">Naturaleza</option></select>';
+        var filtro_oper = '<select id="filtro_oper" class="form-control input-sm""><option value="">Tipo Operación</option></select>';
         
-        var search = getFormSearch('frm-search-Query_Movement', 'search_b', 'LoadRecordsButtonQuery_Movement');
+        var search = getFormSearch3('frm-search-Query_Movement', 'search_b', 'LoadRecordsButtonQuery_Movement');
 
         var table_container_Query_Movement = $("#table_container_Query_Movement");
-
+        var states = '<select id="project_states" class="search_input"></select>';
+        
         table_container_Query_Movement.jtable({
            title: "Lista de Movimientos por Articulo",
             paging: true,
@@ -52,14 +59,8 @@
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
-                    cssClass: 'btn-primary',
-                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
-                    click: function () {
-                        $scope.openDoc('query_movements/excel', {});
-                    }
                 }]
-            },
+            }, 
             fields: {
                 idTransaccion: {
                     key: true,
@@ -179,12 +180,97 @@
                 return bval;
             }
         });
+        
+        getDataFiltro();
+        function getDataFiltro() {
+            filtro_idAlm = $('#filtro_idAlm');
+            filtro_idLoc = $('#filtro_idLoc');
+            filtro_nat=$('#filtro_nat');
+            filtro_oper=$('#filtro_oper');
+            filtro_cate=$('#filtro_cate');
+            filtro_art=$('#filtro_art');
+            var hoy = new Date();
+            var actu=hoy.getFullYear()+"-"+ (hoy.getMonth()+1)+ "-" +hoy.getDate() ;
+            $("#fecha_inicio").val(actu);
+            $("#fecha_fin").val(actu);
+             // Notify.warning('Debe ingresar el cliente que realizará el pago');
+            RESTService.all('query_movements/getDataFiltro', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                  
+                    filtro_idAlm.append('<option value="">Almacén</option>');
+                    _.each(response.d_Almacen, function (item) {
+                        filtro_idAlm.append('<option value="'+item.description+'">' + item.description + '</option>');
+                    });
+                    filtro_idLoc.append('<option value="">Localización</option>');
+                    _.each(response.d_localizacion, function (item) {
+                        filtro_idLoc.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                    filtro_cate.append('<option value="">Categoría</option>');
+                    _.each(response.d_categoria, function (item) {
+                        filtro_cate.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                    filtro_art.append('<option value="">Artículo</option>');
+                    _.each(response.d_articulo, function (item) {
+                        filtro_art.append('<option value="' + item.description + '">' + item.description + '</option>');
+                    });
+                    filtro_nat.append('<option value="">Naturaleza</option>');
+                    _.each(response.d_naturaleza, function (item) {
+                        filtro_nat.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                    filtro_oper.append('<option value="">Operación</option>');
+                    _.each(response.d_tipoOperacion, function (item) {
+                        filtro_oper.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    });
+                  
+                } else {
+                    getDataFiltro();
+                }
+            }, function () {
+                getDataFiltro();
+            });
+        }
 
+        $("#btn_exportar_QM").click(function(e){
+            var data_excel = {
+                            filtro_idAlm:$('#filtro_idAlm').val(),
+                            filtro_idLoc:$('#filtro_idLoc').val(),
+                            filtro_nat:$('#filtro_nat').val(),
+                            filtro_oper:$('#filtro_oper').val(),
+                            filtro_cate:$('#filtro_cate').val(),
+                            filtro_art:$('#filtro_art').val(),
+                            n_movimiento:$('#n_movimiento').val(),
+                            cod_lote:$('#cod_lote').val(),
+                            cod_serie:$('#cod_serie').val(),
+                            fecha_inicio:$('#fecha_inicio').val(),
+                            fecha_fin:$('#fecha_fin').val(),
+                            search: '',
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.openDoc('query_movements/excel',data_excel);
+        });
         generateSearchForm('frm-search-Query_Movement', 'LoadRecordsButtonQuery_Movement', function(){
             table_container_Query_Movement.jtable('load', {
-                search: $('#search_b').val()
+                search: $('#search_b').val(),
+                filtro_idAlm:$('#filtro_idAlm').val(),
+                filtro_idLoc:$('#filtro_idLoc').val(),
+                filtro_nat:$('#filtro_nat').val(),
+                filtro_oper:$('#filtro_oper').val(),
+                filtro_cate:$('#filtro_cate').val(),
+                filtro_art:$('#filtro_art').val(),
+                n_movimiento:$('#n_movimiento').val(),
+                cod_lote:$('#cod_lote').val(),
+                cod_serie:$('#cod_serie').val(),
+                fecha_inicio:$('#fecha_inicio').val(),
+                fecha_fin:$('#fecha_fin').val(),
             });
         }, true);
+
+        $(".jtable-title-text").removeClass('col-md-4');
+        $(".jtable-title-text").addClass('col-md-3');
+
+        $(".jtable-toolbar").removeClass('col-md-8');
+        $(".jtable-toolbar").addClass('col-md-9');
+
     }
 
     function Config($stateProvider, $urlRouterProvider) {

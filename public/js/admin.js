@@ -356,6 +356,58 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearch2(form_id, input_id, btn_id) {
+    return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="form-group"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
+        '<div class="input-group input-group-sm">' +
+        '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+        '<span class="input-group-btn">' +
+        '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+        '<i class="fa fa-search"></i>' +
+        '</button>' +
+        '</span>' +
+        '<span class="input-group-btn">' +
+        '<button  type="button"  id="btn_exportar_QS" class="btn-primary  btn-sm">' +
+        '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+        '</button>' +
+        '</span>' +
+        '</div>' +
+        '</form>';
+}
+function getFormSearch3(form_id, input_id, btn_id) {
+    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="form-group">'+
+            '<div class="col-md-3"><input onfocus=(this.type="date") onblur=(this.type="text") type="text" class="form-control input-sm" id="fecha_inicio" placeholder="Fecha Inicio"></div>'+
+            '<div class="col-md-3"><input type="text" class="form-control input-sm" onfocus=(this.type="date") onblur=(this.type="text") id="fecha_fin" placeholder="Fecha Fin"></div>'+
+            '<div class="col-md-2"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-2"><select id="filtro_oper"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-2"><select id="filtro_nat"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
+           
+        '</div>'+
+        '<div class="form-group">'+
+            '<div class="col-md-2"><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><input type="text" class="form-control input-sm" id="n_movimiento" placeholder="N° Movimiento" width="100px"></div>'+
+            '<div class="col-md-2"><input type="text" class="form-control input-sm" id="cod_lote" placeholder="Cod Lote" width="100px"></div>'+
+            '<div class="col-md-2"><input type="text" class="form-control input-sm" id="cod_serie" placeholder="Cod Serie" width="100px"></div>'+
+        '</div>'+
+        '<div class="input-group input-group-sm">' +
+        '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+        '<span class="input-group-btn">' +
+        '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+        '<i class="fa fa-search"></i>' +
+        '</button>' +
+        '<button  type="button"  id="btn_exportar_QM" class="btn-primary  btn-sm">' +
+        '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+        '</button>' +
+        '</span>' +
+        // '<span class="input-group-btn">' +
+       
+        // '</span>' +
+        '</div>' +
+        '</form>';
+}
 
 function generateSearchForm(form_id, btn_id, callback, is_click) {
     var btn = $('#' + btn_id);
@@ -812,9 +864,10 @@ function create_pdf_transfer(response) {
             {
             table: {
                 body: [
-                    // [{style: 'tableHeader',image: response.img,rowSpan: 6, colSpan: 2, alignment: 'center',width:100,height:50},{},{ text:'Transferencia N° [ ]',alignment: 'center', colSpan: 9},{}, {}, {},{}, {}, {},{}, {}],
+                    // [{},{},{},{}, {}, {},{}, {}, {},{}, {},{},{}],
                     [{style: 'tableHeader',image: response.img,rowSpan: 3, colSpan: 2, alignment: 'center',width:100,height:50}, {}, {text:'Movimiento de Transferencia',alignment: 'center', colSpan: 11},{}, {}, {},{}, {}, {},{}, {},{}, {}],
-                    [{}, {}, {text:'N° Transferencia [1]',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {},'Column 1', 'Column 2'],
+                    [{},{},{},{}, {}, {},{}, {}, {},{}, {},{},{}],
+                    [{}, {}, {text:'N° Transferencia [1]',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {},'', ''],
                     [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
                     ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
                     ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],

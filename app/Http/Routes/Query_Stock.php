@@ -11,3 +11,4 @@ Route::post('query_stocks/create', ['as' => 'query_stocks.create', 'uses' => 'Qu
 Route::post('query_stocks/delete', ['as' => 'query_stocks.delete', 'uses' => 'Query_stockController@destroy']);
 Route::post('query_stocks/update', ['as' => 'query_stocks.update', 'uses' => 'Query_stockController@update']);
 Route::get('query_stocks/excel', ['as' => 'query_stocks.excel', 'uses' => 'Query_stockController@excel']);
+Route::get('query_stocks/getDataFiltro', 'Query_stockController@getDataFiltro');
