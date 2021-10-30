@@ -314,6 +314,36 @@ class Register_movementController extends Controller
     //         ]);
     //     }
     // }
+     public function pdf(Request $request, Register_movementInterface $repo)
+    {
+            $id = $request->input('id');
+            $operacion = $repo->get_movimiento($id);
+            $data = $repo->find($id);
+            $data_movimiento_Articulo=$repo->get_movement_articulo_print($id);
+            $data_movimiento_lote=$repo->get_movemen_lote($id);
+            $data_movimiento_serie=$repo->get_movemen_Serie($id);
+            if($data['fecha_proceso']){
+                $data['fecha_proceso']=date("d/m/Y", strtotime($data['fecha_proceso']));
+            }else{
+               $data['fecha_proceso']=''; 
+            };
+            $data['fecha_impresion']=date("d/m/Y");
+            $img='logo.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'operacion'=>$operacion,
+                'movimiento_Ar'=>$data_movimiento_Articulo,
+                'data_movimiento_lote'=>$data_movimiento_lote,
+                'data_movimiento_serie'=>$data_movimiento_serie,
+                'estado'=>$id,
+                'img'=>$image,
+            ]);
+    }
 
     public function find($id, Register_movementInterface $repo)
     {

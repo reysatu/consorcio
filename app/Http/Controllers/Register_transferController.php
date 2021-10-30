@@ -333,10 +333,15 @@ class Register_transferController extends Controller
     {
             $id = $request->input('id');
             $data = $repo->find($id);
-            $data_movimiento_Articulo =$repo->get_movement_articulo($id);
+            $data_movimiento_Articulo =$repo->get_movement_articulo_print($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
             $data_movimiento_serie=$repo->get_movemen_Serie($id);
-            $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
+            if($data['fecha_proceso']){
+                $data['fecha_proceso']=date("d/m/Y", strtotime($data['fecha_proceso']));
+            }else{
+               $data['fecha_proceso']=''; 
+            };
+            $data['fecha_impresion']=date("d/m/Y");
             $img='logo.jpg';
             $path = public_path('img/' . $img);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
@@ -348,7 +353,7 @@ class Register_transferController extends Controller
                 'movimiento_Ar'=>$data_movimiento_Articulo,
                 'data_movimiento_lote'=>$data_movimiento_lote,
                 'data_movimiento_serie'=>$data_movimiento_serie,
-                'estado'=>$data,
+                'estado'=>$id,
                 'img'=>$image,
             ]);
     }
@@ -534,10 +539,13 @@ class Register_transferController extends Controller
                             };
                             $valoSrie=$idSerieSe[$se];
                             $valotLote=0;
-                            $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
-                            if($valida[0]->Mensaje!="OK"){
+                            if($identificador_serie_bd[$i]==$ident_serie_bd_serie[$se]){
+                               $valida=$repo->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
+                                if($valida[0]->Mensaje!="OK"){
                                 break;
+                                } 
                             }
+                            
                         }
                     }else if($tipoLo[0]->lote=="1"){
                         for ($lo=0; $lo < count($idLote) ; $lo++) {
@@ -559,7 +567,7 @@ class Register_transferController extends Controller
                 if($valida2!="OK"){
                      $descripcionArticuloGet=$repo->traerDescripcionArticulo($idArticulo[$i]);
                      $descripcion=$descripcionArticuloGet[0]->description;
-                     throw new \Exception($valida2."  ".$descripcion);
+                     throw new \Exception($valida2);
                 }
             }
             $contv=-1;

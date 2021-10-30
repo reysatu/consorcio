@@ -126,13 +126,30 @@
         var btn_movimiento_detalle=$("#btn_movimiento_detalle");
         var modalProcesarTransferencia=$("#modalProcesarTransferencia");
         var msg_cont_ProcesarTransferencia=$("#msg_cont_ProcesarTransferencia");
+         var btn_imprimirMovimiento=$("#btn_imprimirMovimiento");
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
         }).on('ifChanged', function (event) {
             $(event.target).click();
             $scope.chkState();
         });
-
+         btn_imprimirMovimiento.click(function(e){
+            // var data = {
+            //                     referral_guide_id:1,
+                               
+            // };
+            // // window.open(base_url + '/templates/register_transfers/reporte.html', 'name'); 
+            // localStorage.setItem('Nombre', 'Miguel Antonio')
+            //  $scope.loadTransferPDF('referral_guides/referralGuidePDF', data);
+            var id= idMovimiento.val();
+            if(id!=''){
+                 var data = {
+                                id: id,
+                                
+                };
+              $scope.loadMovimientoPDF('register_movements/pdf', data);
+            }
+        });
 
         modalMovimietoArticulo.on('hidden.bs.modal', function (e) {
             cleanMovimientoArticulo();

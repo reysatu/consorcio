@@ -146,10 +146,12 @@ class Register_movement_ArticuloController extends Controller
                             };
                             $valoSrie=$idSerieSe[$se];
                             $valotLote=0;
-                            $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
-                            if($valida[0]->Mensaje!="OK"){
-                                break;
-                            }
+                            if($identificador_serie_bd[$i]==$ident_serie_bd_serie[$se]){
+                                $valida=$vali->validarStock($idAl,$idLoca,$idAr,$valotLote,$valoSrie,$contaCant);
+                                if($valida[0]->Mensaje!="OK"){
+                                    break;
+                                }
+                             }
                         }
                     }else if($tipoLo[0]->lote=="1"){
                        for ($lo=0; $lo < count($idLote) ; $lo++) {
@@ -172,7 +174,7 @@ class Register_movement_ArticuloController extends Controller
                    if($valida2!="OK"){
                      $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
                      $descripcion=$descripcionArticuloGet[0]->description;
-                     throw new \Exception($valida2."  ".$descripcion);
+                     throw new \Exception($valida2);
                      } 
                   }
                 }

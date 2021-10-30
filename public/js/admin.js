@@ -854,27 +854,100 @@ function create_vouchers_pdf(response) {
 
 }
 function create_pdf_transfer(response) {
+    var data_p = response.data;
+    var mov_ar=response.movimiento_Ar;
+    var mov_det=response.data_movimiento_serie;
+    console.log(mov_ar);
     var data = [];
     var array_head = [];
     var array_dataBody = [];
     var array_dataHead = [];
+    var ident='I';
+    var column1  = [];
+    var column2  = [];
+    var column3  = [];
+    var column4  = [];
+    var column5  = [];
+    var column6= [];
+    var header=[];
+   column1.push({image: response.img,rowSpan: 3, colSpan: 8, alignment: 'center',width:120,height:50}, {}, {}, {},{}, {}, {},{}, {text:'Movimiento de Transferencia',alignment: 'center', bold: true,colSpan: 39,height:80},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{},{}, {},{},{}); 
+   column2.push({}, {}, {}, {},{}, {}, {},{}, {text:' \n N° Transferencia:',bold: true,alignment: 'center',fontSize: 10,border: [false, false, false, true],rowSpan: 2, colSpan: 7,height:200},{}, {},{}, {}, {},{}, {text:' \n'+data_p.idTransferencia,border: [false, false, true, true],fontSize: 10,rowSpan: 2, colSpan: 3,height:200}, {},{}, {text:'\n Fecha Transacción: ',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', rowSpan: 2,colSpan: 10,height:80}, {},{}, {},{}, {},{}, {}, {},{},{text:'\n'+data_p.fecha_proceso,fontSize: 10,border: [false, false, true, true], rowSpan: 2,colSpan: 5,height:80}, {}, {},{},{}, {text:'\n Fecha Impresión:',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', colSpan: 9,rowSpan: 2,height:80}, {},{}, {},{},{}, {},{}, {},{text:'\n'+data_p.fecha_impresion,fontSize: 10,border: [false, false, true, true], colSpan: 5,rowSpan: 2,height:80},{}, {},{},{}); 
+   column3.push({}, {}, {}, {},{}, {}, {},{}, ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+   column4.push({text:' ', border: [true, false, true, true], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+   column5.push({text:'Item',bold: true, colSpan: 2, fontSize: 10,height:100}, {}, {text:'Artículo',alignment: 'center',bold: true, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:'Alm. Origen',bold: true, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {},{text:'Loc. Origen',bold: true, colSpan: 5, fontSize: 10,height:100}, {}, {},{}, {}, {text:'Alm. Destino',bold: true, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:'Loc. Destino',bold: true, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:'Lote',bold: true, colSpan: 4, fontSize: 10,height:100},{},{},{}, {text:'Unidad',bold: true,colSpan: 2, fontSize: 10,height:100},{},{text:'Cantidad', bold: true,colSpan: 3,fontSize: 10,height:100},{},{}); 
+    header.push(column1);
+    header.push(column2);
+    header.push(column3);
+    header.push(column4);
+    header.push(column5);
+    var cont=0;
+    mov_ar.map(function(index) {
+        var cantidad=Math.trunc(index.cantidad);
+        var colunmx=[]
+         cont=cont+1;   
+         colunmx.push({text:cont, colSpan: 2, fontSize: 10,height:100}, {}, {text:index.producto, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:index.almacenOrigen, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {},{text:index.localizacionOrigen, colSpan: 5, fontSize: 10,height:100}, {}, {},{}, {}, {text:index.almacenDestino, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:index.localizacionDestino, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:index.lote, colSpan: 4, fontSize: 10,height:100},{},{},{}, {text:index.unidad,colSpan: 2, fontSize: 10,height:100},{},{text:cantidad, colSpan: 3,fontSize: 10,height:100},{},{});
+         header.push(colunmx);
+         var idenDet='I';
+         mov_det.map(function(index2) {
+            console.log("entro");
+            console.log(index.consecutivo);
+            if(index.consecutivo==index2.identificador){
+                var columnz=[];
+                if(idenDet=='I'){
+                    var columny=[];
+                    columny.push({text:'', colSpan: 2, fontSize: 10,height:100},{}, {text:'Serie', colSpan: 6, fontSize: 10,height:100,bold: true},{}, {}, {},{},{}, {text:'Motor', colSpan: 5, fontSize: 10,height:100,bold: true},{}, {},{}, {}, {text:'Color',bold: true, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {}, {text:'Año de Fabricación', bold: true,colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {},{text:'Año Modelo',bold: true, colSpan: 5, fontSize: 10,height:100}, {}, {},{}, {}, {text:'', colSpan: 18, fontSize: 10,height:100,border: [false, false, false, false]},{}, {},{}, {},{},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 10,height:100,border: [false, false, true, true]}); 
+                    header.push(columny);
+                    idenDet='A';
+                };
+                columnz.push({text:'', colSpan: 2, fontSize: 10,height:100},{}, {text:index2.nombreSerie, colSpan: 6, fontSize: 10,height:100},{}, {}, {},{},{}, {text:index2.motor, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {}, {text:index2.color, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {}, {text:index2.anio_fabricacion, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {},{text:index2.anio_modelo, colSpan: 5, fontSize: 10,height:100}, {}, {},{}, {}, {text:'', colSpan: 18, fontSize: 10,height:100,border: [false, true, false, true]},{}, {},{}, {},{},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 10,height:100,border: [false, false, true, true]}); 
+                header.push(columnz);
+
+            }
+
+        });
+
+
+    });
+    for (var i = 0; i < 8; i++) {
+        var colum_espacio_blanco=[];
+        colum_espacio_blanco.push({text:' ', border: [false, false, false, false], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+        header.push(colum_espacio_blanco);
+    }
+    var columnfooter=[];
+     columnfooter.push({text:'',  border: [false, false, false, false], colSpan: 2, fontSize: 10,height:100},{}, {text:'ALMACÉN', border: [false, true, false, false], alignment: 'center',colSpan: 6, fontSize: 10,height:100,bold: true},{}, {}, {},{},{}, {text:'', alignment: 'center',colSpan: 30,border: [false, false, false, false], fontSize: 10,height:100,bold: true},{}, {},{}, {}, {}, {},{}, {}, {}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{text:'RECIBÍ CONFORME', border: [false, true, false, false], colSpan: 6, fontSize: 10,height:100},{},{},{}, {},{},{text:'', border: [false, false, false, false], colSpan: 3,fontSize: 10,height:100,bold: true},{},{}); 
+     header.push(columnfooter);
+     // var lote='';
+     //    var unidad='UND';
+     //    if(index.lote!=''){
+     //        lote=index.lote;
+     //        unidad='';
+     //    }
+
+    // mov_ar.map(function(index) {
+    //     array_dataHead.push([
+    //             {
+    //                table: {
+    //                      body: [
+    //                         [ {image: response.img,rowSpan: 3, colSpan: 8, alignment: 'center',width:120,height:50}, {}, {}, {},{}, {}, {},{}, {text:'Movimiento de Transferencia',alignment: 'center', bold: true,colSpan: 39,height:80},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{},{}, {},{},{}],
+    //                         [ {}, {}, {}, {},{}, {}, {},{}, {text:' \n N° Transferencia:',bold: true,alignment: 'center',fontSize: 10,border: [false, false, false, true],rowSpan: 2, colSpan: 7,height:200},{}, {},{}, {}, {},{}, {text:' \n'+data_p.idTransferencia,border: [false, false, true, true],fontSize: 10,rowSpan: 2, colSpan: 3,height:200}, {},{}, {text:'\n Fecha Transacción: ',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', rowSpan: 2,colSpan: 10,height:80}, {},{}, {},{}, {},{}, {}, {},{},{text:'\n'+data_p.fecha_registro,fontSize: 10,border: [false, false, true, true], rowSpan: 2,colSpan: 5,height:80}, {}, {},{},{}, {text:'\n Fecha Impresión:',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', colSpan: 9,rowSpan: 2,height:80}, {},{}, {},{},{}, {},{}, {},{text:'\n'+data_p.fecha_impresion,fontSize: 10,border: [false, false, true, true], colSpan: 5,rowSpan: 2,height:80},{}, {},{},{}],
+    //                         [ {}, {}, {}, {},{}, {}, {},{}, ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'],
+    //                         [ {text:' ', border: [true, false, true, true], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'],
+    //                         [{text:'Item',bold: true, colSpan: 2, fontSize: 10,height:100}, {}, {text:'Artículo',alignment: 'center',bold: true, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:'Alm. Origen',bold: true, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {},{text:'Loc. Origen',bold: true, colSpan: 5, fontSize: 10,height:100}, {}, {},{}, {}, {text:'Alm. Destino',bold: true, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:'Loc. Destino',bold: true, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {},{text:'Lote',bold: true, colSpan: 4, fontSize: 10,height:100},{},{},{}, {text:'Unidad',bold: true,colSpan: 2, fontSize: 10,height:100},{},{text:'Cantidad', bold: true,colSpan: 3,fontSize: 10,height:100},{},{}],
+    //                      ]
+    //                }  
+    //             }
+
+    //         ]);
+    // });
+
    var docDefinition = {
             pageOrientation: 'landscape',
-            content: [
-            {
-            table: {
-                body: [
-                    // [{},{},{},{}, {}, {},{}, {}, {},{}, {},{},{}],
-                    [{style: 'tableHeader',image: response.img,rowSpan: 3, colSpan: 2, alignment: 'center',width:100,height:50}, {}, {text:'Movimiento de Transferencia',alignment: 'center', colSpan: 11},{}, {}, {},{}, {}, {},{}, {},{}, {}],
-                    [{},{},{},{}, {}, {},{}, {}, {},{}, {},{},{}],
-                    [{}, {}, {text:'N° Transferencia [1]',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {}, {text:'Fecha Transacción',alignment: 'center', colSpan: 3,height:50},{}, {},'', ''],
-                    [{}, {}, 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
-                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
-                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
-                    ['Column 3', 'Column 3', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2', 'Column 3','Column 1', 'Column 2','Column 1', 'Column 2'],
-                    ]
-                }
-            },
+            content: [ {
+                        table: {
+                           body: header
+                        }
+                    }
+            
                     ]
                 };
 
@@ -890,7 +963,94 @@ function create_pdf_transfer(response) {
 
 }
 
+function create_pdf_movimiento(response) {
+    var data_p = response.data;
+    var operacion=response.operacion;
+    var mov_ar=response.movimiento_Ar;
+    var mov_det=response.data_movimiento_serie;
+    console.log(data_p);
+    var data = [];
+    var array_head = [];
+    var array_dataBody = [];
+    var array_dataHead = [];
+    var ident='I';
+    var column1  = [];
+    var column2  = [];
+    var column3  = [];
+    var column4  = [];
+    var column5  = [];
+    var column6= [];
+    var header=[];
+    column1.push({image: response.img,rowSpan: 3, colSpan: 8, alignment: 'center',width:120,height:50}, {}, {}, {},{}, {}, {},{}, {text:'MOVIMIENTO DE '+operacion[0].descripcion,alignment: 'center', bold: true,colSpan: 39,height:80},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{},{}, {},{},{}); 
+    column2.push({}, {}, {}, {},{}, {}, {},{}, {text:' \n N° Movimiento:',bold: true,alignment: 'center',fontSize: 10,border: [false, false, false, true],rowSpan: 2, colSpan: 7,height:200},{}, {},{}, {}, {},{}, {text:' \n'+data_p.idMovimiento,border: [false, false, true, true],fontSize: 10,rowSpan: 2, colSpan: 3,height:200}, {},{}, {text:'\n Fecha Transacción: ',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', rowSpan: 2,colSpan: 10,height:80}, {},{}, {},{}, {},{}, {}, {},{},{text:'\n'+data_p.fecha_proceso,fontSize: 10,border: [false, false, true, true], rowSpan: 2,colSpan: 5,height:80}, {}, {},{},{}, {text:'\n Fecha Impresión:',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', colSpan: 9,rowSpan: 2,height:80}, {},{}, {},{},{}, {},{}, {},{text:'\n'+data_p.fecha_impresion,fontSize: 10,border: [false, false, true, true], colSpan: 5,rowSpan: 2,height:80},{}, {},{},{}); 
+    column3.push({}, {}, {}, {},{}, {}, {},{}, ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+    column4.push({text:' ', border: [true, false, true, true], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+    column5.push({text:'Item',bold: true, colSpan: 2, fontSize: 10,height:100}, {}, {text:'Artículo',alignment: 'center',bold: true, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:'Almacén',bold: true, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:'Localización',bold: true, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:'Lote',bold: true, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:'Unidad',bold: true,colSpan: 2, fontSize: 10,height:100},{},{text:'Cantidad', bold: true,colSpan: 3,fontSize: 10,height:100},{},{}); 
+    header.push(column1);
+    header.push(column2);
+    header.push(column3);
+    header.push(column4);
+    header.push(column5);
+    var cont=0;
+    mov_ar.map(function(index) {
+        var cantidad=Math.trunc(index.cantidad);
+        var colunmx=[]
+         cont=cont+1;   
+         colunmx.push({text:cont, colSpan: 2, fontSize: 10,height:100}, {}, {text:index.producto, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:index.almacen, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:index.localizacion, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:index.lote, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:index.unidad,colSpan: 2, fontSize: 10,height:100},{},{text:cantidad, colSpan: 3,fontSize: 10,height:100},{},{});
+         header.push(colunmx);
+         var idenDet='I';
+         mov_det.map(function(index2) {
+            console.log("entro");
+            console.log(index.consecutivo);
+            if(index.consecutivo==index2.identificador){
+                var columnz=[];
+                if(idenDet=='I'){
+                    var columny=[];
+                    columny.push({text:'', colSpan: 2, fontSize: 10,height:100},{}, {text:'Serie', colSpan: 6, fontSize: 10,height:100,bold: true},{}, {}, {},{},{}, {text:'Motor', colSpan: 5, fontSize: 10,height:100,bold: true},{}, {},{}, {}, {text:'Color',bold: true, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {}, {text:'Año de Fabricación', bold: true,colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:'Año Modelo',bold: true, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:'', colSpan: 13, fontSize: 10,height:100,border: [false, false, false, false]},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 10,height:100,border: [false, false, true, true]}); 
+                    header.push(columny);
+                    idenDet='A';
+                };
+                columnz.push({text:'', colSpan: 2, fontSize: 10,height:100},{}, {text:index2.nombreSerie, colSpan: 6, fontSize: 10,height:100},{}, {}, {},{},{}, {text:index2.motor, colSpan: 5, fontSize: 10,height:100},{}, {},{}, {}, {text:index2.color, colSpan: 5, fontSize: 10,height:100}, {},{}, {}, {}, {text:index2.anio_fabricacion, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:index2.anio_modelo, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:'', colSpan: 13, fontSize: 10,height:100,border: [false, true, false, true]},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 10,height:100,border: [false, false, true, true]}); 
+                header.push(columnz);
 
+            }
+
+        });
+
+
+    });
+    for (var i = 0; i < 8; i++) {
+        var colum_espacio_blanco=[];
+        colum_espacio_blanco.push({text:' ', border: [false, false, false, false], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+        header.push(colum_espacio_blanco);
+    }
+    var columnfooter=[];
+     columnfooter.push({text:'',  border: [false, false, false, false], colSpan: 2, fontSize: 10,height:100},{}, {text:'ALMACÉN', border: [false, true, false, false], alignment: 'center',colSpan: 6, fontSize: 10,height:100,bold: true},{}, {}, {},{},{}, {text:'', alignment: 'center',colSpan: 30,border: [false, false, false, false], fontSize: 10,height:100,bold: true},{}, {},{}, {}, {}, {},{}, {}, {}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{text:'RECIBÍ CONFORME', border: [false, true, false, false], colSpan: 6, fontSize: 10,height:100},{},{},{}, {},{},{text:'', border: [false, false, false, false], colSpan: 3,fontSize: 10,height:100,bold: true},{},{}); 
+     header.push(columnfooter);
+     
+
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            content: [ {
+                        table: {
+                           body: header
+                        }
+                    }
+            
+                    ]
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
 function create_receptionTransfer_pdf(response) {
     var data = [];
     var array_head = [];

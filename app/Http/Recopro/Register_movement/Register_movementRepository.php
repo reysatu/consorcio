@@ -38,7 +38,7 @@ class Register_movementRepository implements Register_movementInterface
          return $mostrar; 
     }
     public function get_movemen_Serie($id){
-        $mostrar=DB::select("select ma.consecutivo as identificador,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie inner join ERP_Movimiento_Articulo as ma on ma.consecutivo=md.consecutivo where md.idMovimiento='$id'");
+        $mostrar=DB::select("select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie  inner join ERP_Movimiento_Articulo as ma on ma.consecutivo=md.consecutivo where md.idMovimiento='$id'");
          return $mostrar; 
     }
     public function allActive()
@@ -90,6 +90,17 @@ class Register_movementRepository implements Register_movementInterface
     {
         return $this->model->find($id);
     }
+     public function get_movimiento($id)
+    {
+        $mostrar=DB::select("select * from ERP_Movimiento as er inner join ERP_TipoOperacion as ti on er.idTipoOperacion=ti.idTipoOperacion where er.idMovimiento='$id'");
+         return $mostrar; 
+    }
+     public function get_movement_articulo_print($id)
+    {
+        $mostrar=DB::select("SELECT ma.cantidad as cantidad, ma.consecutivo as consecutivo,pr.description as producto,al.description as almacen,lo.descripcion as localizacion,lot.Lote as lote,un.Abreviatura as unidad FROM ERP_Movimiento_Articulo as ma left JOIN ERP_Almacen  as al on al.id=ma.idAlmacen LEFT join ERP_Localizacion as lo on lo.idLocalizacion=ma.idLocalizacion inner join ERP_Productos as pr on pr.id=ma.idArticulo INNER JOIN ERP_UnidadMedida as un on pr.um_id=un.IdUnidadMedida LEFT JOIN ERP_Lote as lot  on lot.idLote=ma.idLote where ma.idMovimiento='$id'");
+         return $mostrar; 
+    }
+
     public function getStockLoc($idl,$idArl){
          $mostrar=DB::select("select total from ERP_almacen_stock_localizacion where idArticulo=$idArl and idLocalizacion=$idl");
          return $mostrar; 

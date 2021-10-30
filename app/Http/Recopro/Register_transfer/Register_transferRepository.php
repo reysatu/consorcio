@@ -72,6 +72,12 @@ select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Tran
         $mostrar=DB::select("select tr.costo as costo2,* from ERP_TransferenciaProducto as tr inner join ERP_Productos as pr on tr.idArticulo=pr.id where tr.idTransferencia='$id'");
         return $mostrar; 
     }
+     public function get_movement_articulo_print($id){
+        $mostrar=DB::select("
+            select tr.consecutivo as consecutivo,pr.description as producto , l.Lote as lote,ao.description as almacenOrigen,lo.descripcion as localizacionOrigen,ad.description as almacenDestino,ld.descripcion as localizacionDestino,tr.cantidad as cantidad, un.Abreviatura as unidad from ERP_TransferenciaProducto as tr inner join ERP_Productos as pr on tr.idArticulo=pr.id inner join ERP_UnidadMedida as un on pr.um_id=un.IdUnidadMedida inner join ERP_Almacen as ao ON ao.id=tr.idAlmacenOrigen inner join ERP_Localizacion as lo on lo.idLocalizacion=tr.idLocalizacionOrigen inner join ERP_Almacen as ad ON ad.id=tr.idAlmacenDestino inner join ERP_Localizacion as ld on ld.idLocalizacion=tr.idLocalizacionDestino left JOIN ERP_Lote as l on l.idLote=tr.idlote where tr.idTransferencia='$id'");
+        return $mostrar; 
+    }
+
     public function destroy($id)
     {
       

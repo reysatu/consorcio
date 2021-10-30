@@ -143,7 +143,13 @@
             // localStorage.setItem('Nombre', 'Miguel Antonio')
             //  $scope.loadTransferPDF('referral_guides/referralGuidePDF', data);
             var id= idMovimiento.val();
-             $scope.loadTransferPDF('register_transfers/pdf', id);
+            if(id!=''){
+                 var data = {
+                                id: id,
+                                
+                };
+              $scope.loadTransferPDF('register_transfers/pdf', data);
+            }
         });
         modalMovimietoArticulo.on('hidden.bs.modal', function (e) {
             cleanMovimientoArticulo();
