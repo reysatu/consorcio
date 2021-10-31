@@ -77,6 +77,9 @@ class HeadAccountanController extends Controller
                 $centrocostot=$data['contable_centrocosto'];
                 $centrocosto=explode(',', $centrocostot);
 
+                $idDetalle_Delete=$data['idDetalle_Delete'];
+
+
                 for ($i=0; $i < count($idOperacion) ; $i++) { 
                         $datoLo=[];
                         $dato=[];
@@ -89,7 +92,13 @@ class HeadAccountanController extends Controller
                                 $repoDet->create($datoLo);
                         }
                 }
-             
+                if(!empty($idDetalle_Delete)){
+                    for($i = 0; $i < count($idDetalle_Delete); ++$i) {
+                        $com=$idDetalle_Delete[$i];
+                        $porciones = explode("_", $com);
+                        $repoDet->destroy_detalle($porciones[0],$porciones[1]);
+                    }
+                }
        
 
            

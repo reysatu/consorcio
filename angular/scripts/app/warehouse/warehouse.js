@@ -36,6 +36,7 @@
         var p_state_localizacion;
         var p_loc_text;
         var w_tienda_body ;
+        var cod_localizacion_delete=[];//array de id eliminados
 
         $scope.chkState = function () {
             var txt_state = (w_physical_location.prop('checked')) ? 'Si' : 'No';
@@ -131,7 +132,7 @@
             w_description_localizacion.val('');
             w_code_localizacion.val('');
             w_tienda_body.html('');
-
+            cod_localizacion_delete=[];
             activeTab('almacen');
         }
 
@@ -194,7 +195,10 @@
                     confirm: 'Si',
                     cancel: 'No'
                 }, function () {
-                    $('#tr_loca_' + code).remove();
+                    $('#tr_loca_' + code).remove(); 
+                    cod_localizacion_delete.push(code);
+                    console.log(cod_localizacion_delete);
+
                 });
                 e.preventDefault();
             });
@@ -328,6 +332,7 @@
                     'local_descripcion': loca_descr,
                     'local_estado': loca_esta,
                     'idLocalizacion_v':idLocalizacion_v,
+                    'id_delete':cod_localizacion_delete,
                    
                 };
                 var w_id = (warehouse_id.val() === '') ? 0 : warehouse_id.val();
@@ -340,6 +345,7 @@
                             type: 'success'
                         });
                         modalW.modal('hide');
+                        console.log(response.cont);
                         LoadRecordsButtonWarehouse.click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?

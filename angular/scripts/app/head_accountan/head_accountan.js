@@ -29,6 +29,7 @@
         var id_operacion=$("#id_operacion");
         var grupoContable_id=$("#grupoContable_id");
         var identDetalle=$("#identDetalle");
+        var idDetalle_Delete=[];
 
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
@@ -50,6 +51,7 @@
             grupoContable.val('');
             identDetalle.val('');
             grupoContable_id.val('');
+            idDetalle_Delete=[];
         }
          function cleanGrupoContableDeta () {
             cleanRequired();
@@ -93,6 +95,7 @@
                     'idGrupoContableCabecera': grupoContable_id.val(),
                     'descripcion': grupoContable.val(),
                     'estado': ((p_state.prop('checked')) ? 'A' : 'I'),
+                    'idDetalle_Delete':idDetalle_Delete,
                     // 'idTienda': w_project_code.val(),
                     // 'users': users,
                     // 'local_codigo': loca_codigo,
@@ -124,6 +127,7 @@
                     'contable_idoperacion': codigo_operacion,
                     'contable_cuenta': d_cuenta,
                     'contable_centrocosto': d_centro_costo,
+                    'idDetalle_Delete':idDetalle_Delete,
                    };
 
                 }
@@ -176,6 +180,8 @@
                     cancel: 'No'
                 }, function () {
                     $('#tr_contDetalle_' + code).remove();
+                    idDetalle_Delete.push(code);
+
                 });
                 e.preventDefault();
              });
@@ -224,7 +230,8 @@
                     modalGrupoContable.modal('show');
                     if(data_p.GrupoDetalle!=[]){
                         _.each(data_p.GrupoDetalle, function (c) {
-                           addToDeta(c.idGrupoContableCabecera,c.operacion, c.cuenta, c.centrocosto,c.idTipoOperacion)
+                          var codigo=String(c.idGrupoContableCabecera)+'_'+String(c.idTipoOperacion);
+                           addToDeta(codigo,c.operacion, c.cuenta, c.centrocosto,c.idTipoOperacion)
                         });
                     }
                    

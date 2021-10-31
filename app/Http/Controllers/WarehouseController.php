@@ -47,6 +47,7 @@ class WarehouseController extends Controller
         try {
             $data = $request->all();
             $data_users = $data['users'];
+            $data_id_delete_localiza=$data['id_delete'];
             $users = explode(',', $data_users);
             $local_codigot=$data['local_codigo'];
             $local_codigo = explode(',', $local_codigot);
@@ -101,10 +102,16 @@ class WarehouseController extends Controller
                         $lorepo->create($datoLo);
                     } 
             }
-           
+            $cont=0;
+            if(!empty($data_id_delete_localiza)){
+                for($i = 0; $i < count($data_id_delete_localiza); ++$i) {
+                    $lorepo->delete_localizacion($data_id_delete_localiza[$i]);
+                };
+            };
             DB::commit();
             return response()->json([
-                'status' => true
+                'status' => true,
+                'cont'=>$cont,
             ]);
 
         } catch (\Exception $e) {

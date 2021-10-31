@@ -57,6 +57,10 @@ class AccoudetRepository implements AccoudetInterface
     {
         $this->model->where('identificador',$ida)->delete();
     }
+     public function destroy_detalle($idgrCa,$idOper)
+    {
+        $this->model->where('idGrupoContableCabecera',$idgrCa)->where('idTipoOperacion',$idOper)->delete();
+    }
    public function deleteByContable($id){
         $this->model->where('idGrupoContableCabecera',$id)->delete();
     }

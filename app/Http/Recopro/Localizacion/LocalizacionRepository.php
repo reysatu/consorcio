@@ -54,6 +54,9 @@ class LocalizacionRepository implements LocalizacionInterface
     public function deleteBywarehose($id){
         DB::table('ERP_Localizacion')->where('idAlmacen', $id)->delete();
     }
+    public function delete_localizacion($id){
+        DB::table('ERP_Localizacion')->where('idLocalizacion', $id)->delete();
+    }
 
    public function getLocalizacion($id)
     {
