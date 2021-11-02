@@ -59,6 +59,26 @@ use App\Http\Recopro\Shop\Shop;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Shop\ShopRepository;
 
+use App\Http\Recopro\Customer\Customer;
+use App\Http\Recopro\Customer\CustomerInterface;
+use App\Http\Recopro\Customer\CustomerRepository;
+
+use App\Http\Recopro\Group_ca\Group_ca;
+use App\Http\Recopro\Group_ca\Group_caInterface;
+use App\Http\Recopro\Group_ca\Group_caRepository;
+
+use App\Http\Recopro\Revision_ca\Revision_ca;
+use App\Http\Recopro\Revision_ca\Revision_caInterface;
+use App\Http\Recopro\Revision_ca\Revision_caRepository;
+
+use App\Http\Recopro\Maintenance\Maintenance;
+use App\Http\Recopro\Maintenance\MaintenanceInterface;
+use App\Http\Recopro\Maintenance\MaintenanceRepository;
+
+use App\Http\Recopro\Consecutive\Consecutive;
+use App\Http\Recopro\Consecutive\ConsecutiveInterface;
+use App\Http\Recopro\Consecutive\ConsecutiveRepository;
+
 use App\Http\Recopro\Category\Category;
 use App\Http\Recopro\Category\CategoryInterface;
 use App\Http\Recopro\Category\CategoryRepository;
@@ -83,6 +103,11 @@ use App\Http\Recopro\Lot\Lot;
 use App\Http\Recopro\Lot\LotInterface;
 use App\Http\Recopro\Lot\LotRepository;
 
+use App\Http\Recopro\Adviser\Adviser;
+use App\Http\Recopro\Adviser\AdviserInterface;
+use App\Http\Recopro\Adviser\AdviserRepository;
+
+
 use App\Http\Recopro\Localizacion\Localizacion;
 use App\Http\Recopro\Localizacion\LocalizacionInterface;
 use App\Http\Recopro\Localizacion\LocalizacionRepository;
@@ -90,6 +115,10 @@ use App\Http\Recopro\Localizacion\LocalizacionRepository;
 use App\Http\Recopro\Modelo\Modelo;
 use App\Http\Recopro\Modelo\ModeloInterface;
 use App\Http\Recopro\Modelo\ModeloRepository;
+
+use App\Http\Recopro\Technician\Technician;
+use App\Http\Recopro\Technician\TechnicianInterface;
+use App\Http\Recopro\Technician\TechnicianRepository;
 
 use App\Http\Recopro\Register_Transfer_Articulo\Register_Transfer_Articulo;
 use App\Http\Recopro\Register_Transfer_Articulo\Register_Transfer_ArticuloInterface;
@@ -138,6 +167,10 @@ use App\Http\Recopro\Stock_Serie\Stock_SerieRepository;
 use App\Http\Recopro\Articulo_Kit\Articulo_Kit;
 use App\Http\Recopro\Articulo_Kit\Articulo_KitInterface;
 use App\Http\Recopro\Articulo_Kit\Articulo_KitRepository;
+
+use App\Http\Recopro\TypeConsecutive\TypeConsecutive;
+use App\Http\Recopro\TypeConsecutive\TypeConsecutiveInterface;
+use App\Http\Recopro\TypeConsecutive\TypeConsecutiveRepository;
 
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_Articulo;
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_ArticuloInterface;
@@ -398,14 +431,21 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCurrency();
         $this->registerMeasure();
         $this->registerShop();
+        $this->registerCustomer();
+        $this->registerGroup_ca();
+        $this->registerRevision_ca();
+        $this->registerMaintenance();
         $this->registerCategory();
+        $this->registerConsecutive();
         $this->registerHeadAccountan();
         $this->registerOperation();
         $this->registerFamily();
         $this->registerSubFamily();
         $this->registerLot();
+        $this->registerAdviser();
         $this->registerLocalizacion();
         $this->registerModelo();
+        $this->registerTechnician();
         $this->registerRegister_Transfer_Articulo();
         $this->registerRegister_Transfer_Detalle();
         $this->registerQuery_stock();
@@ -420,6 +460,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerNaturaleza();
         $this->registerStock_Serie();
         $this->registerArticulo_Kit();
+        $this->registerTypeConsecutive();
         $this->registerRegister_movement_Articulo();
         $this->registerRegister_movement_Detalle();
         $this->registerAlmacen_Stock_Localizacion();
@@ -908,6 +949,38 @@ class AppServiceProvider extends ServiceProvider
             return new ShopRepository(new Shop());
         });
     }
+    public function registerRevision_ca()
+    {
+        $app = $this->app;
+
+        $app->bind(Revision_caInterface::class, function ($app) {
+            return new Revision_caRepository(new Revision_ca());
+        });
+    }
+    public function registerCustomer()
+    {
+        $app = $this->app;
+
+        $app->bind(CustomerInterface::class, function ($app) {
+            return new CustomerRepository(new Customer());
+        });
+    }
+     public function registerGroup_ca()
+    {
+        $app = $this->app;
+
+        $app->bind(Group_caInterface::class, function ($app) {
+            return new Group_caRepository(new Group_ca());
+        });
+    }
+    public function registerMaintenance()
+    {
+        $app = $this->app;
+
+        $app->bind(MaintenanceInterface::class, function ($app) {
+            return new MaintenanceRepository(new Maintenance());
+        });
+    }
 
     public function registerCategory()
     {
@@ -915,6 +988,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(CategoryInterface::class, function ($app) {
             return new CategoryRepository(new Category());
+        });
+    }
+    public function registerConsecutive()
+    {
+        $app = $this->app;
+
+        $app->bind(ConsecutiveInterface::class, function ($app) {
+            return new ConsecutiveRepository(new Consecutive());
         });
     }
 
@@ -961,6 +1042,14 @@ class AppServiceProvider extends ServiceProvider
             return new LotRepository(new Lot());
         });
     }
+      public function registerAdviser()
+    {
+        $app = $this->app;
+
+        $app->bind(AdviserInterface::class, function ($app) {
+            return new AdviserRepository(new Adviser());
+        });
+    }
      public function registerLocalizacion()
     {
         $app = $this->app;
@@ -975,6 +1064,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ModeloInterface::class, function ($app) {
             return new ModeloRepository(new Modelo());
+        });
+    }
+    public function registerTechnician()
+    {
+        $app = $this->app;
+
+        $app->bind(TechnicianInterface::class, function ($app) {
+            return new TechnicianRepository(new Technician());
         });
     }
     public function registerRegister_Transfer_Articulo()
@@ -1087,6 +1184,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(Articulo_KitInterface::class, function ($app) {
             return new Articulo_KitRepository(new Articulo_Kit());
+        });
+    }
+    public function registerTypeConsecutive()
+    {
+        $app = $this->app;
+
+        $app->bind(TypeConsecutiveInterface::class, function ($app) {
+            return new TypeConsecutiveRepository(new TypeConsecutive());
         });
     }
     public function registerRegister_movement_Articulo()

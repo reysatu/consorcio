@@ -48,7 +48,12 @@
         'sys.app.accoudets',
         'sys.app.shops',
         'sys.app.series',
-      
+        'sys.app.technicians',
+        'sys.app.advisers',
+        'sys.app.consecutives',
+        'sys.app.maintenances',
+        'sys.app.customers',
+        'sys.app.group_cas',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
@@ -60,6 +65,7 @@
         'sys.app.approval_purchase_orders',
         'sys.app.approval_autonomy',
         'sys.app.accounts_pay',
+        'sys.app.revision_cas',
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',

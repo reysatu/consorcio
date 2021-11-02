@@ -107,6 +107,20 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Report_stocks.php';
 
     require app_path() . '\Http\Routes\Report_movements.php';
+
+    require app_path() . '\Http\Routes\Technicians.php';
+
+    require app_path() . '\Http\Routes\Advisers.php';
+
+    require app_path() . '\Http\Routes\Consecutives.php';
+
+    require app_path() . '\Http\Routes\Maintenances.php';
+
+    require app_path() . '\Http\Routes\Customers.php';
+
+    require app_path() . '\Http\Routes\Group_ca.php';
+    
+    require app_path() . '\Http\Routes\Revision_ca.php';
     //Route Purchases
 
     require app_path() . '\Http\Routes\Requirements.php';
