@@ -31,7 +31,7 @@
             descripcion.val('');
             direccion.val('');
             departamento.val('');
-            provincia.val('');
+            provincia.val(''); 
             tienda_id.val('');
             distrito.val('');
             p_state.prop('checked', true).iCheck('update');
@@ -78,7 +78,6 @@
                      var data_p = response.data;
                      console.log(data_p);
                       provincia.html('');
-                        distrito.html('');
                       provincia.append('<option value="" selected>Seleccione</option>');
                      _.each(response.data, function(item) {
                         if(item.cProvincia==bandera){

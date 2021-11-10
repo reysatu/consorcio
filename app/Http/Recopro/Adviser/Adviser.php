@@ -22,7 +22,7 @@ class Adviser extends Model
     public $incrementing = false;
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
-    protected $fillable = ['id', 'descripcion','cIdUsuCre','cIdUsuMod'];
+    protected $fillable = ['id', 'descripcion','cIdUsuCre','cIdUsuMod','estado'];
     
      public function user_c()
     {

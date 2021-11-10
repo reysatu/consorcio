@@ -20,3 +20,4 @@ Route::post('articles/upload', ['as' => 'articles.upload', 'uses' => 'ProductCon
 Route::get('articles/TraerModelos/{id}', ['as' => 'articles.TraerModelos', 'uses' => 'ModeloController@TraerModelos']);
 Route::get('articles/TraerSubFamilia/{id}', ['as' => 'articles.TraerSubFamilia', 'uses' => 'SubFamilyController@TraerSubFamilia']);
 Route::post('articles/getArticulosSelect', ['as' => 'articles.getArticulosSelect', 'uses' => 'ProductController@traeAll_kit']);
+Route::post('articles/getProductosServicio', ['as' => 'articles.getProductosServicio', 'uses' => 'ProductController@traeAll_Servicios']);

@@ -14,20 +14,20 @@ trait MaintenanceTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['MANTENIMIENTO','MONTO REVISIÓN','MONTO MECÁNICA','TERCEROS','OTROS MONTOS','REPUESTOS','ACCESORIOS','LUBRICANTES','OTROS REPUESTOS','TOTAL'];
+        $columns[] = ['MANTENIMIENTO','ESTADO','U.CREADO','F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
+            $estado="ACTIVO";
+            if($i->estado=='I'){
+                $estado='INACTIVO';
+            };
             $columns[] = [
                 ['left', $i->nombre],
-                ['left', $i->mo_revision],
-                ['left', $i->mo_mecanica],
-                ['left', $i->terceros],
-                ['left', $i->otros_mo],
-                ['left', $i->repuestos],
-                ['left', $i->accesorios],
-                ['left', $i->lubricantes],
-                ['left', $i->otros_rep],
-                ['left', $i->total],
+                ['left',$estado],
+                ['left', $i->user_c->name],
+                ['center', (Carbon::parse($i->dFecCre)->format('d-m-Y'))],
+                ['left', $i->user_u->name],
+                ['center', (Carbon::parse($i->dFecMod)->format('d-m-Y'))]
             ];
         }
 

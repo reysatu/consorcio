@@ -24,7 +24,7 @@ class Group_caController extends Controller
     public function all(Request $request, Group_caInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'nombre'];
+        $params = ['id', 'nombre','estado'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
@@ -35,6 +35,11 @@ class Group_caController extends Controller
         $id='id';
         $data['id'] = $repo->get_consecutivo($table,$id);
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
@@ -47,6 +52,11 @@ class Group_caController extends Controller
         $data = $request->all();
         $id = $data['id'];
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->update($id, $data);
         return response()->json(['Result' => 'OK']);
     }
@@ -60,7 +70,7 @@ class Group_caController extends Controller
 
     public function getAll(Group_caInterface $repo)
     {
-        return parseSelect($repo->all(), 'id', 'nombre');
+        return parseSelect($repo->allActive(), 'id', 'nombre'); 
     }
 
     public function excel(Group_caInterface $repo)

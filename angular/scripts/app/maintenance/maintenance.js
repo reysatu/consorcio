@@ -58,79 +58,47 @@
                 },
                 nombre: {
                     title: 'Revisión',
-                     
-
                 },
-                 mo_revision: {
-                    title: 'Monto Revisión',
-                     
-
+                estado: {
+                    title: 'Estado',
+                    values: { 'I': 'Inactivo', 'A': 'Activo' },
+                    type: 'checkbox',
+                    defaultValue: 'A',
+                   
                 },
-                 mo_mecanica: {
-                    title: 'Monto Mecánica',
-                     
-
-                },
-                 terceros: {
-                    title: 'Terceros',
-                     
-
-                },
-                 otros_mo: {
-                    title: 'Otros Montos',
-                     
-
-                },
-                repuestos: {
-                    title: 'Repuestos',
-                     
-
-                },
-                accesorios: {
-                    title: 'Accesorios',
-                     
-
-                },
-                lubricantes: {
-                    title: 'Lubricantes',
-                     
-
-                },
-                otros_rep: {
-                    title: 'Otros repuestos',
-                },
-                total: {
-                    title: 'Total',
-                    input: function (data) {
-                        if (data.record) {
-                            return '<div class="jtable-input jtable-text-input col-md-9" ><input type="text" name="total" class="form-control input-sm " readonly value="' + data.record.total + '" /></div>';
-                        } else {
-                            return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="total" class="form-control input-sm " readonly value="0" /></div>';
-                        }
-                    }
-                },
+                // total: {
+                //     title: 'Total',
+                //     input: function (data) {
+                //         if (data.record) {
+                //             return '<div class="jtable-input jtable-text-input col-md-9" ><input type="text" name="total" class="form-control input-sm " readonly value="' + data.record.total + '" /></div>';
+                //         } else {
+                //             return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="total" class="form-control input-sm " readonly value="0" /></div>';
+                //         }
+                //     }
+                // },
                 
 
             },
            
 
             formCreated: function (event, data) {
-                data.form.find('input[name="mo_revision"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="mo_mecanica"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="terceros"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="otros_mo"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="repuestos"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="accesorios"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="lubricantes"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
-                data.form.find('input[name="otros_rep"]').attr('onkeypress','return validDecimals(event, this, 4)')
-                    .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="mo_revision"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="mo_mecanica"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="terceros"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="otros_mo"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="repuestos"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="accesorios"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="lubricantes"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                // data.form.find('input[name="otros_rep"]').attr('onkeypress','return validDecimals(event, this, 4)')
+                //     .attr('onblur','return roundDecimals(this, 3)');
+                 $('input[name="nombre"]').attr('maxlength', 50);
                  function sumar(){
                      var  mo_revision=Number($('input[name="mo_revision"]').val());
                      var  mo_mecanica=Number($('input[name="mo_mecanica"]').val()); 

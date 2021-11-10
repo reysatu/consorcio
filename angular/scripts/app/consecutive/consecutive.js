@@ -60,7 +60,7 @@
                         if (data.record) {
                             return '<div class="jtable-input jtable-text-input col-md-9" ><input type="text" name="cCodConsecutivo" class="form-control input-sm " readonly value="' + data.record.cCodConsecutivo + '" /></div>';
                         } else {
-                            return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="cCodConsecutivo" class="form-control input-sm "  /></div>';
+                            return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="cCodConsecutivo" class="form-control input-sm " maxlength="10" /></div>';
                         }
                     }
                 },
@@ -80,9 +80,9 @@
                     title: 'Consecutivo',
                     input: function (data) {
                         if (data.record) {
-                            return '<div class="jtable-input jtable-text-input col-md-9" ><input type="text" name="nConsecutivo" class="form-control input-sm " readonly value="' + data.record.nConsecutivo + '" /></div>';
+                            return '<div class="jtable-input jtable-text-input col-md-9" ><input type="text" name="nConsecutivo" class="form-control input-sm "  value="' + data.record.nConsecutivo + '" /></div>';
                         } else {
-                            return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="nConsecutivo" class="form-control input-sm " readonly value="0" /></div>';
+                            return '<div class="jtable-input jtable-text-input col-md-9" > <input type="text" name="nConsecutivo" class="form-control input-sm " readonly value="0"  onkeypress="return soloNumeros(event)"" /></div>';
                         }
                     }
                 },
@@ -91,6 +91,7 @@
 
             formCreated: function (event, data) {
                 data.form.find('input[name="Categoria"]').attr('onkeypress','return soloLetras(event)');
+                
                 $('#Edit-estado').parent().addClass('i-checks');
                
                 $('.i-checks').iCheck({

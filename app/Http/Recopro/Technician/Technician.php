@@ -24,7 +24,7 @@ class Technician extends Model
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
 
-    protected $fillable = ['id', 'descripcion','meta_cantidad','meta_monto','cIdUsuCre','cIdUsuMod'];
+    protected $fillable = ['id', 'descripcion','cIdUsuCre','cIdUsuMod','estado'];
     
      public function user_c()
     {

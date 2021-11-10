@@ -28,8 +28,7 @@ class TechnicianRepository implements TechnicianInterface
     {
         return $this->model->where(function($q) use ($s){
             $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('dFecCre DESC');
-            $q->orWhere('meta_cantidad', 'LIKE', '%'.$s.'%');
-            $q->orWhere('meta_monto', 'LIKE', '%'.$s.'%');
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
         });
 
     }
@@ -52,7 +51,7 @@ class TechnicianRepository implements TechnicianInterface
     }
     public function update($id, array $attributes)
     {
-        $attributes['user_updated'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }

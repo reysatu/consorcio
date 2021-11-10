@@ -24,7 +24,7 @@ class TechnicianController extends Controller
     public function all(Request $request, TechnicianInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'descripcion','meta_monto','meta_cantidad'];
+        $params = ['id', 'descripcion','estado'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
@@ -35,11 +35,16 @@ class TechnicianController extends Controller
         $id='id';
         $data['descripcion'] = strtoupper($data['descripcion']);
         $data['id'] = $repo->get_consecutivo($table,$id);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
             'Record' => []
-        ]);
+        ]); 
     }
 
     public function update(TechnicianInterface $repo, Request $request)

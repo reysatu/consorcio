@@ -44,7 +44,7 @@ class ProductRepository implements ProductInterface
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id','!=',3);
-            $q->orWhere('code_article', 'LIKE', '%' . $s . '%');
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%')->where('type_id','!=',3);
         });
     }
     public function search3($s)
@@ -60,6 +60,13 @@ class ProductRepository implements ProductInterface
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description_detail', 'LIKE', '%'.$s.'%')->where('serie',1);
+        });
+    }
+     public function searchServicio($s)
+    {
+        return $this->model->where(function($q) use ($s){
+            $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id',2)->where('state',1);
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%')->where('type_id',2)->where('state',1);
         });
     }
     public function searchLote($s)

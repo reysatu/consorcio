@@ -61,6 +61,13 @@
                      
 
                 },
+                estado: {
+                    title: 'Estado',
+                    values: { 'I': 'Inactivo', 'A': 'Activo' },
+                    type: 'checkbox',
+                    defaultValue: 'A',
+                   
+                },
             },
            
 

@@ -59,20 +59,15 @@
                 descripcion: {
                     title: 'Técnico',
                 },
-                meta_cantidad: {
-                     title: 'Meta Cantidad',
+                estado: {
+                    title: 'Estado',
+                    values: { 'I': 'Inactivo', 'A': 'Activo' },
+                    type: 'checkbox',
+                    defaultValue: 'A',
                    
                 },
-                meta_monto: {
-                     title: 'Meta Monto',
-                     display: function (data) {
-                        var meta_monto=Number(data.record.meta_monto);
-                        var re=meta_monto.toFixed(2);
-                        return re;
-                    }
-                },
 
-            },
+            }, 
            
 
             formCreated: function (event, data) {

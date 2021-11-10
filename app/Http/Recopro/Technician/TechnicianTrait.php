@@ -14,13 +14,16 @@ trait TechnicianTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['TÉCNICO','META CANTIDAD','META MONTO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['TÉCNICO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
+            $estado="ACTIVO";
+            if($i->estado=='I'){
+                $estado='INACTIVO';
+            };
             $columns[] = [
                 ['left', $i->descripcion],
-                ['left',$i->meta_cantidad],
-                ['left',$i->meta_monto],
+                ['left',$estado],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->dFecCre)->format('d-m-Y'))],
                 ['left', $i->user_u->name],

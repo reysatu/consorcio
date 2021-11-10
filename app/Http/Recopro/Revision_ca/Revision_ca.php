@@ -14,7 +14,7 @@ class Revision_ca extends Model
   
     protected $table = 'ERP_RevisionCA';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $primaryKey = 'id';
 
@@ -22,11 +22,23 @@ class Revision_ca extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['id', 'nombre','idgrupo'];
+    const CREATED_AT = 'dFecCre';
+    const UPDATED_AT = 'dFecMod';
+    
+    protected $fillable = ['id', 'nombre','idgrupo','cIdUsuCre','cIdUsuMod','estado'];
     
      public function grupo_c_EXCEL()
     {
         return $this->belongsTo(Group_ca::class, 'idgrupo');
+    }
+     public function user_c()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuCre');
+    }
+
+    public function user_u()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuMod');
     }
 
    

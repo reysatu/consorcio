@@ -14,12 +14,16 @@ trait AdviserTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['ASESOR','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['ASESOR','U.CREADO','ESTADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
-            
+            $estado="ACTIVO";
+            if($i->estado=='I'){
+                $estado='INACTIVO';
+            };
             $columns[] = [
                 ['left', $i->descripcion],
+                ['left',$estado],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->dFecCre)->format('d-m-Y'))],
                 ['left', $i->user_u->name],

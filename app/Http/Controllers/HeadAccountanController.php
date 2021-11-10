@@ -96,7 +96,10 @@ class HeadAccountanController extends Controller
                     for($i = 0; $i < count($idDetalle_Delete); ++$i) {
                         $com=$idDetalle_Delete[$i];
                         $porciones = explode("_", $com);
-                        $repoDet->destroy_detalle($porciones[0],$porciones[1]);
+                        if(!empty($porciones[1])){
+                            $repoDet->destroy_detalle($porciones[0],$porciones[1]);
+                        }
+                       
                     }
                 }
        

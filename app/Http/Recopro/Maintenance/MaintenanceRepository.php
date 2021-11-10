@@ -26,23 +26,15 @@ class MaintenanceRepository implements MaintenanceInterface
     {
         return $this->model->where(function($q) use ($s){
             $q->where('nombre', 'LIKE', '%'.$s.'%');
-            $q->orWhere('mo_revision', 'LIKE', '%'.$s.'%');
-            $q->orWhere('mo_mecanica', 'LIKE', '%'.$s.'%');
-            $q->orWhere('terceros', 'LIKE', '%'.$s.'%');
-            $q->orWhere('otros_mo', 'LIKE', '%'.$s.'%');
-            $q->orWhere('repuestos', 'LIKE', '%'.$s.'%');
-            $q->orWhere('accesorios', 'LIKE', '%'.$s.'%');
-            $q->orWhere('lubricantes', 'LIKE', '%'.$s.'%');
-            $q->orWhere('otros_rep', 'LIKE', '%'.$s.'%');
-            $q->orWhere('total', 'LIKE', '%'.$s.'%');
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
         });
 
     }
     
      public function create(array $attributes)
     {
-        // $attributes['user_created'] = auth()->id();
-        // $attributes['user_updated'] = auth()->id();
+        $attributes['cIdUsuCre'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)
@@ -58,7 +50,7 @@ class MaintenanceRepository implements MaintenanceInterface
     }
     public function update($id, array $attributes)
     {
-        // $attributes['user_updated'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }

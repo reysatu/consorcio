@@ -13,24 +13,25 @@ class Maintenance extends Model
   
     protected $table = 'ERP_Mantenimientos';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
-
-    protected $fillable = ['id','nombre','mo_revision','mo_mecanica','terceros','otros_mo','repuestos','accesorios','lubricantes','otros_rep','total'];
+    const CREATED_AT = 'dFecCre';
+    const UPDATED_AT = 'dFecMod';
+    protected $fillable = ['id','nombre','estado','cIdUsuCre','cIdUsuMod'];
     
-    //  public function user_c()
-    // {
-    //     return $this->belongsTo(User::class, 'user_created');
-    // }
+     public function user_c()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuCre');
+    }
 
-    // public function user_u()
-    // {
-    //     return $this->belongsTo(User::class, 'user_updated');
-    // }
+    public function user_u()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuMod');
+    }
 
 }

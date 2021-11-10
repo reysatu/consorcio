@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Group_ca extends Model
 {
-  
+   
     protected $table = 'ERP_GruposCA';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $primaryKey = 'id';
 
@@ -21,16 +21,19 @@ class Group_ca extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['nombre', 'id'];
+    const CREATED_AT = 'dFecCre';
+    const UPDATED_AT = 'dFecMod';
     
-    //  public function user_c()
-    // {
-    //     return $this->belongsTo(User::class, 'user_created');
-    // }
+    protected $fillable = ['nombre', 'id','cIdUsuCre','cIdUsuMod','estado'];
+    
+    public function user_c()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuCre');
+    }
 
-    // public function user_u()
-    // {
-    //     return $this->belongsTo(User::class, 'user_updated');
-    // }
+    public function user_u()
+    {
+        return $this->belongsTo(User::class, 'cIdUsuMod');
+    }
 
 }

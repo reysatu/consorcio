@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Recopro\PaymentCondition;
+<?php namespace App\Http\Recopro\PaymentCondition;
 
 /**
  * Created by PhpStorm.
@@ -14,14 +12,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentCondition extends Model
 {
-    use SoftDeletes;
-
+   
+    public $timestamps = true;
     protected $table = 'ERP_CondicionPago';
+    protected $primaryKey = 'id';
+    protected $fillable = ['id','code', 'days','description', 'user_created', 'user_updated', 'user_deleted'];
 
-    protected $fillable = ['code', 'days','description', 'user_created', 'user_updated', 'user_deleted'];
-
+    public $incrementing = false;
     protected $hidden = ['deleted_at'];
-
     function user_c()
     {
         return $this->belongsTo(User::class, 'user_created');

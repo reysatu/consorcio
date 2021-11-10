@@ -14,12 +14,21 @@ trait Revision_caTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['REVISIÓN','GRUPO'];
+        $columns[] = ['REVISIÓN','GRUPO','ESTADO','U.CREADO','F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
+            $estado="ACTIVO";
+            if($i->estado=='I'){
+                $estado='INACTIVO';
+            };
             $columns[] = [
                 ['left', $i->nombre],
                 ['left', $i->grupo_c_EXCEL->nombre],
+                ['left',$estado],
+                ['left', $i->user_c->name],
+                ['center', (Carbon::parse($i->dFecCre)->format('d-m-Y'))],
+                ['left', $i->user_u->name],
+                ['center', (Carbon::parse($i->dFecMod)->format('d-m-Y'))]
             ];
         }
 

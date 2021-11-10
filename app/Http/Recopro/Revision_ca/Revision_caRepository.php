@@ -29,6 +29,7 @@ class Revision_caRepository implements Revision_caInterface
             $q->where('id', 'LIKE', '%'.$s.'%');
             $q->orWhere('nombre', 'LIKE', '%'.$s.'%');
             $q->orWhere('idGrupo', 'LIKE', '%'.$s.'%');
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
         });
 
     }
@@ -38,8 +39,8 @@ class Revision_caRepository implements Revision_caInterface
     }
      public function create(array $attributes)
     {
-        // $attributes['user_created'] = auth()->id();
-        // $attributes['user_updated'] = auth()->id();
+          $attributes['cIdUsuCre'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)
@@ -55,7 +56,7 @@ class Revision_caRepository implements Revision_caInterface
     }
     public function update($id, array $attributes)
     {
-        // $attributes['user_updated'] = auth()->id();
+          $attributes['cIdUsuMod'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }

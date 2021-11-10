@@ -358,7 +358,7 @@ function getFormSearch(form_id, input_id, btn_id) {
 }
 function getFormSearch2(form_id, input_id, btn_id) {
     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
-        '<div class="form-group"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
+        '<div class="form-group"><select id="filtro_art"  style="margin-right:5px;width: 100%" name="filtro_art" class="form-control input-sm "></select><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
         '<div class="input-group input-group-sm">' +
         '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
         '<span class="input-group-btn">' +

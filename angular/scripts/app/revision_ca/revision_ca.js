@@ -59,9 +59,16 @@
                 nombre: {
                     title: 'Revisión',
                 },
-                idGrupo: {
+                idgrupo: {
                     title: 'Grupo',
                     options: base_url + '/revision_cas/getGrupo' ,
+                },
+                estado: {
+                    title: 'Estado',
+                    values: { 'I': 'Inactivo', 'A': 'Activo' },
+                    type: 'checkbox',
+                    defaultValue: 'A',
+                   
                 },
 
             },

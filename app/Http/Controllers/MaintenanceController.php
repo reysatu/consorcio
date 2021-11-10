@@ -24,7 +24,7 @@ class MaintenanceController extends Controller
     public function all(Request $request, MaintenanceInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'nombre','mo_revision','mo_mecanica','terceros','otros_mo','repuestos','accesorios','lubricantes','otros_rep','total'];
+        $params = ['id', 'nombre','estado'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
@@ -35,6 +35,11 @@ class MaintenanceController extends Controller
         $id='id';
         $data['id'] = $repo->get_consecutivo($table,$id);
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
@@ -47,6 +52,11 @@ class MaintenanceController extends Controller
         $data = $request->all();
         $id = $data['id'];
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->update($id, $data);
 
         return response()->json(['Result' => 'OK']);

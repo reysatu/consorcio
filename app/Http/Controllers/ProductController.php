@@ -136,6 +136,12 @@ class ProductController extends Controller
         $params = ['id', 'description','code_article','type_id','serie','lote'];
         return parseList($repo->searchSerie($s), $request, 'id', $params);
     }
+      public function traeAll_Servicios(Request $request, ProductInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['id', 'description','code_article','type_id','serie','lote'];
+        return parseList($repo->searchServicio($s), $request, 'id', $params);
+    }
      public function traeAllLote(Request $request, ProductInterface $repo)
     {
         $s = $request->input('search', '');

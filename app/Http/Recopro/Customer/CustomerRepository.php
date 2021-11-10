@@ -42,8 +42,8 @@ class CustomerRepository implements CustomerInterface
     }
      public function create(array $attributes)
     {
-        // $attributes['user_created'] = auth()->id();
-        // $attributes['user_updated'] = auth()->id();
+        $attributes['cIdUsuCre'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)
@@ -54,12 +54,12 @@ class CustomerRepository implements CustomerInterface
          }else{
             $actu=intval($mostrar[0]->$id);
          };
-        $new=$actu+1;
+        $new=$actu+1; 
         return $new; 
     }
     public function update($id, array $attributes)
     {
-        // $attributes['user_updated'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
@@ -70,6 +70,32 @@ class CustomerRepository implements CustomerInterface
         $model->update($attributes);
         $model->delete();
      
+    }
+     public function findByCode($code)
+    {
+        return $this->model->where('documento', $code)->first();
+    }
+    public function gte_tipo_doc()
+    {   
+        $mostrar=DB::select("select cCodigo Codigo, cDescripcion TipoDocumento 
+from ERP_TABLASUNAT
+where cnombretabla = 'TIPO_DOCUMENTO'");
+        return $mostrar; 
+    }
+    public function tipo_clie()
+    {   
+        $mostrar=DB::select("select * from ERP_TipoCliente where estado='A'");
+        return $mostrar; 
+    }
+    public function find($id)
+    {
+        $mostra=DB::select("SELECT * FROM ERP_Clientes as ti left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo where ti.id=$id");
+        return $mostra;
+    }
+    public function get_cliente_document($id)
+    {
+        $mostra=DB::select("SELECT tipo.descripcion as tipo_cliente_descr,* FROM ERP_Clientes as ti left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo inner join ERP_TipoCliente  as tipo on tipo.id=ti.id_tipocli  where ti.documento='$id'");
+        return $mostra;
     }
 
 }

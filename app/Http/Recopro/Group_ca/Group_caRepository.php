@@ -37,7 +37,8 @@ class Group_caRepository implements Group_caInterface
     }
      public function create(array $attributes)
     {
-       
+        $attributes['cIdUsuCre'] = auth()->id();
+        $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)
@@ -52,7 +53,7 @@ class Group_caRepository implements Group_caInterface
         return $new; 
     }
     public function update($id, array $attributes)
-    {
+    {   $attributes['cIdUsuMod'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }

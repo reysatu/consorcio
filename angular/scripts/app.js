@@ -54,6 +54,10 @@
         'sys.app.maintenances',
         'sys.app.customers',
         'sys.app.group_cas',
+        'sys.app.typeServicioMants',
+        'sys.app.vehiculos_terceros',
+        'sys.app.list_precios',
+        'sys.app.orden_servicios',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

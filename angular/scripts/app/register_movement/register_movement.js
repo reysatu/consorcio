@@ -1619,7 +1619,7 @@
                         LoadRecordsButtonRegister_Movement.click();
                     }
                   
-                    
+                     
                     }
                });
 

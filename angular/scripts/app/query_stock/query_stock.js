@@ -25,7 +25,7 @@
         var filtro_idAlm= '<select id="filtro_idAlm" class="form-control input-sm""><option value="">Almacen</option></select>';
         var filtro_idLoc = '<select id="filtro_idLoc" class="form-control input-sm""><option value="">Localizacion</option></select>';
         var filtro_cate = '<select id="filtro_cate" class="form-control input-sm""><option value="">Categoría</option></select>';
-        var filtro_art = '<select id="filtro_art" class="form-control input-sm""><option value="">Árticulo</option></select>';
+        var filtro_art = '<select id="filtro_art"  style="width: 100%" class="form-control input-sm""><option value="">Árticulo</option></select>';
         
         // var data_stock={Almacen: "Piso N° 1",Articulo: "MOTOCAR NL 150",Categoria: "TRIMOVIL",Costo_Promedio_Unitario: "6400.00",Costo_Total: "6400.00",Disponible: "1.0000",Localizacion: "E-F1-C1",Lote: "",Remitido: ".0000",Serie: "8WAKRFS51ML048094",Total: "1.0000",Transito: ".0000",Unidad: "UND",id: "6524" };
         var btn_exportar_QS=$("#btn_exportar_QS");
@@ -153,7 +153,7 @@
         }, true);
 
         getDataFiltro();
-
+         $('#filtro_art').select2();
         function getDataFiltro() {
             filtro_idAlm = $('#filtro_idAlm');
             filtro_idLoc = $('#filtro_idLoc');
@@ -181,7 +181,7 @@
                     });
                     filtro_art.append('<option value="">Artículo</option>');
                     _.each(response.d_articulo, function (item) {
-                        filtro_art.append('<option value="' + item.description + '">' + item.description + '</option>');
+                        filtro_art.append('<option value="' + item.description + '">'+ item.code_article+' '+ item.description + '</option>');
                     });
                     // data_stock=response.data_complete;
                     // console.log(data_stock);

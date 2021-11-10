@@ -24,17 +24,22 @@ class AdviserController extends Controller
     public function all(Request $request, AdviserInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'descripcion'];
+        $params = ['id', 'descripcion','estado'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
     public function create(AdviserInterface $repo, Request $request)
     {
-        $data = $request->all();
+        $data = $request->all(); 
         $table="ERP_Asesores";
         $id='id';
         $data['id'] = $repo->get_consecutivo($table,$id);
         $data['descripcion'] = strtoupper($data['descripcion']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
@@ -47,6 +52,11 @@ class AdviserController extends Controller
         $data = $request->all();
         $id = $data['id'];
         $data['descripcion'] = strtoupper($data['descripcion']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->update($id, $data);
         return response()->json(['Result' => 'OK']);
     }

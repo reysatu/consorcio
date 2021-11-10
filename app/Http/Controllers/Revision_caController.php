@@ -24,7 +24,7 @@ class Revision_caController extends Controller
     public function all(Request $request, Revision_caInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'nombre','idGrupo'];
+        $params = ['id', 'nombre','idgrupo','estado'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
@@ -35,6 +35,11 @@ class Revision_caController extends Controller
         $id='id';
         $data['id'] = $repo->get_consecutivo($table,$id);
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
@@ -47,6 +52,11 @@ class Revision_caController extends Controller
         $data = $request->all();
         $id = $data['id'];
         $data['nombre'] = strtoupper($data['nombre']);
+        $estado='A';
+        if(!isset($data['estado'])){
+            $estado='I';
+        };
+        $data['estado'] =  $estado;
         $repo->update($id, $data);
 
         return response()->json(['Result' => 'OK']);

@@ -55,9 +55,46 @@ use App\Http\Recopro\Measure\Measure;
 use App\Http\Recopro\Measure\MeasureInterface;
 use App\Http\Recopro\Measure\MeasureRepository;
 
+use App\Http\Recopro\Type_vehiculo\Type_vehiculo;
+use App\Http\Recopro\Type_vehiculo\Type_vehiculoInterface;
+use App\Http\Recopro\Type_vehiculo\Type_vehiculoRepository;
+
+use App\Http\Recopro\List_precio\List_precio;
+use App\Http\Recopro\List_precio\List_precioInterface;
+use App\Http\Recopro\List_precio\List_precioRepository;
+
+use App\Http\Recopro\List_precio_detalle\List_precio_detalle;
+use App\Http\Recopro\List_precio_detalle\List_precio_detalleInterface;
+use App\Http\Recopro\List_precio_detalle\List_precio_detalleRepository;
+
 use App\Http\Recopro\Shop\Shop;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Shop\ShopRepository;
+
+use App\Http\Recopro\TypeCostumer\TypeCostumer;
+use App\Http\Recopro\TypeCostumer\TypeCostumerInterface;
+use App\Http\Recopro\TypeCostumer\TypeCostumerRepository;
+
+// use App\Http\Recopro\TypeServicioMant\TypeServicioMant;
+// use App\Http\Recopro\TypeServicioMant\TypeServicioMantInterface;
+// use App\Http\Recopro\TypeServicioMant\TypeServicioMantRepository;
+
+
+use App\Http\Recopro\Orden_servicio\Orden_servicio;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioRepository;
+
+use App\Http\Recopro\TablaSunat\TablaSunat;
+use App\Http\Recopro\TablaSunat\TablaSunatInterface;
+use App\Http\Recopro\TablaSunat\TablaSunatRepository;
+
+use App\Http\Recopro\TypeServicioMant\TypeServicioMant;
+use App\Http\Recopro\TypeServicioMant\TypeServicioMantInterface;
+use App\Http\Recopro\TypeServicioMant\TypeServicioMantRepository;
+
+use App\Http\Recopro\Vehiculos_tercero\Vehiculos_tercero;
+use App\Http\Recopro\Vehiculos_tercero\Vehiculos_terceroInterface;
+use App\Http\Recopro\Vehiculos_tercero\Vehiculos_terceroRepository;
 
 use App\Http\Recopro\Customer\Customer;
 use App\Http\Recopro\Customer\CustomerInterface;
@@ -430,7 +467,13 @@ class AppServiceProvider extends ServiceProvider
         $this->registerContestProviderDetail();
         $this->registerCurrency();
         $this->registerMeasure();
+        $this->registerType_vehiculo();
+        $this->registerList_precio();
+        $this->registerList_precio_detalle();
         $this->registerShop();
+        $this->registerTypeCostumer();
+        $this->registerTipo_mantenimiento();
+        $this->registerOrden_servicio();
         $this->registerCustomer();
         $this->registerGroup_ca();
         $this->registerRevision_ca();
@@ -447,6 +490,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerModelo();
         $this->registerTechnician();
         $this->registerRegister_Transfer_Articulo();
+        $this->registerTypeServicioMant();
+        $this->registerVehiculos_tercero();
+        $this->registerTablaSunat();
         $this->registerRegister_Transfer_Detalle();
         $this->registerQuery_stock();
 		$this->registerQuery_movements();
@@ -940,13 +986,58 @@ class AppServiceProvider extends ServiceProvider
             return new MeasureRepository(new Measure());
         });
     }
+    public function registerList_precio_detalle()
+    {
+        $app = $this->app;
 
+        $app->bind(List_precio_detalleInterface::class, function ($app) {
+            return new List_precio_detalleRepository(new List_precio_detalle());
+        });
+    }
+    public function registerList_precio()
+    {
+        $app = $this->app;
+
+        $app->bind(List_precioInterface::class, function ($app) {
+            return new List_precioRepository(new List_precio());
+        });
+    }
+    public function registerType_vehiculo()
+    {
+        $app = $this->app;
+
+        $app->bind(Type_vehiculoInterface::class, function ($app) {
+            return new Type_vehiculoRepository(new Type_vehiculo());
+        });
+    }
+    public function registerOrden_servicio()
+    {
+        $app = $this->app;
+
+        $app->bind(Orden_servicioInterface::class, function ($app) {
+            return new Orden_servicioRepository(new Orden_servicio());
+        });
+    }
     public function registerShop()
     {
         $app = $this->app;
 
         $app->bind(ShopInterface::class, function ($app) {
             return new ShopRepository(new Shop());
+        });
+    }
+    public function registerTipo_mantenimiento()
+    {
+        $app = $this->app;
+        $app->bind(Tipo_mantenimientoInterface::class, function ($app) {
+            return new Tipo_mantenimientoRepository(new Tipo_mantenimiento());
+        });
+    }
+    public function registerTypeCostumer()
+    {
+        $app = $this->app;
+        $app->bind(TypeCostumerInterface::class, function ($app) {
+            return new TypeCostumerRepository(new TypeCostumer());
         });
     }
     public function registerRevision_ca()
@@ -1072,6 +1163,30 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(TechnicianInterface::class, function ($app) {
             return new TechnicianRepository(new Technician());
+        });
+    }
+    public function registerTablaSunat()
+    {
+        $app = $this->app;
+
+        $app->bind(TablaSunatInterface::class, function ($app) {
+            return new TablaSunatRepository(new TablaSunat());
+        });
+    }
+    public function registerTypeServicioMant()
+    {
+        $app = $this->app;
+
+        $app->bind(TypeServicioMantInterface::class, function ($app) {
+            return new TypeServicioMantRepository(new TypeServicioMant());
+        });
+    }
+    public function registerVehiculos_tercero()
+    {
+        $app = $this->app;
+
+        $app->bind(Vehiculos_terceroInterface::class, function ($app) {
+            return new Vehiculos_terceroRepository(new Vehiculos_tercero());
         });
     }
     public function registerRegister_Transfer_Articulo()
