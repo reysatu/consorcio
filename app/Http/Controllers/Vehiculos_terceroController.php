@@ -28,7 +28,7 @@ class Vehiculos_terceroController extends Controller
     public function all(Request $request, Vehiculos_terceroInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'idModelo','idMarca','idModelo','n_chasis','anio_fabricacion','color','placa','idTipoVehiculo','motor'];
+        $params = ['id', 'idModelo','idMarca','idModelo','n_chasis','anio_fabricacion','color','placa','motor'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 

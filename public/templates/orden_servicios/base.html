@@ -96,6 +96,7 @@ h5.linea span {
     </div>
   </div>
 </div>
+
 <div class="modal" id="modalOrdenServivio" role="dialog" style="overflow-y: scroll;">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -123,7 +124,7 @@ h5.linea span {
                                                     </div>
                                                     <label class="col-sm-2 control-label">Moneda</label>
                                                     <div class="col-sm-2">
-                                                         <select id="IdMoneda" class="form-control input-sm"></select>
+                                                         <select id="IdMoneda"  class="form-control input-sm"></select>
                                                     </div>
                                                     <label class="col-sm-2 control-label">Condiciones de Pago</label>
                                                     <div class="col-sm-2">
@@ -200,7 +201,7 @@ h5.linea span {
                                                     <input type="hidden" class="form-control input-sm " id="distrito_or" >
                                                     <label class="col-sm-2 control-label">Tipo Documento</label>
                                                     <div class="col-sm-2">
-                                                       <select id="idDocumentoCli" class="form-control input-sm"></select>
+                                                       <select id="idDocumentoCli" disabled class="form-control input-sm"></select>
                                                     </div>
                                                     <label class="col-sm-1 control-label col-md-offset-1"> Documento</label>
                                                     <div class="col-sm-2">
@@ -305,12 +306,13 @@ h5.linea span {
                                     </div>
                                     <h5 class="linea"><span>Mantenimientos</span></h5>
                                     <div class="form-horizontal">
-                                        <br>
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-5">
+                                                 <div class="form-group">
+                                                   <h5 class="">Revisiones a realizar</h5>
+                                                 </div> 
                                                 <div class="form-group">
-                                                    <label class="col-sm-2 control-label">Mantenimientos</label>
-                                                    <div class="col-sm-10">
+                                                    <div class="col-sm-12">
                                                         <select id="gru_revisiones" class="form-control input-sm"></select>
                                                     </div>
                                                 </div>
@@ -330,7 +332,10 @@ h5.linea span {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-md-offset-1">
+                                            <div class="col-md-6 ">
+                                               <div class="form-group">
+                                                   <h5 class="">Servicios a realizar</h5>
+                                                 </div> 
                                                 <div class="form-group">
                                                     <div class="col-sm-7">
                                                         <select id="servicios_select" class="form-control input-sm" style="width: 100%"><option value="">Servicios</option></select>
@@ -531,7 +536,7 @@ h5.linea span {
               </div>  
         </div>
         <div class="modal-footer">
-        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="saveCliente()" >Guardar</button>  
+        <button type="button" class="btn btn-danger-admin btn-sm" id="btn_save_cliente" >Guardar</button>  
         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
@@ -604,3 +609,30 @@ h5.linea span {
       
     </div>
   </div>
+  <div class="modal modal2 fade" id="modalDeleteDetalle" role="dialog" >
+    <div class="modal-dialog  modal-dialog2 modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">¿Esta seguro ?</h4>
+          <input type="hidden" id="">
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger hide" role="alert" id="msg_cont_EliminarMovimiento">
+              <span class="fa fa-warning"></span>
+              <p></p>            
+          </div> 
+          <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> Los servicios seleccionados se eliminaran. ¿Está seguro?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-admin btn-sm"   id="btn_cambio_delete"    ng-click="EliminarServiciosDetalle()">
+              Eliminar 
+          </button>
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+             Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

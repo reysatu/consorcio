@@ -16,6 +16,8 @@
         
         var totales;
         var servicios;
+        var btn_save_cliente=$("#btn_save_cliente");
+        var modalDeleteDetalle=$("#modalDeleteDetalle");
         var id_tipomant=$("#id_tipomant");
         var tipo_totales_slec=$("#tipo_totales_slec");
         var id_cliente_tipo_or=$("#id_cliente_tipo_or");
@@ -113,7 +115,7 @@
             
             RESTService.get('orden_servicios/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    console.log(response.data);
+                 
                     var data=response.data;
                     cCodConsecutivo.prop('disabled',true);
                     cCodConsecutivo.val(data[0].cCodConsecutivo).trigger("change");
@@ -135,7 +137,7 @@
                     tipodoc.val(data[0].tipodoc).trigger("change");
                     estado.val(data[0].iEstado).trigger("change");
                     var data_cliente=response.data_cliente;
-                    console.log(data_cliente);
+                   
                     cliente_id_or.val(data_cliente[0].id);
                     documento_or.val(data_cliente[0].documento);
                     getCliente();
@@ -229,7 +231,7 @@
                 RESTService.get('shops/TraerProvincias', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
-                     console.log(data_p);
+                   
                       provincia.html('');
                       provincia.append('<option value="" >Seleccione</option>');
                      _.each(response.data, function(item) {
@@ -255,7 +257,7 @@
         RESTService.get('shops/TraerDistritos', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
-                     console.log(data_p);
+                 
                        distrito.html('');
                       distrito.append('<option value="" >Seleccione</option>');
                      _.each(response.data, function(item) {
@@ -292,7 +294,7 @@
                         getDepartamento(bandera);
                         distrito_ver.val("");
                         distrito_or.val("");
-                        idDocumentoCli.val("");
+                        // idDocumentoCli.val("");
                         razonsocial_cliente_or.val("");
                         documento_or.val("");
                         contacto_or.val("");
@@ -340,7 +342,7 @@
             RESTService.get('orden_servicios/get_Placa', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var datos=response.data;
-                    console.log(response);
+                 
                     idMarca_add.html("");
                     idMarca_add.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.marca, function(item) {
@@ -388,9 +390,13 @@
             getProvincia(bandera,id);
         });
           idMoneda.change(function () {
-            llenarServicios();
+              if(table_servicios.html()!=""){
+                 modalDeleteDetalle.modal("show");
+              }
+             llenarServicios();
         });
         function llenarServicios(){
+
            var mone_ser=idMoneda.val();
           var clientipo_ser=id_cliente_tipo_or.val();
           servicios_select.html(''); 
@@ -465,20 +471,21 @@
              var td2 = $('<td class="text-center"></td>');
              var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'" />');
              var idTipo_input = $('<input type="hidden" class="idTipo_select form-control input-sm"  value="'+tipoTo+'" />');
+            var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
              var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS="' + code + '" id="tr_pre' + code + '"  value="'+tipoText+'" readonly/>');
              var precio = $('<input type="number" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'" data-precio="' +preci_t+ '" value="' +preci_t+ '"  />');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
              tda.append(precio);
              tdb.append(tipototal);
-             td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser);
+             td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
              tr.append(td1).append(tda).append(tdb).append(td2);
              table_servicios.append(tr);
             var precio=arrayRe[2];
              if(tipoTo=='1'){
                 var mo_r=mo_revision.val();
-                console.log(mo_r);
-                console.log(precio);
+              
+             
                 var new_mor=Number(mo_r)+Number(precio);
                 mo_revision.val(new_mor.toFixed(2));
              }else if(tipoTo=='2'){
@@ -526,12 +533,11 @@
                  var code = (e.keyCode ? e.keyCode : e.which);
                     if(code==13){
                     var tipoTo =$(this).attr('data_idTipoPres');
-                    console.log(tipoTo);
+                    
 
                     var precio_ant =$(this).attr('data-precio');
                     var precio_act=$(this).val();
-                     console.log(precio_ant);
-                    console.log(precio_act);
+                   
                        if(tipoTo=='1'){
                             var mo=mo_revision.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
@@ -598,7 +604,7 @@
                     if(nConsecutivo.val()!=''){
 
                         var id=cCodConsecutivo.val()+'_'+nConsecutivo.val()+'_'+idedet;
-                        console.log(id);
+                      
                         RESTService.get('orden_servicios/deleteDetalle', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
                            $('#tr_b_' + code).remove();
@@ -622,7 +628,7 @@
                  }else if(idTipo=='2'){
                     var mo_m=mo_mecanica.val();
                     var new_mo_m=Number(mo_m)-Number(precio_borrar);
-                    console.log(new_mo_m);
+                    
                     mo_mecanica.val(new_mo_m.toFixed(2));
                  }else if(idTipo=='3'){
                     var mo_tr=terceros.val();
@@ -908,20 +914,38 @@
             provincia.html('');
             distrito.html('');
         };
-        $scope.EliminarOrden = function(){
-            var id=idOrdenDelete.val();
-            RESTService.get('orden_servicios/delete', id, function(response) {
+          $('#btn_cambio_delete').click(function(e){
+            EliminarServiciosDetalle();
+          })
+
+
+         function EliminarServiciosDetalle (){
+             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+             var id_revision_array =[];
+                $.each($('.idDetalleGrup'), function (idx, item) {
+                    id_revision_array[idx] = $(item).val();
+
+                });
+            id_revision_array = id_revision_array.join(',');
+            
+            var params = {
+                    'id_revision_array':id_revision_array,
+                 };
+                 
+             RESTService.updated('orden_servicios/deleteDetalle', id, params, function(response)  {
                  if (!_.isUndefined(response.status) && response.status) {
                          AlertFactory.textType({
                             title: '',
-                            message: 'El registro se eliminó correctamente',
+                            message: 'Los servicios se eliminaron correctamente',
                             type: 'success'
                         });
-                        modalDeleteOrden.modal("hide"); 
-                        LoadRecordsButtonOrden_Servicio.click();
+                         console.log(response.data);
+                         console.log(response.datad);
+                        table_servicios.html("");
+                        modalDeleteDetalle.modal("hide"); 
                     }else {
                         var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo guardar el Almacén. Intente nuevamente.' : response.message;
+                            'No se pudo eliminar. Intente nuevamente.' : response.message;
                         AlertFactory.textType({
                             title: '',
                             message: msg_,
@@ -1141,7 +1165,23 @@
 
             }
         }
-         $scope.saveCliente = function()
+        btn_save_cliente.click(function(e){
+            saveCliente();
+        });
+         tipodoc.change(function () {
+            console.log("entro1");
+            if(idDocumentoCli.val()!=""){
+                 console.log("entro2");
+                 if(tipodoc.val()!=idDocumentoCli.val()){
+                    if(table_servicios.html()!=""){
+                         console.log("entro3");
+                        modalDeleteDetalle.modal('show');
+                    }
+                 }
+            }
+           
+        });
+        function saveCliente()
         {
             var bval = true;
             bval = bval && tipodoc.required();
@@ -1166,6 +1206,7 @@
                 });
              bval = false;
             };
+           
             if(bval){
                  var params = {
                     'tipodoc': tipodoc.val(),
@@ -1389,7 +1430,6 @@
             recordsLoaded: function(event, data) {
                 $('.edit-orden').click(function(e){
                     var id = $(this).attr('data-id');
-                    console.log(id);
                     findRegister_Orden(id);
                     e.preventDefault();
                 });

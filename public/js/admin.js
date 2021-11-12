@@ -357,21 +357,26 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</form>';
 }
 function getFormSearch2(form_id, input_id, btn_id) {
-    return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
-        '<div class="form-group"><select id="filtro_art"  style="margin-right:5px;width: 100%" name="filtro_art" class="form-control input-sm "></select><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
-        '<div class="input-group input-group-sm">' +
-        '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
-        '<span class="input-group-btn">' +
-        '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
-        '<i class="fa fa-search"></i>' +
-        '</button>' +
-        '</span>' +
-        '<span class="input-group-btn">' +
-        '<button  type="button"  id="btn_exportar_QS" class="btn-primary  btn-sm">' +
-        '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
-        '</button>' +
-        '</span>' +
-        '</div>' +
+    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="form-group">'+
+            '<div class="col-md-4"><select id="filtro_art"  style="margin-right:5px;width: 100%" name="filtro_art" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-2"><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><div class="input-group input-group-sm">' +
+            '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+            '<span class="input-group-btn">' +
+            '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+            '<i class="fa fa-search"></i>' +
+            '</button>' +
+            '</span>' +
+            '<span class="input-group-btn">' +
+            '<button  type="button"  id="btn_exportar_QS" class="btn-primary  btn-sm">' +
+            '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+            '</button>' +
+            '</span>' +
+            '</div></div>' +
+            '</div>'+
         '</form>';
 }
 function getFormSearch3(form_id, input_id, btn_id) {
@@ -379,20 +384,22 @@ function getFormSearch3(form_id, input_id, btn_id) {
         '<div class="form-group">'+
             '<div class="col-md-3"><input onfocus=(this.type="date") onblur=(this.type="text") type="text" class="form-control input-sm" id="fecha_inicio" placeholder="Fecha Inicio"></div>'+
             '<div class="col-md-3"><input type="text" class="form-control input-sm" onfocus=(this.type="date") onblur=(this.type="text") id="fecha_fin" placeholder="Fecha Fin"></div>'+
-            '<div class="col-md-2"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-4"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
             '<div class="col-md-2"><select id="filtro_oper"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
-            '<div class="col-md-2"><select id="filtro_nat"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
+          
            
         '</div>'+
         '<div class="form-group">'+
+           '<div class="col-md-2"><select id="filtro_nat"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
             '<div class="col-md-2"><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select></div>'+
-            '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select></div>'+
+            '<div class="col-md-2"><select style="margin-right:5px;width: 100%" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select></div>'+
             '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
             '<div class="col-md-2"><input type="text" class="form-control input-sm" id="n_movimiento" placeholder="N° Movimiento" width="100px"></div>'+
             '<div class="col-md-2"><input type="text" class="form-control input-sm" id="cod_lote" placeholder="Cod Lote" width="100px"></div>'+
-            '<div class="col-md-2"><input type="text" class="form-control input-sm" id="cod_serie" placeholder="Cod Serie" width="100px"></div>'+
         '</div>'+
-        '<div class="input-group input-group-sm">' +
+        '<div class="form-group">'+
+        '<div class="col-md-2" ><input type="text" class="form-control input-sm" id="cod_serie" placeholder="Cod Serie" width="100px"></div>'+
+        '<div class="col-md-2">'+
         '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
         '<span class="input-group-btn">' +
         '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
@@ -405,6 +412,7 @@ function getFormSearch3(form_id, input_id, btn_id) {
         // '<span class="input-group-btn">' +
        
         // '</span>' +
+         '</div>' +
         '</div>' +
         '</form>';
 }

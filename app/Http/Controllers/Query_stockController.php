@@ -70,4 +70,22 @@ class Query_stockController extends Controller
             ]);
         }
     }
+    public function get_localizacion_al($id, Query_stockInterface $repo)
+    {
+        try {
+            $data_almacen=$repo->get_id_almacen($id);
+            $data = $repo->get_localizacion_almacen($data_almacen[0]->id);
+            return response()->json([
+                'status' => true,
+                'localizaciones' => $data,
+              
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 } 

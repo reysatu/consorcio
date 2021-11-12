@@ -19,6 +19,9 @@ Route::get('orden_servicios/get_Placa/{id}', ['as' => 'orden_servicios.get_Placa
 Route::get('orden_servicios/get_Modelo/{id}', ['as' => 'orden_servicios.get_Modelo', 'uses' => 'Vehiculos_terceroController@get_Modelo_documento']);
 Route::put('orden_servicios/createOrden/{id}', ['as' => 'orden_servicios.createOrden', 'uses' => 'Orden_servicioController@createUpdate']);
 
+
+Route::put('orden_servicios/deleteDetalle/{id}', ['as' => 'orden_servicios.deleteDetalle', 'uses' => 'Orden_servicioController@deleteDetalleChangue']);
+
 Route::get('orden_servicios/delete/{id}', ['as' => 'orden_servicios.delete', 'uses' => 'Orden_servicioController@destroy']);
 
 Route::get('orden_servicios/deleteMovimiento/{id}', ['as' => 'orden_servicios.deleteMovimiento', 'uses' => 'Orden_servicioController@delete_movimiento']);

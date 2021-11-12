@@ -30,7 +30,33 @@ class Orden_servicioController extends Controller
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
  
- 
+     public function deleteDetalleChangue($id, Orden_servicioInterface $repo, Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $valtodo=explode("_", $id);
+            
+            $id_revision_array=$data['id_revision_array'];
+            $id_revision_array=explode(',', $id_revision_array);
+            for ($i=0; $i < count($id_revision_array) ; $i++) {
+               $val=$repo->destroy_orden_detalle($valtodo[0],$valtodo[1],$id_revision_array[$i]);
+            };
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'data'=>$id_revision_array,
+                'datad'=>$id,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function createUpdate($id, Orden_servicioInterface $repo, Request $request)
     {
         DB::beginTransaction();

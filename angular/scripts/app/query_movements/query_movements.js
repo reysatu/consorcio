@@ -180,7 +180,17 @@
                 return bval;
             }
         });
-        
+         $('#filtro_art').select2();
+         $('#filtro_idAlm').change(function () {
+            var descrip=$('#filtro_idAlm').val();
+            RESTService.get('query_stocks/get_localizacion', descrip, function(response) {
+                 filtro_idLoc.html("");
+                 filtro_idLoc.append('<option value="">Localización</option>');
+                _.each(response.localizaciones, function (item) {
+                    filtro_idLoc.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                });
+              });
+        });
         getDataFiltro();
         function getDataFiltro() {
             filtro_idAlm = $('#filtro_idAlm');
@@ -202,16 +212,16 @@
                         filtro_idAlm.append('<option value="'+item.description+'">' + item.description + '</option>');
                     });
                     filtro_idLoc.append('<option value="">Localización</option>');
-                    _.each(response.d_localizacion, function (item) {
-                        filtro_idLoc.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
-                    });
+                    // _.each(response.d_localizacion, function (item) {
+                    //     filtro_idLoc.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
+                    // });
                     filtro_cate.append('<option value="">Categoría</option>');
                     _.each(response.d_categoria, function (item) {
                         filtro_cate.append('<option value="' + item.descripcion + '">' + item.descripcion + '</option>');
                     });
                     filtro_art.append('<option value="">Artículo</option>');
                     _.each(response.d_articulo, function (item) {
-                        filtro_art.append('<option value="' + item.description + '">' + item.description + '</option>');
+                        filtro_art.append('<option value="' + item.description + '">' + item.code_article+' '+ item.description + '</option>');
                     });
                     filtro_nat.append('<option value="">Naturaleza</option>');
                     _.each(response.d_naturaleza, function (item) {

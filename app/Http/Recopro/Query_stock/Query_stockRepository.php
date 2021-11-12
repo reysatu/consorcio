@@ -110,6 +110,14 @@ class Query_stockRepository implements Query_stockInterface
           $mostrar2=DB::select("select * from ERP_Localizacion");
           return $mostrar2;
     }
+     public function get_localizacion_almacen($id){
+          $mostrar2=DB::select("select * from ERP_Localizacion where idAlmacen='$id'");
+          return $mostrar2;
+    }
+     public function get_id_almacen($descrip){
+          $mostrar2=DB::select("select * from ERP_Almacen where description='$descrip'");
+          return $mostrar2;
+    }
      public function get_categoria(){
           $mostrar2=DB::select("select * from ERP_Categoria");
           return $mostrar2;
