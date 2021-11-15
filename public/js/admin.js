@@ -382,8 +382,8 @@ function getFormSearch2(form_id, input_id, btn_id) {
 function getFormSearch3(form_id, input_id, btn_id) {
     return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
         '<div class="form-group">'+
-            '<div class="col-md-3"><input onfocus=(this.type="date") onblur=(this.type="text") type="text" class="form-control input-sm" id="fecha_inicio" placeholder="Fecha Inicio"></div>'+
-            '<div class="col-md-3"><input type="text" class="form-control input-sm" onfocus=(this.type="date") onblur=(this.type="text") id="fecha_fin" placeholder="Fecha Fin"></div>'+
+            '<div class="col-md-3"><input  type="date" class="form-control input-sm" id="fecha_inicio" placeholder="Fecha Inicio"></div>'+
+            '<div class="col-md-3"><input type="date" class="form-control input-sm"  id="fecha_fin" placeholder="Fecha Fin"></div>'+
             '<div class="col-md-4"><select id="filtro_art"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
             '<div class="col-md-2"><select id="filtro_oper"  style="margin-right:5px" name="filtro_art" class="form-control input-sm "></select></div>'+
           

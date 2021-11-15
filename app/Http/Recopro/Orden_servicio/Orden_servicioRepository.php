@@ -223,13 +223,13 @@ class Orden_servicioRepository implements Orden_servicioInterface
      public function destroy_orden_mantenimiento($id,$no,$mant)
     {
          $pdo=DB::connection()->getPdo();
-         $destroy=DB::update("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicioMantenimiento '$id','$no','$mant'");
+         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicioMantenimiento '$id','$no','$mant'");
          return $destroy;
     }
      public function destroy_orden_detalle($id,$no,$mant)
     {
          $pdo=DB::connection()->getPdo();
-         $destroy=DB::update("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicioDetalle '$id','$no','$mant'");
+         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicioDetalle '$id','$no','$mant'");
          return $destroy;
     }
        public function actualizar_orden_mantenimiento($cCodConsecutivo,$res,$id_mantenimiento_array,$modo_mant,$usuario){

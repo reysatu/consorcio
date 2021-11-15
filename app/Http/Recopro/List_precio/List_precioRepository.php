@@ -18,7 +18,12 @@ class List_precioRepository implements List_precioInterface
         $this->model = $model; 
        
     }
-
+      public function valida_lista($idTipoCli,$idMone,$feI,$fFin)
+    {
+         $pdo=DB::connection()->getPdo();
+         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_Valida_ListaPrecio '$idTipoCli','$idMone','$feI','$fFin'");
+         return $destroy;
+    }
     public function all()
     {
         return $this->model->get();

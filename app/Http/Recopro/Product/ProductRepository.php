@@ -65,9 +65,13 @@ class ProductRepository implements ProductInterface
      public function searchServicio($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id',2)->where('state',1);
-            $q->orWhere('code_article', 'LIKE', '%' . $s . '%')->where('type_id',2)->where('state',1);
+            $q->where('description', 'LIKE', '%'.$s.'%')->where('state',1);
+            $q->orWhere('code_article', 'LIKE', '%' . $s . '%')->where('state',1);
         });
+    }
+      public function findByCode($code)
+    {
+        return $this->model->where('code_article', $code)->first();
     }
     public function searchLote($s)
     {

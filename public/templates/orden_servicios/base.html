@@ -73,7 +73,7 @@ h5.linea span {
     <div class="modal-dialog  modal-dialog2 modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button"  class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">¿Esta seguro ?</h4>
           <input type="hidden" id="idOrdenDelete">
         </div>
@@ -141,22 +141,7 @@ h5.linea span {
                                                     <div class="col-sm-2">
                                                          <input type ="time" id="horaRec" class="form-control input-sm">
                                                     </div>
-                                                      <label class="col-sm-2 control-label">Hora de Entrega</label>
-                                                    <div class="col-sm-2">
-                                                         <input type ="time" id="horaEnt" class="form-control input-sm">
-                                                    </div>
-                                                 
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="col-sm-1 control-label">Fecha Entrega</label>
-                                                    <div class="col-sm-3">
-                                                        <input type="date" class="form-control input-sm" id="dFecEntrega">
-                                                    </div>
-                                                    <label class="col-sm-2 control-label">Tipo de Servicio</label>
-                                                     <div class="col-sm-3">
-                                                        <select id="id_tipo" class="form-control input-sm"></select>
-                                                    </div>
-                                                     <label class="col-sm-1 control-label">Estado</label>
+                                                      <label class="col-sm-2 control-label">Estado</label>
                                                     <div class="col-sm-2">
                                                         <select id="estado" class="form-control input-sm" disabled>
                                                           <option value="" selected> </option>
@@ -167,24 +152,41 @@ h5.linea span {
                                                                  <option value="4"> Cancelada</option> 
                                                         </select>
                                                     </div>
+                                                     
+                                                 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-sm-1 control-label">Técnico</label>
-                                                     <div class="col-sm-3">
-                                                        <select id="idTecnico"  style="width: 100%;" class="form-control input-sm"></select>
+                                                    <label class="col-sm-1 control-label">Fecha Entrega</label>
+                                                    <div class="col-sm-3">
+                                                        <input type="date" class="form-control input-sm" id="dFecEntrega">
                                                     </div>
-                                                    <label class="col-sm-1 control-label">Tipo de Mantenimiento</label>
-                                                     <div class="col-sm-3 col-md-offset-1 ">
-                                                        <select id="id_tipomant" class="form-control input-sm"></select>
-                                                    </div>
-                                                    <label class="col-sm-1 control-label">Tipo Vehículo</label>
+                                                     <label class="col-sm-2 control-label">Hora de Entrega</label>
                                                     <div class="col-sm-2">
+                                                         <input type ="time" id="horaEnt" class="form-control input-sm">
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">Tipo de Servicio</label>
+                                                     <div class="col-sm-2">
+                                                        <select id="id_tipo" class="form-control input-sm"></select>
+                                                    </div>
+                                                   
+                                                </div>
+                                                <div class="form-group">
+                                                   <label class="col-sm-1 control-label">Tipo Vehículo</label>
+                                                    <div class="col-sm-3">
                                                          <select id="idTipoVehi_add" class="form-control input-sm" ></select>
                                                     </div>
+                                                     <label class="col-sm-1 control-label">Tipo de Mantenimiento</label>
+                                                     <div class="col-sm-2 col-md-offset-1 ">
+                                                        <select id="id_tipomant" class="form-control input-sm"></select>
+                                                    </div>
+                                                    <label class="col-sm-2 control-label">Técnico</label>
+                                                     <div class="col-sm-2">
+                                                        <select id="idTecnico"  style="width: 100%;" class="form-control input-sm"></select>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="col-sm-1 control-label">Asesor</label>
-                                                     <div class="col-sm-3  ">
+                                                   <label class="col-sm-1 control-label">Asesor</label>
+                                                     <div class="col-sm-3">
                                                         <select id="idAsesor" style="width: 100%;" class="form-control input-sm js-example-responsive"></select>
                                                     </div>
                                                 </div>
@@ -209,8 +211,11 @@ h5.linea span {
                                                     </div>
                                                     <label class="col-sm-1 control-label"> Tipo Cliente</label>
                                                     <div class="col-sm-3">
-                                                        <input type="text" class="form-control input-sm"  id="tipoCliente_or" readonly >
-                                                         <input type="hidden" class="form-control input-sm"  id="id_cliente_tipo_or" readonly >
+                                                       <!--  <input type="text" class="form-control input-sm"   id="tipoCliente_or" readonly > -->
+                                                        <!--  <input type="hidden" class="form-control input-sm"  id="id_cliente_tipo_or" readonly > -->
+                                                         <select class="form-control input-sm" id="id_cliente_tipo_or" disabled>
+                                                           
+                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -613,7 +618,7 @@ h5.linea span {
     <div class="modal-dialog  modal-dialog2 modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close" id="btn_cerrar" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">¿Esta seguro ?</h4>
           <input type="hidden" id="">
         </div>
@@ -625,10 +630,10 @@ h5.linea span {
           <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> Los servicios seleccionados se eliminaran. ¿Está seguro?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger-admin btn-sm"   id="btn_cambio_delete"    ng-click="EliminarServiciosDetalle()">
+          <button type="button" class="btn btn-danger-admin btn-sm"   id="btn_cambio_delete"    >
               Eliminar 
           </button>
-          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" id="btn_cancelar_servicio">
              Cerrar
           </button>
         </div>

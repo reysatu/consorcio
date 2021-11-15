@@ -27,7 +27,7 @@ class SerieController extends Controller
     public function all(Request $request, SerieInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo','idTipoCompraVenta','nPoliza','nLoteCompra'];
+        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo','idTipoCompraVenta','nPoliza','nLoteCompra','cPlacaVeh'];
         return parseList($repo->search($s), $request, 'idSerie', $params);
     }
 
@@ -38,6 +38,7 @@ class SerieController extends Controller
         $id='idSubFamilia';
         $data['idSubFamilia'] = $repo->get_consecutivo($table,$id);
         $data['descripcion'] = strtoupper($data['SubFamilia']);
+          $data['descripcion'] = strtoupper($data['SubFamilia']);
         $data['idFamilia'] = $data['idFamilia'];
         $estado='A';
         if(!isset($data['estado'])){
@@ -118,6 +119,7 @@ class SerieController extends Controller
              $data['chasis'] = strtoupper($data['chasis']);
              $data['motor'] = strtoupper($data['motor']);
              $data['color'] = strtoupper($data['color']);
+             $data['cPlacaVeh'] = strtoupper($data['cPlacaVeh']);
              $w = $repo->findByCode($data['nombreSerie']);
             if ($id != 0) {
                 if ($w && $w->idSerie != $id) {

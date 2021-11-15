@@ -68,6 +68,10 @@ class List_precioController extends Controller
             $data = $request->all();
             $data['descripcion'] = strtoupper($data['descripcion']);
             $data['iEstado']=0;
+            $w = $repo->valida_lista($data['id_tpocli'],$data['IdMoneda'],$data['dFecVigIni'],$data['dFecVigFin']);
+            if($w[0]->Mensaje!=''){
+                 throw new \Exception('Hay una lista vigente con estos datos. Por favor ingrese otra información.');
+            }
             if ($id != 0) {
                 $repo->update($id, $data);
             } else {
@@ -97,15 +101,15 @@ class List_precioController extends Controller
                                 $datoLo['idProducto'] = $idProducto[$i];
                                 $datoLo['nPrecio'] = $nPrecio[$i];
                                 $repoDet->create($datoLo);
+                        }else{
+                                $datoLo['nPrecio'] = $nPrecio[$i];
+                                $repoDet->update($id,$idProducto[$i], $datoLo);
                         }
                 }
                 if(!empty($idDetalle_Delete)){
                     for($i = 0; $i < count($idDetalle_Delete); ++$i) {
                         $com=$idDetalle_Delete[$i];
-                        $porciones = explode("_", $com);
-                         if(!empty($porciones[1])){
-                            $repoDet->destroy_detalle($porciones[0],$porciones[1]);
-                        }
+                        $repoDet->destroy_detalle($id,$com);
                     }
                 }
        

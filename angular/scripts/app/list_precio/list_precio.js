@@ -78,8 +78,8 @@
                     dFecVigFin.val(data_p.dFecVigFin);
                     
                     _.each(data_p.productos, function (c) {
-                          var codigo=String(c.id_lista)+'_'+String(c.idProducto);
-                           addToProductos(codigo,c.descripcion,c.nPrecio,c.idProducto)
+                          // var codigo=String(c.id_lista)+'_'+String(c.idProducto);
+                           addToProductos(c.idProducto,c.descripcion,c.nPrecio,c.idProducto)
                      });
                      modalPrecios.modal('show');
                 } else {

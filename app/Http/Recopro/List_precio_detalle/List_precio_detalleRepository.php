@@ -41,6 +41,7 @@ class List_precio_detalleRepository implements List_precio_detalleInterface
         $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
     }
+    
     public function get_consecutivo($table,$id)
     {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
          $actu=0;
@@ -52,11 +53,9 @@ class List_precio_detalleRepository implements List_precio_detalleInterface
         $new=$actu+1;
         return $new; 
     }
-    public function update($id, array $attributes)
+   public function update($ida,$idb, array $attributes)
     {
-        $attributes['cIdUsuMod'] = auth()->id();
-        $model = $this->model->findOrFail($id);
-        $model->update($attributes);
+      $this->model->where('id_lista', $ida)->where('idProducto', $idb)->update($attributes);
     }
     public function destroy_detalle($id_lista,$idProducto)
     {

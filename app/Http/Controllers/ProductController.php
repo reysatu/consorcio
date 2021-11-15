@@ -61,14 +61,20 @@ class ProductController extends Controller
             $data['color'] = strtoupper($data['color']);
             $data['description'] = strtoupper($data['description']);
             $data['description_detail'] = strtoupper($data['description_detail']);
-
+            $w = $repo->findByCode($data['code_article']);
             if ($id != 0) {
+                if ($w && $w->id != $id) {
+                    throw new \Exception('Ya existe un Articulo con este código . Por favor ingrese otro código.');
+                }
                 $repo->update($id, $data);
                 $product = $repo->find($id);
                 $code = $product->code_article;
                 $ide = $product->id;
 
             } else {
+                if ($w) {
+                    throw new \Exception('Ya existe un Articulo con este código. Por favor ingrese otro código.');
+                }
                 $product = $repo->create($data);
                 $ide = $product->id;
                 $code = $product->code_article;

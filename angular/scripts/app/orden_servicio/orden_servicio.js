@@ -16,6 +16,7 @@
         
         var totales;
         var servicios;
+        var valor_moneda;
         var btn_save_cliente=$("#btn_save_cliente");
         var modalDeleteDetalle=$("#modalDeleteDetalle");
         var id_tipomant=$("#id_tipomant");
@@ -24,6 +25,7 @@
         var table_servicios=$("#table_servicios");
         var servicios_select=$("#servicios_select");
         var idMoneda=$("#IdMoneda");
+        var btn_cancelar_servicio=$("#btn_cancelar_servicio");
         var tipo_vehi=$("#tipo_vehi");
         var idTipoVehi_add=$("#idTipoVehi_add");
         var tipoCliente_or=$("#tipoCliente_or");
@@ -61,7 +63,7 @@
         var tabla_grupo_revision=$("#articulo_dd_det");
         var tipodoc=$("#tipodoc");
         var razonsocial_cliente=$("#razonsocial_cliente");
-
+        var btn_cerrar=$("#btn_cerrar");
         var documento=$("#documento");
         var contacto=$("#contacto");
         var direccion=$("#direccion");
@@ -168,8 +170,8 @@
                     // idAsesor
                     // horaEnt
                     // nKilometraje
-
-
+                    id_tipocli.data("prev",id_cliente_tipo_or.val());
+                    idMoneda.data("prev",idMoneda.val());
                     modalOrdenServivio.modal("show");
                 } else {
                     AlertFactory.textType({
@@ -181,6 +183,11 @@
             });
         }
         function newOrdenServicio() {
+            var hoy = new Date();
+            var actu=hoy.getFullYear()+"-"+ (hoy.getMonth()+1)+ "-" +hoy.getDate() ;
+            var hora = hoy.getHours() + ':' + hoy.getMinutes();
+            dFecRec.val(actu);
+            horaRec.val(hora);
             modalOrdenServivio.modal('show');
             titlemodalOrdenServivio.html('Nuevo Orden de Servicio');
         }
@@ -294,7 +301,7 @@
                         getDepartamento(bandera);
                         distrito_ver.val("");
                         distrito_or.val("");
-                        // idDocumentoCli.val("");
+                        idDocumentoCli.val("");
                         razonsocial_cliente_or.val("");
                         documento_or.val("");
                         contacto_or.val("");
@@ -304,7 +311,9 @@
                         telefono_or.val("");
                         cliente_id_or.val("");
                         tipoCliente_or.val("");
-                        id_cliente_tipo_or.val("")
+                        id_tipocli.data("prev",id_cliente_tipo_or.val());
+                        id_tipocli.val(id_cliente_tipo_or.val());
+                        // id_cliente_tipo_or.val("")
                         llenarServicios();
                      }else{
                         distrito_ver.val(datos[0].cDistrito);
@@ -320,6 +329,7 @@
                         cliente_id_or.val(datos[0].id);
                         tipoCliente_or.val(datos[0].tipo_cliente_descr).trigger('change');
                         id_cliente_tipo_or.val(datos[0].id_tipocli)
+                         id_tipocli.data("prev",id_cliente_tipo_or.val());
                         llenarServicios();
                  
                      }
@@ -393,8 +403,40 @@
               if(table_servicios.html()!=""){
                  modalDeleteDetalle.modal("show");
               }
-             llenarServicios();
+              llenarServicios();
         });
+        id_cliente_tipo_or.change(function () {
+             
+              llenarServicios();
+        });
+           id_tipocli.change(function () {
+            console.log("entro1");
+            if(id_cliente_tipo_or.val()!=""){
+                 console.log("entro2");
+                 if(id_tipocli.val()!=id_cliente_tipo_or.val() && id_tipocli.val()!=""){
+                    if(table_servicios.html()!=""){
+                         console.log("entro3");
+
+                        modalDeleteDetalle.modal('show');
+                    }
+                 }
+            }
+           
+        });
+        btn_cancelar_servicio.click(function () {
+            idMoneda.val(idMoneda.data("prev")).trigger("change");
+            id_tipocli.val(id_tipocli.data("prev")).trigger("change");
+            
+          });
+        
+        btn_cerrar.click(function () {
+            idMoneda.val(idMoneda.data("prev")).trigger("change");
+            id_tipocli.val(id_tipocli.data("prev")).trigger("change");
+          });
+        // idMoneda.click(function () {
+        //     valor_moneda=$(this).val();
+        //     console.log(valor_moneda);
+        // });
         function llenarServicios(){
 
            var mone_ser=idMoneda.val();
@@ -447,7 +489,8 @@
                 var vto =servicios_select.val();
                 if(vto!='' && tipoTo!=''){
                     var modo_ser=0;
-                    addServicios(vto,tipoTo,tipoText,modo_ser);
+                    var iddet=0;
+                    addServicios(vto,tipoTo,tipoText,modo_ser,iddet);
                 }
         });
         function addServicios(vto,tipoTo,tipoText,modo_ser,iddet){
@@ -481,6 +524,8 @@
              td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
              tr.append(td1).append(tda).append(tdb).append(td2);
              table_servicios.append(tr);
+            idMoneda.data("prev",idMoneda.val()); 
+            id_tipocli.data("prev",id_cliente_tipo_or.val());   
             var precio=arrayRe[2];
              if(tipoTo=='1'){
                 var mo_r=mo_revision.val();
@@ -601,13 +646,28 @@
                     confirm: 'Si',
                     cancel: 'No'
                 }, function () {
-                    if(nConsecutivo.val()!=''){
+                    if(nConsecutivo.val()!='' && idedet){
 
                         var id=cCodConsecutivo.val()+'_'+nConsecutivo.val()+'_'+idedet;
                       
                         RESTService.get('orden_servicios/deleteDetalle', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
-                           $('#tr_b_' + code).remove();
+                            var data=response.data;
+                            console.log(data);
+                            if(data[0].Mensaje!=''){
+                                  AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                            }else{
+                                   AlertFactory.textType({
+                                    title: '',
+                                    message: 'El servicio se eliminó correctamente',
+                                    type: 'success'
+                                });
+                                $('#tr_b_' + code).remove();
+                            }
                      }else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo eliminar. Intente nuevamente.' : response.message;
@@ -716,7 +776,23 @@
                         var id=cCodConsecutivo.val()+'_'+nConsecutivo.val()+'_'+code;
                         RESTService.get('orden_servicios/deleteMovimiento', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
-                           $('#tr_b_' + code).remove();
+                            var data=response.data;
+                            console.log(data);
+                            if(data[0].Mensaje!=''){
+                                  AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                            }else{
+                                   AlertFactory.textType({
+                                    title: '',
+                                    message: 'El mantenimiento se eliminó correctamente',
+                                    type: 'success'
+                                });
+                                $('#tr_b_' + code).remove();
+                            }
+                           
                      }else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo eliminar. Intente nuevamente.' : response.message;
@@ -788,9 +864,21 @@
             sumar_key();
         }); 
 
+        function clean_totale(){
+            mo_revision.val(0);
+            mo_mecanica.val(0);
+            terceros.val(0);
+            otros_mo.val(0);
+            repuestos.val(0);
+            accesorios.val(0);
+            lubricantes.val(0);
+            otros_rep.val(0);
+        }
+
         function sumar_key(){
             subtotal_moa.val(Number(mo_revision.val())+Number(mo_mecanica.val())+Number(terceros.val())+Number(otros_mo.val()));
             subtotal_mob.val(Number(repuestos.val())+Number(accesorios.val())+Number(lubricantes.val())+Number(otros_rep.val()));
+          
             var totalfin=Number(subtotal_moa.val())+Number(subtotal_mob.val());
             total.val(totalfin.toFixed(2));
         }
@@ -826,12 +914,14 @@
          modaClientes.on('hidden.bs.modal', function (e) {
               cleanCliente();
         });
+       
           modaVehiculosTerceros.on('hidden.bs.modal', function (e) {
               cleanVehi();
         });
            modalOrdenServivio.on('hidden.bs.modal', function (e) {
               cleanOrdenServi();
         });
+       
         function cleanOrdenServi(){
             table_servicios.html("");
             cCodConsecutivo.val("");
@@ -920,7 +1010,9 @@
 
 
          function EliminarServiciosDetalle (){
-             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+            
+            if(nConsecutivo.val()!=""){
+                var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
              var id_revision_array =[];
                 $.each($('.idDetalleGrup'), function (idx, item) {
                     id_revision_array[idx] = $(item).val();
@@ -934,15 +1026,31 @@
                  
              RESTService.updated('orden_servicios/deleteDetalle', id, params, function(response)  {
                  if (!_.isUndefined(response.status) && response.status) {
-                         AlertFactory.textType({
-                            title: '',
-                            message: 'Los servicios se eliminaron correctamente',
-                            type: 'success'
-                        });
-                         console.log(response.data);
-                         console.log(response.datad);
-                        table_servicios.html("");
-                        modalDeleteDetalle.modal("hide"); 
+                          var data=response.dato;
+                            console.log(data);
+                            if(data[0].Mensaje!=''){
+                                  AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                                   idMoneda.val(idMoneda.data("prev")).trigger("change");
+                                  id_tipocli.val(id_tipocli.data("prev")).trigger("change");
+                                   modalDeleteDetalle.modal("hide");
+                            }else{
+                                 console.log(response.data);
+                                 console.log(response.datad);
+                                table_servicios.html("");
+                                idMoneda.data("prev",idMoneda.val());  
+                                id_tipocli.data("prev",id_tipocli.val());
+                                if(id_tipocli.val()!=''){
+                                   id_cliente_tipo_or.val(id_tipocli.val()).trigger("change"); 
+                                }
+                                modalDeleteDetalle.modal("hide");
+                                
+                                clean_totale();
+                                sumar_key();
+                            }
                     }else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo eliminar. Intente nuevamente.' : response.message;
@@ -951,13 +1059,18 @@
                             message: msg_,
                             type: 'error'
                         });
+                        id_cliente_tipo_or.val(id_tipocli.val()).trigger("change");
+                        idMoneda.data("prev",idMoneda.val()); 
+                        id_tipocli.data("prev",id_tipocli.val()); 
                         modalDeleteOrden.modal("hide"); 
                     }
                });
-
-               
-          
-
+         }else{
+              modalDeleteDetalle.modal("hide"); 
+              table_servicios.html("");
+                clean_totale();
+               sumar_key();
+         }
         }
         function cleanVehi () {
             cleanRequired();
@@ -990,7 +1103,6 @@
             bval = bval && distrito_ver.required();
             bval = bval && nKilometraje.required();
             bval = bval && placa.required();
-            bval = bval && marca.required();
             if($("#articulo_dd_det").html()==''){
                AlertFactory.showWarning({
                     title: '',
@@ -1100,7 +1212,9 @@
                     RESTService.updated('orden_servicios/createOrden', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                        var data_p =response.res;
-                        $("#nConsecutivo").val(data_p[0].Nro);
+                       console.log(data_p[0].Mensaje);
+                       if(Number(data_p[0].Mensaje)){
+                        $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");
                         btn_guardarOrden.prop('disabled',true); 
                         cCodConsecutivo.prop('disabled',true); 
@@ -1109,7 +1223,15 @@
                             message: 'La orden se registró correctamente.',
                             type: 'success'
                         });
-
+                         LoadRecordsButtonOrden_Servicio.click();
+                    }else{
+                         AlertFactory.textType({
+                            title: '',
+                            message: data_p[0].Mensaje,
+                            type: 'info'
+                        });
+                    }
+                        
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar el Vehiculo. Intente nuevamente.' : response.message;
@@ -1168,19 +1290,7 @@
         btn_save_cliente.click(function(e){
             saveCliente();
         });
-         tipodoc.change(function () {
-            console.log("entro1");
-            if(idDocumentoCli.val()!=""){
-                 console.log("entro2");
-                 if(tipodoc.val()!=idDocumentoCli.val()){
-                    if(table_servicios.html()!=""){
-                         console.log("entro3");
-                        modalDeleteDetalle.modal('show');
-                    }
-                 }
-            }
-           
-        });
+        
         function saveCliente()
         {
             var bval = true;
@@ -1255,12 +1365,17 @@
                         id_tipocli.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
                     });
                   
+                    id_cliente_tipo_or.append('<option value="">Seleccionar</option>');
+                        tipo_clie.map(function(index) {
+                        id_cliente_tipo_or.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                    });
                 }
             }, function() {
                 getDataFormCustomer();
             });
         }
         getDataFormCustomer();
+
         function getDataFormOrden () {
             var id=0;
             RESTService.get('orden_servicios/get_Placa', id, function(response) {
@@ -1282,6 +1397,7 @@
         function getDataForOrdenServicio () {
             RESTService.all('orden_servicios/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                   
                      cCodConsecutivo.append('<option value="">Seleccionar</option>');
                      _.each(response.codigo, function(item) {
                         cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'">'+item.cCodConsecutivo+'</option>');
@@ -1328,6 +1444,7 @@
                        _.each(response.totales, function(item) {
                         tipo_totales_slec.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
                     });
+                
                 } 
             }, function() {
                 getDataForOrdenServicio();

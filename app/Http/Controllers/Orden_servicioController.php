@@ -42,11 +42,15 @@ class Orden_servicioController extends Controller
             $id_revision_array=explode(',', $id_revision_array);
             for ($i=0; $i < count($id_revision_array) ; $i++) {
                $val=$repo->destroy_orden_detalle($valtodo[0],$valtodo[1],$id_revision_array[$i]);
+               if($val[0]->Mensaje!=''){
+                break;
+               }
             };
             DB::commit();
             return response()->json([
                 'status' => true,
                 'data'=>$id_revision_array,
+                'dato'=>$val,
                 'datad'=>$id,
             ]);
         } catch (\Exception $e) {
@@ -158,7 +162,8 @@ class Orden_servicioController extends Controller
                 $modo,
                 $usuario
             );
-            $id_mantenimiento_array=$data['id_mantenimiento_array'];
+            if(intval($res[0]->Mensaje)){
+                $id_mantenimiento_array=$data['id_mantenimiento_array'];
             $id_mantenimiento_array=explode(',', $id_mantenimiento_array);
 
             $id_revision_array=$data['id_revision_array'];
@@ -178,12 +183,13 @@ class Orden_servicioController extends Controller
             $modo_array_mant=$data['modo_array_mant'];
             $modo_array_mant=explode(',', $modo_array_mant);
              for ($i=0; $i < count($id_mantenimiento_array) ; $i++) {
-                $repo->actualizar_orden_mantenimiento($cCodConsecutivo,$res[0]->Nro,$id_mantenimiento_array[$i],$modo_array_mant[$i],$usuario);
+                $repo->actualizar_orden_mantenimiento($cCodConsecutivo,$res[0]->Mensaje,$id_mantenimiento_array[$i],$modo_array_mant[$i],$usuario);
              };
              $cont=0;
              for ($i=0; $i < count($id_revision_array) ; $i++) {
-                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Nro,$cont,$id_revision_array[$i],$precio_array[$i],$id_tipo_array[$i],$modo_array_serv[$i],$usuario);
+                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$cont,$id_revision_array[$i],$precio_array[$i],$id_tipo_array[$i],$modo_array_serv[$i],$usuario);
              };
+            }
             DB::commit();
             return response()->json([
                 'status' => true,

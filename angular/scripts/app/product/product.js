@@ -400,11 +400,13 @@
                         });
                         modalProduct.modal('hide');
                         LoadRecordsButtonProduct.click();
-                    } else {
+                    } else { 
+                         var msg_ = (_.isUndefined(response.message)) ?
+                            'Hubo un error al guardar el artículo.' : response.message;
                         AlertFactory.textType({
                             title: '',
-                            message: 'Hubo un error al guardar el artículo. Intente nuevamente.',
-                            type: 'error'
+                            message: msg_,
+                            type: 'info'
                         });
                     }
                 });

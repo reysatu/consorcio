@@ -99,6 +99,9 @@ class Vehiculos_terceroController extends Controller
     {
         try {
             $data = $repo->get_Placa_document($id);
+            if(empty($data)){
+                  $data = $repo->get_Placa_document_empresa($id);
+            }
             $marca=$repo->get_Marca_or();
             $tipo_vehi=$repo->get_TipoVehi_or();
             return response()->json([

@@ -84,7 +84,7 @@ class SerieRepository implements SerieInterface
 
     public function find($id)
     {
-        $mostra=DB::select("SELECT pr.id as idArticulo,pr.description as Articulo,Se.idSerie as idSerie,Se.nombreSerie AS nombreSerie, Se.chasis as chasis,Se.idTipoCompraVenta as idTipoCompraVenta,Se.nPoliza as nPoliza, Se.nLoteCompra as nLoteCompra, Se.motor as motor, Se.anio_fabricacion as anio_fabricacion, Se.anio_modelo as anio_modelo, Se.color as color FROM ERP_Serie as Se inner join ERP_Productos as pr on Se.idArticulo=pr.id where Se.idSerie=$id");
+        $mostra=DB::select("SELECT pr.id as idArticulo,pr.description as Articulo,Se.idSerie as idSerie,Se.nombreSerie AS nombreSerie,Se.cPlacaVeh as cPlacaVeh, Se.chasis as chasis,Se.idTipoCompraVenta as idTipoCompraVenta,Se.nPoliza as nPoliza, Se.nLoteCompra as nLoteCompra, Se.motor as motor, Se.anio_fabricacion as anio_fabricacion, Se.anio_modelo as anio_modelo, Se.color as color FROM ERP_Serie as Se inner join ERP_Productos as pr on Se.idArticulo=pr.id where Se.idSerie=$id");
         return $mostra;
     }
      public function get_tipoCompraVenta(){

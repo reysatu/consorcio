@@ -27,7 +27,7 @@
         var tipoCompra=$("#tipoCompra");
         var nrPoliza=$("#nrPoliza");
         var nrLote=$("#nrLote");
-
+        var cPlacaVeh=$("#cPlacaVeh");
         var anio_fabricacion = $('#anio_fabricacion');
         var anio_modelo = $('#anio_modelo');
 
@@ -38,6 +38,7 @@
         function cleanserie () {
             cleanRequired();
             titleModalSerie.html('');
+            cPlacaVeh.val('');
             producto.val('');
             serie_id.val('');
             p_product_name.val('');
@@ -102,6 +103,7 @@
                     'idTipoCompraVenta':tipoCompra.val(),
                     'nPoliza':nrPoliza.val(),
                     'nLoteCompra':nrLote.val(),
+                    'cPlacaVeh':cPlacaVeh.val(),
                  };
                 var serieIde_id = (serie_id.val() === '') ? 0 : serie_id.val();
 
@@ -123,7 +125,7 @@
                             type: 'info'
                         });
                     }
-                });
+                }); 
             }
 
         };
@@ -147,6 +149,7 @@
                     tipoCompra.val(data_p[0].idTipoCompraVenta).trigger('change');;
                     nrPoliza.val(data_p[0].nPoliza);
                     nrLote.val(data_p[0].nLoteCompra)
+                     cPlacaVeh.val(data_p[0].cPlacaVeh)
                     modalSerie.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -214,6 +217,9 @@
                     create: false,
                     edit: false,
                     list: false
+                },
+                 cPlacaVeh: {
+                    title: 'Placa',
                 },
                  serie: {
                     title: 'Serie',

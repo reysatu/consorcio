@@ -14,11 +14,12 @@ trait SerieTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['SERIE','ARTÍCULO','CHASIS','MOTOR','COLOR','AÑO DE FABRICACIÓN','AÑO DEL MODELO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['SERIE','PLACA','ARTÍCULO','CHASIS','MOTOR','COLOR','AÑO DE FABRICACIÓN','AÑO DEL MODELO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $columns[] = [
                 ['left',$i->nombreSerie],
+                ['left',$i->cPlacaVeh],
                 ['left',$i->Product_d->description_detail],
                 ['left',$i->chasis],
                 ['left',$i->motor],

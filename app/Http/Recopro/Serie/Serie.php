@@ -22,7 +22,7 @@ class Serie extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idSerie', 'nombreSerie','idArticulo','chasis','motor','anio_fabricacion','anio_modelo','color','user_created','user_updated','idTipoCompraVenta','nPoliza','nLoteCompra'];
+    protected $fillable = ['idSerie', 'nombreSerie','idArticulo','chasis','motor','anio_fabricacion','anio_modelo','color','user_created','user_updated','idTipoCompraVenta','nPoliza','nLoteCompra','cPlacaVeh'];
     
      public function user_c()
     {
