@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\TypeCostumer;
+<?php namespace App\Http\Recopro\ObjetivosDetalle;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class TypeCostumer extends Model
+class ObjetivosDetalle extends Model
 {
   
-    protected $table = 'ERP_TipoCliente';
+    protected $table = 'ERP_ObjetivosDetalle';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_obj';
 
     protected $keyType = 'string';
 
@@ -24,7 +24,7 @@ class TypeCostumer extends Model
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
 
-    protected $fillable = ['id', 'descripcion','estado','cIdUsuCre','cIdUsuMod'];
+    protected $fillable = ['id_obj', 'nPeriodo','id_TipoPers','id_Persona','nCant','nMonto','cIdUsuCre','cIdUsuMod'];
     
      public function user_c()
     {

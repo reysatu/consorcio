@@ -58,6 +58,9 @@
         'sys.app.vehiculos_terceros',
         'sys.app.list_precios',
         'sys.app.orden_servicios',
+        'sys.app.typeCustomers',
+        'sys.app.typeObjets',
+        'sys.app.objetivos',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

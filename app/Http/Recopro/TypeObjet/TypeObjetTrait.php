@@ -6,15 +6,15 @@
  * Time: 11:36 AM
  */
 
-namespace App\Http\Recopro\TypeCostumer;
+namespace App\Http\Recopro\TypeObjet;
 
 use Carbon\Carbon;
 
-trait TypeCostumerTrait
+trait TypeObjetTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['Tipo Cliente','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['TIPOS DE OBJETIVOS','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $estado="ACTIVO";
@@ -33,7 +33,7 @@ trait TypeCostumerTrait
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE TIPOS DE CLIENTES'
+            'title' => 'LISTA DE TIPOS DE OBJETIVOS'
         ];
 
         return $data;

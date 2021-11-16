@@ -63,6 +63,10 @@ use App\Http\Recopro\List_precio\List_precio;
 use App\Http\Recopro\List_precio\List_precioInterface;
 use App\Http\Recopro\List_precio\List_precioRepository;
 
+use App\Http\Recopro\Objetivo\Objetivo;
+use App\Http\Recopro\Objetivo\ObjetivoInterface;
+use App\Http\Recopro\Objetivo\ObjetivoRepository;
+
 use App\Http\Recopro\List_precio_detalle\List_precio_detalle;
 use App\Http\Recopro\List_precio_detalle\List_precio_detalleInterface;
 use App\Http\Recopro\List_precio_detalle\List_precio_detalleRepository;
@@ -70,6 +74,11 @@ use App\Http\Recopro\List_precio_detalle\List_precio_detalleRepository;
 use App\Http\Recopro\Shop\Shop;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Shop\ShopRepository;
+
+use App\Http\Recopro\TypeObjet\TypeObjet;
+use App\Http\Recopro\TypeObjet\TypeObjetInterface;
+use App\Http\Recopro\TypeObjet\TypeObjetRepository;
+
 
 use App\Http\Recopro\TypeCostumer\TypeCostumer;
 use App\Http\Recopro\TypeCostumer\TypeCostumerInterface;
@@ -228,6 +237,18 @@ use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleReposito
 use App\Http\Recopro\Almacen_Stock_Localizacion\Almacen_Stock_Localizacion;
 use App\Http\Recopro\Almacen_Stock_Localizacion\Almacen_Stock_LocalizacionInterface;
 use App\Http\Recopro\Almacen_Stock_Localizacion\Almacen_Stock_LocalizacionRepository;
+
+
+use App\Http\Recopro\ObjetivosDetalle\ObjetivosDetalle;
+use App\Http\Recopro\ObjetivosDetalle\ObjetivosDetalleInterface;
+use App\Http\Recopro\ObjetivosDetalle\ObjetivosDetalleRepository;
+
+
+use App\Http\Recopro\TypePersona\TypePersona;
+use App\Http\Recopro\TypePersona\TypePersonaInterface;
+use App\Http\Recopro\TypePersona\TypePersonaRepository;
+
+
 
 use App\Http\Recopro\Departure\Departure;
 use App\Http\Recopro\Departure\DepartureInterface;
@@ -453,6 +474,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerDocumentType();
         $this->registerMotiveTransfer();
 
+        $this->registerObjetivosDetalle();
+		$this->registerTypePersona();
+
         // Module Purchases
         $this->registerRequirement();
         $this->registerRequirementDetail();
@@ -469,8 +493,10 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMeasure();
         $this->registerType_vehiculo();
         $this->registerList_precio();
+        $this->registerObjetivo();
         $this->registerList_precio_detalle();
         $this->registerShop();
+        $this->registerTypeObjet();
         $this->registerTypeCostumer();
         $this->registerTipo_mantenimiento();
         $this->registerOrden_servicio();
@@ -824,6 +850,23 @@ class AppServiceProvider extends ServiceProvider
             return new ProjectStateRepository(new ProjectState());
         });
     }
+    
+    public function registerObjetivosDetalle()
+    {
+        $app = $this->app;
+
+        $app->bind(ObjetivosDetalleInterface::class, function ($app) {
+            return new ObjetivosDetalleRepository(new ObjetivosDetalle());
+        });
+    }
+	public function registerTypePersona()
+    {
+        $app = $this->app;
+
+        $app->bind(TypePersonaInterface::class, function ($app) {
+            return new TypePersonaRepository(new TypePersona());
+        });
+    }
 
     public function registerProjectSubState()
     {
@@ -994,6 +1037,14 @@ class AppServiceProvider extends ServiceProvider
             return new List_precio_detalleRepository(new List_precio_detalle());
         });
     }
+     public function registerObjetivo()
+    {
+        $app = $this->app;
+
+        $app->bind(ObjetivoInterface::class, function ($app) {
+            return new ObjetivoRepository(new Objetivo());
+        });
+    }
     public function registerList_precio()
     {
         $app = $this->app;
@@ -1024,6 +1075,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ShopInterface::class, function ($app) {
             return new ShopRepository(new Shop());
+        });
+    }
+    public function registerTypeObjet()
+    {
+        $app = $this->app;
+
+        $app->bind(TypeObjetInterface::class, function ($app) {
+            return new TypeObjetRepository(new TypeObjet());
         });
     }
     public function registerTipo_mantenimiento()

@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\TypeCostumer;
+namespace App\Http\Recopro\ObjetivosDetalle;
 use Illuminate\Support\Facades\DB;
 
-class TypeCostumerRepository implements TypeCostumerInterface
+class ObjetivosDetalleRepository implements ObjetivosDetalleInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(TypeCostumer $model)
+    public function __construct(ObjetivosDetalle $model)
     {
         $this->model = $model; 
        
@@ -52,19 +52,13 @@ class TypeCostumerRepository implements TypeCostumerInterface
         $new=$actu+1;
         return $new; 
     }
-    public function update($id, array $attributes)
+    public function update($ida,$idb,$idc,$idd, array $attributes)
     {
-        $attributes['cIdUsuMod'] = auth()->id();
-        $model = $this->model->findOrFail($id);
-        $model->update($attributes);
+       $this->model->where('id_obj', $ida)->where('nPeriodo', $idb)->where('id_TipoPers', $idc)->where('id_Persona', $idd)->update($attributes);
     }
-    public function destroy($id)
+     public function destroy_detalle($id_obj,$nPeriodo,$id_TipoPers,$id_Persona)
     {
-        $attributes = [];
-        $model = $this->model->findOrFail($id);
-        $model->update($attributes);
-        $model->delete();
-     
+        $this->model->where('id_obj',$id_obj)->where('nPeriodo',$nPeriodo)->where('id_TipoPers',$id_TipoPers)->where('id_Persona',$id_Persona)->delete();
     }
 
 }

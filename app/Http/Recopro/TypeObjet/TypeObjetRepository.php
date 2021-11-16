@@ -6,19 +6,17 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\TypeCostumer;
+namespace App\Http\Recopro\TypeObjet;
 use Illuminate\Support\Facades\DB;
 
-class TypeCostumerRepository implements TypeCostumerInterface
+class TypeObjetRepository implements TypeObjetInterface
 {
     protected $model;
- private static $_ACTIVE = 'A';
-    public function __construct(TypeCostumer $model)
+    private static $_ACTIVE = 'A';
+    public function __construct(TypeObjet $model)
     {
         $this->model = $model; 
-       
     }
-
     public function all()
     {
         return $this->model->get();
@@ -29,7 +27,6 @@ class TypeCostumerRepository implements TypeCostumerInterface
             $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
         });
-
     }
     public function allActive()
     {

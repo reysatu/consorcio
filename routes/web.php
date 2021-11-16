@@ -147,6 +147,15 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\List_precios.php';
 
+    require app_path() . '\Http\Routes\TypeCustomers.php';
+
+    require app_path() . '\Http\Routes\TypeObjets.php';
+
+    require app_path() . '\Http\Routes\Objetivos.php';
+
+    require app_path() . '\Http\Routes\ObjetivosDetalles.php';
+
+    require app_path() . '\Http\Routes\TypePersonas.php';
     // Route Warehouse
 
     require app_path() . '\Http\Routes\Entrys.php';

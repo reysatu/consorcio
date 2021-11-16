@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\TypeCostumer;
+namespace App\Http\Recopro\TypePersona;
 use Illuminate\Support\Facades\DB;
 
-class TypeCostumerRepository implements TypeCostumerInterface
+class TypePersonaRepository implements TypePersonaInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(TypeCostumer $model)
+    public function __construct(TypePersona $model)
     {
         $this->model = $model; 
        
@@ -37,8 +37,8 @@ class TypeCostumerRepository implements TypeCostumerInterface
     }
      public function create(array $attributes)
     {
-        $attributes['cIdUsuCre'] = auth()->id();
-        $attributes['cIdUsuMod'] = auth()->id();
+        $attributes['user_created'] = auth()->id();
+        $attributes['user_updated'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)
@@ -54,7 +54,7 @@ class TypeCostumerRepository implements TypeCostumerInterface
     }
     public function update($id, array $attributes)
     {
-        $attributes['cIdUsuMod'] = auth()->id();
+        $attributes['user_updated'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
