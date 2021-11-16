@@ -131,6 +131,7 @@
         function newProduct()
         {   cleanProduct();
             titleModalProduct.html('Nuevo Artículo');
+            cargartableMovAr2();
             modalProduct.modal('show');
            
            
@@ -623,6 +624,90 @@
                 });
             }
         });
+
+         function cargartableMovAr2(){
+             var search_cc22 = getFormSearch('frm-search-cc22', 'search_cc22', 'LoadRecordsButtonCC22');
+         table_container_cc2 = $("#table_container_Register_Articulo");
+        table_container_cc2.jtable({
+            title: "Lista de Articulos",
+            paging: true,
+            sorting: true,
+             cache: false,
+            actions: {
+                listAction: base_url + '/articles/get_articles_precios'
+            },
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_cc22
+                }]
+            },
+            fields: {
+                idProducto: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false
+                },
+                codigo_articulo: {
+                    title: 'Código Articulo'
+                },
+                producto: {
+                   title: 'Producto'
+                },
+                precio: {
+                     title: 'Precio',
+                     display: function (data) {
+                            var newpre=Number(data.record.precio);
+                            return newpre.toFixed(2);
+                        }
+                },
+                cliente: {
+                    title: 'Tipo Cliente'
+                },
+                moneda: {
+                    title: 'Moneda'
+                },
+
+                // costo: {
+                //     title: 'costo'
+
+                // },
+                // select: {
+                //     width: '1%',
+                //     sorting: false,
+                //     edit: false,
+                //     create: false,
+                //     listClass: 'text-center',
+                //     display: function (data) {
+                //         return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-costo="'+data.record.costo+'" data-name="'+
+                //             data.record.description+'" data-type="'+data.record.type_id+'"  data-serie="'+data.record.serie+'" data-lote="'+data.record.lote+'" data-code="'+data.record.id+'"><i class="fa fa-'+
+                //             icon_select+' fa-1-5x"></i></a>';
+                //    }
+                // }
+            },
+            recordsLoaded: function(event, data) {
+                $('.select_cc').click(function(e){
+                    var codigo = $(this).attr('data-code');
+                    var descripcionArt = $(this).attr('data-name');
+                    var idTipoArt = $(this).attr('data-type');
+                    var serie = $(this).attr('data-serie');
+                    var lote = $(this).attr('data-lote');
+                    var costo = $(this).attr('data-costo');
+                    seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
+                    e.preventDefault();
+                });
+            }
+        });
+
+        generateSearchForm('frm-search-cc22', 'LoadRecordsButtonCC22', function(){
+            table_container_cc2.jtable('load', {
+                search: $('#search_cc22').val()
+            });
+        }, true);
+
+        }
+
 
         generateSearchForm('frm-search-cc', 'LoadRecordsButtonCC', function(){
             table_container_cc.jtable('load', {

@@ -13,7 +13,7 @@
 
     function List_precioCtrl($scope, _, RESTService, AlertFactory)
     {   
-        
+        var modalDeleteListaPrecio=$("#modalDeleteListaPrecio");
         var descripcion=$("#descripcion");
         var id_tipocli=$("#id_tipocli");
         var idMoneda=$("#IdMoneda");
@@ -26,6 +26,9 @@
         var modalPrecios=$("#modalPrecios");
         var titlemodalPrecios=$("#titlemodalPrecios");
         var idDetalle_Delete=[];
+        var btn_aprobar=$("#btn_aprobar");
+        var idPrecioDelete=$("#idPrecioDelete");
+        var btn_guardar_precios=$("#btn_guardar_precios");
         modalPrecios.on('hidden.bs.modal', function (e) {
             cleanPrecios();
         });
@@ -40,7 +43,9 @@
             dFecVigFin.val('');
             p_table_productos.html('');
             lista_id.val('');
-            iEstado.val('')
+            iEstado.val('').trigger("change");
+            btn_aprobar.prop('disabled',true); 
+            btn_guardar_precios.prop('disabled',false); 
             idDetalle_Delete=[];
         }
         function newListPrecio() {
@@ -60,28 +65,28 @@
             RESTService.get('list_precios/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                    console.log(data_p);
-                    var estadov='Registrado';
-                    if(data_p.iEstado==0){
-                        estadov='Registrado';
-                    }else if(data_p.iEstado==1){
-                         estadov='Aprobada';
-                     }else if(data_p.iEstado==2){
-                         estadov='Vencida';
-                    };
-                    iEstado.val(estadov);
+                    iEstado.val(data_p.iEstado);
+
                     descripcion.val(data_p.descripcion);
                     id_tipocli.val(data_p.id_tpocli).trigger("change");
                     idMoneda.val(data_p.moneda).trigger("change");
                     lista_id.val(data_p.id);
                     dFecVigIni.val(data_p.dFecVigIni);
                     dFecVigFin.val(data_p.dFecVigFin);
-                    
                     _.each(data_p.productos, function (c) {
                           // var codigo=String(c.id_lista)+'_'+String(c.idProducto);
-                           addToProductos(c.idProducto,c.descripcion,c.nPrecio,c.idProducto)
+                          var pre=Number(c.nPrecio);
+                           addToProductos(c.idProducto,c.descripcion,pre.toFixed(2),c.idProducto)
                      });
-                     modalPrecios.modal('show');
+                    if(data_p.iEstado==0){
+                        btn_guardar_precios.prop('disabled',false); 
+                        btn_aprobar.prop('disabled',false); 
+                        iEstado.val(data_p.iEstado).trigger("change");
+                    }else{
+                        btn_guardar_precios.prop('disabled',true); 
+                    };
+                    modalPrecios.modal('show');
+
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -91,6 +96,27 @@
                 }
             });
         }
+        $scope.Aprobar_precios = function () {
+            var id=lista_id.val();
+            RESTService.get('list_precios/aprobarPrecio', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                    if(data_p.iEstado==1){
+                         btn_aprobar.prop('disabled',true); 
+                        btn_guardar_precios.prop('disabled',true); 
+                         iEstado.val(1).trigger('change');
+                    };
+                     LoadRecordsButtonList_precio.click();
+                   
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener la lista. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
+        } 
         $scope.savePrecios = function () {
             var bval = true;
             bval = bval && descripcion.required();
@@ -148,7 +174,9 @@
                             message: 'La lista se guardó correctamente.',
                             type: 'success'
                         });
-                        modalPrecios.modal('hide');
+                        iEstado.val(0).trigger('change');
+                        lista_id.val(response.id);
+                        btn_aprobar.prop('disabled',false); 
                         LoadRecordsButtonList_precio.click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
@@ -156,7 +184,7 @@
                         AlertFactory.textType({
                             title: '',
                             message: msg_,
-                            type: 'error'
+                            type: 'info'
                         });
                     }
                 });
@@ -284,6 +312,7 @@
                             addToProductos(code,description,precio,code);
                             e.preventDefault();
                     });
+                   
                 }
             });
             generateSearchForm('frm-search-producto', 'LoadRecordsButtonProducto', function () {
@@ -292,6 +321,34 @@
                 });
             }, false);
 
+        }
+        $scope.eliminarPrecios = function(){
+            var id=idPrecioDelete.val();
+            console.log(id);
+            RESTService.get('list_precios/delete', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                    var dta=response.elim;
+                    console.log(dta);
+                    if(dta=="A"){
+                        AlertFactory.textType({
+                                title: '',
+                                message: 'Solo se puede eliminar Listas en estado Registrado',
+                                type: 'info'
+                        }); 
+                        modalDeleteListaPrecio.modal("hide"); 
+                    }else{
+                         AlertFactory.textType({
+                            title: '',
+                            message: 'El registro se eliminó correctamente',
+                            type: 'success'
+                        });
+                        modalDeleteListaPrecio.modal("hide"); 
+                        LoadRecordsButtonList_precio.click();
+                    }
+                  
+                    
+                    }
+               });
         }
         var search = getFormSearch('frm-search-List_precio', 'search_b', 'LoadRecordsButtonList_precio');
 
@@ -303,7 +360,6 @@
             sorting: true,
             actions: { 
                 listAction: base_url + '/list_precios/list',
-                deleteAction: base_url + '/list_precios/delete',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',
@@ -378,6 +434,18 @@
                             data.record.id + '"><i class="fa fa-pencil-square-o fa-1-5x fa-green"></i></a>';
                     }
                 }
+                ,
+                    Eliminar: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a data-target="#"  data-ide="'+data.record.id+'"   title="Eliminar" class="jtable-command-button eliminar-precio"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
+                    }
+                    
+                }
 
             },
            
@@ -385,6 +453,12 @@
                 $('.edit_w').click(function (e) {
                     var id = $(this).attr('data-code');
                     findListPre(id);
+                    e.preventDefault();
+                });
+                $('.eliminar-precio').click(function(e){
+                    var ide = $(this).attr('data-ide');
+                    idPrecioDelete.val(ide);
+                    modalDeleteListaPrecio.modal("show");
                     e.preventDefault();
                 });
             },

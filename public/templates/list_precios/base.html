@@ -1,3 +1,33 @@
+<style>
+   .table-wrapper {
+
+  max-height: 200px !important;
+  width: auto !important;
+  overflow: auto !important;
+  display:inline-block !important;
+}
+.table-earnings {
+  background: #F3F5F6 !important;
+}
+.modal2 {
+  text-align: center;
+  padding: 0!important;
+}
+
+.modal2:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
+.modal-dialog2 {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
+</style>
 <div class="panel panel-danger-admin">
     <div class="panel-heading">
         Gestión de Lista de Precios
@@ -9,6 +39,33 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal modal2 fade" id="modalDeleteListaPrecio" role="dialog">
+    <div class="modal-dialog  modal-dialog2 modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">¿Esta seguro ?</h4>
+          <input type="hidden" id="idPrecioDelete">
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger hide" role="alert" id="msg_cont_EliminarMovimiento">
+              <span class="fa fa-warning"></span>
+              <p></p>            
+          </div> 
+          <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> El registro será eliminado. ¿Está seguro?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-admin btn-sm"    ng-click="eliminarPrecios()">
+              Eliminar 
+          </button>
+          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+             Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal" id="modalPrecios" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -32,7 +89,12 @@
                                     </div>
                                     <label class="col-sm-2 control-label">Estado</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control input-sm" id="iEstado" readonly>
+                                        <select name="" disabled class="form-control input-sm" id="iEstado">
+                                            <option value=""> </option>
+                                            <option value="0">Registrado</option>
+                                            <option value="1">Aprobada</option>
+                                            <option value="2">Vencida</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -86,11 +148,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-admin btn-sm" ng-click="savePrecios()">
+                <button type="button" id="btn_guardar_precios" class="btn btn-danger-admin btn-sm" ng-click="savePrecios()">
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>
-                <button type="button" class="btn btn-info btn-sm" >
+                <button type="button"  id="btn_aprobar" class="btn btn-info btn-sm" disabled ng-click="Aprobar_precios()">
                     <span class="fa fa-save"></span>
                     Aprobar
                 </button>

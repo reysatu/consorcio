@@ -71,6 +71,10 @@ use App\Http\Recopro\List_precio_detalle\List_precio_detalle;
 use App\Http\Recopro\List_precio_detalle\List_precio_detalleInterface;
 use App\Http\Recopro\List_precio_detalle\List_precio_detalleRepository;
 
+use App\Http\Recopro\Precios_producto\Precios_producto;
+use App\Http\Recopro\Precios_producto\Precios_productoInterface;
+use App\Http\Recopro\Precios_producto\Precios_productoRepository;
+
 use App\Http\Recopro\Shop\Shop;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Shop\ShopRepository;
@@ -495,6 +499,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerList_precio();
         $this->registerObjetivo();
         $this->registerList_precio_detalle();
+        $this->registerPrecios_producto();
         $this->registerShop();
         $this->registerTypeObjet();
         $this->registerTypeCostumer();
@@ -587,6 +592,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ModuleInterface::class, function ($app) {
             return new ModuleRepository(new Module());
+        });
+    }
+     public function registerPrecios_producto()
+    {
+        $app = $this->app;
+
+        $app->bind(Precios_productoInterface::class, function ($app) {
+            return new Precios_productoRepository(new Precios_producto());
         });
     }
 

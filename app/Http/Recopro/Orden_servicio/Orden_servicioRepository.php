@@ -132,7 +132,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
     public function get_servicios(){
    
           $mostrar3=DB::select("
-                      select pr.id as idProducto,pr.code_article as codigo_articulo , pr.description as producto ,pd.nPrecio as precio,p.id_tpocli as tipo_cliente,p.IdMoneda as idMoneda from ERP_ListaPrecios as p inner join ERP_ListaPreciosDetalle as pd on p.id=pd.id_lista inner join ERP_Productos as pr  on pr.id=pd.idProducto where  p.iEstado='1'");
+                      select pr.id as idProducto,pr.code_article as codigo_articulo , pr.description as producto ,pd.nPrecio as precio,p.id_tpocli as tipo_cliente,p.IdMoneda as idMoneda from ERP_ListaPrecios as p inner join ERP_ListaPreciosDetalle as pd on p.id=pd.id_lista inner join ERP_Productos as pr  on pr.id=pd.idProducto where  p.iEstado='1' and pr.type_id='2'");
           return $mostrar3;
     }
     public function get_Tipomantenimientos(){

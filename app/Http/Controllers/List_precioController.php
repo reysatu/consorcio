@@ -61,6 +61,25 @@ class List_precioController extends Controller
             ]);
         }
     }
+     public function aprobarPrecio($id, List_precioInterface $repo)
+    {
+        try {
+          
+            $data['iEstado']=1;
+            $repo->update($id, $data);
+            $data = $repo->find($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function createUpdate($id, List_precioInterface $repo, List_precio_detalleInterface $repoDet,request $request )
     {
         DB::beginTransaction();
@@ -119,6 +138,7 @@ class List_precioController extends Controller
             DB::commit();
             return response()->json([
                 'status' => true,
+                'id'=>$id,
             ]);
 
 
@@ -166,11 +186,31 @@ class List_precioController extends Controller
     //     return response()->json(['Result' => 'OK']);
     // }
 
-    public function destroy(List_precioInterface $repo, Request $request)
-    {
-        $id = $request->input('id');
-        $repo->destroy($id);
-        return response()->json(['Result' => 'OK']);
+    // public function destroy(List_precioInterface $repo, Request $request)
+    // {
+    //     $id = $request->input('id');
+    //     $repo->destroy($id);
+    //     return response()->json(['Result' => 'OK']);
+    // }
+     public function destroy($id, List_precioInterface $repo, Request $request)
+    {   try {
+         $data = $repo->find($id);
+         $elim='A';
+         if($data->iEstado=='0'){
+             $repo->destroy($id);
+             $elim='B';
+        }
+        return response()->json([
+            'status' => true,
+            'elim'=>$elim,
+        ]);
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     // // public function getAll(BrandInterface $repo)

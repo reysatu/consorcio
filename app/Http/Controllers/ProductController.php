@@ -18,7 +18,7 @@ use App\Http\Recopro\Type\TypeInterface;
 use App\Http\Recopro\TypeRetention\TypeRetentionInterface;
 use App\Http\Recopro\Unity\UnityInterface;
 use App\Http\Requests\ProductRequest;
-
+use App\Http\Recopro\Precios_producto\Precios_productoInterface;
 use App\Http\Recopro\Modelo\ModeloInterface;
 use App\Http\Recopro\Category\CategoryInterface;
 use App\Http\Recopro\Family\FamilyInterface;
@@ -122,6 +122,12 @@ class ProductController extends Controller
         $s = $request->input('search', '');
         $params = ['id', 'description','code_article','type_id','serie','lote','costo'];
         return parseList($repo->searchTrans($s), $request, 'id', $params);
+    }
+    public function getProductoPrecios(Request $request, Precios_productoInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['idProducto', 'producto','codigo_articulo','precio','cliente','moneda'];
+        return parseList($repo->search($s), $request, 'idProducto', $params);
     }
      public function traeAll(Request $request, ProductInterface $repo)
     {
