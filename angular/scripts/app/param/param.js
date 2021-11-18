@@ -22,9 +22,7 @@
             sorting: true,
             actions: {
                 listAction: base_url + '/params/list',
-                createAction: base_url + '/params/create',
                 updateAction: base_url + '/params/update',
-                deleteAction: base_url + '/params/delete'
             },
             messages: {
                 addNewRecord: 'Nuevo parámetro',

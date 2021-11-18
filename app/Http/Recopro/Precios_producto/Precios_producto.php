@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Precios_producto extends Model
 {
   
-    protected $table = 'ERP_view_Productos_Precios';
+    protected $table = 'ERP_VW_Productos_Precios';
 
     public $timestamps = true;
 
@@ -21,7 +21,7 @@ class Precios_producto extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idProducto', 'producto','codigo_articulo','precio','idTipocliente','cliente','idmoneda','moneda'];
+    protected $fillable = ['idProducto', 'Producto','Codigo_Articulo','Precio','idTipoCliente','Cliente','idMoneda','Moneda'];
     
     //  public function user_c()
     // {

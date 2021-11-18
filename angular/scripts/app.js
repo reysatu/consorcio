@@ -61,6 +61,7 @@
         'sys.app.typeCustomers',
         'sys.app.typeObjets',
         'sys.app.objetivos',
+        'sys.app.proformas',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

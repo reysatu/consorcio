@@ -126,7 +126,7 @@ class ProductController extends Controller
     public function getProductoPrecios(Request $request, Precios_productoInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idProducto', 'producto','codigo_articulo','precio','cliente','moneda'];
+        $params = ['idProducto', 'Producto','Codigo_Articulo','Precio','Cliente','Moneda'];
         return parseList($repo->search($s), $request, 'idProducto', $params);
     }
      public function traeAll(Request $request, ProductInterface $repo)

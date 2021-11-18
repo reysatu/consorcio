@@ -55,6 +55,22 @@ use App\Http\Recopro\Measure\Measure;
 use App\Http\Recopro\Measure\MeasureInterface;
 use App\Http\Recopro\Measure\MeasureRepository;
 
+use App\Http\Recopro\Proforma\Proforma;
+use App\Http\Recopro\Proforma\ProformaInterface;
+use App\Http\Recopro\Proforma\ProformaRepository;
+
+use App\Http\Recopro\Proforma_detalle\Proforma_detalle;
+use App\Http\Recopro\Proforma_detalle\Proforma_detalleInterface;
+use App\Http\Recopro\Proforma_detalle\Proforma_detalleRepository;
+
+use App\Http\Recopro\Proforma_mo\Proforma_mo;
+use App\Http\Recopro\Proforma_mo\Proforma_moInterface;
+use App\Http\Recopro\Proforma_mo\Proforma_moRepository;
+
+use App\Http\Recopro\Parametro\Parametro;
+use App\Http\Recopro\Parametro\ParametroInterface;
+use App\Http\Recopro\Parametro\ParametroRepository;
+
 use App\Http\Recopro\Type_vehiculo\Type_vehiculo;
 use App\Http\Recopro\Type_vehiculo\Type_vehiculoInterface;
 use App\Http\Recopro\Type_vehiculo\Type_vehiculoRepository;
@@ -477,6 +493,11 @@ class AppServiceProvider extends ServiceProvider
         $this->registerPaymentCondition();
         $this->registerDocumentType();
         $this->registerMotiveTransfer();
+
+        $this->registerProforma();
+        $this->registerProforma_detalle();
+        $this->registerProforma_mo();
+        $this->registerParametro();
 
         $this->registerObjetivosDetalle();
 		$this->registerTypePersona();
@@ -1512,8 +1533,40 @@ class AppServiceProvider extends ServiceProvider
             return new DocumentTypeRepository(new DocumentType());
         });
     }
+	  public function registerProforma()
+    {
+        $app = $this->app;
 
-    public function registerMotiveTransfer()
+        $app->bind(ProformaInterface::class, function ($app) {
+            return new ProformaRepository(new Proforma());
+        });
+    }
+	 public function registerProforma_detalle()
+    {
+        $app = $this->app;
+
+        $app->bind(Proforma_detalleInterface::class, function ($app) {
+            return new Proforma_detalleRepository(new Proforma_detalle());
+        });
+    }
+
+    public function registerProforma_mo()
+    {
+        $app = $this->app;
+
+        $app->bind(Proforma_moInterface::class, function ($app) {
+            return new Proforma_moRepository(new Proforma_mo());
+        });
+    }
+     public function registerParametro()
+    {
+        $app = $this->app;
+
+        $app->bind(ParametroInterface::class, function ($app) {
+            return new ParametroRepository(new Parametro());
+        });
+    }
+     public function registerMotiveTransfer()
     {
         $app = $this->app;
 

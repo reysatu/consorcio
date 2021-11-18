@@ -649,23 +649,23 @@
                     edit: false,
                     list: false
                 },
-                codigo_articulo: {
+                Codigo_Articulo: {
                     title: 'Código Articulo'
                 },
-                producto: {
+                Producto: {
                    title: 'Producto'
                 },
-                precio: {
+                Precio: {
                      title: 'Precio',
                      display: function (data) {
-                            var newpre=Number(data.record.precio);
+                            var newpre=Number(data.record.Precio);
                             return newpre.toFixed(2);
                         }
                 },
-                cliente: {
+                Cliente: {
                     title: 'Tipo Cliente'
                 },
-                moneda: {
+                Moneda: {
                     title: 'Moneda'
                 },
 

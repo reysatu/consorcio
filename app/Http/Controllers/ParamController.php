@@ -26,7 +26,7 @@ class ParamController extends Controller
         return parseList($repo->search($s), $request, 'id', $params);
     }
 
-    public function create(ParamInterface $repo, ParamRequest $request)
+    public function create(ParamInterface $repo, Request $request)
     {
         $data = $request->all();
         $repo->create($data);
@@ -37,7 +37,7 @@ class ParamController extends Controller
         ]);
     }
 
-    public function update(ParamInterface $repo, ParamRequest $request)
+    public function update(ParamInterface $repo, Request $request)
     {
         $data = $request->all();
         $id = $data['id'];
