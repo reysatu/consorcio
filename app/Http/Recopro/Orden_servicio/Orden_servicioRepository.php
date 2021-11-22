@@ -72,6 +72,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
           $mostrar3=DB::select("select * from ERP_Consecutivos where cCodTipoCons='ORDEN'");
           return $mostrar3;
     }
+   
     public function getcondicion_pago(){
    
           $mostrar3=DB::select("select * from ERP_CondicionPago");
@@ -132,7 +133,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
     public function get_servicios(){
    
           $mostrar3=DB::select("
-                      select pr.id as idProducto,pr.code_article as codigo_articulo , pr.description as producto ,pd.nPrecio as precio,p.id_tpocli as tipo_cliente,p.IdMoneda as idMoneda from ERP_ListaPrecios as p inner join ERP_ListaPreciosDetalle as pd on p.id=pd.id_lista inner join ERP_Productos as pr  on pr.id=pd.idProducto where  p.iEstado='1' and pr.type_id='2'");
+                      select pr.impuesto as impuesto, pr.id as idProducto,pr.code_article as codigo_articulo , pr.description as producto ,pd.nPrecio as precio,p.id_tpocli as tipo_cliente,p.IdMoneda as idMoneda from ERP_ListaPrecios as p inner join ERP_ListaPreciosDetalle as pd on p.id=pd.id_lista inner join ERP_Productos as pr  on pr.id=pd.idProducto where  p.iEstado='1' and pr.type_id='2'");
           return $mostrar3;
     }
     public function get_Tipomantenimientos(){
@@ -175,6 +176,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
                 $accesorios,
                 $lubricantes,
                 $otros_rep,
+                $impuesto,
                 $total,
                 $modo,
                 $usuario){
@@ -209,15 +211,21 @@ class Orden_servicioRepository implements Orden_servicioInterface
                 '$accesorios',
                 '$lubricantes',
                 '$otros_rep',
+                '$impuesto',
                 '$total',
                 '$modo',
                 '$usuario'");
          return $destroy;
     }
+    public function getcodigo_proforma(){
+   
+          $mostrar3=DB::select("select * from ERP_Consecutivos where cCodTipoCons='PROFORMA'");
+          return $mostrar3;
+    }
      public function destroy_orden($id,$no)
     {
          $pdo=DB::connection()->getPdo();
-         $destroy=DB::update("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicio '$id','$no'");
+         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicio '$id','$no'");
          return $destroy;
     }
      public function destroy_orden_mantenimiento($id,$no,$mant)
@@ -242,7 +250,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
                 '$usuario'"
           );
        }
-       public function actualizar_orden_detalle($cCodConsecutivo,$res,$cont,$id_revision_array,$precio_array,$id_tipo_array,$modo,$usuario){
+       public function actualizar_orden_detalle($cCodConsecutivo,$res,$cont,$id_revision_array,$precio_array,$impuesto,$id_tipo_array,$modo,$usuario){
          $pdo=DB::connection()->getPdo();
          $destroy=DB::update("SET NOCOUNT ON; EXEC ST_ActualizaOrdenServicioDetalle 
                 '$cCodConsecutivo',
@@ -250,6 +258,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
                 '$cont',
                 '$id_revision_array',
                 '$precio_array',
+                '$impuesto',
                 '$id_tipo_array',
                 '$modo',
                 '$usuario'"

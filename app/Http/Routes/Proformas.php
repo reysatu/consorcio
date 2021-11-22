@@ -8,6 +8,20 @@
 
 Route::post('proformas/list', ['as' => 'proformas.list', 'uses' => 'ProformaController@all']);
 Route::post('proformas/create', ['as' => 'proformas.create', 'uses' => 'ProformaController@create']);
-Route::post('proformas/delete', ['as' => 'proformas.delete', 'uses' => 'ProformaController@destroy']);
+
 Route::post('proformas/update', ['as' => 'proformas.update', 'uses' => 'ProformaController@update']);
 Route::get('proformas/excel', ['as' => 'proformas.excel', 'uses' => 'ProformaController@excel']);
+Route::get('proformas/data_form', ['as' => 'proformas.data_form', 'uses' => 'ProformaController@data_form']);
+
+Route::put('proformas/createProforma/{id}', ['as' => 'proformas.createProforma', 'uses' => 'ProformaController@createUpdate']);
+
+
+Route::get('proformas/deleteDetalleServicio/{id}', ['as' => 'proformas.deleteDetalleServicio', 'uses' => 'ProformaController@deleteDetalleServicio']);
+
+Route::get('proformas/deleteDetalleRepuesto/{id}', ['as' => 'proformas.deleteDetalleRepuesto', 'uses' => 'ProformaController@deleteDetalleRepuesto']);
+
+Route::get('proformas/find/{id}', ['as' => 'proformas.find', 'uses' => 'ProformaController@find']);
+
+Route::get('proformas/delete/{id}', ['as' => 'proformas.delete', 'uses' => 'ProformaController@destroy']);
+
+Route::put('proformas/deleteDetalleMO/{id}', ['as' => 'proformas.deleteDetalleMO', 'uses' => 'ProformaController@deleteDetalleMO']);

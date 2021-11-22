@@ -5,7 +5,7 @@
   width: auto !important;
   overflow: auto !important;
   display:inline-block !important;
-}
+} 
 .table-earnings {
   background: #F3F5F6 !important;
 }
@@ -277,7 +277,7 @@ h5.linea span {
                                                     <label class="col-sm-1 control-label">Kilometraje</label>
                                                     <div class="col-sm-2">
                                                         <input type="number" id="nKilometraje" 
-                                                                  class="form-control input-sm" />
+                                                                  class="form-control input-sm" min="1" />
                                                     </div>
                                                     <label class="col-sm-1 control-label">Marca</label>
                                                     <div class="col-sm-2">
@@ -312,7 +312,7 @@ h5.linea span {
                                     <h5 class="linea"><span>Mantenimientos</span></h5>
                                     <div class="form-horizontal">
                                         <div class="row">
-                                            <div class="col-md-5">
+                                            <div class="col-md-6">
                                                  <div class="form-group">
                                                    <h5 class="">Revisiones a realizar</h5>
                                                  </div> 
@@ -337,7 +337,7 @@ h5.linea span {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 ">
+                                            <div class="col-md-12 ">
                                                <div class="form-group">
                                                    <h5 class="">Servicios a realizar</h5>
                                                  </div> 
@@ -357,6 +357,8 @@ h5.linea span {
                                                                         <tr>
                                                                             <th>Servicios</th>
                                                                             <th>Precio</th>
+                                                                            <th>Impuesto</th>
+                                                                            <th>Sub Total</th>
                                                                             <th>Tipo</th>
                                                                             <th width="50px"></th>
                                                                         </tr>
@@ -366,6 +368,14 @@ h5.linea span {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                     <div class="col-md-12">
+                                                        <label class="col-sm-2 control-label">Total Mano de Obra</label>
+                                                        <div class="col-sm-4">
+                                                           <input id="totalMO" class="form-control input-sm" readonly />
+                                                        </div>
+                                                     </div> 
+                                                  </div>
                                                   <h5 class="linea"><span>Datos Totales</span></h5>
                                                 <div class="form-group">
                                                   <div class="col-md-6">
@@ -446,11 +456,11 @@ h5.linea span {
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btn_guardarOrden" class="btn btn-info btn-sm" >
+                        <button type="button" id="btn_imprimir" class="btn btn-info btn-sm" >
                             <span class="fa fa-file-pdf-o"></span>
                             Imprimir
                         </button>
-                        <button type="button" id="btn_guardarOrden" class="btn btn-warning btn-sm" >
+                        <button type="button" id="btn_cancelar" class="btn btn-warning btn-sm" >
                             <span class="fa fa-ban"></span>
                             Cancelar
                         </button>

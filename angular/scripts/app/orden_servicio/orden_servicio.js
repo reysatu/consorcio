@@ -13,8 +13,9 @@
 
     function Orden_ServicioCtrl($scope, _, RESTService, AlertFactory)
     {   
-        
+        var totalMO=$("#totalMO");
         var totales;
+        var igv;
         var servicios;
         var valor_moneda;
         var btn_save_cliente=$("#btn_save_cliente");
@@ -117,8 +118,9 @@
             
             RESTService.get('orden_servicios/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                 
+                  
                     var data=response.data;
+                    titlemodalOrdenServivio.html('Editar Orden '+'['+data[0].nConsecutivo+ ']');
                     cCodConsecutivo.prop('disabled',true);
                     cCodConsecutivo.val(data[0].cCodConsecutivo).trigger("change");
                      // cCodConsecutivo.val(data[0].cCodConsecutivo+'*'+data[0].nConsecutivo).trigger("change");
@@ -156,7 +158,7 @@
 
                     var data_detalle=response.data_detalle;
                       _.each(data_detalle, function (b) {
-                        var vto=b.idProducto+'*'+b.description+'*'+b.nTotal;
+                        var vto=b.idProducto+'*'+b.description+'*'+b.nTotal+'*'+b.impuesto;
                          var tipoTo=b.id_tipototal;
                          var tipoText=b.descripcion;
                          var modo_servi=1;
@@ -410,12 +412,12 @@
               llenarServicios();
         });
            id_tipocli.change(function () {
-            console.log("entro1");
+          
             if(id_cliente_tipo_or.val()!=""){
-                 console.log("entro2");
+              
                  if(id_tipocli.val()!=id_cliente_tipo_or.val() && id_tipocli.val()!=""){
                     if(table_servicios.html()!=""){
-                         console.log("entro3");
+                        
 
                         modalDeleteDetalle.modal('show');
                     }
@@ -445,7 +447,7 @@
           servicios_select.append('<option value="" selected>Seleccionar </option>');
             _.each(servicios, function(item) {
                 if(mone_ser==item.idMoneda && clientipo_ser==item.tipo_cliente){
-                    servicios_select.append('<option value="'+item.idProducto+'*'+item.producto+'*'+item.precio+'">'+item.codigo_articulo+' '+item.producto+'</option>');
+                    servicios_select.append('<option value="'+item.idProducto+'*'+item.producto+'*'+item.precio+'*'+item.impuesto+'">'+item.codigo_articulo+' '+item.producto+'</option>');
                 }
             }); 
         }  
@@ -493,13 +495,308 @@
                     addServicios(vto,tipoTo,tipoText,modo_ser,iddet);
                 }
         });
+        // function addServicios(vto,tipoTo,tipoText,modo_ser,iddet){
+        //     var arrayRe=vto.split("*");
+        //     var code=arrayRe[0];
+        //     var producto=arrayRe[1];
+        //     var precio=arrayRe[2];
+        //     var impuesto=arrayRe[3];
+        //     var preci_t=Number(precio).toFixed(2);
+
+        //     if ($('#tr_b_' + code).length > 0) {
+        //         AlertFactory.showWarning({
+        //             title: '',
+        //             message: 'Ya se asignó este servicio'
+        //         });
+        //         return false;
+        //     }
+        //      var tr = $('<tr id="tr_b_' + code + '"></tr>');
+        //      var td1 = $('<td>' + producto + '</td>');
+        //      var tda = $('<td></td>');
+        //      var tdb = $('<td></td>');
+        //      var td2 = $('<td class="text-center"></td>');
+        //      var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'" />');
+        //      var idTipo_input = $('<input type="hidden" class="idTipo_select form-control input-sm"  value="'+tipoTo+'" />');
+        //     var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
+        //      var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
+        //      var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS="' + code + '" id="tr_pre' + code + '"  value="'+tipoText+'" readonly/>');
+        //      var precio = $('<input type="number" min="1" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'" data-precio="' +preci_t+ '" value="' +preci_t+ '"  />');
+        //      var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
+        //      tda.append(precio);
+        //      tdb.append(tipototal);
+        //      td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
+        //      tr.append(td1).append(tda).append(tdb).append(td2);
+        //      table_servicios.append(tr);
+        //     idMoneda.data("prev",idMoneda.val()); 
+        //     id_tipocli.data("prev",id_cliente_tipo_or.val());   
+        //     var precio=arrayRe[2];
+        //      if(tipoTo=='1'){
+        //         var mo_r=mo_revision.val();
+              
+             
+        //         var new_mor=Number(mo_r)+Number(precio);
+        //         mo_revision.val(new_mor.toFixed(2));
+        //      }else if(tipoTo=='2'){
+        //         var mo_m=mo_mecanica.val();
+        //         var new_mo_m=Number(mo_m)+Number(precio);
+        //         mo_mecanica.val(new_mo_m.toFixed(2));
+        //      }else if(tipoTo=='3'){
+        //         var mo_tr=terceros.val();
+        //         var new_mo_tr=Number(mo_tr)+Number(precio);
+        //         terceros.val(new_mo_tr.toFixed(2));
+        //      }else if(tipoTo=='4'){
+        //         var mo_otr=otros_mo.val();
+        //         var new_mo_otr=Number(mo_otr)+Number(precio);
+        //         otros_mo.val(new_mo_otr.toFixed(2));
+        //      }else if(tipoTo=='5'){
+        //         var mo_rp=repuestos.val();
+        //         var new_mo_rp=Number(mo_rp)+Number(precio);
+        //         repuestos.val(new_mo_rp.toFixed(2));
+        //      }else if(tipoTo=='6'){
+        //         var mo_ac=accesorios.val();
+        //         var new_mo_ac=Number(mo_ac)+Number(precio);
+        //         accesorios.val(new_mo_ac.toFixed(2));
+        //      }else if(tipoTo=='7'){
+        //         var mo_lub=lubricantes.val();
+        //         var new_mo_lub=Number(mo_lub)+Number(precio);
+        //         lubricantes.val(new_mo_lub.toFixed(2));
+        //      }else if(tipoTo=='8'){
+        //         var mo_trp=otros_rep.val();
+        //         var new_trp=Number(mo_trp)+Number(precio);
+        //         otros_rep.val(new_trp.toFixed(2));
+        //      }
+        //     sumar_key(); 
+        //     servicios_select.val("").trigger("change");
+        //     tipo_totales_slec.val("").trigger("change");
+        //     //  var totales_table=$("#tr_pre"+code);
+        //     // totales_table.append('<option value="" selected>Seleccionar </option>');
+        //     // _.each(totales, function(item) {
+        //     // totales_table.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+        //     // });
+        //      // $('.total_revision').change(function (e) {
+        //      //    var code = $(this).val();
+
+        //      // });
+        //         $("#tr_prec_"+code).keypress(function(e) {
+        //          var code = (e.keyCode ? e.keyCode : e.which);
+        //             if(code==13){
+        //             var tipoTo =$(this).attr('data_idTipoPres');
+                    
+
+        //             var precio_ant =$(this).attr('data-precio');
+        //             var precio_act=$(this).val();
+                   
+        //                if(tipoTo=='1'){
+        //                     var mo=mo_revision.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     mo_revision.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='2'){
+        //                     var mo=mo_mecanica.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     mo_mecanica.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='3'){
+        //                     var mo=terceros.val();
+        //                      var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     terceros.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='4'){
+        //                     var mo=otros_mo.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     otros_mo.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='5'){
+        //                     var mo=repuestos.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     repuestos.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='6'){
+        //                     var mo=accesorios.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     accesorios.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='7'){
+        //                     var mo=lubricantes.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     lubricantes.val(mont.toFixed(2));
+        //                  }else if(tipoTo=='8'){
+        //                     var mo=otros_rep.val();
+        //                     var precio_temp=Number(mo)-Number(precio_ant);
+        //                     var mont=Number(precio_temp)+Number(precio_act);
+        //                     $(this).attr('data-precio',mont.toFixed(2));
+        //                     otros_rep.val(new_trp.toFixed(2));
+        //                  }
+        //                 sumar_key(); 
+        //             }
+        //          });
+          
+        //      $('.deltotal').click(function (e) {
+        //         var code = $(this).attr('data-id');
+        //         var idTipo = $(this).attr('data_idTipoDel');
+        //         var idedet=$(this).attr('data-idedet');
+        //         AlertFactory.confirm({
+        //             title: '',
+        //             message: '¿Está seguro que desea quitar este servicio ?',
+        //             confirm: 'Si',
+        //             cancel: 'No'
+        //         }, function () {
+        //             if(nConsecutivo.val()!='' && idedet){
+
+        //                 var id=cCodConsecutivo.val()+'_'+nConsecutivo.val()+'_'+idedet;
+                      
+        //                 RESTService.get('orden_servicios/deleteDetalle', id, function(response) {
+        //                 if (!_.isUndefined(response.status) && response.status) {
+        //                     var data=response.data;
+        //                     if(data[0].Mensaje!=''){
+        //                           AlertFactory.textType({
+        //                             title: '',
+        //                             message: data[0].Mensaje,
+        //                             type: 'info'
+        //                         });
+        //                     }else{
+        //                            AlertFactory.textType({
+        //                             title: '',
+        //                             message: 'El servicio se eliminó correctamente',
+        //                             type: 'success'
+        //                         });
+        //                         $('#tr_b_' + code).remove();
+        //                     }
+        //              }else {
+        //                 var msg_ = (_.isUndefined(response.message)) ?
+        //                     'No se pudo eliminar. Intente nuevamente.' : response.message;
+        //                         AlertFactory.textType({
+        //                             title: '',
+        //                             message: msg_,
+        //                             type: 'error'
+        //                         });
+        //                  }
+        //                 });
+        //             }else{
+        //                 var idcod='#tr_' + code;
+        //             var precio_borrar=$("#tr_prec_"+code).val();
+        //         if(idTipo=='1'){
+        //             var mo_r=mo_revision.val();
+        //             var new_mor=Number(mo_r)-Number(precio_borrar);
+        //             mo_revision.val(new_mor.toFixed(2));
+        //          }else if(idTipo=='2'){
+        //             var mo_m=mo_mecanica.val();
+        //             var new_mo_m=Number(mo_m)-Number(precio_borrar);
+                    
+        //             mo_mecanica.val(new_mo_m.toFixed(2));
+        //          }else if(idTipo=='3'){
+        //             var mo_tr=terceros.val();
+        //             var new_mo_tr=Number(mo_tr)-Number(precio_borrar);
+        //             terceros.val(new_mo_tr.toFixed(2));
+        //          }else if(idTipo=='4'){
+        //             var mo_otr=otros_mo.val();
+        //             var new_mo_otr=Number(mo_otr)-Number(precio_borrar);
+        //             otros_mo.val(new_mo_otr.toFixed(2));
+        //          }else if(idTipo=='5'){
+        //             var mo_rp=repuestos.val();
+        //             var new_mo_rp=Number(mo_rp)-Number(precio_borrar);
+        //             repuestos.val(new_mo_rp.toFixed(2));
+        //          }else if(idTipo=='6'){
+        //             var mo_ac=accesorios.val();
+        //             var new_mo_ac=Number(mo_ac)-Number(precio_borrar);
+        //             accesorios.val(new_mo_ac.toFixed(2));
+        //          }else if(idTipo=='7'){
+        //             var mo_lub=lubricantes.val();
+        //             var new_mo_lub=Number(mo_lub)-Number(precio_borrar);
+        //             lubricantes.val(new_mo_lub.toFixed(2));
+        //          }else if(idTipo=='8'){
+        //             var mo_trp=otros_rep.val();
+        //             var new_trp=Number(mo_trp)-Number(precio_borrar);
+        //             otros_rep.val(new_trp.toFixed(2));
+        //          }
+        //             sumar_key(); 
+        //             $('#tr_b_' + code).remove();
+        //         }
+
+
+                   
+        //         });
+        //         e.preventDefault();
+        //     });
+
+        // }
+          function calcular_impueso(precio,cantidad){
+            var impu=(Number(precio)*Number(cantidad))*((Number(igv)/100));
+            impu=impu.toFixed(2);
+            return impu;
+        }
+         function calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec){
+            if(tipoTo=='1'){
+                            var mo=mo_revision.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                            $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            mo_revision.val(mont.toFixed(2));
+                         }else if(tipoTo=='2'){
+                            var mo=mo_mecanica.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            mo_mecanica.val(mont.toFixed(2));
+                         }else if(tipoTo=='3'){
+                            var mo=terceros.val();
+                             var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            terceros.val(mont.toFixed(2));
+                         }else if(tipoTo=='4'){
+                            var mo=otros_mo.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            otros_mo.val(mont.toFixed(2));
+                         }else if(tipoTo=='5'){
+                            var mo=repuestos.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            repuestos.val(mont.toFixed(2));
+                         }else if(tipoTo=='6'){
+                            var mo=accesorios.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            accesorios.val(mont.toFixed(2));
+                         }else if(tipoTo=='7'){
+                            var mo=lubricantes.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            lubricantes.val(mont.toFixed(2));
+                         }else if(tipoTo=='8'){
+                            var mo=otros_rep.val();
+                            var precio_temp=Number(mo)-Number(precio_ant);
+                            var mont=Number(precio_temp)+Number(precio_act);
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
+                            otros_rep.val(new_trp.toFixed(2));
+                         }
+        }
         function addServicios(vto,tipoTo,tipoText,modo_ser,iddet){
             var arrayRe=vto.split("*");
             var code=arrayRe[0];
             var producto=arrayRe[1];
             var precio=arrayRe[2];
-
+            var impuesto=arrayRe[3];
             var preci_t=Number(precio).toFixed(2);
+            var impuesto_can=0;
+            var cantidad=1;
+            if(impuesto=='1'){
+                impuesto_can=calcular_impueso(preci_t,cantidad);
+            };
+            var subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
             if ($('#tr_b_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
@@ -511,58 +808,35 @@
              var td1 = $('<td>' + producto + '</td>');
              var tda = $('<td></td>');
              var tdb = $('<td></td>');
+             var tdim = $('<td></td>');
+             var tdsub = $('<td></td>');
              var td2 = $('<td class="text-center"></td>');
              var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'" />');
+             var impuestoRe = $('<input type="number" class="totalImpuesto_servicio form-control input-sm" data-impuestoSer="'+impuesto+'"  id="tr_impSer' + code + '"  value="'+impuesto_can+'" readonly/>');
+             var subtotal_input = $('<input type="number" class="subtotal_repuesto form-control input-sm" data-SubtotalSer="'+subt+'"  id="tr_subtotalSer' + code + '"  value="'+subt.toFixed(2)+'" readonly/>');
              var idTipo_input = $('<input type="hidden" class="idTipo_select form-control input-sm"  value="'+tipoTo+'" />');
-            var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
+             var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
-             var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS="' + code + '" id="tr_pre' + code + '"  value="'+tipoText+'" readonly/>');
+             var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS2="' + code + '"  value="'+tipoText+'" readonly/>');
              var precio = $('<input type="number" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'" data-precio="' +preci_t+ '" value="' +preci_t+ '"  />');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
              tda.append(precio);
              tdb.append(tipototal);
+             tdim.append(impuestoRe);
+             tdsub.append(subtotal_input);
              td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
-             tr.append(td1).append(tda).append(tdb).append(td2);
+             tr.append(td1).append(tda).append(tda).append(tdim).append(tdsub).append(tdb).append(td2);
              table_servicios.append(tr);
-            idMoneda.data("prev",idMoneda.val()); 
-            id_tipocli.data("prev",id_cliente_tipo_or.val());   
-            var precio=arrayRe[2];
-             if(tipoTo=='1'){
-                var mo_r=mo_revision.val();
-              
-             
-                var new_mor=Number(mo_r)+Number(precio);
-                mo_revision.val(new_mor.toFixed(2));
-             }else if(tipoTo=='2'){
-                var mo_m=mo_mecanica.val();
-                var new_mo_m=Number(mo_m)+Number(precio);
-                mo_mecanica.val(new_mo_m.toFixed(2));
-             }else if(tipoTo=='3'){
-                var mo_tr=terceros.val();
-                var new_mo_tr=Number(mo_tr)+Number(precio);
-                terceros.val(new_mo_tr.toFixed(2));
-             }else if(tipoTo=='4'){
-                var mo_otr=otros_mo.val();
-                var new_mo_otr=Number(mo_otr)+Number(precio);
-                otros_mo.val(new_mo_otr.toFixed(2));
-             }else if(tipoTo=='5'){
-                var mo_rp=repuestos.val();
-                var new_mo_rp=Number(mo_rp)+Number(precio);
-                repuestos.val(new_mo_rp.toFixed(2));
-             }else if(tipoTo=='6'){
-                var mo_ac=accesorios.val();
-                var new_mo_ac=Number(mo_ac)+Number(precio);
-                accesorios.val(new_mo_ac.toFixed(2));
-             }else if(tipoTo=='7'){
-                var mo_lub=lubricantes.val();
-                var new_mo_lub=Number(mo_lub)+Number(precio);
-                lubricantes.val(new_mo_lub.toFixed(2));
-             }else if(tipoTo=='8'){
-                var mo_trp=otros_rep.val();
-                var new_trp=Number(mo_trp)+Number(precio);
-                otros_rep.val(new_trp.toFixed(2));
-             }
-            sumar_key(); 
+             idMoneda.data("prev",idMoneda.val()); 
+             id_tipocli.data("prev",id_cliente_tipo_or.val()); 
+             var precio=arrayRe[2];
+             var precio_antT=0;
+             var precio_actT=Number(precio)+Number(impuesto_can);
+             var data_prec='data-precio';
+             var tr_pre='tr_prec_';
+             calcular_precio_totales(precio_antT,precio_actT,tipoTo,code,tr_pre,data_prec);
+             sumar_key(); 
+             calcular_total_MO();
             servicios_select.val("").trigger("change");
             tipo_totales_slec.val("").trigger("change");
             //  var totales_table=$("#tr_pre"+code);
@@ -575,64 +849,25 @@
 
              // });
                 $("#tr_prec_"+code).keypress(function(e) {
-                 var code = (e.keyCode ? e.keyCode : e.which);
-                    if(code==13){
+                 var tecl = (e.keyCode ? e.keyCode : e.which);
+                    if(tecl==13){
                     var tipoTo =$(this).attr('data_idTipoPres');
-                    
-
                     var precio_ant =$(this).attr('data-precio');
                     var precio_act=$(this).val();
-                   
-                       if(tipoTo=='1'){
-                            var mo=mo_revision.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            mo_revision.val(mont.toFixed(2));
-                         }else if(tipoTo=='2'){
-                            var mo=mo_mecanica.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            mo_mecanica.val(mont.toFixed(2));
-                         }else if(tipoTo=='3'){
-                            var mo=terceros.val();
-                             var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            terceros.val(mont.toFixed(2));
-                         }else if(tipoTo=='4'){
-                            var mo=otros_mo.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            otros_mo.val(mont.toFixed(2));
-                         }else if(tipoTo=='5'){
-                            var mo=repuestos.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            repuestos.val(mont.toFixed(2));
-                         }else if(tipoTo=='6'){
-                            var mo=accesorios.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            accesorios.val(mont.toFixed(2));
-                         }else if(tipoTo=='7'){
-                            var mo=lubricantes.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            lubricantes.val(mont.toFixed(2));
-                         }else if(tipoTo=='8'){
-                            var mo=otros_rep.val();
-                            var precio_temp=Number(mo)-Number(precio_ant);
-                            var mont=Number(precio_temp)+Number(precio_act);
-                            $(this).attr('data-precio',mont.toFixed(2));
-                            otros_rep.val(new_trp.toFixed(2));
-                         }
-                        sumar_key(); 
+                    var impuEstado=$("#tr_impSer"+code).attr('data-impuestoSer');
+                    var impuesto_can=0;
+                    var cantidad=1;
+                    if(impuEstado=='1'){
+                        impuesto_can=calcular_impueso(precio_act,cantidad);
+                    }
+                    precio_act=Number(precio_act)+Number(impuesto_can);
+                    $("#tr_impSer"+code).val(impuesto_can);
+                    var data_prec='data-precio';
+                    var tr_pre='tr_prec_';
+                    calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
+                    calcular_total_MO();
+                    sumar_key();
+
                     }
                  });
           
@@ -647,13 +882,10 @@
                     cancel: 'No'
                 }, function () {
                     if(nConsecutivo.val()!='' && idedet){
-
                         var id=cCodConsecutivo.val()+'_'+nConsecutivo.val()+'_'+idedet;
-                      
                         RESTService.get('orden_servicios/deleteDetalle', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
                             var data=response.data;
-                            console.log(data);
                             if(data[0].Mensaje!=''){
                                   AlertFactory.textType({
                                     title: '',
@@ -663,7 +895,7 @@
                             }else{
                                    AlertFactory.textType({
                                     title: '',
-                                    message: 'El servicio se eliminó correctamente',
+                                    message: 'El Servicio se eliminó correctamente',
                                     type: 'success'
                                 });
                                 $('#tr_b_' + code).remove();
@@ -680,7 +912,7 @@
                         });
                     }else{
                         var idcod='#tr_' + code;
-                    var precio_borrar=$("#tr_prec_"+code).val();
+                    var precio_borrar=$("#tr_subtotalSer"+code).val();
                 if(idTipo=='1'){
                     var mo_r=mo_revision.val();
                     var new_mor=Number(mo_r)-Number(precio_borrar);
@@ -717,6 +949,7 @@
                  }
                     sumar_key(); 
                     $('#tr_b_' + code).remove();
+                    calcular_total_MO();
                 }
 
 
@@ -725,6 +958,33 @@
                 e.preventDefault();
             });
 
+        }
+        function getDataForProforma () {
+            RESTService.all('proformas/data_form', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                     igv=response.igv[0].value;
+                    //   articulos_repuestos.append('<option value="">Seleccionar</option>');
+                    //  _.each(response.articulos_repuestos, function(item) {
+                    //     articulos_repuestos.append('<option value="'+item.id+'*'+item.nPrecio+'">'+item.code_article+' '+item.description+'</option>');
+                    // });
+                } 
+            }, function() {
+                getDataForProforma();
+            });
+        }
+        getDataForProforma();
+         function calcular_total_MO(){
+            var totalt=0;
+            $("#table_servicios tr").each(function(){
+                var cantidadt=1;
+                var preciot=Number($(this).find("td:eq(1)").children("input").val());
+                var impuestot=Number($(this).find("td:eq(2)").children("input").val());
+                var subtota=(cantidadt*preciot)+impuestot;
+                $(this).find("td:eq(3)").children("input").val(subtota.toFixed(2));
+                totalt=totalt+subtota;
+            });
+       
+            totalMO.val(totalt.toFixed(2));
         }
         function addMante(total,modo_t) {
             var arrayRe=total.split("*");
@@ -875,10 +1135,11 @@
             otros_rep.val(0);
         }
 
-        function sumar_key(){
-            subtotal_moa.val(Number(mo_revision.val())+Number(mo_mecanica.val())+Number(terceros.val())+Number(otros_mo.val()));
-            subtotal_mob.val(Number(repuestos.val())+Number(accesorios.val())+Number(lubricantes.val())+Number(otros_rep.val()));
-          
+       function sumar_key(){
+            var subA=Number(mo_revision.val())+Number(mo_mecanica.val())+Number(terceros.val())+Number(otros_mo.val());
+            var subB=Number(repuestos.val())+Number(accesorios.val())+Number(lubricantes.val())+Number(otros_rep.val());
+            subtotal_moa.val(subA.toFixed(2));
+            subtotal_mob.val(subB.toFixed(2));
             var totalfin=Number(subtotal_moa.val())+Number(subtotal_mob.val());
             total.val(totalfin.toFixed(2));
         }
@@ -1013,7 +1274,7 @@
             
             if(nConsecutivo.val()!=""){
                 var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
-             var id_revision_array =[];
+                var id_revision_array =[];
                 $.each($('.idDetalleGrup'), function (idx, item) {
                     id_revision_array[idx] = $(item).val();
 
@@ -1062,7 +1323,7 @@
                         id_cliente_tipo_or.val(id_tipocli.val()).trigger("change");
                         idMoneda.data("prev",idMoneda.val()); 
                         id_tipocli.data("prev",id_tipocli.val()); 
-                        modalDeleteOrden.modal("hide"); 
+                        modalDeleteDetalle.modal("hide"); 
                     }
                });
          }else{
@@ -1071,6 +1332,35 @@
                 clean_totale();
                sumar_key();
          }
+        }
+          $scope.EliminarOrden = function()
+        {
+           var id=idOrdenDelete.val();
+            console.log(id);
+            RESTService.get('orden_servicios/delete', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                    var dta=response.data;
+                    if(dta[0]['Mensaje']!=""){
+                         AlertFactory.textType({
+                                title: '',
+                                message: dta[0]['Mensaje'],
+                                type: 'info'
+                        }); 
+                        modalDeleteOrden.modal("hide"); 
+                    }else{
+                         AlertFactory.textType({
+                            title: '',
+                            message: 'El registro se eliminó correctamente',
+                            type: 'success'
+                        });
+                        modalDeleteOrden.modal("hide"); 
+                        LoadRecordsButtonOrden_Servicio.click();
+                    }
+                  
+                  
+                    
+                    }
+               }); 
         }
         function cleanVehi () {
             cleanRequired();
@@ -1157,7 +1447,20 @@
                 });
                 modo_array_serv = modo_array_serv.join(',');
                 
-                
+                 var impuesto_servicio =[];
+                $.each($('.totalImpuesto_servicio'), function (idx, item) {
+                    impuesto_servicio[idx] = $(item).val();
+                });
+                impuesto_servicio = impuesto_servicio.join(',');
+  
+
+
+                 var idDetalleGrup =[];
+                $.each($('.idDetalleGrup'), function (idx, item) {
+                    idDetalleGrup[idx] = $(item).val();
+                });
+                idDetalleGrup = idDetalleGrup.join(',');
+
 
                 var totalConse=cCodConsecutivo.val();
                 var arrayConEn=totalConse.split("*");
@@ -1196,12 +1499,13 @@
                     'otros_mo': otros_mo.val(),
                     'respuestos': repuestos.val(),
                     'accesorios': accesorios.val(),
-
+                    'impuesto_servicio':impuesto_servicio,
                     'lubricantes': lubricantes.val(),
                     'otros_rep': otros_rep.val(),
                     'total': total.val(),
                     'id_mantenimiento_array':id_mantenimiento_array,
                     'id_revision_array':id_revision_array,
+                    'idDetalleGrup':idDetalleGrup,
                     'id_tipo_array':id_tipo_array,
                     'precio_array':precio_array,
                     'modo_array_mant':modo_array_mant,
@@ -1212,7 +1516,6 @@
                     RESTService.updated('orden_servicios/createOrden', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                        var data_p =response.res;
-                       console.log(data_p[0].Mensaje);
                        if(Number(data_p[0].Mensaje)){
                         $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");

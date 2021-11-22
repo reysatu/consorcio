@@ -97,6 +97,24 @@ class Orden_servicioController extends Controller
             $accesorios=strtoupper($data['accesorios']);
             $lubricantes=strtoupper($data['lubricantes']);
             $otros_rep=strtoupper($data['otros_rep']);
+            $precio_array=$data['precio_array'];
+            $precio_array=explode(',', $precio_array);
+            
+            $impuesto_servicio=$data['impuesto_servicio'];
+            $impuesto_servicio=explode(',', $impuesto_servicio);
+
+            $idDetalleGrup=$data['idDetalleGrup'];
+            $idDetalleGrup=explode(',', $idDetalleGrup);
+
+            $impuesto=0;
+            $totalmo=0;
+             for ($i=0; $i < count($impuesto_servicio) ; $i++) {
+                $impuesto=$impuesto+floatval($impuesto_servicio[$i]);
+            }
+             for ($i=0; $i < count($precio_array) ; $i++) {
+                $totalmo=$totalmo+floatval($precio_array[$i]);
+            }
+            $total=floatval($totalmo)+floatval($impuesto);
             if($mo_revision==''){
                 $mo_revision=0;
             };
@@ -121,7 +139,6 @@ class Orden_servicioController extends Controller
             if($otros_rep==''){
                 $otros_rep=0;
             };
-            $total=strtoupper($data['total']);
             $val=1;
             if($data['nConsecutivo']==0){
                 $val=0;
@@ -158,11 +175,13 @@ class Orden_servicioController extends Controller
                 $accesorios,
                 $lubricantes,
                 $otros_rep,
+                $impuesto,
                 $total,
                 $modo,
                 $usuario
             );
             if(intval($res[0]->Mensaje)){
+
                 $id_mantenimiento_array=$data['id_mantenimiento_array'];
             $id_mantenimiento_array=explode(',', $id_mantenimiento_array);
 
@@ -185,9 +204,8 @@ class Orden_servicioController extends Controller
              for ($i=0; $i < count($id_mantenimiento_array) ; $i++) {
                 $repo->actualizar_orden_mantenimiento($cCodConsecutivo,$res[0]->Mensaje,$id_mantenimiento_array[$i],$modo_array_mant[$i],$usuario);
              };
-             $cont=0;
              for ($i=0; $i < count($id_revision_array) ; $i++) {
-                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$cont,$id_revision_array[$i],$precio_array[$i],$id_tipo_array[$i],$modo_array_serv[$i],$usuario);
+                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$precio_array[$i],$impuesto_servicio[$i],$id_tipo_array[$i],$modo_array_serv[$i],$usuario);
              };
             }
             DB::commit();
@@ -211,6 +229,7 @@ class Orden_servicioController extends Controller
     {
         
         $codigo = $Repo->getcodigo();
+        $codigo_proforma = $Repo->getcodigo_proforma();
         $condicion_pago = $Repo->getcondicion_pago();
         $tipo_servicio = $Repo->gettipo_servicio();
         $tipo_document = $Repo->gettipo_document();
@@ -224,6 +243,7 @@ class Orden_servicioController extends Controller
         return response()->json([
             'status' => true,
             'codigo' => $codigo,
+            'codigo_proforma'=>$codigo_proforma,
             'condicion_pago' => $condicion_pago,
             'tipo_servicio' => $tipo_servicio,
             'tipo_document'=> $tipo_document,

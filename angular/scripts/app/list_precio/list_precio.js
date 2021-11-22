@@ -82,6 +82,7 @@
                         btn_guardar_precios.prop('disabled',false); 
                         btn_aprobar.prop('disabled',false); 
                         iEstado.val(data_p.iEstado).trigger("change");
+                        
                     }else{
                         btn_guardar_precios.prop('disabled',true); 
                     };
@@ -105,6 +106,11 @@
                          btn_aprobar.prop('disabled',true); 
                         btn_guardar_precios.prop('disabled',true); 
                          iEstado.val(1).trigger('change');
+                          AlertFactory.textType({
+                            title: '',
+                            message: 'La lista se aprobó correctamente',
+                            type: 'success'
+                        });
                     };
                      LoadRecordsButtonList_precio.click();
                    
