@@ -81,11 +81,18 @@ class ProformaRepository implements ProformaInterface
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_EliminaProformaDetalle '$id','$no','$mant'");
          return $destroy;
     }
+     public function cambiar_estado($id,$no,$estado,$usuario)
+    {
+         $pdo=DB::connection()->getPdo();
+         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaEstadoProforma '$id','$no','$estado','$usuario'");
+         return $destroy;
+    }
      public function find_proforma($conse,$nro)
     {
         $mostrar3=DB::select("SELECT prof.nEstimadoHoras as nEstimadoHoras,prof.idAsesor as idAsesorProforma, prof.cCodConsecutivo as cCodConsecutivo,prof.nConsecutivo as nConsecutivo,prof.dFechaRegistro as dFechaRegistro,prof.nTotalMO as nTotalMO,prof.nTotalDetalle as nTotalDetalle,prof.nSubTotal as nSubTotal,prof.nTotal as nTotal,prof.nImpuesto as nImpuesto,prof.iEstado as iEstado,os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh, os.cMotor as cMotor,os.nKilometraje as nKilometraje, os.cColor as cColor,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivoOS, os.nConsecutivo as nConsecutivoOS, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idcCondicionPago as idcCondicionPago,cp.description as condicionPago,os.idAsesor as idAsesor,ase.descripcion as asesor FROM ERP_OrdenServicio as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda inner join ERP_CondicionPago as cp on cp.id=os.idcCondicionPago INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente INNER JOIN ERP_TipoCliente as tc on tc.id=cl.id_tipocli inner join ERP_Proforma as prof on prof.cCodConsecutivoOS=os.cCodConsecutivo  inner join ERP_Asesores as ase on ase.id=os.idAsesor where prof.nConsecutivoOS=os.nConsecutivo and prof.cCodConsecutivo='$conse' AND prof.nConsecutivo='$nro'");
           return $mostrar3;
     }
+   
     public function find_proforma_repuestos($conse,$nro)
     { 
       $mostrar3=DB::select("select pr.id as idProducto, od.id as idDetalleRepues,* from ERP_ProformaDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");

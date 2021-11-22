@@ -25,3 +25,5 @@ Route::get('proformas/find/{id}', ['as' => 'proformas.find', 'uses' => 'Proforma
 Route::get('proformas/delete/{id}', ['as' => 'proformas.delete', 'uses' => 'ProformaController@destroy']);
 
 Route::put('proformas/deleteDetalleMO/{id}', ['as' => 'proformas.deleteDetalleMO', 'uses' => 'ProformaController@deleteDetalleMO']);
+
+Route::put('proformas/cambiar_estado/{id}', ['as' => 'proformas.cambiar_estado', 'uses' => 'ProformaController@cambiar_estado']);

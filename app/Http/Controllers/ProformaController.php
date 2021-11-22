@@ -262,6 +262,29 @@ class ProformaController extends Controller
             ]);
         }
     }
+    public function cambiar_estado($id, ProformaInterface $repo, Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $valtodo=explode("_", $id);
+            $usuario=auth()->id();
+            $val=$repo->cambiar_estado($valtodo[0],$valtodo[1],$data['estado'],$usuario);
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+                
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function find($id, ProformaInterface $repo)
     {
         try {

@@ -32,3 +32,4 @@ Route::get('orden_servicios/find/{id}', ['as' => 'orden_servicios.find', 'uses' 
 
 Route::post('orden_servicios/getCliente', 'Orden_servicioController@getCliente');
 
+Route::put('orden_servicios/cambiar_estado/{id}', ['as' => 'orden_servicios.cambiar_estado', 'uses' => 'Orden_servicioController@cambiar_estado']);

@@ -15,8 +15,8 @@
     {   
         var servicios;
         var igv;
-        var btn_aprobarProforma=$("#btn_aprobarProforma");
-        var btn_guardarProforma=$("#btn_guardarProforma");
+        var btn_aprobarProforma=$(".btn_aprobarProforma");
+        var btn_guardarProforma=$(".btn_guardarProforma");
         var estado=$("#estado");
         var btn_cerrar=$("#btn_cerrar");
         var btn_cancelar_servicio=$("#btn_cancelar_servicio");
@@ -81,6 +81,47 @@
             idcCondicionPago.val('');
             idAsesor.val('').trigger('change');
         }
+         btn_aprobarProforma.click(function () {
+           Aprobar_Proforma_servicio();
+          });
+          function Aprobar_Proforma_servicio(){
+             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+             var params = {
+                    'estado':1,
+                 };
+              RESTService.updated('proformas/cambiar_estado', id, params, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var data=response.data;
+                        if(data[0].Mensaje=='OK'){
+                              AlertFactory.textType({
+                                    title: '',
+                                    message: 'La Proforma se aprobó correctamente',
+                                    type: 'success'
+                                });
+                                btn_guardarProforma.prop('disabled',true); 
+                                estado.val(1);
+                            }else{
+                              
+
+                                 AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                               
+                            }
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Vehiculo. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                        
+                });
+          }
          function findRegister_Proforma(id)
         {
             
@@ -101,17 +142,23 @@
                     idAsesor.val(data[0].idAsesorProforma).trigger("change");
                     var hor=Number(data[0].nEstimadoHoras);
                     nEstimadoHoras.val(hor.toFixed(2));
+                    estado.val(data[0].iEstado);
+                    if(data[0].iEstado!='0'){
+                          btn_guardarProforma.prop('disabled',true); 
+                    }
                     dFecEntrega.val(data.dFechaRegistro2);
                     _.each(response.data_repuesto, function (b) {
                         var modo_m=1;
                          addRepuesto(b.idProducto,b.description,b.nPrecioUnitario,b.id_tipototal,b.descripcion,b.nCant,b.impuesto,modo_m,b.idDetalleRepues);
                     });
 
+
                     _.each(response.data_servicio, function (b) {
                         var modo_m=1;
                         var vto=b.idProducto+'*'+b.description+'*'+b.nTotal+'*'+b.impuesto;
                          addServicios(vto,b.id_tipototal,b.descripcion,modo_m,b.idDetalleServicio);
                     });
+                     btn_aprobarProforma.prop('disabled',false); 
                     modalProforma.modal("show");
                 } else {
                     AlertFactory.textType({

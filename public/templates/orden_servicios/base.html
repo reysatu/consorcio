@@ -105,11 +105,41 @@ h5.linea span {
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h4 class="modal-title" id="titlemodalOrdenServivio"></h4>
+                        
                     </div>
                     <div class="modal-body">
                             <div class="tab-content">
+                              <br>
+                                    <div>
+                           <div style="float:left">
+                          <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" >
+                              <span class="fa fa-save"></span>
+                              En Ejecución
+                          </button>
+                          <button type="button" id="" class="btn btn-warning btn-sm btn_terminada" >
+                              <span class="fa fa-save"></span>
+                              Terminada
+                          </button> 
+                          <button type="button" id="" class="btn btn-info btn-sm btn_cancelar" >
+                              <span class="fa fa-ban"></span>
+                              Cancelar
+                          </button>
+                       </div>
+                        <div style="float:right">  
+                            <button type="button" id="" class="btn btn-info btn-sm btn_imprimir" >
+                              <span class="fa fa-file-pdf-o"></span>
+                              Imprimir
+                            </button>
+                            <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden" ng-click="saveOrdenServicio()">
+                                <span class="fa fa-save"></span>
+                                Guardar
+                            </button>
+                        </div> 
+                        </div>
+                     <br>
                                     <h5 class="linea"><span>Datos Generales</span></h5>
                                     <div class="form-horizontal">
+
                                         <br>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -456,21 +486,33 @@ h5.linea span {
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btn_imprimir" class="btn btn-info btn-sm" >
-                            <span class="fa fa-file-pdf-o"></span>
-                            Imprimir
-                        </button>
-                        <button type="button" id="btn_cancelar" class="btn btn-warning btn-sm" >
-                            <span class="fa fa-ban"></span>
-                            Cancelar
-                        </button>
-                        <button type="button" id="btn_guardarOrden" class="btn btn-danger-admin btn-sm" ng-click="saveOrdenServicio()">
-                            <span class="fa fa-save"></span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
-                            <span class="fa fa-times"></span> Cerrar
-                        </button>
+                       <div style="float:left">
+                          <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" >
+                              <span class="fa fa-save"></span>
+                              En Ejecución
+                          </button>
+                          <button type="button" id="" class="btn btn-warning btn-sm btn_terminada" >
+                              <span class="fa fa-save"></span>
+                              Terminada
+                          </button> 
+                          <button type="button" id="" class="btn btn-info btn-sm btn_cancelar" >
+                              <span class="fa fa-ban"></span>
+                              Cancelar
+                          </button>
+                       </div>
+                        <div style="float:right">  
+                            <button type="button" id="" class="btn btn-info btn-sm btn_imprimir" >
+                              <span class="fa fa-file-pdf-o"></span>
+                              Imprimir
+                            </button>
+                            <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden" ng-click="saveOrdenServicio()">
+                                <span class="fa fa-save"></span>
+                                Guardar
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+                                <span class="fa fa-times"></span> Cerrar
+                            </button>
+                        </div>    
                     </div>
                 </div>
             </div>

@@ -107,6 +107,24 @@ h5.linea span {
                     </div>
                     <div class="modal-body">
                             <div class="tab-content">
+                                    <br>
+                                      <div style="float:left">
+                             <button type="button" id=""  disabled class="btn btn-warning btn-sm btn_aprobarProforma" >
+                                  <span class="fa fa-ban"></span>
+                                  Aprobar
+                              </button>
+                        </div>
+                        <div style="float:right">
+                          <button type="button" id="" class="btn btn-info btn-sm btn_imprimirProforma" >
+                              <span class="fa fa-file-pdf-o"></span>
+                              Imprimir
+                          </button>
+                          <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarProforma" ng-click="saveProforma()">
+                              <span class="fa fa-save"></span>
+                              Guardar
+                          </button>
+                        </div>
+                                    <br>
                                     <h5 class="linea"><span>Datos Generales</span></h5>
                                     <div class="form-horizontal">
                                         <br>
@@ -385,21 +403,25 @@ h5.linea span {
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="btn_imprimirProforma" class="btn btn-info btn-sm" >
-                            <span class="fa fa-file-pdf-o"></span>
-                            Imprimir
-                        </button>
-                        <button type="button" id="btn_aprobarProforma"  disabled class="btn btn-warning btn-sm" >
-                            <span class="fa fa-ban"></span>
-                            Aprobar
-                        </button>
-                        <button type="button" id="btn_guardarProforma" class="btn btn-danger-admin btn-sm" ng-click="saveProforma()">
-                            <span class="fa fa-save"></span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
-                            <span class="fa fa-times"></span> Cerrar
-                        </button>
+                        <div style="float:left">
+                             <button type="button" id=""  disabled class="btn btn-warning btn-sm btn_aprobarProforma" >
+                                  <span class="fa fa-ban"></span>
+                                  Aprobar
+                              </button>
+                        </div>
+                        <div style="float:right">
+                          <button type="button" id="" class="btn btn-info btn-sm btn_imprimirProforma" >
+                              <span class="fa fa-file-pdf-o"></span>
+                              Imprimir
+                          </button>
+                          <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarProforma" ng-click="saveProforma()">
+                              <span class="fa fa-save"></span>
+                              Guardar
+                          </button>
+                          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+                              <span class="fa fa-times"></span> Cerrar
+                          </button>
+                        </div>
                     </div>
                 </div>
             </div>

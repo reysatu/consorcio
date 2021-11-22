@@ -35,7 +35,7 @@
         var modalDeleteOrden=$("#modalDeleteOrden");
         var modaClientes = $('#modaClientes');
         var titleModalClientes = $('#titleModalClientes');
-        var btn_guardarOrden=$("#btn_guardarOrden");
+        var btn_guardarOrden=$(".btn_guardarOrden");
         var modaVehiculosTerceros=$("#modaVehiculosTerceros");
         var titleModalVehiculosTerceros=$("#titleModalVehiculosTerceros");
         var estado=$("#estado");
@@ -81,6 +81,10 @@
         var otros_mo=$("#otros_mo");
         var subtotal_moa=$("#subtotal_moa");
 
+        var btn_ejecucion=$(".btn_ejecucion");
+        var btn_terminada=$(".btn_terminada");
+        var btn_cancelar=$(".btn_cancelar");
+
        var repuestos=$("#repuestos");
         var accesorios=$("#accesorios");
         var lubricantes=$("#lubricantes");
@@ -113,6 +117,126 @@
         var chasis=$("#chasis");
         var anio_fabricacion=$("#anio_fabricacion");
         var color=$("#color");
+         btn_cancelar.click(function () {
+           cancelar_orden_servicio();
+          });
+          btn_ejecucion.click(function () {
+           ejecucion_orden_servicio();
+          });
+           btn_terminada.click(function () {
+           terminada_orden_servicio();
+          });
+        function cancelar_orden_servicio(){
+             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+             var params = {
+                    'estado':4,
+                 };
+              RESTService.updated('orden_servicios/cambiar_estado', id, params, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var data=response.data;
+                        if(data[0].Mensaje=='OK'){
+                            AlertFactory.textType({
+                                    title: '',
+                                    message: 'La orden se registró correctamente',
+                                    type: 'success'
+                                });
+                                estado.val(4);
+                                
+                            }else{
+                               
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                               
+                            }
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Vehiculo. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                        
+                });
+        }
+        function ejecucion_orden_servicio(){
+             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+             var params = {
+                    'estado':2,
+                 };
+              RESTService.updated('orden_servicios/cambiar_estado', id, params, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var data=response.data;
+                        if(data[0].Mensaje=='OK'){
+                                  AlertFactory.textType({
+                                    title: '',
+                                    message: 'La orden se registró correctamente',
+                                    type: 'success'
+                                });
+                                estado.val(2);
+                            }else{
+                                  AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                               
+                            }
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Vehiculo. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                        
+                });
+        }
+        function terminada_orden_servicio(){
+             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+             var params = {
+                    'estado':3,
+                 };
+              RESTService.updated('orden_servicios/cambiar_estado', id, params, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var data=response.data;
+                        if(data[0].Mensaje=='OK'){
+                                  
+                              AlertFactory.textType({
+                                    title: '',
+                                    message: 'La orden se registró correctamente',
+                                    type: 'success'
+                                });
+                                estado.val(3);
+                            }else{
+                              
+
+                                 AlertFactory.textType({
+                                    title: '',
+                                    message: data[0].Mensaje,
+                                    type: 'info'
+                                });
+                               
+                            }
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Vehiculo. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                        
+                });
+        }
+
         function findRegister_Orden(id)
         {
             
@@ -172,6 +296,9 @@
                     // idAsesor
                     // horaEnt
                     // nKilometraje
+                    if(data[0].iEstado!='0'){
+                          btn_guardarOrden.prop('disabled',true); 
+                    }
                     id_tipocli.data("prev",id_cliente_tipo_or.val());
                     idMoneda.data("prev",idMoneda.val());
                     modalOrdenServivio.modal("show");
