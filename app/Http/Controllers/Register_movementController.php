@@ -190,7 +190,7 @@ class Register_movementController extends Controller
 
     public function excel(Register_movementInterface $repo)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE MOVIMIENTOS', 'MOVIMIENTOS');
+        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE MOVIMIENTOS', 'Lista de movimientos');
     }
     
     public function getLocalizacionSelec($id, LocalizacionInterface $repo)
@@ -318,7 +318,7 @@ class Register_movementController extends Controller
     {
             $id = $request->input('id');
             $operacion = $repo->get_movimiento($id);
-            $data = $repo->find($id);
+            $data = $repo->find($id); 
             $data_movimiento_Articulo=$repo->get_movement_articulo_print($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
             $data_movimiento_serie=$repo->get_movemen_Serie($id);
@@ -350,6 +350,7 @@ class Register_movementController extends Controller
         try {
             $data = $repo->find($id);
             $data_movimiento_Articulo = $repo->get_movement_articulo($id);
+            $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
             $data_movimiento_serie=$repo->get_movemen_Serie($id);
             $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
@@ -360,6 +361,7 @@ class Register_movementController extends Controller
                  'movimiento_Ar'=>$data_movimiento_Articulo,
                  'data_movimiento_lote'=>$data_movimiento_lote,
                  'data_movimiento_serie'=>$data_movimiento_serie,
+                 'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
             ]);
 
         } catch (\Exception $e) {
@@ -414,6 +416,7 @@ class Register_movementController extends Controller
         $operacion = parseSelectOnly($operRepo->allActive(), 'idTipoOperacion', 'descripcion');
         $usuario=auth()->id();
         $operaciones = $operRepo->getOperation($usuario);
+        $operaciones_entra = $operRepo->getOperation_entra($usuario);
         $almacen_usuario = $WareRepo->getAlmacen_usuario($usuario);
         return response()->json([
             'status' => true,
@@ -421,6 +424,7 @@ class Register_movementController extends Controller
             'almacen' => $almacen,
             'operacion' => $operacion,
             'operaciones'=> $operaciones,
+            'operaciones_entra'=>$operaciones_entra,
             'almacen_usuario'=>$almacen_usuario,
         ]);
     }

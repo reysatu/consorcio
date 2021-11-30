@@ -46,6 +46,6 @@ Route::get('register_movements/valida_series_serve/{id}', ['as' => 'register_mov
 
 Route::get('register_movements/find/{id}', ['as' => 'register_movements.find', 'uses' => 'Register_movementController@find']);
 
-Route::post('register_movements/delete', ['as' => 'register_movements.delete', 'uses' => 'Register_movementController@destroy']);
+// Route::post('register_movements/delete', ['as' => 'register_movements.delete', 'uses' => 'Register_movementController@destroy']);
 
 Route::get('register_movements/pdf', 'Register_movementController@pdf');

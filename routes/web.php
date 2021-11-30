@@ -124,7 +124,9 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Vehiculos_terceros.php';
 
+    require app_path() . '\Http\Routes\Devolucion_servicesTecnicos.php';
 
+    require app_path() . '\Http\Routes\Entrega_servicesTecnicos.php';
     //Route Purchases
 
     require app_path() . '\Http\Routes\Requirements.php';
@@ -162,6 +164,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Proforma_detalles.php';
 
     require app_path() . '\Http\Routes\Proforma_mos.php';
+
+    require app_path() . '\Http\Routes\Quality_controls.php';
     // Route Warehouse
 
     require app_path() . '\Http\Routes\Entrys.php';

@@ -22,7 +22,7 @@ class Register_movement extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento','idTipoOperacion','fecha_registro','fecha_proceso','idUsuario','naturaleza','observaciones','consecutivo','idAlmacen','idMoneda','estado','user_created','user_updated'];
+    protected $fillable = ['idMovimiento','idTipoOperacion','fecha_registro','fecha_proceso','idUsuario','naturaleza','observaciones','consecutivo','idMoneda','estado','user_created','user_updated','cCodConsecutivo','nConsecutivo'];
     
      public function user_c()
     {

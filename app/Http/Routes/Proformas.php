@@ -27,3 +27,5 @@ Route::get('proformas/delete/{id}', ['as' => 'proformas.delete', 'uses' => 'Prof
 Route::put('proformas/deleteDetalleMO/{id}', ['as' => 'proformas.deleteDetalleMO', 'uses' => 'ProformaController@deleteDetalleMO']);
 
 Route::put('proformas/cambiar_estado/{id}', ['as' => 'proformas.cambiar_estado', 'uses' => 'ProformaController@cambiar_estado']);
+
+Route::get('proformas/getDetalle_entrada/{id}', ['as' => 'proformas.getDetalle_entrada', 'uses' => 'ProformaController@getDetalle_entrada']);

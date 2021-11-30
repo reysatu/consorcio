@@ -103,6 +103,10 @@
         'sys.app.purchase_payments',
         'sys.app.writing_checks',
         'sys.app.petty_cash',
+        //Servicio tecnico 
+        'sys.app.devolucion_servicesTecnicos',
+        'sys.app.entrega_servicesTecnicos',
+        'sys.app.quality_controls',
         // Reportes
         'sys.app.stocks'
     ]).run(Run)

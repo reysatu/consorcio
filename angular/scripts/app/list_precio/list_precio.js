@@ -239,7 +239,7 @@
             var td1 = $('<td>' + description + '</td>');
             var tdu = $('<td></td>');
             var inp = $('<input type="hidden" class="w_idProducto" value="' + idProducto + '" />');
-            var in2 = $('<input type="number"  class="form-control input-sm w_precio" value="' + precio + '"/>');
+            var in2 = $('<input type="number" min="1"  class="form-control input-sm w_precio" value="' + precio + '"/>');
             td1.append(inp);
             tdu.append(in2);
             var td2 = $('<td class="text-center"></td>');

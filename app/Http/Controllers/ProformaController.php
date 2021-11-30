@@ -220,11 +220,15 @@ class ProformaController extends Controller
     {
         $codigo_proforma = $Repo->getTotal_Orden();
         $articulos_repuestos=$Repo->get_articuloRepuestos();
+        $getTotal_Orden_total=$Repo->getTotal_Orden_total();
+        $get_proformas_entrega=$Repo->get_proformas_entrega();
          $igv=$Repo->get_igv();
         return response()->json([
             'status' => true,
             'codigo_proforma'=>$codigo_proforma,
             'articulos_repuestos'=>$articulos_repuestos,
+            'total_orden'=>$getTotal_Orden_total,
+            'proformas_entrega'=>$get_proformas_entrega,
             'igv'=>$igv,
         ]);
     }
@@ -232,6 +236,24 @@ class ProformaController extends Controller
     {   try {
             $valtodo=explode("_", $id);
             $val=$repo->destroy_Proforma_detalleSer($valtodo[0],$valtodo[1],$valtodo[2]);
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getDetalle_entrada($id, ProformaInterface $repo, Request $request)
+    {   try {
+            $valtodo=explode("_", $id);
+            $val=$repo->get_detalle_entrada($valtodo[0],$valtodo[1]);
             return response()->json([
                 'status' => true,
                 'data'=>$val,

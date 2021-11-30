@@ -59,6 +59,10 @@ use App\Http\Recopro\Proforma\Proforma;
 use App\Http\Recopro\Proforma\ProformaInterface;
 use App\Http\Recopro\Proforma\ProformaRepository;
 
+use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevision;
+use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevisionInterface;
+use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevisionRepository;
+
 use App\Http\Recopro\Proforma_detalle\Proforma_detalle;
 use App\Http\Recopro\Proforma_detalle\Proforma_detalleInterface;
 use App\Http\Recopro\Proforma_detalle\Proforma_detalleRepository;
@@ -70,6 +74,10 @@ use App\Http\Recopro\Proforma_mo\Proforma_moRepository;
 use App\Http\Recopro\Parametro\Parametro;
 use App\Http\Recopro\Parametro\ParametroInterface;
 use App\Http\Recopro\Parametro\ParametroRepository;
+
+use App\Http\Recopro\Quality_control\Quality_control;
+use App\Http\Recopro\Quality_control\Quality_controlInterface;
+use App\Http\Recopro\Quality_control\Quality_controlRepository;
 
 use App\Http\Recopro\Type_vehiculo\Type_vehiculo;
 use App\Http\Recopro\Type_vehiculo\Type_vehiculoInterface;
@@ -495,10 +503,11 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMotiveTransfer();
 
         $this->registerProforma();
+        $this->registerQualitycontrolRevision();
         $this->registerProforma_detalle();
         $this->registerProforma_mo();
         $this->registerParametro();
-
+        $this->registerQuality_control();
         $this->registerObjetivosDetalle();
 		$this->registerTypePersona();
 
@@ -1541,6 +1550,14 @@ class AppServiceProvider extends ServiceProvider
             return new ProformaRepository(new Proforma());
         });
     }
+      public function registerQualitycontrolRevision()
+    {
+        $app = $this->app;
+
+        $app->bind(QualitycontrolRevisionInterface::class, function ($app) {
+            return new QualitycontrolRevisionRepository(new QualitycontrolRevision());
+        });
+    }
 	 public function registerProforma_detalle()
     {
         $app = $this->app;
@@ -1564,6 +1581,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ParametroInterface::class, function ($app) {
             return new ParametroRepository(new Parametro());
+        });
+    }
+     public function registerQuality_control()
+    {
+        $app = $this->app;
+
+        $app->bind(Quality_controlInterface::class, function ($app) {
+            return new Quality_controlRepository(new Quality_control());
         });
     }
      public function registerMotiveTransfer()
