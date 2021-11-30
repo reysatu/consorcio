@@ -287,7 +287,7 @@
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     cCodConsecutivoOS.val(cons).trigger("change");
                     cCodConsecutivoOS.prop('disabled',true);
-                    titlemodalMovimieto.html('Editar Movimiento '+'['+ data_p.idMovimiento+ ']');
+                    titlemodalMovimieto.html('Editar Entrega '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
                     btn_movimiento_detalle.prop('disabled',false);
