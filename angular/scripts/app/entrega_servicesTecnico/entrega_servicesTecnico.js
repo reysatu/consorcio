@@ -193,7 +193,7 @@
                                 cont=cont+1;
                                 addArticuloTable(index.idProducto,
                                     index.description,Math.trunc(index.nCant),
-                                    ver,cont,tipo,codl,
+                                    ver,index.idDetalleRepues,tipo,codl,
                                     datl,idAlmacen,
                                     idLocalizacion,
                                     index.costo,
@@ -289,7 +289,7 @@
                     cCodConsecutivoOS.prop('disabled',true);
                     titlemodalMovimieto.html('Editar Entrega '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
-                    var serE=response.data_movimiento_serie;
+                    var serE=response.data_movemen_Serie_entrega;
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
@@ -318,7 +318,9 @@
                             aartMSE.push(grubSE);
                         });
                     }
+                    console.log("***");
                     console.log(aartMSE);
+                    console.log("***");
                     idTipoOperacion.val(data_p.idTipoOperacion+'*'+data_p.naturaleza).trigger('change');
                     idTipoOperacion.prop('disabled',true);
                     idTipoOperacion.trigger('change');
@@ -374,9 +376,15 @@
                             tipo='LE';
                             codl=index.idLote;
                         }
-                      
-
-                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,index.idLote,index.cod_lote,index.idAlmacen,index.idLocalizacion,index.costo2,index.costo_total,index.precio,index.precio_total,Math.trunc(index.nCantidadPendienteEntregar));                      
+                        var idLoteEnviar=index.idLote;
+                        if(index.idLote==null){
+                            idLoteEnviar='';
+                        }
+                        var idCodLoteEnviar=index.cod_lote;
+                        if(index.cod_lote==null){
+                            idCodLoteEnviar='';
+                        }
+                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,idLoteEnviar,idCodLoteEnviar,index.idAlmacen,index.idLocalizacion,index.costo2,index.costo_total,index.precio,index.precio_total,Math.trunc(index.nCantidadPendienteEntregar));                      
                       })
                     // console.log(data_p);
                     // p_id.val(data_p.id);
@@ -1136,6 +1144,7 @@
                     'ident_serie_bd_serie':ident_serie_bd_serie,
                     'naturaleza':naturalezaGeneral,
                 };
+                console.log(params);
                 var str=idTipoOperacion.val();
                 var complet=str.split("*");
                 var idTO=complet[0];

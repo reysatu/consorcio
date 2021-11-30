@@ -21,4 +21,7 @@ Route::post('series/getArticulosSelect', ['as' => 'series.getArticulosSelect', '
 Route::post('series/getArticulosSerie', ['as' => 'series.getArticulosSerie', 'uses' => 'ProductController@traeAllSerie']);
 
 Route::put('series/createserie/{id}', ['as' => 'series.createserie', 'uses' => 'SerieController@createUpdate']);
+
+Route::put('series/createserie_varios/{id}', ['as' => 'series.createserie_varios', 'uses' => 'SerieController@createUpdateVarios']);
+
 Route::get('series/find/{id}', ['as' => 'series.find', 'uses' => 'SerieController@find']);

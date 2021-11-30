@@ -145,6 +145,81 @@ class SerieController extends Controller
             ]);
         }
     }
+     public function createUpdateVarios($id, SerieInterface $repo, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+
+            $idArticulo = $data['idArticulo'];
+
+            $nombreSerie = $data['nombreSerie'];
+            $nombreSerie = explode(',', $nombreSerie);
+
+            $chasis = $data['chasis'];
+            $chasis = explode(',', $chasis);
+
+            $motor = $data['motor'];
+            $motor = explode(',', $motor);
+
+            $anio_fabricacion = $data['anio_fabricacion'];
+            $anio_fabricacion = explode(',', $anio_fabricacion);
+
+            $anio_modelo = $data['anio_modelo'];
+            $anio_modelo = explode(',', $anio_modelo);
+
+            $color = $data['color'];
+            $color = explode(',', $color);
+
+            $idTipoCompraVenta = $data['idTipoCompraVenta'];
+            $idTipoCompraVenta = explode(',', $idTipoCompraVenta);
+
+            $nPoliza = $data['nPoliza'];
+            $nPoliza = explode(',', $nPoliza);
+
+            $nLoteCompra = $data['nLoteCompra'];
+            $nLoteCompra = explode(',', $nLoteCompra);
+            $idSeries=[];
+            $cod_series=[];
+            $table="ERP_Serie";
+            $idt='idSerie';
+            
+            for ($k=0; $k < count($nombreSerie) ; $k++) { 
+                 $compra=$idTipoCompraVenta[$k];
+                    if($idTipoCompraVenta[$k]==''){
+                        $compra=null;
+                     };
+                    $contserie = $repo->create([
+                    'idSerie' => $repo->get_consecutivo($table,$idt),
+                    'nombreSerie' => strtoupper($nombreSerie[$k]),
+                    'idArticulo' => $idArticulo,
+                    'chasis' =>strtoupper($chasis[$k]),
+                    'motor' =>strtoupper($motor[$k]),
+                    'anio_fabricacion' => $anio_fabricacion[$k],
+                    'anio_modelo' => $anio_modelo[$k],
+                    'color' => strtoupper($color[$k]),
+                    'idTipoCompraVenta' => $compra,
+                    'nPoliza' => strtoupper($nPoliza[$k]),
+                    'nLoteCompra' => strtoupper($nLoteCompra[$k]),
+                ]);
+                array_push ( $idSeries ,  $contserie->idSerie );
+                array_push ( $cod_series ,  $contserie->nombreSerie );
+
+            };
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'idSeries'=>$idSeries,
+                'cod_series'=>$cod_series
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
      public function find($id, SerieInterface $repo)
     {
         try {

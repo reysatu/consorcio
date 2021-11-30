@@ -7,25 +7,26 @@
  */
 
 namespace App\Http\Controllers;
-
+use App\Http\Recopro\Register_movement\Register_movementTrait;
 use App\Http\Recopro\Category\CategoryTrait;
 use Illuminate\Http\Request;
+use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\Category\CategoryInterface;
 use App\Http\Requests\CategoryRequest;
 class Devolucion_servicesTecnicoController extends Controller
 {
-     use CategoryTrait;
+     use Register_movementTrait;
 
     public function __construct()
     {
 //        $this->middleware('json');
     }
 
-    public function all(Request $request, CategoryInterface $repo)
+    public function all(Request $request, Register_movementInterface $repo)
     {
-        $s = $request->input('search', '');
-        $params = ['idCategoria', 'descripcion as Categoria','estado'];
-        return parseList($repo->search($s), $request, 'idCategoria', $params);
+       $s = $request->input('search', '');
+        $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
+        return parseList($repo->search_devolucion($s), $request, 'idMovimiento', $params);
     }
 
     public function create(CategoryInterface $repo, CategoryRequest $request)
@@ -75,8 +76,8 @@ class Devolucion_servicesTecnicoController extends Controller
     // //     return parseSelect($repo->all(), 'id', 'description');
     // // }
 
-    public function excel(CategoryInterface $repo)
+    public function excel(Register_movementInterface $repo)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CATEGORÍAS', 'Categoría');
+        return generateExcel($this->generateDataExcel($repo->all_devolucion_servicio()), 'LISTA DE DEVOLUCIÓN A SERVICIOS TÉCNICOS', 'Devolución');
     }
 }

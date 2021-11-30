@@ -54,6 +54,7 @@ class Entrega_servicesTecnicoController extends Controller
             $data['observaciones'] = strtoupper($data['observaciones']);
             $data['cCodConsecutivo'] = strtoupper($data['cCodConsecutivo']);
             $data['nConsecutivo'] = strtoupper($data['nConsecutivo']);
+            $consecutivo_proforma=$repoM->get_consecutivo_proforma(strtoupper($data['cCodConsecutivo']),strtoupper($data['nConsecutivo']));
             if($data['observaciones']==''){
                 $data['observaciones']=null;
             }
@@ -257,7 +258,7 @@ class Entrega_servicesTecnicoController extends Controller
                             'idArticulo' => $idArticulo[$i],
                             'idAlmacen' => $idAlmacen[$i],
                             'idLocalizacion' =>$idLocalizacion[$i],
-                            'consecutivo'=> $lorepo->get_consecutivo($tablelMd,$idtMd),
+                            'consecutivo'=>  $identificador_serie_bd[$i],
                             'idLote' =>$idLB,
                             'cantidad' =>  $cantidad[$i],
                             'costo' => $costo[$i], 

@@ -222,6 +222,7 @@ class ProformaController extends Controller
         $articulos_repuestos=$Repo->get_articuloRepuestos();
         $getTotal_Orden_total=$Repo->getTotal_Orden_total();
         $get_proformas_entrega=$Repo->get_proformas_entrega();
+        $get_proformas_devolucion=$Repo->get_proformas_devolucion();
          $igv=$Repo->get_igv();
         return response()->json([
             'status' => true,
@@ -229,6 +230,7 @@ class ProformaController extends Controller
             'articulos_repuestos'=>$articulos_repuestos,
             'total_orden'=>$getTotal_Orden_total,
             'proformas_entrega'=>$get_proformas_entrega,
+            'proformas_devolucion'=>$get_proformas_devolucion,
             'igv'=>$igv,
         ]);
     }
@@ -254,6 +256,7 @@ class ProformaController extends Controller
     {   try {
             $valtodo=explode("_", $id);
             $val=$repo->get_detalle_entrada($valtodo[0],$valtodo[1]);
+            
             return response()->json([
                 'status' => true,
                 'data'=>$val,

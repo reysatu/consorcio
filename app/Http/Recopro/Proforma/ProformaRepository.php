@@ -202,11 +202,18 @@ class ProformaRepository implements ProformaInterface
                 SELECT os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idAsesor as idAsesor FROM ERP_Proforma as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda  INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente where os.cfacturado ='N' and (os.iEstado='1' or os.iEstado='2' or os.iEstado='3')");
           return $mostrar3;
     }
+    public function get_proformas_devolucion(){
+   
+          $mostrar3=DB::select("  
+                SELECT os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idAsesor as idAsesor FROM ERP_Proforma as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda  INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente where os.cfacturado ='N' and (os.iEstado='2' or os.iEstado='3')");
+          return $mostrar3;
+    }
      public function get_detalle_entrada($conse,$nro){
    
           $mostrar3=DB::select("select pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, od.id as idDetalleRepues,* from ERP_ProformaDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
           return $mostrar3;
     }
+    
      public function get_articuloRepuestos(){
    
           $mostrar3=DB::select("select pr.id as idProducto, * from ERP_Productos as pr inner join ERP_ListaPreciosDetalle as li on pr.id=li.idProducto INNER JOIN ERP_ListaPrecios as list on list.id=li.id_lista where type_id='1' or type_id='3'");

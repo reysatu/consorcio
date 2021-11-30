@@ -263,7 +263,7 @@ class Register_movementController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-    }
+    } 
     public function valida_series_serve($id, SerieInterface $repo){
 
         try {
@@ -353,6 +353,8 @@ class Register_movementController extends Controller
             $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
             $data_movimiento_serie=$repo->get_movemen_Serie($id);
+            $data_movemen_Serie_entrega=$repo->get_movemen_Serie_entrega($id); 
+            
             $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
 
             return response()->json([
@@ -362,6 +364,7 @@ class Register_movementController extends Controller
                  'data_movimiento_lote'=>$data_movimiento_lote,
                  'data_movimiento_serie'=>$data_movimiento_serie,
                  'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
+                 'data_movemen_Serie_entrega'=>$data_movemen_Serie_entrega,
             ]);
 
         } catch (\Exception $e) {
