@@ -288,7 +288,7 @@
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     cCodConsecutivoOS.val(cons).trigger("change");
                     cCodConsecutivoOS.prop('disabled',true);
-                    titlemodalMovimieto.html('Editar Entrega '+'['+ data_p.idMovimiento+ ']');
+                    titlemodalMovimieto.html('Editar Devolución '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movemen_Serie_entrega;
                     btn_movimiento_detalle.prop('disabled',false);
@@ -973,7 +973,13 @@
             acodigos.forEach(function(val,index) {
                     var cantP=$('#canMs_'+val).val();
                     var CantV=$('#id_pendi'+val).val();
-                    if(cantP>CantV){
+                       console.log("*****___");
+                    console.log(cantP,CantV);
+                    console.log("*****___");
+                    if(Number(cantP)>Number(CantV)){
+                        console.log("-------------");
+                        console.log(cantP,CantV);
+                        console.log("-------------");
                         AlertFactory.showWarning({
                         title: '',
                         message: 'La cantidad ingresada no puede ser mayor a la cantidad pendiente',
@@ -1510,11 +1516,13 @@
                 e.preventDefault();
             }); 
             $('.m_articulo_cantidad').keyup(function (e) {
+
                 var cantidap = $(this).val();
-                var costo=$(this).closest("tr").find("td:eq(4)").children("input").val();
+                var costo=$(this).closest("tr").find("td:eq(5)").children("input").val();
+                console.log(costo);
                 var importe=Number(cantidap) * Number(costo);
-                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(6)").children("p").text(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(6)").children("input").val(importe.toFixed(2));
                  if(naturalezaGeneral=="S" || naturalezaGeneral=="A"){
                      var preciUni=$(this).closest("tr").find("td:eq(6)").children("input").val();
                      var precioTotal=Number(cantidap) * Number(preciUni);

@@ -199,7 +199,7 @@ class ProformaRepository implements ProformaInterface
     public function get_proformas_entrega(){
    
           $mostrar3=DB::select("  
-                SELECT os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idAsesor as idAsesor FROM ERP_Proforma as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda  INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente where os.cfacturado ='N' and (os.iEstado='1' or os.iEstado='2' or os.iEstado='3')");
+                SELECT os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idAsesor as idAsesor FROM ERP_Proforma as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda  INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente where os.cfacturado ='N' and (os.iEstado='1' or os.iEstado='3')");
           return $mostrar3;
     }
     public function get_proformas_devolucion(){

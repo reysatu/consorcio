@@ -282,7 +282,7 @@
             RESTService.get('register_movements/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                    console.log(data_p);
+                   
                     idMovimiento.val(data_p.idMovimiento);
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     cCodConsecutivoOS.val(cons).trigger("change");
@@ -318,9 +318,7 @@
                             aartMSE.push(grubSE);
                         });
                     }
-                    console.log("***");
-                    console.log(aartMSE);
-                    console.log("***");
+                    
                     idTipoOperacion.val(data_p.idTipoOperacion+'*'+data_p.naturaleza).trigger('change');
                     idTipoOperacion.prop('disabled',true);
                     idTipoOperacion.trigger('change');
@@ -361,7 +359,7 @@
 
                     modalMovimieto.modal("show");
                      articulo_mov_det.html("");
-                     console.log(mov_ar);
+                    
                      mov_ar.map(function(index) {
                         var ver='A';
                         var tipo='NA';
@@ -968,10 +966,11 @@
             acodigos.forEach(function(val,index) {
                     var cantP=$('#canMs_'+val).val();
                     var CantV=$('#id_pendi'+val).val();
-                    if(cantP>CantV){
+                 
+                     if(Number(cantP)>Number(CantV)){
                         AlertFactory.showWarning({
                         title: '',
-                        message: 'La cantidad ingresada no puede ser mayor a la cantidad pendiente',
+                        message: 'La cantidad ingresada no puede ser mayor a la cantidad pendiente ',
                         });
                       bval=false;
                     }
@@ -1193,7 +1192,7 @@
                     'naturaleza':naturalezaGeneral,
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
-                console.log(paramsCabezera);
+               
                 RESTService.updated('entrega_servicesTecnicos/saveEntrega', movimiento_id, paramsCabezera, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         titlemodalMovimieto.html('Nueva Entrega '+'['+ response.code+ ']');
@@ -1505,10 +1504,10 @@
             }); 
             $('.m_articulo_cantidad').keyup(function (e) {
                 var cantidap = $(this).val();
-                var costo=$(this).closest("tr").find("td:eq(4)").children("input").val();
+                var costo=$(this).closest("tr").find("td:eq(5)").children("input").val();
                 var importe=Number(cantidap) * Number(costo);
-                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(6)").children("p").text(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(6)").children("input").val(importe.toFixed(2));
                  if(naturalezaGeneral=="S" || naturalezaGeneral=="A"){
                      var preciUni=$(this).closest("tr").find("td:eq(6)").children("input").val();
                      var precioTotal=Number(cantidap) * Number(preciUni);
