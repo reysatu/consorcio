@@ -14,7 +14,7 @@
     function Entrega_servicesTecnicoCtrl($scope, _, RESTService, AlertFactory)
     {
        
-        
+        var proformas_completas;
         var codigo_actual; //variable para identificar en que fila voy a gregar lotes o series 
         var cCodConsecutivoOS=$("#cCodConsecutivoOS");
         var nConsecutivoOS=$("#nConsecutivoOS");
@@ -138,15 +138,32 @@
             $(event.target).click();
             $scope.chkState();
         });
-         cCodConsecutivoOS.select2();
+        function cargar_proformas(esta){
+            if(esta=='ED'){
+             cCodConsecutivoOS.html('');
+             cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
+                     _.each(proformas_completas, function(item) {
+                        cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                    });
+            }else{
+                cCodConsecutivoOS.html('');
+                cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
+                     _.each(proformas_completas, function(item) {
+                        if(item.est=='1' || item.est=='3' ){
+                              cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                        }
+                    });
+            }
+         
+        }
+        cCodConsecutivoOS.select2();
         $.fn.modal.Constructor.prototype.enforceFocus = function () {};
          function getDataForProforma () {
             RESTService.all('proformas/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                     cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
-                     _.each(response.proformas_entrega, function(item) {
-                        cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
-                    });
+                    proformas_completas=response.proformas_entrega;
+
+                    
                 } 
             }, function() {
                 getDataForProforma();
@@ -281,11 +298,16 @@
           
             RESTService.get('register_movements/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    var verProforma='ED';
+                    cargar_proformas(verProforma);
                     var data_p = response.data;
                    
                     idMovimiento.val(data_p.idMovimiento);
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
+                    console.log(cons);
+                    console.log(proformas_completas);
                     cCodConsecutivoOS.val(cons).trigger("change");
+
                     cCodConsecutivoOS.prop('disabled',true);
                     titlemodalMovimieto.html('Editar Entrega '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
@@ -536,6 +558,8 @@
             btnguardarMovimiento.trigger('change');
             procesarTransfBoton.prop('disabled',true);
             procesarTransfBoton.trigger('change');
+            var verProforma='CR';
+            cargar_proformas(verProforma);
         }
         function cleanMovimientoArticulo(){
             articulo_serie_det.html('');
@@ -952,7 +976,7 @@
                 cantrIn='A';
                 return false; 
             }
-            console.log(cont_che,cont_se);
+            
             if(cont_che!=cont_se){
                 bval=false;
                  AlertFactory.showWarning({
@@ -1143,7 +1167,7 @@
                     'ident_serie_bd_serie':ident_serie_bd_serie,
                     'naturaleza':naturalezaGeneral,
                 };
-                console.log(params);
+                
                 var str=idTipoOperacion.val();
                 var complet=str.split("*");
                 var idTO=complet[0];
@@ -2216,6 +2240,8 @@
         {
             titlemodalMovimieto.html('Nueva Entrega');
             modalMovimieto.modal('show');
+            var verProforma='CR';
+            cargar_proformas(verProforma);
         }
          $scope.addArticulo = function()
         {   

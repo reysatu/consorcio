@@ -14,7 +14,7 @@
     function Devolucion_servicesTecnicoCtrl($scope, _, RESTService, AlertFactory)
    {
        
-        
+        var proformas_completas;
         var codigo_actual; //variable para identificar en que fila voy a gregar lotes o series 
         var cCodConsecutivoOS=$("#cCodConsecutivoOS");
         var nConsecutivoOS=$("#nConsecutivoOS");
@@ -143,10 +143,7 @@
          function getDataForProforma () {
             RESTService.all('proformas/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                     cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
-                     _.each(response.proformas_devolucion, function(item) {
-                        cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
-                    });
+                     proformas_completas=response.proformas_entrega;
                 } 
             }, function() {
                 getDataForProforma();
@@ -283,7 +280,8 @@
             RESTService.get('register_movements/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                   
+                    var verProforma='ED';
+                    cargar_proformas(verProforma);
                     idMovimiento.val(data_p.idMovimiento);
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     cCodConsecutivoOS.val(cons).trigger("change");
@@ -542,6 +540,8 @@
             btnguardarMovimiento.trigger('change');
             procesarTransfBoton.prop('disabled',true);
             procesarTransfBoton.trigger('change');
+            var verProforma='CR';
+            cargar_proformas(verProforma);
         }
         function cleanMovimientoArticulo(){
             articulo_serie_det.html('');
@@ -862,6 +862,24 @@
                 }
 
                });
+        }
+        function cargar_proformas(esta){
+            if(esta=='ED'){
+             cCodConsecutivoOS.html('');
+             cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
+                     _.each(proformas_completas, function(item) {
+                        cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                    });
+            }else{
+                cCodConsecutivoOS.html('');
+                cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
+                     _.each(proformas_completas, function(item) {
+                        if(item.est=='1' || item.est=='3' ){
+                              cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                        }
+                    });
+            }
+         
         }
         $scope.guardarMovimientoDetalle = function(){
             var bval =true;
@@ -2315,6 +2333,8 @@
         {
             titlemodalMovimieto.html('Nueva Devolución');
             modalMovimieto.modal('show');
+            var verProforma='CR';
+            cargar_proformas(verProforma);
         }
          $scope.addArticulo = function()
         {   
