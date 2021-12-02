@@ -12,7 +12,7 @@
     Orden_ServicioCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory'];
 
     function Orden_ServicioCtrl($scope, _, RESTService, AlertFactory)
-    {   
+    {    
         var totalMO=$("#totalMO");
         var totales;
         var igv;
@@ -253,6 +253,7 @@
                     idMoneda.val(data[0].IdMoneda).trigger("change");
                     idcCondicionPago.val(data[0].idcCondicionPago).trigger("change");
                     cliente_id_or.val(data[0].idCliente);
+                    console.log(data.dFecRec2);
                     dFecRec.val(data.dFecRec2);
                     horaEnt.val(data[0].horaEnt);
                     horaRec.val(data[0].horaRec);
@@ -301,6 +302,17 @@
                     }
                     id_tipocli.data("prev",id_cliente_tipo_or.val());
                     idMoneda.data("prev",idMoneda.val());
+                    if(estado.val()!=''){
+                        if(estado.val()==0 || estado.val()==1){
+                            btn_ejecucion.prop('disabled',false);
+                        };
+                        if(estado.val()==1 || estado.val()==2){
+                            btn_cancelar.prop('disabled',false);
+                        };
+                        if(estado.val()==2){
+                            btn_terminada.prop('disabled',false);
+                        };
+                    }
                     modalOrdenServivio.modal("show");
                 } else {
                     AlertFactory.textType({
@@ -313,10 +325,39 @@
         }
         function newOrdenServicio() {
             var hoy = new Date();
-            var actu=hoy.getFullYear()+"-"+ (hoy.getMonth()+1)+ "-" +hoy.getDate() ;
-            var hora = hoy.getHours() + ':' + hoy.getMinutes();
+            var hAnio=hoy.getFullYear();
+            var hmes=hoy.getMonth()+1;
+            if(Number(hmes)<10){
+                hmes='0'+String(hmes);
+            }
+
+            var hdia=hoy.getDate();
+            if(Number(hdia)<10){
+                hdia='0'+String(hdia);
+            }
+            var hora = hoy.getHours();
+            if(Number(hora)<10){
+                hora='0'+String(hora);
+            }
+            var minutos= hoy.getMinutes();
+            if(Number(minutos)<10){
+                minutos='0'+String(minutos);
+            }
+            var actu=hAnio+'-'+hmes+'-'+hdia;
+            var hora_ac=hora+':'+minutos;
             dFecRec.val(actu);
-            horaRec.val(hora);
+            horaRec.val(hora_ac);
+            if(estado.val()!=''){
+                if(estado.val()==0 || estado.val()==1){
+                    btn_ejecucion.prop('disabled',false);
+                };
+                if(estado.val()==1 || estado.val()==2){
+                    btn_cancelar.prop('disabled',false);
+                };
+                if(estado.val()==2){
+                    btn_terminada.prop('disabled',false);
+                };
+            }
             modalOrdenServivio.modal('show');
             titlemodalOrdenServivio.html('Nuevo Orden de Servicio');
         }
@@ -1315,6 +1356,9 @@
             cCodConsecutivo.val("");
             idcCondicionPago.val("");
             nConsecutivo.val("");
+            btn_ejecucion.prop('disabled',true);
+            btn_cancelar.prop('disabled',true);
+            btn_terminada.prop('disabled',true);
             idTecnico.val("");
             idAsesor.val("");
             btn_guardarOrden.prop('disabled',false); 
@@ -1653,6 +1697,17 @@
                             message: 'La orden se registró correctamente.',
                             type: 'success'
                         });
+                          if(estado.val()!=''){
+                                if(estado.val()==0 || estado.val()==1){
+                                btn_ejecucion.prop('disabled',false);
+                                };
+                                if(estado.val()==1 || estado.val()==2){
+                                    btn_cancelar.prop('disabled',false);
+                                };
+                                if(estado.val()==2){
+                                    btn_terminada.prop('disabled',false);
+                                };
+                            }
                          LoadRecordsButtonOrden_Servicio.click();
                     }else{
                          AlertFactory.textType({

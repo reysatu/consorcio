@@ -60,6 +60,25 @@ class ObjetivoController extends Controller
             ]);
         }
     }
+     public function aprobarObjetivo($id, ObjetivoInterface $repo)
+    {
+        try {
+          
+            $data['iEstado']=1;
+            $repo->update($id, $data);
+            $data = $repo->find($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 
  
     public function create(ObjetivoInterface $repo, Request $request)

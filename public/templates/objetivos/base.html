@@ -78,7 +78,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-danger-admin" ng-click="saveObjetivo()">
+                 <button type="button"  id="btn_aprobar" class="btn btn-info btn-sm" disabled ng-click="Aprobar_objetivo()">
+                    <span class="fa fa-save"></span>
+                    Aprobar
+            </button>
+                <button type="button" id="btn_guardar_objetivo" class="btn btn-sm btn-danger-admin" ng-click="saveObjetivo()">
+
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>
@@ -148,6 +153,7 @@
               </div>  
         </div>
         <div class="modal-footer">
+          
         <button type="button" class="btn btn-danger-admin btn-sm" ng-click="AgregarTable()" >Agregar</button>  
         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
         </div>

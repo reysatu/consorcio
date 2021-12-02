@@ -19,3 +19,5 @@ Route::get('objetivos/get_personas/{id}', ['as' => 'objetivos.get_personas', 'us
 Route::put('objetivos/saveObjetivos/{id}', ['as' => 'objetivos.saveObjetivos', 'uses' => 'ObjetivoController@createUpdate']);
 
 Route::get('objetivos/find/{id}', ['as' => 'objetivos.find', 'uses' => 'ObjetivoController@find']);
+
+Route::get('objetivos/aprobarObjetivo/{id}', ['as' => 'objetivos.aprobarObjetivo', 'uses' => 'ObjetivoController@aprobarObjetivo']);

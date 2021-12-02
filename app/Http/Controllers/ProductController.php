@@ -172,7 +172,7 @@ class ProductController extends Controller
         try {
 
             $data = $repo->find($id);
-
+            $precios_producto=$repo->get_precios($id);
             if($data['type_id']==3){
                     $datosKit=$repo->getDetalleKit($id);
                     $grupoKit = [];
@@ -190,6 +190,7 @@ class ProductController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => $data,
+                'precios_producto'=>$precios_producto,
             ]);
 
         } catch (\Exception $e) {

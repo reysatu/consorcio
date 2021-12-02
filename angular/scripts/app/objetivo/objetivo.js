@@ -22,13 +22,13 @@
         var idMoneda=$("#IdMoneda");
         var nAno=$("#nAno");
         var id_objetivo=$("#id_objetivo");
-
+        var btn_aprobar=$("#btn_aprobar");
         var nPeriodo=$("#nPeriodo");
         var id_TipoPers=$("#id_TipoPers");
         var id_Persona=$("#id_Persona");
         var nCant=$("#nCant");
         var nMonto=$("#nMonto");
-
+        var btn_guardar_objetivo=$("#btn_guardar_objetivo");
         var w_objetivo_detalle=$("#w_objetivo_detalle");
         var idDetalle_Delete=[];
 
@@ -41,9 +41,37 @@
             iEstado.val('').trigger('change');
             idMoneda.val('').trigger('change');
             nAno.val("");
+            btn_aprobar.prop('disabled',true); 
+            btn_guardar_objetivo.prop('disabled',false); 
             idDetalle_Delete=[];
             id_objetivo.val("");
         }
+          $scope.Aprobar_objetivo = function () {
+            var id=id_objetivo.val();
+            RESTService.get('objetivos/aprobarObjetivo', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                    if(data_p.iEstado==1){
+                        btn_aprobar.prop('disabled',true); 
+                        btn_guardar_objetivo.prop('disabled',true); 
+                         iEstado.val(1).trigger('change');
+                          AlertFactory.textType({
+                            title: '',
+                            message: 'El objetivo se aprobó correctamente',
+                            type: 'success'
+                        });
+                    };
+                     LoadRecordsButtonobjetivo.click();
+                   
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener la lista. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
+        } 
          function cleanmodalDetalle () {
             cleanRequired();
             nPeriodo.val('').trigger('change');
@@ -98,8 +126,16 @@
                         }else if(c.nPeriodo==12){
                             periodo='Diciembre';
                         }
-                        addToLoca(c.id_obj,c.nPeriodo,periodo, c.id_TipoPers,c.tipo_persona,c.id_Persona,c.persona,c.nCant,c.nMonto)
+                        addToLoca(c.id_obj,c.nPeriodo,periodo, c.id_TipoPers,c.tipo_persona,c.id_Persona,c.persona,Number(c.nCant),Number(c.nMonto));
                     });
+                     if(data_p.iEstado==0){
+                        btn_guardar_objetivo.prop('disabled',false); 
+                        btn_aprobar.prop('disabled',false); 
+                        iEstado.val(data_p.iEstado).trigger("change");
+                    }else{
+                        btn_guardar_objetivo.prop('disabled',true); 
+                    };
+
                     modalObjetivos.modal('show');
                 } else {
                     AlertFactory.textType({

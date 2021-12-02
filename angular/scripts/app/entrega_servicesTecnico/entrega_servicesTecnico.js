@@ -292,6 +292,7 @@
             $("#msg_cont_ProcesarTransferencia p").html("");
 
         }
+        
          function findRegister_movement(id)
         {
             titlemodalMovimieto.html('Editar Entrega');

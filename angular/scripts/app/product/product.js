@@ -14,6 +14,7 @@
     function ProductCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
         var modalProduct = $('#modalProduct');
+        var table_precios_producto=$("#table_precios_producto");
         var modalCC = $('#modalCC');
         var modalBrand = $('#modalBrand');
         var titleModalProduct = $('#titleModalProduct');
@@ -120,6 +121,7 @@
             p_id_tipo.val('').trigger('change');
             p_id_unidad_medidad.val('').trigger('change');
             p_costo.val("");
+            table_precios_producto.html("");
             msg_cont.addClass('hide');
             activeTab('general');
         }
@@ -226,6 +228,7 @@
             RESTService.get('articles/find', id, function(response) {
 
                 if (!_.isUndefined(response.status) && response.status) {
+                    console.log(response.precios_producto);
                     var data_p = response.data;
                     p_costo.val(Number(data_p.costo));
                     p_id.val(data_p.id);
@@ -273,7 +276,31 @@
                            addToArticuloKitt(c.idArticulo_kit,c.code_kit, c.idArticulo_kit_description,Math.trunc(c.cantidadkit))
                         });
                     };
+                    var html='';
+                    html+='<thead>';
+                    html+='<tr>';
+                    html+='<th>Código</th>';
+                    html+='<th>Producto</th>';
+                    html+='<th>Precio</th>';
+                    html+='<th>Tipo Cliente</th>';
+                    html+='<th>Moneda</th>';
+                    html+='<tbody></tbody>';
+                    html+='</tr>';
+                    html+='</thead>';
+                    html+='<tbody id="articulo_kit_det">';
+                    html+='<tr>';
+                    _.each(response.precios_producto, function (c) {
+                        html+='<td>'+c.codigo_articulo+'</td>';
+                        html+='<td>'+c.productos+'</td>';
+                        html+='<td>'+c.precio+'</td>';
+                        html+='<td>'+c.tipo_cliente+'</td>';
+                        html+='<td>'+c.moneda+'</td>';
+                    });
+                    html+='</tr>';
+                    html+='</tbody>';
+                    table_precios_producto.append(html);
                     modalProduct.modal('show');
+
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -282,6 +309,25 @@
                     });
                 }
             });
+        }
+        function addToLoca(codigo,productos,precio, tipocliente,moneda) {
+           
+            var tr = $('<tr id="tr_loca_' + codigo + '"></tr>');
+            var td1 = $('<td>' + code + '</td>');
+            var td2 = $('<td>' + username + '</td>');
+            var td3 = $('<td>' + estado_t + '</td>');
+            var inpcodigo = $('<input type="hidden" class="idLocalizacion_v" value="' + codigoLocali + '" />');
+            var inp = $('<input type="hidden" class="w_locali_co" value="' + code + '" />');
+            var inp2 = $('<input type="hidden" class="w_locali_des" value="' + username + '" />');
+            var inp3 = $('<input type="hidden" class="w_locali_est" value="' + estado + '" />');
+            td1.append(inp).append(inpcodigo);
+            td2.append(inp2);
+            td3.append(inp3);
+            var td4 = $('<td class="text-center"></td>');
+            var btn = $('<button class="btn btn-danger btn-xs delWarehouseLoca" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
+            td4.append(btn);
+            tr.append(td1).append(td2).append(td3).append(td4);
+            table_precios_producto.append(tr);
         }
         $scope.addAritculoKit = function()
         {   

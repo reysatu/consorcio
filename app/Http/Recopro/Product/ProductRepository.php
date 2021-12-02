@@ -205,6 +205,10 @@ class ProductRepository implements ProductInterface
           $mostrar2=DB::select("select  * from ERP_Articulo_kit as ak inner join ERP_Productos as pr on ak.idArticulo=pr.id  where idArticuloKit=$idkit");
           return $mostrar2;
     }
+    public function get_precios($id){
+          $mostrar2=DB::select("select pr.code_article as codigo_articulo,lisDet.nPrecio as precio,pr.description as productos,tic.descripcion as tipo_cliente, mo.Descripcion as moneda from ERP_ListaPrecios as lis inner join ERP_TipoCliente as tic on tic.id=lis.id_tpocli inner join ERP_Moneda as mo on mo.IdMoneda=lis.IdMoneda inner join ERP_ListaPreciosDetalle as lisDet on lis.id=lisDet.id_lista inner join ERP_Productos as pr on pr.id=lisDet.idProducto where pr.id='$id'");
+          return $mostrar2;
+    }
     public function getidArticuloKit($id){
    
           $mostrar3=DB::select("select  top 1 idArticulo,idArticuloKit,cantidad from ERP_Articulo_kit as ak inner join ERP_Productos as pr on ak.idArticulo=pr.id  where idArticulo='$id' order by ak.created_at asc");
