@@ -1548,15 +1548,15 @@
         {
             var bval = true;
             bval = bval && cCodConsecutivo.required();
+              bval = bval && idMoneda.required();
             bval = bval && idcCondicionPago.required();
-            bval = bval && idMoneda.required();
+          
             bval = bval && dFecRec.required();
             bval = bval && horaRec.required();
-            bval = bval && dFecEntrega.required();
-            bval = bval && horaEnt.required();
+            bval = bval && idTipoVehi_add.required();
             bval = bval && id_tipo.required();
             bval = bval && id_tipomant.required();
-            bval = bval && idTipoVehi_add.required();
+           
             bval = bval && documento_or.required();
             bval = bval && placa.required();
             bval = bval && documento_or.required();
