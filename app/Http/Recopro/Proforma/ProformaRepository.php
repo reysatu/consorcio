@@ -215,9 +215,9 @@ class ProformaRepository implements ProformaInterface
           return $mostrar3;
     }
     
-     public function get_articuloRepuestos(){
+     public function get_repuestos_consecutivo($conse){
    
-          $mostrar3=DB::select("select pr.id as idProducto, * from ERP_Productos as pr inner join ERP_ListaPreciosDetalle as li on pr.id=li.idProducto INNER JOIN ERP_ListaPrecios as list on list.id=li.id_lista where type_id='1' or type_id='3'");
+          $mostrar3=DB::select("select SUM(als.disponible) AS stock,lipr.IdMoneda as IdMoneda,lipr.id_tpocli as id_tpocli ,pr.id as idProducto,pr.description as description,lip.nPrecio as nPrecio,pr.impuesto as impuesto,pr.code_article as code_article  from ERP_Consecutivos as con inner join ERP_Tienda as ti  on con.nCodTienda=ti.idTienda INNER JOIN ERP_Almacen as al on al.idTienda=ti.idTienda  INNER JOIN ERP_almacen_stock AS als on als.idAlmacen=al.id INNER JOIN ERP_Productos as pr on pr.id=als.idArticulo INNER JOIN ERP_ListaPreciosDetalle AS lip on lip.idProducto=pr.id inner join ERP_ListaPrecios as lipr on lipr.id=lip.id_lista where con.cCodConsecutivo='$conse' and als.disponible >0 GROUP BY pr.id, pr.description,lip.nPrecio, pr.impuesto,pr.code_article,lipr.IdMoneda,lipr.id_tpocli");
           return $mostrar3;
     }
     public function get_igv(){

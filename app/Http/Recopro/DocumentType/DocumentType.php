@@ -13,9 +13,9 @@ use \Illuminate\Database\Eloquent\Model;
 class DocumentType extends Model
 {
 
-    protected $table = 'TipoDocumento';
+    protected $table = 'ERP_TipoDocumento';
 
-    protected $fillable = ['Descripcion', 'EquivalenciaSunat', 'Referencia'];
+    protected $fillable = ['IdTipoDocumento','Descripcion', 'EquivalenciaSunat', 'Referencia'];
 
     public $timestamps = false;
 

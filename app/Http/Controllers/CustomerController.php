@@ -14,6 +14,7 @@ use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Recopro\TablaSunat\TablaSunatInterface;
 use App\Http\Recopro\TypeCostumer\TypeCostumerInterface;
+use App\Http\Recopro\DocumentType\DocumentTypeInterface;
 use Carbon\Carbon;
 use DB;
 class CustomerController extends Controller
@@ -28,7 +29,7 @@ class CustomerController extends Controller
     public function all(Request $request, CustomerInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'tipodoc','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','ubigeo','id_tipocli'];
+        $params = ['id', 'tipodoc','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','ubigeo','id_tipocli','IdTipoDocumento'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
     public function createUpdate($id, CustomerInterface $repo, Request $request)
@@ -96,10 +97,12 @@ class CustomerController extends Controller
        
         $tipo_doc = $tipodoc->gte_tipo_doc();
         $tipo_clie = $tipodoc->tipo_clie();
+        $tipoc_doc_venta = $tipodoc->tipoc_doc_venta();
         return response()->json([
             'status' => true,
             'tipoc_doc' => $tipo_doc,
             'tipo_clie' => $tipo_clie,
+            'tipoc_doc_venta'=>$tipoc_doc_venta,
         ]);
     }
     public function update(CustomerInterface $repo, Request $request)
@@ -136,6 +139,10 @@ class CustomerController extends Controller
      public function getTipoCliente(TypeCostumerInterface $repo)
     {
         return parseSelect($repo->allActive(), 'id', 'descripcion');
+    }
+      public function getTipoDocumentoVenta(DocumentTypeInterface $repo)
+    {
+        return parseSelect($repo->all(), 'IdTipoDocumento', 'Descripcion');
     }
 
     public function excel(CustomerInterface $repo)

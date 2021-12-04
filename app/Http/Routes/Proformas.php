@@ -20,6 +20,8 @@ Route::get('proformas/deleteDetalleServicio/{id}', ['as' => 'proformas.deleteDet
 
 Route::get('proformas/deleteDetalleRepuesto/{id}', ['as' => 'proformas.deleteDetalleRepuesto', 'uses' => 'ProformaController@deleteDetalleRepuesto']);
 
+Route::get('proformas/get_repuestos_consecutivo/{id}', ['as' => 'proformas.get_repuestos_consecutivo', 'uses' => 'ProformaController@get_repuestos_consecutivo']);
+
 Route::get('proformas/find/{id}', ['as' => 'proformas.find', 'uses' => 'ProformaController@find']);
 
 Route::get('proformas/delete/{id}', ['as' => 'proformas.delete', 'uses' => 'ProformaController@destroy']);

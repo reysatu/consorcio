@@ -88,6 +88,12 @@ class Orden_servicioRepository implements Orden_servicioInterface
           $mostrar3=DB::select("select cCodigo Codigo, cDescripcion TipoDocumento from ERP_TABLASUNAT where cnombretabla = 'TIPO_DOCUMENTO'");
           return $mostrar3;
     }
+     public function gettipo_document_venta(){
+   
+          $mostrar3=DB::select("select * from ERP_TipoDocumento
+where IdTipoDocumento in ('01','03')");
+          return $mostrar3;
+    }
     public function gettecnico(){
    
           $mostrar3=DB::select("select * from ERP_Tecnico where estado='A'");

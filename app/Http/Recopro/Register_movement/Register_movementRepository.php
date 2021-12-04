@@ -154,7 +154,7 @@ ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr
          return $mostrar; 
     }
     public function getLocaStock($idAlmacen){
-         $mostrar=DB::select("select lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen");
+         $mostrar=DB::select("select los.remitido as remitido,lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen");
          return $mostrar;
     }
      public function getLocalizacioAlmacen($idAlmacen){

@@ -219,7 +219,7 @@ class ProformaController extends Controller
      public function data_form (ProformaInterface $Repo)
     {
         $codigo_proforma = $Repo->getTotal_Orden();
-        $articulos_repuestos=$Repo->get_articuloRepuestos();
+        // $articulos_repuestos=$Repo->get_articuloRepuestos();
         $getTotal_Orden_total=$Repo->getTotal_Orden_total();
         $get_proformas_entrega=$Repo->get_proformas_entrega();
         $get_proformas_devolucion=$Repo->get_proformas_devolucion();
@@ -227,7 +227,7 @@ class ProformaController extends Controller
         return response()->json([
             'status' => true,
             'codigo_proforma'=>$codigo_proforma,
-            'articulos_repuestos'=>$articulos_repuestos,
+            // 'articulos_repuestos'=>$articulos_repuestos,
             'total_orden'=>$getTotal_Orden_total,
             'proformas_entrega'=>$get_proformas_entrega,
             'proformas_devolucion'=>$get_proformas_devolucion,
@@ -323,6 +323,23 @@ class ProformaController extends Controller
                 'data' => $data,
                 'data_repuesto'=>$data_repuesto,
                 'data_servicio'=>$data_servicio,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function get_repuestos_consecutivo($id, ProformaInterface $repo)
+    {
+        try {
+            $data = $repo->get_repuestos_consecutivo($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+               
             ]);
 
         } catch (\Exception $e) {

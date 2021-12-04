@@ -961,7 +961,10 @@
 
         }
          function llenarServicios(){
-          var mone_ser=idMoneda.val();
+         var bval = true;
+         bval = bval && cCodConsecutivo.required();  
+        if(bval){
+            var mone_ser=idMoneda.val();
           var clientipo_ser=id_cliente_tipo_or.val();
           servicios_select.html(''); 
           servicios_select.append('<option value="" selected>Seleccionar </option>');
@@ -970,15 +973,22 @@
                     servicios_select.append('<option value="'+item.idProducto+'*'+item.producto+'*'+item.precio+'*'+item.impuesto+'">'+item.codigo_articulo+' '+item.producto+'</option>');
                 }
             });  
-            articulos_repuestos.html(''); 
-            articulos_repuestos.append('<option value="">Seleccionar</option>');
-                 _.each(repuestos_array, function(item) {
-                if(mone_ser==item.IdMoneda && clientipo_ser==item.id_tpocli){
-                    articulos_repuestos.append('<option value="'+item.idProducto+'*'+item.nPrecio+'*'+item.description+'*'+item.impuesto+'">'+item.code_article+' '+item.description+'</option>');
-                 }
-                });
-            
+            var id=cCodConsecutivo.val();
+             RESTService.get('proformas/get_repuestos_consecutivo', id, function(response) {
+             if (!_.isUndefined(response.status) && response.status) {
+                     articulos_repuestos.html(''); 
+                     articulos_repuestos.append('<option value="">Seleccionar</option>');
+                     _.each(response.data, function(item) {
+                    if(mone_ser==item.IdMoneda && clientipo_ser==item.id_tpocli){
+                        articulos_repuestos.append('<option value="'+item.idProducto+'*'+item.nPrecio+'*'+item.description+'*'+item.impuesto+'">'+item.code_article+' '+item.description+' / '+Number(item.stock)+'</option>');
+                     }
+                    });
+                }
+            });
+        }
+          
         }  
+         
         function cleanProforma(){
            
             cCodConsecutivo.val("").trigger('change');
@@ -1009,8 +1019,16 @@
               sumar_key();
           
         }
+        cCodConsecutivo.change(function () {
+            var bval = true;
+            bval = bval && cCodConsecutivo_orden.required();  
+            if(bval){
+                llenarServicios();
+            }
+        });
 
         cCodConsecutivo_orden.change(function () {
+            console.log("hola");
             if(table_servicios.html()!="" || table_repuestos.html()!=""){
                  modalDeleteDetalle.modal("show");
             }
@@ -1152,7 +1170,7 @@
                         cCodConsecutivo_orden.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
                     });
                      igv=response.igv[0].value;
-                     repuestos_array=response.articulos_repuestos;
+                     // repuestos_array=response.articulos_repuestos;
                     //   articulos_repuestos.append('<option value="">Seleccionar</option>');
                     //  _.each(response.articulos_repuestos, function(item) {
                     //     articulos_repuestos.append('<option value="'+item.id+'*'+item.nPrecio+'">'+item.code_article+' '+item.description+'</option>');

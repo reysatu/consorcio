@@ -33,6 +33,7 @@ class CustomerRepository implements CustomerInterface
             $q->orWhere('direccion', 'LIKE', '%'.$s.'%');
             $q->orWhere('correo_electronico', 'LIKE', '%'.$s.'%');
             $q->orWhere('celular', 'LIKE', '%'.$s.'%');
+             $q->orWhere('IdTipoDocumento', 'LIKE', '%'.$s.'%');
         });
 
     }
@@ -85,6 +86,12 @@ where cnombretabla = 'TIPO_DOCUMENTO'");
     public function tipo_clie()
     {   
         $mostrar=DB::select("select * from ERP_TipoCliente where estado='A'");
+        return $mostrar; 
+    }
+      public function tipoc_doc_venta()
+    {   
+        $mostrar=DB::select("select * from ERP_TipoDocumento
+where IdTipoDocumento in ('01','03')");
         return $mostrar; 
     }
     public function find($id)

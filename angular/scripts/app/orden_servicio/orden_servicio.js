@@ -17,8 +17,9 @@
         var totales;
         var igv;
         var servicios;
-        var valor_moneda;
+        var valor_moneda; 
         var btn_save_cliente=$("#btn_save_cliente");
+        var id_tipoDoc_Venta=$("#id_tipoDoc_Venta");
         var modalDeleteDetalle=$("#modalDeleteDetalle");
         var id_tipomant=$("#id_tipomant");
         var tipo_totales_slec=$("#tipo_totales_slec");
@@ -69,6 +70,7 @@
         var contacto=$("#contacto");
         var direccion=$("#direccion");
         var correo_electronico=$("#correo_electronico");
+        var id_tipoDoc_Venta_or=$("#id_tipoDoc_Venta_or");
         var celular=$("#celular");
         var telefono=$("#telefono");
         var cliente_id=$("#cliente_id");
@@ -473,10 +475,12 @@
                         distrito_or.val("");
                         idDocumentoCli.val("");
                         razonsocial_cliente_or.val("");
+                        documento.val(documento_or.val());
                         documento_or.val("");
                         contacto_or.val("");
                         direccion_or.val("");
                         correo_electronico_or.val("");
+                        id_tipoDoc_Venta_or.val("").trigger('change');
                         celular_or.val("");
                         telefono_or.val("");
                         cliente_id_or.val("");
@@ -494,6 +498,7 @@
                         contacto_or.val(datos[0].contacto);
                         direccion_or.val(datos[0].direccion);
                         correo_electronico_or.val(datos[0].correo_electronico);
+                        id_tipoDoc_Venta_or.val(datos[0].IdTipoDocumento).trigger("change");
                         celular_or.val(datos[0].celular);
                         telefono_or.val(datos[0].telefono);
                         cliente_id_or.val(datos[0].id);
@@ -1385,6 +1390,7 @@
             contacto_or.val("");
             direccion_or.val("");
             correo_electronico_or.val("");
+            id_tipoDoc_Venta_or.val("").trigger("change");
             celular_or.val("");
             telefono_or.val("");
             cliente_id_or.val("");
@@ -1427,6 +1433,7 @@
             contacto.val('');
             direccion.val('');
             correo_electronico.val('');
+            id_tipoDoc_Venta.val('');
             celular.val('');
             telefono.val('');
             cliente_id.val('');
@@ -1562,6 +1569,7 @@
             bval = bval && documento_or.required();
             bval = bval && idDocumentoCli.required();
             bval = bval && distrito_ver.required();
+            bval = bval && id_tipoDoc_Venta_or.required();
             bval = bval && nKilometraje.required();
             bval = bval && placa.required();
             if($("#articulo_dd_det").html()==''){
@@ -1662,7 +1670,7 @@
                     'idAsesor': idAsesor.val(),
                     'idcCondicionPago': idcCondicionPago.val(),
                     'cObservaciones': observaciones.val(),
-                    
+                    'id_tipoDoc_Venta_or':id_tipoDoc_Venta_or.val(),
                     'mo_revision': mo_revision.val(),
 
                     'mo_mecanica': mo_mecanica.val(),
@@ -1682,6 +1690,7 @@
                     'modo_array_mant':modo_array_mant,
                     'modo_array_serv':modo_array_serv,
                  };
+
                
                 var id = (idOrden.val() === '') ? 0 : idOrden.val();
                     RESTService.updated('orden_servicios/createOrden', id, params, function(response) {
@@ -1730,6 +1739,103 @@
                   });
             } 
         }
+//          function getSunat() 
+// {
+//   $("#contenedor").slideDown(0);
+//   var dni='71980490';  
+  
+
+//   // const url="https://dniruc.apisperu.com/api/v1/dni/71980490?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM";
+//   // fetch(url)
+//   // .then(response=>response.json())
+//   // .then(data =>{
+//   //   console.log(data.razonSocial);
+   
+//   // })
+
+
+// }
+ documento.keypress(function(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+        if(code==13){
+              $('#show_loading').removeClass('ng-hide');
+                getDatosCliente();
+        }
+});
+function getDatosCliente(){
+      // RESTService.get("https://dniruc.apisperu.com/api/v1/dni/71980490?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", '', function(response) {
+      //            console.log(response);
+      //          });
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      // Si nada da error
+      if (this.readyState == 4 && this.status == 200) {
+        // La respuesta, aunque sea JSON, viene en formato texto, por lo que tendremos que hace run parse
+        var data=JSON.parse(this.responseText);
+        console.log(data);
+        if(data.nombres!=null){
+            var razon=data.nombres+' '+data.apellidoPaterno+' '+data.apellidoMaterno;
+            razonsocial_cliente.val(razon);
+        }else if(data.razonSocial!=null){
+             var razon=data.razonSocial;
+             var direc=data.direccion;
+            razonsocial_cliente.val(razon);
+            direccion.val(direc);
+        }else{
+              razonsocial_cliente.val('');
+                direccion.val('');
+            AlertFactory.textType({
+                            title: '',
+                            message: 'No se encontró datos del cliente',
+                            type: 'info'
+            });
+             $('#show_loading').addClass('ng-hide');
+        };
+        $('#show_loading').addClass('ng-hide');
+      }
+    };
+    if(tipodoc.val()=='01'){
+          if(documento.val().length==8){
+             var dni=documento.val();
+            xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/dni/"+dni+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send();
+        }else{
+             AlertFactory.textType({
+                            title: '',
+                            message: 'dígitos del documento incompletos',
+                            type: 'info'
+            });
+              razonsocial_cliente.val('');
+                direccion.val('');
+              $('#show_loading').addClass('ng-hide');
+        }
+       
+
+    }else{
+        if(documento.val().length==11){
+             var ruc=documento.val();
+            xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/ruc/"+ruc+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send();
+        }else{
+            AlertFactory.textType({
+                            title: '',
+                            message: 'dígitos del documento incompletos',
+                            type: 'info'
+            });
+             razonsocial_cliente.val('');
+                direccion.val('');
+            $('#show_loading').addClass('ng-hide');
+
+        }
+       
+    }
+   
+}
+
+// getSunat();
+
          $scope.saveVehiculos = function()
         {
             var bval = true;
@@ -1782,6 +1888,7 @@
             bval = bval && tipodoc.required();
             bval = bval && documento.required();
             bval = bval && id_tipocli.required();
+            bval = bval && id_tipoDoc_Venta.required();
             bval = bval && razonsocial_cliente.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
@@ -1813,7 +1920,8 @@
                     'celular': celular.val(),
                     'telefono': telefono.val(),
                     'distrito': distrito.val(),
-                    'id_tipocli':id_tipocli.val(),
+                    'id_tipocli':id_tipocli.val(), 
+                    'IdTipoDocumento':id_tipoDoc_Venta.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -1898,6 +2006,14 @@
                          idDocumentoCli.append('<option value="">Seleccionar</option>');
                          _.each(response.tipo_document, function(item) {
                         idDocumentoCli.append('<option value="'+item.Codigo+'">'+item.TipoDocumento+'</option>');
+                    });
+                          id_tipoDoc_Venta_or.append('<option value="">Seleccionar</option>');
+                         _.each(response.tipo_document_venta, function(item) {
+                        id_tipoDoc_Venta_or.append('<option value="'+item.IdTipoDocumento+'">'+item.Descripcion+'</option>');
+                    });
+                           id_tipoDoc_Venta.append('<option value="">Seleccionar</option>');
+                         _.each(response.tipo_document_venta, function(item) {
+                        id_tipoDoc_Venta.append('<option value="'+item.IdTipoDocumento+'">'+item.Descripcion+'</option>');
                     });
                         gru_revisiones.append('<option value="" selected>Seleccionar </option>');
                       _.each(response.revisiones, function(item) {

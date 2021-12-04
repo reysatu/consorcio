@@ -15,6 +15,7 @@
     {
         var modaClientes = $('#modaClientes');
         var titleModalClientes = $('#titleModalClientes');
+        var id_tipoDoc_Venta=$("#id_tipoDoc_Venta");
         var departamento = $('#departamento');
         var provincia = $('#provincia');
         var distrito = $('#distrito');
@@ -44,8 +45,87 @@
             var bandera='xxxxx';
             getDepartamento(bandera);
         }
+        documento.keypress(function(e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code==13){
+              $('#show_loading').removeClass('ng-hide');
+                getDatosCliente();
+        }
+});
+function getDatosCliente(){
+      // RESTService.get("https://dniruc.apisperu.com/api/v1/dni/71980490?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", '', function(response) {
+      //            console.log(response);
+      //          });
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      // Si nada da error
+      if (this.readyState == 4 && this.status == 200) {
+        // La respuesta, aunque sea JSON, viene en formato texto, por lo que tendremos que hace run parse
+        var data=JSON.parse(this.responseText);
+        console.log(data);
+        if(data.nombres!=null){
+            var razon=data.nombres+' '+data.apellidoPaterno+' '+data.apellidoMaterno;
+            razonsocial_cliente.val(razon);
+        }else if(data.razonSocial!=null){
+             var razon=data.razonSocial;
+             var direc=data.direccion;
+            razonsocial_cliente.val(razon);
+            direccion.val(direc);
+        }else{
+              razonsocial_cliente.val('');
+                direccion.val('');
+            AlertFactory.textType({
+                            title: '',
+                            message: 'No se encontró datos del cliente',
+                            type: 'info'
+            });
+             $('#show_loading').addClass('ng-hide');
+        };
+        $('#show_loading').addClass('ng-hide');
+      }
+    };
+    if(tipodoc.val()=='01'){
+          if(documento.val().length==8){
+             var dni=documento.val();
+            xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/dni/"+dni+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send();
+        }else{
+             AlertFactory.textType({
+                            title: '',
+                            message: 'dígitos del documento incompletos',
+                            type: 'info'
+            });
+              razonsocial_cliente.val('');
+                direccion.val('');
+              $('#show_loading').addClass('ng-hide');
+        }
+       
+
+    }else{
+        if(documento.val().length==11){
+             var ruc=documento.val();
+            xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/ruc/"+ruc+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send();
+        }else{
+            AlertFactory.textType({
+                            title: '',
+                            message: 'dígitos del documento incompletos',
+                            type: 'info'
+            });
+             razonsocial_cliente.val('');
+                direccion.val('');
+            $('#show_loading').addClass('ng-hide');
+
+        }
+       
+    }
+   
+}
+
          function findCliente(id)
-        {
+        { 
             titleModalClientes.html('Editar Cliente');
             RESTService.get('customers/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -60,6 +140,7 @@
                     telefono.val(data_p[0].telefono);
                     cliente_id.val(data_p[0].id);
                     id_tipocli.val(data_p[0].id_tipocli).trigger('change');
+                    id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
                      getDepartamento(data_p[0].cDepartamento);
                      getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
                      getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
@@ -176,6 +257,7 @@
             id_tipocli.val('').trigger("change");
             razonsocial_cliente.val('');
             documento.val('');
+            id_tipoDoc_Venta.val("").trigger("change");
             contacto.val('');
             direccion.val('');
             correo_electronico.val('');
@@ -193,10 +275,12 @@
             var bval = true;
             bval = bval && tipodoc.required();
             bval = bval && id_tipocli.required();
+            bval = bval && id_tipoDoc_Venta.required();
             bval = bval && razonsocial_cliente.required();
             bval = bval && documento.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
+            
             if(tipodoc.val()=='01' && documento.val().length!=8){
                 AlertFactory.textType({
                             title: '',
@@ -225,12 +309,18 @@
                     'telefono': telefono.val(),
                     'distrito': distrito.val(),
                     'id_tipocli':id_tipocli.val(),
+                    'IdTipoDocumento':id_tipoDoc_Venta.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
                   RESTService.updated('customers/createCliente', cli_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         modaClientes.modal('hide');
+                         AlertFactory.textType({
+                            title: '',
+                            message: 'El registro se guardó correctamente',
+                            type: 'success'
+                        });
                         LoadRecordsButtonCustomer.click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
@@ -250,12 +340,17 @@
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip=response.tipoc_doc;
                     var tipo_clie=response.tipo_clie;
+                      var tipoc_doc_venta=response.tipoc_doc_venta;
                       tip.map(function(index) {
                          tipodoc.append('<option value="'+index.Codigo+'">'+index.TipoDocumento+'</option>');
                       });
                         id_tipocli.append('<option value="">Seleccionar</option>');
                         tipo_clie.map(function(index) {
                         id_tipocli.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                      });
+                        id_tipoDoc_Venta.append('<option value="">Seleccionar</option>');
+                        tipoc_doc_venta.map(function(index) {
+                        id_tipoDoc_Venta.append('<option value="'+index.IdTipoDocumento+'">'+index.Descripcion+'</option>');
                       });
                   
                     //  _.each(response.operaciones, function(item) {
@@ -313,6 +408,10 @@
                  id_tipocli: {
                     title: 'Tipo Cliente',
                       options: base_url + '/customers/getTipoCliente' ,
+                },
+                 IdTipoDocumento: {
+                    title: 'Tipo Documento Venta',
+                      options: base_url + '/customers/getTipoDocumentoVenta' ,
                 },
                 documento: {
                     title: 'Documento',

@@ -111,7 +111,7 @@ class Orden_servicioController extends Controller
             $idAsesor=strtoupper($data['idAsesor']);
             $idcCondicionPago=strtoupper($data['idcCondicionPago']);
             $cObservaciones=strtoupper($data['cObservaciones']);
-           
+            $id_tipoDoc_Venta_or=strtoupper($data['id_tipoDoc_Venta_or']);
             $mo_revision=strtoupper($data['mo_revision']);
             $mo_mecanica=strtoupper($data['mo_mecanica']);
             $terceros=strtoupper($data['terceros']);
@@ -256,6 +256,7 @@ class Orden_servicioController extends Controller
         $condicion_pago = $Repo->getcondicion_pago();
         $tipo_servicio = $Repo->gettipo_servicio();
         $tipo_document = $Repo->gettipo_document();
+        $tipo_document_venta=$Repo->gettipo_document_venta();
         $revisiones = $Repo->getrevisiones();
         $tecnico = $Repo->gettecnico();
         $asesor = $Repo->getasesor();
@@ -277,6 +278,7 @@ class Orden_servicioController extends Controller
             'servicios'=>$servicios,
             'totales'=>$totales,
             'tipoMantenimiento'=>$tipoMantenimiento,
+            'tipo_document_venta'=>$tipo_document_venta,
         ]);
     }
 
