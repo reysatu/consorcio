@@ -123,7 +123,7 @@ where IdTipoDocumento in ('01','03')");
     }
     public function find_orden($conse,$nro)
     {
-        $mostrar3=DB::select("select cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago where ore.cCodConsecutivo='$conse' and ore.nConsecutivo='$nro'");
+        $mostrar3=DB::select("select ore.IdTipoDocumento as idDocumentoVenta, cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago where ore.cCodConsecutivo='$conse' and ore.nConsecutivo='$nro'");
           return $mostrar3;
     }
      public function find_orden_cliente($idCliente)
@@ -184,6 +184,7 @@ where IdTipoDocumento in ('01','03')");
                 $otros_rep,
                 $impuesto,
                 $total,
+                $id_tipoDoc_Venta_or,
                 $modo,
                 $usuario){
          $pdo=DB::connection()->getPdo();
@@ -219,6 +220,7 @@ where IdTipoDocumento in ('01','03')");
                 '$otros_rep',
                 '$impuesto',
                 '$total',
+                '$id_tipoDoc_Venta_or',
                 '$modo',
                 '$usuario'");
          return $destroy;

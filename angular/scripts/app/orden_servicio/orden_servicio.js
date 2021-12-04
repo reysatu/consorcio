@@ -246,6 +246,7 @@
                 if (!_.isUndefined(response.status) && response.status) {
                   
                     var data=response.data;
+                    
                     titlemodalOrdenServivio.html('Editar Orden '+'['+data[0].nConsecutivo+ ']');
                     cCodConsecutivo.prop('disabled',true);
                     cCodConsecutivo.val(data[0].cCodConsecutivo).trigger("change");
@@ -267,6 +268,7 @@
                     idTipoVehi_add.val(data[0].id_tipoveh).trigger("change");
                     tipodoc.val(data[0].tipodoc).trigger("change");
                     estado.val(data[0].iEstado).trigger("change");
+                    id_tipoDoc_Venta_or.val(data[0].idDocumentoVenta).trigger("change");
                     var data_cliente=response.data_cliente;
                    
                     cliente_id_or.val(data_cliente[0].id);
@@ -498,7 +500,7 @@
                         contacto_or.val(datos[0].contacto);
                         direccion_or.val(datos[0].direccion);
                         correo_electronico_or.val(datos[0].correo_electronico);
-                        id_tipoDoc_Venta_or.val(datos[0].IdTipoDocumento).trigger("change");
+                       
                         celular_or.val(datos[0].celular);
                         telefono_or.val(datos[0].telefono);
                         cliente_id_or.val(datos[0].id);
@@ -1696,6 +1698,7 @@
                     RESTService.updated('orden_servicios/createOrden', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                        var data_p =response.res;
+
                        if(Number(data_p[0].Mensaje)){
                         $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");

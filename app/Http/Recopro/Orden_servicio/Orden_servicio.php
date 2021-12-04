@@ -33,7 +33,7 @@ class Orden_servicio extends Model
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
 
-    protected $fillable = ['cCodConsecutivo', 'nConsecutivo','id_tipo','id_tipomant','IdMoneda','id_tipoveh', 'horaRec','dFecEntrega','horaEnt','cPlacaVeh','cMotor','cChasis','iAnioFab','cColor','idCliente','cObservaciones','idAsesor','iEstado','mo_revision','mo_mecanica','terceros','otros_mo','respuestos','accesorios','lubricantes','otros_rep','total','idcCondicionPago','nkilometraje','idTecnico','dFecRec','cIdUsuMod'];
+    protected $fillable = ['cCodConsecutivo', 'nConsecutivo','id_tipo','id_tipomant','IdMoneda','id_tipoveh', 'horaRec','dFecEntrega','horaEnt','cPlacaVeh','cMotor','cChasis','iAnioFab','cColor','idCliente','cObservaciones','idAsesor','iEstado','mo_revision','mo_mecanica','terceros','otros_mo','respuestos','accesorios','lubricantes','otros_rep','total','idcCondicionPago','nkilometraje','idTecnico','dFecRec','cIdUsuMod','IdTipoDocumento'];
     
      public function user_c()
     {

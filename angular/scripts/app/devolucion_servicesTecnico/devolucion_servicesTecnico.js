@@ -874,7 +874,7 @@
                 cCodConsecutivoOS.html('');
                 cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
                      _.each(proformas_completas, function(item) {
-                        if(item.est=='1' || item.est=='3' ){
+                        if(item.est=='2' || item.est=='3' ){
                               cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
                         }
                     });

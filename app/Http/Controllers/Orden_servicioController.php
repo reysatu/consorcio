@@ -200,6 +200,7 @@ class Orden_servicioController extends Controller
                 $otros_rep,
                 $impuesto,
                 $total,
+                $id_tipoDoc_Venta_or,
                 $modo,
                 $usuario
             );
@@ -387,6 +388,8 @@ class Orden_servicioController extends Controller
                 'data_cliente'=>$data_cliente,
                 'data_matenimiento'=>$data_matenimiento,
                 'data_detalle'=>$data_detalle,
+                'con'=>$valtodo[0],
+                'nr'=>$valtodo[1]
             ]);
 
         } catch (\Exception $e) {
