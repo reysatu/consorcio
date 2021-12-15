@@ -65,7 +65,7 @@ select * from ERP_ControlCalidad where id='$id'");
          return $mostrar; 
     }
     public function getGrupos(){
-         $mostrar=DB::select("select gr.id as idGrupo,gr.nombre as nombre,rv.id as idRev, rv.nombre as revision from ERP_GruposCA as gr inner join ERP_RevisionCA as rv on gr.id=rv.idgrupo where gr.estado='A' AND rv.estado='A'");
+         $mostrar=DB::select("select gr.id as idGrupo,gr.nombre as nombre,rv.id as idRev, rv.nombre as revision from ERP_GruposCA as gr inner join ERP_RevisionCA as rv on gr.id=rv.idgrupo where gr.estado='A' AND rv.estado='A' ORDER BY gr.id");
          return $mostrar; 
     }
     public function update($id, array $attributes)

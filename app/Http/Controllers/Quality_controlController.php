@@ -12,8 +12,9 @@ use App\Http\Recopro\Quality_control\Quality_controlTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Quality_control\Quality_controlInterface;
 use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevisionInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Requests\Quality_controlRequest;
-use DB;
+use DB; 
 class Quality_controlController extends Controller
 {
      use Quality_controlTrait;
@@ -21,6 +22,26 @@ class Quality_controlController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
+    }
+     public function pdf(Request $request, Quality_controlInterface $repo,Orden_servicioInterface $repoOs)
+    {          
+            $id = $request->input('id');
+            $data = $repo->find($id);
+            $detalle= $repo->find_Detalle($id);
+            $data_orden= $repoOs->find_orden($data[0]->cCodConsecutivoOS,$data[0]->nConsecutivoOS);
+            $get_vehiculo=$repoOs->get_vehi($data_orden[0]->cPlacaVeh);
+            $get_cliente=$repoOs->get_cliente($data_orden[0]->idCliente);
+            $data['dFechaRegistro2']=date("Y-m-d", strtotime($data[0]->dFechaRegistro));
+
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'detalle' => $detalle,
+                'data_orden'=>$data_orden,
+                'get_vehiculo'=>$get_vehiculo,
+                'get_cliente'=>$get_cliente,
+                'data_orden'=>$data_orden,
+            ]);
     }
 
     public function createUpdate($id, Quality_controlInterface $repo,QualitycontrolRevisionInterface $repoDet, Request $request)
@@ -53,23 +74,30 @@ class Quality_controlController extends Controller
                $res=$repo->create($data);
                $id=$res->id;
             }
+            $conta=0;
+            $contb=0;
             for ($i=0; $i < count($id_Revision) ; $i++) {
-              
-                $data['idControlCalidad']=$id;
-                $data['idrevision']=$id_Revision[$i];
-                $data['iRevisado']=$valcheck[$i];
+                $dato=[];
+                $dato['idControlCalidad']=$id;
+                $dato['idrevision']=$id_Revision[$i];
+                $dato['iRevisado']=$valcheck[$i];
+               
                 if ($id_RevisionDet[$i] != 0) {
-                    $repoDet->update($id_RevisionDet[$i],$data);
+                    $conta=$conta+1;
+                    $repoDet->update($id_RevisionDet[$i],$dato);
                 } else {
-                      $table="ERP_ControlCalidadRevision";
-                        $idta='id';
-                        $data['id']=$repoDet->get_consecutivo($table,$idta);
-                    $repoDet->create($data);
+                    $contb=$contb+1;
+                    $table="ERP_ControlCalidadRevision";
+                    $idta='id';
+                    $dato['id']=$repoDet->get_consecutivo($table,$idta);
+                    $repoDet->create($dato);
                 }
             }
             DB::commit();
             return response()->json([
                 'status' => true,
+                'conta'=>$conta,
+                'contb'=>$contb,
                
               
             ]);

@@ -861,6 +861,1086 @@ function create_vouchers_pdf(response) {
     }
 
 }
+function create_pdf_ordenServicio(response) {
+     var data=response.data;
+    console.log(response.data);
+    var dataCli=response.data_cliente;
+    console.log(dataCli);
+    console.log(response.data_matenimiento);
+    console.log(response.data_detalle);
+    console.log(response.con);
+    console.log(response.nr);
+    console.log(data.dFecRec2);
+    console.log(data.dFecEntrega2);
+    var data_dis=response.get_distrito;
+    var get_vehiculo=response.get_vehiculo;
+    var modelo=get_vehiculo[0].descripcion;
+    console.log(data[0].idcCondicionPago);
+    var horaEnt=data[0].horaEnt;
+    var dni='';
+    var ruc='';
+    console.log("****");
+    console.log(dataCli[0].documento);
+    console.log("****");
+    if(dataCli[0].tipodoc=='01'){
+        dni=dataCli[0].documento;
+    }else{
+       ruc=dataCli[0].documento;
+    }
+    var razonsocial_cliente=dataCli[0].razonsocial_cliente;
+    var documento=dataCli[0].documento;
+    var direccion=dataCli[0].direccion;
+    var distrito=data_dis[0].cDistrito;
+    var telefono=dataCli[0].telefono;
+    var correo_electronico=dataCli[0].correo_electronico;
+    var celular=dataCli[0].celular;
+    var cMotor=data[0].cMotor;
+    var cChasis=data[0].cChasis;
+    var iAnioFab=data[0].iAnioFab;
+    var cColor=data[0].cColor;
+    var cPlacaVeh=data[0].cPlacaVeh;
+    var nKilometraje=data[0].nKilometraje;
+
+    var mo_revision=Number(data[0].mo_revision);
+    var mo_mecanica=Number(data[0].mo_mecanica);
+    var terceros=Number(data[0].terceros);
+    var otros_mo=Number(data[0].otros_mo);
+    var sub_mo=mo_revision+mo_mecanica+terceros+otros_mo;
+    sub_mo=sub_mo.toFixed(2);
+    var respuestos=Number(data[0].respuestos);
+    var accesorios=Number(data[0].accesorios);
+    var lubricantes=Number(data[0].lubricantes);
+    var otros_rep=Number(data[0].otros_rep);
+    var cObservaciones=data[0].cObservaciones;
+    var sub_re= respuestos+accesorios+lubricantes+otros_rep;
+    sub_re=sub_re.toFixed(2);
+    var total=Number(data[0].total);
+
+
+    var mcondicionPago='';
+    if(data[0].idcCondicionPago=='9'){
+        mcondicionPago=394;
+    }else if(data[0].idcCondicionPago=='10'){
+          mcondicionPago=455;
+    }else{
+         mcondicionPago=500;
+    };
+    var tipoSer='';
+    if(data[0].id_tipo=='1'){
+        tipoSer=166;
+    }else if(data[0].id_tipo=='2'){
+        tipoSer=236;
+    }else{
+        tipoSer=200;
+    }
+    var mantenimiento_X="";
+    var cambioAciete_X="";
+    var reparacioMotor_x="";
+    var descar_x="";
+    var embrague_x="";
+    var transmi_x="";
+    var sisArras_x="";
+    var fren_x="";
+    var bate_x="";
+    var revisitE_x="";
+    var revisitIN_x="";
+    var suspencio_x="";
+    var aroneu_x="";
+    var sistEsca_x="";
+    var sistDirecc_x="";
+    var otro_x="";
+
+    var fechRecep= moment(data.dFecRec2).format('DD/MM/YYYY');
+    var fechEntrega= moment(data.dFecEntrega2).format('DD/MM/YYYY');
+
+    var data_matenimiento=response.data_matenimiento;
+    _.each(data_matenimiento, function (b) {
+        var vto=b.idMantenimiento;
+        if(vto==1){
+            mantenimiento_X='X';
+        };
+        if(vto==2){
+            cambioAciete_X='X';
+        };
+        if(vto==3){
+            reparacioMotor_x='X';
+        };
+        if(vto==4){
+            descar_x='X';
+        };
+        if(vto==5){
+            embrague_x='X';
+        };
+        if(vto==6){
+            transmi_x='X';
+        };
+        if(vto==7){
+            sisArras_x='X';
+        };
+        if(vto==8){
+            fren_x='X';
+        };
+        if(vto==9){
+            bate_x='X';
+        };
+        
+
+        if(vto==10){
+            revisitE_x='X';
+        };
+        if(vto==11){
+            revisitIN_x='X';
+        };
+        if(vto==12){
+            suspencio_x='X';
+        };
+        if(vto==13){
+            aroneu_x='X';
+        };
+        if(vto==14){
+            sistEsca_x='X';
+        };
+        if(vto==15){
+            sistDirecc_x='X';
+        };
+        if(vto==16){
+            otro_x='X';
+        };
+       
+    });
+    
+
+    var docDefinition = {
+           content: [
+        {
+            text: ""+response.con+'  '+response.nr+"",
+            fontSize: 14,
+             bold: true,
+            absolutePosition: { x:479 , y: 64 }
+        },
+        {
+            text: 'X',
+            fontSize: 14,
+            bold: true,
+            absolutePosition: { x:mcondicionPago , y: 90 }
+        },
+        {
+            text: fechRecep,
+            bold: true,
+            fontSize: 10,
+            absolutePosition: { x:329 , y: 98 }
+        },
+        {
+            text: fechEntrega,
+            absolutePosition: { x:329 , y: 107 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text:""+horaEnt+"",
+            absolutePosition: { x:529 , y: 101 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: razonsocial_cliente,
+            absolutePosition: { x:102 , y: 146 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: ruc,
+            absolutePosition: { x:102 , y: 163 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: direccion,
+            absolutePosition: { x:102 , y: 180 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: distrito,
+            absolutePosition: { x:102 , y: 200 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: razonsocial_cliente,
+            absolutePosition: { x:102 , y: 214 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: dni,
+            absolutePosition: { x:76 , y: 233 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: telefono,
+            absolutePosition: { x:76 , y: 253 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: correo_electronico,
+            absolutePosition: { x:152 , y: 233 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: celular,
+            absolutePosition: { x:152 , y: 253 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: 'X',
+            absolutePosition: { x:285 , y: tipoSer },
+            bold: true,
+            fontSize: 14,
+        },
+        {
+            text: modelo,
+            absolutePosition: { x:420 , y: 146 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: cMotor,
+            absolutePosition: { x:420 , y: 163 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: cChasis,
+            absolutePosition: { x:420 , y: 180 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: iAnioFab,
+            absolutePosition: { x:420 , y: 200 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: cColor,
+            absolutePosition: { x:420 , y: 214 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: cPlacaVeh,
+            absolutePosition: { x:420 , y: 233 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: nKilometraje,
+            absolutePosition: { x:420 , y: 253 },
+            bold: true,
+            fontSize: 10,
+        },
+
+        {
+            text: mantenimiento_X,
+            absolutePosition: { x:52 , y: 295 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: cambioAciete_X,
+            absolutePosition: { x:52 , y: 318 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: reparacioMotor_x,
+            absolutePosition: { x:52 , y: 343 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: descar_x,
+            absolutePosition: { x:52 , y: 366 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: embrague_x,
+            absolutePosition: { x:52 , y: 391 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: transmi_x,
+            absolutePosition: { x:52 , y: 416 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: sisArras_x,
+            absolutePosition: { x:52 , y: 439 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: fren_x,
+            absolutePosition: { x:52 , y: 464 },
+            bold: true,
+            fontSize: 14,
+        },
+
+         {
+            text: bate_x,
+            absolutePosition: { x:173 , y: 295 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: revisitE_x,
+            absolutePosition: { x:173 , y: 318 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: revisitIN_x,
+            absolutePosition: { x:173 , y: 343 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: suspencio_x,
+            absolutePosition: { x:173 , y: 366 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: aroneu_x,
+            absolutePosition: { x:173 , y: 391 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: sistEsca_x,
+            absolutePosition: { x:173 , y: 416 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: sistDirecc_x,
+            absolutePosition: { x:173 , y: 439 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: otro_x,
+            absolutePosition: { x:173 , y: 464 },
+            bold: true,
+            fontSize: 14,
+        },
+
+
+
+        {
+            text: mo_revision,
+            absolutePosition: { x:441 , y: 284 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: mo_mecanica,
+            absolutePosition: { x:441 , y: 298 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: terceros,
+            absolutePosition: { x:441 , y: 315 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: otros_mo,
+            absolutePosition: { x:441 , y: 335 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: sub_mo,
+            absolutePosition: { x:441 , y: 354 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: respuestos,
+            absolutePosition: { x:441 , y: 369 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: accesorios,
+            absolutePosition: { x:441 , y: 385 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: lubricantes,
+            absolutePosition: { x:441 , y: 402 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: otros_rep,
+            absolutePosition: { x:441 , y: 419 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: sub_re,
+            absolutePosition: { x:441 , y: 439 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: total,
+            absolutePosition: { x:441 , y: 459 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: cObservaciones ,
+            absolutePosition: { x:61 , y: 538 },
+            bold: true,
+            fontSize: 10,
+        },
+         {
+            text: modelo ,
+            absolutePosition: { x:341 , y: 594 },
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: cPlacaVeh,
+            absolutePosition: { x:488 , y: 594 },
+            bold: true,
+            fontSize: 10,
+        },
+
+
+    ],
+    styles: {
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'right',
+            margin: [0, 20, 0, 80]
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+function create_pdf_qualityControl(response) {
+    var data=response.data;
+    var detalle=response.detalle;
+    var cliente=response.get_cliente;
+    var vehiculo=response.get_vehiculo;
+    var data_orden=response.data_orden;
+
+    var razonsocial_cliente=cliente[0].razonsocial_cliente;
+    var modelo=vehiculo[0].descripcion;
+    var vin=data_orden[0].cChasis;
+    var motor=data_orden[0].cMotor;
+
+    var cOtros=data[0].cOtros;
+
+    var procedimientoG="";
+    var cargaBat="";
+    var lavadoVehi="";
+    var tanqueComb="";
+    var llaveComb="";
+    var aceisMot="";
+    var refrige="";
+    var palancaFre="";
+    var frenoDelant="";
+    var fluidoFreno="";
+    var frenoTraser="";
+    var embrage="";
+    var acelerad="";
+    var fluidosRevi="";
+    var revisionLuce="";
+    var estrangulador="";
+    var valvulas="";
+    var cadenaTransmisi="";
+    var ralenti="";
+    var neumatico="";
+    var espejosRetro="";
+    var tuerca="";
+    var suspDelant="";
+    var suspTrase="";
+    var soportLat="";
+    var rayosRued="";
+    var lavadoVehiDes="";
+    var otros="";
+
+    _.each(detalle, function (b) {
+        var vto=b.idrevision;
+        if(vto=='1' && b.iRevisado=='1'){
+            procedimientoG='X';
+        };
+        if(vto=='2' && b.iRevisado=='1'){
+            cargaBat='X';
+        };
+        ////
+        if(vto=='3' && b.iRevisado=='1'){
+            lavadoVehi='X';
+        };
+        if(vto=='4'  && b.iRevisado=='1'){
+            tanqueComb='X';
+        };
+        if(vto=='5' && b.iRevisado=='1'){
+            llaveComb='X';
+        };
+        if(vto=='6' && b.iRevisado=='1'){
+            aceisMot='X';
+        };
+        if(vto=='14'  && b.iRevisado=='1'){
+            refrige='X';
+        };
+//
+        if(vto=='7' && b.iRevisado=='1'){
+            palancaFre='X';
+        };
+        if(vto=='8' && b.iRevisado=='1'){
+            frenoDelant='X';
+        };
+        if(vto=='9' && b.iRevisado=='1'){
+            fluidoFreno='X';
+        };
+        if(vto=='10' && b.iRevisado=='1'){
+            frenoTraser='X';
+        };
+        if(vto=='15' && b.iRevisado=='1'){
+            embrage='X';
+        };
+        if(vto=='16' && b.iRevisado=='1'){
+            acelerad='X';
+        };
+         if(vto=='17' && b.iRevisado=='1'){
+            fluidosRevi='X';
+        };
+         if(vto=='18' && b.iRevisado=='1'){
+            revisionLuce='X';
+        };
+
+        //////
+
+        if(vto=='11' && b.iRevisado=='1'){
+            estrangulador='X';
+        };
+        if(vto=='12' && b.iRevisado=='1'){
+            valvulas='X';
+        };
+        if(vto=='13' && b.iRevisado=='1'){
+            cadenaTransmisi='X';
+        };
+        if(vto=='19' && b.iRevisado=='1'){
+            ralenti='X';
+        };
+        if(vto=='20' && b.iRevisado=='1'){
+            neumatico='X';
+        };
+        if(vto=='21' && b.iRevisado=='1'){
+            espejosRetro='X';
+        };
+        if(vto=='22' && b.iRevisado=='1'){
+            tuerca='X';
+        };
+
+        if(vto=='23' && b.iRevisado=='1'){
+            suspDelant='X';
+        };
+        if(vto=='24' && b.iRevisado=='1'){
+            suspTrase='X';
+        };
+        if(vto=='25' && b.iRevisado=='1'){
+            soportLat='X';
+        };
+        if(vto=='26' && b.iRevisado=='1'){
+            rayosRued='X';
+        };
+        if(vto=='27' && b.iRevisado=='1'){
+            lavadoVehiDes='X';
+        };
+        if(vto=='28' && b.iRevisado=='1'){
+            otros='X';
+        };
+
+        
+        
+       
+    });
+    var otrosTex='';
+   if(cOtros!=''){
+        otrosTex='X';
+   };
+    var docDefinition = {
+           content: [
+           {
+            text: modelo,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:81 , y: 115 }
+        },
+        {
+            text: vin,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:81 , y: 126 }
+        },
+        {
+            text: razonsocial_cliente,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:292 , y: 115 }
+        },
+        {
+            text: motor,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:292 , y: 126 }
+        },
+
+        //
+
+        {
+            text: procedimientoG,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:405 , y: 139 }
+        },
+        {
+            text: cargaBat,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:405 , y: 155 }
+        },
+        //
+         {
+            text: lavadoVehi,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 189 }
+        },
+        {
+            text: tanqueComb,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 205 }
+        },
+         {
+            text: llaveComb,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 221 }
+        },
+        {
+            text: aceisMot,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 236 }
+        },
+         {
+            text: refrige,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 252 }
+        },
+
+
+        ////
+        {
+            text: palancaFre,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 289 }
+        },
+         {
+            text: frenoDelant,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 305 }
+        },
+        {
+            text: fluidoFreno,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 321 }
+        },
+         {
+            text: frenoTraser,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 336 }
+        },
+        {
+            text: embrage,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 352 }
+        },
+         {
+            text: acelerad,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 368 }
+        },
+        {
+            text: fluidosRevi,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 384 }
+        },
+         {
+            text: revisionLuce,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 400 }
+        },
+
+        /////
+
+        {
+            text: suspDelant,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 431 }
+        },
+        {
+            text: suspTrase,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 447 }
+        },
+         {
+            text: soportLat,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 463 }
+        },
+        {
+            text: rayosRued,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 478 }
+        },
+        {
+            text: lavadoVehiDes,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 494 }
+        },
+         {
+            text: otros,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 510 }
+        },
+        ///////
+
+        {
+            text: estrangulador,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 431 }
+        },
+        {
+            text: valvulas,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 447 }
+        },
+         {
+            text: cadenaTransmisi,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 463 }
+        },
+        {
+            text: ralenti,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 478 }
+        },
+        {
+            text: neumatico,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 494 }
+        },
+         {
+            text: espejosRetro,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 510 }
+        },
+         {
+            text: tuerca,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:223 , y: 526 }
+        },
+         {
+            text: cOtros,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:249 , y: 523 }
+        },
+         {
+            text: otrosTex,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:423 , y: 526 }
+        },
+    ],
+    styles: {
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'right',
+            margin: [0, 20, 0, 80]
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+
+
+    var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+function create_pdf_proforma(response) {
+    var data=response.data;
+    var repus=response.data_repuesto;
+    var servi=response.data_servicio;
+    var data_cli=response.data_cliente;
+    var array_head=[];
+    var nConsecutivo=data[0].nConsecutivo;
+    var cPlacaVeh=data[0].cPlacaVeh;
+    var razonsocial_cliente=data[0].razonsocial_cliente;
+    var nEstimadoHoras=Number(data[0].nEstimadoHoras);
+    var celular=data_cli[0].celular;
+    var dFechaRegistro= moment(data[0].dFechaRegistro).format('DD/MM/YYYY');
+    console.log(data);
+    console.log(repus);
+    console.log(servi);
+    console.log(data_cli);
+
+    var mantenimiento_X="";
+    var cambioAciete_X="";
+    var reparacioMotor_x="";
+    var descar_x="";
+    var embrague_x="";
+    var transmi_x="";
+    var sisArras_x="";
+    var fren_x="";
+    var bate_x="";
+    var revisitE_x="";
+    var revisitIN_x="";
+    var suspencio_x="";
+    var aroneu_x="";
+    var sistEsca_x="";
+    var sistDirecc_x="";
+    var otro_x="";
+    array_head.push([
+        {
+            text: nConsecutivo,
+            fontSize: 14,
+            bold: true,
+            absolutePosition: { x:479 , y: 64 }
+        },
+         {
+            text: cPlacaVeh,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:118 , y: 144 }
+        },
+         {
+            text: razonsocial_cliente,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:118 , y: 163 }
+        },
+         {
+            text: celular,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:118 , y: 181 }
+        },
+         {
+            text: dFechaRegistro,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:452 , y: 181 }
+        },
+        ]);
+    var cont=0;
+    var alt=239;
+    var totalRep=0;
+    _.each(repus, function (b) {
+        var desc=b.description;
+        var cant=b.nCant;
+        var pre=b.nPrecioUnitario;
+        var tot=Number(b.nTotal)+Number(b.nImpuesto);
+        totalRep=totalRep+tot;
+        alt=alt+13
+        cont=cont+1;
+        if(cont<16){
+        array_head.push([
+        {
+            text: desc,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:66 , y: alt }
+        },
+         {
+            text: cant,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:336 , y: alt }
+        },
+         {
+            text: pre,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:417 , y: alt }
+        },
+         {
+            text: tot,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:498 , y: alt }
+        }
+        ]);
+        }
+    });
+    totalRep=totalRep.toFixed(2);
+    array_head.push([
+        {
+            text: totalRep,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:501 , y: 452 }
+        }
+    ]);
+    var cont=0;
+    var totalRepMo=0;
+    var altu=492;
+     _.each(servi, function (b) {
+        var desc=b.description;
+        var tota=b.nTotal;
+        var tot=Number(b.nTotal)+Number(b.nImpuesto);
+        totalRepMo=totalRepMo+tot;
+         altu=altu+13;
+          cont=cont+1;
+          if(cont<6){
+          array_head.push([
+                {
+                    text: desc,
+                    fontSize: 10,
+                    bold: true,
+                    absolutePosition: { x:66 , y: altu }
+                },
+                 {
+                    text: tot,
+                    fontSize: 10,
+                    bold: true,
+                    absolutePosition: { x:498 , y: altu }
+                }
+            ])
+        };
+     });
+     totalRepMo=totalRepMo.toFixed(2);
+     array_head.push([
+        {
+            text: totalRepMo,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:498 , y: 573 }
+        }
+    ]);
+    var totalcom=Number(totalRep)+Number(totalRepMo);
+    totalcom=totalcom.toFixed(2);
+    array_head.push([
+        {
+            text: totalcom,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:498 , y: 594 }
+        },
+        {
+            text: nEstimadoHoras,
+            fontSize: 10,
+            bold: true,
+            absolutePosition: { x:498 , y: 607 }
+        }
+    ]);
+    var docDefinition = {
+           content: [
+           array_head
+    ],
+    styles: {
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'right',
+            margin: [0, 20, 0, 80]
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+
+
+    var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
 function create_pdf_transfer(response) {
     var data_p = response.data;
     var mov_ar=response.movimiento_Ar;

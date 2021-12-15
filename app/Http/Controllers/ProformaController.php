@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\Proforma\ProformaTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Proforma\ProformaInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Requests\ProformaRequest;
 use DB;
 class ProformaController extends Controller
@@ -21,7 +22,24 @@ class ProformaController extends Controller
     {
 //        $this->middleware('json');
     }
-
+    public function pdf(Request $request, ProformaInterface $repo,Orden_servicioInterface $repoOrde)
+    {          
+            $id = $request->input('id');
+            $valtodo=explode("_", $id);
+            $data = $repo->find_proforma($valtodo[0],$valtodo[1]);
+            $data_repuesto = $repo->find_proforma_repuestos($valtodo[0],$valtodo[1]);
+            $data['dFechaRegistro2']=date("Y-m-d", strtotime($data[0]->dFechaRegistro));
+            $data_servicio=$repo->find_proforma_servicios($valtodo[0],$valtodo[1]);
+            $data_orden= $repoOrde->find_orden($data[0]->cCodConsecutivoOS,$data[0]->nConsecutivoOS);
+            $data_cliente=$repoOrde->find_orden_cliente($data_orden[0]->idCliente);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'data_repuesto'=>$data_repuesto,
+                'data_servicio'=>$data_servicio,
+                'data_cliente'=>$data_cliente,
+            ]);
+    }
     public function all(Request $request, ProformaInterface $repo)
     {
         $s = $request->input('search', '');

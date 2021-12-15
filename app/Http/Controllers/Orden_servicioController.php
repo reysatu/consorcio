@@ -22,6 +22,30 @@ class Orden_servicioController extends Controller
     {
 //        $this->middleware('json');
     }
+     public function pdf(Request $request, Orden_servicioInterface $repo)
+    {          
+            $id = $request->input('id');
+            $valtodo=explode("_", $id);
+            $data = $repo->find_orden($valtodo[0],$valtodo[1]);
+            $data_matenimiento = $repo->find_orden_mantenimiento($valtodo[0],$valtodo[1]);
+            $data['dFecEntrega2']=date("Y-m-d", strtotime($data[0]->dFecEntrega));
+            $data['dFecRec2']=date("Y-m-d", strtotime($data[0]->dFecRec));
+            $data_cliente=$repo->find_orden_cliente($data[0]->idCliente);
+            $data_detalle=$repo->find_orden_detalle($valtodo[0],$valtodo[1]);
+            $get_vehiculo=$repo->get_vehi($data[0]->cPlacaVeh);
+            $get_distrito=$repo->get_distrito_print($data_cliente[0]->ubigeo);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'data_cliente'=>$data_cliente,
+                'data_matenimiento'=>$data_matenimiento,
+                'data_detalle'=>$data_detalle,
+                'con'=>$valtodo[0],
+                'nr'=>$valtodo[1],
+                'get_distrito'=>$get_distrito,
+                'get_vehiculo'=>$get_vehiculo,
+            ]);
+    }
 
     public function all(Request $request, Orden_servicioInterface $repo)
     {
@@ -122,6 +146,12 @@ class Orden_servicioController extends Controller
             $otros_rep=strtoupper($data['otros_rep']);
             $precio_array=$data['precio_array'];
             $precio_array=explode(',', $precio_array);
+
+            $nIdDscto=strtoupper($data['nIdDscto']);
+           
+            $nPorcDescuento=strtoupper($data['nPorcDescuento']);
+            $nDescuento=strtoupper($data['nDescuento']);
+            $nOperGratuita=strtoupper($data['nOperGratuita']);
             
             $impuesto_servicio=$data['impuesto_servicio'];
             $impuesto_servicio=explode(',', $impuesto_servicio);
@@ -137,7 +167,7 @@ class Orden_servicioController extends Controller
              for ($i=0; $i < count($precio_array) ; $i++) {
                 $totalmo=$totalmo+floatval($precio_array[$i]);
             }
-            $total=floatval($totalmo)+floatval($impuesto);
+            $total=$data["total"];
             if($mo_revision==''){
                 $mo_revision=0;
             };
@@ -201,6 +231,10 @@ class Orden_servicioController extends Controller
                 $impuesto,
                 $total,
                 $id_tipoDoc_Venta_or,
+                $nIdDscto,
+                $nPorcDescuento,
+                $nDescuento,
+                $nOperGratuita,
                 $modo,
                 $usuario
             );
@@ -225,17 +259,46 @@ class Orden_servicioController extends Controller
 
             $modo_array_mant=$data['modo_array_mant'];
             $modo_array_mant=explode(',', $modo_array_mant);
+
+
+            $cantidDeta=$data['cantidDeta'];
+            $cantidDeta=explode(',', $cantidDeta);
+
+            $porDeta=$data['porDeta'];
+            $porDeta=explode(',', $porDeta);
+
+            $montoDeta=$data['montoDeta'];
+            $montoDeta=explode(',', $montoDeta);
+
+            $idDescuenDeta=$data['idDescuenDeta'];
+            $idDescuenDeta=explode(',', $idDescuenDeta);
+
+            $staOperacion=$data['staOperacion'];
+            $staOperacion=explode(',', $staOperacion);
+
+              $operacionGra=$data['operacionGra'];
+            $operacionGra=explode(',', $operacionGra);
+
              for ($i=0; $i < count($id_mantenimiento_array) ; $i++) {
                 $repo->actualizar_orden_mantenimiento($cCodConsecutivo,$res[0]->Mensaje,$id_mantenimiento_array[$i],$modo_array_mant[$i],$usuario);
              };
              for ($i=0; $i < count($id_revision_array) ; $i++) {
-                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$precio_array[$i],$impuesto_servicio[$i],$id_tipo_array[$i],$modo_array_serv[$i],$usuario);
+                $totald=$cantidDeta[$i]*$precio_array[$i];
+                if($staOperacion[$i]=='C'){
+                    $totalO=$cantidDeta[$i]*$precio_array[$i]+$impuesto_servicio[$i];
+                }else{
+                    $totalO=0;
+                };
+                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$totald,$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_serv[$i],$usuario);
+                }
+
              };
-            }
+           
             DB::commit();
             return response()->json([
                 'status' => true,
                 'res'=>$res,
+                'val'=>$idDetalleGrup,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -264,7 +327,11 @@ class Orden_servicioController extends Controller
         $moneda = $Repo->getmoneda();
         $servicios = $Repo->get_servicios(); 
         $tipoMantenimiento = $Repo->get_Tipomantenimientos(); 
-        $totales = $Repo->get_totales();  
+        $totales = $Repo->get_totales();
+           $usuario=auth()->id();
+        $descuentos=$Repo->get_descuentos($usuario);
+     
+
         return response()->json([
             'status' => true,
             'codigo' => $codigo,
@@ -276,10 +343,12 @@ class Orden_servicioController extends Controller
             'tecnico'=>$tecnico,
             'moneda'=>$moneda,
             'asesor'=>$asesor,
+            'descuentos'=>$descuentos,
             'servicios'=>$servicios,
             'totales'=>$totales,
             'tipoMantenimiento'=>$tipoMantenimiento,
             'tipo_document_venta'=>$tipo_document_venta,
+            'usuario'=>$usuario,
         ]);
     }
 
@@ -360,28 +429,7 @@ class Orden_servicioController extends Controller
             $data['dFecRec2']=date("Y-m-d", strtotime($data[0]->dFecRec));
             $data_cliente=$repo->find_orden_cliente($data[0]->idCliente);
             $data_detalle=$repo->find_orden_detalle($valtodo[0],$valtodo[1]);
-            // $users = [];
-            // foreach ($data->warehouseUser as $bp) {
-            //     $users[] = [
-            //         'id' => $bp->user->id,
-            //         'username' => $bp->user->username,
-            //         'name' => $bp->user->name,
-            //     ];
-            // }
-            // $data['users'] = $users;
-            // $info=$repo->getlocalizacione($id);
-            // $Localizacion = [];
-            // foreach ($info as $bp) {
-            //         $Localizacion[] = [
-            //         'idLocalizacion' => $bp->idLocalizacion,
-            //         'codigo' => $bp->codigo,
-            //         'descripcion' => $bp->descripcion,
-            //         'estado' => $bp->estado,
-            //     ];
-            // }
-            // $data['localizacion'] = $Localizacion;
-            // $data['idTienda'] = $data->Shop_u->idTienda;
-            // $data['Tienda'] = $data->Shop_u->descripcion;
+           
             return response()->json([
                 'status' => true,
                 'data' => $data,

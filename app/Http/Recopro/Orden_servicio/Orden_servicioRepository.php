@@ -117,19 +117,42 @@ where IdTipoDocumento in ('01','03')");
     }
      public function find_orden_detalle($conse,$nro)
     { 
-      $mostrar3=DB::select("select od.id as idDetalleSer,* from ERP_OrdenServicioDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
+      $mostrar3=DB::select("select des.nPorcDescuento as porDes, des.nMonto as montoDes, od.id_tipototal as totaltipo,tit.descripcion as descripcioText,od.id as idDetalleSer,* from ERP_OrdenServicioDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal left join ERP_Descuentos as des on des.id=od.nIdDscto where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro' ");
+      return $mostrar3;
+
+    }
+    public function get_distrito_print($cod)
+    { 
+      $mostrar3=DB::select("select * from ERP_Ubigeo where cCodUbigeo='$cod'");
+      return $mostrar3;
+
+    }
+    public function get_vehi($placa)
+    { 
+      $mostrar3=DB::select("select * from ERP_VehTerceros as vt  inner join ERP_Modelo as mo on mo.idModelo=vt.idModelo where placa='$placa'");
+      return $mostrar3;
+
+    }
+    public function get_cliente($idCliente)
+    { 
+      $mostrar3=DB::select("select * from ERP_Clientes where id='$idCliente'");
       return $mostrar3;
 
     }
     public function find_orden($conse,$nro)
     {
-        $mostrar3=DB::select("select ore.IdTipoDocumento as idDocumentoVenta, cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago where ore.cCodConsecutivo='$conse' and ore.nConsecutivo='$nro'");
+        $mostrar3=DB::select("select des.nPorcDescuento as porDes , des.nMonto as montoDes, ore.IdTipoDocumento as idDocumentoVenta, cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago  left join ERP_Descuentos as des on des.id=ore.nIdDscto where ore.cCodConsecutivo='$conse' and ore.nConsecutivo='$nro'");
           return $mostrar3;
     }
      public function find_orden_cliente($idCliente)
     {
       $mostrar3=DB::select("SELECT * FROM ERP_Clientes as cl inner join ERP_TipoCliente as ti on cl.id_tipocli=ti.id where cl.id='$idCliente'");
           return $mostrar3;
+    }
+     public function get_descuentos($usuario)
+    {
+      $mostrar3=DB::select("SELECT * FROM ERP_Descuentos as de  left join ERP_DescuentosUsuario as du on du.nIdDscto=de.id left JOIN ERP_DescuentosProducto as dp on de.id=dp.nIdDscto where  (du.nIdUsuario='$usuario' or nTodosUsusarios='1') and de.estado='A'");
+      return $mostrar3;
     }
     public function get_totales(){
    
@@ -185,6 +208,10 @@ where IdTipoDocumento in ('01','03')");
                 $impuesto,
                 $total,
                 $id_tipoDoc_Venta_or,
+                $nIdDscto,
+                $nPorcDescuento,
+                $nDescuento,
+                $nOperGratuita,
                 $modo,
                 $usuario){
          $pdo=DB::connection()->getPdo();
@@ -221,6 +248,10 @@ where IdTipoDocumento in ('01','03')");
                 '$impuesto',
                 '$total',
                 '$id_tipoDoc_Venta_or',
+                '$nDescuento',
+                '$nPorcDescuento',
+                '$nIdDscto',
+                '$nOperGratuita',
                 '$modo',
                 '$usuario'");
          return $destroy;
@@ -264,18 +295,10 @@ where IdTipoDocumento in ('01','03')");
                 '$usuario'"
           );
        }
-       public function actualizar_orden_detalle($cCodConsecutivo,$res,$cont,$id_revision_array,$precio_array,$impuesto,$id_tipo_array,$modo,$usuario){
+       public function actualizar_orden_detalle($cCodConsecutivo,$res,$idDetalleGrup,$id_revision_array,$totald,$impuesto_servicio,$id_tipo_array,$montoDeta,$porDeta,$cantidDeta,$precio_array,$idDescuenDeta,$staOperacion,$totalO,$modo_array_serv,$usuario){
          $pdo=DB::connection()->getPdo();
          $destroy=DB::update("SET NOCOUNT ON; EXEC ST_ActualizaOrdenServicioDetalle 
-                '$cCodConsecutivo',
-                '$res',
-                '$cont',
-                '$id_revision_array',
-                '$precio_array',
-                '$impuesto',
-                '$id_tipo_array',
-                '$modo',
-                '$usuario'"
+                '$cCodConsecutivo','$res','$idDetalleGrup','$id_revision_array','$totald','$impuesto_servicio','$id_tipo_array','$montoDeta','$porDeta','$cantidDeta','$precio_array','$idDescuenDeta','$staOperacion','$totalO','$modo_array_serv','$usuario'"
           );
        } 
 

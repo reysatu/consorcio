@@ -66,6 +66,16 @@
         var dFecEntrega=$("#dFecEntrega");
         var nEstimadoHoras=$("#nEstimadoHoras");
         var idProforma=$("#idProforma");
+        var btn_imprimirProforma=$(".btn_imprimirProforma");
+        btn_imprimirProforma.click(function(e){
+            var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
+            if(id!=''){
+                 var data = {
+                        id: id,        
+                };
+              $scope.loadProformaPDF('proformas/pdf', data);
+            }
+        });
         function cleandatos(){
             id_cliente_tipo_or.val('');
             idcliente.val('');
