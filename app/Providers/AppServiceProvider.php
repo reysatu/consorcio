@@ -141,6 +141,18 @@ use App\Http\Recopro\Shop\Shop;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Shop\ShopRepository;
 
+use App\Http\Recopro\Descuento\Descuento;
+use App\Http\Recopro\Descuento\DescuentoInterface;
+use App\Http\Recopro\Descuento\DescuentoRepository;
+
+use App\Http\Recopro\DescuentoProducto\DescuentoProducto;
+use App\Http\Recopro\DescuentoProducto\DescuentoProductoInterface;
+use App\Http\Recopro\DescuentoProducto\DescuentoProductoRepository;
+
+use App\Http\Recopro\DescuentoUsuario\DescuentoUsuario;
+use App\Http\Recopro\DescuentoUsuario\DescuentoUsuarioInterface;
+use App\Http\Recopro\DescuentoUsuario\DescuentoUsuarioRepository;
+
 use App\Http\Recopro\TypeObjet\TypeObjet;
 use App\Http\Recopro\TypeObjet\TypeObjetInterface;
 use App\Http\Recopro\TypeObjet\TypeObjetRepository;
@@ -578,6 +590,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerList_precio_detalle();
         $this->registerPrecios_producto();
         $this->registerShop();
+        $this->registerDescuento();
+        $this->registerDescuentoProducto();
+        $this->registerDescuentoUsuario();
         $this->registerTypeObjet();
         $this->registerTypeCostumer();
         $this->registerTipo_mantenimiento();
@@ -1248,6 +1263,30 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ShopInterface::class, function ($app) {
             return new ShopRepository(new Shop());
+        });
+    }
+    public function registerDescuento()
+    {
+        $app = $this->app;
+
+        $app->bind(DescuentoInterface::class, function ($app) {
+            return new DescuentoRepository(new Descuento());
+        });
+    }
+    public function registerDescuentoUsuario()
+    {
+        $app = $this->app;
+
+        $app->bind(DescuentoUsuarioInterface::class, function ($app) {
+            return new DescuentoUsuarioRepository(new DescuentoUsuario());
+        });
+    }
+    public function registerDescuentoProducto()
+    {
+        $app = $this->app;
+
+        $app->bind(DescuentoProductoInterface::class, function ($app) {
+            return new DescuentoProductoRepository(new DescuentoProducto());
         });
     }
     public function registerTypeObjet()

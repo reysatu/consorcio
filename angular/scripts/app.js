@@ -27,6 +27,7 @@
         'sys.app.params',
         'sys.app.approvers_projects',
         // Maestros
+        'sys.app.descuentos',
         'sys.app.brands',
         'sys.app.currencys',
         'sys.app.measures',
@@ -331,6 +332,30 @@
                 }
             });
         };
+         $scope.loadTransferPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_transfer(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
         $scope.loadMovimientoPDF = function (url, id) {
             angular.element('#show_loading').removeClass('ng-hide');
             $.ajax({
@@ -342,6 +367,79 @@
                         // });
                        
                         create_pdf_movimiento(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+        $scope.loadOrdenServicioPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_ordenServicio(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+
+        $scope.loadProformaPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_proforma(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+        $scope.loadQualityControlPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_qualityControl(response);
                        
                     }
                     angular.element('#show_loading').addClass('ng-hide');

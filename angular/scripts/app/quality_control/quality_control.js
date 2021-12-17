@@ -25,6 +25,16 @@
         var idcontrol_calidad=$("#idcontrol_calidad");
         var datos_calidad=$("#datos_calidad");
         var btn_guardarCalida=$("#btn_guardarCalida");
+        var btn_imprimirQc=$("#btn_imprimirQc");
+        btn_imprimirQc.click(function(e){
+            var id=idcontrol_calidad.val();
+            if(id!=''){
+                 var data = {
+                        id: id,        
+                };
+              $scope.loadQualityControlPDF('quality_controls/pdf', data);
+            }
+        });
         function findRegister_Control(id)
         {
             
@@ -122,13 +132,13 @@
                     id_Revision[idx] = $(item).val();
                 });
                 id_Revision = id_Revision.join(',');
-                
+                console.log(id_Revision);
                 var id_RevisionDet =[];
                 $.each($('.id_RevisionDet'), function (idx, item) {
                     id_RevisionDet[idx] = $(item).val();
                 });
                 id_RevisionDet = id_RevisionDet.join(',');
-
+                console.log(id_RevisionDet);
                 var valcheck =[];
                 $.each($('.valcheck'), function (idx, item) {
                      valcheck[idx] = (($(item).prop('checked')) ? 1 : 0);
@@ -148,11 +158,18 @@
                     'id_RevisionDet':id_RevisionDet,
                  };
 
-               
+
+               console.log(idcontrol_calidad.val());
                 var id = (idcontrol_calidad.val() === '') ? 0 : idcontrol_calidad.val();
                     RESTService.updated('quality_controls/createControl', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                        var data_p =response.res;
+                       console.log("*********");
+                       console.log(response.conta);
+                       console.log("*********");
+                       console.log(response.contb);
+                       console.log("*********");
+
                        iEstado.val(response.estado).trigger('change');
                       
                    
@@ -206,6 +223,7 @@
                     // html +='</div>';
                    
                     var cont=1;
+                    console.log(total);
                     total.map(function(index) {
                         if(cont==index.idGrupo){
                              html+='<h5 class="linea"><span>'+index.nombre+'</span></h5>';
