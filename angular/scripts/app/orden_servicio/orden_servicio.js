@@ -1047,7 +1047,7 @@
                 if(val==""){
                     porcentajeTotal.val(0);
                     montoTotal.val(0);
-                      calcular_total_MO();
+                  
                    
                 }else{
                      var arrayRe=val.split("*");
@@ -1057,9 +1057,23 @@
                     var porTotal=Number((Number(porc)*Number(total.val()))/100);
                     $("#porcentajeTotal").val(porTotal.toFixed(2));
                     $("#montoTotal").val(mont);
-                    calcular_total_MO();
+                 
                     
                 }
+                var totalDes=total.val();
+                totalDes=Number(totalDes);
+                if(totalDescuento.val()!='' ){
+                    if(montoTotal.val()<1){
+                            var por=Number(porcentajeTotal.val());
+                            totalDes=totalDes-por;
+                        }else{
+                            console.log("******");
+                            console.log(totalDes);
+                             console.log(montoTotal.val());
+                            totalDes=Number(totalDes)-Number(montoTotal.val());
+                        }
+                }
+                desTotal.val(totalDes.toFixed(2));
             });
 
          $.fn.modal.Constructor.prototype.enforceFocus = function () {};
@@ -1085,7 +1099,7 @@
                 if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
                        var por=Number(item.nPorcDescuento);
                        var monto=Number(item.nMonto);
-                    if((item.idMoneda==mo || item.nPorcDescuento!='0') && (item.nSaldoUso>0 || item.nLimiteUso=='0') && item.cTipoAplica=='L'){
+                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
                         if(item.dFecIni<=actu && item.dFecFin>actu){
                             var valDes=item.id+'*'+por+'*'+monto;
                             console.log(valDes,idDescuento);
@@ -1123,40 +1137,32 @@
                 var tr_pre='tr_subtotalSer';
                 var tipoTo=$("#pOper"+codigo).attr('data-tipotoChek');
                 var code=codigo;
-                console.log("***");
-                console.log(code);
+               
 
            if($("#pOper"+codigo).prop('checked')){
-            console.log("entroA");
-            calcular_total_MO();
-            console.log("tewrcer actualizado");
+                console.log("entroA");
+            // console.log("tewrcer actualizado");
                 $("#id_desc_"+code).val("").trigger('change');
                 $("#id_desc_"+code).prop("disabled",true);
-                
-                var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio');
-                var precio_act=$("#tr_subtotalSer"+code).val();
+                // var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio');
+                // var precio_act=$("#tr_subtotalSer"+code).val();
                
-                console.log(precio_ant,precio_act);
-               
-             
-                sumar_key();
-                var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio',precio_act);
-                var precio_act=$("#tr_subtotalSer"+code).val();
+                // console.log(precio_ant,precio_act);
+                // var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio',precio_act);
+                // var precio_act=$("#tr_subtotalSer"+code).val();
            }else{
-            console.log("cuarto actualizado");
-            console.log("entrodd");
-            calcular_total_MO();
+            // console.log("cuarto actualizado");
+            // console.log("entrodd");
              $("#id_desc_"+code).prop("disabled",false);
-             var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio');
-             var precio_act=$("#tr_subtotalSer"+code).val();
-             console.log(precio_ant,precio_act,tipoTo);
-          
-             var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio',precio_act);
-             sumar_key();
-
+             // var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio');
+             // var precio_act=$("#tr_subtotalSer"+code).val();
+             // console.log(precio_ant,precio_act,tipoTo);
+             // var precio_ant=$("#tr_subtotalSer"+code).attr('data-precio',precio_act);
+           
 
            }
-            
+            calcular_total_MO();
+            sumar_key();
         }
        
       
@@ -1309,53 +1315,53 @@
         //     }
         //   });
             $('.cantOrde').keyup(function (e) {
-                  console.log("entro cant");
-                  // var cantidap = $(this).val();
-                  // var impuestoOri=$(this).closest("tr").find("td:eq(3)").children("input").attr('data-imp');
-                  // console.log("****");
-                  // var totalImp=Number(cantidap)*Number(impuestoOri);
-                  // totalImp=totalImp.toFixed(2)
-                  //  $(this).closest("tr").find("td:eq(3)").children("input").val(totalImp);
-                  //  id_tipocli.data("prev",id_tipocli.val());
-                    var data_prec='data-precio';
-                    var tr_pre='tr_subtotalSer';
-                    var code=$(this).attr('data-codigoC');
-                    var tipoTo=$(this).attr('data-tipoto');
+                  // console.log("entro cant");
+                  // // var cantidap = $(this).val();
+                  // // var impuestoOri=$(this).closest("tr").find("td:eq(3)").children("input").attr('data-imp');
+                  // // console.log("****");
+                  // // var totalImp=Number(cantidap)*Number(impuestoOri);
+                  // // totalImp=totalImp.toFixed(2)
+                  // //  $(this).closest("tr").find("td:eq(3)").children("input").val(totalImp);
+                  // //  id_tipocli.data("prev",id_tipocli.val());
+                  //   var data_prec='data-precio';
+                  //   var tr_pre='tr_subtotalSer';
+                  //   var code=$(this).attr('data-codigoC');
+                  //   var tipoTo=$(this).attr('data-tipoto');
                   
-                    if($("#id_desc_"+code).val()!=""){
-                        if( $("#porc_"+code).val()>0){
-                            var val=$("#id_desc_"+code).val();
-                            var arrayRe=val.split("*");
-                            var code=arrayRe[0];
-                            var porc=arrayRe[1];
-                            var cantidadt=Number($(this).closest("tr").find("td:eq(1)").children("input").val());
-                            if(cantidadt==""){
-                                cantidadt=0;
-                            }
-                            var preciot=Number($(this).closest("tr").find("td:eq(2)").children("input").val());
-                            var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
-                            var subtota=(cantidadt*preciot)+(impuestot);
-                            var porTotal=Number((Number(porc)*Number(subtota))/100);
+                  //   if($("#id_desc_"+code).val()!=""){
+                  //       if( $("#porc_"+code).val()>0){
+                  //           var val=$("#id_desc_"+code).val();
+                  //           var arrayRe=val.split("*");
+                  //           var code=arrayRe[0];
+                  //           var porc=arrayRe[1];
+                  //           var cantidadt=Number($(this).closest("tr").find("td:eq(1)").children("input").val());
+                  //           if(cantidadt==""){
+                  //               cantidadt=0;
+                  //           }
+                  //           var preciot=Number($(this).closest("tr").find("td:eq(2)").children("input").val());
+                  //           var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
+                  //           var subtota=(cantidadt*preciot)+(impuestot);
+                  //           var porTotal=Number((Number(porc)*Number(subtota))/100);
                             
                         
-                            $(this).closest("tr").find("td:eq(6)").children("input").val(porTotal.toFixed(2));
-                            console.log($("#porc_"+code).val());
-                              calcular_total_MO();
-                        }
-                    }
+                  //           $(this).closest("tr").find("td:eq(6)").children("input").val(porTotal.toFixed(2));
+                  //           console.log($("#porc_"+code).val());
+                  //             calcular_total_MO();
+                  //       }
+                  //   }
                    
-                    if($("#pOper"+code).prop('checked')){
-                        console.log("puede sumar ");
-                    }else{
-                        console.log("primer actualizado");
-                        calcular_total_MO();
-                        var precio_ant=$(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio');
-                        var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
+                  //   if($("#pOper"+code).prop('checked')){
+                  //       console.log("puede sumar ");
+                  //   }else{
+                  //       console.log("primer actualizado");
+                  //       calcular_total_MO();
+                  //       var precio_ant=$(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio');
+                  //       var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
                       
-                        $(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio',precio_act);
-                        sumar_key();
+                  //       $(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio',precio_act);
+                  //       sumar_key();
 
-                    }
+                  //   }
                      calcular_total_MO();
                       sumar_key();
                   
@@ -1367,15 +1373,8 @@
                 var code=arrayRe[0];
                 var porc=arrayRe[1];
                 var mont=arrayRe[2];
-               
-              
-                var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
-              
                 if($(this).val()!=""){
                     if(porc!='0'){
-                        console.log("entro porcentaje");
-                        console.log(porc);
-                        console.log(precio_act);
                         var cantidadt=$(this).closest("tr").find("td:eq(1)").children("input").val();
                         var preciot=Number($(this).closest("tr").find("td:eq(2)").children("input").val());
                         var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
@@ -1392,25 +1391,25 @@
                     $("#porc_"+codigo).val("");
                 }
                
-                var data_prec='data-precio';
-                var tr_pre='tr_subtotalSer';
-                var tipoTo=$(this).attr('data-tipotoSe');
+                // var data_prec='data-precio';
+                // var tr_pre='tr_subtotalSer';
+                // var tipoTo=$(this).attr('data-tipotoSe');
                
-                if($("#pOper"+codigo).prop('checked')){
-                    console.log("no puede sumar ")
-                }else{
-                    console.log("entro a sumar ");
-                    console.log("segundo actualizado");
-                    calcular_total_MO();
-                    var precio_ant=$(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio');
-                    var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
+                // if($("#pOper"+codigo).prop('checked')){
+                //     console.log("no puede sumar ")
+                // }else{
+                //     console.log("entro a sumar ");
+                //     console.log("segundo actualizado");
+                //     calcular_total_MO();
+                //     var precio_ant=$(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio');
+                //     var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
                    
-                    $(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio',precio_act);
-                    sumar_key();
-                    calcular_total_MO();
+                //     $(this).closest("tr").find("td:eq(8)").children("input").attr('data-precio',precio_act);
+                //     sumar_key();
+                //     calcular_total_MO();
                  
                     
-                }
+                // }
                   calcular_total_MO();
                       sumar_key();
               
@@ -1560,10 +1559,17 @@
             $("#table_servicios tr").each(function(){
                 var cantidadt=$(this).find("td:eq(1)").children("input").val();
                 var preciot=Number($(this).find("td:eq(2)").children("input").val());
-                var impuestot=Number($(this).find("td:eq(3)").children("input").val());
+                var estadoImpues=$(this).find("td:eq(3)").children("input").attr('data-impuestoSer');
+                var impu=0;
+                console.log(estadoImpues);
+                console.log("Estado impuesto");
+                if(estadoImpues=="1"){
+                    impu=Number((Number(preciot)*Number(cantidadt))*((Number(igv)/100)));
+                };
                 var porce=Number($(this).find("td:eq(6)").children("input").val());
                 var monto=Number($(this).find("td:eq(7)").children("input").val());
-                var subtota=(cantidadt*preciot)+(impuestot);
+                var subtota=(cantidadt*preciot)+(impu);
+                $(this).find("td:eq(3)").children("input").val(impu.toFixed(2));
                 var codigo=$(this).find("td:eq(1)").children("input").attr('data-codigoC'); 
                
                     if($("#pOper"+codigo).prop('checked')){
@@ -1587,20 +1593,10 @@
 
             totales_nuevo();
             totalMO.val(totalt.toFixed(2));
-            var totalDes=totalt.toFixed(2);
+            var totalDes=totalt;
             totalDes=Number(totalDes);
-            if(totalDescuento.val()!='' ){
-                if(montoTotal.val()<1){
-                        var por=Number(porcentajeTotal.val());
-                        totalDes=totalDes-por;
-                    }else{
-                        console.log("******");
-                        console.log(totalDes);
-                         console.log(montoTotal.val());
-                        totalDes=Number(totalDes)-Number(montoTotal.val());
-                    }
-            }
             desTotal.val(totalDes.toFixed(2));
+            totalDescuento.val("").trigger("change");
         }
         function addMante(total,modo_t) {
             var arrayRe=total.split("*");
@@ -2219,6 +2215,7 @@
                     'idDetalleGrup':idDetalleGrup,
                     'id_tipo_array':id_tipo_array,
                     'precio_array':precio_array,
+                    
                     'modo_array_mant':modo_array_mant,
                     'modo_array_serv':modo_array_serv,
                     'cantidDeta':cantidDeta,
@@ -2227,6 +2224,7 @@
                     'porDeta':porDeta,
                     'operacionGra':operacionGra,
                     'staOperacion':staOperacion,
+
 
                     
                  };
