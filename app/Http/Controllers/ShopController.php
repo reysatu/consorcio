@@ -113,6 +113,12 @@ class ShopController extends Controller
     }
 
 
+    public function getTiendas(Request $request, ShopInterface $repo)
+    {
+        return parseSelect($repo->all(), 'idTienda', 'descripcion');
+    }
+
+
     public function excel(ShopInterface $repo)
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE TIENDAS', 'Tienda');

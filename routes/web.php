@@ -127,6 +127,25 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Devolucion_servicesTecnicos.php';
 
     require app_path() . '\Http\Routes\Entrega_servicesTecnicos.php';
+
+    require app_path() . '\Http\Routes\Bancos.php';
+
+    require app_path() . '\Http\Routes\TiposMovimiento.php';
+
+    require app_path() . '\Http\Routes\FormasPago.php';
+
+    require app_path() . '\Http\Routes\Denominaciones.php';
+
+    require app_path() . '\Http\Routes\Convenios.php';
+
+    require app_path() . '\Http\Routes\CuentasBancarias.php';
+
+    require app_path() . '\Http\Routes\Aprobacion.php';
+
+    require app_path() . '\Http\Routes\Cajas.php';
+
+    require app_path() . '\Http\Routes\ConsecutivosComprobantes.php';
+
     //Route Purchases
 
     require app_path() . '\Http\Routes\Requirements.php';
