@@ -6,15 +6,13 @@
  * Time: 6:56 PM
  */
 
-namespace App\Http\Recopro\Convenios;
+namespace App\Http\Recopro\Solicitud;
 
-use Illuminate\Support\Facades\DB;
-
-class ConveniosRepository implements ConveniosInterface
+class SolicitudRepository implements SolicitudInterface
 {
     protected $model;
     private static $_ACTIVE = 'A';
-    public function __construct(Convenios $model)
+    public function __construct(Solicitud $model)
     {
         $this->model = $model;
     }
@@ -22,7 +20,7 @@ class ConveniosRepository implements ConveniosInterface
     public function search($s)
     {
         return $this->model->orWhere(function($q) use ($s){
-            $q->where('descripcionconvenio', 'LIKE', '%'.$s.'%');
+            $q->where('numero_solicitud', 'LIKE', '%'.$s.'%');
         });
     }
 
@@ -64,18 +62,5 @@ class ConveniosRepository implements ConveniosInterface
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
         $model->delete();
-    }
-
-    public function get_consecutivo($table,$id)
-    {     
-        $mostrar = DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
-        $actu=0;
-        if(!$mostrar) {
-            $actu=0;
-        } else {
-            $actu=intval($mostrar[0]->$id);
-        }
-        $new=$actu+1;
-        return $new; 
     }
 }

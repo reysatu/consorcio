@@ -33,6 +33,9 @@ class DenominacionesController extends Controller
     public function create(DenominacionesInterface $repo, DenominacionesRequest $request)
     {
         $data = $request->all();
+        $table="ERP_Denominaciones";
+        $id='id_denominacion';
+        $data['id_denominacion'] = $repo->get_consecutivo($table,$id);
         // $data['id_denominacion'] = $data['id_denominacion'];
         $data['descripcion'] = $data['denominacion'];
         // print_r($data);

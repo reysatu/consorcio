@@ -36,6 +36,9 @@ class AprobacionController extends Controller
         // $data['idaprobacion'] = $data['idaprobacion'];
         // $data['nombre_aprobacion'] = $data['convenio'];
         // print_r($data);
+        $table="ERP_Aprobacion";
+        $id='idaprobacion';
+        $data['idaprobacion'] = $repo->get_consecutivo($table,$id);
         $repo->create($data);
 
         return response()->json([

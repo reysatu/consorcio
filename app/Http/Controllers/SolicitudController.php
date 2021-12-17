@@ -8,21 +8,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Recopro\Cajas\CajasInterface;
-use App\Http\Recopro\Cajas\CajasTrait;
-use App\Http\Requests\CajasRequest;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Solicitud\SolicitudTrait;
+use App\Http\Requests\SolicitudRequest;
 use Illuminate\Http\Request;
 
-class CajasController extends Controller
+class SolicitudController extends Controller
 {
-    use CajasTrait;
+    use SolicitudTrait;
 
     public function __construct()
     {
 //        $this->middleware('json');
     }
 
-    public function all(Request $request, CajasInterface $repo)
+    public function all(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
         $params = ['idcaja', 'nombre_caja', 'usuario', 'activo', 'idtienda'];
@@ -30,15 +30,13 @@ class CajasController extends Controller
         return parseList($repo->search($s), $request, 'idcaja', $params);
     }
 
-    public function create(CajasInterface $repo, CajasRequest $request)
+    public function create(SolicitudInterface $repo, SolicitudRequest $request)
     {
         $data = $request->all();
-         $table="ERP_Cajas";
-        $id='idcaja';
-        $data['idcaja'] = $repo->get_consecutivo($table,$id);
         // $data['idcaja'] = $data['idcaja'];
         // $data['nombre_caja'] = $data['convenio'];
         // print_r($data);
+        
         $repo->create($data);
 
         return response()->json([
@@ -47,7 +45,7 @@ class CajasController extends Controller
         ]);
     }
 
-    public function update(CajasInterface $repo, CajasRequest $request)
+    public function update(SolicitudInterface $repo, SolicitudRequest $request)
     {
         $data = $request->all();
         // print_r($data);
@@ -58,20 +56,20 @@ class CajasController extends Controller
         return response()->json(['Result' => 'OK']);
     }
 
-    public function destroy(CajasInterface $repo, Request $request)
+    public function destroy(SolicitudInterface $repo, Request $request)
     {
         $idcaja = $request->input('idcaja');
         $repo->destroy($idcaja);
         return response()->json(['Result' => 'OK']);
     }
 
-    public function getAll(CajasInterface $repo)
+    public function getAll(SolicitudInterface $repo)
     {
         return parseSelect($repo->all(), 'idcaja', 'nombre_caja');
     }
 
-    public function excel(CajasInterface $repo)
+    public function excel(SolicitudInterface $repo)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CAJAS', 'Cajas');
+        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE Solicitud', 'Solicitud');
     }
 }

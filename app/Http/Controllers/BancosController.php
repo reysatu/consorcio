@@ -32,7 +32,12 @@ class BancosController extends Controller
     public function create(BancosInterface $repo, BancosRequest $request)
     {
         $data = $request->all();
+        $table="ERP_Bancos";
+        $id='idbanco';
+        $data['idbanco'] = $repo->get_consecutivo($table,$id);
         $data['descripcion'] = $data['banco'];
+
+       
         $repo->create($data);
 
         return response()->json([

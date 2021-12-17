@@ -16,8 +16,9 @@ class Bancos extends Model
 
     protected $table = 'ERP_Bancos';
 
-    protected $fillable = ['descripcion', 'user_created', 'user_updated', 'user_deleted'];
+    protected $fillable = ['idbanco', 'descripcion', 'user_created', 'user_updated', 'user_deleted'];
     protected $primaryKey = 'idbanco';
+
     protected $hidden = ['deleted_at'];
 
     public function user_c()

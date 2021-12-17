@@ -33,6 +33,10 @@ class ConsecutivosComprobantesController extends Controller
     public function create(ConsecutivosComprobantesInterface $repo, ConsecutivosComprobantesRequest $request)
     {
         $data = $request->all();
+
+        $table="ERP_ConsecutivosComprobantes";
+        $id='id_consecutivo';
+        $data['id_consecutivo'] = $repo->get_consecutivo($table,$id);
         // $data['id_consecutivo'] = $data['id_consecutivo'];
         // $data['nombre_caja'] = $data['convenio'];
         // print_r($data);
