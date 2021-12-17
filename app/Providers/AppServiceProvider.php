@@ -18,6 +18,44 @@ use App\Http\Recopro\ApproverProjectDetail\ApproverProjectDetailRepository;
 use App\Http\Recopro\Brand\Brand;
 use App\Http\Recopro\Brand\BrandInterface;
 use App\Http\Recopro\Brand\BrandRepository;
+use App\Http\Recopro\Bancos\Bancos;
+use App\Http\Recopro\Bancos\BancosInterface;
+use App\Http\Recopro\Bancos\BancosRepository;
+
+use App\Http\Recopro\TiposMovimiento\TiposMovimiento;
+use App\Http\Recopro\TiposMovimiento\TiposMovimientoInterface;
+use App\Http\Recopro\TiposMovimiento\TiposMovimientoRepository;
+
+use App\Http\Recopro\FormasPago\FormasPago;
+use App\Http\Recopro\FormasPago\FormasPagoInterface;
+use App\Http\Recopro\FormasPago\FormasPagoRepository;
+
+use App\Http\Recopro\Denominaciones\Denominaciones;
+use App\Http\Recopro\Denominaciones\DenominacionesInterface;
+use App\Http\Recopro\Denominaciones\DenominacionesRepository;
+
+use App\Http\Recopro\Convenios\Convenios;
+use App\Http\Recopro\Convenios\ConveniosInterface;
+use App\Http\Recopro\Convenios\ConveniosRepository;
+
+use App\Http\Recopro\CuentasBancarias\CuentasBancarias;
+use App\Http\Recopro\CuentasBancarias\CuentasBancariasInterface;
+use App\Http\Recopro\CuentasBancarias\CuentasBancariasRepository;
+
+use App\Http\Recopro\Aprobacion\Aprobacion;
+use App\Http\Recopro\Aprobacion\AprobacionInterface;
+use App\Http\Recopro\Aprobacion\AprobacionRepository;
+
+
+use App\Http\Recopro\Cajas\Cajas;
+use App\Http\Recopro\Cajas\CajasInterface;
+use App\Http\Recopro\Cajas\CajasRepository;
+
+
+use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantes;
+use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesRepository;
+
 use App\Http\Recopro\Buyer\BuyerInterface;
 use App\Http\Recopro\Config\ConfigInterface;
 use App\Http\Recopro\ConsumerReturn\ConsumerReturn;
@@ -493,6 +531,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Module Masters
         $this->registerBrand();
+        $this->registerBancos();
+        $this->registerTiposMovimiento();
+        $this->registerFormasPago();
+        $this->registerDenominaciones();
+        $this->registerConvenios();
+        $this->registerCuentasBancarias();
+        $this->registerAprobacion();
+        $this->registerCajas();
+        $this->registerConsecutivosComprobantes();
         $this->registerEntity();
         $this->registerTypePerson();
         $this->registerTypeDocumentIdentity();
@@ -717,6 +764,89 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(BrandInterface::class, function ($app) {
             return new BrandRepository(new Brand());
+        });
+    }
+
+    public function registerBancos()
+    {
+        $app = $this->app;
+
+        $app->bind(BancosInterface::class, function ($app) {
+            return new BancosRepository(new Bancos());
+        });
+    }
+
+    public function registerTiposMovimiento()
+    {
+        $app = $this->app;
+
+        $app->bind(TiposMovimientoInterface::class, function ($app) {
+            return new TiposMovimientoRepository(new TiposMovimiento());
+        });
+    }
+
+    public function registerFormasPago()
+    {
+        $app = $this->app;
+
+        $app->bind(FormasPagoInterface::class, function ($app) {
+            return new FormasPagoRepository(new FormasPago());
+        });
+    }
+
+    public function registerDenominaciones()
+    {
+        $app = $this->app;
+
+        $app->bind(DenominacionesInterface::class, function ($app) {
+            return new DenominacionesRepository(new Denominaciones());
+        });
+    }
+
+    public function registerConvenios()
+    {
+        $app = $this->app;
+
+        $app->bind(ConveniosInterface::class, function ($app) {
+            return new ConveniosRepository(new Convenios());
+        });
+    }
+
+    public function registerCuentasBancarias()
+    {
+        $app = $this->app;
+
+        $app->bind(CuentasBancariasInterface::class, function ($app) {
+            return new CuentasBancariasRepository(new CuentasBancarias());
+        });
+    }
+
+    public function registerAprobacion()
+    {
+        $app = $this->app;
+
+        $app->bind(AprobacionInterface::class, function ($app) {
+            return new AprobacionRepository(new Aprobacion());
+        });
+    }
+
+ 
+
+    public function registerCajas()
+    {
+        $app = $this->app;
+
+        $app->bind(CajasInterface::class, function ($app) {
+            return new CajasRepository(new Cajas());
+        });
+    }
+
+    public function registerConsecutivosComprobantes()
+    {
+        $app = $this->app;
+
+        $app->bind(ConsecutivosComprobantesInterface::class, function ($app) {
+            return new ConsecutivosComprobantesRepository(new ConsecutivosComprobantes());
         });
     }
 
