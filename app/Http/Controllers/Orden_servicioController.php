@@ -279,13 +279,13 @@ class Orden_servicioController extends Controller
               $operacionGra=$data['operacionGra'];
             $operacionGra=explode(',', $operacionGra);
 
-             for ($i=0; $i < count($id_mantenimiento_array) ; $i++) {
+             for ($i=0; $i < count($id_mantenimiento_array) ; $i++) { 
                 $repo->actualizar_orden_mantenimiento($cCodConsecutivo,$res[0]->Mensaje,$id_mantenimiento_array[$i],$modo_array_mant[$i],$usuario);
              };
              for ($i=0; $i < count($id_revision_array) ; $i++) {
-                $totald=$cantidDeta[$i]*$precio_array[$i];
+                $totald=floatval($cantidDeta[$i])*floatval($precio_array[$i]);
                 if($staOperacion[$i]=='C'){
-                    $totalO=$cantidDeta[$i]*$precio_array[$i]+$impuesto_servicio[$i];
+                    $totalO=floatval($cantidDeta[$i])*floatval($precio_array[$i])+floatval($impuesto_servicio[$i]);
                 }else{
                     $totalO=0;
                 };

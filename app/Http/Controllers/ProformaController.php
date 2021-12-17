@@ -145,6 +145,11 @@ class ProformaController extends Controller
             $idDetalleRepuestoGrup=$data['idDetalleRepuestoGrup'];
             $idDetalleRepuestoGrup=explode(',', $idDetalleRepuestoGrup);
 
+            $nDescuento=$data['nDescuentoP'];
+            $nPorcDescuento=$data['nPorcDescuentoP'];
+            $nIdDscto=$data['nIdDsctoP'];
+            $nOperGratuita=$data['nOperGratuitaP'];
+
             $totalmo=0;
             $totaldetalle=0;
             $impuesto=0;
@@ -187,22 +192,72 @@ class ProformaController extends Controller
                 $subtotal,
                 $impuesto,
                 $total,
+
+                $nDescuento,
+                $nPorcDescuento,
+                $nIdDscto,
+                $nOperGratuita,
+
                 $modo,
                 $usuario
             );
+         
+        $montoRepu=$data["montoRepu"];
+        $montoRepu=explode(',', $montoRepu);
+
+        $porRepu=$data["porRepu"];
+        $porRepu=explode(',', $porRepu);
+
+        $idDescuenRepues=$data["idDescuenRepues"];
+        $idDescuenRepues=explode(',', $idDescuenRepues);
+
+        $staOperacionRepu=$data["staOperacionRepu"];
+        $staOperacionRepu=explode(',', $staOperacionRepu);
+
+        $operacionGraRep=$data["operacionGraRep"];
+        $operacionGraRep=explode(',', $operacionGraRep);
+
+        $cantidDeta=$data["cantidDeta"];
+
+          $cantidDeta=explode(',', $cantidDeta);
+        $montoDeta=$data["montoDeta"];
+         $montoDeta=explode(',', $montoDeta);
+        $porDeta=$data["porDeta"];
+        $porDeta=explode(',', $porDeta);
+        $cantidDeta=$data["cantidDeta"];
+          $cantidDeta=explode(',', $cantidDeta);
+        $idDescuenDeta=$data["idDescuenDeta"];
+         $idDescuenDeta=explode(',', $idDescuenDeta);
+        $staOperacion=$data["staOperacion"];
+         $staOperacion=explode(',', $staOperacion);
+
         if(intval($res[0]->Mensaje)){
           for ($i=0; $i < count($id_repuesto_array) ; $i++) {
                 $total=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i]);
-                 $repo->actualizar_Proforma_detalle($cCod,$res[0]->Mensaje,$idDetalleRepuestoGrup[$i],$id_repuesto_array[$i],$id_repuesto_cantidad[$i],$id_repuesto_precio[$i],$total,$id_repuesto_impuesto[$i],$id_repuesto_tipoTotal[$i],$modo_array_repuesto[$i],$usuario);
+                 if($staOperacionRepu[$i]=='C'){
+                    $totalO=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i])+floatval($id_repuesto_impuesto[$i]);
+                }else{
+                    $totalO=0;
+                };
+                $repo->actualizar_Proforma_detalle($cCod,$res[0]->Mensaje,$idDetalleRepuestoGrup[$i],$id_repuesto_array[$i],
+                    $id_repuesto_cantidad[$i],$id_repuesto_precio[$i],$total,$id_repuesto_impuesto[$i],$id_repuesto_tipoTotal[$i],
+                    $montoRepu[$i],$porRepu[$i],$idDescuenRepues[$i],$staOperacionRepu[$i],$totalO,$modo_array_repuesto[$i],$usuario);
            };
             for ($i=0; $i < count($id_revision_array) ; $i++) {
-                 $repo->actualizar_Proforma_MO($cCod,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$precio_array_servicio[$i],$impuesto_servicio[$i],$id_tipo_array[$i],$modo_array_servicio[$i],$usuario);
+                  $totald=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i]);
+                   if($staOperacion[$i]=='C'){
+                    $totalO=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i])+floatval($impuesto_servicio[$i]);
+                }else{
+                    $totalO=0;
+                };
+                 $repo->actualizar_Proforma_MO($cCod,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$totald,$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array_servicio[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_servicio[$i],$usuario);
+                }
            };
-        };  
             DB::commit();
             return response()->json([
                 'status' => true,
                 'res'=>$res,
+                'test'=>$id_repuesto_array,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

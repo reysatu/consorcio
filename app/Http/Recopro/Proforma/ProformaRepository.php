@@ -100,19 +100,19 @@ class ProformaRepository implements ProformaInterface
     }
      public function find_proforma($conse,$nro)
     {
-        $mostrar3=DB::select("SELECT prof.nEstimadoHoras as nEstimadoHoras,prof.idAsesor as idAsesorProforma, prof.cCodConsecutivo as cCodConsecutivo,prof.nConsecutivo as nConsecutivo,prof.dFechaRegistro as dFechaRegistro,prof.nTotalMO as nTotalMO,prof.nTotalDetalle as nTotalDetalle,prof.nSubTotal as nSubTotal,prof.nTotal as nTotal,prof.nImpuesto as nImpuesto,prof.iEstado as iEstado,os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh, os.cMotor as cMotor,os.nKilometraje as nKilometraje, os.cColor as cColor,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivoOS, os.nConsecutivo as nConsecutivoOS, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idcCondicionPago as idcCondicionPago,cp.description as condicionPago,os.idAsesor as idAsesor,ase.descripcion as asesor FROM ERP_OrdenServicio as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda inner join ERP_CondicionPago as cp on cp.id=os.idcCondicionPago INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente INNER JOIN ERP_TipoCliente as tc on tc.id=cl.id_tipocli inner join ERP_Proforma as prof on prof.cCodConsecutivoOS=os.cCodConsecutivo  inner join ERP_Asesores as ase on ase.id=os.idAsesor where prof.nConsecutivoOS=os.nConsecutivo and prof.cCodConsecutivo='$conse' AND prof.nConsecutivo='$nro'");
+        $mostrar3=DB::select("SELECT prof.nIdDscto as nIdDsctoPr, des.nPorcDescuento as porDes , des.nMonto as montoDes, prof.nEstimadoHoras as nEstimadoHoras,prof.idAsesor as idAsesorProforma, prof.cCodConsecutivo as cCodConsecutivo,prof.nConsecutivo as nConsecutivo,prof.dFechaRegistro as dFechaRegistro,prof.nTotalMO as nTotalMO,prof.nTotalDetalle as nTotalDetalle,prof.nSubTotal as nSubTotal,prof.nTotal as nTotal,prof.nImpuesto as nImpuesto,prof.iEstado as iEstado,os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh, os.cMotor as cMotor,os.nKilometraje as nKilometraje, os.cColor as cColor,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivoOS, os.nConsecutivo as nConsecutivoOS, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idcCondicionPago as idcCondicionPago,cp.description as condicionPago,os.idAsesor as idAsesor,ase.descripcion as asesor FROM ERP_OrdenServicio as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda inner join ERP_CondicionPago as cp on cp.id=os.idcCondicionPago INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente INNER JOIN ERP_TipoCliente as tc on tc.id=cl.id_tipocli inner join ERP_Proforma as prof on prof.cCodConsecutivoOS=os.cCodConsecutivo  inner join ERP_Asesores as ase on ase.id=os.idAsesor  left join ERP_Descuentos as des on des.id=prof.nIdDscto  where prof.nConsecutivoOS=os.nConsecutivo and prof.cCodConsecutivo='$conse' AND prof.nConsecutivo='$nro'");
           return $mostrar3;
     }
    
     public function find_proforma_repuestos($conse,$nro)
     { 
-      $mostrar3=DB::select("select pr.id as idProducto, od.id as idDetalleRepues,* from ERP_ProformaDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
+      $mostrar3=DB::select("select des.nPorcDescuento as porDes, des.nMonto as montoDes, od.id_tipototal as totaltipo,tit.descripcion as descripcioText, pr.id as idProducto, od.id as idDetalleRepues,* from ERP_ProformaDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal left join ERP_Descuentos as des on des.id=od.nIdDscto where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
       return $mostrar3;
 
-    }
+    } 
     public function find_proforma_servicios($conse,$nro)
     { 
-      $mostrar3=DB::select("select pr.id as idProducto, od.id as idDetalleServicio,* from ERP_ProformaMO as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
+      $mostrar3=DB::select("select des.nPorcDescuento as porDes, des.nMonto as montoDes,od.id_tipototal as totaltipo,tit.descripcion as descripcioText, pr.id as idProducto, od.id as idDetalleServicio,* from ERP_ProformaMO as od inner join ERP_Productos as pr on pr.id=od.idProducto inner join ERP_TipoTotalOS as tit on tit.id=od.id_tipototal left join ERP_Descuentos as des on des.id=od.nIdDscto  where od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'");
       return $mostrar3;
 
     }
@@ -132,6 +132,10 @@ class ProformaRepository implements ProformaInterface
                 $subtotal,
                 $impuesto,
                 $total,
+                $nDescuento,
+                $nPorcDescuento,
+                $nIdDscto,
+                $nOperGratuita,
                 $modo,
                 $usuario){
          $pdo=DB::connection()->getPdo();
@@ -151,23 +155,27 @@ class ProformaRepository implements ProformaInterface
                 '$subtotal',
                 '$impuesto',
                 '$total',
+                '$nDescuento',
+                '$nPorcDescuento',
+                '$nIdDscto',
+                '$nOperGratuita',
                 '$modo',
                 '$usuario'");
          return $destroy;
     }
     public function actualizar_Proforma_detalle(
-                $cCod,$ncon,$cont,$id_repuesto_array,$id_repuesto_cantidad,$id_repuesto_precio,$total,$id_repuesto_impuesto,$id_repuesto_tipoTotal,$modo_array_repuesto,$usuario){
+                $cCod,$ncon,$cont,$id_repuesto_array,$id_repuesto_cantidad,$id_repuesto_precio,$total,$id_repuesto_impuesto,$id_repuesto_tipoTotal,$montoRepu,$porRepu,$idDescuenRepues,$staOperacionRepu,$operacionGraRep,$modo_array_repuesto,$usuario){
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaProformaDetalle 
-                '$cCod','$ncon','$cont','$id_repuesto_array','$id_repuesto_cantidad','$id_repuesto_precio','$total','$id_repuesto_impuesto','$id_repuesto_tipoTotal','$modo_array_repuesto','$usuario'");
-         return $destroy;
+                '$cCod','$ncon','$cont','$id_repuesto_array','$id_repuesto_cantidad','$id_repuesto_precio','$total','$id_repuesto_impuesto','$id_repuesto_tipoTotal','$montoRepu','$porRepu','$idDescuenRepues','$staOperacionRepu','$operacionGraRep','$modo_array_repuesto','$usuario'");
+         // return $destroy;
     }
-    public function actualizar_Proforma_MO($cCod,$res,$cont,$id_revision_array,$precio_array_servicio,$impuesto_servicio,$id_tipo_array,$modo_array_servicio,$usuario){
+   public function actualizar_Proforma_MO($cCodConsecutivo,$res,$idDetalleGrup,$id_revision_array,$totald,$impuesto_servicio,$id_tipo_array,$montoDeta,$porDeta,$cantidDeta,$precio_array,$idDescuenDeta,$staOperacion,$totalO,$modo_array_serv,$usuario){
          $pdo=DB::connection()->getPdo();
-         $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaProformaMO 
-                '$cCod','$res','$cont','$id_revision_array','$precio_array_servicio','$impuesto_servicio','$id_tipo_array','$modo_array_servicio','$usuario'");
-         return $destroy;
-    }
+         $destroy=DB::update("SET NOCOUNT ON; EXEC ST_ActualizaProformaMO 
+                '$cCodConsecutivo','$res','$idDetalleGrup','$id_revision_array','$totald','$impuesto_servicio','$id_tipo_array','$montoDeta','$porDeta','$cantidDeta','$precio_array','$idDescuenDeta','$staOperacion','$totalO','$modo_array_serv','$usuario'"
+          );
+       } 
      public function destroy_Proforma_detalleSer($id,$no,$deta)
     {
          $pdo=DB::connection()->getPdo();

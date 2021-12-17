@@ -261,13 +261,17 @@ h5.linea span {
                                                             <table class="table table-bordered table-striped table-hover" id="tabla_grupo_revision">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Artículo</th>
-                                                                            <th>Cantidad</th>
-                                                                            <th>Precio</th>
-                                                                            <th>Impuesto</th>
-                                                                            <th>Sub Total</th>
+                                                                           <th width="110px">Artículos</th>
+                                                                            <th width="60px">Cantidad</th>
+                                                                            <th width="60px">Precio</th>
+                                                                            <th width="70px">Impuesto</th>
+                                                                            <th>Operación gratuita</th>
+                                                                            <th width="130px">Descuentos</th>
+                                                                            <th width="10px">Porcentaje</th>
+                                                                            <th width="70px">Monto</th>
+                                                                             <th width="80px">Sub Total</th>
                                                                             <th>Tipo</th>
-                                                                            <th width="50px"></th>
+                                                                            <th width="30px"></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="table_repuestos"></tbody>
@@ -302,12 +306,17 @@ h5.linea span {
                                                             <table class="table table-bordered table-striped table-hover" id="tabla_grupo_revision">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Servicios</th>
-                                                                            <th>Precio</th>
-                                                                            <th>Impuesto</th>
-                                                                            <th>Sub Total</th>
+                                                                            <th width="110px">Servicios</th>
+                                                                            <th width="60px">Cantidad</th>
+                                                                            <th width="60px">Precio</th>
+                                                                            <th width="70px">Impuesto</th>
+                                                                            <th>Operación gratuita</th>
+                                                                            <th width="130px">Descuentos</th>
+                                                                            <th width="10px">Porcentaje</th>
+                                                                            <th width="70px">Monto</th>
+                                                                             <th width="80px">Sub Total</th>
                                                                             <th>Tipo</th>
-                                                                            <th width="50px"></th>
+                                                                            <th width="30px"></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody id="table_servicios"></tbody>
@@ -345,7 +354,7 @@ h5.linea span {
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                         <label class="col-sm-6 control-label">Otros</label>
+                                                         <label class="col-sm-6 control-label">M.O Otros</label>
                                                         <div class="col-sm-6">
                                                             <input type="number" id="otros_mo" class="form-control input-sm" value="0"
                                                             readonly />
@@ -388,14 +397,42 @@ h5.linea span {
                                                         <div class="col-sm-6">
                                                             <input id="subtotal_mob" class="form-control input-sm"  value="0"  readonly />
                                                         </div>
-                                                    </div>
+                                                    </div> 
                                                     <div class="form-group">
-                                                         <label class="col-sm-6 control-label">Total</label>
+                                                         <label class="col-sm-6 control-label">Operación Gratuita</label>
                                                         <div class="col-sm-6">
                                                             <input id="total" class="form-control input-sm" readonly  value="0" />
                                                         </div>
                                                     </div>
                                                   </div>
+                                                  <div class="col-md-12 ">
+                                                    <div class="form-group">
+                                                           <label class="col-sm-2  control-label">
+                                                             Descuento
+                                                           </label>
+                                                          <div class="col-sm-2 ">
+                                                              <select id="totalDescuento" class="totalDescuento form-control input-sm" style="width: 100%" /> </select>
+                                                          </div>
+                                                           <label class="col-sm-2  control-label">
+                                                             Porcentaje
+                                                           </label>
+                                                           <div class="col-sm-2">
+                                                              <input id="porcentajeTotal" class="form-control input-sm"  value="0"  readonly />
+                                                          </div>
+                                                            <label class="col-sm-1  control-label">
+                                                             Monto
+                                                           </label>
+                                                            <div class="col-sm-3">
+                                                              <input id="montoTotal" class="form-control input-sm"    readonly />
+                                                          </div> 
+                                                    </div>
+                                                    <div class="form-group">
+                                                           <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
+                                                          <div class="col-sm-3 col-md-offset-1">
+                                                              <input id="desTotal" class="form-control input-sm" readonly  value="0" />
+                                                          </div>
+                                                    </div>
+                                                 </div>
                                                 </div>  
                                             </div>    
                                         </div>

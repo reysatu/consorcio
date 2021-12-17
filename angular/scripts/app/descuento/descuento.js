@@ -81,7 +81,8 @@
                     nLimiteUso.val(data[0].nLimiteUso);
                     nCantUso.val(data[0].nCantUso);
                     nSaldoUso.val(data[0].nSaldoUso);
-
+                    productos_select.val("").trigger("change");
+                      usuarios_select.val("").trigger("change");
                     if(data[0].nLimiteUso=='0'){
                          limit.prop('checked', false).iCheck('update');
                      }else{
@@ -189,7 +190,10 @@
             var id=arrayRe[0];
             var name=arrayRe[1];
             var codDetalle=0;
-            addUsuar(id,name,codDetalle);
+             if(vto!=""){
+               addUsuar(id,name,codDetalle);
+            }
+            
         });
         productos_select.change(function () {
             var vto=$(this).val();
@@ -198,7 +202,10 @@
             var code=arrayRe[1];
             var descrip=arrayRe[2];
             var codDetalle=0;
-            addProdu(id,code,descrip,codDetalle);
+            if(vto!=""){
+                addProdu(id,code,descrip,codDetalle);
+            }
+            
         });
 
 
@@ -206,8 +213,9 @@
             if ($('#tr_p_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'Ya se asignó este usuario'
+                    message: 'Ya se asignó este artículo'
                 });
+                productos_select.val("");
                 return false;
             }
              var tr = $('<tr id="tr_p_' + code + '"></tr>');
@@ -265,6 +273,7 @@
                     title: '',
                     message: 'Ya se asignó este usuario'
                 });
+                usuarios_select.val("").trigger("change");
                 return false;
             }
              var tr = $('<tr id="tr_b_' + code + '"></tr>');

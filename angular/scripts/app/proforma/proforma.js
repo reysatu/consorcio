@@ -13,8 +13,14 @@
 
     function ProformaCtrl($scope, _, RESTService, AlertFactory)
     {   
+        var descuentos;
+        var acodigos=[];
+        var bcodigos=[];
+        var desTotal=$("#desTotal");
         var servicios;
         var igv;
+        var montoTotal=$("#montoTotal");
+        var porcentajeTotal=$("#porcentajeTotal");
         var btn_aprobarProforma=$(".btn_aprobarProforma");
         var btn_guardarProforma=$(".btn_guardarProforma");
         var estado=$("#estado");
@@ -23,6 +29,7 @@
         var modalDeleteProforma=$("#modalDeleteProforma");
         var idProformaDelete=$("#idProformaDelete");
         var totalMO=$("#totalMO");
+        var totalDescuento=$("#totalDescuento");
         var repuestos_array;
         var estado=$("#estado");
         var table_repuestos=$("#table_repuestos");
@@ -91,6 +98,7 @@
             idcCondicionPago.val('');
             idAsesor.val('').trigger('change');
         }
+        totalDescuento.select2();
          btn_aprobarProforma.click(function () {
            Aprobar_Proforma_servicio();
           });
@@ -132,6 +140,42 @@
                         
                 });
           }
+          totalDescuento.change(function() {
+            var codigo=$(this).attr('data-desc');
+            var val=$(this).val();
+            if(val==""){
+                
+                porcentajeTotal.val(0);
+                montoTotal.val(0);
+                  
+               
+            }else{
+                
+                 var arrayRe=val.split("*");
+                var code=arrayRe[0];
+                var porc=arrayRe[1];
+                var mont=arrayRe[2];
+                var porTotal=Number((Number(porc)*Number(total.val()))/100);
+                
+               
+                $("#porcentajeTotal").val(porTotal.toFixed(2));
+                $("#montoTotal").val(mont);
+            }
+            var totalDes=total.val();
+            totalDes=Number(totalDes);
+            if(totalDescuento.val()!='' ){
+                if(montoTotal.val()<1){
+                        var por=Number(porcentajeTotal.val());
+                        totalDes=totalDes-por;
+                    }else{
+                        
+                        totalDes=Number(totalDes)-Number(montoTotal.val());
+                    }
+            }
+            desTotal.val(totalDes.toFixed(2));
+          
+
+        });
          function findRegister_Proforma(id)
         {
             
@@ -159,15 +203,38 @@
                     dFecEntrega.val(data.dFechaRegistro2);
                     _.each(response.data_repuesto, function (b) {
                         var modo_m=1;
-                         addRepuesto(b.idProducto,b.description,b.nPrecioUnitario,b.id_tipototal,b.descripcion,b.nCant,b.impuesto,modo_m,b.idDetalleRepues);
-                    });
+                        var porcen=Number(b.nPorcDescuento);
+                        var monto=Number(b.nDescuento);
+                        var idDescuento="";
+                        if(b.nIdDscto!=0){
+                            idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
+                         }
+                       
+                                //   (idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet,opera,idDescuento)
+                         addRepuesto(b.idProducto,b.description,b.nPrecioUnitario,b.id_tipototal,b.descripcioText,Number(b.nCant),b.impuesto,modo_m,b.idDetalleRepues,b.cOperGrat,idDescuento);
+                        });
 
 
                     _.each(response.data_servicio, function (b) {
                         var modo_m=1;
                         var vto=b.idProducto+'*'+b.description+'*'+b.nTotal+'*'+b.impuesto;
-                         addServicios(vto,b.id_tipototal,b.descripcion,modo_m,b.idDetalleServicio);
+                        var idDescuento="";
+                        var porcen=Number(b.nPorcDescuento);
+                        var monto=Number(b.nDescuento);
+                        if(b.nIdDscto!=0){
+                            idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
+                         }
+                         addServicios(vto,b.id_tipototal,b.descripcioText,modo_m,b.idDetalleServicio,b.nCant,b.cOperGrat,idDescuento);
+                         
+                        //  addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento);
                     });
+                    var destotal="";
+                    if(data[0].nIdDsctoPr!=0){
+                        var porcen=Number(data[0].porDes);
+                        var monto=Number(data[0].montoDes);
+                        destotal =data[0].nIdDsctoPr+"*"+porcen+'*'+monto;
+                     }
+                      totalDescuento.val(destotal).trigger("change");
                      btn_aprobarProforma.prop('disabled',false); 
                     modalProforma.modal("show");
                 } else {
@@ -239,13 +306,29 @@
                 });
                 return false;  
             }
-            if($("#total").val()==0){
-               AlertFactory.showWarning({
-                    title: '',
-                    message: 'El total no puede ser 0'
-                });
-                return false;  
-            }
+          
+            acodigos.forEach(function(val,index) {
+                var canr=$('#tr_cant'+val);
+                bval = bval && canr.required();
+            });
+            bcodigos.forEach(function(val,index) {
+                var canr=$('#tr_cantidadRe_'+val);
+                bval = bval && canr.required();
+            });
+            if($("#total").val()<0){
+                AlertFactory.showWarning({
+                     title: '',
+                     message: 'La operacion gratuita no puede ser menor a 0 '
+                 });
+                 return false;  
+             }
+             if($("#desTotal").val()<0){
+                AlertFactory.showWarning({
+                     title: '',
+                     message: 'El total no puede ser menor a 0'
+                 });
+                 return false;  
+             }
             if(bval){
 
                 var id_repuesto_array =[];
@@ -259,22 +342,38 @@
                     id_repuesto_cantidad[idx] = $(item).val();
                 });
                 id_repuesto_cantidad = id_repuesto_cantidad.join(',');
+               
+
+                var idDescuenRepues=[];
+                $.each($('.descuentosSelectRe'), function (idx, item) {
+                    var valo= $(item).val();
+                    var arrayRe=valo.split("*");
+                    var coded=arrayRe[0];
+                    idDescuenRepues[idx] =coded
+                });
+
+                idDescuenRepues = idDescuenRepues.join(',');
+
+                var id_repuesto_tipoTotal =[];
+                $.each($('.idTipoRepuesto_select'), function (idx, item) {
+                    id_repuesto_tipoTotal[idx] = $(item).val();
+                });
+                id_repuesto_tipoTotal = id_repuesto_tipoTotal.join(',');
+
                 var id_repuesto_precio =[];
                 $.each($('.precioRepuesto_m'), function (idx, item) {
                     id_repuesto_precio[idx] = $(item).val();
                 });
                 id_repuesto_precio = id_repuesto_precio.join(',');
+
+
                 var id_repuesto_impuesto =[];
                 $.each($('.totalImpuesto_repuesto'), function (idx, item) {
                     id_repuesto_impuesto[idx] = $(item).val();
                 });
                  id_repuesto_impuesto = id_repuesto_impuesto.join(',');
 
-                 var id_repuesto_tipoTotal =[];
-                $.each($('.idTipoRepuesto_select'), function (idx, item) {
-                    id_repuesto_tipoTotal[idx] = $(item).val();
-                });
-                id_repuesto_tipoTotal = id_repuesto_tipoTotal.join(',');
+               
 
                 var modo_array_repuesto =[];
                 $.each($('.modo_serRepuestoDet'), function (idx, item) {
@@ -282,6 +381,63 @@
                 });
                 modo_array_repuesto = modo_array_repuesto.join(',');
 
+                
+
+                var modo_array_repuesto =[];
+                $.each($('.modo_serRepuestoDet'), function (idx, item) {
+                    modo_array_repuesto[idx] = $(item).val();
+                });
+                modo_array_repuesto = modo_array_repuesto.join(',');
+
+                var operacionGraRep =[];
+                $.each($('.subtotal_repuesto '), function (idx, item) {
+                    operacionGraRep[idx] = $(item).val();
+                });
+                operacionGraRep = operacionGraRep.join(',');
+
+                var staOperacionRepu =[];
+                $.each($('.checkClassOpe'), function (idx, item) {
+                    var checkOpera= ($(this).prop('checked')) ? 'C' : 'S';
+                    staOperacionRepu[idx] = checkOpera;
+                });
+                staOperacionRepu = staOperacionRepu.join(',');
+
+                var staOperacion =[];
+                $.each($('.checkClass'), function (idx, item) {
+                    var checkOpera= ($(this).prop('checked')) ? 'C' : 'S';
+                    staOperacion[idx] = checkOpera;
+                });
+                staOperacion = staOperacion.join(',');
+
+                  var idDetalleGrupRep =[];
+                $.each($('.idDetalleRepuestoGrup'), function (idx, item) {
+                    idDetalleGrupRep[idx] = $(item).val();
+                });
+                idDetalleGrupRep = idDetalleGrupRep.join(',');
+
+                var montoRepu =[];
+                $.each($('.montoRe'), function (idx, item) {
+                  
+                    var montod= $(item).val();
+                    if(montod==""){
+                        montod=0;
+                    }
+                    montoRepu[idx] =montod;
+                });
+                montoRepu = montoRepu.join(',');
+
+                var porRepu =[];
+                $.each($('.porcentRe'), function (idx, item) {
+                   
+                    var porcen= $(item).val();
+                    if(porcen==""){
+                        porcen=0;
+                    }
+                    porRepu[idx] =porcen;
+                });
+                porRepu = porRepu.join(',');
+
+                /////////
                 var id_revision_array =[];
                 $.each($('.idRevision_select'), function (idx, item) {
                     id_revision_array[idx] = $(item).val();
@@ -294,6 +450,32 @@
                 });
                 id_tipo_array = id_tipo_array.join(',');
 
+                var cantidDeta =[];
+                $.each($('.cantOrde '), function (idx, item) {
+                    cantidDeta[idx] = $(item).val();
+                });
+                cantidDeta = cantidDeta.join(',');
+
+                var montoDeta =[];
+                $.each($('.monto'), function (idx, item) {
+                  
+                    var montod= $(item).val();
+                    if(montod==""){
+                        montod=0;
+                    }
+                    montoDeta[idx] =montod;
+                });
+                montoDeta = montoDeta.join(',');
+
+                 var idDescuenServ=[];
+                $.each($('.descuentosSelect'), function (idx, item) {
+                    var valo= $(item).val();
+                    var arrayRe=valo.split("*");
+                    var coded=arrayRe[0];
+                    idDescuenServ[idx] =coded
+                });
+
+                idDescuenServ = idDescuenServ.join(',');
                  var precio_array =[];
                 $.each($('.precio_m'), function (idx, item) {
                     precio_array[idx] = $(item).val();
@@ -319,6 +501,33 @@
                 });
                 idDetalleGrup = idDetalleGrup.join(',');
 
+                var porDeta =[];
+                $.each($('.porcent'), function (idx, item) {
+                   
+                    var porcen= $(item).val();
+                    if(porcen==""){
+                        porcen=0;
+                    }
+                    porDeta[idx] =porcen;
+                });
+                porDeta = porDeta.join(',');
+                 var idDescuenDeta=[];
+                $.each($('.descuentosSelect'), function (idx, item) {
+                  
+                    var valo= $(item).val();
+                    var arrayRe=valo.split("*");
+                    var coded=arrayRe[0];
+                    idDescuenDeta[idx] =coded
+                });
+
+                idDescuenDeta = idDescuenDeta.join(',');
+
+
+                var cantidDeta =[];
+                $.each($('.cantOrde '), function (idx, item) {
+                    cantidDeta[idx] = $(item).val();
+                });
+                cantidDeta = cantidDeta.join(',');
 
                 var idDetalleRepuestoGrup =[];
                 $.each($('.idDetalleRepuestoGrup'), function (idx, item) {
@@ -329,6 +538,20 @@
                 if($("#nConsecutivo").val()==""){
                     con=0;
                 };
+                var val= totalDescuento.val();
+                var arrayRe=val.split("*");
+                var coded=arrayRe[0];
+                var porcd=arrayRe[1];
+                var montd=arrayRe[2];
+             
+                var porcenTotal=porcentajeTotal.val();
+                if(porcenTotal==""){
+                    porcenTotal=0;
+                }
+                var montoTotals=montoTotal.val();
+                if(montoTotals==""){
+                    montoTotals=0;
+                }
                 var params = {
                     'cCod': cCodConsecutivo.val(),
                     'nCons': con,
@@ -353,13 +576,38 @@
                     'precio_array_servicio':precio_array,
                     'impuesto_servicio':impuesto_servicio,
                     'modo_array_servicio':modo_array_servicio,
-                 };
+                    'nDescuentoP':montoTotals,
+                    'nIdDsctoP':coded,
+                    'nPorcDescuentoP':porcenTotal,
+                    'nOperGratuitaP':total.val(),
+                    'montoRepu':montoRepu,
+                    'porRepu':porRepu,
+                    'idDescuenRepues':idDescuenRepues,
+                    'staOperacionRepu':staOperacionRepu,
+                    'operacionGraRep':operacionGraRep,
 
+                    'cantidDeta':cantidDeta,
+                    'montoDeta':montoDeta,
+                    'porDeta':porDeta,
+                    'cantidDeta':cantidDeta,
+                    'idDescuenDeta':idDescuenDeta,
+                    'staOperacion':staOperacion,
+
+                 };
+                 console.log("esto son los id");
+                 console.log(id_revision_array );
+
+                 console.log(id_repuesto_array );
+               console.log(idDetalleRepuestoGrup );
+               console.log(idDetalleGrup );
                
                 var id = (idProforma.val() === '') ? 0 : idProforma.val();
                     RESTService.updated('proformas/createProforma', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                        var data_p =response.res;
+                       var tes=response.test;
+                       console.log("test");
+                       console.log(response.test);
                        if(Number(data_p[0].Mensaje)){
                         $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");
@@ -410,6 +658,38 @@
             subtotal_mob.val(subB.toFixed(2));
             var totalfin=Number(subtotal_moa.val())+Number(subtotal_mob.val());
             total.val(totalfin.toFixed(2));
+           ;
+            var val=totalDescuento.val();
+            if(val==""){
+                
+                porcentajeTotal.val(0);
+                montoTotal.val(0);
+                  
+               
+            }else{
+                
+                 var arrayRe=val.split("*");
+                var code=arrayRe[0];
+                var porc=arrayRe[1];
+                var mont=arrayRe[2];
+                var porTotal=Number((Number(porc)*Number(total.val()))/100);
+                
+                $("#porcentajeTotal").val(porTotal.toFixed(2));
+                $("#montoTotal").val(mont);
+            }
+            var totalDes=total.val();
+            totalDes=Number(totalDes);
+            if(totalDescuento.val()!='' ){
+                if(montoTotal.val()<1){
+                        var por=Number(porcentajeTotal.val());
+                        totalDes=totalDes-por;
+                    }else{
+                        
+                        totalDes=Number(totalDes)-Number(montoTotal.val());
+                    }
+            }
+            desTotal.val(totalDes.toFixed(2));
+            
         }
           function clean_totale(){
             mo_revision.val(0);
@@ -448,7 +728,7 @@
              RESTService.updated('proformas/deleteDetalleMO', id, params, function(response)  {
                  if (!_.isUndefined(response.status) && response.status) {
                           var data=response.dato;
-                            console.log(data);
+                            
                             if(data[0].Mensaje!=''){
                                   AlertFactory.textType({
                                     title: '',
@@ -458,13 +738,10 @@
                                   cCodConsecutivo_orden.data("prev",cCodConsecutivo_orden.val()); 
                                    modalDeleteDetalle.modal("hide");
                             }else{
-                                 // console.log(response.data);
-                                 // console.log(response.datad);
+                               
                                 table_servicios.html("");
                                 cCodConsecutivo_orden.data("prev",cCodConsecutivo_orden.val()); 
-                                // if(id_tipocli.val()!=''){
-                                //    id_cliente_tipo_or.val(id_tipocli.val()).trigger("change"); 
-                                // }
+                                
                               AlertFactory.textType({
                                     title: '',
                                     message: 'Repuestos y  servicios se eliminaron correctamente',
@@ -513,7 +790,9 @@
                     var precio=totRep[1];
                     var prodDescrip=totRep[2];
                     var impuesto=totRep[3];
-                    addRepuesto(idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet);
+                    var opera='S';
+                    var idDescuento="";
+                    addRepuesto(idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet,opera,idDescuento);
                 }
         });
          tipo_totales_slec.change(function () {
@@ -523,7 +802,10 @@
                 if(vto!='' && tipoTo!=''){
                     var modo_ser=0;
                     var iddet=0;
-                    addServicios(vto,tipoTo,tipoText,modo_ser,iddet);
+                    var cant=1;
+                    var opera='S';
+                    var idDescuento="";
+                    addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento);
                 }
         });
         function calcular_impueso(precio,cantidad){
@@ -534,28 +816,113 @@
         function calcular_total_repuesto(){
             var totalt=0;
             $("#table_repuestos tr").each(function(){
-                var cantidadt=Number($(this).find("td:eq(1)").children("input").val());
+                var cantidadt=$(this).find("td:eq(1)").children("input").val();
                 var preciot=Number($(this).find("td:eq(2)").children("input").val());
-                var impuestot=Number($(this).find("td:eq(3)").children("input").val());
-                var subtota=(cantidadt*preciot)+impuestot;
-                $(this).find("td:eq(4)").children("input").val(subtota.toFixed(2));
+                var estadoImpues=$(this).find("td:eq(3)").children("input").attr('data-impuestoRepuesto');
+                var impu=0;
+                if(estadoImpues=="1"){
+                    impu=Number((Number(preciot)*Number(cantidadt))*((Number(igv)/100)));
+                };
+                var porce=Number($(this).find("td:eq(6)").children("input").val());
+                var monto=Number($(this).find("td:eq(7)").children("input").val());
+                var subtota=(cantidadt*preciot)+(impu);
+                $(this).find("td:eq(3)").children("input").val(impu.toFixed(2));
+                var codigo=$(this).find("td:eq(1)").children("input").attr('data-cantCoRe');
+                
+              
+               if($("#id_descRe_"+codigo).prop("disabled")){
+                            console.log("check repuestop");
+                          
+                            subtota=0;
+                        }else{
+                            console.log("check repuesto");
+                            if(porce!='0'){
+                                subtota=subtota-Number(porce);
+                            }else{
+                                subtota=subtota-Number(monto);
+                            }
+                        };
+               
+                $(this).find("td:eq(8)").children("input").val(subtota.toFixed(2));
                 totalt=totalt+subtota;
+                
             });
-       
+             totales_nuevo();
             totalDetalle.val(totalt.toFixed(2));
+            
+            var totalDes=totalt;
+            desTotal.val(totalDes.toFixed(2));
+            totalDescuento.val("").trigger("change");
         }
         function calcular_total_MO(){
             var totalt=0;
             $("#table_servicios tr").each(function(){
-                var cantidadt=1;
-                var preciot=Number($(this).find("td:eq(1)").children("input").val());
-                var impuestot=Number($(this).find("td:eq(2)").children("input").val());
-                var subtota=(cantidadt*preciot)+impuestot;
-                $(this).find("td:eq(3)").children("input").val(subtota.toFixed(2));
+                var cantidadt=$(this).find("td:eq(1)").children("input").val();
+                var preciot=Number($(this).find("td:eq(2)").children("input").val());
+                var estadoImpues=$(this).find("td:eq(3)").children("input").attr('data-impuestoSer');
+                var impu=0;
+               
+                if(estadoImpues=="1"){
+                    impu=Number((Number(preciot)*Number(cantidadt))*((Number(igv)/100)));
+                };
+                var porce=Number($(this).find("td:eq(6)").children("input").val());
+                var monto=Number($(this).find("td:eq(7)").children("input").val());
+                var subtota=(cantidadt*preciot)+(impu);
+                $(this).find("td:eq(3)").children("input").val(impu.toFixed(2));
+                var codigo=$(this).find("td:eq(1)").children("input").attr('data-codigoC'); 
+               console.log(codigo);
+               console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+                        if($("#id_desc_"+codigo).prop("disabled")){
+                            console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+                          
+                            subtota=0;
+                        }else{
+                            console.log("zxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                            if(porce!='0'){
+                                subtota=subtota-Number(porce);
+                            }else{
+                                subtota=subtota-Number(monto);
+                            }
+                        };
+                    
+           
+              
+                
+                $(this).find("td:eq(8)").children("input").val(subtota.toFixed(2));
                 totalt=totalt+subtota;
             });
-       
+
+            totales_nuevo();
             totalMO.val(totalt.toFixed(2));
+            var totalDes=totalt;
+           
+            desTotal.val(totalDes.toFixed(2));
+             totalDescuento.val("").trigger("change");
+        }
+        
+        function  totales_nuevo(){
+            clean_totale()
+             $("#table_servicios tr").each(function(){
+                var data_prec='data-precio';
+                var tr_pre='tr_subtotalSer';
+                var tipoTo=$(this).find("td:eq(1)").children("input").attr('data-tipoto');
+                var code=$(this).find("td:eq(1)").children("input").attr('data-codigoC'); 
+                var precio_ant=0;
+                var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
+                calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
+                
+            });
+            $("#table_repuestos tr").each(function(){
+                var data_prec='data-precio';
+                var tr_pre='tr_subtotalSer';
+                var tipoTo=$(this).find("td:eq(1)").children("input").attr('data_idTipoCanti');
+                var code=$(this).find("td:eq(1)").children("input").attr('data-cantCoRe'); 
+                var precio_ant=0;
+                var precio_act=$(this).closest("tr").find("td:eq(8)").children("input").val();
+                calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
+                
+            });
+             
         }
         function calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec){
             if(tipoTo=='1'){
@@ -605,21 +972,123 @@
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
                            $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            otros_rep.val(new_trp.toFixed(2));
+                            otros_rep.val(mont.toFixed(2));
                          }
         }
-        function  addRepuesto(idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet){
+        function cambio(codigo){
+              
+
+           if($("#pOper"+codigo).prop('checked')){
+          
+             $("#id_desc_"+codigo).prop("disabled",false);
+             calcular_total_MO();
+           
+             sumar_key();
+           }else{
+
+            console.log("entroA");
+                $("#id_desc_"+codigo).val("").trigger('change');
+                $("#id_desc_"+codigo).prop("disabled",true);
+                calcular_total_MO();
+                sumar_key();
+                
+           
+
+
+           }
+            
+        }
+        function cambio2(codigo){
+        var code=codigo;
+        console.log(code);
+        console.log("codigo check");
+            if($("#pOperRe"+code).prop('checked')){
+                console.log("entro al disabled");
+                $("#id_descRe_"+code).prop("disabled",false);
+            }else{
+                $("#id_descRe_"+code).val("").trigger('change');
+                $("#id_descRe_"+code).prop("disabled",true);
+            }
+            calcular_total_repuesto();
+            sumar_key();
+        }
+        function addDescuentosRepuestos(codigo,idDescuento){
+             var selectDescuento=$("#id_descRe_"+codigo);
+             selectDescuento.select2();
+            var hoy = new Date();
+            var hAnio=hoy.getFullYear();
+            var hmes=hoy.getMonth()+1;
+            if(Number(hmes)<10){
+                hmes='0'+String(hmes);
+            }
+
+            var hdia=hoy.getDate();
+            if(Number(hdia)<10){
+                hdia='0'+String(hdia);
+            }
+            var actu=hAnio+'-'+hmes+'-'+hdia;
+
+            selectDescuento.append('<option value="" selected>Seleccionar</option>');
+              _.each(descuentos, function(item) {
+                var mo=idMoneda.val();
+                
+                if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
+                       var por=Number(item.nPorcDescuento);
+                       var monto=Number(item.nMonto);
+                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
+                        if(item.dFecIni<=actu && item.dFecFin>actu){
+                            var valDes=item.id+'*'+por+'*'+monto;
+                            console.log(valDes,idDescuento);
+                            // if(valDes==idDescuento){
+                            //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
+                            // }else{
+                                selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                            // }
+                            
+                             
+                        }
+                    }
+                }
+                $("#id_descRe_"+codigo).val(idDescuento).trigger("change");
+                
+            }); 
+        }
+        function  addRepuesto(idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet,opera,idDescuento){
             var code=idRepues;
             var producto=prodDescrip;
             var precio=precio;
+            var porcentajeid=0;
+            var montoid=0;
             var precio_cam=precio;
+            var check="";
+            var disab="";
+            if(opera=="C"){
+                check="checked";
+                disab="disabled";
+            }
             var preci_t=Number(precio).toFixed(2);
-           
             var impuesto_can=0;
             if(impuesto=='1'){
                 impuesto_can=calcular_impueso(preci_t,cantidad);
             };
-             var subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
+            console.log("aaaaaaaaaaaaaaaaaaaa");
+            console.log(opera);
+            console.log("bbbbbbbbbbbbbbbbbb");
+            console.log(check);
+            console.log("ccccccccccccc");
+            console.log(disab);
+            
+            var subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
+            if(idDescuento!=""){
+                var arrayDe=idDescuento.split("*");
+                 porcentajeid=arrayDe[1];
+                 porcentajeid=Number(subt)*Number(porcentajeid)/100;
+                 porcentajeid=porcentajeid.toFixed(2);
+                 montoid=arrayDe[2];
+            }
+            console.log("gggggggggggg");
+            console.log(idDescuento);
+
             if ($('#tr_rep_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
@@ -627,14 +1096,25 @@
                 });
                 return false;
             }
+            bcodigos.push(code);
              var tr = $('<tr id="tr_rep_' + code + '"></tr>');
              var td1 = $('<td>' + producto + '</td>');
              var tdcant = $('<td></td>');
              var tda = $('<td></td>');
+             var tdImpu = $('<td></td>');
              var tsImp= $('<td></td>');
+             var tdOper = $('<td></td>');
              var tdSubT= $('<td></td>');
              var tdb = $('<td></td>');
+             var tdPorcentaje = $('<td></td>');
+             var tdMonto = $('<td></td>');
+             var tdim = $('<td></td>');
              var td2 = $('<td class="text-center"></td>');
+             var ngratuito = $('<input type="hidden" id="gratRe'+code+'" class="nGratuito form-control input-sm"  value=""/>');
+             var chek=$(' <div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheckRe="'+code+'" data-tipotoChekRe="'+tipoTo+'" class="checkClassOpe" type="checkbox" id="pOperRe'+code+'" '+check+'  /> </label></div>');
+             var monto=$('<input type="type" id="montoRe_'+code+'" class="montoRe form-control input-sm"  value="'+montoid+'"  readonly/>');
+             var porc=$('<input type="type" id="porcRe_'+code+'" class="porcentRe form-control input-sm"  value="'+porcentajeid+'"  readonly/>');
+             var inpDes=$('<select id="id_descRe_'+code+'" data-tipotoSeRe="'+tipoTo+'"  class="descuentosSelectRe form-control input-sm" data-descRe="'+code+'"  style="width: 100%"  '+disab+' ></select>');
              var idRepuesto_input = $('<input type="hidden" class="idRepuesto_select form-control input-sm"  value="'+code+'" />');
              var idTipo_input = $('<input type="hidden" class="idTipoRepuesto_select form-control input-sm"  value="'+tipoTo+'" />');
              var idGrupDe_input= $('<input type="hidden" class="idDetalleRepuestoGrup form-control input-sm"  value="'+iddet+'" />');
@@ -642,73 +1122,103 @@
              var tipototal = $('<input class="total_repuesto form-control input-sm" data-idTipoRepuesto="'+tipoTo+'" data-idS="' + code + '" id="tr_pre' + code + '"  value="'+tipoText+'" readonly/>');
              var impuestoRe = $('<input type="number" class="totalImpuesto_repuesto form-control input-sm" data-impuestoRepuesto="'+impuesto+'"  id="tr_impu' + code + '"  value="'+impuesto_can+'" readonly/>');
              var subtotal_input = $('<input type="number" class="subtotal_repuesto form-control input-sm" data-Subtotal="'+subt+'"  id="tr_subtotal' + code + '"  value="'+subt.toFixed(2)+'" readonly/>');
-             var cantidad = $('<input type="number" min="1" class="cantidad_m form-control input-sm"  data_idTipoCanti="'+tipoTo+'" data-cantidad="' +cantidad+ '" id="tr_cantidad_'+code+'" value="' +cantidad+ '"  />');
-             var precio = $('<input type="number" min="1" class="precioRepuesto_m form-control input-sm"  data_idTipoPresRepuesto="'+tipoTo+'" id="tr_prec_Repuesto'+code+'" data-precioRepuesto="' +preci_t+ '" value="' +preci_t+ '"  />');
+             var cantidad = $('<input type="text" onkeypress="return soloNumeros(event)" class="cantidad_m form-control input-sm" data-cantCoRe="'+code+'"  data_idTipoCanti="'+tipoTo+'"  data-cantImpues="'+impuesto+'" data-cantidad="' +cantidad+ '" id="tr_cantidadRe_'+code+'" value="' +cantidad+ '"  />');
+             var precio = $('<input type="number" min="1" class="precioRepuesto_m form-control input-sm" data-codigoCanRe="'+code+'"  data_idTipoPresRepuesto="'+tipoTo+'" id="tr_prec_Repuesto'+code+'" data-precioRepuesto="' +preci_t+ '" value="' +preci_t+ '"  readonly/>');
              var btn = $('<button class="btn btn-danger btn-xs deltotalRepues" data-idedetRepues="'+iddet+'" data_idTipoDelRepues="'+tipoTo+'"   data-idRepues="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
+             tdImpu.append(inpDes);
+             tdOper.append(chek);
+             tdPorcentaje.append(porc);
+             tdcant.append(cantidad);
+             tdMonto.append(monto);
              tda.append(precio);
              tsImp.append(impuestoRe);
              tdcant.append(cantidad);
              tdSubT.append(subtotal_input);
              tdb.append(tipototal);
-             td2.append(btn).append(idRepuesto_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
-             tr.append(td1).append(tdcant).append(tda).append(tsImp).append(tdSubT).append(tdb).append(td2);
+             td2.append(btn).append(idRepuesto_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input).append(ngratuito);
+             tr.append(td1).append(tdcant).append(tda).append(tsImp).append(tdOper).append(tdImpu).append(tdPorcentaje).append(tdMonto).append(tdSubT).append(tdb).append(td2);
              table_repuestos.append(tr);
+
              cCodConsecutivo_orden.data("prev",cCodConsecutivo_orden.val()); 
              var precio=precio_cam;
-             var precio_antT=0;
-             var precio_actT=Number(precio)+Number(impuesto_can);
-             var tr_pre='tr_prec_Repuesto';
-             var data_prec='data-precioRepuesto';
-             calcular_precio_totales(precio_antT,precio_actT,tipoTo,code,tr_pre,data_prec);
-             sumar_key(); 
-             calcular_total_repuesto();
+             addDescuentosRepuestos(code,idDescuento);
+            calcular_total_repuesto();
+            sumar_key(); 
              articulos_repuestos.val("").trigger("change");
              tipo_totales_slec2.val("").trigger("change");
-                $("#tr_prec_Repuesto"+code).keypress(function(e) {
-                 var tecl = (e.keyCode ? e.keyCode : e.which);
-                    if(tecl==13){
-                    var tipoTo =$(this).attr('data_idTipoPresRepuesto');
-                    var precio_ant =$(this).attr('data-precioRepuesto');
-                    var impuEstado=$("#tr_impu"+code).attr('data-impuestoRepuesto');
-                    var impuesto_can=0;
-                    var cantidad=Number($("#tr_cantidad_"+code).val());
-                    var precio_act=$(this).val()*cantidad;
-                    if(impuEstado=='1'){
-                        var preci=$(this).val();
-                        impuesto_can=calcular_impueso(preci,cantidad);
-                    }
-                    precio_act=Number(precio_act)+Number(impuesto_can);
-                    $("#tr_impu"+code).val(impuesto_can);
+                
+               
+                $('.cantidad_m').keyup(function (e) {
                     calcular_total_repuesto();
-                    var tr_pre='tr_prec_Repuesto';
-                    var data_prec='data-precioRepuesto';
-                    calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
-                    sumar_key(); 
+                    sumar_key();
+                });
+               
+                $(".checkClassOpe").click(function() {  
+                    var codigo2=$(this).closest("tr").find("td:eq(2)").children("input").attr('data-codigoCanRe');
+                 
+                    cambio2(codigo2);
+                }); 
+                 $('#pOperRe'+code).iCheck({
+                    checkboxClass: 'icheckbox_square-green'
+                }).on('ifChanged', function (event) {
+                    $(event.target).click();
+                    console.log("vuelta2");
+                   
+                });
+                //  $("#tr_cantidad_"+code).keypress(function(e) {
+
+                //  var tecl = (e.keyCode ? e.keyCode : e.which);
+                //     if(tecl==13){
+                //     var tipoTo =$("#tr_prec_Repuesto"+code).attr('data_idTipoPresRepuesto');
+                //     var precio_ant =$("#tr_prec_Repuesto"+code).attr('data-precioRepuesto');
+                //     var impuEstado=$("#tr_impu"+code).attr('data-impuestoRepuesto');
+                //     var impuesto_can=0;
+                //     var cantidad=Number($("#tr_cantidad_"+code).val());
+                //     var precio_act=$("#tr_prec_Repuesto"+code).val()*cantidad;
+                //     if(impuEstado=='1'){
+                //         var preci=$("#tr_prec_Repuesto"+code).val();
+                //         impuesto_can=calcular_impueso(preci,cantidad);
+                //     }
+                //     precio_act=Number(precio_act)+Number(impuesto_can);
+                //     $("#tr_impu"+code).val(impuesto_can);
+                //     calcular_total_repuesto();
+                //     var tr_pre='tr_prec_Repuesto';
+                //     var data_prec='data-precioRepuesto';
+                //     calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
+                //     sumar_key(); 
+                //     }
+                //  });
+                $(".descuentosSelectRe" ).change(function() {
+                    var codigo=$(this).attr('data-descRe');
+                    var val=$(this).val();
+                    var arrayRe=val.split("*");
+                    var code=arrayRe[0];
+                    var porc=arrayRe[1];
+                    var mont=arrayRe[2];
+                    if($(this).val()!=""){
+                        if(porc!='0'){
+                            var cantidadt=$(this).closest("tr").find("td:eq(1)").children("input").val();
+                            var preciot=Number($(this).closest("tr").find("td:eq(2)").children("input").val());
+                            var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
+                            var subtota=(cantidadt*preciot)+(impuestot);
+                            var porTotal=Number((Number(porc)*Number(subtota))/100);
+                            $("#porcRe_"+codigo).val(porTotal.toFixed(2));
+                            $("#montoRe_"+codigo).val(0);
+                        }else{
+                            $("#montoRe_"+codigo).val(mont);
+                            $("#porcRe_"+codigo).val(0);
+                        }
+                    }else{
+                        $("#montoRe_"+codigo).val("");
+                        $("#porcRe_"+codigo).val("");
                     }
-                 });
-                 $("#tr_cantidad_"+code).keypress(function(e) {
-                 var tecl = (e.keyCode ? e.keyCode : e.which);
-                    if(tecl==13){
-                    var tipoTo =$("#tr_prec_Repuesto"+code).attr('data_idTipoPresRepuesto');
-                    var precio_ant =$("#tr_prec_Repuesto"+code).attr('data-precioRepuesto');
-                    var impuEstado=$("#tr_impu"+code).attr('data-impuestoRepuesto');
-                    var impuesto_can=0;
-                    var cantidad=Number($("#tr_cantidad_"+code).val());
-                    var precio_act=$("#tr_prec_Repuesto"+code).val()*cantidad;
-                    if(impuEstado=='1'){
-                        var preci=$("#tr_prec_Repuesto"+code).val();
-                        impuesto_can=calcular_impueso(preci,cantidad);
-                    }
-                    precio_act=Number(precio_act)+Number(impuesto_can);
-                    $("#tr_impu"+code).val(impuesto_can);
+                   
+                    
                     calcular_total_repuesto();
-                    var tr_pre='tr_prec_Repuesto';
-                    var data_prec='data-precioRepuesto';
-                    calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
-                    sumar_key(); 
-                    }
-                 });
-          
+                          sumar_key();
+                          
+                  
+                });
              $('.deltotalRepues').click(function (e) {
                 var code = $(this).attr('data-idRepues');
                 var idTipo = $(this).attr('data_idTipoDelRepues');
@@ -796,19 +1306,40 @@
                 e.preventDefault();
             });
         }
-        function addServicios(vto,tipoTo,tipoText,modo_ser,iddet){
+        function addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento){
             var arrayRe=vto.split("*");
+            var porcentajeid=0;
+            var montoid=0;
             var code=arrayRe[0];
             var producto=arrayRe[1];
             var precio=arrayRe[2];
             var impuesto=arrayRe[3];
             var preci_t=Number(precio).toFixed(2);
             var impuesto_can=0;
-            var cantidad=1;
+            var cantidad=cant;
+            cantidad=Number(cantidad);
+            console.log("----");
+            console.log(opera);
+            console.log(idDescuento);
             if(impuesto=='1'){
                 impuesto_can=calcular_impueso(preci_t,cantidad);
             };
-            var subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
+            
+            var check="";
+            var disab="";
+            if(opera=="C"){
+                check="checked";
+                disab="disabled";
+            }
+            var subt=0;
+             subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
+            if(idDescuento!=""){
+                var arrayDe=idDescuento.split("*");
+                 porcentajeid=arrayDe[1];
+                 porcentajeid=Number(subt)*Number(porcentajeid)/100;
+                 porcentajeid=porcentajeid.toFixed(2);
+                 montoid=arrayDe[2];
+            }
             if ($('#tr_b_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
@@ -816,72 +1347,136 @@
                 });
                 return false;
             }
+
+            console.log("ver precio mal ");
+            console.log(subt.toFixed(2));
+            acodigos.push(code);
              var tr = $('<tr id="tr_b_' + code + '"></tr>');
              var td1 = $('<td>' + producto + '</td>');
+             var tdCant= $('<td></td>');
              var tda = $('<td></td>');
+             var tdImpu = $('<td></td>');
+             var tdOper = $('<td></td>');
              var tdb = $('<td></td>');
+             var tdim = $('<td></td>');
+             var tdPorcentaje = $('<td></td>');
+             var tdMonto = $('<td></td>');
              var tdim = $('<td></td>');
              var tdsub = $('<td></td>');
              var td2 = $('<td class="text-center"></td>');
-             var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'" />');
-             var impuestoRe = $('<input type="number" class="totalImpuesto_servicio form-control input-sm" data-impuestoSer="'+impuesto+'"  id="tr_impSer' + code + '"  value="'+impuesto_can+'" readonly/>');
-             var subtotal_input = $('<input type="number" class="subtotal_repuesto form-control input-sm" data-SubtotalSer="'+subt+'"  id="tr_subtotalSer' + code + '"  value="'+subt.toFixed(2)+'" readonly/>');
+             var ngratuito = $('<input type="hidden" id="grat'+code+'" class="nGratuito form-control input-sm"  value=""/>');
+             var preVer = $('<input type="text" class="form-control input-sm"  value="'+preci_t+'"  />');
+             var cantidad = $('<input type="text" onkeypress="return soloNumeros(event)" class="cantOrde form-control input-sm" data-cant="'+impuesto+'"  id="tr_cant' + code + '" data-codigoC="'+code+'" data-tipoto="'+tipoTo+'" value="'+cantidad+'"/>');
+             var chek=$(' <div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="'+code+'" data-tipotoChek="'+tipoTo+'" class="checkClass" type="checkbox" id="pOper'+code+'" '+check+'  /> </label></div>');
+             var monto=$('<input type="type" id="monto_'+code+'" class="monto form-control input-sm"  value="'+montoid+'"  readonly/>');
+             var porc=$('<input type="type" id="porc_'+code+'" class="porcent form-control input-sm"  value="'+porcentajeid+'"  readonly/>');
+             var inpDes=$('<select id="id_desc_'+code+'" data-tipotoSe="'+tipoTo+'"  class="descuentosSelect form-control input-sm" data-desc="'+code+'"  style="width: 100%"  '+disab+' ></select>');
+             var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'"  />');
+             var impuestoRe = $('<input type="number" class="totalImpuesto_servicio form-control input-sm" data-impuestoSer="'+impuesto+'"  id="tr_impSer' + code + '" data-imp="'+impuesto_can+'" value="'+impuesto_can+'" readonly/>');
+             var subtotal_input = $('<input type="number" class="subtotal_servicio form-control input-sm" data-SubtotalSer="'+subt+'" data-precio="'+subt.toFixed(2)+'"  id="tr_subtotalSer'+code+'"  value="'+subt.toFixed(2)+'" readonly/>');
              var idTipo_input = $('<input type="hidden" class="idTipo_select form-control input-sm"  value="'+tipoTo+'" />');
              var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
              var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS2="' + code + '"  value="'+tipoText+'" readonly/>');
-             var precio = $('<input type="number" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'" data-precio="' +preci_t+ '" value="' +preci_t+ '"  />');
+             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"  readonly/>');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
+             tdImpu.append(inpDes);
+             tdOper.append(chek);
+             tdPorcentaje.append(porc);
+             tdCant.append(cantidad);
+             tdMonto.append(monto);
              tda.append(precio);
              tdb.append(tipototal);
              tdim.append(impuestoRe);
              tdsub.append(subtotal_input);
-             td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input);
-             tr.append(td1).append(tda).append(tda).append(tdim).append(tdsub).append(tdb).append(td2);
+             tda.append(precio);
+             td2.append(btn).append(idRevision_input).append(idTipo_input).append(idinput_modoser).append(idGrupDe_input).append(ngratuito);
+             
+             tr.append(td1).append(tdCant).append(tda).append(tdim).append(tdOper).append(tdImpu).append(tdPorcentaje).append(tdMonto).append(tdsub).append(tdb).append(td2);
              table_servicios.append(tr);
-             cCodConsecutivo_orden.data("prev",cCodConsecutivo_orden.val()); 
+            //  idMoneda.data("prev",idMoneda.val()); 
+            //  id_tipocli.data("prev",id_cliente_tipo_or.val()); 
              var precio=arrayRe[2];
              var precio_antT=0;
              var precio_actT=Number(precio)+Number(impuesto_can);
              var data_prec='data-precio';
-             var tr_pre='tr_prec_';
-             calcular_precio_totales(precio_antT,precio_actT,tipoTo,code,tr_pre,data_prec);
-             sumar_key(); 
+             var tr_pre='tr_subtotalSer';
+             if(idProforma!=""){
+                if(opera=="C"){
+                precio_actT=0;
+                 }else{
+                     console.log(cantidad,precio,impuesto_can,porcentajeid,montoid)
+                    precio_actT=(Number(cant)*Number(precio))+Number(impuesto_can)-Number(porcentajeid)-Number(montoid);
+                    precio_actT=precio_actT.toFixed(2);
+                 };
+             }
+             console.log("precios actuales ver");
+             console.log(precio_antT,precio_actT);
+             addDescuentos(code,idDescuento);
+             
+           
              calcular_total_MO();
-            servicios_select.val("").trigger("change");
-            tipo_totales_slec.val("").trigger("change");
-            //  var totales_table=$("#tr_pre"+code);
-            // totales_table.append('<option value="" selected>Seleccionar </option>');
-            // _.each(totales, function(item) {
-            // totales_table.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
-            // });
-             // $('.total_revision').change(function (e) {
-             //    var code = $(this).val();
-
-             // });
-                $("#tr_prec_"+code).keypress(function(e) {
-                 var tecl = (e.keyCode ? e.keyCode : e.which);
-                    if(tecl==13){
-                    var tipoTo =$(this).attr('data_idTipoPres');
-                    var precio_ant =$(this).attr('data-precio');
-                    var precio_act=$(this).val();
-                    var impuEstado=$("#tr_impSer"+code).attr('data-impuestoSer');
-                    var impuesto_can=0;
-                    var cantidad=1;
-                    if(impuEstado=='1'){
-                        impuesto_can=calcular_impueso(precio_act,cantidad);
-                    }
-                    precio_act=Number(precio_act)+Number(impuesto_can);
-                    $("#tr_impSer"+code).val(impuesto_can);
-                    var data_prec='data-precio';
-                    var tr_pre='tr_prec_';
-                    calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec);
+             sumar_key(); 
+             
+           
+          
+                $('.checkClass').change(function (e) {
+                  console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                }); 
+                $('.checkClass').on('change', function() {
+                    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                });
+                $(".checkClass").click(function() {  
+                    var codigo2=$(this).closest("tr").find("td:eq(1)").children("input").attr('data-codigoC');
+                 
+                    cambio(codigo2);
+                }); 
+                $('#pOper'+code).iCheck({
+                    checkboxClass: 'icheckbox_square-green'
+                }).on('ifChanged', function (event) {
+                    $(event.target).click();
+                    console.log("vueltaa");
+                   
+                });
+                
+        
+            $('.cantOrde').keyup(function (e) {
                     calcular_total_MO();
                     sumar_key();
-
+                  
+            });
+            $(".descuentosSelect" ).change(function() {
+                var codigo=$(this).attr('data-desc');
+                var val=$(this).val();
+                var arrayRe=val.split("*");
+                var code=arrayRe[0];
+                var porc=arrayRe[1];
+                var mont=arrayRe[2];
+                if($(this).val()!=""){
+                    if(porc!='0'){
+                        console.log("entro porcentaje");
+                        var cantidadt=$(this).closest("tr").find("td:eq(1)").children("input").val();
+                        var preciot=Number($(this).closest("tr").find("td:eq(2)").children("input").val());
+                        var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
+                        var subtota=(cantidadt*preciot)+(impuestot);
+                        var porTotal=Number((Number(porc)*Number(subtota))/100);
+                        $("#porc_"+codigo).val(porTotal.toFixed(2));
+                        $("#monto_"+codigo).val(0);
+                    }else{
+                        $("#monto_"+codigo).val(mont);
+                        $("#porc_"+codigo).val(0);
                     }
-                 });
-          
+                }else{
+                    $("#monto_"+codigo).val("");
+                    $("#porc_"+codigo).val("");
+                }
+                
+                calcular_total_MO();
+                sumar_key();
+
+            });
+            servicios_select.val("").trigger("change");
+            tipo_totales_slec.val("").trigger("change");
              $('.deltotal').click(function (e) {
                 var code = $(this).attr('data-id');
                 var idTipo = $(this).attr('data_idTipoDel');
@@ -923,44 +1518,45 @@
                         });
                     }else{
                         var idcod='#tr_' + code;
-                    var precio_borrar=$("#tr_subtotalSer"+code).val();
-                if(idTipo=='1'){
-                    var mo_r=mo_revision.val();
-                    var new_mor=Number(mo_r)-Number(precio_borrar);
-                    mo_revision.val(new_mor.toFixed(2));
-                 }else if(idTipo=='2'){
-                    var mo_m=mo_mecanica.val();
-                    var new_mo_m=Number(mo_m)-Number(precio_borrar);
+                //     var precio_borrar=$("#tr_subtotalSer"+code).val();
+                // if(idTipo=='1'){
+                //     var mo_r=mo_revision.val();
+                //     var new_mor=Number(mo_r)-Number(precio_borrar);
+                //     mo_revision.val(new_mor.toFixed(2));
+                //  }else if(idTipo=='2'){
+                //     var mo_m=mo_mecanica.val();
+                //     var new_mo_m=Number(mo_m)-Number(precio_borrar);
                     
-                    mo_mecanica.val(new_mo_m.toFixed(2));
-                 }else if(idTipo=='3'){
-                    var mo_tr=terceros.val();
-                    var new_mo_tr=Number(mo_tr)-Number(precio_borrar);
-                    terceros.val(new_mo_tr.toFixed(2));
-                 }else if(idTipo=='4'){
-                    var mo_otr=otros_mo.val();
-                    var new_mo_otr=Number(mo_otr)-Number(precio_borrar);
-                    otros_mo.val(new_mo_otr.toFixed(2));
-                 }else if(idTipo=='5'){
-                    var mo_rp=repuestos.val();
-                    var new_mo_rp=Number(mo_rp)-Number(precio_borrar);
-                    repuestos.val(new_mo_rp.toFixed(2));
-                 }else if(idTipo=='6'){
-                    var mo_ac=accesorios.val();
-                    var new_mo_ac=Number(mo_ac)-Number(precio_borrar);
-                    accesorios.val(new_mo_ac.toFixed(2));
-                 }else if(idTipo=='7'){
-                    var mo_lub=lubricantes.val();
-                    var new_mo_lub=Number(mo_lub)-Number(precio_borrar);
-                    lubricantes.val(new_mo_lub.toFixed(2));
-                 }else if(idTipo=='8'){
-                    var mo_trp=otros_rep.val();
-                    var new_trp=Number(mo_trp)-Number(precio_borrar);
-                    otros_rep.val(new_trp.toFixed(2));
-                 }
-                    sumar_key(); 
+                //     mo_mecanica.val(new_mo_m.toFixed(2));
+                //  }else if(idTipo=='3'){
+                //     var mo_tr=terceros.val();
+                //     var new_mo_tr=Number(mo_tr)-Number(precio_borrar);
+                //     terceros.val(new_mo_tr.toFixed(2));
+                //  }else if(idTipo=='4'){
+                //     var mo_otr=otros_mo.val();
+                //     var new_mo_otr=Number(mo_otr)-Number(precio_borrar);
+                //     otros_mo.val(new_mo_otr.toFixed(2));
+                //  }else if(idTipo=='5'){
+                //     var mo_rp=repuestos.val();
+                //     var new_mo_rp=Number(mo_rp)-Number(precio_borrar);
+                //     repuestos.val(new_mo_rp.toFixed(2));
+                //  }else if(idTipo=='6'){
+                //     var mo_ac=accesorios.val();
+                //     var new_mo_ac=Number(mo_ac)-Number(precio_borrar);
+                //     accesorios.val(new_mo_ac.toFixed(2));
+                //  }else if(idTipo=='7'){
+                //     var mo_lub=lubricantes.val();
+                //     var new_mo_lub=Number(mo_lub)-Number(precio_borrar);
+                //     lubricantes.val(new_mo_lub.toFixed(2));
+                //  }else if(idTipo=='8'){
+                //     var mo_trp=otros_rep.val();
+                //     var new_trp=Number(mo_trp)-Number(precio_borrar);
+                //     otros_rep.val(new_trp.toFixed(2));
+                //  }
+                 
                     $('#tr_b_' + code).remove();
                     calcular_total_MO();
+                       sumar_key(); 
                 }
 
 
@@ -970,6 +1566,46 @@
             });
 
         }
+        function addDescuentos(codigo,idDescuento){
+            var selectDescuento=$("#id_desc_"+codigo);
+            selectDescuento.select2();
+           var hoy = new Date();
+           var hAnio=hoy.getFullYear();
+           var hmes=hoy.getMonth()+1;
+           if(Number(hmes)<10){
+               hmes='0'+String(hmes);
+           }
+
+           var hdia=hoy.getDate();
+           if(Number(hdia)<10){
+               hdia='0'+String(hdia);
+           }
+           var actu=hAnio+'-'+hmes+'-'+hdia;
+
+           selectDescuento.append('<option value="" selected>Seleccionar</option>');
+             _.each(descuentos, function(item) {
+               var mo=idMoneda.val();
+               if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
+                      var por=Number(item.nPorcDescuento);
+                      var monto=Number(item.nMonto);
+                   if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
+                       if(item.dFecIni<=actu && item.dFecFin>actu){
+                           var valDes=item.id+'*'+por+'*'+monto;
+                           
+                           // if(valDes==idDescuento){
+                           //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
+                           // }else{
+                               selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                           // }
+                           
+                            
+                       }
+                   }
+               }
+               $("#id_desc_"+codigo).val(idDescuento).trigger("change");
+               
+           }); 
+       }
          function llenarServicios(){
          var bval = true;
          bval = bval && cCodConsecutivo.required();  
@@ -1013,6 +1649,7 @@
             dFecEntrega.val("");
             nEstimadoHoras.val("");
             table_repuestos.html("");
+            totalDescuento.val("").trigger("change");
             cCodConsecutivo_orden.val("").trigger('change');
             servicios_select.html(''); 
             servicios_select.append('<option value="" selected>Seleccionar </option>');
@@ -1038,7 +1675,7 @@
         });
 
         cCodConsecutivo_orden.change(function () {
-            console.log("hola");
+            
             if(table_servicios.html()!="" || table_repuestos.html()!=""){
                  modalDeleteDetalle.modal("show");
             }
@@ -1116,41 +1753,49 @@
         function getDataForOrdenServicio () {
             RESTService.all('orden_servicios/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                   
+
+                    descuentos=response.descuentos;
                      cCodConsecutivo.append('<option value="">Seleccionar</option>');
                      _.each(response.codigo_proforma, function(item) {
                         cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'">'+item.cCodConsecutivo+'</option>');
+                    });
+                    var hoy = new Date();
+                    var hAnio=hoy.getFullYear();
+                    var hmes=hoy.getMonth()+1;
+                    if(Number(hmes)<10){
+                        hmes='0'+String(hmes);
+                    }
+
+                    var hdia=hoy.getDate();
+                    if(Number(hdia)<10){
+                        hdia='0'+String(hdia);
+                    }
+                    var actu=hAnio+'-'+hmes+'-'+hdia;
+                    totalDescuento.append('<option value="">Seleccionar</option>');
+                     _.each(response.descuentos, function(item) {
+                        if( item.cTipoAplica=='T'){
+                            var mo=idMoneda.val();
+                             var por=Number(item.nPorcDescuento);
+                            var monto=Number(item.nMonto);
+                            if((item.idMoneda==mo || item.nPorcDescuento!='0') && (item.nSaldoUso>0 || item.nLimiteUso=='0')){
+                                if(item.dFecIni<=actu && item.dFecFin>actu){
+                                    totalDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                                 }
+                            }
+                    } 
                     });
                     //   cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+'</option>');
                        idcCondicionPago.append('<option value="">Seleccionar</option>');
                      _.each(response.condicion_pago, function(item) {
                         idcCondicionPago.append('<option value="'+item.id+'">'+item.description+'</option>');
                     });
-                    //    _.each(response.tipo_servicio, function(item) {
-                    //     id_tipo.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
-                    // });
-                    //      idDocumentoCli.append('<option value="">Seleccionar</option>');
-                    //      _.each(response.tipo_document, function(item) {
-                    //     idDocumentoCli.append('<option value="'+item.Codigo+'">'+item.TipoDocumento+'</option>');
-                    // });
-                    //     gru_revisiones.append('<option value="" selected>Seleccionar </option>');
-                    //   _.each(response.revisiones, function(item) {
-                    //     gru_revisiones.append('<option value="'+item.id+'*'+item.nombre+'*'+item.mo_revision+'*'+item.mo_mecanica+'*'+item.terceros+'*'+item.otros_mo+'*'+item.repuestos+'*'+item.accesorios+'*'+item.lubricantes+'*'+item.otros_rep+'">'+item.nombre+'</option>');
-                    // });
-                    //   idTecnico.append('<option value="">Seleccionar</option>');
-                    //   _.each(response.tecnico, function(item) {
-                    //     idTecnico.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
-                    // });
+                    
                        idAsesor.append('<option value="">Seleccionar</option>');
                      _.each(response.asesor, function(item) {
                         idAsesor.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
                     });
-                    //    id_tipomant.append('<option value="">Seleccionar</option>');
-                    //    _.each(response.tipoMantenimiento, function(item) {
-                    //     id_tipomant.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
-                    // });
-                 
-                       servicios=response.servicios;
+                  
+                    servicios=response.servicios;
                         idMoneda.append('<option value="">Seleccionar</option>');
                        _.each(response.moneda, function(item) {
                         idMoneda.append('<option value="'+item.IdMoneda+'">'+item.Descripcion+'</option>');
