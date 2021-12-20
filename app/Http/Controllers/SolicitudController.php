@@ -25,15 +25,15 @@ class SolicitudController extends Controller
     public function all(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idcaja', 'nombre_caja', 'usuario', 'activo', 'idtienda'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio'];
         // print_r($repo->search($s)); exit;
-        return parseList($repo->search($s), $request, 'idcaja', $params);
+        return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
 
     public function create(SolicitudInterface $repo, SolicitudRequest $request)
     {
         $data = $request->all();
-        // $data['idcaja'] = $data['idcaja'];
+        // $data['cCodConsecutivo'] = $data['cCodConsecutivo'];
         // $data['nombre_caja'] = $data['convenio'];
         // print_r($data);
         
@@ -49,27 +49,67 @@ class SolicitudController extends Controller
     {
         $data = $request->all();
         // print_r($data);
-        $idcaja = $data['idcaja'];
+        $cCodConsecutivo = $data['cCodConsecutivo'];
         // $data['nombre_caja'] = $data['convenio'];
-        $repo->update($idcaja, $data);
+        $repo->update($cCodConsecutivo, $data);
 
         return response()->json(['Result' => 'OK']);
     }
 
     public function destroy(SolicitudInterface $repo, Request $request)
     {
-        $idcaja = $request->input('idcaja');
-        $repo->destroy($idcaja);
+        $cCodConsecutivo = $request->input('cCodConsecutivo');
+        $repo->destroy($cCodConsecutivo);
         return response()->json(['Result' => 'OK']);
     }
 
     public function getAll(SolicitudInterface $repo)
     {
-        return parseSelect($repo->all(), 'idcaja', 'nombre_caja');
+        return parseSelect($repo->all(), 'cCodConsecutivo', 'nombre_caja');
     }
 
     public function excel(SolicitudInterface $repo)
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE Solicitud', 'Solicitud');
+    }
+
+    public function data_form (SolicitudInterface $Repo)
+    {
+        
+        $codigo = $Repo->getcodigo();
+        // $codigo_proforma = $Repo->getcodigo_proforma();
+        $condicion_pago = $Repo->getcondicion_pago();
+        // $tipo_servicio = $Repo->gettipo_servicio();
+        $tipo_document = $Repo->gettipo_document();
+        // $tipo_document_venta=$Repo->gettipo_document_venta();
+        // $revisiones = $Repo->getrevisiones();
+        // $tecnico = $Repo->gettecnico();
+        // $asesor = $Repo->getasesor();
+        $moneda = $Repo->getmoneda();
+        // $servicios = $Repo->get_servicios(); 
+        // $tipoMantenimiento = $Repo->get_Tipomantenimientos(); 
+        // $totales = $Repo->get_totales();
+        $usuario=auth()->id();
+        $descuentos=$Repo->get_descuentos($usuario);
+     
+
+        return response()->json([
+            'status' => true,
+            'codigo' => $codigo,
+            // 'codigo_proforma'=>$codigo_proforma,
+            'condicion_pago' => $condicion_pago,
+            // 'tipo_servicio' => $tipo_servicio,
+            'tipo_document'=> $tipo_document,
+            // 'revisiones'=>$revisiones,
+            // 'tecnico'=>$tecnico,
+            'moneda'=>$moneda,
+            // 'asesor'=>$asesor,
+            'descuentos'=>$descuentos,
+            // 'servicios'=>$servicios,
+            // 'totales'=>$totales,
+            // 'tipoMantenimiento'=>$tipoMantenimiento,
+            // 'tipo_document_venta'=>$tipo_document_venta,
+            'usuario'=>$usuario,
+        ]);
     }
 }

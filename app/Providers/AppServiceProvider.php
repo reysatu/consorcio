@@ -52,6 +52,15 @@ use App\Http\Recopro\Cajas\CajasInterface;
 use App\Http\Recopro\Cajas\CajasRepository;
 
 
+use App\Http\Recopro\Vendedores\Vendedores;
+use App\Http\Recopro\Vendedores\VendedoresInterface;
+use App\Http\Recopro\Vendedores\VendedoresRepository;
+
+use App\Http\Recopro\Solicitud\Solicitud;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Solicitud\SolicitudRepository;
+
+
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantes;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesRepository;
@@ -539,6 +548,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCuentasBancarias();
         $this->registerAprobacion();
         $this->registerCajas();
+        $this->registerVendedores();
+        $this->registerSolicitud();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
         $this->registerTypePerson();
@@ -838,6 +849,24 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(CajasInterface::class, function ($app) {
             return new CajasRepository(new Cajas());
+        });
+    }
+
+    public function registerVendedores()
+    {
+        $app = $this->app;
+
+        $app->bind(VendedoresInterface::class, function ($app) {
+            return new VendedoresRepository(new Vendedores());
+        });
+    }
+
+    public function registerSolicitud()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudInterface::class, function ($app) {
+            return new SolicitudRepository(new Solicitud());
         });
     }
 

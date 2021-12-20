@@ -72,6 +72,7 @@
         'sys.app.aprobacion',
         'sys.app.cajas',
         'sys.app.consecutivos_comprobantes',
+        'sys.app.vendedores',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
@@ -85,7 +86,8 @@
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
         //Ventas
-        // 'sys.app.solicitud',
+        'sys.app.solicitud',
+
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',

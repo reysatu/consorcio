@@ -17,8 +17,8 @@ class Solicitud extends Model
 
     protected $table = 'ERP_Solicitud';
 
-    protected $fillable = ['idsolicitud', 'nombre_caja', 'usuario', 'activo', 'user_created', 'user_updated', 'user_deleted', 'idtienda'];
-    protected $primaryKey = 'idsolicitud';
+    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'user_created', 'user_updated', 'user_deleted', 'idconvenio'];
+    protected $primaryKey = 'cCodConsecutivo';
     // protected $keyType = 'string';
     protected $hidden = ['deleted_at'];
 

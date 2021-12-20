@@ -75,7 +75,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
    
     public function getcondicion_pago(){
    
-          $mostrar3=DB::select("select * from ERP_CondicionPago");
+          $mostrar3=DB::select("select * from get_totales");
           return $mostrar3;
     }
     public function gettipo_servicio(){
