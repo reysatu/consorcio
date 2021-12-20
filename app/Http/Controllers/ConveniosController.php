@@ -35,6 +35,9 @@ class ConveniosController extends Controller
         $data = $request->all();
         // $data['idconvenio'] = $data['idconvenio'];
         $data['descripcionconvenio'] = $data['convenio'];
+        $table="ERP_Convenios";
+        $id='idconvenio';
+        $data['idconvenio'] = $repo->get_consecutivo($table,$id);
         // print_r($data);
         $repo->create($data);
 

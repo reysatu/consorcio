@@ -33,6 +33,10 @@ class CuentasBancariasController extends Controller
     public function create(CuentasBancariasInterface $repo, CuentasBancariasRequest $request)
     {
         $data = $request->all();
+
+        $table="ERP_CuentasBancarias";
+        $id='id_cuentabancaria';
+        $data['id_cuentabancaria'] = $repo->get_consecutivo($table,$id);
         // $data['id_cuentabancaria'] = $data['id_cuentabancaria'];
         // $data['numero_cuenta'] = $data['convenio'];
         // print_r($data);

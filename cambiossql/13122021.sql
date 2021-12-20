@@ -1,17 +1,20 @@
 USE [Consorcio]
 GO
 
-/****** Object:  Table [dbo].[ERP_Bancos]    Script Date: 13/12/2021 10:50:50 p.m. ******/
+/****** Object:  Table [dbo].[ERP_Bancos]    Script Date: 17/12/2021 02:47:10 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+SET ANSI_PADDING ON
+GO
+
 CREATE TABLE [dbo].[ERP_Bancos](
-	[idbanco] [int] IDENTITY(1,1) NOT NULL,
-	[descripcion] [nvarchar](255) NOT NULL,
-	[user_created] [int] NOT NULL,
+	[idbanco] [int] NOT NULL,
+	[descripcion] [varchar](50) NULL,
+	[user_created] [int] NULL,
 	[user_updated] [int] NULL,
 	[user_deleted] [int] NULL,
 	[created_at] [datetime] NULL,
@@ -25,10 +28,11 @@ CREATE TABLE [dbo].[ERP_Bancos](
 
 GO
 
+SET ANSI_PADDING OFF
+GO
 
 
-
-/****** Object:  Table [dbo].[ERP_TiposMovimiento]    Script Date: 17/12/2021 06:41:46 a.m. ******/
+/****** Object:  Table [dbo].[ERP_TiposMovimiento]    Script Date: 17/12/2021 02:48:02 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -60,7 +64,8 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_FormasPago]    Script Date: 17/12/2021 06:42:15 a.m. ******/
+
+/****** Object:  Table [dbo].[ERP_FormasPago]    Script Date: 17/12/2021 02:48:18 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -92,7 +97,10 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_Denominaciones]    Script Date: 17/12/2021 06:42:39 a.m. ******/
+
+
+
+/****** Object:  Table [dbo].[ERP_Denominaciones]    Script Date: 17/12/2021 02:48:37 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -103,7 +111,7 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[ERP_Denominaciones](
-	[id_denominacion] [int] IDENTITY(1,1) NOT NULL,
+	[id_denominacion] [int] NOT NULL,
 	[descripcion] [varchar](50) NULL,
 	[valor] [decimal](18, 5) NULL,
 	[user_created] [int] NULL,
@@ -125,7 +133,9 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_Convenios]    Script Date: 17/12/2021 06:42:58 a.m. ******/
+
+
+/****** Object:  Table [dbo].[ERP_Convenios]    Script Date: 17/12/2021 02:49:08 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -136,7 +146,7 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[ERP_Convenios](
-	[idconvenio] [int] IDENTITY(1,1) NOT NULL,
+	[idconvenio] [int] NOT NULL,
 	[descripcionconvenio] [varchar](100) NULL,
 	[estado] [int] NULL,
 	[user_created] [int] NULL,
@@ -158,7 +168,10 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_CuentasBancarias]    Script Date: 17/12/2021 06:43:13 a.m. ******/
+
+
+
+/****** Object:  Table [dbo].[ERP_CuentasBancarias]    Script Date: 17/12/2021 02:49:55 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -169,7 +182,7 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[ERP_CuentasBancarias](
-	[id_cuentabancaria] [int] IDENTITY(1,1) NOT NULL,
+	[id_cuentabancaria] [int] NOT NULL,
 	[idbanco] [int] NULL,
 	[numero_cuenta] [varchar](50) NULL,
 	[descripcion_cuenta] [varchar](50) NULL,
@@ -200,7 +213,10 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_Aprobacion]    Script Date: 17/12/2021 06:43:47 a.m. ******/
+
+
+
+/****** Object:  Table [dbo].[ERP_Aprobacion]    Script Date: 17/12/2021 02:51:09 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -211,7 +227,7 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[ERP_Aprobacion](
-	[idaprobacion] [int] IDENTITY(1,1) NOT NULL,
+	[idaprobacion] [int] NOT NULL,
 	[nombre_aprobacion] [varchar](50) NULL,
 	[idtienda] [int] NULL,
 	[user_created] [int] NULL,
@@ -240,7 +256,9 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_Cajas]    Script Date: 17/12/2021 06:44:12 a.m. ******/
+
+
+/****** Object:  Table [dbo].[ERP_Cajas]    Script Date: 17/12/2021 02:51:58 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
@@ -251,7 +269,7 @@ SET ANSI_PADDING ON
 GO
 
 CREATE TABLE [dbo].[ERP_Cajas](
-	[idcaja] [int] IDENTITY(1,1) NOT NULL,
+	[idcaja] [int] NOT NULL,
 	[idtienda] [int] NULL,
 	[nombre_caja] [varchar](100) NULL,
 	[usuario] [varchar](10) NULL,
@@ -282,17 +300,22 @@ GO
 
 
 
-/****** Object:  Table [dbo].[ERP_ConsecutivosComprobantes]    Script Date: 17/12/2021 06:44:41 a.m. ******/
+
+
+/****** Object:  Table [dbo].[ERP_ConsecutivosComprobantes]    Script Date: 17/12/2021 02:52:22 p.m. ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+SET ANSI_PADDING ON
+GO
+
 CREATE TABLE [dbo].[ERP_ConsecutivosComprobantes](
-	[id_consecutivo] [int] IDENTITY(1,1) NOT NULL,
+	[id_consecutivo] [int] NOT NULL,
 	[idtienda] [int] NULL,
-	[serie] [int] NULL,
+	[serie] [varchar](10) NULL,
 	[numero] [int] NULL,
 	[actual] [int] NULL,
 	[ultimo] [int] NULL,
@@ -302,6 +325,7 @@ CREATE TABLE [dbo].[ERP_ConsecutivosComprobantes](
 	[user_deleted] [int] NULL,
 	[created_at] [datetime] NULL,
 	[updated_at] [datetime] NULL,
+	[deleted_at] [datetime] NULL,
  CONSTRAINT [PK_ERP_ConsecutivosComprobantes] PRIMARY KEY CLUSTERED 
 (
 	[id_consecutivo] ASC
@@ -310,12 +334,18 @@ CREATE TABLE [dbo].[ERP_ConsecutivosComprobantes](
 
 GO
 
+SET ANSI_PADDING OFF
+GO
+
 ALTER TABLE [dbo].[ERP_ConsecutivosComprobantes]  WITH CHECK ADD  CONSTRAINT [fk_consecutivos_comprobantes_tienda] FOREIGN KEY([idtienda])
 REFERENCES [dbo].[ERP_Tienda] ([idTienda])
 GO
 
 ALTER TABLE [dbo].[ERP_ConsecutivosComprobantes] CHECK CONSTRAINT [fk_consecutivos_comprobantes_tienda]
 GO
+
+
+
 
 
 

@@ -84,6 +84,8 @@
         'sys.app.approval_autonomy',
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
+        //Ventas
+        // 'sys.app.solicitud',
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',

@@ -16,7 +16,7 @@ class Denominaciones extends Model
 
     protected $table = 'ERP_Denominaciones';
 
-    protected $fillable = ['descripcion', 'valor', 'user_created', 'user_updated', 'user_deleted'];
+    protected $fillable = ['id_denominacion', 'descripcion', 'valor', 'user_created', 'user_updated', 'user_deleted'];
     protected $primaryKey = 'id_denominacion';
     // protected $keyType = 'string';
     protected $hidden = ['deleted_at'];

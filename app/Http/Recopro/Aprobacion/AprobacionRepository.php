@@ -8,6 +8,8 @@
 
 namespace App\Http\Recopro\Aprobacion;
 
+use Illuminate\Support\Facades\DB;
+
 class AprobacionRepository implements AprobacionInterface
 {
     protected $model;
@@ -62,5 +64,18 @@ class AprobacionRepository implements AprobacionInterface
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
         $model->delete();
+    }
+
+    public function get_consecutivo($table,$id)
+    {     
+        $mostrar = DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
+        $actu=0;
+        if(!$mostrar) {
+            $actu=0;
+        } else {
+            $actu=intval($mostrar[0]->$id);
+        }
+        $new=$actu+1;
+        return $new; 
     }
 }
