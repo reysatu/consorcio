@@ -98,7 +98,7 @@ h5.linea span {
 </div>
 
 <div class="modal" id="modalOrdenServivio" role="dialog" style="overflow-y: scroll;">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-lg" style="width:90%;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -150,7 +150,7 @@ h5.linea span {
                                                        <select id="cCodConsecutivo" class="form-control input-sm"></select>
                                                     </div>
                                                     <div class="col-sm-2">
-                                                        <input type="text" class="form-control input-sm"  id="nConsecutivo" readonly/>
+                                                        <input type="text" class="form-control input-sm"  id="nConsecutivo" disabled/>
                                                     </div>
                                                     <label class="col-sm-1 control-label">Moneda</label>
                                                     <div class="col-sm-2">
@@ -241,8 +241,8 @@ h5.linea span {
                                                     </div>
                                                     <label class="col-sm-1 control-label"> Tipo Cliente</label>
                                                     <div class="col-sm-3">
-                                                       <!--  <input type="text" class="form-control input-sm"   id="tipoCliente_or" readonly > -->
-                                                        <!--  <input type="hidden" class="form-control input-sm"  id="id_cliente_tipo_or" readonly > -->
+                                                       <!--  <input type="text" class="form-control input-sm"   id="tipoCliente_or" disabled > -->
+                                                        <!--  <input type="hidden" class="form-control input-sm"  id="id_cliente_tipo_or" disabled > -->
                                                          <select class="form-control input-sm" id="id_cliente_tipo_or" disabled>
                                                            
                                                          </select>
@@ -251,37 +251,37 @@ h5.linea span {
                                                 <div class="form-group">
                                                    <label class="col-sm-2 control-label"> Razon Social</label>
                                                     <div class="col-sm-3">
-                                                        <input type="text" class="form-control input-sm"  id="razonsocial_cliente_or" readonly >
+                                                        <input type="text" class="form-control input-sm"  id="razonsocial_cliente_or" disabled >
                                                     </div>
 
                                                     <label class="col-sm-1 control-label">Contacto</label>
                                                     <div class="col-sm-2">
-                                                        <input type="text" class="form-control input-sm"  id="contacto_or" readonly >
+                                                        <input type="text" class="form-control input-sm"  id="contacto_or" disabled >
                                                     </div>
                                                     <label class="col-sm-1 control-label">Dirección</label>
                                                     <div class="col-sm-3">
-                                                        <input type="text" class="form-control input-sm"  id="direccion_or" readonly >
+                                                        <input type="text" class="form-control input-sm"  id="direccion_or" disabled >
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="form-group">
                                                   <label class="col-sm-2 control-label">Correo</label>
                                                     <div class="col-sm-3">
-                                                        <input type="email" class="form-control input-sm"  id="correo_electronico_or" readonly >
+                                                        <input type="email" class="form-control input-sm"  id="correo_electronico_or" disabled >
                                                     </div>
                                                     <label class="col-sm-1 control-label">Celular</label>
                                                     <div class="col-sm-2">
-                                                        <input type="text" class="form-control input-sm"  id="celular_or" readonly >
+                                                        <input type="text" class="form-control input-sm"  id="celular_or" disabled >
                                                     </div>
                                                      <label class="col-sm-1 control-label">Teléfono</label>
                                                     <div class="col-sm-2">
-                                                        <input type="text" class="form-control input-sm " id="telefono_or" readonly>
+                                                        <input type="text" class="form-control input-sm " id="telefono_or" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group"> 
                                                   <label class="col-sm-2 control-label">Distrito</label>
                                                     <div class="col-sm-2">
-                                                        <input type="text" class="form-control input-sm"  readonly id="distrito_ver" >
+                                                        <input type="text" class="form-control input-sm"  disabled id="distrito_ver" >
                                                     </div>
                                                     <label  class="col-sm-2  control-label">Tipo Doc. de Venta</label>
                                                     <div class="col-sm-2">
@@ -315,29 +315,29 @@ h5.linea span {
                                                     </div>
                                                     <label class="col-sm-1 control-label">Marca</label>
                                                     <div class="col-sm-2">
-                                                       <input id="marca" class="form-control input-sm" readonly/>
+                                                       <input id="marca" class="form-control input-sm" disabled/>
                                                     </div>
                                                      <label class="col-sm-1 control-label">Modelo</label>
                                                     <div class="col-sm-2">
-                                                       <input id="modelo" class="form-control input-sm" readonly />
+                                                       <input id="modelo" class="form-control input-sm" disabled />
                                                     </div>
                                                 </div>    
                                                 <div class="form-group">
                                                     <label class="col-sm-1 control-label">Chasis</label>
                                                     <div class="col-sm-2">
-                                                       <input id="chasis" class="form-control input-sm" readonly/>
+                                                       <input id="chasis" class="form-control input-sm" disabled/>
                                                     </div>
                                                     <label class="col-sm-1 control-label">Año de fabricación</label>
                                                     <div class="col-sm-2">
-                                                       <input id="anio_fabricacion" class="form-control input-sm" readonly/>
+                                                       <input id="anio_fabricacion" class="form-control input-sm" disabled/>
                                                     </div>
                                                     <label class="col-sm-1 control-label">Color</label>
                                                     <div class="col-sm-2">
-                                                       <input id="color" class="form-control input-sm" readonly />
+                                                       <input id="color" class="form-control input-sm" disabled />
                                                     </div>
                                                     <label class="col-sm-1 control-label">Motor</label>
                                                     <div class="col-sm-2">
-                                                       <input id="motor" class="form-control input-sm" readonly />
+                                                       <input id="motor" class="form-control input-sm" disabled />
                                                     </div>
                                                 </div>
                                             </div>
@@ -389,16 +389,16 @@ h5.linea span {
                                                             <table class="table table-bordered table-striped table-hover" id="tabla_grupo_revision">
                                                                     <thead>
                                                                         <tr> 
-                                                                            <th width="110px">Servicios</th>
+                                                                            <th width="130px">Servicios</th>
                                                                             <th width="60px">Cantidad</th>
-                                                                            <th width="60px">Precio</th>
+                                                                            <th width="70px">Precio</th>
                                                                             <th width="70px">Impuesto</th>
-                                                                            <th>Operación gratuita</th>
+                                                                            <th width="80px">Operación gratuita</th>
                                                                             <th width="130px">Descuentos</th>
                                                                             <th width="10px">Porcentaje</th>
-                                                                            <th width="70px">Monto</th>
+                                                                            <th width="70px">Monto descuento</th>
                                                                              <th width="80px">Sub Total</th>
-                                                                            <th>Tipo</th>
+                                                                            <th width="160px">Tipo</th>
                                                                             <th width="30px"></th>
                                                                         </tr>
                                                                     </thead>
@@ -411,7 +411,7 @@ h5.linea span {
                                                      <div class="col-md-12">
                                                         <label class="col-sm-2 control-label">Total Mano de Obra</label>
                                                         <div class="col-sm-4">
-                                                           <input id="totalMO" class="form-control input-sm" readonly />
+                                                           <input id="totalMO" class="form-control input-sm" disabled />
                                                         </div>
                                                      </div> 
                                                   </div>
@@ -421,32 +421,32 @@ h5.linea span {
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">M.O Revisión</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="mo_revision" class="form-control input-sm" value="0" readonly />
+                                                            <input type="number" id="mo_revision" class="form-control input-sm" value="0" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">M.O Mecánica</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="mo_mecanica" class="form-control input-sm"  value="0" readonly />
+                                                            <input type="number" id="mo_mecanica" class="form-control input-sm"  value="0" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Servicio Terceros</label>
                                                         <div class="col-sm-6">
-                                                            <input  type="number" id="terceros" class="form-control input-sm" value="0" readonly/>
+                                                            <input  type="number" id="terceros" class="form-control input-sm" value="0" disabled/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">M.O Otros</label>
                                                         <div class="col-sm-6">
                                                             <input type="number" id="otros_mo" class="form-control input-sm" value="0"
-                                                            readonly />
+                                                            disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Sub Total</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="subtotal_moa" class="form-control input-sm" readonly  value="0"  />
+                                                            <input type="number" id="subtotal_moa" class="form-control input-sm" disabled  value="0"  />
                                                         </div>
                                                     </div>
                                                   </div>
@@ -454,67 +454,67 @@ h5.linea span {
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Repuestos</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="repuestos" class="form-control input-sm" value="0" readonly />
+                                                            <input type="number" id="repuestos" class="form-control input-sm" value="0" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Accesorios</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="accesorios" class="form-control input-sm"  value="0" readonly />
+                                                            <input type="number" id="accesorios" class="form-control input-sm"  value="0" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Lubricantes</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="lubricantes" class="form-control input-sm"  value="0" readonly/>
+                                                            <input type="number" id="lubricantes" class="form-control input-sm"  value="0" disabled/>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Otros</label>
                                                         <div class="col-sm-6">
-                                                            <input type="number" id="otros_rep" class="form-control input-sm" value="0" readonly />
+                                                            <input type="number" id="otros_rep" class="form-control input-sm" value="0" disabled />
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Sub Total</label>
                                                         <div class="col-sm-6">
-                                                            <input id="subtotal_mob" class="form-control input-sm"  value="0"  readonly />
+                                                            <input id="subtotal_mob" class="form-control input-sm"  value="0"  disabled />
                                                         </div>
                                                     </div>
                                                     
                                                     <div class="form-group">
                                                          <label class="col-sm-6 control-label">Operación Gratuita</label>
                                                         <div class="col-sm-6">
-                                                            <input id="total" class="form-control input-sm" readonly  value="0" />
+                                                            <input id="total" class="form-control input-sm" disabled  value="0" />
                                                         </div>
                                                     </div>
                                                     
                                                   </div>
                                                  <div class="col-md-12 ">
                                                     <div class="form-group">
-                                                           <label class="col-sm-2  control-label">
+                                                           <label class="col-sm-1  control-label">
                                                              Descuento
                                                            </label>
-                                                          <div class="col-sm-2 ">
+                                                          <div class="col-sm-2">
                                                               <select id="totalDescuento" class="totalDescuento form-control input-sm" style="width: 100%" /> </select>
                                                           </div>
-                                                           <label class="col-sm-2  control-label">
+                                                           <label class="col-sm-1  control-label">
                                                              Porcentaje
                                                            </label>
                                                            <div class="col-sm-2">
-                                                              <input id="porcentajeTotal" class="form-control input-sm"  value="0"  readonly />
+                                                              <input id="porcentajeTotal" class="form-control input-sm"  value="0"  disabled />
                                                           </div>
-                                                            <label class="col-sm-1  control-label">
-                                                             Monto
+                                                            <label class="col-sm-2  control-label">
+                                                             Monto descuento
                                                            </label>
-                                                            <div class="col-sm-3">
-                                                              <input id="montoTotal" class="form-control input-sm"    readonly />
+                                                            <div class="col-sm-3 col-md-offset-1">
+                                                              <input id="montoTotal" class="form-control input-sm"    disabled />
                                                           </div> 
                                                     </div>
                                                     <div class="form-group">
                                                            <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                                           <div class="col-sm-3 col-md-offset-1">
-                                                              <input id="desTotal" class="form-control input-sm" readonly  value="0" />
+                                                              <input id="desTotal" class="form-control input-sm" disabled  value="0" />
                                                           </div>
                                                     </div>
                                                  </div>

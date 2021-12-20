@@ -35,3 +35,5 @@ Route::post('orden_servicios/getCliente', 'Orden_servicioController@getCliente')
 Route::put('orden_servicios/cambiar_estado/{id}', ['as' => 'orden_servicios.cambiar_estado', 'uses' => 'Orden_servicioController@cambiar_estado']);
 
 Route::get('orden_servicios/pdf', 'Orden_servicioController@pdf');
+
+Route::get('orden_servicios/get_precios_list/{id}', ['as' => 'orden_servicios.get_precios_list', 'uses' => 'Orden_servicioController@get_precios_list']);

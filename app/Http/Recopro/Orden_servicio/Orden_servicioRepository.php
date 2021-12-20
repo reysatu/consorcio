@@ -121,6 +121,23 @@ where IdTipoDocumento in ('01','03')");
       return $mostrar3;
 
     }
+     public function get_precios_list($idProducto,$idTipoCli,$idMoneda)
+    { 
+      $mostrar3=DB::select("select * from ERP_ListaPrecios as li inner join ERP_ListaPreciosDetalle as ld on li.id=ld.id_lista inner join ERP_Productos as pr on pr.id=ld.idProducto where ld.idProducto='$idProducto' and li.id_tpocli='$idTipoCli' and li.IdMoneda='$idMoneda' and li.iEstado='1'");
+      return $mostrar3;
+
+    }
+    
+    public function get_parametroPrecio()
+    { 
+      $mostrar3=DB::select("select * from ERP_Parametros where id='3'");
+      return $mostrar3;
+    }
+    public function get_redondeo()
+    { 
+      $mostrar3=DB::select("select * from ERP_Parametros where id='2'");
+      return $mostrar3;
+    }
     public function get_distrito_print($cod)
     { 
       $mostrar3=DB::select("select * from ERP_Ubigeo where cCodUbigeo='$cod'");
@@ -163,6 +180,11 @@ where IdTipoDocumento in ('01','03')");
    
           $mostrar3=DB::select("
                       select pr.impuesto as impuesto, pr.id as idProducto,pr.code_article as codigo_articulo , pr.description as producto ,pd.nPrecio as precio,p.id_tpocli as tipo_cliente,p.IdMoneda as idMoneda from ERP_ListaPrecios as p inner join ERP_ListaPreciosDetalle as pd on p.id=pd.id_lista inner join ERP_Productos as pr  on pr.id=pd.idProducto where  p.iEstado='1' and pr.type_id='2'");
+          return $mostrar3;
+    }
+     public function get_servicios_todos(){
+   
+          $mostrar3=DB::select("SELECT * FROM ERP_Productos WHERE state='1' and type_id='2'");
           return $mostrar3;
     }
     public function get_Tipomantenimientos(){
@@ -265,6 +287,12 @@ where IdTipoDocumento in ('01','03')");
     {
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_EliminaOrdenServicio '$id','$no'");
+         return $destroy;
+    }
+    public function cambio_tipo($moneda,$fecha)
+    {
+         $pdo=DB::connection()->getPdo();
+         $destroy=DB::select("SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'");
          return $destroy;
     }
      public function destroy_orden_mantenimiento($id,$no,$mant)

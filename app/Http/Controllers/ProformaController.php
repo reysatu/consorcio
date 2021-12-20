@@ -408,7 +408,8 @@ class ProformaController extends Controller
     public function get_repuestos_consecutivo($id, ProformaInterface $repo)
     {
         try {
-            $data = $repo->get_repuestos_consecutivo($id);
+            $data = $repo->get_repuestos_consecutivo2($id);
+            
             return response()->json([
                 'status' => true,
                 'data' => $data,
