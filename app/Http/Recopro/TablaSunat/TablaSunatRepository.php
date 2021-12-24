@@ -32,6 +32,10 @@ class TablaSunatRepository implements TablaSunatInterface
     {
        return $this->model->where('cnombretabla','TIPO_DOCUMENTO')->get();
     }
+     public function allTipoPersona()
+    {
+       return $this->model->where('cnombretabla','TIPO_PERSONA')->get();
+    }
     
 
 }

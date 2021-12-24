@@ -29,6 +29,7 @@
         var celular=$("#celular");
         var telefono=$("#telefono");
         var cliente_id=$("#cliente_id");
+        var cEstadoCivil=$("#cEstadoCivil");
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_state.html(txt_state2);
@@ -138,6 +139,7 @@ function getDatosCliente(){
                     correo_electronico.val(data_p[0].correo_electronico);
                     celular.val(data_p[0].celular);
                     telefono.val(data_p[0].telefono);
+                    cEstadoCivil.val(data_p[0].cEstadoCivil);
                     cliente_id.val(data_p[0].id);
                     id_tipocli.val(data_p[0].id_tipocli).trigger('change');
                     id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
@@ -267,6 +269,7 @@ function getDatosCliente(){
             departamento.val('');
             provincia.val('');
             distrito.val('');
+            cEstadoCivil.val('');
             provincia.html('');
             distrito.html('');
         };
@@ -310,6 +313,7 @@ function getDatosCliente(){
                     'distrito': distrito.val(),
                     'id_tipocli':id_tipocli.val(),
                     'IdTipoDocumento':id_tipoDoc_Venta.val(),
+                    'cEstadoCivil':cEstadoCivil.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();

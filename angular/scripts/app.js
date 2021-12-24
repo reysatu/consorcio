@@ -72,6 +72,9 @@
         'sys.app.aprobacion',
         'sys.app.cajas',
         'sys.app.consecutivos_comprobantes',
+        'sys.app.cobradors',
+        'sys.app.configJerarquias',
+        'sys.app.personas',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

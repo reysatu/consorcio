@@ -287,6 +287,13 @@ h5.linea span {
                                                     <div class="col-sm-2">
                                                         <select id="id_tipoDoc_Venta_or" class="form-control input-sm"></select>
                                                     </div> 
+                                                    <label  class="col-sm-1 control-label"></label>
+                                                    <div class="col-sm-1">
+                                                         <button type="button" id="btn_editar_cliente" class="btn btn-danger-admin btn-sm ">
+                                                              <span class="fa fa-save"></span>
+                                                              Editar
+                                                          </button>
+                                                    </div> 
                                                 </div> 
                                                 <div class="form-group">
                                                     <label class="col-sm-2 control-label">Requerimiento del Cliente</label>
@@ -645,6 +652,17 @@ h5.linea span {
                             <div class="col-sm-4">
                                 <select id="distrito" class="form-control input-sm"></select>
                             </div>
+                           <label class="col-sm-2 control-label">Estado Civil</label>
+                                        <div class="col-sm-4">
+                                            <select class="form-control input-sm" id="cEstadoCivil">
+                                                <option value="">Seleccionar</option>
+                                                <option value="S">Soltero</option>
+                                                <option value="C">Casado</option>
+                                                <option value="D">Divorciado</option>
+                                                <option value="V">Viudo</option>
+                                                <option value="X">Conviviente</option>
+                                            </select>
+                            </div>  
                         </div>
                     </div>
                  </div>   

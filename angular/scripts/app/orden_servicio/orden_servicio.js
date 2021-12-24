@@ -17,9 +17,11 @@
         var cambioChe;
         var cambioDes;
         var redondeo;
+        var cEstadoCivil=$("#cEstadoCivil");
         var acodigos=[];
         var totalMO=$("#totalMO");
         var totales;
+        var btn_editar_cliente=$("#btn_editar_cliente");
         var articuloPrecio;
         var btn_imprimir=$(".btn_imprimir");
         var igv;
@@ -137,6 +139,47 @@
         //     var id=departamento.val();
         //     getProvincia(bandera,id);
         // });
+
+        btn_editar_cliente.click(function(e){
+            if(cliente_id_or.val()==''){
+                 AlertFactory.textType({
+                                    title: '',
+                                    message: 'Debe seleccionar un cliente',
+                                    type: 'info'
+                                });
+            }else{
+               titleModalClientes.html('Editar Cliente');
+               var id=cliente_id_or.val();
+                RESTService.get('customers/find', id, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                         var data_p = response.data;
+                        tipodoc.val(data_p[0].tipodoc).trigger('change');
+                        razonsocial_cliente.val(data_p[0].razonsocial_cliente);
+                        documento.val(data_p[0].documento);
+                        contacto.val(data_p[0].contacto);
+                        direccion.val(data_p[0].direccion);
+                        correo_electronico.val(data_p[0].correo_electronico);
+                        celular.val(data_p[0].celular);
+                        telefono.val(data_p[0].telefono);
+                        cEstadoCivil.val(data_p[0].cEstadoCivil);
+                        cliente_id.val(data_p[0].id);
+                        id_tipocli.val(data_p[0].id_tipocli).trigger('change');
+                        id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
+                         getDepartamento(data_p[0].cDepartamento);
+                         getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
+                         getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                         modaClientes.modal('show');
+                         console.log(data_p);
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                            type: 'error'
+                        });
+                    }
+                }); 
+            }
+        });
         btn_imprimir.click(function(e){
             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
             if(id!=''){
@@ -465,9 +508,9 @@
                       departamento.append('<option value="" selected >Seleccione</option>');
                      _.each(response.data, function(item) {
                         if(item.cDepartamento==bandera){
-                             departamento.append('<option value="'+item.cDepartamento+'"  >'+item.cDepartamento+'</option>');
+                             departamento.append('<option value="'+item.cDepartamento+'" selected>'+item.cDepartamento+'</option>');
                         }else{
-                             departamento.append('<option value="'+item.cDepartamento+'" >'+item.cDepartamento+'</option>');
+                             departamento.append('<option value="'+item.cDepartamento+'">'+item.cDepartamento+'</option>');
                         };
             
                     });
@@ -2593,6 +2636,7 @@ function getDatosCliente(){
                     'distrito': distrito.val(),
                     'id_tipocli':id_tipocli.val(), 
                     'IdTipoDocumento':id_tipoDoc_Venta.val(),
+                     'cEstadoCivil':cEstadoCivil.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();

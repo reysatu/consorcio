@@ -16,6 +16,7 @@ Route::get('customers/data_form', ['as' => 'customers.data_form', 'uses' => 'Cus
 Route::put('customers/createCliente/{id}', ['as' => 'customers.createCliente', 'uses' => 'CustomerController@createUpdate']);
 
 Route::post('customers/getTipoDocumento', 'CustomerController@getTipoDocumento');
+Route::post('customers/getTipoPersona', 'CustomerController@getTipoPersona');
 Route::post('customers/getTipoCliente', 'CustomerController@getTipoCliente');
 Route::post('customers/getTipoDocumentoVenta', 'CustomerController@getTipoDocumentoVenta');
 Route::get('customers/find/{id}', ['as' => 'customers.find', 'uses' => 'CustomerController@find']);

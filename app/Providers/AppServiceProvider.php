@@ -34,6 +34,18 @@ use App\Http\Recopro\Denominaciones\Denominaciones;
 use App\Http\Recopro\Denominaciones\DenominacionesInterface;
 use App\Http\Recopro\Denominaciones\DenominacionesRepository;
 
+use App\Http\Recopro\Persona\Persona;
+use App\Http\Recopro\Persona\PersonaInterface;
+use App\Http\Recopro\Persona\PersonaRepository;
+
+use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalle;
+use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalleInterface;
+use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalleRepository;
+
+use App\Http\Recopro\ConfigJerarquia\ConfigJerarquia;
+use App\Http\Recopro\ConfigJerarquia\ConfigJerarquiaInterface;
+use App\Http\Recopro\ConfigJerarquia\ConfigJerarquiaRepository;
+
 use App\Http\Recopro\Convenios\Convenios;
 use App\Http\Recopro\Convenios\ConveniosInterface;
 use App\Http\Recopro\Convenios\ConveniosRepository;
@@ -46,6 +58,10 @@ use App\Http\Recopro\Aprobacion\Aprobacion;
 use App\Http\Recopro\Aprobacion\AprobacionInterface;
 use App\Http\Recopro\Aprobacion\AprobacionRepository;
 
+
+use App\Http\Recopro\Cobrador\Cobrador;
+use App\Http\Recopro\Cobrador\CobradorInterface;
+use App\Http\Recopro\Cobrador\CobradorRepository;
 
 use App\Http\Recopro\Cajas\Cajas;
 use App\Http\Recopro\Cajas\CajasInterface;
@@ -534,10 +550,14 @@ class AppServiceProvider extends ServiceProvider
         $this->registerBancos();
         $this->registerTiposMovimiento();
         $this->registerFormasPago();
+        $this->registerPersona();
         $this->registerDenominaciones();
+        $this->registerConfigJerarquia();
+        $this->registerConfigJerarquiaDetalle();
         $this->registerConvenios();
         $this->registerCuentasBancarias();
         $this->registerAprobacion();
+        $this->registerCobrador();
         $this->registerCajas();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
@@ -793,6 +813,14 @@ class AppServiceProvider extends ServiceProvider
             return new FormasPagoRepository(new FormasPago());
         });
     }
+    public function registerPersona()
+    {
+        $app = $this->app;
+
+        $app->bind(PersonaInterface::class, function ($app) {
+            return new PersonaRepository(new Persona());
+        });
+    }
 
     public function registerDenominaciones()
     {
@@ -800,6 +828,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(DenominacionesInterface::class, function ($app) {
             return new DenominacionesRepository(new Denominaciones());
+        });
+    }
+    public function registerConfigJerarquia()
+    {
+        $app = $this->app;
+
+        $app->bind(ConfigJerarquiaInterface::class, function ($app) {
+            return new ConfigJerarquiaRepository(new ConfigJerarquia());
+        });
+    }
+    public function registerConfigJerarquiaDetalle()
+    {
+        $app = $this->app;
+
+        $app->bind(ConfigJerarquiaDetalleInterface::class, function ($app) {
+            return new ConfigJerarquiaDetalleRepository(new ConfigJerarquiaDetalle());
         });
     }
 
@@ -827,6 +871,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(AprobacionInterface::class, function ($app) {
             return new AprobacionRepository(new Aprobacion());
+        });
+    }
+     public function registerCobrador()
+    {
+        $app = $this->app;
+
+        $app->bind(CobradorInterface::class, function ($app) {
+            return new CobradorRepository(new Cobrador());
         });
     }
 

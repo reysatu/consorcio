@@ -94,6 +94,11 @@ where cnombretabla = 'TIPO_DOCUMENTO'");
 where IdTipoDocumento in ('01','03')");
         return $mostrar; 
     }
+     public function getPersona()
+    {   
+        $mostrar=DB::select("Select * from ERP_TABLASUNAT where cNombretabla = 'TIPO_PERSONA'");
+        return $mostrar; 
+    }
     public function find($id)
     {
         $mostra=DB::select("SELECT * FROM ERP_Clientes as ti left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo where ti.id=$id");
