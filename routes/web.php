@@ -88,7 +88,11 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Lots.php';
 
+    require app_path() . '\Http\Routes\ConfigJerarquias.php';
+
     require app_path() . '\Http\Routes\Modelos.php';
+
+    require app_path() . '\Http\Routes\Cobradors.php';
 
     require app_path() . '\Http\Routes\Accoudets.php';
 
@@ -113,6 +117,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Advisers.php';
 
     require app_path() . '\Http\Routes\Consecutives.php';
+
+    require app_path() . '\Http\Routes\Personas.php';
 
     require app_path() . '\Http\Routes\Maintenances.php';
 

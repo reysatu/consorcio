@@ -16,9 +16,13 @@
         var cambCan;
         var cambioChe;
         var cambioDes;
+        var redondeo;
+        var cEstadoCivil=$("#cEstadoCivil");
         var acodigos=[];
         var totalMO=$("#totalMO");
         var totales;
+        var btn_editar_cliente=$("#btn_editar_cliente");
+        var articuloPrecio;
         var btn_imprimir=$(".btn_imprimir");
         var igv;
         var desTotal=$("#desTotal");
@@ -135,6 +139,47 @@
         //     var id=departamento.val();
         //     getProvincia(bandera,id);
         // });
+
+        btn_editar_cliente.click(function(e){
+            if(cliente_id_or.val()==''){
+                 AlertFactory.textType({
+                                    title: '',
+                                    message: 'Debe seleccionar un cliente',
+                                    type: 'info'
+                                });
+            }else{
+               titleModalClientes.html('Editar Cliente');
+               var id=cliente_id_or.val();
+                RESTService.get('customers/find', id, function(response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                         var data_p = response.data;
+                        tipodoc.val(data_p[0].tipodoc).trigger('change');
+                        razonsocial_cliente.val(data_p[0].razonsocial_cliente);
+                        documento.val(data_p[0].documento);
+                        contacto.val(data_p[0].contacto);
+                        direccion.val(data_p[0].direccion);
+                        correo_electronico.val(data_p[0].correo_electronico);
+                        celular.val(data_p[0].celular);
+                        telefono.val(data_p[0].telefono);
+                        cEstadoCivil.val(data_p[0].cEstadoCivil);
+                        cliente_id.val(data_p[0].id);
+                        id_tipocli.val(data_p[0].id_tipocli).trigger('change');
+                        id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
+                         getDepartamento(data_p[0].cDepartamento);
+                         getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
+                         getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                         modaClientes.modal('show');
+                         console.log(data_p);
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                            type: 'error'
+                        });
+                    }
+                }); 
+            }
+        });
         btn_imprimir.click(function(e){
             var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
             if(id!=''){
@@ -312,7 +357,7 @@
                     documento_or.val(data_cliente[0].documento);
                     getCliente();
                     observaciones.val(data[0].cObservaciones);
-                    nKilometraje.val(data[0].nKilometraje);
+                    nKilometraje.val(Number(data[0].nKilometraje));
                     placa.val(data[0].cPlacaVeh);
                     getPlaca();
                     var data_matenimiento=response.data_matenimiento;
@@ -325,7 +370,7 @@
                     var data_detalle=response.data_detalle;
                     console.log(data_detalle);
                       _.each(data_detalle, function (b) {
-                        var vto=b.idProducto+'*'+b.description+'*'+b.nTotal+'*'+b.impuesto;
+                        var vto=b.idProducto+'*'+b.description+'*'+b.nPrecioUnitario+'*'+b.impuesto;
                          var tipoTo=b.totaltipo;
                          var tipoText=b.descripcioText;
                          var modo_servi=1;
@@ -333,7 +378,11 @@
                          var cant=b.nCant;
                          var opera=b.cOperGrat;
                          var porcen=Number(b.nPorcDescuento);
+
                          var monto=Number(b.nDescuento);
+                         if(porcen>0){
+                            monto=0;
+                         };
                          var idDescuento="";
                          if(b.nIdDscto!=0){
                             idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
@@ -415,7 +464,10 @@
             var actu=hAnio+'-'+hmes+'-'+hdia;
             var hora_ac=hora+':'+minutos;
             dFecRec.val(actu);
+            dFecEntrega.val(actu);
             horaRec.val(hora_ac);
+            idcCondicionPago.val('9').trigger("change");
+            idMoneda.val('1').trigger("change");
             if(estado.val()!=''){
                 if(estado.val()==0 || estado.val()==1){
                     btn_ejecucion.prop('disabled',false);
@@ -456,9 +508,9 @@
                       departamento.append('<option value="" selected >Seleccione</option>');
                      _.each(response.data, function(item) {
                         if(item.cDepartamento==bandera){
-                             departamento.append('<option value="'+item.cDepartamento+'"  >'+item.cDepartamento+'</option>');
+                             departamento.append('<option value="'+item.cDepartamento+'" selected>'+item.cDepartamento+'</option>');
                         }else{
-                             departamento.append('<option value="'+item.cDepartamento+'" >'+item.cDepartamento+'</option>');
+                             departamento.append('<option value="'+item.cDepartamento+'">'+item.cDepartamento+'</option>');
                         };
             
                     });
@@ -555,7 +607,7 @@
                         id_tipocli.data("prev",id_cliente_tipo_or.val());
                         id_tipocli.val(id_cliente_tipo_or.val());
                         // id_cliente_tipo_or.val("")
-                        llenarServicios();
+                        // llenarServicios();
                      }else{
                         distrito_ver.val(datos[0].cDistrito);
                         distrito_or.val(datos[0].ubigeo);
@@ -568,11 +620,16 @@
                        
                         celular_or.val(datos[0].celular);
                         telefono_or.val(datos[0].telefono);
-                        cliente_id_or.val(datos[0].id);
+                        cliente_id_or.val(datos[0].idCliente);
                         tipoCliente_or.val(datos[0].tipo_cliente_descr).trigger('change');
                         id_cliente_tipo_or.val(datos[0].id_tipocli)
-                         id_tipocli.data("prev",id_cliente_tipo_or.val());
-                        llenarServicios();
+                        id_tipocli.data("prev",id_cliente_tipo_or.val());
+                        id_tipoDoc_Venta_or.val(datos[0].IdTipoDocumento).trigger("change");
+                        if(nConsecutivo.val()==""){
+                             id_tipoDoc_Venta_or.focus();
+                        }
+                       
+                        // llenarServicios();
                  
                      }
                  }else {
@@ -621,6 +678,10 @@
                         color.val(datos[0].color);
                         motor.val(datos[0].motor);
                         tipo_vehi.val(datos[0].tipo_vehiculo);
+                         if(nConsecutivo.val()==""){
+                             nKilometraje.focus();
+                         }
+                    
                      }
                  }else {
                     AlertFactory.textType({
@@ -652,11 +713,11 @@
               if(table_servicios.html()!=""){
                  modalDeleteDetalle.modal("show");
               }
-              llenarServicios();
+              // llenarServicios();
         });
         id_cliente_tipo_or.change(function () {
              
-              llenarServicios();
+              // llenarServicios();
         });
            id_tipocli.change(function () {
           
@@ -690,13 +751,7 @@
 
            var mone_ser=idMoneda.val();
           var clientipo_ser=id_cliente_tipo_or.val();
-          servicios_select.html(''); 
-          servicios_select.append('<option value="" selected>Seleccionar </option>');
-            _.each(servicios, function(item) {
-                if(mone_ser==item.idMoneda && clientipo_ser==item.tipo_cliente){
-                    servicios_select.append('<option value="'+item.idProducto+'*'+item.producto+'*'+item.precio+'*'+item.impuesto+'">'+item.codigo_articulo+' '+item.producto+'</option>');
-                }
-            }); 
+          
         }  
         idMarca_add.change(function () {
              var id=idMarca_add.val();
@@ -742,8 +797,9 @@
                     var cant=1;
                     var opera='S';
                     var idDescuento="";
-                  
-                    addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento);
+                   console.log(articuloPrecio);
+                   console.log("articuloPrecio");
+                addServicios(articuloPrecio,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento);
                     
                 }
         });
@@ -1042,35 +1098,37 @@
                             otros_rep.val(mont.toFixed(2));
                          }
         }
-          totalDescuento.change(function() {
+          totalDescuento.change(function() { 
+               sumar_key();
                 var codigo=$(this).attr('data-desc');
                 var val=$(this).val();
                 if(val==""){
                     porcentajeTotal.val(0);
                     montoTotal.val(0);
-                  
-                   
                 }else{
-                     var arrayRe=val.split("*");
+                    var arrayRe=val.split("*");
                     var code=arrayRe[0];
                     var porc=arrayRe[1];
-                    var mont=arrayRe[2];
-                    var porTotal=Number((Number(porc)*Number(total.val()))/100);
-                    $("#porcentajeTotal").val(porTotal.toFixed(2));
-                    $("#montoTotal").val(mont);
+                    var mont=Number(arrayRe[2]);
+                    var porTotal=Number((Number(porc)*Number(desTotal.val()))/100);
+                    console.log("porcentaje total");
+                    console.log(porTotal);
+                    $("#porcentajeTotal").val(porc);
+                    if(porc==0 || porc==""){
+                           var porTotal=mont;
+                    }
+                    $("#montoTotal").val(porTotal.toFixed(2));
                  
                     
                 }
-                var totalDes=total.val();
+                sumar_key();
+                var totalDes=desTotal.val();
                 totalDes=Number(totalDes);
                 if(totalDescuento.val()!='' ){
                     if(montoTotal.val()<1){
-                            var por=Number(porcentajeTotal.val());
-                            totalDes=totalDes-por;
+                           totalDes=Number(totalDes)-Number(montoTotal.val());
                         }else{
-                            console.log("******");
-                            console.log(totalDes);
-                             console.log(montoTotal.val());
+                           
                             totalDes=Number(totalDes)-Number(montoTotal.val());
                         }
                 }
@@ -1200,9 +1258,12 @@
             if(idDescuento!=""){
                 var arrayDe=idDescuento.split("*");
                  porcentajeid=arrayDe[1];
-                 porcentajeid=Number(subt)*Number(porcentajeid)/100;
-                 porcentajeid=porcentajeid.toFixed(2);
-                 montoid=arrayDe[2];
+                 var montoAdd=Number(subt)*Number(porcentajeid)/100;
+                 montoid=montoAdd.toFixed(2);
+                 if(porcentajeid==0 || porcentajeid==""){
+                     montoid=arrayDe[2];
+                 }
+                
             }
             if ($('#tr_b_' + code).length > 0) {
                 AlertFactory.showWarning({
@@ -1241,7 +1302,7 @@
              var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
              var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS2="' + code + '"  value="'+tipoText+'" readonly/>');
-             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"  readonly/>');
+             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"  onkeypress="return validDecimals(event, this, 2)"/>');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
              tdImpu.append(inpDes);
              tdOper.append(chek);
@@ -1291,8 +1352,51 @@
                  
                     cambio(codigo2);
                 });
+            $(".precio_m").blur(function(){
+               console.log("perdio");
+                 var preciofin = $(this).val();
+                  var precioOr=$(this).attr('data-precioOrigen');
+                 var newpp=Number(precioOr)+Number(redondeo);
+                        var newpn=Number(precioOr)-Number(redondeo);
+                        if(preciofin>newpp || preciofin<newpn){
+                            AlertFactory.textType({
+                                    title: '',
+                                    message: 'El precio del producto solo se puede ajustar +- '+ redondeo,
+                                    type: 'info'
+                                });
+                            $(this).val(precioOr);
 
-     
+                        }
+                    calcular_total_MO();
+                    sumar_key();
+
+            });
+
+            
+             $('.precio_m').keypress(function (e) {
+               
+                 var precioOr=$(this).attr('data-precioOrigen');
+
+             
+                var code = (e.keyCode ? e.keyCode : e.which);
+                    if(code==13){
+                        var preciofin = $(this).val();
+                        var newpp=Number(precioOr)+Number(redondeo);
+                        var newpn=Number(precioOr)-Number(redondeo);
+                        if(preciofin>newpp || preciofin<newpn){
+                            AlertFactory.textType({
+                                    title: '',
+                                    message: 'El precio del producto solo se puede ajustar +- '+ redondeo,
+                                    type: 'info'
+                                });
+                            $(this).val(precioOr);
+
+                        }
+                    calcular_total_MO();
+                    sumar_key();
+                      
+                    }
+             });
         //   $('.checkClass').click(function (e) {
         //         var data_prec='data-precio';
         //         var tr_pre='tr_subtotalSer';
@@ -1381,8 +1485,8 @@
                         var impuestot=Number($(this).closest("tr").find("td:eq(3)").children("input").val());
                         var subtota=(cantidadt*preciot)+(impuestot);
                         var porTotal=Number((Number(porc)*Number(subtota))/100);
-                        $("#porc_"+codigo).val(porTotal.toFixed(2));
-                        $("#monto_"+codigo).val(0);
+                        $("#porc_"+codigo).val(porc);
+                          $("#monto_"+codigo).val(0);
                     }else{
                         $("#monto_"+codigo).val(mont);
                         $("#porc_"+codigo).val(0);
@@ -1479,6 +1583,9 @@
                                     type: 'success'
                                 });
                                 $('#tr_b_' + code).remove();
+                                  calcular_total_MO();
+                      sumar_key();
+              
                             }
                      }else {
                         var msg_ = (_.isUndefined(response.message)) ?
@@ -1529,10 +1636,10 @@
                  }
                  
                     $('#tr_b_' + code).remove();
+                   
+                }
                     calcular_total_MO();
                        sumar_key(); 
-                }
-
 
                    
                 });
@@ -1557,6 +1664,7 @@
         getDataForProforma();
          function calcular_total_MO(){
             var totalt=0;
+            var operacionGratuita=0;
             $("#table_servicios tr").each(function(){
                 var cantidadt=$(this).find("td:eq(1)").children("input").val();
                 var preciot=Number($(this).find("td:eq(2)").children("input").val());
@@ -1569,17 +1677,24 @@
                 };
                 var porce=Number($(this).find("td:eq(6)").children("input").val());
                 var monto=Number($(this).find("td:eq(7)").children("input").val());
+
                 var subtota=(cantidadt*preciot)+(impu);
+
                 $(this).find("td:eq(3)").children("input").val(impu.toFixed(2));
+                  // $("#monto_"+codigo).val(0);
                 var codigo=$(this).find("td:eq(1)").children("input").attr('data-codigoC'); 
                
                     if($("#pOper"+codigo).prop('checked')){
                          $("#grat"+codigo).val(subtota.toFixed(2));
+                         operacionGratuita=operacionGratuita+subtota;
                          subtota=0;
                     }else{
                         if($(this).find("td:eq(5)").children(".descuentosSelect").val()!=""){
                             if(porce!='0'){
-                                subtota=subtota-Number(porce);
+                                 var porcet=Number($(this).find("td:eq(6)").children("input").val());
+                                 var montopor=subtota*porcet/100;
+                                 $("#monto_"+codigo).val(montopor.toFixed(2));
+                                 subtota=subtota-Number(montopor);
                             }else{
                                 subtota=subtota-Number(monto);
                             }
@@ -1596,6 +1711,7 @@
             totalMO.val(totalt.toFixed(2));
             var totalDes=totalt;
             totalDes=Number(totalDes);
+            total.val(operacionGratuita.toFixed(2));
             desTotal.val(totalDes.toFixed(2));
             totalDescuento.val("").trigger("change");
         }
@@ -1623,7 +1739,7 @@
              td2.append(btn).append(codigo_mantenimiento).append(modo_mant);
              tr.append(td1).append(td2).append(inpcodigo);
              tabla_grupo_revision.append(tr);
-
+             gru_revisiones.val("").trigger("change");
             // var mo_r=arrayRe[2];
             // var mo_me=arrayRe[3];
             // var mo_ter=arrayRe[4];
@@ -1754,10 +1870,10 @@
             subtotal_moa.val(subA.toFixed(2));
             subtotal_mob.val(subB.toFixed(2));
             var totalfin=Number(subtotal_moa.val())+Number(subtotal_mob.val());
-            total.val(totalfin.toFixed(2));
-            if(totalDescuento.val()==""){
-                desTotal.val(totalfin.toFixed(2));
-            }
+            // total.val(totalfin.toFixed(2));
+            
+            desTotal.val(totalfin.toFixed(2));
+            
         }
         function sumar(m1,m2,m3,m4,m5,m6,m7,m8){
             var mo_revision_va =mo_revision.val();
@@ -1809,7 +1925,7 @@
             btn_terminada.prop('disabled',true);
             idTecnico.val("");
             idAsesor.val("");
-            totalDescuento.val("").trigger("change");
+            
             btn_guardarOrden.prop('disabled',false); 
             idTipoVehi_add.val("").trigger("change");
             idMoneda.val("1").trigger("change");
@@ -1821,8 +1937,7 @@
             cCodConsecutivo.prop('disabled',false); 
             dFecEntrega.val("");
             horaEnt.val("");
-            servicios_select.html(''); 
-            servicios_select.append('<option value="" selected>Seleccionar </option>');
+            servicios_select.val("").trigger("change");
             estado.val("");
             idcCondicionPago.val('1').trigger("change");
             documento_or.val("");
@@ -1867,6 +1982,7 @@
             motor_add.val("");
             motor.val("");
             totalMO.val("");
+            totalDescuento.val("").trigger("change");
         }
         function cleanCliente () {
             cleanRequired();
@@ -2424,7 +2540,63 @@ function getDatosCliente(){
         btn_save_cliente.click(function(e){
             saveCliente();
         });
-        
+        servicios_select.change(function () {
+            if(servicios_select.val()!=""){
+                var bval = true;
+                if(idMoneda.val()==""){
+                   AlertFactory.textType({
+                                title: '',
+                                message: 'Debe seleccionar una moneda',
+                                type: 'info'
+                    });
+                   servicios_select.val("").trigger("change");
+                   bval = false;
+                 }
+                if(razonsocial_cliente_or.val()==""){
+                    AlertFactory.textType({
+                                    title: '',
+                                    message: 'Debe seleccionar un cliente',
+                                    type: 'info'
+                        });
+                       servicios_select.val("").trigger("change");
+                       bval = false;
+                }
+                if(bval){
+                        var id=servicios_select.val()+'_'+id_cliente_tipo_or.val()+'_'+idMoneda.val();
+                        RESTService.get('orden_servicios/get_precios_list', id, function(response) {
+                             if (!_.isUndefined(response.status) && response.status) {
+                                 console.log(response.data);
+                                 var datos=response.data;
+                                 var precio=response.newPrecio;
+                                 if(datos==''){
+                                    var producto=$("#servicios_select option:selected").text();
+                                      AlertFactory.textType({
+                                                title: '',
+                                                message: 'No existe precios para este producto: '+producto,
+                                                type: 'info'
+                                    });
+                                      articuloPrecio="";
+                                     servicios_select.val("").trigger("change");     
+                                 }else{
+                                    if(precio==''){
+                                       precio=datos[0].nPrecio;
+                                    }
+                                    articuloPrecio=datos[0].idProducto+'*'+datos[0].description+'*'+precio+'*'+datos[0].impuesto;  
+                                    console.log(articuloPrecio);
+                                 }
+                                 console.log("precios");
+                                 // servicios_select.val("").trigger("change");
+                             }else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Hubo un error . Intente nuevamente.',
+                                    type: 'info'
+                                });
+                            }
+                           });
+                   }
+            }
+        });
         function saveCliente()
         {
             var bval = true;
@@ -2465,6 +2637,7 @@ function getDatosCliente(){
                     'distrito': distrito.val(),
                     'id_tipocli':id_tipocli.val(), 
                     'IdTipoDocumento':id_tipoDoc_Venta.val(),
+                     'cEstadoCivil':cEstadoCivil.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -2473,7 +2646,7 @@ function getDatosCliente(){
                         documento_or.val(documento.val());
                         getCliente();
                         modaClientes.modal('hide');
-                        
+                        id_tipoDoc_Venta_or.focus();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar el Cliente. Intente nuevamente.' : response.message;
@@ -2487,6 +2660,7 @@ function getDatosCliente(){
             }
 
         };
+
          function getDataFormCustomer () {
             RESTService.all('customers/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -2535,6 +2709,9 @@ function getDatosCliente(){
                 if (!_.isUndefined(response.status) && response.status) {
                    
                      descuentos=response.descuentos;
+                     redondeo=response.dataredondeo
+                     console.log("redondeo");
+                     console.log(redondeo);
                     var hoy = new Date();
                     var hAnio=hoy.getFullYear();
                     var hmes=hoy.getMonth()+1;
@@ -2604,7 +2781,12 @@ function getDatosCliente(){
                     //    _.each(response.servicios, function(item) {
                     //     servicios_select.append('<option value="'+item.idProducto+'*'+item.producto+'*'+item.precio+'">'+item.producto+'</option>');
                     // });
-                       servicios=response.servicios;
+                      servicios=response.servicios_todos;
+                      servicios_select.html(''); 
+                      servicios_select.append('<option value="" selected>Seleccionar </option>');
+                        _.each(response.servicios_todos, function(item) {
+                            servicios_select.append('<option value="'+item.id+'">'+item.code_article+' '+item.description+'</option>');
+                        }); 
                         idMoneda.append('<option value="">Seleccionar</option>');
                        _.each(response.moneda, function(item) {
                         idMoneda.append('<option value="'+item.IdMoneda+'">'+item.Descripcion+'</option>');

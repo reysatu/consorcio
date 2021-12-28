@@ -97,7 +97,7 @@ h5.linea span {
   </div>
 </div>
 <div class="modal" id="modalProforma" role="dialog" style="overflow-y: scroll;">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-lg" style="width:70%;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -261,15 +261,15 @@ h5.linea span {
                                                             <table class="table table-bordered table-striped table-hover" id="tabla_grupo_revision">
                                                                     <thead>
                                                                         <tr>
-                                                                           <th width="110px">Artículos</th>
+                                                                           <th width="140px">Artículos</th>
                                                                             <th width="60px">Cantidad</th>
-                                                                            <th width="60px">Precio</th>
+                                                                            <th width="80px">Precio</th>
                                                                             <th width="70px">Impuesto</th>
-                                                                            <th>Operación gratuita</th>
+                                                                            <th width="70px">Operación gratuita</th>
                                                                             <th width="130px">Descuentos</th>
-                                                                            <th width="10px">Porcentaje</th>
-                                                                            <th width="70px">Monto</th>
-                                                                             <th width="80px">Sub Total</th>
+                                                                            <th width="80px">Porcentaje</th>
+                                                                            <th width="100px">Monto descuento</th>
+                                                                             <th width="100px">Sub Total</th>
                                                                             <th>Tipo</th>
                                                                             <th width="30px"></th>
                                                                         </tr>
@@ -306,15 +306,15 @@ h5.linea span {
                                                             <table class="table table-bordered table-striped table-hover" id="tabla_grupo_revision">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th width="110px">Servicios</th>
+                                                                            <th width="140px">Servicios</th>
                                                                             <th width="60px">Cantidad</th>
-                                                                            <th width="60px">Precio</th>
+                                                                            <th width="80px">Precio</th>
                                                                             <th width="70px">Impuesto</th>
-                                                                            <th>Operación gratuita</th>
+                                                                            <th width="70px">Operación gratuita</th>
                                                                             <th width="130px">Descuentos</th>
-                                                                            <th width="10px">Porcentaje</th>
-                                                                            <th width="70px">Monto</th>
-                                                                             <th width="80px">Sub Total</th>
+                                                                            <th width="80px">Porcentaje</th>
+                                                                            <th width="100px">Monto descuento</th>
+                                                                             <th width="100px">Sub Total</th>
                                                                             <th>Tipo</th>
                                                                             <th width="30px"></th>
                                                                         </tr>
@@ -407,22 +407,22 @@ h5.linea span {
                                                   </div>
                                                   <div class="col-md-12 ">
                                                     <div class="form-group">
-                                                           <label class="col-sm-2  control-label">
+                                                           <label class="col-sm-1 control-label">
                                                              Descuento
                                                            </label>
                                                           <div class="col-sm-2 ">
                                                               <select id="totalDescuento" class="totalDescuento form-control input-sm" style="width: 100%" /> </select>
                                                           </div>
-                                                           <label class="col-sm-2  control-label">
+                                                           <label class="col-sm-1  control-label">
                                                              Porcentaje
                                                            </label>
                                                            <div class="col-sm-2">
                                                               <input id="porcentajeTotal" class="form-control input-sm"  value="0"  readonly />
                                                           </div>
-                                                            <label class="col-sm-1  control-label">
-                                                             Monto
+                                                            <label class="col-sm-2  control-label">
+                                                             Monto descuento
                                                            </label>
-                                                            <div class="col-sm-3">
+                                                            <div class="col-sm-3 col-md-offset-1">
                                                               <input id="montoTotal" class="form-control input-sm"    readonly />
                                                           </div> 
                                                     </div>

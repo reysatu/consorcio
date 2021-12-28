@@ -15,6 +15,7 @@ use App\Http\Requests\CustomerRequest;
 use App\Http\Recopro\TablaSunat\TablaSunatInterface;
 use App\Http\Recopro\TypeCostumer\TypeCostumerInterface;
 use App\Http\Recopro\DocumentType\DocumentTypeInterface;
+use App\Http\Recopro\Persona\PersonaInterface;
 use Carbon\Carbon;
 use DB;
 class CustomerController extends Controller
@@ -32,11 +33,51 @@ class CustomerController extends Controller
         $params = ['id', 'tipodoc','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','ubigeo','id_tipocli','IdTipoDocumento'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
-    public function createUpdate($id, CustomerInterface $repo, Request $request)
+    public function createUpdate($id, CustomerInterface $repo,PersonaInterface $rePer, Request $request)
     {
         DB::beginTransaction();
         try {
             $data = $request->all();
+            $table1="ERP_Persona";
+            $idt1='idPersona';
+            $dato=[];
+            $dato['cDireccion'] = strtoupper($data['direccion']);
+            $dato['cTipodocumento'] = strtoupper($data['tipodoc']);
+            $dato['cNumerodocumento'] = strtoupper($data['documento']);
+            $dato['cRegion'] =substr($data['distrito'], 0, 2);
+            $dato['cProvincia'] =substr($data['distrito'], 0, 4);
+            $dato['cUbigeo'] = strtoupper($data['distrito']);
+            $dato['cEmail'] = strtoupper($data['correo_electronico']);
+            $dato['cCelular'] = strtoupper($data['celular']);
+            $dato['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
+            $tip='06';
+            $raz=strtoupper($data['razonsocial_cliente']);
+            if($data['tipodoc']=='01'){
+                 $tip='01';
+                 $raz=null;
+            }
+            $idPersonacl='';
+            $dato['cTipopersona'] = $tip;
+            $dato['cRazonsocial'] = strtoupper($raz);
+            $w = $rePer->findByCode($data['documento']);
+            if ($id != 0) {
+                $datos_cliente = $rePer->find($id);
+                if ($w && $w->idPersona != $datos_cliente[0]->idPersona) {
+                    throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
+                }
+                $dataper=$rePer->update($datos_cliente[0]->idPersona, $dato);
+                $idPersonacl=$datos_cliente[0]->idPersona;
+            } else {
+                if ($w) {
+                    throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
+                }
+                $dato['idPersona'] = $repo->get_consecutivo($table1,$idt1);
+                $dataper=$rePer->create($dato);
+                $idPersonacl=$dataper->idPersona;
+
+            };
+          
+
             $table="ERP_Clientes";
             $idt='id';
             $data['tipodoc'] = strtoupper($data['tipodoc']);
@@ -48,6 +89,8 @@ class CustomerController extends Controller
             $data['celular'] = strtoupper($data['celular']);
             $data['telefono'] = strtoupper($data['telefono']);
             $data['ubigeo'] = $data['distrito'];
+            $data['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
+            $data['idPersona']= $idPersonacl;
             $w = $repo->findByCode($data['documento']);
             if ($id != 0) {
                 if ($w && $w->id != $id) {
@@ -73,9 +116,12 @@ class CustomerController extends Controller
             ]);
         }
     }
-    public function create(CustomerInterface $repo, Request $request)
+    public function create(CustomerInterface $repo,PersonaInterface $rePer, Request $request)
     {
+        
+
         $data = $request->all();
+
         $table="ERP_Clientes";
         $id='id';
         $data['id'] = $repo->get_consecutivo($table,$id);
@@ -86,6 +132,7 @@ class CustomerController extends Controller
         $data['direccion'] = strtoupper($data['direccion']);
         $data['correo_electronico'] = strtoupper($data['correo_electronico']);
         $data['celular'] = strtoupper($data['celular']);
+        
         $repo->create($data);
         return response()->json([
             'Result' => 'OK',
@@ -98,11 +145,13 @@ class CustomerController extends Controller
         $tipo_doc = $tipodoc->gte_tipo_doc();
         $tipo_clie = $tipodoc->tipo_clie();
         $tipoc_doc_venta = $tipodoc->tipoc_doc_venta();
+        $tipo_persona=$tipodoc->getPersona();
         return response()->json([
             'status' => true,
             'tipoc_doc' => $tipo_doc,
             'tipo_clie' => $tipo_clie,
             'tipoc_doc_venta'=>$tipoc_doc_venta,
+            'tipo_persona'=>$tipo_persona,
         ]);
     }
     public function update(CustomerInterface $repo, Request $request)
@@ -135,6 +184,10 @@ class CustomerController extends Controller
      public function getTipoDocumento(TablaSunatInterface $repo)
     {
         return parseSelect($repo->allTipoDocumento(), 'cCodigo', 'cDescripcion');
+    }
+    public function getTipoPersona(TablaSunatInterface $repo)
+    {
+        return parseSelect($repo->allTipoPersona(), 'cCodigo', 'cDescripcion');
     }
      public function getTipoCliente(TypeCostumerInterface $repo)
     {

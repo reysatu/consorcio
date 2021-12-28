@@ -12,6 +12,7 @@ use App\Http\Recopro\Orden_servicio\Orden_servicioTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Requests\Orden_servicioRequest;
+
 use App\Http\Recopro\Customer\CustomerInterface;
 use DB;
 class Orden_servicioController extends Controller
@@ -108,7 +109,7 @@ class Orden_servicioController extends Controller
             ]);
         }
     }
-    public function createUpdate($id, Orden_servicioInterface $repo, Request $request)
+    public function createUpdate($id, Orden_servicioInterface $repo,CustomerInterface $repoCust,Request $request)
     {
         DB::beginTransaction();
         try {
@@ -161,13 +162,23 @@ class Orden_servicioController extends Controller
 
             $impuesto=0;
             $totalmo=0;
-             for ($i=0; $i < count($impuesto_servicio) ; $i++) {
+
+            $dato=[];
+         
+            $idCl=$idCliente;
+            $dato['IdTipoDocumento'] =$id_tipoDoc_Venta_or;
+            $repoCust->update($idCl, $dato);
+
+            for ($i=0; $i < count($impuesto_servicio) ; $i++) {
                 $impuesto=$impuesto+floatval($impuesto_servicio[$i]);
             }
              for ($i=0; $i < count($precio_array) ; $i++) {
                 $totalmo=$totalmo+floatval($precio_array[$i]);
             }
             $total=$data["total"];
+            if($nOperGratuita==""){
+                $nOperGratuita=0;
+            }
             if($mo_revision==''){
                 $mo_revision=0;
             };
@@ -326,11 +337,12 @@ class Orden_servicioController extends Controller
         $asesor = $Repo->getasesor();
         $moneda = $Repo->getmoneda();
         $servicios = $Repo->get_servicios(); 
+        $servicios_todos = $Repo->get_servicios_todos(); 
         $tipoMantenimiento = $Repo->get_Tipomantenimientos(); 
         $totales = $Repo->get_totales();
-           $usuario=auth()->id();
+        $usuario=auth()->id();
         $descuentos=$Repo->get_descuentos($usuario);
-     
+        $dataredondeo=$Repo->get_redondeo();
 
         return response()->json([
             'status' => true,
@@ -340,6 +352,7 @@ class Orden_servicioController extends Controller
             'tipo_servicio' => $tipo_servicio,
             'tipo_document'=> $tipo_document,
             'revisiones'=>$revisiones,
+            'servicios_todos'=>$servicios_todos,
             'tecnico'=>$tecnico,
             'moneda'=>$moneda,
             'asesor'=>$asesor,
@@ -348,6 +361,7 @@ class Orden_servicioController extends Controller
             'totales'=>$totales,
             'tipoMantenimiento'=>$tipoMantenimiento,
             'tipo_document_venta'=>$tipo_document_venta,
+            'dataredondeo'=>$dataredondeo[0]->value,
             'usuario'=>$usuario,
         ]);
     }
@@ -361,6 +375,39 @@ class Orden_servicioController extends Controller
             return response()->json([
                 'status' => true,
                 'data'=>$val,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function get_precios_list($id, Orden_servicioInterface $repo, Request $request)
+    {   try {
+            $valtodo=explode("_", $id);
+            $idProducto=$valtodo[0];
+            $idTipoCli=$valtodo[1];
+            $idMoneda=$valtodo[2];
+            $val=$repo->get_precios_list($idProducto, $idTipoCli,$idMoneda);
+             $newPrecio='';
+            if(empty($val) && $idMoneda=='1'){
+                $para=$repo->get_parametroPrecio();
+                $val=$repo->get_precios_list($idProducto, $idTipoCli,$para[0]->value);
+                if(!empty($val)){
+                    $fecha_actual=date("Y-m-d");
+                    $cambio=$repo->cambio_tipo($para[0]->value,$fecha_actual);
+                    $newPrecio=floatval($val[0]->nPrecio)*floatval($cambio[0]->Mensaje);
+                }
+            }
+        // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
+        //     DB::commit();
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+                'newPrecio'=>$newPrecio,
             ]);
 
     }catch (\Exception $e) {
