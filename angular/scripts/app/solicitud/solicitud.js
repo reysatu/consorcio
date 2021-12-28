@@ -1745,7 +1745,6 @@
 
         $scope.guardar_solicitud = function() {
             
-
             var bval = true;
             bval = bval && cCodConsecutivo.required();
             bval = bval && idMoneda.required();
@@ -1754,7 +1753,6 @@
             bval = bval && documento_or.required();
 
             if(bval) {
-                
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize(),
                     function (data, textStatus, jqXHR) {
                         console.log(data);

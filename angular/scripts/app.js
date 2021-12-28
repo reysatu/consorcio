@@ -72,13 +72,13 @@
         'sys.app.aprobacion',
         'sys.app.cajas',
         'sys.app.consecutivos_comprobantes',
-<<<<<<< HEAD
+
         'sys.app.vendedores',
-=======
+
         'sys.app.cobradors',
         'sys.app.configJerarquias',
         'sys.app.personas',
->>>>>>> c3b42633f971023939b3e9ec08b503abd859b73a
+
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
