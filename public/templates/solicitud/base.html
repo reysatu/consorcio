@@ -81,12 +81,13 @@
                 <h4 class="modal-title" id="titlemodalSolicitud"></h4>
 
             </div>
+            <form id="formulario-solicitud">
             <div class="modal-body">
                 <div class="tab-content">
                     <br>
                     <div>
                         <div style="float:left">
-                            <button type="button" id="" disabled class="btn btn-primary btn-sm btn_ejecucion">
+                            <!-- <button type="button" id="" disabled class="btn btn-primary btn-sm btn_ejecucion">
                                 <span class="fa fa-save"></span>
                                 En Ejecución
                             </button>
@@ -97,13 +98,13 @@
                             <button type="button" id="" disabled class="btn btn-info btn-sm btn_cancelar">
                                 <span class="fa fa-ban"></span>
                                 Cancelar
-                            </button>
+                            </button> -->
                         </div>
                         <div style="float:right">
-                            <button type="button" id="" class="btn btn-info btn-sm btn_imprimir">
+                            <!-- <button type="button" id="" class="btn btn-info btn-sm btn_imprimir">
                                 <span class="fa fa-file-pdf-o"></span>
                                 Imprimir
-                            </button>
+                            </button> -->
                             <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden"
                                 ng-click="saveOrdenServicio()">
                                 <span class="fa fa-save"></span>
@@ -122,18 +123,24 @@
                                     <input type="hidden" class="form-control input-sm " id="idOrden">
                                     <label class="col-sm-1 control-label">Consecutivo</label>
                                     <div class="col-sm-2">
-                                        <select id="cCodConsecutivo" class="form-control input-sm"></select>
+                                        <select id="cCodConsecutivo" name="cCodConsecutivo" class="form-control input-sm"></select>
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" class="form-control input-sm" id="nConsecutivo" readonly />
+                                        <input type="text" class="form-control input-sm" id="nConsecutivo" name="nConsecutivo" readonly />
                                     </div>
                                     <label class="col-sm-1 control-label">Moneda</label>
                                     <div class="col-sm-2">
-                                        <select id="IdMoneda" class="form-control input-sm"></select>
+                                        <select id="IdMoneda" name="idmoneda" class="form-control input-sm"></select>
                                     </div>
-                                    <label class="col-sm-2 control-label">Condiciones de Pago</label>
+                                    <label class="col-sm-2 control-label">Tipo Solicitud</label>
                                     <div class="col-sm-2">
-                                         <select id="idcCondicionPago" disabled class="form-control input-sm"></select>
+                                        <select id="tipo_solicitud" name="tipo_solicitud" class="form-control input-sm">
+                                            <option value="">Seleccionar</option>
+                                            <option value="1">CONTADO</option>
+                                            <option value="2">CRÉDITO DIRECTO</option>
+                                            <option value="3">CRÉDITO FINANCIERO</option>
+                                        </select>
+
                                     </div>
                                    
                                 </div>
@@ -191,14 +198,21 @@
                                     </div>
                                 </div> -->
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label">Convenio</label>
+                                    <label class="col-sm-2 control-label">Fecha Vencimiento</label>
                                     <div class="col-sm-3">
-                                        <select id="idconvenio" class="form-control input-sm"></select>
+                                        <input type="date" class="form-control input-sm" id="fecha_vencimiento" name="fecha_vencimiento">
+                                    </div>
+
+                                    <div class="credito" style="display: none;">
+                                        <label class="col-sm-1 control-label">Convenio</label>
+                                        <div class="col-sm-3">
+                                            <select id="idconvenio" name="idconvenio" class="form-control input-sm"></select>
+                                        </div>
                                     </div>
 
                                     <label class="col-sm-1 control-label">Vendedor</label>
                                     <div class="col-sm-3">
-                                        <select id="idvendedor" style="width: 100%;"
+                                        <select id="idvendedor" name="idvendedor" style="width: 100%;"
                                             class="form-control input-sm js-example-responsive"></select>
                                     </div>
                                 </div>
@@ -211,11 +225,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input type="hidden" class="form-control input-sm " id="cliente_id_or">
+                                    <input type="hidden" class="form-control input-sm " id="cliente_id_or" name="idcliente">
                                     <input type="hidden" class="form-control input-sm " id="distrito_or">
                                     <label class="col-sm-2 control-label">Tipo Documento</label>
                                     <div class="col-sm-2">
-                                        <select id="idDocumentoCli" disabled class="form-control input-sm"></select>
+                                        <select id="idDocumentoCli"  disabled class="form-control input-sm"></select>
                                     </div>
                                     <label class="col-sm-1 control-label col-md-offset-1"> Documento</label>
                                     <div class="col-sm-2">
@@ -281,8 +295,8 @@
                             </div>
                         </div>
                     </div>
-                    <h5 class="linea"><span>Vehículo</span></h5>
-                    <div class="form-horizontal">
+                    <!-- <h5 class="linea"><span>Vehículo</span></h5> -->
+                    <!-- <div class="form-horizontal">
                         <br>
                         <div class="row">
                             <div class="col-md-12">
@@ -324,8 +338,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <h5 class="linea"><span>Mantenimientos</span></h5>
+                    </div> -->
+                    <!-- <h5 class="linea"><span>Mantenimientos</span></h5> -->
                     <div class="form-horizontal">
                         <div class="row">
                             <!-- <div class="col-md-6">
@@ -355,10 +369,10 @@
                                 </div>
                             </div> -->
                             <div class="col-md-12 ">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <h5 class="">Servicios a realizar</h5>
-                                </div>
-                                <div class="form-group">
+                                </div> -->
+                                <!-- <div class="form-group">
                                     <div class="col-sm-7">
                                         <select id="servicios_select" class="form-control input-sm" style="width: 100%">
                                             <option value="">Servicios</option>
@@ -366,6 +380,16 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <select id="tipo_totales_slec" class="form-control input-sm"></select>
+                                    </div>
+                                </div> -->
+                                <br>
+                                <div class="form-group">
+                                    <input type="hidden" id="ident_detalle">
+                                    <div class="col-sm-2">
+                                            <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArticulo()">
+                                            <span class="fa fa-plus"></span>
+                                            Agregar Artículo
+                                            </button>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -375,36 +399,43 @@
                                                 id="tabla_grupo_revision">
                                                 <thead>
                                                     <tr>
-                                                        <th width="110px">Servicios</th>
-                                                        <th width="60px">Cantidad</th>
+                                                        <th width="110px">Articulo</th>
+                                                        <th width="110px">Almacen</th>
+                                                        <th width="110px">Localización</th>
+                                                        <th width="110px">Lote</th>
+                                                        <th width="30px">Cantidad</th>
                                                         <th width="60px">Precio</th>
-                                                        <th width="70px">Impuesto</th>
-                                                        <th>Operación gratuita</th>
-                                                        <th width="130px">Descuentos</th>
-                                                        <th width="10px">Porcentaje</th>
-                                                        <th width="70px">Monto</th>
-                                                        <th width="80px">Sub Total</th>
-                                                        <th>Tipo</th>
+                                                        <th width="60px">Precio Total</th>
+                                                        <th width="70px">Descuento</th>
+                                                        <th width="70px">Porcentaje Descuento</th>
+                                                        <th width="70px">M. Descuento</th>
+                                                        <th width="70px">M. Subtotal</th>
+                                                       
+                                                        <th width="130px">M. Exonerado</th>
+                                                        <th width="10px">M. Afecto</th>
+                                                        <th width="70px">M. Inafecto</th>
+                                                        <th width="80px">Impuestos</th>
+                                                        <th width="70px">Total</th>
                                                         <th width="30px"></th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="table_servicios"></tbody>
+                                                <tbody id="articulo_mov_det"></tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <div class="col-md-12">
                                         <label class="col-sm-2 control-label">Total Mano de Obra</label>
                                         <div class="col-sm-4">
                                             <input id="totalMO" class="form-control input-sm" readonly />
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <h5 class="linea"><span>Datos Totales</span></h5>
                                 <div class="form-group">
                                     <div class="col-md-6">
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label class="col-sm-6 control-label">M.O Revisión</label>
                                             <div class="col-sm-6">
                                                 <input type="number" id="mo_revision" class="form-control input-sm"
@@ -438,49 +469,49 @@
                                                 <input type="number" id="subtotal_moa" class="form-control input-sm"
                                                     readonly value="0" />
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Repuestos</label>
+                                            <label class="col-sm-6 control-label">Monto Descuento</label>
                                             <div class="col-sm-6">
-                                                <input type="number" id="repuestos" class="form-control input-sm"
+                                                <input type="number" id="t_monto_descuento" name="t_monto_descuento" class="form-control input-sm"
                                                     value="0" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Accesorios</label>
+                                            <label class="col-sm-6 control-label">Monto Sub Total</label>
                                             <div class="col-sm-6">
-                                                <input type="number" id="accesorios" class="form-control input-sm"
+                                                <input type="number" id="t_monto_subtotal" name="t_monto_subtotal" class="form-control input-sm"
                                                     value="0" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Lubricantes</label>
+                                            <label class="col-sm-6 control-label">Monto Exonerado</label>
                                             <div class="col-sm-6">
-                                                <input type="number" id="lubricantes" class="form-control input-sm"
+                                                <input type="number" id="t_monto_exonerado" name="t_monto_exonerado" class="form-control input-sm"
                                                     value="0" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Otros</label>
+                                            <label class="col-sm-6 control-label">Monto Afecto</label>
                                             <div class="col-sm-6">
-                                                <input type="number" id="otros_rep" class="form-control input-sm"
+                                                <input type="number" id="t_monto_afecto" name="t_monto_afecto" class="form-control input-sm"
                                                     value="0" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Sub Total</label>
+                                            <label class="col-sm-6 control-label">Monto Inafecto</label>
                                             <div class="col-sm-6">
-                                                <input id="subtotal_mob" class="form-control input-sm" value="0"
+                                                <input id="t_monto_inafecto" name="t_monto_inafecto" class="form-control input-sm" value="0"
                                                     readonly />
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-sm-6 control-label">Operación Gratuita</label>
+                                            <label class="col-sm-6 control-label">Impuestos</label>
                                             <div class="col-sm-6">
-                                                <input id="total" class="form-control input-sm" readonly value="0" />
+                                                <input id="t_impuestos" name="t_impuestos" class="form-control input-sm" readonly value="0" />
                                             </div>
                                         </div>
 
@@ -491,27 +522,27 @@
                                                 Descuento
                                             </label>
                                             <div class="col-sm-2 ">
-                                                <select id="totalDescuento" class="totalDescuento form-control input-sm"
+                                                <select id="totalDescuento" name="descuento_id" class="totalDescuento form-control input-sm"
                                                     style="width: 100%" /> </select>
                                             </div>
                                             <label class="col-sm-2  control-label">
                                                 Porcentaje
                                             </label>
                                             <div class="col-sm-2">
-                                                <input id="porcentajeTotal" class="form-control input-sm" value="0"
+                                                <input id="porcentajeTotal" name="porcentaje_descuento_total" class="form-control input-sm" value="0"
                                                     readonly />
                                             </div>
                                             <label class="col-sm-1  control-label">
                                                 Monto
                                             </label>
                                             <div class="col-sm-3">
-                                                <input id="montoTotal" class="form-control input-sm" readonly />
+                                                <input id="montoTotal" name="monto_descuento_total" class="form-control input-sm" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                             <div class="col-sm-3 col-md-offset-1">
-                                                <input id="desTotal" class="form-control input-sm" readonly value="0" />
+                                                <input id="desTotal" name="t_total" class="form-control input-sm" readonly value="0" />
                                             </div>
                                         </div>
                                     </div>
@@ -523,7 +554,7 @@
             </div>
             <div class="modal-footer">
                 <div style="float:left">
-                    <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" disabled>
+                    <!-- <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" disabled>
                         <span class="fa fa-save"></span>
                         En Ejecución
                     </button>
@@ -534,15 +565,15 @@
                     <button type="button" id="" class="btn btn-info btn-sm btn_cancelar" disabled>
                         <span class="fa fa-ban"></span>
                         Cancelar
-                    </button>
+                    </button> -->
                 </div>
                 <div style="float:right">
-                    <button type="button" id="" class="btn btn-info btn-sm btn_imprimir">
+                    <!-- <button type="button" id="" class="btn btn-info btn-sm btn_imprimir">
                         <span class="fa fa-file-pdf-o"></span>
                         Imprimir
-                    </button>
+                    </button> -->
                     <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden"
-                        ng-click="saveOrdenServicio()">
+                        ng-click="guardar_solicitud()">
                         <span class="fa fa-save"></span>
                         Guardar
                     </button>
@@ -551,6 +582,266 @@
                     </button>
                 </div>
             </div>
+            </form>
         </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="modaClientes" role="dialog">
+    <div class="modal-dialog" role="document">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="titleModalClientes"></h4>
+        </div>
+        
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="cliente_id" >
+                                <label class="col-sm-2 control-label">Tipo Documento</label>
+                                <div class="col-sm-4">
+                                    <select id="tipodoc" class="form-control input-sm" ></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Documento</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="documento" maxlength="11">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Tipo Cliente</label>
+                                <div class="col-sm-4">
+                                    <select id="id_tipocli" class="form-control input-sm"></select>
+                                </div>
+                                <!-- <label class="col-sm-2 control-label">Tipo Doc. de Venta</label>
+                                <div class="col-sm-4">
+                                    <select id="id_tipoDoc_Venta" class="form-control input-sm"></select>
+                                </div> -->
+                                
+                            
+                            </div>
+                            <div class="form-group">
+                            <input type="hidden" class="form-control input-sm " id="tienda_id" >
+                                <label class="col-sm-2 control-label">Razon Social</label>
+                                <div class="col-sm-10">
+                                    <input id="razonsocial_cliente" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                            <input type="hidden" class="form-control input-sm " id="tienda_id" >
+                                <label class="col-sm-2 control-label">Dirección</label>
+                                <div class="col-sm-10">
+                                    <input id="direccion" class="form-control input-sm" />
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Contacto</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="contacto">
+                                </div>
+                                <label class="col-sm-2 control-label">Correo</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="correo_electronico">
+                                </div>
+                            
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="tienda_id" >
+                                <label class="col-sm-2 control-label">Celular</label>
+                                <div class="col-sm-4">
+                                    <input id="celular" class="form-control input-sm" />
+                                </div>
+                                <label class="col-sm-2 control-label">Teléfono</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="telefono">
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                            <label class="col-sm-2 control-label">Departamento</label>
+                                <div class="col-sm-4">
+                                    <select id="departamento" class="form-control input-sm" ></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Provincia</label>
+                                <div class="col-sm-4">
+                                    <select id="provincia" class="form-control input-sm"></select>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                            <label class="col-sm-2 control-label">Distrito</label>
+                                <div class="col-sm-4">
+                                    <select id="distrito" class="form-control input-sm"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>  
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-admin btn-sm" id="btn_save_cliente" >Guardar</button>  
+                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+      
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="modal " id="modalMovimietoArticulo" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <input type="hidden" id="idenifcador_table_art" value="I">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="titlemodalMovimietoArticulo">Artículos</h4>
+        </div>
+        <div class="modal-body">
+             <div class="row">
+                <div class="col-md-12">
+                    <div id="table_container_Register_Articulo" class="table-responsive"></div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="hidden" id="idArtSerie">
+                    <input type="hidden" id="cantArtSerie">
+                     <input type="hidden" id="desArtSerie">
+                    
+                </div> 
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArtLisSeri()">
+            <span class="fa fa-plus"></span>
+                            Agregar
+        </button>   
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+      
+    </div>
+</div> 
+
+<div class="modal" id="modalSerieR" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="titleModalLote">Serie</h4>
+        </div>
+        <div class="modal-body">
+              <div class="form-horizontal">
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger hide" role="alert" id="msg_cont">
+                            <span class="fa fa-warning"></span>
+                            Debe seleccionar un Artículo
+                        </div> 
+                        <div class="form-group">
+                            <input type="hidden" id="identSerAr">
+                            <label class="col-sm-2 control-label">Artículo</label>
+                                <div class="col-sm-6">
+                                        <input type="hidden" id="idProductoMss" readonly class="form-control input-sm">
+                                        <input type="hidden" id="costoAS" readonly class="form-control input-sm">
+                                        <input type="text" id="desProductoMss" readonly class="form-control input-sm">
+                                </div>
+                            <label class="col-sm-1 control-label">Cantidad</label>
+                                <div class="col-sm-2">
+                                        <input type="text" id="cantProductoMss"  class="form-control input-sm" onkeypress="return soloNumeros(event)">
+                                </div>    
+                        </div>
+                        <br>
+                        <div class="form-group">
+                                <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 ">
+                                    <!-- <button id="btnAgreSer" type="button" class="btn btn-danger-admin btn-sm" ng-click="addtableSerie()" >Agregar Serie</button>   -->
+                              
+                                    <button id="btnSeleSerie" type="button" class="btn btn-danger-admin btn-sm" ng-click="addSeleccSerie()" >Seleccionar Serie </button>  
+                                </div>    
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="table_container_Series_Articulo" class="table-responsive"></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive table-wrapper">
+                            <table class="table table-bordered table-striped table-hover" id="tabla_articulo_serie">
+                                    <thead id="table_serie_cabecera">
+                                        <!-- <tr>
+                                            <th width="250px" >Artículo</th>
+                                            <th width="250px" height="20px">Nr° Serie</th>
+                                            <th width="250px" height="20px">Chasis</th>
+                                            <th width="250px" height="20px">Motor</th>
+                                            <th width="100px" height="20px">Color</th>
+                                            <th width="150px" height="20px">Año fabricación</th>
+                                            <th width="100px" height="20px">Año Modelo</th>
+                                        </tr> -->
+                                    </thead>
+                                    <tbody id="articulo_serie_det"></tbody>
+                            </table> 
+                        </div>
+                    </div>
+                 </div>   
+              </div>  
+        </div>
+        <div class="modal-footer">
+         <button type="button" id="btn_serC"  disabled class="btn btn-danger-admin btn-sm" ng-click="addSerieCompleTab()" >Agregar</button>      
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+      
+    </div>
+</div> 
+
+
+<div class="modal" id="modalNada" role="dialog">
+    <div class="modal-dialog" role="document">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="titleModalLote">Artículo</h4>
+        </div>
+        <div class="modal-body">
+              <div class="form-horizontal">
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger hide" role="alert" id="msg_cont">
+                            <span class="fa fa-warning"></span>
+                            Debe seleccionar un Artículo
+                        </div> 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Artículo</label>
+                                <div class="col-sm-6">
+                                        <input type="hidden" id="idProductoMN" readonly class="form-control input-sm">
+                                        <input type="hidden" id="costoNa" readonly class="form-control input-sm">
+                                        <input type="text" id="desProductoMN" readonly class="form-control input-sm">
+                                </div>
+                            <label class="col-sm-2 control-label">Cantidad</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control input-sm" id="cantProductoMN">
+                            </div>   
+                        </div>
+                    </div>
+                 </div>   
+              </div>  
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+      
     </div>
 </div>

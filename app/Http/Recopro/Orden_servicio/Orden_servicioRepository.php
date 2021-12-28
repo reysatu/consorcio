@@ -75,7 +75,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
    
     public function getcondicion_pago(){
    
-          $mostrar3=DB::select("select * from get_totales");
+          $mostrar3=DB::select("select * from ERP_CondicionPago");
           return $mostrar3;
     }
     public function gettipo_servicio(){
@@ -157,6 +157,7 @@ where IdTipoDocumento in ('01','03')");
     public function get_totales(){
    
           $mostrar3=DB::select("SELECT * FROM ERP_TipoTotalOS where estado='A'");
+      //     print_r($mostrar3);
           return $mostrar3;
     }
     public function get_servicios(){

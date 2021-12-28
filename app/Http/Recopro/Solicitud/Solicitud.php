@@ -1,7 +1,7 @@
 <?php namespace App\Http\Recopro\Solicitud;
 
 use App\Http\Recopro\User\User;
-use App\Http\Recopro\Shop\Shop;
+// use App\Http\Recopro\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +17,7 @@ class Solicitud extends Model
 
     protected $table = 'ERP_Solicitud';
 
-    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'user_created', 'user_updated', 'user_deleted', 'idconvenio'];
+    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'origen', 'idconvenio', 'idvendedor', 'idcliente', 'idmoneda', 'estado', 'fecha_vencimiento', 'iddescuento', 'porcentaje_descuento', 'monto_descuento', 'subtotal', 'monto_exonerado', 'monto_afecto', 'monto_inafecto', 'impuestos', 'monto_total', 'monto_descuento_detalle', 'user_created', 'user_updated', 'user_deleted'];
     protected $primaryKey = 'cCodConsecutivo';
     // protected $keyType = 'string';
     protected $hidden = ['deleted_at'];
@@ -32,8 +32,8 @@ class Solicitud extends Model
         return $this->belongsTo(User::class, 'user_updated');
     }
 
-    public function tienda_d()
-    {
-        return $this->belongsTo(Shop::class,'idtienda');
-    }
+    // public function tienda_d()
+    // {
+    //     return $this->belongsTo(Shop::class,'idtienda');
+    // }
 }
