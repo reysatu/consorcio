@@ -72,9 +72,13 @@
         'sys.app.aprobacion',
         'sys.app.cajas',
         'sys.app.consecutivos_comprobantes',
+
+        'sys.app.vendedores',
+
         'sys.app.cobradors',
         'sys.app.configJerarquias',
         'sys.app.personas',
+
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
@@ -88,7 +92,8 @@
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
         //Ventas
-        // 'sys.app.solicitud',
+        'sys.app.solicitud',
+
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',
@@ -105,6 +110,7 @@
         'sys.app.query_movements',
         'sys.app.report_stocks',
         'sys.app.report_movements',
+        'sys.app.aperturaCajas',
         // Proyectos
         'sys.app.projects',
         'sys.app.direct_billing',

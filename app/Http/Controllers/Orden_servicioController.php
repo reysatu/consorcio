@@ -287,7 +287,7 @@ class Orden_servicioController extends Controller
             $staOperacion=$data['staOperacion'];
             $staOperacion=explode(',', $staOperacion);
 
-              $operacionGra=$data['operacionGra'];
+            $operacionGra=$data['operacionGra'];
             $operacionGra=explode(',', $operacionGra);
 
              for ($i=0; $i < count($id_mantenimiento_array) ; $i++) { 

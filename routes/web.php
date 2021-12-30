@@ -154,6 +154,12 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\ConsecutivosComprobantes.php';
 
+
+    require app_path() . '\Http\Routes\CajaDiarias.php';
+
+    require app_path() . '\Http\Routes\Vendedores.php';
+
+
     // Routes Ventas
 
     require app_path() . '\Http\Routes\Solicitud.php';

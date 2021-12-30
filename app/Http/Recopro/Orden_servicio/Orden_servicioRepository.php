@@ -174,6 +174,7 @@ where IdTipoDocumento in ('01','03')");
     public function get_totales(){
    
           $mostrar3=DB::select("SELECT * FROM ERP_TipoTotalOS where estado='A'");
+      //     print_r($mostrar3);
           return $mostrar3;
     }
     public function get_servicios(){

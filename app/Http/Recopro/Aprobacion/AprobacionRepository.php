@@ -51,6 +51,11 @@ class AprobacionRepository implements AprobacionInterface
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
+    public function getDetalle($id)
+    {   
+        $mostrar=DB::select("select * from ERP_AprobacionUsuario where idAprobacion='$id'");
+        return $mostrar; 
+    }
 
     public function find($id)
     {
@@ -62,6 +67,7 @@ class AprobacionRepository implements AprobacionInterface
         $attributes = [];
         $attributes['user_deleted'] = auth()->id();
         $model = $this->model->findOrFail($id);
+        DB::table('ERP_AprobacionUsuario')->where('idAprobacion',$id)->delete();
         $model->update($attributes);
         $model->delete();
     }
@@ -78,4 +84,10 @@ class AprobacionRepository implements AprobacionInterface
         $new=$actu+1;
         return $new; 
     }
+     public function destroy_aprobacionSoliDetalle($id,$usua)
+    {
+       
+        DB::table('ERP_AprobacionUsuario')->where('idAprobacion',$id)->where('idUsuario',$usua)->delete();
+    }
+
 }

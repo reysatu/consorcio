@@ -33,7 +33,7 @@
             },
             toolbar: {
                 items: [{
-                    cssClass: 'buscador',
+                    cssClass: 'buscador', 
                     text: search
                 },{
                     cssClass: 'btn-primary',
@@ -50,11 +50,20 @@
                     edit: false,
                     list: false,
                 },
+                idMoneda: {
+                    title: 'Moneda',
+                    options: base_url + '/type_change/getMonedas',
+                    defaultValue: 1,
+                },
                 denominacion: {
                     title: 'Denominación'
                 },
                 valor: {
-                    title: 'Valor'
+                    title: 'Valor',
+                    display: function (data) {
+                            var valo=Number(data.record.valor);
+                            return valo;
+                    }
                 }
             },
             formCreated: function (event, data) {

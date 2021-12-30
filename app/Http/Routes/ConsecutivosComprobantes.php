@@ -13,3 +13,7 @@ Route::post('consecutivos_comprobantes/update', ['as' => 'consecutivos_comproban
 Route::get('consecutivos_comprobantes/excel', ['as' => 'consecutivos_comprobantes.excel', 'uses' => 'ConsecutivosComprobantesController@excel']);
 
 Route::post('consecutivos_comprobantes/getTiendas', 'ShopController@getTiendas');
+Route::put('consecutivos_comprobantes/saveComprobante/{id}', ['as' => 'consecutivos_comprobantes.saveComprobante', 'uses' => 'ConsecutivosComprobantesController@createUpdate']);
+Route::get('consecutivos_comprobantes/find/{id}', ['as' => 'consecutivos_comprobantes.find', 'uses' => 'ConsecutivosComprobantesController@find']);
+
+Route::get('consecutivos_comprobantes/deleteUsuario/{id}', ['as' => 'consecutivos_comprobantes.deleteUsuario', 'uses' => 'ConsecutivosComprobantesController@deleteDetalle']);
