@@ -63,10 +63,15 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
         $attributes = [];
         $attributes['user_deleted'] = auth()->id();
         $model = $this->model->findOrFail($id);
+        DB::table('ERP_ConsecutivoComprobanteUsuario')->where('idConsecutivo',$id)->delete();
         $model->update($attributes);
         $model->delete();
     }
-
+     public function getDetalle($id)
+    {   
+        $mostrar=DB::select("select * from ERP_ConsecutivoComprobanteUsuario as de inner join ERP_Usuarios as us on us.id=de.idUsuario where de.idConsecutivo='$id'");
+        return $mostrar; 
+    }
     public function get_consecutivo($table,$id)
     {     
         $mostrar = DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
@@ -78,5 +83,10 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
         }
         $new=$actu+1;
         return $new; 
+    }
+     public function destroy_ConsecutivoDetalle($id,$usua)
+    {
+       
+        DB::table('ERP_ConsecutivoComprobanteUsuario')->where('idConsecutivo',$id)->where('idUsuario',$usua)->delete();
     }
 }

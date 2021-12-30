@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class DenominacionesController extends Controller
 {
-    use DenominacionesTrait;
+    use DenominacionesTrait; 
 
     public function __construct()
     {
@@ -25,7 +25,7 @@ class DenominacionesController extends Controller
     public function all(Request $request, DenominacionesInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id_denominacion', 'descripcion as denominacion', 'valor'];
+        $params = ['id_denominacion', 'descripcion as denominacion', 'valor','idMoneda'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'id_denominacion', $params);
     }

@@ -17,6 +17,11 @@ trait ConsecutivosComprobantesTrait
         $columns[] = ['SERIE', 'NUMERO', 'TIENDA', 'ACTUAL', 'ULTIMO', 'LONGITUD', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
+            // $usuarios=[];
+            // foreach ($i->usuarios_det  as $wu) {
+            //     $usuarios[] = $wu->user_comp->name;
+            // }
+            // $usuarios = implode(',', $usuarios);
             $columns[] = [
                 ['left', $i->serie],
                 ['left', $i->numero],
@@ -24,6 +29,7 @@ trait ConsecutivosComprobantesTrait
                 ['left', $i->actual],
                 ['left', $i->ultimo],
                 ['left', $i->longitud],
+                // ['left', $usuarios],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
                 ['left', $i->user_u->name],

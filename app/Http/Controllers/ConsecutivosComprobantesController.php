@@ -9,10 +9,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuarioInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesTrait;
 use App\Http\Requests\ConsecutivosComprobantesRequest;
 use Illuminate\Http\Request;
-
+use DB;
 class ConsecutivosComprobantesController extends Controller
 {
     use ConsecutivosComprobantesTrait;
@@ -28,6 +29,46 @@ class ConsecutivosComprobantesController extends Controller
         $params = ['id_consecutivo', 'numero', 'serie', 'actual', 'ultimo', 'longitud', 'idtienda'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'id_consecutivo', $params);
+    }
+    public function find($id, ConsecutivosComprobantesInterface $repo)
+    {
+        try {
+            $data = $repo->find($id);
+            $dataDetalle=$repo->getDetalle($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'dataDetalle' => $dataDetalle
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+     public function deleteDetalle($id, ConsecutivosComprobantesInterface $repo, Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+          
+            $valtodo=explode("_", $id);
+            $val=$repo->destroy_ConsecutivoDetalle($valtodo[0],$valtodo[1]);
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'dato'=>$val,
+            
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function create(ConsecutivosComprobantesInterface $repo, ConsecutivosComprobantesRequest $request)
@@ -47,7 +88,63 @@ class ConsecutivosComprobantesController extends Controller
             'Record' => []
         ]);
     }
+      public function createUpdate($id, ConsecutivosComprobantesInterface $repo, ConsecutivoComprobanteUsuarioInterface $repoDet, request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $data['serie'] = strtoupper($data['serie']);
+            if ($id != 0) {
+                $repo->update($id, $data);
+            } else {
+                $idt = 'id_consecutivo';
+                $table = "ERP_ConsecutivosComprobantes";
+                $data['id_consecutivo'] = $repo->get_consecutivo($table, $idt);
+                $grup = $repo->create($data);
+                $id = $grup->id_consecutivo;
+            };
 
+
+            $idUsuario = $data['idUsuario'];
+            $idUsuario = explode(',', $idUsuario);
+
+            $idConsedet = $data['idConsedet'];
+            $idConsedet = explode(',', $idConsedet);
+
+          
+
+            for ($i = 0; $i < count($idUsuario); $i++) {
+                $datoLo = [];
+                $modo = 1;
+                if ($idConsedet[$i] == '0') {
+                    $modo = 0;
+                };
+                if ($modo == 0) {
+                    $datoLo['idConsecutivo'] = $id;
+                    $datoLo['idUsuario'] = $idUsuario[$i];
+                    $repoDet->create($datoLo);
+                }
+                // else {
+                //     $repoDet->update($id, $idUsuario[$i], $datoLo);
+                // };
+            };
+
+
+
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+               // 'data'=>$grup,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
     public function update(ConsecutivosComprobantesInterface $repo, ConsecutivosComprobantesRequest $request)
     {
         $data = $request->all();
