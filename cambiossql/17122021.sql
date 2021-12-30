@@ -1,3 +1,194 @@
+USE [Consorcio]
+GO
+
+/****** Object:  Table [dbo].[ERP_Solicitud]    Script Date: 28/12/2021 04:38:42 p.m. ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ERP_Solicitud](
+	[cCodConsecutivo] [varchar](10) NOT NULL,
+	[nConsecutivo] [int] NOT NULL,
+	[fecha_solicitud] [datetime] NULL,
+	[tipo_solicitud] [varchar](1) NULL,
+	[origen] [varchar](1) NULL,
+	[idconvenio] [int] NULL,
+	[idvendedor] [int] NULL,
+	[idcliente] [int] NULL,
+	[idmoneda] [varchar](5) NULL,
+	[estado] [varchar](1) NULL,
+	[fecha_vencimiento] [datetime] NULL,
+	[iddescuento] [int] NULL,
+	[porcentaje_descuento] [decimal](18, 5) NULL,
+	[monto_descuento] [decimal](18, 5) NULL,
+	[subtotal] [decimal](18, 5) NULL,
+	[monto_exonerado] [decimal](18, 5) NULL,
+	[monto_afecto] [decimal](18, 5) NULL,
+	[monto_inafecto] [decimal](18, 5) NULL,
+	[impuestos] [decimal](18, 5) NULL,
+	[monto_total] [decimal](18, 5) NULL,
+	[monto_descuento_detalle] [decimal](18, 5) NULL,
+	[subtotal_detalle] [decimal](18, 5) NULL,
+	[monto_exonerado_detalle] [decimal](18, 5) NULL,
+	[monto_afecto_detalle] [decimal](18, 5) NULL,
+	[monto_inafecto_detalle] [decimal](18, 5) NULL,
+	[impuestos_detalle] [decimal](18, 5) NULL,
+	[monto_total_detalle] [decimal](18, 5) NULL,
+	[user_created] [int] NULL,
+	[user_updated] [int] NULL,
+	[user_deleted] [int] NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+	[deleted_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[cCodConsecutivo] ASC,
+	[nConsecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud]  WITH CHECK ADD FOREIGN KEY([idcliente])
+REFERENCES [dbo].[ERP_Clientes] ([id])
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud]  WITH CHECK ADD  CONSTRAINT [fk_moneda_solicitud] FOREIGN KEY([idmoneda])
+REFERENCES [dbo].[ERP_Moneda] ([IdMoneda])
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud] CHECK CONSTRAINT [fk_moneda_solicitud]
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud]  WITH CHECK ADD  CONSTRAINT [fk_vendedores_solicitud] FOREIGN KEY([idvendedor])
+REFERENCES [dbo].[ERP_Vendedores] ([idvendedor])
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud] CHECK CONSTRAINT [fk_vendedores_solicitud]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 -> Registrado
+2 -> Vigente
+3 -> Por Aprobar
+4 -> Aprobado
+5 -> Rechazado
+6 -> Facturado
+7 -> Despachado
+
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'ERP_Solicitud', @level2type=N'COLUMN',@level2name=N'estado'
+GO
+
+
+
+
+/****** Object:  Table [dbo].[ERP_SolicitudArticulo]    Script Date: 28/12/2021 04:39:04 p.m. ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ERP_SolicitudArticulo](
+	[id] [int] NOT NULL,
+	[cCodConsecutivo] [varchar](10) NOT NULL,
+	[nConsecutivo] [int] NOT NULL,
+	[idarticulo] [int] NOT NULL,
+	[unidad] [varchar](20) NULL,
+	[cantidad] [money] NULL,
+	[idalmacen] [int] NULL,
+	[idlocalizacion] [int] NULL,
+	[idlote] [int] NULL,
+	[costo] [decimal](18, 5) NULL,
+	[costo_total] [decimal](18, 5) NULL,
+	[precio_unitario] [decimal](18, 5) NULL,
+	[iddescuento] [int] NULL,
+	[porcentaje_descuento] [money] NULL,
+	[precio_total] [decimal](18, 5) NULL,
+	[monto_descuento] [decimal](18, 5) NULL,
+	[subtotal] [decimal](18, 5) NULL,
+	[monto_exonerado] [decimal](18, 5) NULL,
+	[monto_afecto] [decimal](18, 5) NULL,
+	[monto_inafecto] [decimal](18, 5) NULL,
+	[impuestos] [decimal](18, 5) NULL,
+	[monto_total] [decimal](18, 5) NULL,
+ CONSTRAINT [pk_solicitud_articulo] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC,
+	[cCodConsecutivo] ASC,
+	[nConsecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudArticulo]  WITH CHECK ADD  CONSTRAINT [fk_productos_solicitud_articulo] FOREIGN KEY([idarticulo])
+REFERENCES [dbo].[ERP_Productos] ([id])
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudArticulo] CHECK CONSTRAINT [fk_productos_solicitud_articulo]
+GO
+
+
+
+/****** Object:  Table [dbo].[ERP_SolicitudDetalle]    Script Date: 28/12/2021 04:39:17 p.m. ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ERP_SolicitudDetalle](
+	[id] [int] NOT NULL,
+	[cCodConsecutivo] [varchar](10) NOT NULL,
+	[nConsecutivo] [int] NOT NULL,
+	[idarticulo] [int] NOT NULL,
+	[idSerie] [int] NOT NULL,
+ CONSTRAINT [pk_solicitud_detalle] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC,
+	[cCodConsecutivo] ASC,
+	[nConsecutivo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudDetalle]  WITH CHECK ADD  CONSTRAINT [fk_productos_solicitud_detalle] FOREIGN KEY([idarticulo])
+REFERENCES [dbo].[ERP_Productos] ([id])
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudDetalle] CHECK CONSTRAINT [fk_productos_solicitud_detalle]
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudDetalle]  WITH CHECK ADD  CONSTRAINT [fk_serie_solicitud_detalle] FOREIGN KEY([idSerie])
+REFERENCES [dbo].[ERP_Serie] ([idSerie])
+GO
+
+ALTER TABLE [dbo].[ERP_SolicitudDetalle] CHECK CONSTRAINT [fk_serie_solicitud_detalle]
+GO
+
+
+
 
 
 
