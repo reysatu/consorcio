@@ -20,16 +20,21 @@ class CajasRepository implements CajasInterface
     }
 
     public function search($s)
-    {
+    { 
         return $this->model->orWhere(function($q) use ($s){
             $q->where('nombre_caja', 'LIKE', '%'.$s.'%')
-            ->where('usuario', 'LIKE', '%'.$s.'%');
+            ->where('idcaja', 'LIKE', '%'.$s.'%');
         });
     }
 
     public function all()
     { 
         return $this->model->all();
+    }
+    public function getDetalle($id)
+    {   
+        $mostrar=DB::select("select * from ERP_CajaUsuario where idcaja='$id'");
+        return $mostrar; 
     }
 
     public function create(array $attributes)
@@ -63,6 +68,7 @@ class CajasRepository implements CajasInterface
         $attributes = [];
         $attributes['user_deleted'] = auth()->id();
         $model = $this->model->findOrFail($id);
+        DB::table('ERP_CajaUsuario')->where('idcaja',$id)->delete();
         $model->update($attributes);
         $model->delete();
     }
@@ -78,5 +84,10 @@ class CajasRepository implements CajasInterface
         }
         $new=$actu+1;
         return $new; 
+    }
+     public function destroy_CajaDetalle($id,$usua)
+    {
+       
+        DB::table('ERP_CajaUsuario')->where('idCaja',$id)->where('idUsuario',$usua)->delete();
     }
 }

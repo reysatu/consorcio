@@ -30,9 +30,34 @@ use App\Http\Recopro\FormasPago\FormasPago;
 use App\Http\Recopro\FormasPago\FormasPagoInterface;
 use App\Http\Recopro\FormasPago\FormasPagoRepository;
 
+use App\Http\Recopro\CajaUsuario\CajaUsuario;
+use App\Http\Recopro\CajaUsuario\CajaUsuarioInterface;
+use App\Http\Recopro\CajaUsuario\CajaUsuarioRepository;
+
+use App\Http\Recopro\CajaDiaria\CajaDiaria;
+use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
+use App\Http\Recopro\CajaDiaria\CajaDiariaRepository;
+
+use App\Http\Recopro\CajaDiariaDenominaciones\CajaDiariaDenominaciones;
+use App\Http\Recopro\CajaDiariaDenominaciones\CajaDiariaDenominacionesInterface;
+use App\Http\Recopro\CajaDiariaDenominaciones\CajaDiariaDenominacionesRepository;
+
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalle;
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleRepository;
+
+
 use App\Http\Recopro\Denominaciones\Denominaciones;
 use App\Http\Recopro\Denominaciones\DenominacionesInterface;
 use App\Http\Recopro\Denominaciones\DenominacionesRepository;
+
+use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuario;
+use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuarioInterface;
+use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuarioRepository;
+
+use App\Http\Recopro\AprobacionUsuario\AprobacionUsuario;
+use App\Http\Recopro\AprobacionUsuario\AprobacionUsuarioInterface;
+use App\Http\Recopro\AprobacionUsuario\AprobacionUsuarioRepository;
 
 use App\Http\Recopro\Persona\Persona;
 use App\Http\Recopro\Persona\PersonaInterface;
@@ -559,8 +584,14 @@ class AppServiceProvider extends ServiceProvider
         $this->registerBancos();
         $this->registerTiposMovimiento();
         $this->registerFormasPago();
+        $this->registerCajaUsuario();
+        $this->registerCajaDiaria();
+        $this->registerCajaDiariaDenominaciones();
+        $this->registerCajaDiariaDetalle();
         $this->registerPersona();
         $this->registerDenominaciones();
+        $this->registerConsecutivoComprobanteUsuario();
+        $this->registerAprobacionUsuario();
         $this->registerConfigJerarquia();
         $this->registerConfigJerarquiaDetalle();
         $this->registerConvenios();
@@ -824,6 +855,38 @@ class AppServiceProvider extends ServiceProvider
             return new FormasPagoRepository(new FormasPago());
         });
     }
+    public function registerCajaUsuario()
+    {
+        $app = $this->app;
+
+        $app->bind(CajaUsuarioInterface::class, function ($app) {
+            return new CajaUsuarioRepository(new CajaUsuario());
+        });
+    }
+    public function registerCajaDiaria()
+    {
+        $app = $this->app;
+
+        $app->bind(CajaDiariaInterface::class, function ($app) {
+            return new CajaDiariaRepository(new CajaDiaria());
+        });
+    }
+    public function registerCajaDiariaDenominaciones()
+    {
+        $app = $this->app;
+
+        $app->bind(CajaDiariaDenominacionesInterface::class, function ($app) {
+            return new CajaDiariaDenominacionesRepository(new CajaDiariaDenominaciones());
+        });
+    }
+    public function registerCajaDiariaDetalle()
+    {
+        $app = $this->app;
+
+        $app->bind(CajaDiariaDetalleInterface::class, function ($app) {
+            return new CajaDiariaDetalleRepository(new CajaDiariaDetalle());
+        });
+    }
     public function registerPersona()
     {
         $app = $this->app;
@@ -839,6 +902,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(DenominacionesInterface::class, function ($app) {
             return new DenominacionesRepository(new Denominaciones());
+        });
+    }
+    public function registerConsecutivoComprobanteUsuario()
+    {
+        $app = $this->app;
+
+        $app->bind(ConsecutivoComprobanteUsuarioInterface::class, function ($app) {
+            return new ConsecutivoComprobanteUsuarioRepository(new ConsecutivoComprobanteUsuario());
+        });
+    }
+    public function registerAprobacionUsuario()
+    {
+        $app = $this->app;
+
+        $app->bind(AprobacionUsuarioInterface::class, function ($app) {
+            return new AprobacionUsuarioRepository(new AprobacionUsuario());
         });
     }
     public function registerConfigJerarquia()

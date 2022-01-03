@@ -14,11 +14,11 @@ trait DenominacionesTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['DENOMINACIÓN', 'VALOR', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['MONEDA','DENOMINACIÓN', 'VALOR', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $columns[] = [
-                // ['left', $i->codigo_formapago],
+                ['left', $i->currency_u->Descripcion],
                 ['left', $i->descripcion],
                 ['left', $i->valor],
                 ['left', $i->user_c->name],

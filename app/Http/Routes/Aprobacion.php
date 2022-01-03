@@ -13,3 +13,9 @@ Route::post('aprobacion/update', ['as' => 'aprobacion.update', 'uses' => 'Aproba
 Route::get('aprobacion/excel', ['as' => 'aprobacion.excel', 'uses' => 'AprobacionController@excel']);
 
 Route::post('aprobacion/getTiendas', 'ShopController@getTiendas');
+
+Route::put('aprobacion/saveAprobaSoli/{id}', ['as' => 'aprobacion.saveAprobaSoli', 'uses' => 'AprobacionController@createUpdate']);
+
+Route::get('aprobacion/find/{id}', ['as' => 'aprobacion.find', 'uses' => 'AprobacionController@find']);
+
+Route::get('aprobacion/deleteUsuario/{id}', ['as' => 'aprobacion.deleteUsuario', 'uses' => 'AprobacionController@deleteDetalle']);

@@ -9,10 +9,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Recopro\Cajas\CajasInterface;
+use App\Http\Recopro\CajaUsuario\CajaUsuarioInterface;
 use App\Http\Recopro\Cajas\CajasTrait;
 use App\Http\Requests\CajasRequest;
 use Illuminate\Http\Request;
-
+use DB;
 class CajasController extends Controller
 {
     use CajasTrait;
@@ -29,11 +30,29 @@ class CajasController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idcaja', $params);
     }
+     public function find($id, CajasInterface $repo)
+    {
+        try {
+            $data = $repo->find($id);
+            $dataDetalle=$repo->getDetalle($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'dataDetalle' => $dataDetalle
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 
     public function create(CajasInterface $repo, CajasRequest $request)
     {
         $data = $request->all();
-         $table="ERP_Cajas";
+        $table="ERP_Cajas";
         $id='idcaja';
         $data['idcaja'] = $repo->get_consecutivo($table,$id);
         // $data['idcaja'] = $data['idcaja'];
@@ -46,7 +65,94 @@ class CajasController extends Controller
             'Record' => []
         ]);
     }
+    public function createUpdate($id, CajasInterface $repo, CajaUsuarioInterface $repoDet, request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $data['idtienda'] = strtoupper($data['idtienda']);
+            $data['nombre_caja'] = strtoupper($data['nombre_caja']);
+            // $estado='A';
+            // if(!isset($data['estado'])){
+            //     $estado='I';
+            // };
+            $data['activo'] = $data['estado'];
+            if ($id != 0) {
+                $repo->update($id, $data);
+            } else {
+                $idt = 'idcaja';
+                $table = "ERP_Cajas";
+                $data['idcaja'] = $repo->get_consecutivo($table, $idt);
+                $grup = $repo->create($data);
+                $id = $grup->idcaja;
+            };
 
+
+            $idUsuario = $data['idUsuario'];
+            $idUsuario = explode(',', $idUsuario);
+
+            $idcajadet = $data['idcajadet'];
+            $idcajadet = explode(',', $idcajadet);
+
+            $nameUsuario = $data['nameUsuario'];
+            $nameUsuario = explode(',', $nameUsuario);
+
+            for ($i = 0; $i < count($idUsuario); $i++) {
+                $datoLo = [];
+                $modo = 1;
+                if ($idcajadet[$i] == '0') {
+                    $modo = 0;
+                };
+                if ($modo == 0) {
+                    $datoLo['idCaja'] = $id;
+                    $datoLo['idUsuario'] = $idUsuario[$i];
+                    $datoLo['usuario'] = $nameUsuario[$i];
+                    $repoDet->create($datoLo);
+                }
+                // else {
+                //     $repoDet->update($id, $idUsuario[$i], $datoLo);
+                // };
+            };
+
+
+
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+               // 'data'=>$grup,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteDetalle($id, CajasInterface $repo, Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+          
+            $valtodo=explode("_", $id);
+            $val=$repo->destroy_CajaDetalle($valtodo[0],$valtodo[1]);
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'dato'=>$val,
+            
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function update(CajasInterface $repo, CajasRequest $request)
     {
         $data = $request->all();

@@ -239,6 +239,11 @@ GO
 EXEC sp_rename '[dbo].[ERP_Solicitud].[t_subtotal]', 't_monto_subtotal', 'COLUMN'
 GO
 
+alter table ERP_SolicitudArticulo add constraint fk_solicitud_solicitud_articulo foreign key(cCodConsecutivo, nConsecutivo) 
+references ERP_Solicitud(cCodConsecutivo, nConsecutivo);
+
+alter table ERP_SolicitudDetalle add constraint fk_solicitud_solicitud_detalle foreign key(cCodConsecutivo, nConsecutivo) 
+references ERP_Solicitud(cCodConsecutivo, nConsecutivo);
 
 --- LLAVES FORÁNEAS
 /*

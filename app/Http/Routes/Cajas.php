@@ -13,3 +13,10 @@ Route::post('cajas/update', ['as' => 'cajas.update', 'uses' => 'CajasController@
 Route::get('cajas/excel', ['as' => 'cajas.excel', 'uses' => 'CajasController@excel']);
 
 Route::post('cajas/getTiendas', 'ShopController@getTiendas');
+
+Route::put('cajas/saveCaja/{id}', ['as' => 'cajas.saveCaja', 'uses' => 'CajasController@createUpdate']);
+Route::get('cajas/find/{id}', ['as' => 'cajas.find', 'uses' => 'CajasController@find']);
+
+Route::get('cajas/deleteUsuario/{id}', ['as' => 'cajas.deleteUsuario', 'uses' => 'CajasController@deleteDetalle']);
+
+Route::post('cajas/getAll', 'CajasController@getAll');
