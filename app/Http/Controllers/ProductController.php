@@ -385,4 +385,9 @@ class ProductController extends Controller
 
 
     }
+
+    public function obtener_precio(Request $request, ProductInterface $repo) {
+        $precio = $repo->obtener_precio($request);
+        return response()->json($precio);
+    }
 }

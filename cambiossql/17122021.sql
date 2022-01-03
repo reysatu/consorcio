@@ -190,6 +190,54 @@ GO
 
 
 
+IF ((SELECT COUNT(*) from fn_listextendedproperty('MS_Description', 
+'SCHEMA', N'dbo', 
+'TABLE', N'ERP_Solicitud', 
+'COLUMN', N'tipo_solicitud')) > 0) 
+EXEC sp_updateextendedproperty @name = N'MS_Description', @value = N'1: CONTADO
+2: CREDITO DIRECTO
+3: CREDITO FINANCIERO'
+, @level0type = 'SCHEMA', @level0name = N'dbo'
+, @level1type = 'TABLE', @level1name = N'ERP_Solicitud'
+, @level2type = 'COLUMN', @level2name = N'tipo_solicitud'
+ELSE
+EXEC sp_addextendedproperty @name = N'MS_Description', @value = N'1: CONTADO
+2: CREDITO DIRECTO
+3: CREDITO FINANCIERO'
+, @level0type = 'SCHEMA', @level0name = N'dbo'
+, @level1type = 'TABLE', @level1name = N'ERP_Solicitud'
+, @level2type = 'COLUMN', @level2name = N'tipo_solicitud'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[porcentaje_descuento]', N't_porcentaje_descuento', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[monto_descuento]', N't_monto_descuento', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[subtotal]', N't_subtotal', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[monto_exonerado]', N't_monto_exonerado', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[monto_afecto]', N't_monto_afecto', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[monto_inafecto]', N't_monto_inafecto', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[impuestos]', N't_impuestos', 'COLUMN'
+GO
+
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[monto_total]', N't_monto_total', 'COLUMN'
+GO
+EXEC sp_rename N'[dbo].[ERP_Solicitud].[iddescuento]', N'descuento_id', 'COLUMN'
+GO
+
+
+EXEC sp_rename '[dbo].[ERP_Solicitud].[t_subtotal]', 't_monto_subtotal', 'COLUMN'
+GO
 
 
 --- LLAVES FORÁNEAS

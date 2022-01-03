@@ -72,7 +72,7 @@
 
 
 <div class="modal" id="modalSolicitud" role="dialog" style="overflow-y: scroll;">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="width:90%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -105,8 +105,14 @@
                                 <span class="fa fa-file-pdf-o"></span>
                                 Imprimir
                             </button> -->
+
+                            <button style="display: none;" type="button" id="" class="btn btn-danger-admin btn-sm credito"
+                                ng-click="datos_credito()">
+                                <span class="fa fa-money"></span>
+                                Datos Crédito
+                            </button>
                             <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden"
-                                ng-click="saveOrdenServicio()">
+                                ng-click="guardar_solicitud()">
                                 <span class="fa fa-save"></span>
                                 Guardar
                             </button>
@@ -205,7 +211,7 @@
 
                                     <div class="credito" style="display: none;">
                                         <label class="col-sm-1 control-label">Convenio</label>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <select id="idconvenio" name="idconvenio" class="form-control input-sm"></select>
                                         </div>
                                     </div>
@@ -475,7 +481,7 @@
                                         <div class="form-group">
                                             <label class="col-sm-6 control-label">Monto Descuento</label>
                                             <div class="col-sm-6">
-                                                <input type="number" id="t_monto_descuento" name="t_monto_descuento" class="form-control input-sm"
+                                                <input type="number" id="monto_descuento_detalle" name="monto_descuento_detalle" class="form-control input-sm"
                                                     value="0" readonly />
                                             </div>
                                         </div>
@@ -529,20 +535,20 @@
                                                 Porcentaje
                                             </label>
                                             <div class="col-sm-2">
-                                                <input id="porcentajeTotal" name="porcentaje_descuento_total" class="form-control input-sm" value="0"
+                                                <input id="porcentajeTotal" name="t_porcentaje_descuento" class="form-control input-sm" value="0"
                                                     readonly />
                                             </div>
                                             <label class="col-sm-1  control-label">
                                                 Monto
                                             </label>
                                             <div class="col-sm-3">
-                                                <input id="montoTotal" name="monto_descuento_total" class="form-control input-sm" readonly />
+                                                <input id="montoTotal" name="t_monto_descuento" class="form-control input-sm" readonly />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                             <div class="col-sm-3 col-md-offset-1">
-                                                <input id="desTotal" name="t_total" class="form-control input-sm" readonly value="0" />
+                                                <input id="desTotal" name="t_monto_total" class="form-control input-sm" readonly value="0" />
                                             </div>
                                         </div>
                                     </div>
@@ -752,9 +758,11 @@
                             <input type="hidden" id="identSerAr">
                             <label class="col-sm-2 control-label">Artículo</label>
                                 <div class="col-sm-6">
-                                        <input type="hidden" id="idProductoMss" readonly class="form-control input-sm">
-                                        <input type="hidden" id="costoAS" readonly class="form-control input-sm">
-                                        <input type="text" id="desProductoMss" readonly class="form-control input-sm">
+                                    <input type="hidden" id="idProductoMss" readonly class="form-control input-sm">
+                                    <input type="hidden" id="posee-serie" readonly class="form-control input-sm">
+                                    <input type="hidden" id="codigo-tr" readonly class="form-control input-sm">
+                                    <input type="hidden" id="costoAS" readonly class="form-control input-sm">
+                                    <input type="text" id="desProductoMss" readonly class="form-control input-sm">
                                 </div>
                             <label class="col-sm-1 control-label">Cantidad</label>
                                 <div class="col-sm-2">

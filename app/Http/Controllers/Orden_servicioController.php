@@ -343,7 +343,7 @@ class Orden_servicioController extends Controller
         $usuario=auth()->id();
         $descuentos=$Repo->get_descuentos($usuario);
         $dataredondeo=$Repo->get_redondeo();
-
+        // print_r($dataredondeo); exit;
         return response()->json([
             'status' => true,
             'codigo' => $codigo,
@@ -361,7 +361,7 @@ class Orden_servicioController extends Controller
             'totales'=>$totales,
             'tipoMantenimiento'=>$tipoMantenimiento,
             'tipo_document_venta'=>$tipo_document_venta,
-            'dataredondeo'=>$dataredondeo[0]->value,
+            'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
             'usuario'=>$usuario,
         ]);
     }
@@ -395,10 +395,13 @@ class Orden_servicioController extends Controller
              $newPrecio='';
             if(empty($val) && $idMoneda=='1'){
                 $para=$repo->get_parametroPrecio();
-                $val=$repo->get_precios_list($idProducto, $idTipoCli,$para[0]->value);
+
+                $parametro_moneda = (isset($para[0]->value)) ? $para[0]->value : 0;
+
+                $val=$repo->get_precios_list($idProducto, $idTipoCli,$parametro_moneda);
                 if(!empty($val)){
                     $fecha_actual=date("Y-m-d");
-                    $cambio=$repo->cambio_tipo($para[0]->value,$fecha_actual);
+                    $cambio=$repo->cambio_tipo($parametro_moneda,$fecha_actual);
                     $newPrecio=floatval($val[0]->nPrecio)*floatval($cambio[0]->Mensaje);
                 }
             }

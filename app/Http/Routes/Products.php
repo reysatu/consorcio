@@ -24,3 +24,5 @@ Route::post('articles/getArticulosSelect', ['as' => 'articles.getArticulosSelect
 Route::post('articles/get_articles_precios', ['as' => 'articles.get_articles_precios', 'uses' => 'ProductController@getProductoPrecios']);
 
 Route::post('articles/getProductosServicio', ['as' => 'articles.getProductosServicio', 'uses' => 'ProductController@traeAll_Servicios']);
+
+Route::post('articles/obtener_precio', ['as' => 'articles.obtener_precio', 'uses' => 'ProductController@obtener_precio']);

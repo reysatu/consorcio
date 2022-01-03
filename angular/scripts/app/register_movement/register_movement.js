@@ -721,7 +721,7 @@
                                              idLocali.append('<option value="'+itemdos.idLocalizacion+'" >'+itemdos.descripcion+' / '+stock+'</option>');
                                         }  
                                  }
-                              }else{
+                              } else{ 
                                 if(itemdos.idLocalizacion==idLocalizacion){
 
                                   idLocali.append('<option selected value="'+itemdos.idLocalizacion+'" >'+itemdos.descripcion+' / '+stock+'</option>'); 

@@ -62,18 +62,16 @@
                         </div>
                     </div>
                 </div>
-                <span class="p_show_dp_">
-                    <button class="btn btn-sm btn-success show_not_approval showProjectIsMeta pEditMeta" ng-click="addStructureIncome()">
-                        <span class="fa fa-plus"></span>
-                        Agregar Recurso
-                    </button>
-                </span>
-                <div class="separator show_not_approval showProjectIsMeta pEditMeta"></div>
+                <button class="btn btn-sm btn-success show_not_approval" ng-click="addStructureIncome()">
+                    <span class="fa fa-plus"></span>
+                    Agregar Recurso
+                </button>
+                <div class="separator show_not_approval"></div>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered" id="p_inc_apu_table">
                         <thead>
                         <tr>
-                            <th width="20px" id="p_anl_box"></th>
+                            <th width="20px"></th>
                             <th>Código</th>
                             <th>Mano de Obra</th>
                             <th>Unidad</th>
@@ -109,12 +107,12 @@
                         <tr id="p_inc_apu_tr_1507071_2" data-code="1507071" data-type="2">
                             <td></td>
                             <td class="text-center fa-red">1507071</td>
-                            <td>Materiales Varios <span class="p_apu_materials"></span>% mano de obra</td>
+                            <td>Materiales Varios <span class="p_inc_percentage"></span>% mano de obra</td>
                             <td class="text-center fa-red">%mo</td>
                             <td></td>
-                            <td class="text-right p_apu_materials"></td>
+                            <td class="text-right p_inc_percentage"></td>
                             <td class="text-right p_inc_apu_tot p_inc_apu_total_mo">0.00</td>
-                            <td class="text-right p_inc_apu_tot p_inc_apu_total_per_1 p_inc_apu_inp_tot">0.00</td>
+                            <td class="text-right p_inc_apu_tot p_inc_apu_total_per p_inc_apu_inp_tot">0.00</td>
                         </tr>
                         <tr>
                             <th colspan="7"></th>
@@ -138,12 +136,12 @@
                         <tr id="p_inc_apu_tr_1602019_3" data-code="1602019" data-type="3">
                             <td></td>
                             <td class="text-center fa-red">1602019</td>
-                            <td>Herramientas <span class="p_apu_equipment"></span>% mano de obra</td>
+                            <td>Herramientas <span class="p_inc_percentage"></span>% mano de obra</td>
                             <td class="text-center fa-red">%mo</td>
                             <td></td>
-                            <td class="text-right p_apu_equipment"></td>
+                            <td class="text-right p_inc_percentage"></td>
                             <td class="text-right p_inc_apu_tot p_inc_apu_total_mo">0.00</td>
-                            <td class="text-right p_inc_apu_tot p_inc_apu_total_per_2 p_inc_apu_inp_tot">0.00</td>
+                            <td class="text-right p_inc_apu_tot p_inc_apu_total_per p_inc_apu_inp_tot">0.00</td>
                         </tr>
                         <tr>
                             <th colspan="5"></th>
@@ -170,31 +168,13 @@
                             <th colspan="7"></th>
                             <th class="text-right p_inc_apu_tot" id="p_inc_apu_t_sc">0.00</th>
                         </tr>
-                        <tr class="p_apu_sub_c hide">
-                            <th colspan="8"><h4>SUBCONTRATO</h4></th>
-                        </tr>
-                        <tr class="p_apu_sub_c hide">
-                            <td class="text-center"></td>
-                            <td class="text-center p_apu_sub_c_code"></td>
-                            <td class="p_apu_sub_c_text"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-right p_apu_sub_c_total"></td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="modal-footer">
-                <span class="p_show_dp_">
-                    <button type="button" id="btn_save_apu" class="btn btn-success show_not_approval showProjectIsMeta"
-                            ng-click="saveAnalysisPriceUnitary()">
-                        <span class="fa fa-save"></span> Guardar
-                    </button>
-                </span>
-                <button type="button" class="btn btn-success p_apu_sub_c hide" ng-click="saveAPUSubC()">
+                <button type="button" class="btn btn-success show_not_approval"
+                        ng-click="saveAnalysisPriceUnitary()">
                     <span class="fa fa-save"></span> Guardar
                 </button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">

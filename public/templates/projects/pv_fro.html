@@ -1,77 +1,75 @@
-<div class="table-responsive hide info_front_1">
-    <div id='front_fixed'>
-        <table class="table table-bordered table-hovered table-striped">
-            <thead>
-            <tr>
-                <th class="text-center" rowspan="2">Item</th>
-                <th class="text-center" rowspan="2">Código</th>
-                <th class="text-center" rowspan="2" height="73px">Descripcion</th>
-                <th class="text-center" rowspan="2">UND</th>
-                <th class="text-center" colspan="3">PV1 (Meta)</th>
-            </tr>
-            <tr>
-                <th class="text-center">CANT</th>
-                <th class="text-center">PU</th>
-                <th class="text-center">TOTAL</th>
-            </tr>
-            </thead>
-            <tbody id="p_front_list_materials"></tbody>
-            <tfoot>
-            <tr>
-                <th colspan="6" class="text-right">Total Material</th>
-                <th class="text-right" id="p_front_total_materials"></th>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-    <div id="front_movable">
-        <table class="table table-bordered table-hovered table-striped">
-            <thead>
-            <tr>
-                <th class="text-center" id="p_fro_col_mat">FRENTES</th>
-            </tr>
-            <tr id="p_fro_col_pro"></tr>
-            <tr id="p_fro_col_ct"></tr>
-            </thead>
-            <tbody id="p_fro_col_det"></tbody>
-            <tfoot id="p_fro_col_f"></tfoot>
-        </table>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label show_2__">Material</label>
+        <label class="col-sm-2 control-label show_1__">Actividad</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control input-sm show_2__" readonly
+                   value="POSTES Y ESTRUCTURAS">
+            <input type="text" class="form-control input-sm show_1__" readonly
+                   value="EXCAVACION DE HOYOS">
+        </div>
     </div>
 </div>
-<div class="table-responsive hide info_front_2">
-    <div id='front_fixed_act'>
-        <table class="table table-bordered table-hovered table-striped">
-            <thead>
-            <tr>
-                <th colspan="4" height="54px">PV1 (Meta)</th>
-            </tr>
-            <tr>
-                <th rowspan="2">UND</th>
-                <th rowspan="2">CANT</th>
-                <th rowspan="2">PU</th>
-                <th rowspan="2">TOTAL</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr style="height: 25px" id="p_fro_totals_activity">
-                <td class="text-center" id="p_fro_u_me_activity"></td>
-                <td class="text-right" id="p_fro_q_me_activity"></td>
-                <td class="text-right" id="p_fro_p_me_activity"></td>
-                <td class="text-right text-bold" id="p_fro_t_me_activity"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id='front_movable_act'>
-        <table class="table table-bordered table-hovered table-striped">
-            <thead>
-            <tr>
-                <th class="text-center" id="p_fro_col_act">FRENTES</th>
-            </tr>
-            <tr id="p_fro_tr_act"></tr>
-            <tr id="p_fro_tr_ct"></tr>
-            </thead>
-            <tbody id="p_fro_act_body"></tbody>
-        </table>
-    </div>
+<div class="table-responsive show_1__">
+    <table class="table table-bordered">
+        <thead class="show_pv1">
+        <tr>
+            <th colspan="4">PV1 (Meta)</th>
+            <th class="text-center" colspan="7">FRENTES</th>
+        </tr>
+        <tr>
+            <th rowspan="2">Cantidad</th>
+            <th rowspan="2">Unidad</th>
+            <th rowspan="2">Precio</th>
+            <th rowspan="2">Total</th>
+            <th width="20%" colspan="2">ELECTRONORTE S.A.</th>
+            <th width="20%" colspan="2">TECSUR S.A.</th>
+            <th width="20%" colspan="2">T&L INGENIEROS ASOCIADOS SAC</th>
+            <th class="text-center" rowspan="2">TOTAL</th>
+        </tr>
+        <tr>
+            <th class="text-center">Cantidad</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Cantidad</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Cantidad</th>
+            <th class="text-center">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="text-right">15</td>
+            <td class="text-center">UNIDADES</td>
+            <td class="text-right">258.00</td>
+            <th class="text-right">3,870.00</th>
+            <td class="text-center"><input type="text" class="text-right" style="width: 50px" value="5"></td>
+            <td class="text-right">1,290.00</td>
+            <td class="text-center"><input type="text" class="text-right" style="width: 50px" value="5"></td>
+            <td class="text-right">1,290.00</td>
+            <td class="text-center"><input type="text" class="text-right" style="width: 50px" value="5"></td>
+            <td class="text-right">1,290.00</td>
+            <th class="text-right">3,870.00</th>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td class="text-center" colspan="2">
+                <button class="btn btn-sm btn-primary" type="button" ng-click="showAnalysisFro()">
+                    Análisis de precios unitarios
+                </button>
+            </td>
+            <td class="text-center" colspan="2">
+                <button class="btn btn-sm btn-primary" type="button" ng-click="showAnalysisFro()">
+                    Análisis de precios unitarios
+                </button>
+            </td>
+            <td class="text-center" colspan="2">
+                <button class="btn btn-sm btn-primary" type="button" ng-click="showAnalysisFro()">
+                    Análisis de precios unitarios
+                </button>
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
+<div ng-include src="'/templates/projects/table_fro.html'"></div>

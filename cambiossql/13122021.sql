@@ -348,6 +348,36 @@ GO
 
 
 
+-- ----------------------------
+-- Table structure for ERP_Vendedores
+-- ----------------------------
+DROP TABLE [dbo].[ERP_Vendedores]
+GO
+CREATE TABLE [dbo].[ERP_Vendedores] (
+[idvendedor] int NOT NULL ,
+[descripcion] varchar(255) NULL ,
+[estado] varchar(1) NULL ,
+[user_created] int NULL ,
+[user_updated] int NULL ,
+[user_deleted] int NULL ,
+[created_at] datetime NULL ,
+[updated_at] datetime NULL ,
+[deleted_at] datetime NULL 
+)
+
+
+GO
+
+-- ----------------------------
+-- Indexes structure for table ERP_Vendedores
+-- ----------------------------
+
+-- ----------------------------
+-- Primary Key structure for table ERP_Vendedores
+-- ----------------------------
+ALTER TABLE [dbo].[ERP_Vendedores] ADD PRIMARY KEY ([idvendedor])
+GO
+
 
 
 

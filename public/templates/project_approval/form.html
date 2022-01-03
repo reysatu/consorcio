@@ -19,12 +19,6 @@
                         <li role="presentation">
                             <a data-target="#income" aria-controls="income" role="tab" data-toggle="tab">Ingresos</a>
                         </li>
-                        <li role="presentation" class="tab_4 hide">
-                            <a data-target="#expenses" aria-controls="expenses" role="tab" data-toggle="tab">Gastos</a>
-                        </li>
-                        <li role="presentation" class="tab_5 hide">
-                            <a data-target="#fronts_distribution" aria-controls="fronts_distribution" role="tab" data-toggle="tab">Distribución de Frentes</a>
-                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="home">
@@ -35,12 +29,6 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="income">
                             <div ng-include src="'/templates/projects/income.html'"></div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="expenses">
-                            <div ng-include src="'/templates/projects/expenses.html'"></div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="fronts_distribution">
-                            <div ng-include src="'/templates/projects/fronts.html'"></div>
                         </div>
                     </div>
                 </div>

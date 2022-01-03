@@ -7,7 +7,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title">
-                    <span id="title_op">Nueva Orden de Compra</span>
+                    <span class="show_new">Nueva Orden de Compra</span>
+                    <span class="show_edit">Editar Orden de Compra</span>
                 </h4>
             </div>
             <div class="modal-body">
@@ -18,56 +19,51 @@
                                    style="text-align: right !important;">O/C Interna</label>
                             <div class="col-sm-3">
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" readonly id="oc_number"
-                                           style="width: 65%">
+                                    <input type="text" class="form-control" readonly value="0001" style="width: 35%">
+                                    <input type="text" class="form-control" readonly value="20170504" style="width: 65%">
                                 </div>
                             </div>
                             <label class="col-sm-1 control-label"
                                    style="text-align: right !important;">Estado</label>
                             <div class="col-sm-3">
-                                <input id="oc_state" type="text" class="form-control input-sm" readonly>
-                                <!--<input type="text" class="form-control input-sm show_edit" readonly-->
-                                <!--value="Recibido Parcial">-->
+                                <input type="text" class="form-control input-sm show_new" readonly value="Registrado">
+                                <input type="text" class="form-control input-sm show_edit" readonly value="Recibido Parcial">
                             </div>
                         </div>
                     </div>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
-                            <a data-target="#tb_general" aria-controls="tab1" role="tab" data-toggle="tab">General</a>
+                            <a data-target="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">General</a>
                         </li>
                         <li role="presentation">
-                            <a data-target="#tb_provider" aria-controls="tab2" role="tab"
-                               data-toggle="tab">Proveedor</a>
+                            <a data-target="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Proveedor</a>
                         </li>
                         <li role="presentation">
-                            <a data-target="#tb_reception" aria-controls="tab3" role="tab"
-                               data-toggle="tab">Recepción</a>
+                            <a data-target="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Recepción</a>
                         </li>
                         <li role="presentation">
-                            <a data-target="#tb_detail" aria-controls="tab4" role="tab" data-toggle="tab">Detalles</a>
+                            <a data-target="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">Detalles</a>
                         </li>
                         <li role="presentation">
-                            <a data-target="#tb_audit" aria-controls="tab5" role="tab" data-toggle="tab">Auditoría</a>
+                            <a data-target="#tab5" aria-controls="tab5" role="tab" data-toggle="tab">Auditoría</a>
                         </li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="tb_general">
+                        <div role="tabpanel" class="tab-pane active" id="tab1">
                             <br>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-horizontal">
-                                        <input type="hidden" id="oc_id">
                                         <div class="form-group">
-                                            <label class="col-sm-4 control-label">Cotización</label>
+                                            <label class="col-sm-4 control-label">Nro.Cotización</label>
                                             <div class="col-sm-8">
                                                 <div class="input-group">
-                                                    <input id="oc_document" type="text" class="form-control input-sm">
+                                                    <input type="text" class="form-control input-sm">
                                                     <span class="input-group-btn">
-                                            <button ng-click="openDocument()" class="btn btn-danger btn-sm"
-                                                    type="button">
+                                            <button class="btn btn-danger btn-sm" type="button">
                                                 <span class="fa fa-file-pdf-o"></span>
                                             </button>
                                         </span>
@@ -77,22 +73,19 @@
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Nro.Cotización del Proveedor</label>
                                             <div class="col-sm-8">
-                                                <input id="oc_number_quotation_provider" type="text"
-                                                       class="form-control input-sm">
+                                                <input type="text" class="form-control input-sm">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Fecha Emisión</label>
                                             <div class="col-sm-8">
-                                                <input id="oc_date_emission" type="text" class="form-control input-sm"
-                                                       readonly>
+                                                <input type="text" class="form-control input-sm" readonly value="02/04/2017">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Fecha Envío</label>
                                             <div class="col-sm-8">
-                                                <input id="oc_shipping_date" type="text" class="form-control input-sm"
-                                                       readonly>
+                                                <input type="text" class="form-control input-sm" readonly value="07/04/2017">
                                             </div>
                                         </div>
                                     </div>
@@ -103,7 +96,7 @@
                                             <label class="col-sm-4 control-label">Servicios</label>
                                             <div class="col-sm-8">
                                                 <label class="checkbox-inline i-checks">
-                                                    <input id="oc_service" type="checkbox"/>
+                                                    <input type="checkbox" checked />
                                                 </label>
                                             </div>
                                         </div>
@@ -111,39 +104,24 @@
                                             <label class="col-sm-4 control-label">Proyecto</label>
                                             <div class="col-sm-8">
                                                 <div class="input-group">
-                                                    <input type="hidden" id="oc_project_id">
-                                                    <input type="text" readonly class="form-control input-sm"
-                                                           id="oc_project_code">
-                                                    <span class="input-group-btn">
-                                                        <button id="oc_button_project"
-                                                                class="btn btn-success btn-sm showReq" type="button"
-                                                                ng-click="openProject()">
-                                                            <span class="fa fa-search-plus"></span>
-                                                        </button>
-                                                    </span>
+                                                    <input type="text" class="form-control input-sm" value="00025"
+                                                           style="width: 30%">
+                                                    <textarea type="text" class="form-control input-sm" rows="2" readonly
+                                                              style="width: 70%">INVERSIONES-TALLER</textarea>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-4 control-label">Descripción</label>
-                                            <div class="col-sm-8">
-                                                <textarea id="oc_project_description" type="text"
-                                                          class="form-control input-sm" readonly
-                                                          rows="2"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-4 control-label">Observaciones</label>
                                             <div class="col-sm-8">
-                                                <textarea id="oc_observation" type="text" class="form-control input-sm"
-                                                          rows="2"></textarea>
+                                                <textarea type="text" class="form-control input-sm" rows="2"></textarea>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tb_provider">
+                        <div role="tabpanel" class="tab-pane" id="tab2">
                             <br>
                             <div class="form-horizontal">
                                 <div class="row">
@@ -152,16 +130,12 @@
                                             <label class="col-sm-3 control-label">Proveedor</label>
                                             <div class="col-sm-9">
                                                 <div class="input-group">
-                                                    <input id="oc_provider_id" type="hidden">
-                                                    <input id="oc_provider_document" type="text"
-                                                           class="form-control input-sm" style="width: 30%">
-                                                    <input id="oc_provider_name" type="text"
-                                                           class="form-control input-sm" readonly
-                                                           style="width: 70%">
-                                                    <span class="input-group-btn">
-                                            <button id="oc_button_provider" ng-click="openProvider()"
-                                                    class="btn btn-success btn-sm"
-                                                    type="button">
+                                                    <input type="text" class="form-control input-sm" value="20390932864"
+                                                           style="width: 30%">
+                                                    <input type="text" class="form-control input-sm" readonly
+                                                           value="IMPORTACIONES GELCO" style="width: 70%">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-success btn-sm" type="button">
                                                 <span class="fa fa-search-plus"></span>
                                             </button>
                                         </span>
@@ -171,37 +145,40 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Contacto</label>
                                             <div class="col-sm-3">
-                                                <input id="oc_provider_contact" type="text"
-                                                       class="form-control input-sm"
-                                                       readonly>
+                                                <select class="form-control input-sm" readonly=""></select>
                                             </div>
                                             <label class="col-sm-3 control-label">Teléfono Contacto</label>
                                             <div class="col-sm-3">
-                                                <input id="oc_provider_contact_telephone" type="text"
-                                                       class="form-control input-sm"
-                                                       readonly>
+                                                <input type="text" class="form-control input-sm" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Dirección</label>
                                             <div class="col-sm-9">
-                                                <input id="oc_provider_address" type="text"
-                                                       class="form-control input-sm">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control input-sm"
+                                                           value="AV. PANAMERICANA SUR KM 18.5 MZ. D LT. 11B VILLA EL">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-success btn-sm" type="button">
+                                                            <span class="fa fa-search-plus"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Condición Pago</label>
                                             <div class="col-sm-4">
-                                                <select class="form-control input-sm"
-                                                        id="oc_payment_condition_id"></select>
+                                                <select class="form-control input-sm">
+                                                    <option value="">LETRA 30 DIAS</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Adelanto Pago</label>
                                             <div class="col-sm-4">
                                                 <div class="input-group">
-                                                    <input id="oc_payment_advance_id" type="text"
-                                                           class="form-control input-sm">
+                                                    <input type="text" class="form-control input-sm">
                                                     <span class="input-group-addon">%</span>
                                                 </div>
                                             </div>
@@ -209,14 +186,16 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Moneda</label>
                                             <div class="col-sm-4">
-                                                <select class="form-control input-sm" id="oc_currency_id"></select>
+                                                <select class="form-control input-sm">
+                                                    <option value="">SOLES</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Descuento</label>
                                             <div class="col-sm-4">
                                                 <div class="input-group">
-                                                    <input id="oc_discount" type="text" class="form-control input-sm">
+                                                    <input type="text" class="form-control input-sm">
                                                     <span class="input-group-addon">%</span>
                                                 </div>
                                             </div>
@@ -225,7 +204,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tb_reception">
+                        <div role="tabpanel" class="tab-pane" id="tab3">
                             <br>
                             <div class="form-horizontal">
                                 <div class="row">
@@ -233,24 +212,26 @@
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Lugar Entrega</label>
                                             <div class="col-sm-9">
-                                                <select id="oc_warehouse_id" class="form-control input-sm"></select>
+                                                <select class="form-control input-sm">
+                                                    <option value="">LOCAL PRINCIPAL</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Días Entrega</label>
                                             <div class="col-sm-2">
-                                                <input id="oc_delivery_days" type="text" class="form-control input-sm">
+                                                <input type="text" class="form-control input-sm" value="1">
                                             </div>
                                             <label class="col-sm-3 control-label">Fecha Entrega</label>
                                             <div class="col-sm-3">
-                                                <input id="oc_date_delivery" type="text" class="form-control input-sm">
+                                                <input type="text" class="form-control input-sm" value="03/04/2017">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tb_detail">
+                        <div role="tabpanel" class="tab-pane" id="tab4">
                             <br>
                             <div class="form-horizontal">
                                 <div class="row">
@@ -258,55 +239,48 @@
                                         <div class="form-group">
                                             <label class="col-md-offset-3 col-sm-4 control-label">Subtotal</label>
                                             <div class="col-sm-5">
-                                                <input id="oc_subtotal" type="text" value="0.00"
-                                                       class="form-control input-sm text-right" readonly>
+                                                <input type="text" class="form-control input-sm text-right" value="2,277.00" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-offset-3 col-sm-4">
-                                                <input id="oc_igv_percentage" type="text" readonly
-                                                       class="form-control input-sm text-right"
+                                                <input type="text" readonly value="18" class="form-control input-sm text-right"
                                                        style="width: 50px; display: inline-block">
                                                 <b>% IGV</b>
                                             </div>
                                             <div class="col-sm-5">
-                                                <input id="oc_igv" type="text" class="form-control input-sm text-right"
-                                                       value="0.00" readonly>
+                                                <input type="text" class="form-control input-sm text-right" value="409.86" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <label class="checkbox-inline i-checks">
-                                                    <input id="oc_is_import" type="checkbox"/>
+                                                    <input type="checkbox" />
                                                     Importación
                                                 </label>
                                             </div>
                                             <div class="col-sm-4">
-                                                <input id="oc_import" type="text" readonly
-                                                       class="form-control input-sm">
+                                                <input type="text" readonly class="form-control input-sm">
                                             </div>
                                             <div class="col-sm-5">
-                                                <input id="oc_import_cant" type="text"
-                                                       class="form-control input-sm text-right" value=".00">
+                                                <input type="text" class="form-control input-sm text-right" value=".00">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <label class="checkbox-inline i-checks">
-                                                    <input id="oc_is_igv" type="checkbox"/>
+                                                    <input type="checkbox" checked />
                                                     Con IGV
                                                 </label>
                                             </div>
                                             <label class="col-sm-4 control-label">Total</label>
                                             <div class="col-sm-5">
-                                                <input id="oc_total" type="text" value="0.00"
-                                                       class="form-control input-sm text-right"
-                                                       readonly>
+                                                <input type="text" class="form-control input-sm text-right" value="2,686.86" readonly>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button ng-click="openProduct()" class="btn btn-xs btn-success">
+                                <button class="btn btn-xs btn-success">
                                     Cargar Recursos
                                 </button>
                                 <div class="separator"></div>
@@ -318,50 +292,49 @@
                                                 <tr>
                                                     <th>Item</th>
                                                     <th>Artículo</th>
-                                                    <!--<th>Marca</th>-->
-                                                    <th width="75px">Cant.</th>
-                                                    <th width="75px">Precio</th>
-                                                    <th width="75px">% Dscto.</th>
-                                                    <th width="75px">Dscto</th>
+                                                    <th>Marca</th>
+                                                    <th>Cant.</th>
+                                                    <th>Precio</th>
+                                                    <th>% Dscto.</th>
+                                                    <th>Dscto</th>
                                                     <th>Precio Compra</th>
                                                     <th>Total</th>
-                                                    <th></th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="oc_body">
-                                                <!--<tr>-->
-                                                <!--<td class="text-center">01</td>-->
-                                                <!--<td>ESCALERA EMBONABLE DE 6 PASOS</td>-->
-                                                <!--<td></td>-->
-                                                <!--<td class="text-right">3</td>-->
-                                                <!--<td class="text-right">462.00</td>-->
-                                                <!--<td class="text-right">0.00</td>-->
-                                                <!--<td class="text-right">.00</td>-->
-                                                <!--<td class="text-right">462.00</td>-->
-                                                <!--<td class="text-right">1,386.00</td>-->
-                                                <!--</tr>-->
-                                                <!--<tr>-->
-                                                <!--<td class="text-center">02</td>-->
-                                                <!--<td>ESCALERA EMBONABLE DE 4 PASOS</td>-->
-                                                <!--<td></td>-->
-                                                <!--<td class="text-right">3</td>-->
-                                                <!--<td class="text-right">297.00</td>-->
-                                                <!--<td class="text-right">0.00</td>-->
-                                                <!--<td class="text-right">.00</td>-->
-                                                <!--<td class="text-right">29.00</td>-->
-                                                <!--<td class="text-right">891.00</td>-->
-                                                <!--</tr>-->
-                                                <!--<tr>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td></td>-->
-                                                <!--<td class="text-right">2,277.00</td>-->
-                                                <!--</tr>-->
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-center">01</td>
+                                                    <td>ESCALERA EMBONABLE DE 6 PASOS</td>
+                                                    <td></td>
+                                                    <td class="text-right">3</td>
+                                                    <td class="text-right">462.00</td>
+                                                    <td class="text-right">0.00</td>
+                                                    <td class="text-right">.00</td>
+                                                    <td class="text-right">462.00</td>
+                                                    <td class="text-right">1,386.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">02</td>
+                                                    <td>ESCALERA EMBONABLE DE 4 PASOS</td>
+                                                    <td></td>
+                                                    <td class="text-right">3</td>
+                                                    <td class="text-right">297.00</td>
+                                                    <td class="text-right">0.00</td>
+                                                    <td class="text-right">.00</td>
+                                                    <td class="text-right">29.00</td>
+                                                    <td class="text-right">891.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="text-right">2,277.00</td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -369,31 +342,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="tb_audit">
+                        <div role="tabpanel" class="tab-pane" id="tab5">
                             <br>
                             <div class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Solicitado por</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control input-sm" readonly value="JARRISON MORI">
+                                        <input type="text" class="form-control input-sm" readonly value="JARRISON MORI"">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Fecha de solicitación</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control input-sm" readonly value="01/04/2017">
+                                        <input type="text" class="form-control input-sm" readonly value="01/04/2017"">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Aprobado por</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control input-sm" readonly value="JOSE MEDINA">
+                                        <input type="text" class="form-control input-sm" readonly value="JOSE MEDINA"">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Fecha de aprobación</label>
                                     <div class="col-sm-4">
-                                        <input type="text" class="form-control input-sm" readonly value="02/04/2017">
+                                        <input type="text" class="form-control input-sm" readonly value="02/04/2017"">
                                     </div>
                                 </div>
                             </div>
@@ -410,7 +383,7 @@
                     <span class="fa fa-sign-out"></span>
                     Cerrar Orden de Compra
                 </button>
-                <button ng-click="savePurchaseOrder()" type="button" class="btn btn-success">
+                <button type="button" class="btn btn-success">
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>

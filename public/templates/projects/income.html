@@ -1,15 +1,15 @@
 <div class="separator"></div>
+<div class="form-inline">
+    <div class="form-group">
+        <label>SubProyecto</label>
+        <select class="form-control input-sm" id="p_inc_sub_projects">
+            <option value="">--Seleccione--</option>
+        </select>
+    </div>
+</div>
+<div class="separator"></div>
 <div class="row">
     <div class="col-md-3">
-        <div class="form-inline">
-            <div class="form-group">
-                <label>SubProyecto</label>
-                <select class="form-control input-sm" id="p_inc_sub_projects">
-                    <option value="">--Seleccione--</option>
-                </select>
-            </div>
-        </div>
-        <div class="separator"></div>
         <div class="table-responsive hide" id="p_table_structure_level">
             <table class="table table-bordered table-hover margin-none">
                 <thead>
@@ -24,12 +24,14 @@
                 </tbody>
             </table>
         </div>
-        <div class="separator hide"></div>
-        <div class="show_btn_add_activity hide">
+        <div class="separator show_edit_level hide"></div>
+        <div class="show_edit_level show_edit_activity hide">
             <div class="btn-group" role="group">
-                <button class="btn btn-sm btn-success" type="button" ng-click="addLevelMatAct(2)">
-                    <span class="fa fa-plus"></span>
+                <button class="btn btn-sm btn-success" type="button">
                     Agregar Actividad
+                </button>
+                <button class="btn btn-sm btn-danger" type="button">
+                    Eliminar Actividad
                 </button>
             </div>
         </div>

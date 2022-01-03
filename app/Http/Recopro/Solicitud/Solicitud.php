@@ -19,7 +19,12 @@ class Solicitud extends Model
 
     protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'origen', 'idconvenio', 'idvendedor', 'idcliente', 'idmoneda', 'estado', 'fecha_vencimiento', 'iddescuento', 'porcentaje_descuento', 'monto_descuento', 'subtotal', 'monto_exonerado', 'monto_afecto', 'monto_inafecto', 'impuestos', 'monto_total', 'monto_descuento_detalle', 'user_created', 'user_updated', 'user_deleted'];
     protected $primaryKey = 'cCodConsecutivo';
-    // protected $keyType = 'string';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+
+
+    
     protected $hidden = ['deleted_at'];
 
     public function user_c()
