@@ -55,7 +55,7 @@
                 }
             },
             formCreated: function (event, data) {
-                data.form.find('input[name="banco"]').attr('onkeypress','return soloLetras(event)');
+                // data.form.find('input[name="banco"]').attr('onkeypress','return soloLetras(event)');
             },
             formSubmitting: function (event, data) {
                 var bval = true;

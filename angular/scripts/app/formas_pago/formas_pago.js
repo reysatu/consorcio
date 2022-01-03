@@ -58,7 +58,7 @@
             },
             formCreated: function (event, data) {
                 data.form.find('input[name="codigo_formapago"]').attr('maxlength', '5');
-                data.form.find('input[name="forma_pago"]').attr('onkeypress','return soloLetras(event)');
+                // data.form.find('input[name="forma_pago"]').attr('onkeypress','return soloLetras(event)');
 
                 // console.log(data.form);
             },

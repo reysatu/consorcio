@@ -65,7 +65,7 @@
             },
             formCreated: function (event, data) {
      
-                data.form.find('input[name="convenio"]').attr('onkeypress','return soloLetras(event)');
+                // data.form.find('input[name="convenio"]').attr('onkeypress','return soloLetras(event)');
                 $('#Edit-estado').parent().addClass('i-checks');
                
                 $('.i-checks').iCheck({
