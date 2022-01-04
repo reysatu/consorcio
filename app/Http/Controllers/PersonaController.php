@@ -47,7 +47,7 @@ class PersonaController extends Controller
             $data['cUbigeo'] = strtoupper($data['cUbigeo']);
             $data['cEmail'] = strtoupper($data['cEmail']);
             $data['cCelular'] = strtoupper($data['cCelular']);
-            $data['dFechanacimiento'] = strtoupper($data['dFechanacimiento']);
+            $data['dFechanacimiento'] = $data['dFechanacimiento'];
             $data['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
             $data['cApepat'] = strtoupper($data['cApepat']);
             $data['cApemat'] = strtoupper($data['cApemat']);
@@ -88,8 +88,14 @@ class PersonaController extends Controller
     {
         try {
             $data = $repo->find($id);
-            $data['dFechacaducidad2']=date("Y-m-d", strtotime($data[0]->dFechacaducidad));
-            $data['dFechanacimiento2']=date("Y-m-d", strtotime($data[0]->dFechanacimiento));
+            $data['dFechacaducidad2']='';
+            $data['dFechanacimiento2']='';
+            if($data[0]->dFechacaducidad!=null){
+                $data['dFechacaducidad2']=date("Y-m-d", strtotime($data[0]->dFechacaducidad));
+            }
+            if($data[0]->dFechanacimiento!=null){
+                $data['dFechanacimiento2']=date("Y-m-d", strtotime($data[0]->dFechanacimiento));
+            }
             return response()->json([
                 'status' => true,
                 'data' => $data

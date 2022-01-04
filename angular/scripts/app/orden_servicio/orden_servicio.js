@@ -671,8 +671,8 @@
                         tipo_vehi.val("");
                      }else{
                         placa.val(datos[0].placa);
-                        marca.val(datos[0].description);
-                        modelo.val(datos[0].descripcion);
+                        marca.val(datos[0].marca);
+                        modelo.val(datos[0].modelo);
                         chasis.val(datos[0].n_chasis);
                         anio_fabricacion.val(datos[0].anio_fabricacion);
                         color.val(datos[0].color);
@@ -2358,7 +2358,8 @@
                        if(Number(data_p[0].Mensaje)){
                         $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");
-                        btn_guardarOrden.prop('disabled',true); 
+                        // btn_guardarOrden.prop('disabled',true); 
+
                         cCodConsecutivo.prop('disabled',true); 
                         AlertFactory.textType({
                             title: '',
@@ -2376,6 +2377,7 @@
                                     btn_terminada.prop('disabled',false);
                                 };
                             }
+                          llenarTablas(data_p[0].Mensaje);
                          LoadRecordsButtonOrden_Servicio.click();
                     }else{
                          AlertFactory.textType({
@@ -2414,6 +2416,95 @@
 
 
 // }
+function llenarTablas(Consecutivo){
+    var id=cCodConsecutivo.val()+'_'+Consecutivo;
+     RESTService.get('orden_servicios/find', id, function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    console.log("entro");
+                  articulo_dd_det.html("");
+                  table_servicios.html("");
+                  var data=response.data;
+                  console.log("borro");
+                    var data_matenimiento=response.data_matenimiento;
+                    _.each(data_matenimiento, function (b) {
+                        var vto=b.idMantenimiento+'*'+b.nombre;
+                        var modo_m=1;
+                         addMante(vto,modo_m);
+                    });
+
+                    var data_detalle=response.data_detalle;
+                    console.log(data_detalle);
+                      _.each(data_detalle, function (b) {
+                        var vto=b.idProducto+'*'+b.description+'*'+b.nPrecioUnitario+'*'+b.impuesto;
+                         var tipoTo=b.totaltipo;
+                         var tipoText=b.descripcioText;
+                         var modo_servi=1;
+                         var idte=b.idDetalleSer;
+                         var cant=b.nCant;
+                         var opera=b.cOperGrat;
+                         var porcen=Number(b.nPorcDescuento);
+
+                         var monto=Number(b.nDescuento);
+                         if(porcen>0){
+                            monto=0;
+                         };
+                         var idDescuento="";
+                         if(b.nIdDscto!=0){
+                            idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
+                         }
+                       
+                         addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento);
+                        //  function addServicios(vto,tipoTo,tipoText,modo_ser,iddet)
+                    });
+
+
+                    // _.each(data_detalle, function (b) {
+                    //     var vto=b.idProducto;
+                    //      var idDescuento=b.nIdDscto+"*"+porcen+'*'+monto;
+                    //      $("#id_desc_"+vto).val(idDescuento).trigger("change");
+                        
+                    // });
+                    
+
+                  
+                    // gru_revisiones
+                    // idTecnico
+                    // idAsesor
+                    // horaEnt
+                    // nKilometraje
+                    // if(data[0].iEstado!='0'){
+                    //       btn_guardarOrden.prop('disabled',true); 
+                    // }
+                    // id_tipocli.data("prev",id_cliente_tipo_or.val());
+                    // idMoneda.data("prev",idMoneda.val());
+                    // if(estado.val()!=''){
+                    //     if(estado.val()==0 || estado.val()==1){
+                    //         btn_ejecucion.prop('disabled',false);
+                    //     };
+                    //     if(estado.val()==1 || estado.val()==2){
+                    //         btn_cancelar.prop('disabled',false);
+                    //     };
+                    //     if(estado.val()==2){
+                    //         btn_terminada.prop('disabled',false);
+                    //     };
+                    // }
+                    var destotal="";
+                    if(data[0].nIdDscto!=0){
+                        var porcen=Number(data[0].porDes);
+                        var monto=Number(data[0].montoDes);
+                        destotal =data[0].nIdDscto+"*"+porcen+'*'+monto;
+                     }
+                    totalDescuento.val(destotal).trigger("change");
+                    // modalOrdenServivio.modal("show");
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
+}
  documento.keypress(function(e) {
     var code = (e.keyCode ? e.keyCode : e.which);
         if(code==13){

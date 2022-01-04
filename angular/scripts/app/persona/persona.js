@@ -190,23 +190,27 @@ function getDatosCliente(){
         {
             var bval = true;
             bval = bval && cTipopersona.required();
-            bval = bval && cDireccion.required();
-
-            bval = bval && cReferencia.required();
-            bval = bval && cDigitoVerificador.required();
             bval = bval && cTipodocumento.required();
             bval = bval && cNumerodocumento.required();
+            bval = bval && cDigitoVerificador.required();
             bval = bval && dFechacaducidad.required();
-            bval = bval && cRegion.required();
+           
 
+            // bval = bval && cReferencia.required();
+            
+        
+           
+            
+            bval = bval && cRegion.required();
             bval = bval && cProvincia.required();
             bval = bval && cUbigeo.required();
-            bval = bval && cEmail.required();
             bval = bval && cCelular.required();
+            bval = bval && cEmail.required();
+            bval = bval && cDireccion.required();
 
-            bval = bval && dFechanacimiento.required();
-            bval = bval && cEstadoCivil.required();
-            bval = bval && cSexo.required();
+            // bval = bval && dFechanacimiento.required();
+            // bval = bval && cEstadoCivil.required();
+            // bval = bval && cSexo.required();
             if(cTipodocumento.val()=='01' && cNumerodocumento.val().length!=8){
                 AlertFactory.textType({
                             title: '',
@@ -403,7 +407,7 @@ function getDatosCliente(){
             sorting: true,
             actions: { 
                 listAction: base_url + '/personas/list',
-                deleteAction: base_url + '/personas/delete',
+                deleteAction: base_url + '/personas/delete', 
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',

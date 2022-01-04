@@ -55,6 +55,10 @@
                     options: base_url + '/cuentas_bancarias/getBancos' 
 
                 },
+                IdMoneda: {
+                    title: 'Moneda',
+                    options: base_url + '/type_change/getMonedas',
+                },
                 numero_cuenta: {
                     title: 'Número Cuenta'
                 },

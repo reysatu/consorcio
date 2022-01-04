@@ -25,7 +25,7 @@ class CuentasBancariasController extends Controller
     public function all(Request $request, CuentasBancariasInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id_cuentabancaria', 'numero_cuenta', 'descripcion_cuenta', 'idbanco'];
+        $params = ['id_cuentabancaria', 'numero_cuenta', 'descripcion_cuenta', 'idbanco','IdMoneda'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'id_cuentabancaria', $params);
     }

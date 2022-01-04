@@ -4,6 +4,7 @@ use App\Http\Recopro\User\User;
 use App\Http\Recopro\Bancos\Bancos;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Recopro\Currency\Currency;
 
 /**
  * Created by PhpStorm.
@@ -17,7 +18,7 @@ class CuentasBancarias extends Model
 
     protected $table = 'ERP_CuentasBancarias';
 
-    protected $fillable = ['id_cuentabancaria', 'numero_cuenta', 'descripcion_cuenta', 'user_created', 'user_updated', 'user_deleted', 'idbanco'];
+    protected $fillable = ['id_cuentabancaria', 'numero_cuenta', 'descripcion_cuenta', 'user_created', 'user_updated', 'user_deleted', 'idbanco','IdMoneda'];
     protected $primaryKey = 'id_cuentabancaria';
     // protected $keyType = 'string';
     protected $hidden = ['deleted_at'];
@@ -35,5 +36,9 @@ class CuentasBancarias extends Model
     public function banco_d()
     {
         return $this->belongsTo(Bancos::class,'idbanco');
+    }
+    public function currency_cuenta()
+    {
+        return $this->belongsTo(Currency::class, 'IdMoneda');
     }
 }
