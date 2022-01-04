@@ -280,7 +280,7 @@
                     _.each(response.personas, function (item) {
                          $("#idfiador").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
                     });
-                    
+
                     $("#idfiadorconyugue").append('<option value="">Seleccionar</option>');
                     _.each(response.personas, function (item) {
                          $("#idfiadorconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
@@ -1831,9 +1831,62 @@
             });
         }
         $scope.datos_credito = function() {
-            $("#idconyugue").focus();
+            // $("#idconyugue").focus();
+            var t_monto_total = $("#desTotal").val();
+            $("#monto_venta").val(t_monto_total);
+            $("#total_financiado").val(t_monto_total);
+            $("#cuota_inicial").attr("max", t_monto_total);
+
+            if(articulo_mov_det.html() == "") {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Debe ingresar al menos un articulo al detalle!',
+                    type: 'info'
+                });
+                return false;
+            }
+
             $("#modal-creditos").modal("show");
         }
+
+        $(document).on("keyup", "#cuota_inicial", function () {
+            var cuota_inicial = parseFloat($(this).val());
+            var monto_venta = parseFloat($("#monto_venta").val());
+            if(isNaN(cuota_inicial)) {
+                cuota_inicial = 0;
+            }
+
+            var total_financiado = monto_venta - cuota_inicial;
+            $("#total_financiado").val(total_financiado.toFixed(2));
+            $("#nro_cuotas").trigger("keyup");
+        });
+
+        $(document).on("keyup", "#nro_cuotas", function () {
+            var nro_cuotas = parseFloat($(this).val());
+            var total_financiado = parseFloat($("#total_financiado").val());
+            if(isNaN(nro_cuotas)) {
+                nro_cuotas = 0;
+            }
+
+            $.post("solicitud/factor_credito", { nro_cuotas: nro_cuotas },
+                function (data, textStatus, jqXHR) {
+                    var porcentaje = 0;
+                    if(data.length > 0) {
+                        porcentaje = parseFloat(data[0].porcentaje);
+                    }
+
+                    var intereses = total_financiado * porcentaje;
+                    var valor_cuota = (total_financiado + intereses) / nro_cuotas;
+                    // alert(intereses);
+                    $("#valor_cuota").val(valor_cuota.toFixed(2));
+                    $("#intereses").val(intereses.toFixed(2));
+
+                },
+                "json"
+            );
+
+        });
+
         $scope.guardar_solicitud = function () {
 
             var bval = true;
@@ -1844,9 +1897,26 @@
             bval = bval && documento_or.required();
 
             if (bval) {
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize(),
+                // alert($("#formulario-solicitud").serialize() + $("#formulario-creditos").serialize());
+                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
-                        console.log(data);
+                       
+                        if(data.status == "i") {
+                        
+                            $("#nConsecutivo").val(data.datos[0].nConsecutivo);
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'La solicitud se registró correctamente.',
+                                type: 'success'
+                            });
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
+                        }
+                       
                     },
                     "json"
                 );

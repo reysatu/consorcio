@@ -137,4 +137,21 @@ class SolicitudRepository implements SolicitudInterface
         return $mostrar3;
     }
 
+    public function get_parametro_cuotas() {
+        $param = DB::select("select * from ERP_Parametros WHERE id=4");
+        if(count($param) > 0) {
+            return $param[0]->value;
+        } else {
+            return 0;
+        }
+
+    }
+
+
+    public function get_factor_credito($nro_cuotas, $param_nro_cuotas) {
+        $sql = "SELECT * FROM ERP_FactorCredito WHERE nrocuotas = {$nro_cuotas}  AND nrocuotas > {$param_nro_cuotas}";
+        // die($sql);
+        return DB::select($sql);
+    }
+
 }

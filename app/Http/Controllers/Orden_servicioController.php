@@ -392,6 +392,7 @@ class Orden_servicioController extends Controller
             $idTipoCli=$valtodo[1];
             $idMoneda=$valtodo[2];
             $val=$repo->get_precios_list($idProducto, $idTipoCli,$idMoneda);
+            // var_dump($val);
              $newPrecio='';
             if(empty($val) && $idMoneda=='1'){
                 $para=$repo->get_parametroPrecio();
@@ -404,6 +405,8 @@ class Orden_servicioController extends Controller
                     $cambio=$repo->cambio_tipo($parametro_moneda,$fecha_actual);
                     $newPrecio=floatval($val[0]->nPrecio)*floatval($cambio[0]->Mensaje);
                 }
+            } else {
+                $newPrecio = $val[0]->nPrecio;
             }
         // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
         //     DB::commit();
