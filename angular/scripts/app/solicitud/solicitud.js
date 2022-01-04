@@ -1900,23 +1900,15 @@
                 // alert($("#formulario-solicitud").serialize() + $("#formulario-creditos").serialize());
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
-                       
-                        if(data.status == "i") {
-                        
-                            $("#nConsecutivo").val(data.datos[0].nConsecutivo);
-                            AlertFactory.textType({
-                                title: '',
-                                message: 'La solicitud se registró correctamente.',
-                                type: 'success'
-                            });
-                        } else {
-                            AlertFactory.textType({
-                                title: '',
-                                message: data.msg,
-                                type: 'info'
-                            });
+                        console.log(data);
+                        if() {
+                            
                         }
-                       
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'La solicitud se registró correctamente.',
+                            type: 'success'
+                        });
                     },
                     "json"
                 );
