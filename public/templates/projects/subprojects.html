@@ -1,3 +1,4 @@
+<!-- Modal -->
 <div class="modal" id="modalSP" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -8,8 +9,8 @@
                 <h4 class="modal-title" id="p_title_modal_sp"></h4>
             </div>
             <div class="modal-body">
-                <input type="text" class="form-control input-sm inp_show_approval inpProjectISPV inpProjectIsMeta"
-                       placeholder="Nombre del SubProyecto" id="p_sp_description">
+                <input type="text" class="form-control input-sm inp_show_approval" placeholder="Nombre del SubProyecto"
+                       id="p_sp_description">
                 <div class="separator"></div>
                 <div>
                     <!-- Nav tabs -->
@@ -23,9 +24,8 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="levels">
-                            <div class="separator show_not_approval showProjectISPV showProjectIsMeta"></div>
-                            <button class="btn btn-sm btn-success show_not_approval showProjectISPV showProjectIsMeta"
-                                    ng-click="addLevel()">
+                            <div class="separator show_not_approval"></div>
+                            <button class="btn btn-sm btn-success show_not_approval" ng-click="addLevel()">
                                 <span class="fa fa-plus"></span>
                                 Agregar Nivel
                             </button>

@@ -160,6 +160,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Vendedores.php';
 
 
+    require app_path() . '\Http\Routes\FactorCredito.php';
+
     // Routes Ventas
 
     require app_path() . '\Http\Routes\Solicitud.php';

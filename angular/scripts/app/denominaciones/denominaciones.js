@@ -68,7 +68,7 @@
             },
             formCreated: function (event, data) {
                 // data.form.find('input[name="codigo_formapago"]').attr('maxlength', '5');
-                data.form.find('input[name="denominacion"]').attr('onkeypress','return soloLetras(event)');
+                // data.form.find('input[name="denominacion"]').attr('onkeypress','return soloLetras(event)');
                 data.form.find('input[name="valor"]').attr('onkeypress','return validDecimals(event, this, 5)');
                 // console.log(data.form);
             },

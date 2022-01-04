@@ -11,6 +11,7 @@
         'sys.utils.libraries',
         //'sys.templates',
         'sys.utils.services',
+        
         'sys.utils.utils',
         'angucomplete-alt',
         'sys.utils.widgets',
@@ -72,12 +73,12 @@
         'sys.app.aprobacion',
         'sys.app.cajas',
         'sys.app.consecutivos_comprobantes',
-
         'sys.app.vendedores',
-
         'sys.app.cobradors',
         'sys.app.configJerarquias',
         'sys.app.personas',
+
+        'sys.app.factor_credito',
 
         // Compras
         'sys.app.requirements',

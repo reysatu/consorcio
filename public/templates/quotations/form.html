@@ -40,7 +40,7 @@
                             <div class="separator"></div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <button id="btn_add_requirement" class="btn btn-success btn-sm" type="button" ng-click="openRequirements()">
+                                    <button class="btn btn-success btn-sm" type="button" ng-click="openRequirements()">
                                         <span class="fa fa-plus-circle"></span>
                                         Agregar Requerimiento
                                     </button>
@@ -84,7 +84,6 @@
                                     <thead>
                                     <tr>
                                         <th>Item</th>
-                                        <th>Matriz</th>
                                         <th>Artículo</th>
                                         <th>U.M.</th>
                                         <th>Cantidad</th>
@@ -98,7 +97,7 @@
                             <div class="separator"></div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <button id="btn_add_quotation_provider" class="btn btn-success btn-sm" type="button" ng-click="openProvider()">
+                                    <button class="btn btn-success btn-sm" type="button" ng-click="openProvider()">
                                         <span class="fa fa-plus-circle"></span>
                                         Agregar Cotización Proveedor
                                     </button>
@@ -117,6 +116,42 @@
                                     </tr>
                                     </thead>
                                     <tbody id="q_body_quotations_providers"></tbody>
+                                    <!--<tr>-->
+                                        <!--<td>20127649872</td>-->
+                                        <!--<td>INDUSTRIA DE SEGURIDAD EL PROGRESO S.A.C.</td>-->
+                                        <!--<td class="text-right">1250.00</td>-->
+                                        <!--<td class="text-center">-->
+                                            <!--<div class="btn-group" role="group" aria-label="...">-->
+                                                <!--<button class="btn btn-success btn-xs" ng-click="showPDF()" title="Ver Documento"><span class="fa fa-file-pdf-o"></span></button>-->
+                                                <!--<button class="btn btn-primary btn-xs" title="Editar"><span class="fa fa-edit"></span></button>-->
+                                                <!--<button class="btn btn-danger btn-xs" title="Eliminar"><span class="fa fa-trash-o"></span></button>-->
+                                            <!--</div>-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td>20514828670</td>-->
+                                        <!--<td>3 P & CIA SAC</td>-->
+                                        <!--<td class="text-right">1150.00</td>-->
+                                        <!--<td class="text-center">-->
+                                            <!--<div class="btn-group" role="group" aria-label="...">-->
+                                                <!--<button class="btn btn-success btn-xs" ng-click="showPDF()" title="Ver Documento"><span class="fa fa-file-pdf-o"></span></button>-->
+                                                <!--<button class="btn btn-primary btn-xs" title="Editar"><span class="fa fa-edit"></span></button>-->
+                                                <!--<button class="btn btn-danger btn-xs" title="Eliminar"><span class="fa fa-trash-o"></span></button>-->
+                                            <!--</div>-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
+                                    <!--<tr>-->
+                                        <!--<td>20509654141</td>-->
+                                        <!--<td>KAPEK INTERNACIONAL SAC</td>-->
+                                        <!--<td class="text-right">1270.00</td>-->
+                                        <!--<td class="text-center">-->
+                                            <!--<div class="btn-group" role="group" aria-label="...">-->
+                                                <!--<button class="btn btn-success btn-xs" ng-click="showPDF()" title="Ver Documento"><span class="fa fa-file-pdf-o"></span></button>-->
+                                                <!--<button class="btn btn-primary btn-xs" title="Editar"><span class="fa fa-edit"></span></button>-->
+                                                <!--<button class="btn btn-danger btn-xs" title="Eliminar"><span class="fa fa-trash-o"></span></button>-->
+                                            <!--</div>-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
                                 </table>
                             </div>
                         </div>
@@ -141,7 +176,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btn_save_quotation" class="btn btn-success" ng-click="saveQuotation()">
+                <button type="button" class="btn btn-success" ng-click="saveQuotation()">
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>

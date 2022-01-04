@@ -28,43 +28,16 @@
                                 <input type="hidden" id="c_c_contest_id">
                             </div>
                             <div class="table-responsive">
-                                <div id='table_fixed'>
-                                    <table class="table table-bordered table-stripped table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th colspan="2"
-                                                style="text-align: center; min-height: 55px; height: 55px; vertical-align: middle">
-                                                CONSOLIDADO
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th style="width: 40%">ARTICULO</th>
-                                            <th id="row_cant_total" style="width: 10%">CANTIDAD TOTAL</th>
-                                        </tr>
-
-                                        </thead>
-                                        <tbody id="c_c_quotations_detail_izq"></tbody>
-                                        <tfoot id="c_c_quotations_foot_izq"></tfoot>
-                                    </table>
-                                </div>
-                                <div id="table_movable">
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <thead id="c_c_quotations_head_der"></thead>
-                                        <tbody id="c_c_quotations_detail_der"></tbody>
-                                        <tfoot id="c_c_quotations_foot_der"></tfoot>
-                                    </table>
-                                </div>
-                                <!--<table class="table table-bordered table-hover table-striped">-->
-                                <!--<thead id="c_c_quotations_head"></thead>-->
-                                <!--<tbody id="c_c_quotations_detail"></tbody>-->
-                                <!--<tfoot id="c_c_quotations_foot"></tfoot>-->
-                                <!--</table>-->
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead id="c_c_quotations_head"></thead>
+                                    <tbody id="c_c_quotations_detail"></tbody>
+                                </table>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="requirements">
                             <div class="separator"></div>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-stripped table-hover" style="width: 150%">
+                                <table class="table table-bordered table-stripped table-hover">
                                     <thead>
                                     <tr>
                                         <th>Requerimiento</th>
@@ -82,20 +55,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info hide" id="btn_cancel_contest" ng-click="cancelContest()">
-                    <span class="fa fa-sign-in"></span>
-                    Cancelar Concurso
-                </button>
-                <button type="button" id="btn_approval_q_compare" class="btn btn-success" ng-click="sendApproval()">
+                <button type="button" class="btn btn-success">
                     <span class="fa fa-sign-out"></span>
                     Envíar a Aprobación
                 </button>
-                <button type="button" class="btn btn-warning" ng-click="seeObservation()">
+                <button type="button" class="btn btn-warning">
                     <span class="fa fa-warning"></span>
                     Ver Observaciones
                 </button>
-                <button type="button" id="btn_save_q_compare" class="btn btn-info showReq"
-                        ng-click="saveComparisonQuotation()">
+                <button type="button" class="btn btn-info">
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>

@@ -1,35 +1,22 @@
+<div class="form-inline">
+    <div class="form-group">
+        <label>SubProyecto</label>
+        <select class="form-control input-sm">
+            <option value="">--Seleccione--</option>
+            <option value="" selected>1. LINEA PRIMARIA</option>
+            <option value="">2. RED PRIMARIA</option>
+        </select>
+    </div>
+</div>
 <div class="separator"></div>
 <div class="row">
     <div class="col-md-3">
+        <div ng-include src="'/templates/projects/matrix_income_fro.html'"></div>
         <div class="separator"></div>
-        <div class="form-inline">
-            <div class="form-group">
-                <label>SubProyecto</label>
-                <select class="form-control input-sm" id="p_fro_sub_projects">
-                    <option value="">--Seleccione--</option>
-                </select>
-            </div>
-        </div>
-        <div class="separator"></div>
-        <div class="table-responsive hide" id="p_table_structure_level_fro">
-            <table class="table table-bordered table-hover margin-none">
-                <thead>
-                <tr>
-                    <th>ESTRUCTURA</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td id="t_body_fro_levels"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="separator"></div>
-        <div class="list-group" id="p_fro_list_activity"></div>
-        <div class="alert alert-danger hide text-bold" role="alert" id="p_fro_alert"></div>
+        <div ng-include src="'/templates/projects/list_activity_fro.html'"></div>
     </div>
     <div class="col-md-9">
         <div ng-include src="'/templates/projects/pv_fro.html'"></div>
     </div>
 </div>
+<!--<div class="table-responsive" ng-include src="'/templates/projects/front_1.html'"></div>-->
