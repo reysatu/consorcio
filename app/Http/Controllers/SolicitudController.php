@@ -55,6 +55,8 @@ class SolicitudController extends Controller
     public function guardar_solicitud(SolicitudInterface $repo, SolicitudRequest $request)
     {
         $data = $request->all();
+
+        // print_r($data); exit;
         $response = array();
 
         try {
@@ -74,9 +76,11 @@ class SolicitudController extends Controller
                 // exit;
                
                 $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
                 $repo->actualizar_correlativo($data["cCodConsecutivo"], $data["nConsecutivo"]);
             } else {
                 $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
+                $this->base_model->modificar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
             }   
 
             
@@ -219,5 +223,17 @@ class SolicitudController extends Controller
             'vendedores'=>$vendedores,
             'personas'=>$personas,
         ]);
+    }
+
+    public function factor_credito(SolicitudInterface $Repo, Request $request) {
+        $param_nro_cuotas = $Repo->get_parametro_cuotas();
+        $nro_cuotas = $request->input("nro_cuotas");
+
+        $factor_credito = $Repo->get_factor_credito($nro_cuotas, $param_nro_cuotas);
+
+
+        echo json_encode($factor_credito);
+
+
     }
 }
