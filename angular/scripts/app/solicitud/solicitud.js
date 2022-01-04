@@ -1815,7 +1815,10 @@
 
             });
         }
-
+        $scope.datos_credito = function() {
+            $("#idconyugue").focus();
+            $("#modal-creditos").modal("show");
+        }
         $scope.guardar_solicitud = function () {
 
             var bval = true;

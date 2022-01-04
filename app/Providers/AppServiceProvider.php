@@ -97,6 +97,10 @@ use App\Http\Recopro\Vendedores\Vendedores;
 use App\Http\Recopro\Vendedores\VendedoresInterface;
 use App\Http\Recopro\Vendedores\VendedoresRepository;
 
+use App\Http\Recopro\FactorCredito\FactorCredito;
+use App\Http\Recopro\FactorCredito\FactorCreditoInterface;
+use App\Http\Recopro\FactorCredito\FactorCreditoRepository;
+
 use App\Http\Recopro\Solicitud\Solicitud;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
@@ -582,6 +586,7 @@ class AppServiceProvider extends ServiceProvider
         // Module Masters
         $this->registerBrand();
         $this->registerBancos();
+        $this->registerFactorCredito();
         $this->registerTiposMovimiento();
         $this->registerFormasPago();
         $this->registerCajaUsuario();
@@ -835,6 +840,15 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(BancosInterface::class, function ($app) {
             return new BancosRepository(new Bancos());
+        });
+    }
+
+    public function registerFactorCredito()
+    {
+        $app = $this->app;
+
+        $app->bind(FactorCreditoInterface::class, function ($app) {
+            return new FactorCreditoRepository(new FactorCredito());
         });
     }
 
