@@ -61,22 +61,44 @@ class CustomerController extends Controller
             $dato['cTipopersona'] = $tip;
             $dato['cRazonsocial'] = strtoupper($raz);
             $w = $rePer->findByCode($data['documento']);
+            $val = $repo->findByCode($data['documento']);
+
             if ($id != 0) {
-                $datos_cliente = $rePer->find($id);
-                if ($w && $w->idPersona != $datos_cliente[0]->idPersona) {
+                if ($val && $val->id != $id) {
                     throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
                 }
-                $dataper=$rePer->update($datos_cliente[0]->idPersona, $dato);
-                $idPersonacl=$datos_cliente[0]->idPersona;
+                // $repo->update($id, $data);
+            } else {
+                if ($val) {
+                    throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
+                }
+                // $data['id'] = $repo->get_consecutivo($table,$idt);
+                // $repo->create($data);
+            };
+            if ($id != 0) {
+                $datos_cliente = $repo->find($id);
+                if ($w && $w->idPersona != $datos_cliente[0]->idPersona) {
+
+                    // throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código. dddd');
+                }
+                $dataper=$rePer->update($w->idPersona, $dato);
+                $idPersonacl=$w->idPersona;
             } else {
                 if ($w) {
-                    throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
+                     // $datos_cliente = $repo->find($id);
+                     $dataper=$rePer->update($w->idPersona, $dato);
+                     $idPersonacl=$w->idPersona;
+                    // throw new \Exception('Ya existe un documento con este código. Por favor ingrese otro código.');
+
+                }else{
+                    $dato['idPersona'] = $repo->get_consecutivo($table1,$idt1);
+                    $dataper=$rePer->create($dato);
+                    $idPersonacl=$dataper->idPersona;
                 }
-                $dato['idPersona'] = $repo->get_consecutivo($table1,$idt1);
-                $dataper=$rePer->create($dato);
-                $idPersonacl=$dataper->idPersona;
+                
 
             };
+
           
 
             $table="ERP_Clientes";
