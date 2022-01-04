@@ -132,4 +132,9 @@ class SolicitudRepository implements SolicitudInterface
         return $mostrar3;
     }
 
+    public function obtener_personas() {
+        $mostrar3 = DB::select("select * from ERP_Persona");
+        return $mostrar3;
+    }
+
 }

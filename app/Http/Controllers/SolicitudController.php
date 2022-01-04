@@ -193,6 +193,7 @@ class SolicitudController extends Controller
         $lotes = $Repo->obtener_lotes($usuario);
         $convenios = $Repo->obtener_convenios($usuario);
         $vendedores = $Repo->obtener_vendedores($usuario);
+        $personas = $Repo->obtener_personas($usuario);
      
 
         return response()->json([
@@ -216,6 +217,7 @@ class SolicitudController extends Controller
             'lotes'=>$lotes,
             'convenios'=>$convenios,
             'vendedores'=>$vendedores,
+            'personas'=>$personas,
         ]);
     }
 }

@@ -270,6 +270,21 @@
                     _.each(response.vendedores, function (item) {
                         idvendedor.append('<option value="' + item.idvendedor + '">' + item.descripcion + '</option>');
                     });
+
+                    $("#idconyugue").append('<option value="">Seleccionar</option>');
+                    _.each(response.personas, function (item) {
+                         $("#idconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    });
+
+                    $("#idfiador").append('<option value="">Seleccionar</option>');
+                    _.each(response.personas, function (item) {
+                         $("#idfiador").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    });
+                    
+                    $("#idfiadorconyugue").append('<option value="">Seleccionar</option>');
+                    _.each(response.personas, function (item) {
+                         $("#idfiadorconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    });
                     // totales = response.totales;
                     // tipo_totales_slec.append('<option value="">Tipo</option>');
                     // _.each(response.totales, function (item) {
