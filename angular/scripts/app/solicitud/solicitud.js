@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
 
-(function () {
+ (function () {
     'use strict';
     angular.module('sys.app.solicitud')
         .config(Config)
@@ -1897,18 +1897,24 @@
             bval = bval && documento_or.required();
 
             if (bval) {
-                // alert($("#formulario-solicitud").serialize() + $("#formulario-creditos").serialize());
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
-                        console.log(data);
-                        if() {
-                            
+                       
+                        if(data.status == "i") {
+                            $("#nConsecutivo").val(data.datos[0].nConsecutivo);
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'La solicitud se registró correctamente.',
+                                type: 'success'
+                            });
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
                         }
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'La solicitud se registró correctamente.',
-                            type: 'success'
-                        });
+                       
                     },
                     "json"
                 );
