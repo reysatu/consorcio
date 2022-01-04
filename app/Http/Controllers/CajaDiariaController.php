@@ -137,7 +137,11 @@ class CajaDiariaController extends Controller
             $datoDet['codigoFormaPago'] ='EFE';
             if($estadoTem==1){
                 $datoDet['codigoTipo'] ='CIE';
-                $repoDet->update($id,$data['consecutivo'],$datoDet);
+                $iddet = 'consecutivo';
+                $tabledet = "ERP_CajaDiariaDetalle";
+                $datoDet['idCajaDiaria'] =$id;
+                $datoDet['consecutivo'] = $repoDet->get_consecutivo($tabledet, $iddet);
+                $grupdet = $repoDet->create($datoDet);
             }else{
                 $datoDet['codigoTipo'] ='APE';
                 $iddet = 'consecutivo';

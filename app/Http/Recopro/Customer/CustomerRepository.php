@@ -64,10 +64,11 @@ class CustomerRepository implements CustomerInterface
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
-    public function destroy($id)
+    public function destroy($id,$idPersona)
     {
         $attributes = [];
         $model = $this->model->findOrFail($id);
+        DB::table('ERP_Persona')->where('idPersona',$idPersona)->delete();
         $model->update($attributes);
         $model->delete();
      

@@ -38,7 +38,7 @@ class CustomerController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->all();
-            $table1="ERP_Persona";
+            $table1="ERP_Persona"; 
             $idt1='idPersona';
             $dato=[];
             $dato['cDireccion'] = strtoupper($data['direccion']);
@@ -54,6 +54,7 @@ class CustomerController extends Controller
             $raz=strtoupper($data['razonsocial_cliente']);
             if($data['tipodoc']=='01'){
                  $tip='01';
+                 $dato['cNombrePersona'] = strtoupper($data['razonsocial_cliente']);
                  $raz=null;
             }
             $idPersonacl='';
@@ -173,7 +174,8 @@ class CustomerController extends Controller
     public function destroy(CustomerInterface $repo, Request $request)
     {
         $id = $request->input('id');
-        $repo->destroy($id);
+        $data = $repo->find($id);
+        $repo->destroy($id,$data[0]->idPersona);
         return response()->json(['Result' => 'OK']);
     }
 

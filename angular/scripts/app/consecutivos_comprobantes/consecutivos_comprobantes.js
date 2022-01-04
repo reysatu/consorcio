@@ -304,7 +304,7 @@
                     title: 'Serie'
                 },
                 numero: {
-                    title: 'Número'
+                    title: 'Inicio'
                 },
                 actual: {
                     title: 'Actual'

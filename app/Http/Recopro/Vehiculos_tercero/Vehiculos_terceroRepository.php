@@ -74,12 +74,12 @@ class Vehiculos_terceroRepository implements Vehiculos_terceroInterface
     }
     public function get_Placa_document($id)
     {
-        $mostra=DB::select("SELECT * FROM ERP_VehTerceros as ti inner join ERP_Modelo as ub on ti.idModelo=ub.idModelo left join ERP_Marcas as mar on mar.id=ti.idMarca where ti.placa='$id'");
+        $mostra=DB::select("SELECT mar.description as marca,ub.descripcion as modelo,* FROM ERP_VehTerceros as ti inner join ERP_Modelo as ub on ti.idModelo=ub.idModelo left join ERP_Marcas as mar on mar.id=ti.idMarca where ti.placa='$id'");
         return $mostra;
     }
      public function get_Placa_document_empresa($id)
     {
-        $mostra=DB::select("SELECT idSerie as id,chasis as n_chasis, anio_fabricacion,color,cPlacaVeh as placa,motor FROM ERP_Serie where cPlacaVeh='$id'");
+        $mostra=DB::select("SELECT mo.descripcion as modelo,mr.description as marca,se.idSerie as id,se.chasis as n_chasis, se.anio_fabricacion as anio_fabricacion,se.color as color,se.cPlacaVeh as placa,se.motor as motor FROM ERP_Serie as se inner join ERP_Productos as pr on pr.id=se.idArticulo inner join erp_modelo as mo on mo.idModelo=pr.idModelo inner join ERP_Marcas as mr on mr.id=pr.idMarca where se.cPlacaVeh='$id'");
         return $mostra;
     }
     public function get_Marca_or()

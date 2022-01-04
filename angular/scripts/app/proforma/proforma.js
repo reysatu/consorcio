@@ -305,20 +305,20 @@
             bval = bval && documento_or.required();
             bval = bval && placa.required();
 
-            if($("#table_repuestos").html()==''){
+            if($("#table_repuestos").html()=='' && $("#table_servicios").html()=='' ){
                AlertFactory.showWarning({
                     title: '',
-                    message: 'Debe agregar un mínimo de 1  Repuesto'
+                    message: 'Debe agregar un mínimo de 1  Repuesto o Servicio'
                 });
                 return false;  
             }
-             if($("#table_servicios").html()==''){
-               AlertFactory.showWarning({
-                    title: '',
-                    message: 'Debe agregar un mínimo de 1 Servicio'
-                });
-                return false;  
-            }
+            //  if($("#table_servicios").html()==''){
+            //    AlertFactory.showWarning({
+            //         title: '',
+            //         message: 'Debe agregar un mínimo de 1 Servicio'
+            //     });
+            //     return false;  
+            // }
           
             acodigos.forEach(function(val,index) {
                 var canr=$('#tr_cant'+val);
@@ -363,7 +363,7 @@
                     var arrayRe=valo.split("*");
                     var coded=arrayRe[0];
                     idDescuenRepues[idx] =coded
-                });
+                }); 
 
                 idDescuenRepues = idDescuenRepues.join(',');
 
@@ -625,7 +625,8 @@
                         $("#nConsecutivo").val(data_p[0].Mensaje);
                         estado.val("0");
                         btn_aprobarProforma.prop('disabled',false); 
-                        btn_guardarProforma.prop('disabled',true); 
+                        // btn_guardarProforma.prop('disabled',true); 
+                        llenarTablas(data_p[0].Mensaje);
                         cCodConsecutivo.prop('disabled',true); 
                         AlertFactory.textType({
                             title: '',
@@ -707,6 +708,63 @@
             accesorios.val(0);
             lubricantes.val(0);
             otros_rep.val(0);
+        }
+        function llenarTablas(Consecutivo){
+            var id=cCodConsecutivo.val()+'_'+Consecutivo;
+             RESTService.get('proformas/find', id, function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                  table_repuestos.html("");
+                  table_servicios.html("");
+                  var data=response.data;
+                    _.each(response.data_repuesto, function (b) {
+                        var modo_m=1;
+                        var porcen=Number(b.nPorcDescuento);
+                        var monto=Number(b.nDescuento);
+                        if(porcen>0){
+                            monto=0;
+                         };
+                        var idDescuento="";
+                        if(b.nIdDscto!=0){
+                            idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
+                         }
+                       
+                                //   (idRepues,prodDescrip,precio,tipoTo,tipoText,cantidad,impuesto,modo_ser,iddet,opera,idDescuento)
+                         addRepuesto(b.idProducto,b.description,b.nPrecioUnitario,b.id_tipototal,b.descripcioText,Number(b.nCant),b.impuesto,modo_m,b.idDetalleRepues,b.cOperGrat,idDescuento);
+                        });
+
+
+                    _.each(response.data_servicio, function (b) {
+                        var modo_m=1;
+                        var vto=b.idProducto+'*'+b.description+'*'+b.nTotal+'*'+b.impuesto;
+                        var idDescuento="";
+                        var porcen=Number(b.nPorcDescuento);
+                        var monto=Number(b.nDescuento);
+                        if(porcen>0){
+                            monto=0;
+                         };
+                        if(b.nIdDscto!=0){
+                            idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
+                         }
+                         addServicios(vto,b.id_tipototal,b.descripcioText,modo_m,b.idDetalleServicio,b.nCant,b.cOperGrat,idDescuento);
+                         
+                        //  addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento);
+                    });
+                    var destotal="";
+                    if(data[0].nIdDsctoPr!=0){
+                        var porcen=Number(data[0].porDes);
+                        var monto=Number(data[0].montoDes);
+                        destotal =data[0].nIdDsctoPr+"*"+porcen+'*'+monto;
+                     }
+                      totalDescuento.val(destotal).trigger("change");
+                   
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener la Proforma. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
         }
 
          function EliminarServiciosDetalle (){

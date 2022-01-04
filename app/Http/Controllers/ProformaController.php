@@ -232,7 +232,8 @@ class ProformaController extends Controller
          $staOperacion=explode(',', $staOperacion);
 
         if(intval($res[0]->Mensaje)){
-          for ($i=0; $i < count($id_repuesto_array) ; $i++) {
+            if($id_repuesto_array[0]!=''){
+                for ($i=0; $i < count($id_repuesto_array) ; $i++) {
                 $total=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i]);
                  if($staOperacionRepu[$i]=='C'){
                     $totalO=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i])+floatval($id_repuesto_impuesto[$i]);
@@ -242,8 +243,11 @@ class ProformaController extends Controller
                 $repo->actualizar_Proforma_detalle($cCod,$res[0]->Mensaje,$idDetalleRepuestoGrup[$i],$id_repuesto_array[$i],
                     $id_repuesto_cantidad[$i],$id_repuesto_precio[$i],$total,$id_repuesto_impuesto[$i],$id_repuesto_tipoTotal[$i],
                     $montoRepu[$i],$porRepu[$i],$idDescuenRepues[$i],$staOperacionRepu[$i],$totalO,$modo_array_repuesto[$i],$usuario);
-           };
-            for ($i=0; $i < count($id_revision_array) ; $i++) {
+                };
+            }
+          
+           if($id_revision_array[0]!=''){
+                for ($i=0; $i < count($id_revision_array) ; $i++) {
                   $totald=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i]);
                    if($staOperacion[$i]=='C'){
                     $totalO=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i])+floatval($impuesto_servicio[$i]);
@@ -252,6 +256,8 @@ class ProformaController extends Controller
                 };
                  $repo->actualizar_Proforma_MO($cCod,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$totald,$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array_servicio[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_servicio[$i],$usuario);
                 }
+            }
+            
            };
             DB::commit();
             return response()->json([

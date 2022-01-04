@@ -11,7 +11,7 @@
     </div>
 </div>
 <div class="modal" id="modalPersona" role="dialog">
-            <div class="modal-dialog  modal-lg" role="document">
+            <div class="modal-dialog  modal-lg" style="width:80%;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -29,15 +29,13 @@
                                         <div class="col-sm-2">
                                            <select id="cTipopersona" class="form-control input-sm"></select>
                                         </div>
-                                        <label class="col-sm-1 control-label">Dirección</label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control input-sm" id="cDireccion">
+                                         <label class="col-sm-2  control-label">Tipo Documento</label>
+                                        <div class="col-sm-2">
+                                             <select id="cTipodocumento" class="form-control input-sm" ></select>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Referencia</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control input-sm" id="cReferencia">
+                                        <label class="col-sm-2 control-label">Nro Documento</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control input-sm" id="cNumerodocumento">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -45,56 +43,35 @@
                                         <div class="col-sm-1">
                                             <input type="text" class="form-control input-sm" id="cDigitoVerificador" min="1" maxlength="1" max="1">
                                         </div>
-                                        <label class="col-sm-2 col-md-offset-1 control-label">Tipo Documento</label>
+                                         <label class="col-sm-2 col-md-offset-1 control-label">Fecha Caducidad</label>
                                         <div class="col-sm-2">
-                                             <select id="cTipodocumento" class="form-control input-sm" ></select>
-                                        </div>
-                                         <label class="col-sm-2 control-label">Nro Documento</label>
-                                        <div class="col-sm-2">
-                                            <input type="text" class="form-control input-sm" id="cNumerodocumento">
-                                        </div>
-
-                                        
-                                       
-                                    </div>
-                                    <div class="form-group">
-                                         <label class="col-sm-2 control-label">Fecha Caducidad</label>
-                                        <div class="col-sm-3">
                                             <input type="date" class="form-control input-sm" id="dFechacaducidad">
                                         </div>
-                                        <label class="col-sm-1 control-label">Región</label>
+                                         <label class="col-sm-2 control-label">Departamento</label>
                                         <div class="col-sm-2">
                                             <select class="form-control input-sm" id="cRegion"/> </select>
                                         </div>
+                                    </div>
+                                    <div class="form-group">
                                          <label class="col-sm-2 control-label">Provincia</label>
                                         <div class="col-sm-2">
                                             <select  class="form-control input-sm" id="cProvincia"></select>
                                         </div>
-                                     
-                                       
-                                    </div>
-                                    <div class="form-group">
-                                          <label class="col-sm-2 control-label">Distrito</label>
+                                        <label class="col-sm-2 control-label">Distrito</label>
                                         <div class="col-sm-2">
                                             <select type="text" class="form-control input-sm" id="cUbigeo"></select>
                                         </div>
-                                        <label class="col-sm-1  col-md-offset-1  control-label">cEmail</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control input-sm" id="cEmail">
-                                        </div>
-                                         
-                                       
-                                    </div>
-                                    <div class="form-group">
                                         <label class="col-sm-2 control-label">cCelular</label>
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control input-sm" id="cCelular">
                                         </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-sm-2 control-label">Fecha Nacimiento</label>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <input type="date" class="form-control input-sm" id="dFechanacimiento">
                                         </div>
-                                        <label class="col-sm-1 control-label">Estado Civil</label>
+                                        <label class="col-sm-2 control-label">Estado Civil</label>
                                         <div class="col-sm-2">
                                             <select class="form-control input-sm" id="cEstadoCivil">
                                                 <option value="">Seleccionar</option>
@@ -105,7 +82,16 @@
                                                 <option value="X">Conviviente</option>
                                             </select>
                                         </div>
+                                        <label class="col-sm-2 control-label">Sexo</label>
+                                        <div class="col-sm-2">
+                                             <select id="cSexo" class="form-control input-sm">
+                                                <option value="">Seleccionar</option>
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Femenino</option>
+                                             </select>
+                                        </div>
                                     </div>
+                                   
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Apellido Paterno</label>
                                         <div class="col-sm-2">
@@ -129,19 +115,23 @@
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control input-sm" id="cRazonsocial">
                                         </div>
-                                     
-                                        
+                                    </div>
+                                     <div class="form-group">
+                                        <label class="col-sm-2  control-label">cEmail</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control input-sm" id="cEmail">
+                                        </div>
+                                        <label class="col-sm-2 control-label">Dirección</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control input-sm" id="cDireccion">
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Sexo</label>
-                                        <div class="col-sm-2">
-                                             <select id="cSexo" class="form-control input-sm">
-                                                <option value="">Seleccionar</option>
-                                                <option value="M">Masculino</option>
-                                                <option value="F">Femenino</option>
-                                             </select>
+                                        <label class="col-sm-2 control-label">Referencia</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control input-sm" id="cReferencia">
                                         </div>
-                                    </div>   
+                                    </div> 
                                 </div>
                             </div>   
                         </div>  

@@ -62,7 +62,7 @@ class PersonaRepository implements PersonaInterface
         return $new; 
     }
     public function update($id, array $attributes)
-    {
+    { 
         $attributes['user_updated'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
@@ -71,6 +71,7 @@ class PersonaRepository implements PersonaInterface
     {
         $attributes = [];
         $model = $this->model->findOrFail($id);
+        DB::table('ERP_Clientes')->where('idPersona',$id)->delete();
         $model->update($attributes);
         $model->delete();
      
