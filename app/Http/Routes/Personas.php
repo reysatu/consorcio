@@ -13,3 +13,5 @@ Route::post('personas/update', ['as' => 'personas.update', 'uses' => 'PersonaCon
 Route::get('personas/excel', ['as' => 'personas.excel', 'uses' => 'PersonaController@excel']);
 Route::put('personas/createPersona/{id}', ['as' => 'personas.createPersona', 'uses' => 'PersonaController@createUpdate']);
 Route::get('personas/find/{id}', ['as' => 'personas.find', 'uses' => 'PersonaController@find']);
+
+Route::get('personas/get_persona_documento/{id}', ['as' => 'personas.get_persona_documento', 'uses' => 'PersonaController@get_persona_documento']);

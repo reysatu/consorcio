@@ -159,4 +159,22 @@ class PersonaController extends Controller
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE PERSONAS', 'Personas');
     }
+
+
+    public function get_persona_documento($id, PersonaInterface $repo)
+    {
+        try {
+            $data = $repo->get_persona_documento($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    } 
 }

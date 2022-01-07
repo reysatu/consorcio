@@ -167,3 +167,6 @@ INSERT INTO [dbo].[ERP_FactorCredito] ([idfactor], [nrocuotas], [porcentaje], [u
 GO
 
 
+ALTER TABLE [dbo].[ERP_SolicitudCredito] DROP COLUMN [comentarios];
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [comentarios] varchar(100) NULL;
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [IdTipoDocumento] varchar(5) NULL;

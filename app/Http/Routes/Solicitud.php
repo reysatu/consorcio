@@ -15,5 +15,7 @@ Route::post('solicitud/factor_credito', ['as' => 'solicitud.factor_credito', 'us
 Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudController@excel']);
 
 
+
+
 Route::get('solicitud/data_form', ['as' => 'solicitud.data_form', 'uses' => 'SolicitudController@data_form']);
 // Route::post('solicitud/getTiendas', 'ShopController@getTiendas');

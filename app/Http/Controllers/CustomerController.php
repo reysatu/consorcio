@@ -75,7 +75,7 @@ class CustomerController extends Controller
                 // $data['id'] = $repo->get_consecutivo($table,$idt);
                 // $repo->create($data);
             };
-            if ($id != 0) {
+            if ($id != 0 && $w) {
                 $datos_cliente = $repo->find($id);
                 if ($w && $w->idPersona != $datos_cliente[0]->idPersona) {
 
