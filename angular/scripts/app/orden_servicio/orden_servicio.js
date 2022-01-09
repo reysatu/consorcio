@@ -13,7 +13,7 @@
 
     function Orden_ServicioCtrl($scope, _, RESTService, AlertFactory)
     {    
-        var cambCan;
+        var cambCan;  
         var cambioChe;
         var cambioDes;
         var redondeo;
@@ -149,8 +149,8 @@
                                 });
             }else{
                titleModalClientes.html('Editar Cliente');
-               var id=cliente_id_or.val();
-                RESTService.get('customers/find', id, function(response) {
+               var id=cliente_id_or.val(); 
+                RESTService.get('orden_servicios/findCliOrde', id, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                          var data_p = response.data;
                         tipodoc.val(data_p[0].tipodoc).trigger('change');
@@ -370,6 +370,7 @@
                     var data_detalle=response.data_detalle;
                     console.log(data_detalle);
                       _.each(data_detalle, function (b) {
+                        var nImpue=0;
                         var vto=b.idProducto+'*'+b.description+'*'+b.nPrecioUnitario+'*'+b.impuesto;
                          var tipoTo=b.totaltipo;
                          var tipoText=b.descripcioText;
@@ -389,7 +390,7 @@
                          }
                        
                         
-                         addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento);
+                         addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento,b.nImpuesto,Number(b.nPorcDescuento),Number(b.nDescuento));
                         //  function addServicios(vto,tipoTo,tipoText,modo_ser,iddet)
                     });
 
@@ -499,9 +500,9 @@
             }
          });
          
-        function getDepartamento(bandera){
+        function getDepartamento(bandera){ 
             var id="0";
-            RESTService.get('shops/TraerDepartamentos', id, function(response) {
+            RESTService.get('orden_servicios/TraerDepartamentosOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      departamento.html('');
@@ -526,7 +527,7 @@
                });
         }
           function getProvincia(bandera,id){
-                RESTService.get('shops/TraerProvincias', id, function(response) {
+                RESTService.get('orden_servicios/TraerProvinciasOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                    
@@ -552,7 +553,7 @@
                });
        }
         function getDistrito(bandera,id){
-        RESTService.get('shops/TraerDistritos', id, function(response) {
+        RESTService.get('orden_servicios/TraerDistritosOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                  
@@ -799,7 +800,10 @@
                     var idDescuento="";
                    console.log(articuloPrecio);
                    console.log("articuloPrecio");
-                addServicios(articuloPrecio,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento);
+                   var nImpue=0;
+                   var nPorcDescuento=0;
+                   var nDescuento=0;
+                addServicios(articuloPrecio,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento,nImpue,nPorcDescuento,nDescuento);
                     
                 }
         });
@@ -1155,25 +1159,47 @@
             selectDescuento.append('<option value="" selected>Seleccionar</option>');
               _.each(descuentos, function(item) {
                 var mo=idMoneda.val();
-                if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
-                       var por=Number(item.nPorcDescuento);
-                       var monto=Number(item.nMonto);
-                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
-                        if(item.dFecIni<=actu && item.dFecFin>actu){
-                            var valDes=item.id+'*'+por+'*'+monto;
-                            console.log(valDes,idDescuento);
-                            // if(valDes==idDescuento){
-                            //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
-                            // }else{
-                                selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                            // }
+                // if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
+                //        var por=Number(item.nPorcDescuento);
+                //        var monto=Number(item.nMonto);
+                //     if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
+                //         if(item.dFecIni<=actu && item.dFecFin>actu){
+                //             var valDes=item.id+'*'+por+'*'+monto;
+                //             console.log(valDes,idDescuento);
+                //             // if(valDes==idDescuento){
+                //             //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
+                //             // }else{
+                //                 selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                //             // }
                             
                              
+                //         }
+                //     }
+                // }
+                // $("#id_desc_"+codigo).val(idDescuento).trigger("change");
+                if(item.dFecIni<=actu && item.dFecFin>actu){
+                     var por=Number(item.nPorcDescuento);
+                     var monto=Number(item.nMonto);
+                    if(item.cTipoAplica=='T'){
+                        if(item.idMoneda==mo || item.nPorcDescuento!=0){
+                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
+                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                            }
+                          
+                        }
+                    }else{
+                         if(item.idMoneda==mo || item.nPorcDescuento!=0){
+                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
+                                if(item.nIdProducto==codigo){
+                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                                }
+                            }
+                          
                         }
                     }
+
                 }
                 $("#id_desc_"+codigo).val(idDescuento).trigger("change");
-                
             }); 
         }
         function  totales_nuevo(){
@@ -1226,7 +1252,7 @@
        
       
        
-        function addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento){
+        function addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento,impuesTotal,nPorcDescuento,nDescuento){
             var arrayRe=vto.split("*");
             var porcentajeid=0;
             var montoid=0;
@@ -1237,15 +1263,22 @@
             var precio=arrayRe[2];
             var impuesto=arrayRe[3];
             var preci_t=Number(precio).toFixed(2);
-            var impuesto_can=0;
+            var impuesto_can=Number(impuesTotal);
             var cantidad=cant;
             cantidad=Number(cantidad);
-            console.log("----");
-            console.log(opera);
-            console.log(idDescuento);
-            if(impuesto=='1'){
+            console.log("impues");
+            console.log(impuesto_can);
+            if(iddet!=0){
+                impuesto=0;
+                if(idDescuento!=""){
+                     porcentajeid=nPorcDescuento;
+                     montoid=nDescuento;
+                }
+            }
+            if(impuesto==1){
                 impuesto_can=calcular_impueso(preci_t,cantidad);
             };
+
             
             var check="";
             var disab="";
@@ -1255,16 +1288,7 @@
             }
             var subt=0;
              subt=Number(preci_t)*Number(cantidad)+Number(impuesto_can);
-            if(idDescuento!=""){
-                var arrayDe=idDescuento.split("*");
-                 porcentajeid=arrayDe[1];
-                 var montoAdd=Number(subt)*Number(porcentajeid)/100;
-                 montoid=montoAdd.toFixed(2);
-                 if(porcentajeid==0 || porcentajeid==""){
-                     montoid=arrayDe[2];
-                 }
-                
-            }
+            
             if ($('#tr_b_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
@@ -1334,7 +1358,9 @@
                     precio_actT=precio_actT.toFixed(2);
                  };
              }
+            
              console.log("precios actuales ver");
+             console.log(impuesto_can);
              console.log(precio_antT,precio_actT);
              addDescuentos(code,idDescuento);
              
@@ -1649,7 +1675,7 @@
         }
 
         function getDataForProforma () {
-            RESTService.all('proformas/data_form', '', function(response) {
+            RESTService.all('orden_servicios/data_formOrden', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                      igv=response.igv[0].value;
                     //   articulos_repuestos.append('<option value="">Seleccionar</option>');
@@ -1669,10 +1695,10 @@
                 var cantidadt=$(this).find("td:eq(1)").children("input").val();
                 var preciot=Number($(this).find("td:eq(2)").children("input").val());
                 var estadoImpues=$(this).find("td:eq(3)").children("input").attr('data-impuestoSer');
-                var impu=0;
+                var impu=Number($(this).find("td:eq(3)").children("input").val());
                 console.log(estadoImpues);
                 console.log("Estado impuesto");
-                if(estadoImpues=="1"){
+                if(estadoImpues==1 ){
                     impu=Number((Number(preciot)*Number(cantidadt))*((Number(igv)/100)));
                 };
                 var porce=Number($(this).find("td:eq(6)").children("input").val());
@@ -2133,8 +2159,15 @@
             bval = bval && id_tipoDoc_Venta_or.required();
             bval = bval && nKilometraje.required();
             bval = bval && placa.required();
-            
-
+            if(idDocumentoCli.val()=="01"){
+                if(id_tipoDoc_Venta_or.val()=="01"){
+                    AlertFactory.showWarning({
+                    title: '',
+                    message: 'El documento de venta no puede ser una factura'
+                    });
+                    return false;  
+                }
+            }
             if($("#articulo_dd_det").html()==''){
                AlertFactory.showWarning({
                     title: '',
@@ -2148,6 +2181,7 @@
                 var canr=$('#tr_cant'+val);
                 bval = bval && canr.required();
             });
+
             if($("#total").val()<0){
                AlertFactory.showWarning({
                     title: '',
@@ -2436,6 +2470,7 @@ function llenarTablas(Consecutivo){
                     console.log(data_detalle);
                       _.each(data_detalle, function (b) {
                         var vto=b.idProducto+'*'+b.description+'*'+b.nPrecioUnitario+'*'+b.impuesto;
+                         
                          var tipoTo=b.totaltipo;
                          var tipoText=b.descripcioText;
                          var modo_servi=1;
@@ -2453,7 +2488,7 @@ function llenarTablas(Consecutivo){
                             idDescuento =b.nIdDscto+"*"+porcen+'*'+monto;
                          }
                        
-                         addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento);
+                         addServicios(vto,tipoTo,tipoText,modo_servi,idte,cant,opera,idDescuento,b.nImpuesto,Number(b.nPorcDescuento),Number(b.nDescuento));
                         //  function addServicios(vto,tipoTo,tipoText,modo_ser,iddet)
                     });
 
@@ -2607,9 +2642,9 @@ function getDatosCliente(){
                     'placa': placa_add.val(),
                  };
 
-                 var id = 0;
+                 var id = 0; 
               
-                  RESTService.updated('vehiculos_terceros/createVehi', id, params, function(response) {
+                  RESTService.updated('orden_servicios/createVehiOrden', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         placa.val(placa_add.val());
                         getPlaca();
@@ -2732,7 +2767,7 @@ function getDatosCliente(){
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
-                  RESTService.updated('customers/createCliente', cli_id, params, function(response) {
+                  RESTService.updated('orden_servicios/createClienteOrden', cli_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         documento_or.val(documento.val());
                         getCliente();
@@ -2753,7 +2788,7 @@ function getDatosCliente(){
         };
 
          function getDataFormCustomer () {
-            RESTService.all('customers/data_form', '', function(response) {
+            RESTService.all('orden_servicios/data_formCliOrden', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip=response.tipoc_doc;
                      var tipo_clie=response.tipo_clie;

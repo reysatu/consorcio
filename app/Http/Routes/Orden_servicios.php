@@ -37,3 +37,19 @@ Route::put('orden_servicios/cambiar_estado/{id}', ['as' => 'orden_servicios.camb
 Route::get('orden_servicios/pdf', 'Orden_servicioController@pdf');
 
 Route::get('orden_servicios/get_precios_list/{id}', ['as' => 'orden_servicios.get_precios_list', 'uses' => 'Orden_servicioController@get_precios_list']);
+
+Route::get('orden_servicios/findCliOrde/{id}', ['as' => 'orden_servicios.findCliOrde', 'uses' => 'CustomerController@find']);
+
+Route::get('orden_servicios/TraerDepartamentosOrde/{id}', ['as' => 'orden_servicios.TraerDepartamentosOrde', 'uses' => 'UbigeoController@TraerDepartamentos']);
+
+Route::get('orden_servicios/TraerProvinciasOrde/{id}', ['as' => 'orden_servicios.TraerProvinciasOrde', 'uses' => 'UbigeoController@TraerProvincias']);
+
+Route::get('orden_servicios/TraerDistritosOrde/{id}', ['as' => 'orden_servicios.TraerDistritosOrde', 'uses' => 'UbigeoController@TraerDistritos']);
+
+Route::get('orden_servicios/data_formOrden', ['as' => 'orden_servicios.data_formOrden', 'uses' => 'ProformaController@data_form']);
+
+Route::put('orden_servicios/createVehiOrden/{id}', ['as' => 'orden_servicios.createVehiOrden', 'uses' => 'Vehiculos_terceroController@createUpdate']);
+
+Route::put('orden_servicios/createClienteOrden/{id}', ['as' => 'orden_servicios.createClienteOrden', 'uses' => 'CustomerController@createUpdate']);
+
+Route::get('orden_servicios/data_formCliOrden', ['as' => 'orden_servicios.data_formCliOrden', 'uses' => 'CustomerController@data_form']);

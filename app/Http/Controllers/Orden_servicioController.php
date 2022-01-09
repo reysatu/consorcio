@@ -22,7 +22,7 @@ class Orden_servicioController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
-    }
+    } 
      public function pdf(Request $request, Orden_servicioInterface $repo)
     {          
             $id = $request->input('id');
@@ -34,6 +34,9 @@ class Orden_servicioController extends Controller
             $data_cliente=$repo->find_orden_cliente($data[0]->idCliente);
             $data_detalle=$repo->find_orden_detalle($valtodo[0],$valtodo[1]);
             $get_vehiculo=$repo->get_vehi($data[0]->cPlacaVeh);
+            if(empty($get_vehiculo)){
+                $get_vehiculo=$repo->get_vehiSerie($data[0]->cPlacaVeh);
+            }
             $get_distrito=$repo->get_distrito_print($data_cliente[0]->ubigeo);
             return response()->json([
                 'status' => true,
@@ -300,7 +303,7 @@ class Orden_servicioController extends Controller
                 }else{
                     $totalO=0;
                 };
-                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$totald,$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_serv[$i],$usuario);
+                 $repo->actualizar_orden_detalle($cCodConsecutivo,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$operacionGra[$i],$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_serv[$i],$usuario);
                 }
 
              };

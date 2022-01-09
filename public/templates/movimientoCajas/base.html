@@ -1,13 +1,202 @@
+<style>
+    .mensajeCaja{
+        color:red;
+        cursor: pointer;
+    }
+</style>
 <div class="panel panel-danger-admin">
     <div class="panel-heading">
-        Gestión de Apertura de Caja
+        Gestión de Movimientos de caja
     </div>
     <div class="panel-body">
-        <div class="row">
-            <div class="col-md-12">
-                <div id="table_container_AperturaCaja" class="table-responsive"></div>
+       <div>
+                            <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a data-target="#general" aria-controls="general" role="tab" data-toggle="tab">Caja</a>
+            </li>
+            <li role="presentation">
+                <a data-target="#sales" aria-controls="sales" role="tab"
+                   data-toggle="tab">Movimiento de Caja</a>
+            </li>
+             <li role="presentation">
+                <a data-target="#kit" aria-controls="kit" role="tab"
+                   data-toggle="tab">Solicitudes</a>
+            </li>
+        </ul>
+                            <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="general">
+                <div class="form-horizontal">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <input  type="hidden" id="idcajaMC" >
+                                <label class="col-sm-1 control-label">Fecha</label>
+                                <div class="col-sm-3">
+                                 <input type="date" class="form-control input-sm" 
+                                           id="fecha_actualMc" disabled>
+                                </div>
+                                <label class="col-sm-1 control-label">Estado</label>
+                                <div class="col-sm-2">
+                                    <select id="estadoMc" class="form-control input-sm" disabled>
+                                                 <option value=""></option>
+                                                 <option value="1">Aperturado</option>
+                                                 <option value="0">Cerrado</option>
+                                    </select>
+                                </div>
+                                <label class="col-sm-1 control-label">Caja</label>
+                                <div class="col-sm-2">
+                                 <input type="text" class="form-control input-sm" 
+                                           id="caja_text" disabled>
+                                </div> 
+                                 <div class="col-sm-2"> 
+                                    <div class="btn-group">
+                                      <button type="button" id="btn_Mapertura" class="btn btn-danger-admin btn-sm">Apertura </button>
+                                      <button type="button" id="btn_Mcierra" class="btn btn-primary btn-sm">Cierre </button>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="btn-group">
+                                      <button type="button" id="btn_apertura" class="btn btn-success btn-sm">  <span class="fa fa-plus"></span>Movimiento de caja </button>
+                                      <button type="button" id="btn_imprimirCaja" class="btn btn-info btn-sm">  <span class="fa fa-file-pdf-o"></span> Imprimir </button>
+                                </div>
+                            </div>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <p><h5>Soles</h5></p>
+                                </div>
+                                 
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                    <thead>
+                                        <tr>
+                                            <th width="20px"></th>
+                                            <th width="100px">COMPROBANTES</th>
+                                            <th width="30px">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_comprobantesMc"></tbody>
+                                    
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    <p><h5>&nbsp</h5></p>
+                                </div>
+                                <div class="col-sm-9" id="caja_sin"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                    <thead>
+                                        <tr>
+                                            <th width="20px" ></th>
+                                            <th width="100px" >MOVIMIENTOS DE EFECTIVO</th>
+                                            <th width="30px">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_movimientoEfecti"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-9">
+                                    <p><h5>DOLARES</h5></p>
+                                </div>
+                                 
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                    <thead>
+                                        <tr>
+                                            <th width="20px"></th>
+                                            <th width="100px">COMPROBANTES</th>
+                                            <th width="30px">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_comprobantesDMc"></tbody>
+                                    
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-sm-3">
+                                    <p><h5>&nbsp</h5></p>
+                                </div>
+                                <div class="col-sm-9" id="caja_sin"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                    <thead>
+                                        <tr>
+                                            <th width="20px" ></th>
+                                            <th width="100px" >MOVIMIENTOS DE EFECTIVO</th>
+                                            <th width="30px">TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_movimientoDEfecti"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>      
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane " id="sales">
+                <div class="form-horizontal">
+                    <div class="row"> 
+                        <div class="col-md-12">
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="table_container_movimientoCaja" class="table-responsive"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div role="tabpanel" class="tab-pane" id="image">
+                <div class="form-horizontal">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-6">
+                                    <div ng-include
+                                         src="'/templates/partials/add-image.html'"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+             <div role="tabpanel" class="tab-pane" id="kit">
+                <div class="form-horizontal">
+                    <br>
+                    <div class="row">
+                        <div class="col-md-8">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+       </div>
     </div>
 </div>
 <div class="modal" id="modalAperturaCaja" role="dialog">
@@ -28,7 +217,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-1 control-label">Fecha</label>
                                         <div class="col-sm-2">
-                                           <input type="date" class="form-control input-sm" id="fechaCaja">
+                                           <input type="date" class="form-control input-sm" id="fechaCaja" disabled>
                                         </div>
                                         <label class="col-sm-1 control-label">Caja</label>
                                         <div class="col-sm-2">
@@ -106,14 +295,14 @@
                                             </div> 
                                         </div>    
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <div class="col-sm-4"> 
                                             <div class="btn-group">
                                               <button type="button" id="btn_apertura" class="btn btn-danger-admin btn-sm">Apertura Caja</button>
                                               <button type="button" id="btn_cierra" class="btn btn-primary btn-sm">Cierre Caja</button>
                                             </div>
                                         </div>    
-                                    </div>
+                                    </div> -->
                                     <br>
                                     <div class="form-group">
                                         <div class="col-sm-6">
@@ -176,10 +365,10 @@
                         </div>  
                     </div>
                     <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_procesarApertura"  ng-click="saveCajasDiarias()">
+                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_procesarApertura"  ng-click="saveCajasDiarias()">
                             <span class="fa fa-save"></span>
                             Guardar
-                        </button> -->
+                        </button>
                         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
                             <span class="fa fa-times"></span> Cerrar
                         </button>

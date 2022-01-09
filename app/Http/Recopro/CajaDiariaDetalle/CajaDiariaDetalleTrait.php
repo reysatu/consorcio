@@ -14,16 +14,25 @@ trait CajaDiariaDetalleTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['CATEGORÍA','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['CONCEPTO','CONCECUTIVO','TIPO','MONEDA','MONTO','NRO DE OPERACIÓN','FORMA DE PAGO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
-            $estado="ACTIVO";
-            if($i->estado=='I'){
-                $estado='INACTIVO';
-            };
+            $descrip="";
+            $moneda="";
+            if(!empty($i->descripcion)){
+                $descrip=$i->descripcion;
+            }
+            if(!empty($i->moneda_u->Descripcion)){
+                $moneda=$i->moneda_u->Descripcion;
+            }
             $columns[] = [
-                ['left', $i->descripcion],
-                ['left', $estado],
+                ['left',$descrip],
+                ['left', $i->consecutivo],
+                ['left', $i->codigoTipo_u->descripcion_tipo],
+                ['left', $moneda],
+                ['left', $i->monto],
+                ['left', $i->nroOperacion],
+                ['left', $i->formaPago_u->descripcion_subtipo],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
                 ['left', $i->user_u->name],
@@ -33,7 +42,7 @@ trait CajaDiariaDetalleTrait
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE CATEGORÍAS'
+            'title' => 'LISTA DE MOVIMIENTOS DE CAJA'
         ];
 
         return $data;

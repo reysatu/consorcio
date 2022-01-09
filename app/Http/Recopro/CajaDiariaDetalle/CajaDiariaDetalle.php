@@ -1,5 +1,8 @@
 <?php namespace App\Http\Recopro\CajaDiariaDetalle;
 use App\Http\Recopro\User\User;
+use App\Http\Recopro\Currency\Currency;
+use App\Http\Recopro\FormasPago\FormasPago;
+use App\Http\Recopro\TiposMovimiento\TiposMovimiento;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 /**
@@ -21,7 +24,7 @@ class CajaDiariaDetalle extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idCajaDiaria', 'consecutivo','codigoTipo','codigoFormaPago','idMoneda','monto','descripcion','nroTarjeta','nroOperacion','user_created','user_updated'];
+    protected $fillable = ['idCajaDiaria', 'consecutivo','codigoTipo','codigoFormaPago','idMoneda','monto','descripcion','nroTarjeta','nroOperacion','user_created','user_updated','created_at'];
     
      public function user_c()
     {
@@ -31,6 +34,18 @@ class CajaDiariaDetalle extends Model
     public function user_u()
     {
         return $this->belongsTo(User::class, 'user_updated');
+    }
+     public function moneda_u()
+    {
+        return $this->belongsTo(Currency::class, 'idMoneda');
+    }
+    public function formaPago_u()
+    {
+        return $this->belongsTo(FormasPago::class, 'codigoFormaPago');
+    }
+    public function codigoTipo_u()
+    {
+        return $this->belongsTo(TiposMovimiento::class, 'codigoTipo');
     }
 
 }

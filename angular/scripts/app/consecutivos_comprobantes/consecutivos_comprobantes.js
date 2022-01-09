@@ -25,13 +25,24 @@
         var ultimo=$("#ultimo");
         var longitud=$("#longitud");
         var idusuario=$("#idusuario");
-
+ 
         var tableDetalleConsecutivo=$("#tableDetalleConsecutivo");
 
         idtienda.select2();
         idusuario.select2();
+       
+        longitud.keyup(function(){
+          
+            cambiarLongitud();
+         }); 
+        function cambiarLongitud(){
+            var log=Number(longitud.val());
+            numero.attr('maxlength', log);
+            actual.attr('maxlength', log);
+            ultimo.attr('maxlength', log);
+        }
          function findConsecuCompro(id) {
-         
+            cambiarLongitud();
             titleConsecutivoCombro.html('Editar Consecutivo');
             RESTService.get('consecutivos_comprobantes/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -92,10 +103,10 @@
             var bval = true;
             bval = bval && idtienda.required();
             bval = bval && serie.required();
+            bval = bval && longitud.required();
             bval = bval && numero.required();
             bval = bval && actual.required();
             bval = bval && ultimo.required();
-            bval = bval && longitud.required();
 
            if($("#tableDetalleConsecutivo").html()==''){
                AlertFactory.showWarning({
@@ -104,7 +115,20 @@
                 });
                 return false;  
             }
-         
+            var log=longitud.val();
+            var num=numero.val();
+            var ac=actual.val();
+            var ul=ultimo.val();
+            // var lNum=num.length;
+            // console.log(log);
+            // console.log(log);
+             if(Number(log)<Number(num.length) || Number(log)<Number(ac.length) || Number(log)<Number(ul.length)){
+               AlertFactory.showWarning({
+                    title: '',
+                    message: 'Los dígitos exceden a la longitud'
+                });
+                return false;  
+            }
             if(bval){
                 
                 var idUsuario =[];
@@ -220,6 +244,7 @@
          function newComprobanteConse()
         {
             titleConsecutivoCombro.html('Nuevo Consecutivo');
+
             modalConsecutivoCombro.modal('show');
         }
 
@@ -231,6 +256,8 @@
                         idusuario.append('<option value="'+item.id+'*'+item.name+'">'+item.name+'</option>');
 
                     });
+
+
                 } 
             }, function() {
                 getDataFormDescuento();

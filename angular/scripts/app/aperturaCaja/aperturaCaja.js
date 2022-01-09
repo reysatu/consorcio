@@ -45,7 +45,7 @@
         var totalSoles=$("#totalSoles");
         var table_demoninacionesDolares=$("#table_demoninacionesDolares");
         var totalDolares=$("#totalDolares");
-
+        
 
         idUsuario.select2();
         idCaja.select2();
@@ -503,7 +503,7 @@
             sorting: true,
             actions: { 
                 listAction: base_url + '/aperturaCajas/list',
-                deleteAction: base_url + '/aperturaCajas/delete',
+                // deleteAction: base_url + '/aperturaCajas/delete',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',
@@ -519,13 +519,15 @@
                     click: function () {
                         $scope.openDoc('aperturaCajas/excel', {});
                     }
-                },{
-                    cssClass: 'btn-danger-admin',
-                    text: '<i class="fa fa-plus"></i> Apertura de Caja',
-                    click: function () {
-                        newAperturaCaja();
-                    }
-                }]
+                }
+                // ,{
+                //     cssClass: 'btn-danger-admin',
+                //     text: '<i class="fa fa-plus"></i> Apertura de Caja',
+                //     click: function () {
+                //         newAperturaCaja();
+                //     }
+                // }
+                ]
             },
             fields: {
                 idCajaDiaria: {

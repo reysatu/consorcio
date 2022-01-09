@@ -33,3 +33,9 @@ Route::put('proformas/cambiar_estado/{id}', ['as' => 'proformas.cambiar_estado',
 Route::get('proformas/getDetalle_entrada/{id}', ['as' => 'proformas.getDetalle_entrada', 'uses' => 'ProformaController@getDetalle_entrada']);
 
 Route::get('proformas/pdf', 'ProformaController@pdf');
+
+Route::get('proformas/get_precios_listProfor/{id}', ['as' => 'proformas.get_precios_listProfor', 'uses' => 'Orden_servicioController@get_precios_list']); 
+
+Route::get('proformas/data_formProforOrden', ['as' => 'proformas.data_formProforOrden', 'uses' => 'Orden_servicioController@data_form']);
+
+Route::get('proformas/data_formProfClien', ['as' => 'proformas.data_formProfClien', 'uses' => 'CustomerController@data_form']);

@@ -356,6 +356,27 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearch_MovimientoCaja(form_id, input_id, btn_id) {
+    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="form-group">'+
+            '<div class="col-md-4"><select id="filtro_tipoMovi"  style="margin-right:5px;width: 100%" name="filtro_tipoMovi" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-3"><select id="filtro_monedaMovi" style="margin-right:5px,width: 100%"  name="filtro_monedaMovi" class="form-control input-sm"></select></div>'+
+            '<div class="input-group input-group-sm">' +
+                '<input type="text" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Concepto" />' +
+                '<span class="input-group-btn">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</span>' +
+                '<span class="input-group-btn">' +
+                    '<button  type="button"  id="btn_exportar_CM" class="btn-primary  btn-sm">' +
+                    '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+                    '</button>' +
+                '</span>' +
+            '</div></div>' +
+            '</div>'+
+        '</form>';
+}
 function getFormSearch2(form_id, input_id, btn_id) {
     return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
         '<div class="form-group">'+
@@ -874,11 +895,11 @@ function create_pdf_ordenServicio(response) {
     console.log(data.dFecEntrega2);
     var data_dis=response.get_distrito;
     var get_vehiculo=response.get_vehiculo;
-    var modelo=get_vehiculo[0].descripcion;
+    var modelo=get_vehiculo[0].Modelo;
     console.log(data[0].idcCondicionPago);
     var horaEnt=data[0].horaEnt;
     var dni='';
-    var ruc='';
+    var ruc=''; 
     console.log("****");
     console.log(dataCli[0].documento);
     console.log("****");
@@ -1744,6 +1765,202 @@ function create_pdf_qualityControl(response) {
     var win = window.open('', '_blank');
    
     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+function create_pdf_movimientoCaja(response) {
+    // console.log("pdf entro");
+    var data=response.dataCaDet;
+    console.log(data); 
+    // var repus=response.data_repuesto;
+    // var servi=response.data_servicio;
+    // var data_cli=response.data_cliente;
+    // var array_head=[];
+    // var nConsecutivo=data[0].nConsecutivo;
+    // var cPlacaVeh=data[0].cPlacaVeh;
+    // var razonsocial_cliente=data[0].razonsocial_cliente;
+    // var nEstimadoHoras=Number(data[0].nEstimadoHoras);
+    // var celular=data_cli[0].celular;
+    // var dFechaRegistro= moment(data[0].dFechaRegistro).format('DD/MM/YYYY');
+    // console.log(data);
+    // console.log(repus);
+    // console.log(servi);
+    // console.log(data_cli);
+
+    // var mantenimiento_X="";
+    // var cambioAciete_X="";
+    // var reparacioMotor_x="";
+    // var descar_x="";
+    // var embrague_x="";
+    // var transmi_x="";
+    // var sisArras_x="";
+    // var fren_x="";
+    // var bate_x="";
+    // var revisitE_x="";
+    // var revisitIN_x="";
+    // var suspencio_x="";
+    // var aroneu_x="";
+    // var sistEsca_x="";
+    // var sistDirecc_x="";
+    // var otro_x="";
+    // array_head.push([
+    //     {
+    //         text: nConsecutivo,
+    //         fontSize: 14,
+    //         bold: true,
+    //         absolutePosition: { x:479 , y: 64 }
+    //     },
+    //      {
+    //         text: cPlacaVeh,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:118 , y: 144 }
+    //     },
+    //      {
+    //         text: razonsocial_cliente,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:118 , y: 163 }
+    //     },
+    //      {
+    //         text: celular,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:118 , y: 181 }
+    //     },
+    //      {
+    //         text: dFechaRegistro,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:452 , y: 181 }
+    //     },
+    //     ]);
+    // var cont=0;
+    // var alt=239;
+    // var totalRep=0;
+    // _.each(repus, function (b) {
+    //     var desc=b.description;
+    //     var cant=b.nCant;
+    //     var pre=b.nPrecioUnitario;
+    //     var tot=Number(b.nTotal)+Number(b.nImpuesto);
+    //     totalRep=totalRep+tot;
+    //     alt=alt+13
+    //     cont=cont+1;
+    //     if(cont<16){
+    //     array_head.push([
+    //     {
+    //         text: desc,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:66 , y: alt }
+    //     },
+    //      {
+    //         text: cant,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:336 , y: alt }
+    //     },
+    //      {
+    //         text: pre,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:417 , y: alt }
+    //     },
+    //      {
+    //         text: tot,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:498 , y: alt }
+    //     }
+    //     ]);
+    //     }
+    // });
+    // totalRep=totalRep.toFixed(2);
+    // array_head.push([
+    //     {
+    //         text: totalRep,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:501 , y: 452 }
+    //     }
+    // ]);
+    // var cont=0;
+    // var totalRepMo=0;
+    // var altu=492;
+    //  _.each(servi, function (b) {
+    //     var desc=b.description;
+    //     var tota=b.nTotal;
+    //     var tot=Number(b.nTotal)+Number(b.nImpuesto);
+    //     totalRepMo=totalRepMo+tot;
+    //      altu=altu+13;
+    //       cont=cont+1;
+    //       if(cont<6){
+    //       array_head.push([
+    //             {
+    //                 text: desc,
+    //                 fontSize: 10,
+    //                 bold: true,
+    //                 absolutePosition: { x:66 , y: altu }
+    //             },
+    //              {
+    //                 text: tot,
+    //                 fontSize: 10,
+    //                 bold: true,
+    //                 absolutePosition: { x:498 , y: altu }
+    //             }
+    //         ])
+    //     };
+    //  });
+    //  totalRepMo=totalRepMo.toFixed(2);
+    //  array_head.push([
+    //     {
+    //         text: totalRepMo,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:498 , y: 573 }
+    //     }
+    // ]);
+    // var totalcom=Number(totalRep)+Number(totalRepMo);
+    // totalcom=totalcom.toFixed(2);
+    // array_head.push([
+    //     {
+    //         text: totalcom,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:498 , y: 594 }
+    //     },
+    //     {
+    //         text: nEstimadoHoras,
+    //         fontSize: 10,
+    //         bold: true,
+    //         absolutePosition: { x:498 , y: 607 }
+    //     }
+    // ]);
+    // var docDefinition = {
+    //        content: [
+    //        array_head
+    // ],
+    // styles: {
+    //     header: {
+    //         fontSize: 18,
+    //         bold: true,
+    //         alignment: 'right',
+    //         margin: [0, 20, 0, 80]
+    //     },
+    //     subheader: {
+    //         fontSize: 14
+    //     },
+    //     superMargin: {
+    //         margin: [20, 0, 40, 0],
+    //         fontSize: 15
+    //     }
+    // }
+    //             };
+
+
+    // var win = window.open('', '_blank');
+   
+    // pdfMake.createPdf(docDefinition).print({}, win);
     // }
 
 }

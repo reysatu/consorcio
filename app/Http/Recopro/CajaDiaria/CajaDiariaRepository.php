@@ -93,6 +93,30 @@ class CajaDiariaRepository implements CajaDiariaInterface
         $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id'");
         return $mostrar; 
     }
+    public function getCajaDiario($id){
+        $mostrar=DB::select("select * from ERP_CajaDiaria as cd inner join ERP_Cajas as c on cd.idCaja=c.idcaja where cd.idCajaDiaria='$id'");
+        return $mostrar; 
+    }
+    public function get_cajaActual($date,$usuario){
+        $mostrar=DB::select("select * from ERP_CajaDiaria as cd inner join ERP_Cajas as c on cd.idCaja=c.idcaja where cd.fechaCaja='$date' and cd.idUsuario='$usuario'");
+        return $mostrar; 
+    }
+    public function getCajaAbierta($date,$usuario){
+        $mostrar=DB::select("select CONVERT(DATE, fechaCaja)  as fecha,* from ERP_CajaDiaria where estado=1 and fechaCaja!='$date' and idUsuario='$usuario'");
+        return $mostrar; 
+    }
+    public function getCajaDetalle($date,$usuario){
+        $mostrar=DB::select("select * from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario'");
+        return $mostrar; 
+    }
+    public function getDataTipo(){
+        $mostrar=DB::select("select * from ERP_TiposMovimiento");
+        return $mostrar; 
+    }
+    public function getDataMoneda(){
+        $mostrar=DB::select("select * from ERP_Moneda");
+        return $mostrar; 
+    }
     //  public function getDenominacionView($id)
     // {   
     //     $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id'");
