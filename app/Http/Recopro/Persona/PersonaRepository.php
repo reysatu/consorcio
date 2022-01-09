@@ -77,4 +77,11 @@ class PersonaRepository implements PersonaInterface
      
     }
 
+    public function get_persona_documento($id) {
+        $mostra=DB::select("SELECT * 
+        FROM ERP_Persona 
+        where cNumerodocumento='$id'");
+        return $mostra;
+    }
+
 }

@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Solicitud\SolicitudTrait;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\SolicitudRequest;
@@ -65,7 +66,8 @@ class SolicitudController extends Controller
             $desc = explode("*", $data["descuento_id"]);
             $descuento_id = $desc[0];
             $data["descuento_id"] = $descuento_id;
-           
+            $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
+        
             if($data["nConsecutivo"] == "") {
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
@@ -183,7 +185,7 @@ class SolicitudController extends Controller
         $condicion_pago = $repo_orden->getcondicion_pago();
         // $tipo_servicio = $repo_orden->gettipo_servicio();
         $tipo_document = $repo_orden->gettipo_document();
-        // $tipo_document_venta=$repo_orden->gettipo_document_venta();
+        $tipo_document_venta=$repo_orden->gettipo_document_venta();
         // $revisiones = $repo_orden->getrevisiones();
         // $tecnico = $repo_orden->gettecnico();
         // $asesor = $repo_orden->getasesor();
@@ -215,7 +217,7 @@ class SolicitudController extends Controller
             // 'servicios'=>$servicios,
             // 'totales'=>$totales,
             // 'tipoMantenimiento'=>$tipoMantenimiento,
-            // 'tipo_document_venta'=>$tipo_document_venta,
+            'tipo_document_venta'=>$tipo_document_venta,
             'usuario'=>$usuario,
             'almacen_usuario'=>$almacen_usuario,
             'lotes'=>$lotes,
@@ -236,4 +238,8 @@ class SolicitudController extends Controller
 
 
     }
+
+    
+
+ 
 }

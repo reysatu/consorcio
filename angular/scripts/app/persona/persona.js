@@ -275,7 +275,7 @@ function getDatosCliente(){
 
         };
         function getDataFormCustomer () {
-            RESTService.all('customers/data_form', '', function(response) {
+            RESTService.all('customersx/', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip=response.tipoc_doc;
                     var tipo_clie=response.tipo_clie;
