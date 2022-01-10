@@ -146,6 +146,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Convenios.php';
 
+    require app_path() . '\Http\Routes\MovimientoCajas.php';
+
     require app_path() . '\Http\Routes\CuentasBancarias.php';
 
     require app_path() . '\Http\Routes\Aprobacion.php';

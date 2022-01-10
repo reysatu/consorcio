@@ -146,7 +146,13 @@ where IdTipoDocumento in ('01','03')");
     }
     public function get_vehi($placa)
     { 
-      $mostrar3=DB::select("select * from ERP_VehTerceros as vt  inner join ERP_Modelo as mo on mo.idModelo=vt.idModelo where placa='$placa'");
+      $mostrar3=DB::select("select mo.descripcion as Modelo,* from ERP_VehTerceros as vt  inner join ERP_Modelo as mo on mo.idModelo=vt.idModelo where placa='$placa'");
+      return $mostrar3;
+
+    }
+    public function get_vehiSerie($placa)
+    { 
+      $mostrar3=DB::select("select mo.descripcion as Modelo,* from ERP_Serie as vs inner join ERP_Productos as pr on pr.id=vs.idArticulo LEFT JOIN ERP_Modelo as mo on mo.idModelo=pr.idModelo where vs.cPlacaVeh='$placa'");
       return $mostrar3;
 
     }

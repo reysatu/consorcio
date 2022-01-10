@@ -153,6 +153,10 @@ class ProformaController extends Controller
             $totalmo=0;
             $totaldetalle=0;
             $impuesto=0;
+
+            $subTotalServicio=$data['subTotalServicio'];
+            $subTotalServicio=explode(',', $subTotalServicio);
+
             for ($i=0; $i < count($precio_array_servicio) ; $i++) {
                 $totalmo=$totalmo+floatval($precio_array_servicio[$i]);
             }
@@ -254,7 +258,7 @@ class ProformaController extends Controller
                 }else{
                     $totalO=0;
                 };
-                 $repo->actualizar_Proforma_MO($cCod,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$totald,$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array_servicio[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_servicio[$i],$usuario);
+                 $repo->actualizar_Proforma_MO($cCod,$res[0]->Mensaje,$idDetalleGrup[$i],$id_revision_array[$i],$subTotalServicio[$i],$impuesto_servicio[$i],$id_tipo_array[$i],$montoDeta[$i],$porDeta[$i],$cantidDeta[$i],$precio_array_servicio[$i],$idDescuenDeta[$i],$staOperacion[$i],$totalO,$modo_array_servicio[$i],$usuario);
                 }
             }
             

@@ -22,4 +22,4 @@ Route::put('aperturaCajas/saveCajasDiarias/{id}', ['as' => 'aperturaCajas.saveCa
 
 Route::get('aperturaCajas/find/{id}', ['as' => 'aperturaCajas.find', 'uses' => 'CajaDiariaController@find']);
 
-// Route::get('aperturaCajas/deleteUsuario/{id}', ['as' => 'aperturaCajas.deleteUsuario', 'uses' => 'CajaDiariaController@deleteDetalle']);
+// Route::get('aperturaCajas/deleteUsuario/{id}', ['as' => 'aperturaCajas.deleteUsuario', 'uses' => 'CajaDiariaController@deleteDetalle']); 

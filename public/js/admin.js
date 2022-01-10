@@ -356,6 +356,27 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearch_MovimientoCaja(form_id, input_id, btn_id) {
+    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="form-group">'+
+            '<div class="col-md-4"><select id="filtro_tipoMovi"  style="margin-right:5px;width: 100%" name="filtro_tipoMovi" class="form-control input-sm "></select></div>'+
+            '<div class="col-md-3"><select id="filtro_monedaMovi" style="margin-right:5px,width: 100%"  name="filtro_monedaMovi" class="form-control input-sm"></select></div>'+
+            '<div class="input-group input-group-sm">' +
+                '<input type="text" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Concepto" />' +
+                '<span class="input-group-btn">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</span>' +
+                '<span class="input-group-btn">' +
+                    '<button  type="button"  id="btn_exportar_CM" class="btn-primary  btn-sm">' +
+                    '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+                    '</button>' +
+                '</span>' +
+            '</div></div>' +
+            '</div>'+
+        '</form>';
+}
 function getFormSearch2(form_id, input_id, btn_id) {
     return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
         '<div class="form-group">'+
@@ -874,11 +895,11 @@ function create_pdf_ordenServicio(response) {
     console.log(data.dFecEntrega2);
     var data_dis=response.get_distrito;
     var get_vehiculo=response.get_vehiculo;
-    var modelo=get_vehiculo[0].descripcion;
+    var modelo=get_vehiculo[0].Modelo;
     console.log(data[0].idcCondicionPago);
     var horaEnt=data[0].horaEnt;
     var dni='';
-    var ruc='';
+    var ruc=''; 
     console.log("****");
     console.log(dataCli[0].documento);
     console.log("****");
@@ -1742,6 +1763,378 @@ function create_pdf_qualityControl(response) {
 
 
     var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+
+function create_pdf_movimientoCaja(response) {
+    var data=response.dataCaDet;
+    var fec=response.feca;
+    var fecAct=response.fechacA;
+    var dataCajaDetForSol=response.dataCajaDetForSol;
+    var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
+    var dataCajaDetForDol=response.dataCajaDetForDol;
+    var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
+
+    var dataSolesEfec=[];
+    var dataSolesMovimientos=[];
+    var totalSolesEfec=0; 
+    var totalSolesForm=0;
+    var tituloSolesEfec=[
+                    { 
+                        text: 'COMPROBANTES',
+                        fillColor: '#eeeeee',
+                        fontSize: 8 ,
+                        alignment: 'center' 
+
+                    },
+                       { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                             alignment: 'center' 
+
+                        },
+                    ];
+    var tituloSolesForm=[
+                        { 
+                            text:'MOVIMIENTO DE EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+      dataSolesEfec.push(tituloSolesEfec);
+      dataSolesMovimientos.push(tituloSolesForm) ;
+
+    _.each(dataCajaDetEfeSol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalSolesEfec=Number(monto)+Number(totalSolesEfec);
+        var dataEfecSol=[
+                    { 
+                        text: b.descripcion_tipo,
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataSolesMovimientos.push(dataEfecSol)   ;        
+    });
+
+   
+    var TotalSolesEfec=[
+                        { 
+                            text:'TOTAL EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalSolesEfec.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(TotalSolesEfec)   ;
+    ////////////////
+    var titulo2SolesForm=[
+                        { 
+                            text:'VENTAS FORMA DE PAGO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: '',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(titulo2SolesForm);                 
+    //////////
+    _.each(dataCajaDetForSol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalSolesForm=Number(monto)+Number(totalSolesForm);
+        var dataFormSol=[
+                    { 
+                        text: b.descripcion_subtipo,
+                        fontSize: 8 ,
+                        
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataSolesMovimientos.push(dataFormSol)   ;        
+    });
+     // totalSolesForm=Number(totalSolesForm).toFixed(2);
+    var TotalSolesForm=[
+                        { 
+                            text:'TOTAL VENTA',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalSolesForm.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(TotalSolesForm);
+
+    /////////////////////////////////////////////
+    var dataDolEfec=[];
+    var dataDolMovimientos=[];
+    var totalDolEfec=0; 
+    var totalDolForm=0;
+    var tituloDolEfec=[
+                    { 
+                        text: 'COMPROBANTES',
+                        fillColor: '#eeeeee',
+                        fontSize: 8 ,
+                        alignment: 'center' 
+
+                    },
+                       { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                             alignment: 'center' 
+
+                        },
+                    ];
+    var tituloDolForm=[
+                        { 
+                            text:'MOVIMIENTO DE EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+      dataDolEfec.push(tituloDolEfec);
+      dataDolMovimientos.push(tituloDolForm) ;
+
+    _.each(dataCajaDetEfeDol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalDolEfec=Number(monto)+Number(totalDolEfec);
+        var dataEfecSol=[
+                    { 
+                        text: b.descripcion_tipo,
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataDolMovimientos.push(dataEfecSol)   ;        
+    });
+
+   
+    var TotalDolEfec=[
+                        { 
+                            text:'TOTAL EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalDolEfec.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(TotalDolEfec)   ;
+    ////////////////
+    var titulo2DolForm=[
+                        { 
+                            text:'VENTAS FORMA DE PAGO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: '',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(titulo2DolForm);                 
+    //////////
+    _.each(dataCajaDetForDol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalDolForm=Number(monto)+Number(totalDolForm);
+        var dataFormSol=[
+                    { 
+                        text: b.descripcion_subtipo,
+                        fontSize: 8 ,
+                        
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataDolMovimientos.push(dataFormSol)   ;        
+    });
+     // totalDolForm=Number(totalDolForm).toFixed(2);
+    var TotalDolForm=[
+                        { 
+                            text:'TOTAL VENTA',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalDolForm.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(TotalDolForm);
+
+    var docDefinition = {
+        pageOrientation: 'landscape',
+           content: [
+        {
+            text: "Caja: "+fec,
+            fontSize: 15,
+            bold: true,
+            absolutePosition: { x:40 , y: 20 }
+        },
+         {
+            text: "Fecha de Impresión: "+fecAct,
+            fontSize: 15,
+            bold: true,
+            absolutePosition: { x:460 , y: 20 }
+        },  
+        { text: 'SOLES', style: 'header',fontSize: 13},
+        {
+            absolutePosition: { x:40 , y: 60 },
+            style: 'tableExample',
+            table: {
+                widths: [250, 90],
+                body: 
+                    dataSolesEfec,
+                   
+            }
+
+        },
+        {  
+            absolutePosition: { x:460 , y: 60 },
+            style: 'tableExample',
+            table: {
+                widths: [250,90],
+                body: dataSolesMovimientos,
+            }
+
+        },
+        {
+            text: '',
+            absolutePosition: { x: 300, y: 100 },
+            pageBreak: 'after'
+        },
+        { text: 'DOLARES', style: 'header',fontSize: 13},
+        {
+            absolutePosition: { x:40 , y: 60 },
+            style: 'tableExample',
+            table: {
+                widths: [250, 90],
+                body: [
+                    [
+                        { 
+                            text: 'COMPROBANTES',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                       { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                             alignment: 'center' 
+
+                        },
+                    ],
+                   
+                ]
+            }
+
+        },
+        {  
+            absolutePosition: { x:460 , y: 60 },
+            style: 'tableExample',
+            table: {
+                widths: [250,90],
+                body: dataDolMovimientos,
+            }
+
+        },
+    ],
+    styles: {
+
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'left',
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+   
+    var win = window.open('', '_blank');
+    // var win = window.open('', '_blank');
    
     pdfMake.createPdf(docDefinition).print({}, win);
     // }

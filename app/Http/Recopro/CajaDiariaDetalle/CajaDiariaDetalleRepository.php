@@ -23,11 +23,70 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
     {
         return $this->model->get();
     }
+    public function allExcel()
+    {   $idusuario=auth()->id();
+        date_default_timezone_set('UTC');
+        $fechacA= date("Y-m-d");
+        $query=DB::select("select * from ERP_CajaDiaria where idUsuario='$idusuario' and fechaCaja='$fechacA'");
+        $idCajaDia=0;
+        if(!empty($query)){
+            $idCajaDia=$query[0]->idCajaDiaria;   
+        }
+        return $this->model->where('idCajaDiaria',$idCajaDia)->get();
+    }
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->where('consecutivo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
+            $q->orWhere('codigoTipo', 'LIKE', '%'.$s.'%');
+            $q->orWhere('codigoFormaPago', 'LIKE', '%'.$s.'%');
+            $q->orWhere('idMoneda', 'LIKE', '%'.$s.'%');
+            $q->orWhere('descripcion', 'LIKE', '%'.$s.'%');
+        });
+
+    }
+    public function search_movimiento_diario($s,$filtro_tipoMovi,$filtro_monedaMovi)
+    {   $idusuario=auth()->id();
+        date_default_timezone_set('UTC');
+        $fechacA= date("Y-m-d");
+        $query=DB::select("select * from ERP_CajaDiaria where idUsuario='$idusuario' and fechaCaja='$fechacA'");
+        $idCajaDia=0;
+        if(!empty($query)){
+            $idCajaDia=$query[0]->idCajaDiaria;   
+        }
+       
+        // return $this->model->where(function($q) use ($s,$idCajaDia,$fechacA,$filtro_tipoMovi,$filtro_monedaMovi){
+
+            
+        //     $q->where('consecutivo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC')->where('idCajaDiaria',$idCajaDia);
+        //     $q->orWhere('codigoTipo', 'LIKE', '%'.$s.'%')->where('idCajaDiaria',$idCajaDia);
+        //     $q->orWhere('codigoFormaPago', 'LIKE', '%'.$s.'%')->where('idCajaDiaria',$idCajaDia);
+        //     $q->orWhere('idMoneda', 'LIKE', '%'.$s.'%')->where('idCajaDiaria',$idCajaDia);
+        //     $q->orWhere('descripcion', 'LIKE', '%'.$s.'%')->where('idCajaDiaria',$idCajaDia);
+        //      $q->orWhere('codigoTipo', 'LIKE', '%'.$filtro_tipoMovi.'%')->where('idCajaDiaria',$idCajaDia);
+        //       $q->orWhere('idMoneda', 'LIKE', '%'.$filtro_monedaMovi.'%')->where('idCajaDiaria',$idCajaDia);
+        //     if(!empty($filtro_tipoMovi)){
+        //      $q=
+        //     }
+        //     if(!empty($filtro_monedaMovi)){
+        //      $q=
+        //     }
+        // });
+
+        return $this->model->where(function($q) use ($s,$idCajaDia,$fechacA,$filtro_tipoMovi,$filtro_monedaMovi) {
+            $q->orderByRaw('created_at DESC')->where('idCajaDiaria',$idCajaDia);
+            if(!empty($filtro_tipoMovi)){
+              $q->Where('codigoTipo',$filtro_tipoMovi);
+            }
+            if(!empty($filtro_monedaMovi)){
+              $q->Where('idMoneda',$filtro_monedaMovi);
+            }
+            if(!empty($s)){
+              $q->Where('descripcion',$s);
+            }
+          
+            // $q->orWhere('Almacen', 'LIKE', '%'.$s.'%');
+            // $q->orWhere('Categoria', 'LIKE', '%'.$s.'%');
         });
 
     }

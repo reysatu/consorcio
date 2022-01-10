@@ -94,7 +94,7 @@
         'sys.app.revision_cas',
         //Ventas
         'sys.app.solicitud',
-
+        'sys.app.movimientoCajas',
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',
@@ -416,7 +416,30 @@
                 }
             });
         };
-
+        $scope.loadMovimientoCajaPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_movimientoCaja(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
         $scope.loadProformaPDF = function (url, id) {
             angular.element('#show_loading').removeClass('ng-hide');
             $.ajax({

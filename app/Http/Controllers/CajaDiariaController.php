@@ -89,7 +89,7 @@ class CajaDiariaController extends Controller
     {
         $usuario=auth()->id();
         $cajas = $moventRepo->getcajas($usuario);
-
+        
         return response()->json([
             'status' => true,
             'cajas' => $cajas,
@@ -191,13 +191,13 @@ class CajaDiariaController extends Controller
                 $repoDeno->create($datoDeno);
             };
 
-
+            $dataCaja=$repo->getCajaDiario($id);
 
 
             DB::commit();
             return response()->json([
                 'status' => true,
-               // 'data'=>$grup,
+                'dataCaja'=>$dataCaja,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
