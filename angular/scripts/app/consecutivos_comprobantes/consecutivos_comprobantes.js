@@ -249,7 +249,7 @@
         }
 
         function getDataFormDescuento () {
-            RESTService.all('descuentos/data_form', '', function(response) {
+            RESTService.all('consecutivos_comprobantes/data_formDescCc', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         idusuario.append('<option value="">Seleccionar</option>');
                        _.each(response.usuarios, function(item) {
@@ -258,7 +258,7 @@
                     });
 
 
-                } 
+                }  
             }, function() {
                 getDataFormDescuento();
             });
@@ -267,7 +267,7 @@
 
         getDataFormDescuento();
         function getDataJerarquiaForm () {
-            RESTService.all('configJerarquias/data_form', '', function(response) {
+            RESTService.all('consecutivos_comprobantes/data_formJerConComp', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tiendaTotal=response.tienda;
                      idtienda.append('<option value="" selected>Seleccionar</option>');

@@ -192,8 +192,8 @@ function getDatosCliente(){
             bval = bval && cTipopersona.required();
             bval = bval && cTipodocumento.required();
             bval = bval && cNumerodocumento.required();
-            bval = bval && cDigitoVerificador.required();
-            bval = bval && dFechacaducidad.required();
+            // bval = bval && cDigitoVerificador.required();
+            // bval = bval && dFechacaducidad.required();
            
 
             // bval = bval && cReferencia.required();
@@ -204,8 +204,8 @@ function getDatosCliente(){
             bval = bval && cRegion.required();
             bval = bval && cProvincia.required();
             bval = bval && cUbigeo.required();
-            bval = bval && cCelular.required();
-            bval = bval && cEmail.required();
+            // bval = bval && cCelular.required();
+            // bval = bval && cEmail.required();
             bval = bval && cDireccion.required();
 
             // bval = bval && dFechanacimiento.required();
@@ -275,7 +275,7 @@ function getDatosCliente(){
 
         };
         function getDataFormCustomer () {
-            RESTService.all('customersx/', '', function(response) {
+            RESTService.all('personas/data_formCusPerson', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip=response.tipoc_doc;
                     var tipo_clie=response.tipo_clie;
@@ -302,7 +302,7 @@ function getDatosCliente(){
         getDataFormCustomer();
         function getDepartamento(bandera){
             var id="0";
-            RESTService.get('shops/TraerDepartamentos', id, function(response) {
+            RESTService.get('personas/TraerDepartamentosPerso', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      cRegion.html('');
@@ -327,7 +327,7 @@ function getDatosCliente(){
                });
         }
         function getProvincia(bandera,id){
-                RESTService.get('shops/TraerProvincias', id, function(response) {
+                RESTService.get('personas/TraerProvinciasPerso', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -353,7 +353,7 @@ function getDatosCliente(){
                });
        }
         function getDistrito(bandera,id){
-        RESTService.get('shops/TraerDistritos', id, function(response) {
+        RESTService.get('personas/TraerDistritosPerso', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -445,18 +445,18 @@ function getDatosCliente(){
                 },
                 cTipopersona: {
                     title: 'Tipo Persona',
-                     options: base_url + '/customers/getTipoPersona' ,
+                     options: base_url + '/personas/getTipoPersonaPerso' ,
                 },
                 cTipodocumento: {
                     title: 'Tipo Documento',
-                    options: base_url + '/customers/getTipoDocumento' ,
+                    options: base_url + '/personas/getTipoDocumentoPerso' ,
                 },
                 cNumerodocumento: {
                     title: 'Nro Documento',
                 },
                 cUbigeo: {
                     title: 'Distrito',
-                    options: base_url + '/shops/getDistrito' 
+                    options: base_url + '/personas/getDistritoPerso' 
                 },
                 edit: {
                     width: '1%',

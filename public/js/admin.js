@@ -1777,7 +1777,8 @@ function create_pdf_movimientoCaja(response) {
     var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
     var dataCajaDetForDol=response.dataCajaDetForDol;
     var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
-
+    var dataCajaDetEfeSolAper=response.dataCajaDetEfeSolAper;
+    var dataCajaDetEfeDolAper=response.dataCajaDetEfeDolAper;
     var dataSolesEfec=[];
     var dataSolesMovimientos=[];
     var totalSolesEfec=0; 
@@ -1816,6 +1817,21 @@ function create_pdf_movimientoCaja(response) {
       dataSolesEfec.push(tituloSolesEfec);
       dataSolesMovimientos.push(tituloSolesForm) ;
 
+
+      var dataEfecSolApe=[
+                    { 
+                        text: 'APERTURA',
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:Number(dataCajaDetEfeSolAper[0].monto).toFixed(2),
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+      dataSolesMovimientos.push(dataEfecSolApe) ;
     _.each(dataCajaDetEfeSol, function (b) {
         var monto=Number(b.monto).toFixed(2);
         totalSolesEfec=Number(monto)+Number(totalSolesEfec);
@@ -1835,7 +1851,7 @@ function create_pdf_movimientoCaja(response) {
          dataSolesMovimientos.push(dataEfecSol)   ;        
     });
 
-   
+   totalSolesEfec=Number(totalSolesEfec)+Number(dataCajaDetEfeSolAper[0].monto);
     var TotalSolesEfec=[
                         { 
                             text:'TOTAL EFECTIVO',
@@ -1945,6 +1961,20 @@ function create_pdf_movimientoCaja(response) {
                     ];               
       dataDolEfec.push(tituloDolEfec);
       dataDolMovimientos.push(tituloDolForm) ;
+       var dataEfecDolApe=[
+                    { 
+                        text: 'APERTURA',
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:Number(dataCajaDetEfeDolAper[0].monto).toFixed(2),
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+      dataDolMovimientos.push(dataEfecDolApe) ;
 
     _.each(dataCajaDetEfeDol, function (b) {
         var monto=Number(b.monto).toFixed(2);
@@ -1964,7 +1994,7 @@ function create_pdf_movimientoCaja(response) {
                     ];
          dataDolMovimientos.push(dataEfecSol)   ;        
     });
-
+    totalDolEfec=Number(totalDolEfec)+Number(dataCajaDetEfeDolAper[0].monto);
    
     var TotalDolEfec=[
                         { 

@@ -121,6 +121,14 @@ class CajaDiariaRepository implements CajaDiariaInterface
         $mostrar=DB::select("select cd.codigoFormaPago as codigoFormaPago,sum(cd.monto) as monto,fp.descripcion_subtipo as descripcion_subtipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoTipo='VTA' GROUP BY cd.codigoFormaPago,fp.descripcion_subtipo");
         return $mostrar; 
     }
+    public function getCajaDetEfeSolAper($date,$usuario){
+        $mostrar=DB::select("select sum(cden.monto * cden.cantidad) as monto from ERP_CajaDiariaDenominaciones as cden inner join ERP_CajaDiaria as c on c.idCajaDiaria=cden.idCajaDiaria  INNER JOIN ERP_Denominaciones as den on cden.idDenominacion=den.id_denominacion where c.fechaCaja='$date' and c.idUsuario='$usuario' and cden.tipo='1' and den.IdMoneda='1' GROUP BY cden.Tipo ");
+        return $mostrar; 
+    }
+    public function getCajaDetEfeDolAper($date,$usuario){
+        $mostrar=DB::select("select sum(cden.monto * cden.cantidad) as monto from ERP_CajaDiariaDenominaciones as cden inner join ERP_CajaDiaria as c on c.idCajaDiaria=cden.idCajaDiaria  INNER JOIN ERP_Denominaciones as den on cden.idDenominacion=den.id_denominacion where c.fechaCaja='$date' and c.idUsuario='$usuario' and cden.tipo='1' and den.IdMoneda='2' GROUP BY cden.Tipo ");
+        return $mostrar; 
+    }
     public function getCajaDetEfeDol($date,$usuario){
         $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(cd.monto) as monto ,tm.descripcion_tipo as descripcion_tipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoFormaPago='EFE' GROUP BY cd.codigoTipo,tm.descripcion_tipo");
         return $mostrar; 

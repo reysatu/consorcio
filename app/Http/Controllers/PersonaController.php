@@ -41,7 +41,7 @@ class PersonaController extends Controller
             $data['cDigitoVerificador'] = strtoupper($data['cDigitoVerificador']);
             $data['cTipodocumento'] = strtoupper($data['cTipodocumento']);
             $data['cNumerodocumento'] = strtoupper($data['cNumerodocumento']);
-            $data['dFechacaducidad'] = strtoupper($data['dFechacaducidad']);
+            $data['dFechacaducidad'] = $data['dFechacaducidad'];
             $data['cRegion'] =substr($data['cUbigeo'], 0, 2);
             $data['cProvincia'] =substr($data['cUbigeo'], 0, 4);
             $data['cUbigeo'] = strtoupper($data['cUbigeo']);

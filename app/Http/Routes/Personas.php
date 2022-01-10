@@ -15,3 +15,14 @@ Route::put('personas/createPersona/{id}', ['as' => 'personas.createPersona', 'us
 Route::get('personas/find/{id}', ['as' => 'personas.find', 'uses' => 'PersonaController@find']);
 
 Route::get('personas/get_persona_documento/{id}', ['as' => 'personas.get_persona_documento', 'uses' => 'PersonaController@get_persona_documento']);
+
+Route::get('personas/data_formCusPerson', ['as' => 'personas.data_formCusPerson', 'uses' => 'CustomerController@data_form']);
+
+Route::get('personas/TraerDepartamentosPerso/{id}', ['as' => 'personas.TraerDepartamentosPerso', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('personas/TraerProvinciasPerso/{id}', ['as' => 'personas.TraerProvinciasPerso', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('personas/TraerDistritosPerso/{id}', ['as' => 'personas.TraerDistritosPerso', 'uses' => 'UbigeoController@TraerDistritos']);
+
+Route::post('personas/getDistritoPerso', 'UbigeoController@getDistrito'); 
+
+Route::post('personas/getTipoDocumentoPerso', 'CustomerController@getTipoDocumento');
+Route::post('personas/getTipoPersonaPerso', 'CustomerController@getTipoPersona');

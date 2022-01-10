@@ -22,7 +22,7 @@
         // {
         //     titleModalMovCaj.html('Nuevo Movimiento de caja');
         //     modalMovCaj.modal('show');
-        // }
+        // } 
         var btn_imprimirCaja=$("#btn_imprimirCaja");
         var table_movimientoEfecti=$("#table_movimientoEfecti");
         var usuarioActual;
@@ -357,6 +357,7 @@
             table_demoninacionesSoles.html("");
             table_demoninacionesDolares.html("");
             var id="0";
+            var tabs=0;
             RESTService.get('movimientoCajas/getDenominaciones', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                       var data_p = response.dataDenominacion;
@@ -364,14 +365,22 @@
                         if(c.idMoneda=='1'){
                             var cantidad=0;
                             var estadoCant='';
-                            addDenominacionSoles(c.id_denominacion,c.descripcion,cantidad,Number(c.valor),estadoCant);
-                        }else if(c.idMoneda=='2'){
-                            var cantidad=0;
-                            var estadoCant='';
-                            addDenominacionDolar(c.id_denominacion,c.descripcion,cantidad,Number(c.valor),estadoCant);
+                            tabs=tabs+1;
+                            addDenominacionSoles(c.id_denominacion,c.descripcion,cantidad,Number(c.valor),estadoCant,tabs);
                         }
                       
                     });
+                      _.each(data_p, function (c) {
+                         if(c.idMoneda=='2'){
+                            var cantidad=0;
+                            var estadoCant='';
+                            tabs=tabs+1;
+                            addDenominacionDolar(c.id_denominacion,c.descripcion,cantidad,Number(c.valor),estadoCant,tabs);
+                        }
+                      
+                    });
+                      tabs=tabs+1; 
+                     $("#btn_procesarApertura").attr('tabindex', tabs);  
                       sumar_cantidades();
                      console.log(data_p);
                  }else {
@@ -385,13 +394,13 @@
                });
         }
 
-        function addDenominacionSoles(idDenominacion,denominacion,cantidad,monto,estadoCant) {
+        function addDenominacionSoles(idDenominacion,denominacion,cantidad,monto,estadoCant,tabs) {
              var tr = $('<tr id="tr_b_' + idDenominacion + '"></tr>');
              var td1 = $('<td>' + denominacion + '</td>');
              var td2 =$('<td></td>');
              var td3 =$('<td></td>');
              var iddenominacion =$('<input type="hidden" name="idDenominacionS[]" class="idDenominacionS form-control input-sm"  value="' +idDenominacion+ '"  />');
-             var cantidad = $('<input type="text" name="cantidadS[]" class="cantidadS form-control input-sm"  value="' +cantidad+ '"  onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
+             var cantidad = $('<input type="text" name="cantidadS[]" class="cantidadS form-control input-sm"  value="' +cantidad+ '"   tabindex="'+tabs+'" onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
              var monto = $('<input type="text" name="montoS[]" class="montoS form-control input-sm"  value="' +monto+ '"  disabled/>');
              td1.append(iddenominacion);
              td2.append(cantidad);
@@ -401,14 +410,36 @@
              $('.cantidadS').keyup(function (e) {
                  sumar_cantidades();
             });
+             $('.cantidadS').keypress(function(e) {
+             var code = (e.keyCode ? e.keyCode : e.which);
+                if(code==13){
+                     var cb = parseInt($(this).attr('tabindex'));
+                     console.log()
+                    if ($(':input[tabindex=\'' + (cb + 1) + '\']') != null) {
+                       $(':input[tabindex=\'' + (cb + 1) + '\']').focus();
+                       $(':input[tabindex=\'' + (cb + 1) + '\']').select();
+                       e.preventDefault();
+            
+                       return false;
+                   }
+                }
+             });
+
+             // documento_or.keypress(function(e) {
+             // var code = (e.keyCode ? e.keyCode : e.which);
+             //    if(code==13){
+             //        getCliente();
+             //    }
+             // });
+
         } 
-        function addDenominacionDolar(idDenominacion,denominacion,cantidad,monto,estadoCant) {
+        function addDenominacionDolar(idDenominacion,denominacion,cantidad,monto,estadoCant,tabs) {
              var tr = $('<tr id="tr_b_' + idDenominacion + '"></tr>');
              var td1 = $('<td>' + denominacion + '</td>');
              var td2 =$('<td></td>');
              var td3 =$('<td></td>');
              var iddenominacion =$('<input type="hidden" name="idDenominacionD[]" class="idDenominacionD form-control input-sm"  value="' +idDenominacion+ '"  />');
-             var cantidad = $('<input type="text" name="cantidadD[]" class="cantidadD form-control input-sm"  value="' +cantidad+ '"  onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
+             var cantidad = $('<input type="text" name="cantidadD[]" class="cantidadD form-control input-sm"  value="' +cantidad+ '"  tabindex="'+tabs+'" onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
              var monto = $('<input type="text" name="montoD[]" class="montoD form-control input-sm"  value="' +monto+ '"  disabled/>');
              td1.append(iddenominacion);
              td2.append(cantidad);
@@ -418,6 +449,21 @@
              $('.cantidadD').keyup(function (e) {
                  sumar_cantidades();
             });
+             $('.cantidadD').keypress(function(e) {
+             var code = (e.keyCode ? e.keyCode : e.which);
+                if(code==13){
+                     var cb = parseInt($(this).attr('tabindex'));
+                     console.log()
+                    if ($(':input[tabindex=\'' + (cb + 1) + '\']') != null) {
+                       $(':input[tabindex=\'' + (cb + 1) + '\']').focus();
+                       $(':input[tabindex=\'' + (cb + 1) + '\']').select();
+                       e.preventDefault();
+            
+                       return false;
+                   }
+                }
+             });
+
         } 
         function cleanAperturaCaja() {
             cleanRequired();
@@ -797,6 +843,13 @@
                     var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
                     var dataCajaDetForDol=response.dataCajaDetForDol;
                     var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
+
+                    var dataCajaDetEfeSolAper=response.dataCajaDetEfeSolAper;
+                    var dataCajaDetEfeDolAper=response.dataCajaDetEfeDolAper;
+
+
+                    console.log(dataCajaDetEfeSolAper);
+                    console.log(dataCajaDetEfeDolAper);
                     console.log("esta es la fecha");
                     console.log(fecha_caja);
                     var tip=response.data;
@@ -819,9 +872,15 @@
 
                     }
                    
+                   
                      if(dataCaDet.length!=0){
                         table_movimientoEfecti.html("");
                         table_movimientoDEfecti.html("");
+                         var cotipoApe=0;
+                        var tipoTexApe='APERTURA';
+                        var montoApe=Number(dataCajaDetEfeSolAper[0].monto);
+                        var tiposumApe='SE';
+                        addTableEfecSol(cotipoApe,tipoTexApe,montoApe,tiposumApe);
                         dataCajaDetEfeSol.map(function(index) {
                               var codigoTipo=index.codigoTipo;
                                var tipotext=index.descripcion_tipo;
@@ -840,6 +899,8 @@
                                 addTableEfecSol(codigoTipo,tipotext,montoadd,tiposum);
                             // }
                         });
+
+
                             var tipoSumA='SE';
                             calcularTotalEfect(tipoSumA);
                             dataCajaDetForSol.map(function(index) {
@@ -856,7 +917,11 @@
                         });   
                         var tipoSumB='SP';
                         calcularTotalEfect(tipoSumB);
-
+                        var cotipoApeDol=0;
+                        var tipoTexApeDol='APERTURA';
+                        var montoApeDol=Number(dataCajaDetEfeDolAper[0].monto);
+                        var tiposumApeDol='DE';
+                        addTableEfecDolar(cotipoApeDol,tipoTexApeDol,montoApeDol,tiposumApeDol);
                         dataCajaDetEfeDol.map(function(index) {
                             // if(index.codigoFormaPago=='EFE' && index.idMoneda=='2'){
                                 var codigoTipo=index.codigoTipo;
