@@ -1964,7 +1964,7 @@
                         monto_afecto = pretotal;
                     }
 
-                    var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + pretotal.toFixed(2) + '"></td>';
+                    var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
                     html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
                     html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
                     html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
