@@ -1158,6 +1158,7 @@
 
             selectDescuento.append('<option value="" selected>Seleccionar</option>');
               _.each(descuentos, function(item) {
+
                 var mo=idMoneda.val();
                 // if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
                 //        var por=Number(item.nPorcDescuento);
@@ -1199,6 +1200,7 @@
                     }
 
                 }
+
                 $("#id_desc_"+codigo).val(idDescuento).trigger("change");
             }); 
         }

@@ -200,7 +200,7 @@ class SolicitudController extends Controller
         $convenios = $Repo->obtener_convenios($usuario);
         $vendedores = $Repo->obtener_vendedores($usuario);
         $personas = $Repo->obtener_personas($usuario);
-     
+        $parametro_igv =  $Repo->get_parametro_igv();
 
         return response()->json([
             'status' => true,
@@ -224,6 +224,7 @@ class SolicitudController extends Controller
             'convenios'=>$convenios,
             'vendedores'=>$vendedores,
             'personas'=>$personas,
+            'parametro_igv'=>$parametro_igv,
         ]);
     }
 
