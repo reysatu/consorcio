@@ -132,7 +132,7 @@ class ProductController extends Controller
      public function traeAll(Request $request, ProductInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'description','code_article','type_id','serie','lote','costo'];
+        $params = ['id', 'description','code_article','type_id','serie','lote','costo', 'impuesto'];
         return parseList($repo->search2($s), $request, 'id', $params);
     }
      public function traeAllMinKit(Request $request, ProductInterface $repo)

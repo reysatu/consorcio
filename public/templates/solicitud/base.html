@@ -89,6 +89,7 @@
 
             </div>
             <form id="formulario-solicitud">
+                <input type="hidden" name="valor_igv" id="valor_igv">
                 <div class="modal-body">
                     <div class="tab-content">
                         <br>
@@ -144,7 +145,7 @@
                                             <select id="IdMoneda" name="idmoneda"
                                                 class="form-control input-sm"></select>
                                         </div>
-                                        <label class="col-sm-1 control-label">Tipo Solicitud</label>
+                                        <label class="col-sm-1 control-label" style="padding-right: 5px;">Tipo Solicitud</label>
                                         <div class="col-sm-2">
                                             <select id="tipo_solicitud" name="tipo_solicitud"
                                                 class="form-control input-sm">
@@ -211,7 +212,7 @@
                                     </div>
                                 </div> -->
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Fecha Vencimiento</label>
+                                        <label class="col-sm-2 control-label" style="padding-right: 5px;">Fecha Vencimiento</label>
                                         <div class="col-sm-2">
                                             <input type="date" class="form-control input-sm" id="fecha_vencimiento"
                                                 name="fecha_vencimiento">
@@ -226,9 +227,27 @@
                                         </div>
 
                                         <label class="col-sm-1 control-label">Vendedor</label>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <select id="idvendedor" name="idvendedor" style="width: 100%;"
                                                 class="form-control input-sm js-example-responsive"></select>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-group"></div>
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label">Estado</label>
+                                        <div class="col-sm-2">
+                                            <select id="estado" name="estado" disabled="disabled" style="width: 100%;"
+                                                class="form-control input-sm js-example-responsive">
+                                                <option value="" selected> </option>
+                                                <option value="1">Registrado</option>
+                                                <option value="2">Vigente</option>
+                                                <option value="3">Por Aprobar</option>
+                                                <option value="4">Aprobado</option>
+                                                <option value="5">Rechazado</option>
+                                                <option value="6">Facturado</option>
+                                                <option value="7">Despachado</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -431,6 +450,7 @@
                                                             <th width="110px">Lote</th>
                                                             <th width="30px">Cantidad</th>
                                                             <th width="60px">Precio</th>
+                                                            <th width="60px">Operació_n Gratuita</th>
                                                             <th width="60px">Precio Total</th>
                                                             <th width="60px">Descuento</th>
                                                             <th width="60px">Porcentaje Descuento</th>
@@ -570,6 +590,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <input type="hidden" name="t_nOperGratuita" id="t_nOperGratuita" value="0">
                                                 <label class="col-sm-6 control-label">Monto Sub Total</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" id="t_monto_subtotal" name="t_monto_subtotal"
@@ -936,6 +957,7 @@
                                 <label class="col-sm-2 control-label">Artículo</label>
                                 <div class="col-sm-6">
                                     <input type="hidden" id="idProductoMN" readonly class="form-control input-sm">
+                                    <input type="hidden" id="impuesto_articulo" name="impuesto_articulo" readonly class="form-control input-sm">
                                     <input type="hidden" id="costoNa" readonly class="form-control input-sm">
                                     <input type="text" id="desProductoMN" readonly class="form-control input-sm">
                                 </div>
@@ -1010,7 +1032,7 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="control-label">Dirección Trabajo</label>
-                            <input type="number" class="form-control input-sm " id="direccion_trabajo"
+                            <input type="text" class="form-control input-sm " id="direccion_trabajo"
                                 name="direccion_trabajo">
                         </div>
                         <div class="col-sm-2">
@@ -1032,23 +1054,47 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Ingreso Neto Mensual</label>
-                            <input type="number" class="form-control input-sm " id="ingreso_neto_mensual"
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="ingreso_neto_mensual"
                                 name="ingreso_neto_mensual">
+                            </div>
+                            
                         </div>
                         <div class="col-sm-3">
                             <label class="control-label">Ingreso Neto Conyugue</label>
-                            <input type="number" class="form-control input-sm " id="ingreso_neto_conyugue"
+                            
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="ingreso_neto_conyugue"
                                 name="ingreso_neto_conyugue">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Otros Ingresos</label>
-                            <input type="numver" class="form-control input-sm " id="otros_ingresos"
+                           
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="otros_ingresos"
                                 name="otros_ingresos">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Total Ingresos</label>
-                            <input type="number" class="form-control input-sm " id="total_ingresos"
+                           
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="total_ingresos"
                                 name="total_ingresos">
+                            </div>
                         </div>
                     </div>
                     <h5 class="linea"><span>Conyugue</span></h5>
@@ -1143,8 +1189,14 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Monto Alquiler</label>
-                            <input type="number" class="form-control input-sm " id="monto_alquiler_fiador"
+                            
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="monto_alquiler_fiador"
                                 name="monto_alquiler_fiador">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Profesión</label>
@@ -1191,23 +1243,48 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Ingreso Neto Mensual</label>
-                            <input type="number" class="form-control input-sm " id="ingreso_neto_mensual_fiador"
+                           
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="ingreso_neto_mensual_fiador"
                                 name="ingreso_neto_mensual_fiador">
+                            </div>
                         </div>
                         <div class="col-sm-3">
                             <label class="control-label">Ingreso Neto Conyugue</label>
-                            <input type="number" class="form-control input-sm " id="ingreso_neto_conyugue_fiador"
+                         
+                            
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="ingreso_neto_conyugue_fiador"
                                 name="ingreso_neto_conyugue_fiador">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Otros Ingresos</label>
-                            <input type="numver" class="form-control input-sm " id="otros_ingresos_fiador"
+                          
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="otros_ingresos_fiador"
                                 name="otros_ingresos_fiador">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Total Ingresos</label>
-                            <input type="number" class="form-control input-sm " id="total_ingresos_fiador"
+                           
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="total_ingresos_fiador"
                                 name="total_ingresos_fiador">
+                            </div>
                         </div>
                     </div>
 

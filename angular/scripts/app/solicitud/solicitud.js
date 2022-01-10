@@ -187,7 +187,10 @@
         function obtener_data_for_solicitud() {
             RESTService.all('solicitud/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-
+                    if(response.parametro_igv.length > 0) {
+                        // alert(response.parametro_igv[0].value);
+                        $("#valor_igv").val(response.parametro_igv[0].value);
+                    }
                     // descuentos = response.descuentos;
                     var hoy = new Date();
                     var hAnio = hoy.getFullYear();
@@ -258,7 +261,7 @@
                     // servicios = response.servicios;
                     idMoneda.append('<option value="">Seleccionar</option>');
                     _.each(response.moneda, function (item) {
-                        idMoneda.append('<option value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
+                        idMoneda.append('<option data-simbolo="'+item.Simbolo+'" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
                     });
 
                     idconvenio.append('<option value="">Seleccionar</option>');
@@ -268,7 +271,7 @@
 
                     idvendedor.append('<option value="">Seleccionar</option>');
                     _.each(response.vendedores, function (item) {
-                        idvendedor.append('<option value="' + item.idvendedor + '">' + item.descripcion + '</option>');
+                        idvendedor.append('<option  value="' + item.idvendedor + '">' + item.descripcion + '</option>');
                     });
 
                     // $("#idconyugue").append('<option value="">Seleccionar</option>');
@@ -290,6 +293,10 @@
                     // _.each(response.totales, function (item) {
                     //     tipo_totales_slec.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
                     // });
+
+              
+                
+
                     AlmacenesSele = response.almacen_usuario;
                     LotesSele = response.lotes;
                     DescuentosSele = response.descuentos;
@@ -1221,7 +1228,7 @@
                         listClass: 'text-center',
                         display: function (data) {
                             return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-costo="' + data.record.costo + '" data-name="' +
-                                data.record.description + '" data-type="' + data.record.type_id + '"  data-serie="' + data.record.serie + '" data-lote="' + data.record.lote + '" data-code="' + data.record.id + '"><i class="fa fa-' +
+                                data.record.description + '" data-type="' + data.record.type_id + '"  data-serie="' + data.record.serie + '" data-lote="' + data.record.lote + '" data-code="' + data.record.id + '" data-impuesto="' + data.record.impuesto + '"><i class="fa fa-' +
                                 icon_select + ' fa-1-5x"></i></a>';
                         }
                     }
@@ -1234,8 +1241,9 @@
                         var serie = $(this).attr('data-serie');
                         var lote = $(this).attr('data-lote');
                         var costo = $(this).attr('data-costo');
+                        var impuesto = $(this).attr('data-impuesto');
 
-                        seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo);
+                        seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto);
                         e.preventDefault();
                     });
                 }
@@ -1311,7 +1319,7 @@
             }
         });
 
-        function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo) {
+        function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto) {
             // comentado por manuel 02/01/2022
             // alert("idTipoArt " + idTipoArt);
             // alert("lote " + lote);
@@ -1350,6 +1358,7 @@
             $('#cantProductoMN').attr('onkeypress', 'return soloNumeros(event)');
             idProductoMN.val(codigo);
             desProductoMN.val(descripcionArt);
+            $("#impuesto_articulo").val(impuesto);
             $("#posee-serie").val(serie);
             modalNada.modal('show');
             costoNa.val(costo);
@@ -1819,6 +1828,7 @@
             // alert("price " +precio);
             var id_tipo_cliente = id_cliente_tipo_or.val();
             var id = idProducto + "_" + id_tipo_cliente + "_" + idMoneda.val();
+            var impuesto_articulo = $("#impuesto_articulo").val();
             // alert(id);
             RESTService.get('orden_servicios/get_precios_list', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -1937,18 +1947,46 @@
                     var btn3 = $('<center><button class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
                     // td6.append(btn1);
 
-                    var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + impor.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + impor.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + impor.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + impor.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_afecto"><p>0.00</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="0.00"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>0.00</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="0.00"></td>';
-                    html += '<td codigo="' + codigo + '" class="impuestos"><p>0.00</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="0.00"></td>';
-                    html += '<td codigo="' + codigo + '" class="total"><p>' + impor.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + impor.toFixed(2) + '"></td>';
+                    var monto_exonerado = 0;
+                    var monto_afecto = 0;
+                    var monto_inafecto = 0;
+                    var impuestos = 0;
+                    var valor_igv = parseFloat($("#valor_igv").val());
+                    var monto_subtotal = pretotal;
+                    // alert(impuesto_articulo);
+
+                    if(impuesto_articulo == "0") {
+                        monto_exonerado = pretotal;
+                    } else {
+                        // alert(valor_igv);
+                        impuestos = pretotal * valor_igv / 100;
+                        pretotal = pretotal + impuestos;
+                        monto_afecto = pretotal;
+                    }
+
+                    var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + pretotal.toFixed(2) + '"></td>';
+                    html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
+                    html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
+                    html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
+                    html += '<td codigo="' + codigo + '" class="impuestos"><p>' + impuestos.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="' + impuestos.toFixed(2) + '"></td>';
+                    html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(2) + '"></td>';
+
+                    var check="";
+                   
+                    if(false){
+                        check="checked";
+                      
+                    }
+
+                    var chek=$('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="'+codigo+'"  class="checkClass" type="checkbox" id="pOper'+codigo+'" '+check+'  > <input type="hidden" name="cOperGrat[]" codigo="'+codigo+'" id="cOperGrat_'+codigo+'" /> <input type="hidden" name="nOperGratuita[]" codigo="'+codigo+'" id="nOperGratuita_'+codigo+'" /> </label></div></td>');
+
+
                     td8.append(btn3);
-                    tr.append(td1).append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
+                    tr.append(td1).append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(chek).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
                     articulo_mov_det.append(tr);
                     addAlmaSelec(codigo);
                     addlocSele(codigo);
-                    obtener_descuentos(codigo);
+                    obtener_descuentos(codigo, idProducto);
                     obtener_lotes(codigo);
 
 
@@ -2073,6 +2111,71 @@
                     };
 
                     calcular_totales();
+
+                    if($("#tipo_solicitud").val() == "2" || $("#tipo_solicitud").val() == "3") {
+                        $("#tipo_solicitud").trigger("change");
+                    }
+
+                    $('.i-checks').iCheck({
+                        checkboxClass: 'icheckbox_square-green'
+                    }).on('ifChanged', function (event) {
+                        $(event.target).click();
+                       
+
+                        var codigo = $(this).data("idcheck");
+                        if($("#pOper"+codigo).prop('checked')){
+
+                            $(".m_articulo_precioTotal[codigo='" + codigo + "']").val(0);
+                            $(".m_articulo_precioTotal[codigo='" + codigo + "']").siblings("p").text(0);
+
+                            $(".select_descuento[codigo='" + codigo + "']").val("");
+                            $(".select_descuento[codigo='" + codigo + "']").attr("disabled", "disabled");
+                            // console.log($(".select_descuento[codigo='" + codigo + "']")[0]);
+                            $(".m_articulo_precio[codigo='" + codigo + "']").val(0);
+                            $(".m_articulo_precio[codigo='" + codigo + "']").siblings("p").text(0);
+
+                            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(0);
+                            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(0);
+
+
+                            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(0);
+                            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(0);
+
+                            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(0);
+                            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(0);
+
+                            $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(0);
+                            $(".monto_afecto[codigo=" + codigo + "]").find("p").text(0);
+
+                            $("input[name='monto_inafecto[]'][codigo=" + codigo + "]").val(0);
+                            $(".monto_inafecto[codigo=" + codigo + "]").find("p").text(0);
+
+                            $("input[name='impuestos[]'][codigo=" + codigo + "]").val(0);
+                            $(".impuestos[codigo=" + codigo + "]").find("p").text(0);
+                            
+                            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(0);
+                            $(".total[codigo=" + codigo + "]").find("p").text(0);
+
+                            var cantidad = parseFloat($("input[name='cantidad[]'][codigo=" + codigo + "]").val());
+                            var precio = parseFloat($("#cosMs_" + codigo).val());
+                            // alert(cantidad);
+                            // alert(precio);
+                            var nOperGratuita = cantidad * precio;
+                            $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(nOperGratuita);
+                            $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("S");
+
+                        } else {
+                            // alert("hola");
+                            $("#canMs_"+codigo).trigger("keyup");
+                            $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("N");
+                            $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(0);
+
+                            
+                        }
+
+                        calcular_totales();
+                    });
+
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -2084,8 +2187,16 @@
 
             });
 
+           
+            
+            
 
         }
+
+        
+       
+
+        
 
         $(document).on("click", ".agregar-series", function () {
             var costo = $(this).data("costo");
@@ -2099,19 +2210,40 @@
             modalSerieR.modal('show');
         });
 
+
+        $(document).on("change", "#IdMoneda", function () {
+            if($(this).val() != "") {
+
+                var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+                // alert("hola " + simbolo);
+                $(".simbolo-moneda").text(simbolo);
+            }
+        })
+
         $(document).on("change", ".select_descuento", function () {
             // alert($(this).attr("codigo"));
             var porcentaje_descuento = 0;
+            var monto_descuento = 0;
             var tipo_descuento = $(this).val();
             var codigo = $(this).attr("codigo");
+            var idtipo = "";
+            var descuento = 0;
             if ($(this).val() != "") {
 
                 porcentaje_descuento = parseFloat($(this).find("option[value=" + $(this).val() + "]").attr("nPorcDescuento"));
+                monto_descuento = parseFloat($(this).find("option[value=" + $(this).val() + "]").attr("nMonto"));
+                idtipo = $(this).find("option[value=" + $(this).val() + "]").attr("idtipo");
             }
             var precio_total = parseFloat($(".m_articulo_precioTotal[codigo='" + codigo + "']").val());
             // alert(precio_total);
+            if(idtipo == "P") {
 
-            var descuento = precio_total * porcentaje_descuento / 100;
+                descuento = precio_total * porcentaje_descuento / 100;
+            } else {
+                descuento = monto_descuento;
+            }
+
+            // alert(descuento);
 
             $("#preMs_" + codigo).val(porcentaje_descuento);
             $("#preMs_" + codigo).siblings("p").text(porcentaje_descuento.toString());
@@ -2138,6 +2270,8 @@
         totalDescuento.change(function () {
             // var codigo=$(this).attr('data-desc');
             var val = $(this).val();
+            var idtipo = "";
+            var porTotal = 0;
             if (val == "") {
 
                 porcentajeTotal.val(0);
@@ -2151,7 +2285,14 @@
                 var porc = arrayRe[1];
                 var mont = arrayRe[2];
                 // alert();
-                var porTotal = Number((Number(porc) * Number($("#t_monto_subtotal").val())) / 100);
+
+                idtipo = $(this).find("option[value='" + $(this).val() + "']").attr("idtipo");
+                if(idtipo == "P") {
+
+                    porTotal = Number((Number(porc) * Number($("#t_monto_subtotal").val())) / 100);
+                } else {
+                    porTotal = mont;
+                }
 
 
                 $("#porcentajeTotal").val(porc);
@@ -2172,7 +2313,7 @@
                 // alert(totalDes);
             }
             desTotal.val(totalDes.toFixed(2));
-
+            $("#tipo_solicitud").trigger("change");
 
         });
 
@@ -2206,6 +2347,7 @@
             var t_monto_inafecto = 0;
             var t_impuestos = 0;
             var t_total = 0;
+            var t_nOperGratuita = 0;
 
             $.each($("input[name='monto_descuento[]']"), function (indexInArray, monto_descuento) {
                 t_monto_descuento += parseFloat(monto_descuento.value);
@@ -2236,6 +2378,14 @@
                 t_total += parseFloat(total.value);
             });
 
+            $.each($("input[name='nOperGratuita[]']"), function (indexInArray, nOperGratuita) {
+                // alert(typeof nOperGratuita.value);
+                t_nOperGratuita += parseFloat(nOperGratuita.value);
+            });
+            // alert(t_nOperGratuita);
+            if(isNaN(t_nOperGratuita)) {
+                t_nOperGratuita = 0;
+            }
             $("#monto_descuento_detalle").val(t_monto_descuento.toFixed(2));
             $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2));
             $("#t_monto_exonerado").val(t_monto_exonerado.toFixed(2));
@@ -2243,6 +2393,7 @@
             $("#t_monto_inafecto").val(t_monto_inafecto.toFixed(2));
             $("#t_impuestos").val(t_impuestos.toFixed(2));
             $("#desTotal").val(t_total.toFixed(2));
+            $("#t_nOperGratuita").val(t_nOperGratuita.toFixed(2));
             // console.log(t_monto_descuento, t_monto_subtotal, t_monto_exonerado, t_monto_afecto, t_monto_inafecto, t_impuestos, t_total);
 
         }
@@ -2271,11 +2422,43 @@
             });
         }
 
-        function obtener_descuentos(codigo) {
+        function obtener_descuentos(codigo, idarticulo) {
             var idDescSele = $("#descuento_" + codigo);
+            var hoy = new Date();
+            var hAnio=hoy.getFullYear();
+            var hmes=hoy.getMonth()+1;
+            if(Number(hmes)<10){
+                hmes='0'+String(hmes);
+            }
+
+            var hdia=hoy.getDate();
+            if(Number(hdia)<10){
+                hdia='0'+String(hdia);
+            }
+            var actu=hAnio+'-'+hmes+'-'+hdia;
+
             idDescSele.append('<option value="" selected>Seleccionar</option>');
             _.each(DescuentosSele, function (item) {
-                idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+                // idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+
+                var mo=idMoneda.val();
+                if(item.nIdProducto==idarticulo || item.cTipoAplica=='T'){
+                       var por=Number(item.nPorcDescuento);
+                       var monto=Number(item.nMonto);
+                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
+                        if(item.dFecIni<=actu && item.dFecFin>actu){
+                            var valDes=item.id+'*'+por+'*'+monto;
+                            // console.log(valDes,idDescuento);
+                            // if(valDes==idDescuento){
+                            //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
+                            // }else{
+                                idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+                            // }
+                            
+                             
+                        }
+                    }
+                }
             });
         }
 
@@ -2331,10 +2514,7 @@
         }
         $scope.datos_credito = function () {
             // $("#idconyugue").focus();
-            var t_monto_total = $("#desTotal").val();
-            $("#monto_venta").val(t_monto_total);
-            $("#total_financiado").val(t_monto_total);
-            $("#cuota_inicial").attr("max", t_monto_total);
+            
 
             if (articulo_mov_det.html() == "") {
                 AlertFactory.textType({
@@ -2422,7 +2602,7 @@
 
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
-            // alert(tipo_solicitud);
+            // alert("change " + tipo_solicitud);   
             if (tipo_solicitud == "1") {
                 $(".credito").hide();
 
@@ -2437,6 +2617,15 @@
             } else {
 
                 $(".convenio").hide();
+            }
+
+            if(tipo_solicitud == "2" || tipo_solicitud == "3") {
+                var t_monto_total = $("#desTotal").val();
+
+                // alert(t_monto_total);
+                $("#monto_venta").val(t_monto_total);
+                $("#total_financiado").val(t_monto_total);
+                $("#cuota_inicial").attr("max", t_monto_total);
             }
         });
 

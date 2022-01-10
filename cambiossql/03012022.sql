@@ -170,3 +170,10 @@ GO
 ALTER TABLE [dbo].[ERP_SolicitudCredito] DROP COLUMN [comentarios];
 ALTER TABLE [dbo].[ERP_Solicitud] ADD [comentarios] varchar(100) NULL;
 ALTER TABLE [dbo].[ERP_Solicitud] ADD [IdTipoDocumento] varchar(5) NULL;
+
+
+alter table ERP_Solicitud add t_nOperGratuita decimal (18,5) -- Monto de Operacion Gratuita
+alter table ERP_SolicitudArticulo add cOperGrat varchar(1) -- Check operacion gratuita (si esta checkeado no puede ingresar descuento)
+go
+alter table ERP_SolicitudArticulo add nOperGratuita decimal (18,5) 
+go

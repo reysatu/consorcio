@@ -1154,24 +1154,7 @@
 
             selectDescuento.append('<option value="" selected>Seleccionar</option>');
               _.each(descuentos, function(item) {
-                var mo=idMoneda.val();
-                if(item.nIdProducto==codigo || item.cTipoAplica=='T'){
-                       var por=Number(item.nPorcDescuento);
-                       var monto=Number(item.nMonto);
-                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
-                        if(item.dFecIni<=actu && item.dFecFin>actu){
-                            var valDes=item.id+'*'+por+'*'+monto;
-                            console.log(valDes,idDescuento);
-                            // if(valDes==idDescuento){
-                            //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
-                            // }else{
-                                selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                            // }
-                            
-                             
-                        }
-                    }
-                }
+                
                 $("#id_desc_"+codigo).val(idDescuento).trigger("change");
                 
             }); 

@@ -154,4 +154,11 @@ class SolicitudRepository implements SolicitudInterface
         return DB::select($sql);
     }
 
+
+    public function get_parametro_igv() {
+        $param = DB::select("select * from ERP_Parametros WHERE id=1");
+        return $param;
+
+    }
+
 }
