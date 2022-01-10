@@ -17,3 +17,7 @@ Route::put('consecutivos_comprobantes/saveComprobante/{id}', ['as' => 'consecuti
 Route::get('consecutivos_comprobantes/find/{id}', ['as' => 'consecutivos_comprobantes.find', 'uses' => 'ConsecutivosComprobantesController@find']);
 
 Route::get('consecutivos_comprobantes/deleteUsuario/{id}', ['as' => 'consecutivos_comprobantes.deleteUsuario', 'uses' => 'ConsecutivosComprobantesController@deleteDetalle']);
+
+Route::get('consecutivos_comprobantes/data_formDescCc', ['as' => 'consecutivos_comprobantes.data_formDescCc', 'uses' => 'DescuentoController@data_form']);
+
+Route::get('consecutivos_comprobantes/data_formJerConComp', ['as' => 'consecutivos_comprobantes.data_formJerConComp', 'uses' => 'ConfigJerarquiaController@data_form']);
