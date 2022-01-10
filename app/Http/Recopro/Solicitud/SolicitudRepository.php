@@ -161,4 +161,13 @@ class SolicitudRepository implements SolicitudInterface
 
     }
 
+    public function envio_aprobar_solicitud($data) {
+        $res = DB::select("SET NOCOUNT ON; EXEC VTA_EnvioAprobarSol 
+        '{$data["cCodConsecutivo"]}',
+        {$data["nConsecutivo"]},
+        ".auth()->id());
+
+        return $res;
+    }
+
 }

@@ -240,6 +240,23 @@ class SolicitudController extends Controller
 
     }
 
+    public function enviar_solicitud(SolicitudInterface $Repo, Request $request) {
+        $data = $request->all();
+        $res = array("status" => "i");
+        if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
+            $data["estado"] = "2"; // vigente
+   
+
+        } else {
+            $data["estado"] = "3"; // por aprobar
+           
+            $Repo->envio_aprobar_solicitud($data);
+        }
+
+        $res = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
+        echo json_encode($res);
+    }
+
     
 
  
