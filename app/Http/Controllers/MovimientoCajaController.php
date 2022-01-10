@@ -29,10 +29,23 @@ class MovimientoCajaController extends Controller
             $usuario=auth()->id();
             date_default_timezone_set('UTC');
             $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
             return response()->json([
                 'status' => true,
                 'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
             ]);
     }
  
@@ -74,6 +87,10 @@ class MovimientoCajaController extends Controller
         $dataCaDet = $recaj->getCajaDetalle($date,$usuario);
         $data_tipo=$recaj->getDataTipo();
         $data_moneda=$recaj->getDataMoneda();
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($date,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($date,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($date,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($date,$usuario);
         $fechacA= date("Y-m-d H:i:s");
 
         return response()->json([
@@ -84,7 +101,11 @@ class MovimientoCajaController extends Controller
             'dataCaDet'=>$dataCaDet,
             'fechacA'=>$fechacA,
             'data_tipo'=>$data_tipo,
-            'data_moneda'=>$data_moneda
+            'data_moneda'=>$data_moneda,
+             'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
         ]);
     }
 

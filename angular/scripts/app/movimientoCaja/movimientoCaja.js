@@ -81,7 +81,9 @@
                 var data = {
                         id: '0',        
                 };
+            if(estadoMc.val()!=''){
               $scope.loadMovimientoCajaPDF('movimientoCajas/pdf', data);
+            }
             
         });
          $('#btn_Mcierra').click(function (e) {
@@ -654,14 +656,14 @@
              generarTablaApertura(); 
         }
         function addTableEfecSol(codigoTipo,tipotext,monto,tipoSum) {
-             if ($('#tr_b_' + codigoTipo).length > 0) {
-                var tota=Number($('#tr_b_' + codigoTipo).find("td:eq(2)").children("p").text());
-                console.log("esdto es total");
-                console.log(tota);
-                var ntotal=Number(tota)+Number(monto);
-                $('#tr_b_' + codigoTipo).find("td:eq(2)").children("p").text(ntotal.toFixed(2));
+            //  if ($('#tr_b_' + codigoTipo).length > 0) {
+            //     var tota=Number($('#tr_b_' + codigoTipo).find("td:eq(2)").children("p").text());
+            //     console.log("esdto es total");
+            //     console.log(tota);
+            //     var ntotal=Number(tota)+Number(monto);
+            //     $('#tr_b_' + codigoTipo).find("td:eq(2)").children("p").text(ntotal.toFixed(2));
                
-            }else{
+            // }else{
                 console.log("entrovvvv");
                  var tr = $('<tr id="tr_b_' + codigoTipo + '"></tr>');
                  var td0 =$('<td></td>');
@@ -671,7 +673,7 @@
                  td0.append(tip);
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoEfecti.append(tr);
-            }
+            // }
              
 
             //  $('.cantidadS').keyup(function (e) {
@@ -679,14 +681,14 @@
             // });
         }
         function addTableEfecDolar(codigoTipo,tipotext,monto,tipoSum) {
-             if ($('#tr_bd_' + codigoTipo).length > 0) {
-                var tota=Number($('#tr_bd_' + codigoTipo).find("td:eq(2)").children("p").text());
-                console.log("esdto es total");
-                console.log(tota);
-                var ntotal=Number(tota)+Number(monto);
-                $('#tr_bd_' + codigoTipo).find("td:eq(2)").children("p").text(ntotal.toFixed(2));
+            //  if ($('#tr_bd_' + codigoTipo).length > 0) {
+            //     var tota=Number($('#tr_bd_' + codigoTipo).find("td:eq(2)").children("p").text());
+            //     console.log("esdto es total");
+            //     console.log(tota);
+            //     var ntotal=Number(tota)+Number(monto);
+            //     $('#tr_bd_' + codigoTipo).find("td:eq(2)").children("p").text(ntotal.toFixed(2));
                
-            }else{
+            // }else{
                 console.log("entrovvvv");
                  var tr = $('<tr id="tr_bd_' + codigoTipo + '"></tr>');
                  var td0 =$('<td></td>');
@@ -696,7 +698,7 @@
                  td0.append(tip);
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoDEfecti.append(tr);
-            }
+            // }
              
 
             //  $('.cantidadS').keyup(function (e) {
@@ -718,14 +720,20 @@
             if(tipoSumX=='SE'){
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
-                 var td1 =$('<th height="20px" width="30px">TOTAL EFECTIVO</th>');
+                 var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL EFECTIVO</th>');
                  var td2 =$('<th height="20px" width="30px">'+totalEfectivo.toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
-                 table_movimientoEfecti.append(tr);     
+                 table_movimientoEfecti.append(tr);
+                 var tr2 = $('<tr></tr>');
+                 var td02 =$('<th height="20px" width="30px"></th>');
+                 var td12 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">VENTAS FORMA DE PAGO</th>');
+                 var td22 =$('<th height="20px" width="30px"></th>');
+                 tr2.append(td02).append(td12).append(td22);
+                 table_movimientoEfecti.append(tr2);   
             }else{
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
-                 var td1 =$('<th height="20px" width="30px">VENTAS FORMA DE PAGO</th>');
+                 var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL VENTA</th>');
                  var td2 =$('<th height="20px" width="30px">'+totalForma.toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoEfecti.append(tr); 
@@ -748,14 +756,20 @@
             if(tipoSumX=='DE'){
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
-                 var td1 =$('<th height="20px" width="30px">TOTAL EFECTIVO</th>');
+                 var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL EFECTIVO</th>');
                  var td2 =$('<th height="20px" width="30px">'+totalEfectivo.toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
-                 table_movimientoDEfecti.append(tr);     
+                 table_movimientoDEfecti.append(tr);
+                 var tr2 = $('<tr></tr>');
+                 var td02 =$('<th height="20px" width="30px"></th>');
+                 var td12 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">VENTAS FORMA DE PAGO</th>');
+                 var td22 =$('<th height="20px" width="30px"></th>');
+                 tr2.append(td02).append(td12).append(td22);
+                 table_movimientoDEfecti.append(tr2);       
             }else{
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
-                 var td1 =$('<th height="20px" width="30px">VENTAS FORMA DE PAGO</th>');
+                 var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL VENTA</th>');
                  var td2 =$('<th height="20px" width="30px">'+totalForma.toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoDEfecti.append(tr); 
@@ -779,6 +793,10 @@
             RESTService.get('movimientoCajas/data_form', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var fecha_caja=response.fechacA;
+                     var dataCajaDetForSol=response.dataCajaDetForSol;
+                    var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
+                    var dataCajaDetForDol=response.dataCajaDetForDol;
+                    var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
                     console.log("esta es la fecha");
                     console.log(fecha_caja);
                     var tip=response.data;
@@ -804,22 +822,28 @@
                      if(dataCaDet.length!=0){
                         table_movimientoEfecti.html("");
                         table_movimientoDEfecti.html("");
-                        dataCaDet.map(function(index) {
-                            if(index.codigoFormaPago=='EFE' && index.idMoneda=='1'){
-                                var codigoTipo=index.codigoTipo;
-                                var tipotext=index.descripcion_tipo;
+                        dataCajaDetEfeSol.map(function(index) {
+                              var codigoTipo=index.codigoTipo;
+                               var tipotext=index.descripcion_tipo;
                                 var montoadd=0;
-                                if(index.monto!=null){
+                               if(index.monto!=null){
                                     montoadd=Number(index.monto);
                                 }
+                            // if(index.codigoFormaPago=='EFE' && index.idMoneda=='1'){
+                            //     var codigoTipo=index.codigoTipo;
+                            //     var tipotext=index.descripcion_tipo;
+                            //     var montoadd=0;
+                            //     if(index.monto!=null){
+                            //         montoadd=Number(index.monto);
+                            //     }
                                 var tiposum='SE';
                                 addTableEfecSol(codigoTipo,tipotext,montoadd,tiposum);
-                            }
+                            // }
                         });
                             var tipoSumA='SE';
                             calcularTotalEfect(tipoSumA);
-                            dataCaDet.map(function(index) {
-                            if(index.idMoneda=='1'){
+                            dataCajaDetForSol.map(function(index) {
+                            // if(index.idMoneda=='1'){
                                 var codigoFormaPago=index.codigoFormaPago;
                                 var tipotext=index.descripcion_subtipo;
                                 var montoadd=0;
@@ -828,13 +852,13 @@
                                 }
                                 var tiposum='SP';
                                 addTableEfecSol(codigoFormaPago,tipotext,montoadd,tiposum);
-                            }
+                            
                         });   
                         var tipoSumB='SP';
                         calcularTotalEfect(tipoSumB);
 
-                        dataCaDet.map(function(index) {
-                            if(index.codigoFormaPago=='EFE' && index.idMoneda=='2'){
+                        dataCajaDetEfeDol.map(function(index) {
+                            // if(index.codigoFormaPago=='EFE' && index.idMoneda=='2'){
                                 var codigoTipo=index.codigoTipo;
                                 var tipotext=index.descripcion_tipo;
                                 var montoadd=0;
@@ -843,12 +867,12 @@
                                 }
                                 var tiposum='DE';
                                 addTableEfecDolar(codigoTipo,tipotext,montoadd,tiposum);
-                            }
+                            // }
                         });
                         var tipodSumA='DE';
                         calcularTotalEfectDola(tipodSumA);
-                        dataCaDet.map(function(index) {
-                            if(index.idMoneda=='2'){
+                        dataCajaDetForDol.map(function(index) {
+                            // if(index.idMoneda=='2'){
                                 var codigoFormaPago=index.codigoFormaPago;
                                 var tipotext=index.descripcion_subtipo;
                                 var montoadd=0;
@@ -857,7 +881,7 @@
                                 }
                                 var tiposum='DP';
                                 addTableEfecDolar(codigoFormaPago,tipotext,montoadd,tiposum);
-                            }
+                            // }
                         });   
                         var tipodSumB='DP';
                         calcularTotalEfectDola(tipodSumB);
