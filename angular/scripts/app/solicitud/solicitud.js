@@ -2676,7 +2676,7 @@
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
             // alert("change " + tipo_solicitud);   
-            if (tipo_solicitud == "1") {
+            if (tipo_solicitud == "1" || tipo_solicitud == "3") {
                 $(".credito").hide();
 
             } else {
@@ -2694,7 +2694,6 @@
 
             if(tipo_solicitud == "2" || tipo_solicitud == "3") {
                 var t_monto_total = $("#desTotal").val();
-
                 // alert(t_monto_total);
                 $("#monto_venta").val(t_monto_total);
                 $("#total_financiado").val(t_monto_total);
