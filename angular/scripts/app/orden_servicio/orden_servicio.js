@@ -186,7 +186,12 @@
                  var data = {
                         id: id,        
                 };
+              if(id_tipo.val()=="3"){
+                $scope.loadOrdenServicioXpressPDF('orden_servicios/pdf', data);
+              }else{
+
               $scope.loadOrdenServicioPDF('orden_servicios/pdf', data);
+              }
             }
         });
          btn_cancelar.click(function () {

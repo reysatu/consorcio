@@ -416,6 +416,30 @@
                 }
             });
         };
+        $scope.loadOrdenServicioXpressPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_ordenServicioXpress(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
         $scope.loadMovimientoCajaPDF = function (url, id) {
             angular.element('#show_loading').removeClass('ng-hide');
             $.ajax({
