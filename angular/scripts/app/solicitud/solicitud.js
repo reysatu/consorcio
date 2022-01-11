@@ -1142,6 +1142,7 @@
                 bval = bval && idMoneda.required();
             }
             bval = bval && documento_or.required();
+            bval = bval && razonsocial_cliente_or.required();
             if (bval) {
                 // if(idMovimiento.val()==""){
                 //     saveMovimientoCab(); 
@@ -1359,6 +1360,7 @@
             idProductoMN.val(codigo);
             desProductoMN.val(descripcionArt);
             $("#impuesto_articulo").val(impuesto);
+            $("#lote_articulo").val(lote);
             $("#posee-serie").val(serie);
             modalNada.modal('show');
             costoNa.val(costo);
@@ -1829,6 +1831,7 @@
             var id_tipo_cliente = id_cliente_tipo_or.val();
             var id = idProducto + "_" + id_tipo_cliente + "_" + idMoneda.val();
             var impuesto_articulo = $("#impuesto_articulo").val();
+            var lote_articulo = $("#lote_articulo").val();
             // alert(id);
             RESTService.get('orden_servicios/get_precios_list', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -1903,7 +1906,12 @@
                     var inpl = $('<select name="idlocalizacion[]" id="' + codigo + '" data-idArl="' + idProducto + '" class="m_articulo_idLoc form-control input-sm"></select>');
 
                     var td_lote = $('<td></td>');
-                    var select_lote = $('<select name="idlote[]" id="lote_' + codigo + '" class="select_lote form-control input-sm"></select>');
+                    var disabled_lote = "";
+                    if(lote_articulo == "0") {
+                        disabled_lote = 'disabled="disabled"';
+                    }
+
+                    var select_lote = $('<select '+disabled_lote+' name="idlote[]" id="lote_' + codigo + '" class="select_lote form-control input-sm"></select>');
 
                     var td_descuentos = $('<td></td>');
                     var select_descuento = $('<select name="iddescuento[]" codigo="' + codigo + '" id="descuento_' + codigo + '" class="select_descuento form-control input-sm"></select>');
@@ -2567,7 +2575,7 @@
         });
 
         $scope.guardar_solicitud = function () {
-
+           
             var bval = true;
             bval = bval && cCodConsecutivo.required();
             bval = bval && idMoneda.required();
@@ -2576,16 +2584,48 @@
             bval = bval && documento_or.required();
 
             if (bval) {
+
+                if($("#tipo_solicitud").val() == "1") {
+                    var cont = 0;
+                    $.each($("select[name='idalmacen[]']"), function (indexInArray, idalmacen) {
+                        console.log(idalmacen);
+                        if(idalmacen.value == "") {
+                            idalmacen.classList.add("border-red");
+                            idalmacen.focus();
+                            cont ++;
+                           
+                        }
+                    });
+                    
+                    $.each($("select[name='idlocalizacion[]']"), function (indexInArray, idlocalizacion) {
+                        console.log(idlocalizacion);
+                        if(idlocalizacion.value == "") {
+                            idlocalizacion.classList.add("border-red");
+                            idlocalizacion.focus();
+                            cont ++;
+                         
+                        }
+                    });
+                }
+                // alert(cont);
+                if(cont > 0) {
+
+                    return false;
+                }
+
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
                             $("#nConsecutivo").val(data.datos[0].nConsecutivo);
+                            $("#estado").val(data.datos[0].estado);
                             AlertFactory.textType({
                                 title: '',
                                 message: 'La solicitud se registró correctamente.',
                                 type: 'success'
                             });
+                            // alert("show");
+                            $("#enviar_solicitud").show();
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -2600,10 +2640,43 @@
             }
         }
 
+
+        $scope.enviar_solicitud = function() {
+            var bval = true;
+            bval = bval && cCodConsecutivo.required();
+            bval = bval && nConsecutivo.required();
+            bval = bval && $("#estado").required();
+         
+
+            if (bval) {
+                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize(),
+                function (data, textStatus, jqXHR) {
+                    if(data.status == "i") {
+                        $("#estado").val(data.datos[0].estado);
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'La solicitud se envio correctamente.',
+                            type: 'success'
+                        });
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    }
+                    
+
+                }, "json");
+            }
+
+            
+        }
+
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
             // alert("change " + tipo_solicitud);   
-            if (tipo_solicitud == "1") {
+            if (tipo_solicitud == "1" || tipo_solicitud == "3") {
                 $(".credito").hide();
 
             } else {
@@ -2621,7 +2694,6 @@
 
             if(tipo_solicitud == "2" || tipo_solicitud == "3") {
                 var t_monto_total = $("#desTotal").val();
-
                 // alert(t_monto_total);
                 $("#monto_venta").val(t_monto_total);
                 $("#total_financiado").val(t_monto_total);

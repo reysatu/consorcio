@@ -12,6 +12,9 @@ Route::post('solicitud/delete', ['as' => 'solicitud.delete', 'uses' => 'Solicitu
 Route::post('solicitud/update', ['as' => 'solicitud.update', 'uses' => 'SolicitudController@update']);
 Route::post('solicitud/guardar_solicitud', ['as' => 'solicitud.guardar_solicitud', 'uses' => 'SolicitudController@guardar_solicitud']);
 Route::post('solicitud/factor_credito', ['as' => 'solicitud.factor_credito', 'uses' => 'SolicitudController@factor_credito']);
+Route::post('solicitud/enviar_solicitud', ['as' => 'solicitud.enviar_solicitud', 'uses' => 'SolicitudController@enviar_solicitud']);
+
+
 Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudController@excel']);
 
 
