@@ -47,7 +47,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
     }
     public function search_movimiento_diario($s,$filtro_tipoMovi,$filtro_monedaMovi)
     {   $idusuario=auth()->id();
-        date_default_timezone_set('UTC');
+        date_default_timezone_set('America/Lima');
         $fechacA= date("Y-m-d");
         $query=DB::select("select * from ERP_CajaDiaria where idUsuario='$idusuario' and fechaCaja='$fechacA'");
         $idCajaDia=0;
