@@ -50,7 +50,47 @@
         var code = (e.keyCode ? e.keyCode : e.which);
         if(code==13){
               $('#show_loading').removeClass('ng-hide');
-                getDatosCliente();
+                var documentoEnvio=documento.val();
+                 RESTService.get('customers/get_cliente_personaCus', documentoEnvio, function(response) {
+                             if (!_.isUndefined(response.status) && response.status) {
+                                    var dataPersona=response.data;
+                                    if(dataPersona.length==0){
+                                        console.log("no hay en persona");
+                                         getDatosCliente();
+                                    }else{
+                                        console.log(dataPersona);
+                                        console.log("si hay ");
+                                         tipodoc.val(dataPersona[0].cTipodocumento).trigger('change');
+                                         var nclie=dataPersona[0].cRazonsocial;
+                                         if(nclie.length==0){
+                                            razonsocial_cliente.val(dataPersona[0].cNombrePersona);
+                                         }else{
+                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                         }
+                                        
+                                        documento.val(dataPersona[0].cNumerodocumento);
+                                        // contacto.val(dataPersona[0].contacto);
+                                        direccion.val(dataPersona[0].cDireccion);
+                                        correo_electronico.val(dataPersona[0].cEmail);
+                                        celular.val(dataPersona[0].cCelular);
+                                       
+                                        cEstadoCivil.val(dataPersona[0].cEstadoCivil);
+                                      
+                                         getDepartamento(dataPersona[0].cDepartamento);
+                                         getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
+                                         getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                    }
+
+
+                             }else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Hubo un error . Intente nuevamente.',
+                                    type: 'info'
+                                });
+                            }
+                           });
+                
         }
 });
 function getDatosCliente(){
@@ -73,7 +113,7 @@ function getDatosCliente(){
             razonsocial_cliente.val(razon);
             direccion.val(direc);
         }else{
-              razonsocial_cliente.val('');
+              razonsocial_cliente.val(''); 
                 direccion.val('');
             AlertFactory.textType({
                             title: '',

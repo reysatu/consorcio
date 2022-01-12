@@ -33,25 +33,31 @@ class MovimientoCajaController extends Controller
             $datoDet = [];
             $total=0;
             $totalEgre=0;
+            $totalOtrosI=0;
             $dataCajadia=[];
             if($data['idMonedaAdd']=='1'){
                 if($data['tipoMovimientoAdd']=='ING'){
                     $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresos);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
                 }else{
                     $total=floatval($dataCaja->totalEfectivo)-floatval($data['montoAdd']);
-                     $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
+                    $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
+
                 }
+                $dataCajadia['totalOtrosIngresos'] =  $totalOtrosI;
                 $dataCajadia['totalEfectivo'] =  $total;
                 $dataCajadia['totalEgresos'] =  $totalEgre;
             }else{
                  if($data['tipoMovimientoAdd']=='ING'){
                     $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresosDol);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);
                 }else{
                     $total=floatval($dataCaja->totalEfectivoDol)-floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresosDol)+floatval($data['montoAdd']);
                 }
+                $dataCajadia['totalOtrosIngresosDol'] =  $totalOtrosI;
                 $dataCajadia['totalEfectivoDol'] =  $total;
                 $dataCajadia['totalEgresosDol'] =  $totalEgre;
             }
@@ -94,6 +100,7 @@ class MovimientoCajaController extends Controller
             date_default_timezone_set('UTC');
             $fechacA= date("Y-m-d");
             $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
             $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
@@ -114,6 +121,7 @@ class MovimientoCajaController extends Controller
                 'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
                  'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
                 'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
             ]);
     }
 

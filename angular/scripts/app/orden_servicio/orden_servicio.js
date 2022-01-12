@@ -2583,50 +2583,6 @@ function llenarTablas(Consecutivo){
                                     }
 
 
-                    //                  idPersona.val(data_p[0].idPersona);
-                    // cTipopersona.val(data_p[0].cTipopersona).trigger('change');
-                    // cDireccion.val(data_p[0].cDireccion);
-                    // cReferencia.val(data_p[0].cReferencia);
-                    // cDigitoVerificador.val(data_p[0].cDigitoVerificador);
-                    // cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
-                    // cNumerodocumento.val(data_p[0].cNumerodocumento);
-                    // dFechacaducidad.val(data_p.dFechacaducidad2);
-                    
-                    // cEmail.val(data_p[0].cEmail);
-                    // cCelular.val(data_p[0].cCelular);
-                    // dFechanacimiento.val(data_p.dFechanacimiento2);
-                    // cEstadoCivil.val(data_p[0].cEstadoCivil).trigger('change');;
-                    // cApepat.val(data_p[0].cApepat);
-                    // cApemat.val(data_p[0].cApemat);
-                    // cNombres.val(data_p[0].cNombres);
-                    // cRazonsocial.val(data_p[0].cRazonsocial);
-                    // cNombrePersona.val(data_p[0].cNombrePersona);
-                    // cSexo.val(data_p[0].cSexo);
-
-                    //  getDepartamento(data_p[0].cDepartamento);
-                    //  getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
-                    //  getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
-                                 // console.log(response.data);
-                                 // var datos=response.data;
-                                 // var precio=response.newPrecio;
-                                 // if(datos==''){
-                                 //    var producto=$("#servicios_select option:selected").text();
-                                 //      AlertFactory.textType({
-                                 //                title: '',
-                                 //                message: 'No existe precios para este producto: '+producto,
-                                 //                type: 'info'
-                                 //    });
-                                 //      articuloPrecio="";
-                                 //     servicios_select.val("").trigger("change");     
-                                 // }else{
-                                 //    if(precio==''){
-                                 //       precio=datos[0].nPrecio;
-                                 //    }
-                                 //    articuloPrecio=datos[0].idProducto+'*'+datos[0].description+'*'+precio+'*'+datos[0].impuesto;  
-                                 //    console.log(articuloPrecio);
-                                 // }
-                                 // console.log("precios");
-                                 // servicios_select.val("").trigger("change");
                              }else {
                                 AlertFactory.textType({
                                     title: '',

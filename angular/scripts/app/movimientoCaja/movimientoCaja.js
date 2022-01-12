@@ -828,7 +828,7 @@
             //      sumar_cantidades();
             // });
         }  
-        function calcularTotalEfect(tipoSumX){
+        function calcularTotalEfect(tipoSumX,totalefecdb){
             var totalEfectivo=0;
             var totalForma=0;
             $("#table_movimientoEfecti tr").each(function(){
@@ -844,7 +844,7 @@
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
                  var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL EFECTIVO</th>');
-                 var td2 =$('<th height="20px" width="30px">'+totalEfectivo.toFixed(2)+'</th>');
+                 var td2 =$('<th height="20px" width="30px">'+Number(totalefecdb).toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoEfecti.append(tr);
                  var tr2 = $('<tr></tr>');
@@ -864,7 +864,7 @@
             
             
         }
-        function calcularTotalEfectDola(tipoSumX){
+        function calcularTotalEfectDola(tipoSumX,totalefecdb){
             var totalEfectivo=0;
             var totalForma=0;
             $("#table_movimientoDEfecti tr").each(function(){
@@ -880,7 +880,7 @@
                  var tr = $('<tr></tr>');
                  var td0 =$('<th height="20px" width="30px"></th>');
                  var td1 =$('<th height="20px" width="30px" style="text-align:left; vertical-align:middle">TOTAL EFECTIVO</th>');
-                 var td2 =$('<th height="20px" width="30px">'+totalEfectivo.toFixed(2)+'</th>');
+                 var td2 =$('<th height="20px" width="30px">'+Number(totalefecdb).toFixed(2)+'</th>');
                  tr.append(td0).append(td1).append(td2);
                  table_movimientoDEfecti.append(tr);
                  var tr2 = $('<tr></tr>');
@@ -979,7 +979,8 @@
 
 
                             var tipoSumA='SE';
-                            calcularTotalEfect(tipoSumA);
+                            var totalefectSol= dataCaja[0].totalEfectivo;
+                            calcularTotalEfect(tipoSumA,totalefectSol);
                             dataCajaDetForSol.map(function(index) {
                             // if(index.idMoneda=='1'){
                                 var codigoFormaPago=index.codigoFormaPago;
@@ -993,7 +994,8 @@
                             
                         });   
                         var tipoSumB='SP';
-                        calcularTotalEfect(tipoSumB);
+                        totalefectSol='';
+                        calcularTotalEfect(tipoSumB.totalefectSol);
                         var cotipoApeDol=0;
                         var tipoTexApeDol='APERTURA';
                         var montoApeDol=Number(dataCajaDetEfeDolAper[0].monto);
@@ -1012,7 +1014,8 @@
                             // }
                         });
                         var tipodSumA='DE';
-                        calcularTotalEfectDola(tipodSumA);
+                        var totalefectDol= dataCaja[0].totalEfectivoDol;
+                        calcularTotalEfectDola(tipodSumA,totalefectDol);
                         dataCajaDetForDol.map(function(index) {
                             // if(index.idMoneda=='2'){
                                 var codigoFormaPago=index.codigoFormaPago;
@@ -1026,7 +1029,8 @@
                             // }
                         });   
                         var tipodSumB='DP';
-                        calcularTotalEfectDola(tipodSumB);
+                        totalefectDol='';
+                        calcularTotalEfectDola(tipodSumB,totalefectDol);
                      }
 
                      if(dataCaja.length!=0){
@@ -1046,6 +1050,7 @@
                      }
                      console.log(response.data_tipo);
                      console.log("response tipo");
+                     $("#filtro_tipoMovi").html("");
                      $("#filtro_tipoMovi").append('<option value="">Tipo</option>');
                      // tipoMovimientoAdd.append('<option value="">Tipo</option>');
                     _.each(response.data_tipo, function (item) {
@@ -1054,6 +1059,7 @@
                     });
 
 
+                    $("#filtro_monedaMovi").html("");
                     $("#filtro_monedaMovi").append('<option value="">Moneda</option>');
                     // idMonedaAdd.append('<option value="">Moneda</option>');
                     _.each(response.data_moneda, function (item) {

@@ -2200,6 +2200,9 @@ function create_pdf_qualityControl(response) {
 function create_pdf_movimientoCaja(response) {
     var data=response.dataCaDet;
     var fec=response.feca;
+    var dataCaja=response.dataMc;
+    var totalefectSol= dataCaja[0].totalEfectivo;
+    var totalefectDol= dataCaja[0].totalEfectivoDol;
     var fecAct=response.fechacA;
     var dataCajaDetForSol=response.dataCajaDetForSol;
     var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
@@ -2288,7 +2291,7 @@ function create_pdf_movimientoCaja(response) {
 
                         },
                         { 
-                            text: totalSolesEfec.toFixed(2),
+                            text:Number(totalefectSol).toFixed(2),
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'right' 
@@ -2432,7 +2435,7 @@ function create_pdf_movimientoCaja(response) {
 
                         },
                         { 
-                            text: totalDolEfec.toFixed(2),
+                            text: Number(totalefectDol).toFixed(2),
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'right' 
