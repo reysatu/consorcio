@@ -43,6 +43,7 @@ class MovimientoCajaController extends Controller
                 }else{
                     $total=floatval($dataCaja->totalEfectivo)-floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos);
 
                 }
                 $dataCajadia['totalOtrosIngresos'] =  $totalOtrosI;
@@ -56,6 +57,7 @@ class MovimientoCajaController extends Controller
                 }else{
                     $total=floatval($dataCaja->totalEfectivoDol)-floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresosDol)+floatval($data['montoAdd']);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol);
                 }
                 $dataCajadia['totalOtrosIngresosDol'] =  $totalOtrosI;
                 $dataCajadia['totalEfectivoDol'] =  $total;
