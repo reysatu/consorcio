@@ -22,7 +22,16 @@
         // {
         //     titleModalMovCaj.html('Nuevo Movimiento de caja');
         //     modalMovCaj.modal('show');
-        // } 
+        // }
+        var tipoMovimientoAdd=$("#tipoMovimientoAdd");
+        var idMonedaAdd=$("#idMonedaAdd");
+        var conceptoAdd=$("#conceptoAdd");
+        var montoAdd=$("#montoAdd");
+        var formaPagoAdd=$("#formaPagoAdd");
+
+        var modalMovimientoCaja=$("#modalMovimientoCaja");
+        var btn_MovimientoInicio=$("#btn_MovimientoInicio");
+
         var btn_imprimirCaja=$("#btn_imprimirCaja");
         var table_movimientoEfecti=$("#table_movimientoEfecti");
         var usuarioActual;
@@ -60,6 +69,20 @@
         var totalSoles=$("#totalSoles");
         var table_demoninacionesDolares=$("#table_demoninacionesDolares");
         var totalDolares=$("#totalDolares");
+         $('#btn_MovimientoInicio').click(function (e) {
+             modalMovimientoCaja.modal('show');
+        });
+        function cleanMovimientoCajaAdd() {
+            cleanRequired();
+            tipoMovimientoAdd.val("");
+            idMonedaAdd.val("");
+            conceptoAdd.val("");
+            montoAdd.val("");
+        }
+
+        modalMovimientoCaja.on('hidden.bs.modal', function (e) {
+            cleanMovimientoCajaAdd();
+        });
 
         $('#btn_Mapertura').click(function (e) {
             // ventanaP='A';
@@ -504,6 +527,60 @@
             titlemodalAperturaCaja.html('Nueva Apertura de Caja');
             modalAperturaCaja.modal('show');
         }
+         $scope.saveAddMovimientoCaja = function()
+        {
+            var bval = true;
+            bval = bval && tipoMovimientoAdd.required();
+            bval = bval && idMonedaAdd.required();
+            bval = bval && montoAdd.required();
+            bval = bval && conceptoAdd.required();
+            if(bval){
+               var params = {
+                        'tipoMovimientoAdd':tipoMovimientoAdd.val(),
+                        'idMonedaAdd':idMonedaAdd.val(),
+                        'montoAdd':montoAdd.val(),
+                        'conceptoAdd':conceptoAdd.val(),
+                        'formaPagoAdd':formaPagoAdd.val(),
+                     };
+                    var id =idcajaMC.val();
+                 RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function(response) {
+                        if (!_.isUndefined(response.status) && response.status) {
+                           
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Se registró correctamente.',
+                                type: 'success'
+                            });
+                            getDataFormMovementCaja();
+                             $('#table_container_movimientoCaja').jtable('reload');
+
+                            // estadoMc.val(cajaGuar[0].estado);
+                            // caja_text.val(cajaGuar[0].nombre_caja);
+                            // if(cajaGuar[0].estado==1){
+                            //      btn_Mapertura.prop('disabled',true);
+                            // };
+                            // if(cajaGuar[0].estado==0){
+                            //      btn_Mapertura.prop('disabled',true);
+                            //      btn_Mcierra.prop('disabled',true);
+                            // };
+                           
+                            // idcajaMC.val(cajaGuar[0].idCajaDiaria);
+                             modalMovimientoCaja.modal('hide');
+                            
+                        } else {
+                            var msg_ = (_.isUndefined(response.message)) ?
+                                'No se pudo guardar . Intente nuevamente.' : response.message;
+                            AlertFactory.textType({
+                                title: '',
+                                message: msg_,
+                                type: 'info'
+                            });
+                        }
+                            
+                      }); 
+            };
+
+        }
 
         $scope.saveCajasDiarias = function()
         {
@@ -847,7 +924,7 @@
                     var dataCajaDetEfeSolAper=response.dataCajaDetEfeSolAper;
                     var dataCajaDetEfeDolAper=response.dataCajaDetEfeDolAper;
 
-
+ 
                     console.log(dataCajaDetEfeSolAper);
                     console.log(dataCajaDetEfeDolAper);
                     console.log("esta es la fecha");
@@ -970,13 +1047,18 @@
                      console.log(response.data_tipo);
                      console.log("response tipo");
                      $("#filtro_tipoMovi").append('<option value="">Tipo</option>');
+                     // tipoMovimientoAdd.append('<option value="">Tipo</option>');
                     _.each(response.data_tipo, function (item) {
                         $("#filtro_tipoMovi").append('<option value="' + item.codigo_tipo + '">' + item.descripcion_tipo + '</option>');
+                        // tipoMovimientoAdd.append('<option value="' + item.codigo_tipo + '">' + item.descripcion_tipo + '</option>');
                     });
 
+
                     $("#filtro_monedaMovi").append('<option value="">Moneda</option>');
+                    // idMonedaAdd.append('<option value="">Moneda</option>');
                     _.each(response.data_moneda, function (item) {
                         $("#filtro_monedaMovi").append('<option value="' + item.IdMoneda + '">'+ item.Descripcion + '</option>');
+                        // idMonedaAdd.append('<option value="' + item.IdMoneda + '">'+ item.Descripcion + '</option>');
                     });
 
                     // var tipo_clie=response.tipo_clie;
@@ -1043,6 +1125,7 @@
                 },
                 codigoTipo: {
                     title: 'Tipo',
+                    options: base_url + '/movimientoCajas/getTipoMoCa',
                 },
                 idMoneda: {
                     title: 'Moneda',
@@ -1057,6 +1140,7 @@
                 },
                 codigoFormaPago: {
                     title: 'Forma de pago',
+                    options: base_url + '/movimientoCajas/getFormPaCa',
                 },
 
                 

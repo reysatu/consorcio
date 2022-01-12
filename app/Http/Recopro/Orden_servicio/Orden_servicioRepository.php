@@ -295,6 +295,11 @@ where IdTipoDocumento in ('01','03')");
           $mostrar3=DB::select("select * from ERP_Consecutivos where cCodTipoCons='PROFORMA'");
           return $mostrar3;
     }
+    public function get_clientePersona($documento){
+   
+          $mostrar3=DB::select("SELECT * FROM ERP_Persona as ti left join ERP_Ubigeo as ub on ti.cUbigeo=ub.cCodUbigeo where ti.cNumerodocumento='$documento'");
+          return $mostrar3;
+    }
      public function destroy_orden($id,$no)
     {
          $pdo=DB::connection()->getPdo();

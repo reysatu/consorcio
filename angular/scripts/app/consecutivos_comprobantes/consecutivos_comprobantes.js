@@ -42,7 +42,7 @@
             ultimo.attr('maxlength', log);
         }
          function findConsecuCompro(id) {
-            cambiarLongitud();
+          
             titleConsecutivoCombro.html('Editar Consecutivo');
             RESTService.get('consecutivos_comprobantes/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -63,7 +63,7 @@
                         });
                     }
                     modalConsecutivoCombro.modal('show');
-                   
+                     cambiarLongitud();
                 } else {
                     AlertFactory.textType({
                         title: '',

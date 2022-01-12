@@ -27,3 +27,9 @@ Route::get('movimientoCajas/find/{id}', ['as' => 'movimientoCajas.find', 'uses' 
 Route::post('movimientoCajas/getMonedasMoc', 'CurrencyController@getAll');
 
 Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
+
+Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
+
+Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');
+
+Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);

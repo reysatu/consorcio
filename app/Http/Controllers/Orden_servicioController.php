@@ -393,6 +393,22 @@ class Orden_servicioController extends Controller
             ]);
         }
     }
+     public function get_cliente_persona($id, Orden_servicioInterface $repo, Request $request)
+    {   try {
+            $val=$repo->get_clientePersona($id);
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function get_precios_list($id, Orden_servicioInterface $repo, Request $request)
     {   try {
             $valtodo=explode("_", $id);

@@ -1032,6 +1032,7 @@ function create_pdf_ordenServicio(response) {
     
 
     var docDefinition = {
+
            content: [
         {
             text: ""+response.con+'  '+response.nr+"",
@@ -1521,9 +1522,15 @@ function create_pdf_ordenServicioXpress(response) {
     
 
     var docDefinition = {
+        pageSize: {
+    width: 800,
+    height: 'auto'
+  },
+        pageMargins: [ 200, 200, 200, 200 ],
            content: [
         {
             text: ""+response.con+'  '+response.nr+"",
+
             fontSize: 14,
              bold: true,
             absolutePosition: { x:479 , y: 64 }
@@ -1762,13 +1769,13 @@ function create_pdf_ordenServicioXpress(response) {
         },
         {
             text: "ST-"+ response.nr,
-            fontSize: 14,
+            fontSize: 12,
              bold: true,
             absolutePosition: { x:479 , y: 172 }
         },
         {
             text:Number(total).toFixed(2),
-            fontSize: 14,
+            fontSize: 12,
              bold: true,
             absolutePosition: { x:479 , y: 195 }
         }

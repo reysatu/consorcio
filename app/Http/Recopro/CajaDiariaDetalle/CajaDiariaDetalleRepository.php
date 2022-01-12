@@ -74,15 +74,15 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         // });
 
         return $this->model->where(function($q) use ($s,$idCajaDia,$fechacA,$filtro_tipoMovi,$filtro_monedaMovi) {
-            $q->orderByRaw('created_at DESC')->where('idCajaDiaria',$idCajaDia);
+            $q->orderByRaw('created_at DESC')->where('idCajaDiaria',$idCajaDia)->where('codigoTipo','!=','APE')->where('codigoTipo','!=','CIE');
             if(!empty($filtro_tipoMovi)){
-              $q->Where('codigoTipo',$filtro_tipoMovi);
+              $q->Where('codigoTipo',$filtro_tipoMovi)->where('codigoTipo','!=','APE')->where('codigoTipo','!=','CIE');
             }
             if(!empty($filtro_monedaMovi)){
-              $q->Where('idMoneda',$filtro_monedaMovi);
+              $q->Where('idMoneda',$filtro_monedaMovi)->where('codigoTipo','!=','APE')->where('codigoTipo','!=','CIE');
             }
             if(!empty($s)){
-              $q->Where('descripcion',$s);
+              $q->Where('descripcion',$s)->where('codigoTipo','!=','APE')->where('codigoTipo','!=','CIE');
             }
           
             // $q->orWhere('Almacen', 'LIKE', '%'.$s.'%');

@@ -1187,12 +1187,12 @@
                      var por=Number(item.nPorcDescuento);
                      var monto=Number(item.nMonto);
                     if(item.cTipoAplica=='T'){
-                        if(item.idMoneda==mo || item.nPorcDescuento!=0){
-                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
-                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                            }
+                        // if(item.idMoneda==mo || item.nPorcDescuento!=0){
+                        //     if(item.nSaldoUso>0 || item.nLimiteUso==0){
+                        //           selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                        //     }
                           
-                        }
+                        // }
                     }else{
                          if(item.idMoneda==mo || item.nPorcDescuento!=0){
                             if(item.nSaldoUso>0 || item.nLimiteUso==0){
@@ -2551,7 +2551,91 @@ function llenarTablas(Consecutivo){
     var code = (e.keyCode ? e.keyCode : e.which);
         if(code==13){
               $('#show_loading').removeClass('ng-hide');
-                getDatosCliente();
+                 var documentoEnvio=documento.val();
+                 RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function(response) {
+                             if (!_.isUndefined(response.status) && response.status) {
+                                    var dataPersona=response.data;
+                                    if(dataPersona.length==0){
+                                        console.log("no hay en persona");
+                                         getDatosCliente();
+                                    }else{
+                                        console.log(dataPersona);
+                                        console.log("si hay ");
+                                         tipodoc.val(dataPersona[0].cTipodocumento).trigger('change');
+                                         var nclie=dataPersona[0].cRazonsocial;
+                                         if(nclie.length==0){
+                                            razonsocial_cliente.val(dataPersona[0].cNombrePersona);
+                                         }else{
+                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                         }
+                                        
+                                        documento.val(dataPersona[0].cNumerodocumento);
+                                        // contacto.val(dataPersona[0].contacto);
+                                        direccion.val(dataPersona[0].cDireccion);
+                                        correo_electronico.val(dataPersona[0].cEmail);
+                                        celular.val(dataPersona[0].cCelular);
+                                       
+                                        cEstadoCivil.val(dataPersona[0].cEstadoCivil);
+                                      
+                                         getDepartamento(dataPersona[0].cDepartamento);
+                                         getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
+                                         getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                    }
+
+
+                    //                  idPersona.val(data_p[0].idPersona);
+                    // cTipopersona.val(data_p[0].cTipopersona).trigger('change');
+                    // cDireccion.val(data_p[0].cDireccion);
+                    // cReferencia.val(data_p[0].cReferencia);
+                    // cDigitoVerificador.val(data_p[0].cDigitoVerificador);
+                    // cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
+                    // cNumerodocumento.val(data_p[0].cNumerodocumento);
+                    // dFechacaducidad.val(data_p.dFechacaducidad2);
+                    
+                    // cEmail.val(data_p[0].cEmail);
+                    // cCelular.val(data_p[0].cCelular);
+                    // dFechanacimiento.val(data_p.dFechanacimiento2);
+                    // cEstadoCivil.val(data_p[0].cEstadoCivil).trigger('change');;
+                    // cApepat.val(data_p[0].cApepat);
+                    // cApemat.val(data_p[0].cApemat);
+                    // cNombres.val(data_p[0].cNombres);
+                    // cRazonsocial.val(data_p[0].cRazonsocial);
+                    // cNombrePersona.val(data_p[0].cNombrePersona);
+                    // cSexo.val(data_p[0].cSexo);
+
+                    //  getDepartamento(data_p[0].cDepartamento);
+                    //  getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
+                    //  getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                                 // console.log(response.data);
+                                 // var datos=response.data;
+                                 // var precio=response.newPrecio;
+                                 // if(datos==''){
+                                 //    var producto=$("#servicios_select option:selected").text();
+                                 //      AlertFactory.textType({
+                                 //                title: '',
+                                 //                message: 'No existe precios para este producto: '+producto,
+                                 //                type: 'info'
+                                 //    });
+                                 //      articuloPrecio="";
+                                 //     servicios_select.val("").trigger("change");     
+                                 // }else{
+                                 //    if(precio==''){
+                                 //       precio=datos[0].nPrecio;
+                                 //    }
+                                 //    articuloPrecio=datos[0].idProducto+'*'+datos[0].description+'*'+precio+'*'+datos[0].impuesto;  
+                                 //    console.log(articuloPrecio);
+                                 // }
+                                 // console.log("precios");
+                                 // servicios_select.val("").trigger("change");
+                             }else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Hubo un error . Intente nuevamente.',
+                                    type: 'info'
+                                });
+                            }
+                           });
+               
         }
 });
 function getDatosCliente(){
