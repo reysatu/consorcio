@@ -71,18 +71,24 @@ class SolicitudController extends Controller
             if($data["nConsecutivo"] == "") {
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
-                $data["origen"] = "O";
+                $data["origen"] = "V";
                 $data["estado"] = "1";
 
                 // print_r($this->preparar_datos("dbo.ERP_Solicitud", $data));
                 // exit;
                
                 $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                if($data["tipo_solicitud"] != "1") {
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                }
                 $repo->actualizar_correlativo($data["cCodConsecutivo"], $data["nConsecutivo"]);
             } else {
                 $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-                $this->base_model->modificar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                if($data["tipo_solicitud"] != "1") {
+                    $this->base_model->modificar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                }
+               
             }   
 
             
@@ -201,6 +207,7 @@ class SolicitudController extends Controller
         $vendedores = $Repo->obtener_vendedores($usuario);
         $personas = $Repo->obtener_personas($usuario);
         $parametro_igv =  $Repo->get_parametro_igv();
+        $dataredondeo = $repo_orden->get_redondeo();
 
         return response()->json([
             'status' => true,
@@ -225,6 +232,7 @@ class SolicitudController extends Controller
             'vendedores'=>$vendedores,
             'personas'=>$personas,
             'parametro_igv'=>$parametro_igv,
+            'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
         ]);
     }
 
@@ -243,21 +251,41 @@ class SolicitudController extends Controller
     public function enviar_solicitud(SolicitudInterface $Repo, Request $request) {
         $data = $request->all();
         $res = array("status" => "i");
+        $data_update = array();
+        $data_update["cCodConsecutivo"] = $data["cCodConsecutivo"];
+        $data_update["nConsecutivo"] = $data["nConsecutivo"];
         if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
-            $data["estado"] = "2"; // vigente
+            $data_update["estado"] = "2"; // vigente
    
 
         } else {
-            $data["estado"] = "3"; // por aprobar
+            $data_update["estado"] = "3"; // por aprobar
            
-            $Repo->envio_aprobar_solicitud($data);
+            $res["msg"] = $Repo->envio_aprobar_solicitud($data_update);
         }
+        // exit;
+        // print_r($res); exit;
+        // print_R($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+        $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+        // echo json_encode($res);
 
-        $res = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-        echo json_encode($res);
+        return response()->json($res);
     }
 
-    
+    public function find(SolicitudInterface $Repo, Request $request) {
+        $data = $request->all();
+        $arr = explode("_", $data["id"]);
+        $cCodConsecutivo = $arr[0];
+        $nConsecutivo = $arr[1];
+        $response = array();
+
+        $response["solicitud"] = $Repo->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_articulo"] = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_detalle"] = $Repo->get_solicitud_detalle($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_credito"] = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        return response()->json($response);
+    }
 
  
 }

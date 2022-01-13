@@ -162,12 +162,49 @@ class SolicitudRepository implements SolicitudInterface
     }
 
     public function envio_aprobar_solicitud($data) {
-        $res = DB::select("SET NOCOUNT ON; EXEC VTA_EnvioAprobarSol 
-        '{$data["cCodConsecutivo"]}',
-        {$data["nConsecutivo"]},
-        ".auth()->id());
+        $sql = "SET NOCOUNT ON; EXEC VTA_EnvioAprobarSol '{$data["cCodConsecutivo"]}', {$data["nConsecutivo"]}, ".auth()->id().", ''";
+
+        // echo $sql; exit;
+        $res = DB::statement($sql);
 
         return $res;
     }
+
+    public function get_solicitud($cCodConsecutivo, $nConsecutivo) {
+
+        $sql = "SELECT * FROM ERP_Solicitud WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_solicitud_articulo($cCodConsecutivo, $nConsecutivo) {
+
+        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote FROM ERP_SolicitudArticulo AS sa
+        INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        WHERE sa.cCodConsecutivo='{$cCodConsecutivo}' AND sa.nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_solicitud_detalle($cCodConsecutivo, $nConsecutivo) {
+
+        $sql = "SELECT * FROM ERP_SolicitudDetalle WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo) {
+
+        $sql = "SELECT * FROM ERP_SolicitudCredito WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+
+
 
 }

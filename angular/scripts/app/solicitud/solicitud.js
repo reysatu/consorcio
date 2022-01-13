@@ -13,11 +13,11 @@
 
     function SolicitudCtrl($scope, _, RESTService, AlertFactory, Helpers) {
 
-        // Helpers.saludo();
 
 
         var modalSolicitud = $('#modalSolicitud');
         var titlemodalSolicitud = $('#titleModalSolicitud');
+        var redondeo;
         var cambCan;
         var cambioChe;
         var cambioDes;
@@ -187,10 +187,11 @@
         function obtener_data_for_solicitud() {
             RESTService.all('solicitud/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    if(response.parametro_igv.length > 0) {
+                    if (response.parametro_igv.length > 0) {
                         // alert(response.parametro_igv[0].value);
                         $("#valor_igv").val(response.parametro_igv[0].value);
                     }
+                    redondeo = response.dataredondeo
                     // descuentos = response.descuentos;
                     var hoy = new Date();
                     var hAnio = hoy.getFullYear();
@@ -261,7 +262,7 @@
                     // servicios = response.servicios;
                     idMoneda.append('<option value="">Seleccionar</option>');
                     _.each(response.moneda, function (item) {
-                        idMoneda.append('<option data-simbolo="'+item.Simbolo+'" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
+                        idMoneda.append('<option data-simbolo="' + item.Simbolo + '" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
                     });
 
                     idconvenio.append('<option value="">Seleccionar</option>');
@@ -294,8 +295,8 @@
                     //     tipo_totales_slec.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
                     // });
 
-              
-                
+
+
 
                     AlmacenesSele = response.almacen_usuario;
                     LotesSele = response.lotes;
@@ -386,26 +387,25 @@
         $(".btn-editar-persona").click(function (e) {
             var tipo = $(this).data("tipo");
             // alert(tipo );
-            if ($("#id"+tipo).val() == '') {
+            if ($("#id" + tipo).val() == '') {
                 AlertFactory.textType({
                     title: '',
-                    message: 'Debe seleccionar un '+ tipo,
+                    message: 'Debe seleccionar un ' + tipo,
                     type: 'info'
                 });
             } else {
-                var id = $("#id"+tipo).val();
+                var id = $("#id" + tipo).val();
                 // alert(id);
                 findPersona(id);
             }
         });
 
-        function findPersona(id)
-        { 
+        function findPersona(id) {
             titleModalPersona.html('Editar Persona');
-            RESTService.get('personas/find', id, function(response) {
+            RESTService.get('personas/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                     var data_p = response.data;
-                   
+                    var data_p = response.data;
+
 
                     idPersona.val(data_p[0].idPersona);
                     cTipopersona.val(data_p[0].cTipopersona).trigger('change');
@@ -415,7 +415,7 @@
                     cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
                     cNumerodocumento.val(data_p[0].cNumerodocumento);
                     dFechacaducidad.val(data_p.dFechacaducidad2);
-                    
+
                     cEmail.val(data_p[0].cEmail);
                     cCelular.val(data_p[0].cCelular);
                     dFechanacimiento.val(data_p.dFechanacimiento2);
@@ -427,12 +427,12 @@
                     cNombrePersona.val(data_p[0].cNombrePersona);
                     cSexo.val(data_p[0].cSexo);
 
-                     getDepartamentoPersona(data_p[0].cDepartamento);
-                     getProvinciaPersona(data_p[0].cProvincia,data_p[0].cDepartamento);
-                     getDistritoPersona(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                    getDepartamentoPersona(data_p[0].cDepartamento);
+                    getProvinciaPersona(data_p[0].cProvincia, data_p[0].cDepartamento);
+                    getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
 
-                     modalPersona.modal('show');
-                     console.log(data_p);
+                    modalPersona.modal('show');
+                    console.log(data_p);
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -459,7 +459,7 @@
             }
         });
 
-        
+
 
         btn_save_cliente.click(function (e) {
             saveCliente();
@@ -646,10 +646,10 @@
             }
         }
 
-       
+
 
         function getPersona(tipo) {
-        //    alert(tipo);
+            //    alert(tipo);
             var bval = true;
             bval = bval && $("#documento_" + tipo).required();
             if (bval) {
@@ -669,7 +669,7 @@
                             $("." + tipo).val("");
 
                         } else {
-                           
+
                             // alert(tipo);
                             // alert(datos[0].cTipodocumento);
                             $("#tipo_documento_" + tipo).val(datos[0].cTipodocumento);
@@ -1299,9 +1299,32 @@
                 var costo_total = "";
                 var precio = "";
                 var precioTotal = "";
-                addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal);
-                modalNada.modal('hide');
-                modalMovimietoArticulo.modal('hide');
+
+                var id_tipo_cliente = id_cliente_tipo_or.val();
+                var id = idProductoMN.val() + "_" + id_tipo_cliente + "_" + idMoneda.val();
+                // alert(id);
+                RESTService.get('orden_servicios/get_precios_list', id, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        if (response.newPrecio != "") {
+                            precio = response.newPrecio;
+                        }
+
+                        var impuesto_articulo = $("#impuesto_articulo").val();
+                        var lote_articulo = $("#lote_articulo").val();
+                        var cOperGrat = "N"
+                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat);
+                        modalNada.modal('hide');
+                        modalMovimietoArticulo.modal('hide');
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error . Intente nuevamente.',
+                            type: 'info'
+                        });
+                    }
+                })
+
+
             }
 
         }
@@ -1362,7 +1385,11 @@
             $("#impuesto_articulo").val(impuesto);
             $("#lote_articulo").val(lote);
             $("#posee-serie").val(serie);
+            // alert("focusss selectsssss");
+           
             modalNada.modal('show');
+            $("#cantProductoMN").focus();
+            $("#cantProductoMN").select();
             costoNa.val(costo);
 
             // }
@@ -1826,385 +1853,389 @@
 
 
 
-        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total) {
-            // alert("price " +precio);
-            var id_tipo_cliente = id_cliente_tipo_or.val();
-            var id = idProducto + "_" + id_tipo_cliente + "_" + idMoneda.val();
-            var impuesto_articulo = $("#impuesto_articulo").val();
-            var lote_articulo = $("#lote_articulo").val();
-            // alert(id);
-            RESTService.get('orden_servicios/get_precios_list', id, function (response) {
-                if (!_.isUndefined(response.status) && response.status) {
-                    // console.log(response.data);
+        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat) {
 
-                    // return false;
-                    var precio = 0;
-                    if (response.newPrecio != "") {
-                        precio = response.newPrecio;
+            // var precio = 0;
+            // if (response.newPrecio != "") {
+            //     precio = response.newPrecio;
+            // }
+
+            // alert(precio);
+            acodigos.push(codigo);
+            // alert(costo+" c "+ costo_total+" c "+ precio);
+            // console.log(idLocalizacion);
+            var costonew = 0;
+            var precionew = 0;
+
+            if (costo != 0 || costo != "") {
+                costonew = Number(costo);
+            };
+            if (precio != 0 || precio != "") {
+                precionew = Number(precio);
+            };
+
+            var impor = Number(cantProducto) * Number(costonew);
+            var pretotal = Number(cantProducto) * Number(precionew);
+            // alert(pretotal);
+            //  if(naturalezaGeneral=="C"){
+            //     impor=0;
+            //  }
+            var tr = $('<tr id="tr_idArticulo' + codigo + '"></tr>');
+            var td1 = $('<td>' + desProducto + '</td>');
+
+            var td3;
+            var inp3;
+            // if(naturalezaGeneral=="S" || naturalezaGeneral=="A" ){
+            //     var tdpr = $('<td></td>');
+            //     var inpr = $('<input type="number" id="preMs_'+codigo+'" min="1" class="m_articulo_precio form-control input-sm" value="' + precionew + '" />');
+            // }else{
+            // precionew = "";
+            var tdpr = $('<td><p>0</p></td>');
+            var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  />');
+            // }
+
+            // if(naturalezaGeneral=="E" || naturalezaGeneral=="C"){
+            //     var td4 = $('<td></td>');
+            //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
+            // }else{
+            var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' +precionew+ '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
+            var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" />');
+            // }
+
+            // if(naturalezaGeneral=="C"){
+            //     var tdy = $('<td></td>');
+            //     var td2 = $('<td></td>');
+            //     var inpy=$('<select  data-arts="'+idProducto+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm" disabled></select>');
+            //     var inpl=$('<select id="'+codigo+'" data-idArl="'+idProducto+'" class="m_articulo_idLoc form-control input-sm" disabled ></select>');
+            //     var td3 = $('<td><p></p></td>');
+            //     var inp3 = $('<input type="hidden" id="canMs_'+codigo+'" class="m_articulo_cantidad" value="0" />');
+            // }else{
+            if (ver == 'A') {
+                var td3 = $('<td style="width: 40px !important;" class="text-center"></td>');
+                var inp3 = $('<input onkeypress="return soloNumeros(event)" type="text" style="width: 40px !important;" id="canMs_' + codigo + '" codigo="' + codigo + '" onkeypress="return soloNumeros(event)" codigo="' + codigo + '" name="cantidad[]" class="m_articulo_cantidad form-control input-sm" value="' + cantProducto + '" />');
+            } else {
+                var td3 = $('<td style="width: 30px !important;"><p>' + cantProducto + '</p></td>');
+                var inp3 = $('<input type="hidden" style="width: 30px !important;" id="canMs_' + codigo + '" class="m_articulo_cantidad"  impuesto_articulo="' + impuesto_articulo + '" codigo="' + codigo + '" name="cantidad[]" value="' + cantProducto + '" />');
+            }
+            var td2 = $('<td></td>');
+            var tdy = $('<td></td>');
+            var inpy = $('<select name="idalmacen[]" data-arts="' + idProducto + '" id="Al_' + codigo + '" data-idAraAl="' + codigo + '" class="m_articulo_idAlm form-control input-sm"></select>');
+            var inpl = $('<select name="idlocalizacion[]" id="' + codigo + '" data-idArl="' + idProducto + '" class="m_articulo_idLoc form-control input-sm"></select>');
+
+            var td_lote = $('<td></td>');
+            var disabled_lote = "";
+            if (lote_articulo == "0") {
+                disabled_lote = 'disabled="disabled"';
+            }
+
+            var select_lote = $('<select ' + disabled_lote + ' name="idlote[]" id="lote_' + codigo + '" class="select_lote form-control input-sm" lote_articulo="' + lote_articulo + '"></select>');
+
+            var td_descuentos = $('<td></td>');
+            var select_descuento = $('<select impuesto_articulo="' + impuesto_articulo + '" name="iddescuento[]" codigo="' + codigo + '" id="descuento_' + codigo + '" class="select_descuento form-control input-sm"></select>');
+
+            // }
+
+
+            var td5 = $('<td><p>' + pretotal.toFixed(2) + '</p></td>');
+            var tdpreT = $('<td><p></p></td>');
+            var inp = $('<input type="hidden" class="m_articulo_id" name="idarticulo[]" value="' + idProducto + '" />');
+
+            var inp5 = $('<input type="hidden" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(2) + '" />');
+            var inpPreTo = $('<input type="hidden" class="m_articulo_montoDescuento" codigo="' + codigo + '"  name="monto_descuento[]" />');
+
+            var op = $('<option value="" selected>Seleccione</option>');
+            var fclt = $('<input type="hidden" class="m_codigo_lote" value="' + codl + '" />');
+            var fdlt = $('<input type="hidden" class="m_dato_lote" value="' + datl + '" />');
+            var identificador_serie_bd = $('<input type="hidden" class="identificador_serie_bd" value="' + codigo + '" />');
+            td1.append(inp).append(fclt).append(fdlt).append(identificador_serie_bd);
+
+
+            td2.append(inpy);
+            tdy.append(inpl);
+            td_lote.append(select_lote);
+            td_descuentos.append(select_descuento);
+            td3.append(inp3);
+            td4.append(inp4);
+            td5.append(inp5);
+            tdpr.append(inpr);
+            tdpreT.append(inpPreTo);
+            // var td6 = $('<td class="text-center"></td>');
+            // var btn1 = $('<button class="btn btn-info btn-xs verUpdate" title="ver" data-cantiShow="' + cantProducto + '" data-descrip="' + desProducto + '" data-idProducto="' + idProducto + '" data-tShow="' + tipo + '" data-idv="' + codigo + '" type="button"><span class="fa fa-eye"></span></button>');
+            var td8 = $('<td class="text-center"></td>');
+
+            var button_series = "";
+
+            if ($("#posee-serie").val() == "1") {
+                button_series = '&nbsp;&nbsp;<button class="btn btn-success btn-xs agregar-series" data-tipo="' + tipo + '" title="Agregar Series" data-id="' + codigo + '" data-idarticulo="' + idProducto + '" data-articulo="' + desProducto + '" data-costo="' + costo + '"  data-posee-serie="' + $("#posee-serie").val() + '" type="button"><span class="fa fa-plus"></span>&nbsp;Agregar Series</button>';
+            }
+
+            var btn3 = $('<center><button class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
+            // td6.append(btn1);
+
+            var monto_exonerado = 0;
+            var monto_afecto = 0;
+            var monto_inafecto = 0;
+            var impuestos = 0;
+            var valor_igv = parseFloat($("#valor_igv").val());
+            var monto_subtotal = pretotal;
+            // alert(impuesto_articulo);
+
+            if (impuesto_articulo == "0") {
+                monto_exonerado = pretotal;
+            } else {
+                // alert(valor_igv);
+                monto_afecto = pretotal;
+                impuestos = pretotal * valor_igv / 100;
+                pretotal = pretotal + impuestos;
+            }
+
+            var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="impuestos"><p>' + impuestos.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="' + impuestos.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(2) + '"></td>';
+
+            var check = "";
+
+            if (cOperGrat == "S") {
+                check = "checked";
+            }
+
+            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass" type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
+
+
+            td8.append(btn3);
+            tr.append(td1).append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(chek).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
+            articulo_mov_det.append(tr);
+            addAlmaSelec(codigo);
+            addlocSele(codigo);
+            obtener_descuentos(codigo, idProducto);
+            obtener_lotes(codigo);
+
+
+            $('.delMovPro').click(function (e) {
+                var code = $(this).attr('data-id');
+                var tip = $(this).attr('data-tipo');
+                AlertFactory.confirm({
+                    title: '',
+                    message: '¿Está seguro que desea quitar este Artículo?',
+                    confirm: 'Si',
+                    cancel: 'No'
+                }, function () {
+                    if (tip == "NA") {
+                        var arrTna = aartMN.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartMN = arrTna;
+                    } else if (tip == "K") {
+                        var arrTK = aartMK.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartMK = arrTK;
+                    } else if (tip == "LE") {
+                        var arrTLE = aartMLE.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartMLE = arrTLE;
+                    } else if (tip == "LN") {
+                        var arrTLN = aartML.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartML = arrTLN;
+                    } else if (tip == "SN") {
+                        var arrTSN = aartMSN.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartMSN = arrTSN;
+                    } else if (tip == "SE") {
+                        var arrTSE = aartMSE.filter(function (car) {
+                            return car.identificador !== code;
+                        })
+                        aartMSE = arrTSE;
                     }
-
-                    // alert(precio);
-                    acodigos.push(codigo);
-                    // alert(costo+" c "+ costo_total+" c "+ precio);
-                    // console.log(idLocalizacion);
-                    var costonew = 0;
-                    var precionew = 0;
-
-                    if (costo != 0 || costo != "") {
-                        costonew = Number(costo);
-                    };
-                    if (precio != 0 || precio != "") {
-                        precionew = Number(precio);
-                    };
-
-                    var impor = Number(cantProducto) * Number(costonew);
-                    var pretotal = Number(cantProducto) * Number(precionew);
-                    // alert(pretotal);
-                    //  if(naturalezaGeneral=="C"){
-                    //     impor=0;
-                    //  }
-                    var tr = $('<tr id="tr_idArticulo' + codigo + '"></tr>');
-                    var td1 = $('<td>' + desProducto + '</td>');
-
-                    var td3;
-                    var inp3;
-                    // if(naturalezaGeneral=="S" || naturalezaGeneral=="A" ){
-                    //     var tdpr = $('<td></td>');
-                    //     var inpr = $('<input type="number" id="preMs_'+codigo+'" min="1" class="m_articulo_precio form-control input-sm" value="' + precionew + '" />');
-                    // }else{
-                    // precionew = "";
-                    var tdpr = $('<td><p>0</p></td>');
-                    var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  />');
-                    // }
-
-                    // if(naturalezaGeneral=="E" || naturalezaGeneral=="C"){
-                    //     var td4 = $('<td></td>');
-                    //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
-                    // }else{
-                    var td4 = $('<td><p>' + precionew + '</p></td>');
-                    var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" /><input name="precio[]" type="hidden" id="cosMs_' + codigo + '" min="1" class="m_articulo_costo form-control input-sm" value="' + precionew + '" />');
-                    // }
-
-                    // if(naturalezaGeneral=="C"){
-                    //     var tdy = $('<td></td>');
-                    //     var td2 = $('<td></td>');
-                    //     var inpy=$('<select  data-arts="'+idProducto+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm" disabled></select>');
-                    //     var inpl=$('<select id="'+codigo+'" data-idArl="'+idProducto+'" class="m_articulo_idLoc form-control input-sm" disabled ></select>');
-                    //     var td3 = $('<td><p></p></td>');
-                    //     var inp3 = $('<input type="hidden" id="canMs_'+codigo+'" class="m_articulo_cantidad" value="0" />');
-                    // }else{
-                    if (ver == 'A') {
-                        var td3 = $('<td style="width: 30px !important;" class="text-center"></td>');
-                        var inp3 = $('<input  type="text" style="width: 30px !important;" id="canMs_' + codigo + '" onkeypress="return soloNumeros(event)" codigo="' + codigo + '" class="m_articulo_cantidad" name="cantidad[]" form-control input-sm" value="' + cantProducto + '" />');
-                    } else {
-                        var td3 = $('<td style="width: 30px !important;"><p>' + cantProducto + '</p></td>');
-                        var inp3 = $('<input type="hidden" style="width: 30px !important;" id="canMs_' + codigo + '" class="m_articulo_cantidad"  codigo="' + codigo + '" name="cantidad[]" value="' + cantProducto + '" />');
-                    }
-                    var td2 = $('<td></td>');
-                    var tdy = $('<td></td>');
-                    var inpy = $('<select name="idalmacen[]" data-arts="' + idProducto + '" id="Al_' + codigo + '" data-idAraAl="' + codigo + '" class="m_articulo_idAlm form-control input-sm"></select>');
-                    var inpl = $('<select name="idlocalizacion[]" id="' + codigo + '" data-idArl="' + idProducto + '" class="m_articulo_idLoc form-control input-sm"></select>');
-
-                    var td_lote = $('<td></td>');
-                    var disabled_lote = "";
-                    if(lote_articulo == "0") {
-                        disabled_lote = 'disabled="disabled"';
-                    }
-
-                    var select_lote = $('<select '+disabled_lote+' name="idlote[]" id="lote_' + codigo + '" class="select_lote form-control input-sm"></select>');
-
-                    var td_descuentos = $('<td></td>');
-                    var select_descuento = $('<select name="iddescuento[]" codigo="' + codigo + '" id="descuento_' + codigo + '" class="select_descuento form-control input-sm"></select>');
-
-                    // }
-
-
-                    var td5 = $('<td><p>' + pretotal.toFixed(2) + '</p></td>');
-                    var tdpreT = $('<td><p></p></td>');
-                    var inp = $('<input type="hidden" class="m_articulo_id" name="idarticulo[]" value="' + idProducto + '" />');
-
-                    var inp5 = $('<input type="hidden" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(2) + '" />');
-                    var inpPreTo = $('<input type="hidden" class="m_articulo_montoDescuento" codigo="' + codigo + '"  name="monto_descuento[]" />');
-
-                    var op = $('<option value="" selected>Seleccione</option>');
-                    var fclt = $('<input type="hidden" class="m_codigo_lote" value="' + codl + '" />');
-                    var fdlt = $('<input type="hidden" class="m_dato_lote" value="' + datl + '" />');
-                    var identificador_serie_bd = $('<input type="hidden" class="identificador_serie_bd" value="' + codigo + '" />');
-                    td1.append(inp).append(fclt).append(fdlt).append(identificador_serie_bd);
-
-
-                    td2.append(inpy);
-                    tdy.append(inpl);
-                    td_lote.append(select_lote);
-                    td_descuentos.append(select_descuento);
-                    td3.append(inp3);
-                    td4.append(inp4);
-                    td5.append(inp5);
-                    tdpr.append(inpr);
-                    tdpreT.append(inpPreTo);
-                    // var td6 = $('<td class="text-center"></td>');
-                    // var btn1 = $('<button class="btn btn-info btn-xs verUpdate" title="ver" data-cantiShow="' + cantProducto + '" data-descrip="' + desProducto + '" data-idProducto="' + idProducto + '" data-tShow="' + tipo + '" data-idv="' + codigo + '" type="button"><span class="fa fa-eye"></span></button>');
-                    var td8 = $('<td class="text-center"></td>');
-
-                    var button_series = "";
-
-                    if ($("#posee-serie").val() == "1") {
-                        button_series = '&nbsp;&nbsp;<button class="btn btn-success btn-xs agregar-series" data-tipo="' + tipo + '" title="Agregar Series" data-id="' + codigo + '" data-idarticulo="' + idProducto + '" data-articulo="' + desProducto + '" data-costo="' + costo + '"  data-posee-serie="' + $("#posee-serie").val() + '" type="button"><span class="fa fa-plus"></span>&nbsp;Agregar Series</button>';
-                    }
-
-                    var btn3 = $('<center><button class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
-                    // td6.append(btn1);
-
-                    var monto_exonerado = 0;
-                    var monto_afecto = 0;
-                    var monto_inafecto = 0;
-                    var impuestos = 0;
-                    var valor_igv = parseFloat($("#valor_igv").val());
-                    var monto_subtotal = pretotal;
-                    // alert(impuesto_articulo);
-
-                    if(impuesto_articulo == "0") {
-                        monto_exonerado = pretotal;
-                    } else {
-                        // alert(valor_igv);
-                        impuestos = pretotal * valor_igv / 100;
-                        pretotal = pretotal + impuestos;
-                        monto_afecto = pretotal;
-                    }
-
-                    var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="impuestos"><p>' + impuestos.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="' + impuestos.toFixed(2) + '"></td>';
-                    html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(2) + '"></td>';
-
-                    var check="";
-                   
-                    if(false){
-                        check="checked";
-                      
-                    }
-
-                    var chek=$('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="'+codigo+'"  class="checkClass" type="checkbox" id="pOper'+codigo+'" '+check+'  > <input type="hidden" name="cOperGrat[]" codigo="'+codigo+'" id="cOperGrat_'+codigo+'" /> <input type="hidden" name="nOperGratuita[]" codigo="'+codigo+'" id="nOperGratuita_'+codigo+'" /> </label></div></td>');
-
-
-                    td8.append(btn3);
-                    tr.append(td1).append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(chek).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
-                    articulo_mov_det.append(tr);
-                    addAlmaSelec(codigo);
-                    addlocSele(codigo);
-                    obtener_descuentos(codigo, idProducto);
-                    obtener_lotes(codigo);
-
-
-                    $('.delMovPro').click(function (e) {
-                        var code = $(this).attr('data-id');
-                        var tip = $(this).attr('data-tipo');
-                        AlertFactory.confirm({
-                            title: '',
-                            message: '¿Está seguro que desea quitar este Artículo?',
-                            confirm: 'Si',
-                            cancel: 'No'
-                        }, function () {
-                            if (tip == "NA") {
-                                var arrTna = aartMN.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartMN = arrTna;
-                            } else if (tip == "K") {
-                                var arrTK = aartMK.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartMK = arrTK;
-                            } else if (tip == "LE") {
-                                var arrTLE = aartMLE.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartMLE = arrTLE;
-                            } else if (tip == "LN") {
-                                var arrTLN = aartML.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartML = arrTLN;
-                            } else if (tip == "SN") {
-                                var arrTSN = aartMSN.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartMSN = arrTSN;
-                            } else if (tip == "SE") {
-                                var arrTSE = aartMSE.filter(function (car) {
-                                    return car.identificador !== code;
-                                })
-                                aartMSE = arrTSE;
-                            }
-                            $('#tr_idArticulo' + code).remove();
-                        });
-                        e.preventDefault();
-                    });
-
-                    $('.addMovPro').click(function (e) {
-                        var idArticuloAl = $(this).attr('data-ida');
-                        modalAlmacenArticulo.modal('show');
-                        $('#search_cc3').val('');
-                        $('#LoadRecordsButtonCC3').click();
-                        e.preventDefault();
-                    });
-                    // $('.m_articulo_idLoc').change(function (e) {
-                    //     var idl = $(this).val();
-                    //     var idAl=$(this).attr('data-idArl');
-                    //     var stock=getStock(idl,idAl);
-                    //     e.preventDefault();
-                    // });
-                    $('.m_articulo_idAlm').change(function (e) {
-                        var idl = $(this).val();
-                        var ident = $(this).attr('data-idAraAl');
-                        var idPrAl = $(this).attr('data-arts');
-
-                        getLocaStock(idl, ident, idPrAl, idLocalizacion);
-                        e.preventDefault();
-                    });
-                    // $('.m_articulo_cantidad').keyup(function (e) {
-                    //     var cantidap = $(this).val();
-                    //     var costo = $(this).closest("tr").find("td:eq(4)").children("input").val();
-                    //     var importe = Number(cantidap) * Number(costo);
-                    //     $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                    //     $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
-                    //     if (naturalezaGeneral == "S" || naturalezaGeneral == "A") {
-                    //         var preciUni = $(this).closest("tr").find("td:eq(6)").children("input").val();
-                    //         var precioTotal = Number(cantidap) * Number(preciUni);
-                    //         $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-                    //         $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
-                    //     }
-                    // })
-                    $('.m_articulo_precio').keyup(function (e) {
-                        var preciop = $(this).val();
-                        var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
-                        var precioTotal = Number(cantidad) * Number(preciop);
-                        $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-                        $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
-                    })
-
-                    $('.m_articulo_precio').change(function (e) {
-                        var preciop = $(this).val();
-                        var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
-                        var precioTotal = Number(cantidad) * Number(preciop);
-                        $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-                        $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
-                    })
-
-                    $('.m_articulo_costo').keyup(function (e) {
-                        var costop = $(this).val();
-                        var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
-                        var importe = Number(cantidad) * Number(costop);
-                        $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                        $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
-                    })
-                    $('#cosMs_' + codigo).change(function (e) {
-                        var costop = $(this).val();
-                        var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
-                        var importe = Number(cantidad) * Number(costop);
-                        $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                        $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
-                    })
-
-                    if (idAlmacen != "") {
-                        $("#Al_" + codigo).val(idAlmacen).trigger('change');
-                        $("#" + codigo).val(idLocalizacion).trigger('change');
-
-                        $("#cosMs_" + codigo).val(Number(costo));
-                        var cos = Number(costo_total);
-                        $("#tr_idArticulo" + codigo).find("td:eq(5)").children("p").text(cos);
-                        $("#tr_idArticulo" + codigo).find("td:eq(5)").children("input").val(cos);
-                    };
-
-                    calcular_totales();
-
-                    if($("#tipo_solicitud").val() == "2" || $("#tipo_solicitud").val() == "3") {
-                        $("#tipo_solicitud").trigger("change");
-                    }
-
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green'
-                    }).on('ifChanged', function (event) {
-                        $(event.target).click();
-                       
-
-                        var codigo = $(this).data("idcheck");
-                        if($("#pOper"+codigo).prop('checked')){
-
-                            $(".m_articulo_precioTotal[codigo='" + codigo + "']").val(0);
-                            $(".m_articulo_precioTotal[codigo='" + codigo + "']").siblings("p").text(0);
-
-                            $(".select_descuento[codigo='" + codigo + "']").val("");
-                            $(".select_descuento[codigo='" + codigo + "']").attr("disabled", "disabled");
-                            // console.log($(".select_descuento[codigo='" + codigo + "']")[0]);
-                            $(".m_articulo_precio[codigo='" + codigo + "']").val(0);
-                            $(".m_articulo_precio[codigo='" + codigo + "']").siblings("p").text(0);
-
-                            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(0);
-                            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(0);
-
-
-                            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(0);
-                            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(0);
-
-                            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(0);
-                            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(0);
-
-                            $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(0);
-                            $(".monto_afecto[codigo=" + codigo + "]").find("p").text(0);
-
-                            $("input[name='monto_inafecto[]'][codigo=" + codigo + "]").val(0);
-                            $(".monto_inafecto[codigo=" + codigo + "]").find("p").text(0);
-
-                            $("input[name='impuestos[]'][codigo=" + codigo + "]").val(0);
-                            $(".impuestos[codigo=" + codigo + "]").find("p").text(0);
-                            
-                            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(0);
-                            $(".total[codigo=" + codigo + "]").find("p").text(0);
-
-                            var cantidad = parseFloat($("input[name='cantidad[]'][codigo=" + codigo + "]").val());
-                            var precio = parseFloat($("#cosMs_" + codigo).val());
-                            // alert(cantidad);
-                            // alert(precio);
-                            var nOperGratuita = cantidad * precio;
-                            $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(nOperGratuita);
-                            $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("S");
-
-                        } else {
-                            // alert("hola");
-                            $("#canMs_"+codigo).trigger("keyup");
-                            $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("N");
-                            $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(0);
-
-                            
-                        }
-
-                        calcular_totales();
-                    });
-
-                } else {
-                    AlertFactory.textType({
-                        title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
-                        type: 'info'
-                    });
-                }
-
-
+                    $('#tr_idArticulo' + code).remove();
+                });
+                e.preventDefault();
             });
 
-           
-            
-            
+            $('.addMovPro').click(function (e) {
+                var idArticuloAl = $(this).attr('data-ida');
+                modalAlmacenArticulo.modal('show');
+                $('#search_cc3').val('');
+                $('#LoadRecordsButtonCC3').click();
+                e.preventDefault();
+            });
+            // $('.m_articulo_idLoc').change(function (e) {
+            //     var idl = $(this).val();
+            //     var idAl=$(this).attr('data-idArl');
+            //     var stock=getStock(idl,idAl);
+            //     e.preventDefault();
+            // });
+            $('.m_articulo_idAlm').change(function (e) {
+                var idl = $(this).val();
+                var ident = $(this).attr('data-idAraAl');
+                var idPrAl = $(this).attr('data-arts');
+
+                getLocaStock(idl, ident, idPrAl, idLocalizacion);
+                e.preventDefault();
+            });
+            // $('.m_articulo_cantidad').keyup(function (e) {
+            //     var cantidap = $(this).val();
+            //     var costo = $(this).closest("tr").find("td:eq(4)").children("input").val();
+            //     var importe = Number(cantidap) * Number(costo);
+            //     $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
+            //     $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+            //     if (naturalezaGeneral == "S" || naturalezaGeneral == "A") {
+            //         var preciUni = $(this).closest("tr").find("td:eq(6)").children("input").val();
+            //         var precioTotal = Number(cantidap) * Number(preciUni);
+            //         $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
+            //         $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+            //     }
+            // })
+            $('.m_articulo_precio').keyup(function (e) {
+                var preciop = $(this).val();
+                var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
+                var precioTotal = Number(cantidad) * Number(preciop);
+                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
+                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+            })
+
+            $('.m_articulo_precio').change(function (e) {
+                var preciop = $(this).val();
+                var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
+                var precioTotal = Number(cantidad) * Number(preciop);
+                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
+                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+            })
+
+            $('.m_articulo_costo').keyup(function (e) {
+                var costop = $(this).val();
+                var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
+                var importe = Number(cantidad) * Number(costop);
+                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+            })
+            $('#cosMs_' + codigo).change(function (e) {
+                var costop = $(this).val();
+                var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
+                var importe = Number(cantidad) * Number(costop);
+                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+            })
+
+            if (idAlmacen != "") {
+                // alert(idAlmacen);
+                $("#Al_" + codigo).val(idAlmacen).trigger('change');
+                $("#" + codigo).val(idLocalizacion).trigger('change');
+
+                $("#cosMs_" + codigo).val(Number(costo));
+                var cos = Number(costo_total);
+                $("#tr_idArticulo" + codigo).find("td:eq(5)").children("p").text(cos);
+                $("#tr_idArticulo" + codigo).find("td:eq(5)").children("input").val(cos);
+            };
+
+            calcular_totales();
+
+            if ($("#tipo_solicitud").val() == "2" || $("#tipo_solicitud").val() == "3") {
+                $("#tipo_solicitud").trigger("change");
+            }
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green'
+            }).on('ifChanged', function (event) {
+                $(event.target).click();
+
+
+                var codigo = $(this).data("idcheck");
+                if ($("#pOper" + codigo).prop('checked')) {
+
+                    $(".m_articulo_precioTotal[codigo='" + codigo + "']").val(0);
+                    $(".m_articulo_precioTotal[codigo='" + codigo + "']").siblings("p").text(0);
+
+                    $(".select_descuento[codigo='" + codigo + "']").val("");
+                    $(".select_descuento[codigo='" + codigo + "']").attr("disabled", "disabled");
+                    // console.log($(".select_descuento[codigo='" + codigo + "']")[0]);
+                    $(".m_articulo_precio[codigo='" + codigo + "']").val(0);
+                    $(".m_articulo_precio[codigo='" + codigo + "']").siblings("p").text(0);
+
+                    $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(0);
+                    $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(0);
+
+
+                    $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(0);
+                    $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(0);
+
+                    $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(0);
+                    $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(0);
+
+                    $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(0);
+                    $(".monto_afecto[codigo=" + codigo + "]").find("p").text(0);
+
+                    $("input[name='monto_inafecto[]'][codigo=" + codigo + "]").val(0);
+                    $(".monto_inafecto[codigo=" + codigo + "]").find("p").text(0);
+
+                    $("input[name='impuestos[]'][codigo=" + codigo + "]").val(0);
+                    $(".impuestos[codigo=" + codigo + "]").find("p").text(0);
+
+                    $("input[name='monto_total[]'][codigo=" + codigo + "]").val(0);
+                    $(".total[codigo=" + codigo + "]").find("p").text(0);
+
+                    var cantidad = parseFloat($("input[name='cantidad[]'][codigo=" + codigo + "]").val());
+                    var precio = parseFloat($("#precio_unitario_" + codigo).val());
+                    // alert(cantidad);
+                    // alert(precio);
+                    var nOperGratuita = cantidad * precio;
+                    $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(nOperGratuita);
+                    $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("S");
+
+                } else {
+                    // alert("hola");
+                    $("#canMs_" + codigo).trigger("keyup");
+                    $("input[name='cOperGrat[]'][codigo=" + codigo + "]").val("N");
+                    $("input[name='nOperGratuita[]'][codigo=" + codigo + "]").val(0);
+
+
+                }
+
+                calcular_totales();
+            });
+
+
+
+
+
+
 
         }
 
-        
-       
 
-        
+
+        $(document).on("blur", "input[name='precio_unitario[]']", function () {
+            // console.log("perdio");
+            var preciofin = $(this).val();
+            var precioOr = $(this).attr('data-precioorigen');
+            var codigo = $(this).attr("codigo");
+            // alert(precioOr);
+            var newpp = Number(precioOr) + Number(redondeo);
+            var newpn = Number(precioOr) - Number(redondeo);
+            if (preciofin > newpp || preciofin < newpn) {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'El precio del producto solo se puede ajustar +- ' + redondeo,
+                    type: 'info'
+                });
+                
+                $(this).val(precioOr);
+
+
+            }
+            $("#canMs_" + codigo).trigger("keyup");
+            // calcular_total_MO();
+            // sumar_key();
+
+        });
+
 
         $(document).on("click", ".agregar-series", function () {
             var costo = $(this).data("costo");
@@ -2220,7 +2251,7 @@
 
 
         $(document).on("change", "#IdMoneda", function () {
-            if($(this).val() != "") {
+            if ($(this).val() != "") {
 
                 var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
                 // alert("hola " + simbolo);
@@ -2234,6 +2265,7 @@
             var monto_descuento = 0;
             var tipo_descuento = $(this).val();
             var codigo = $(this).attr("codigo");
+            var impuesto_articulo = $(this).attr("impuesto_articulo");
             var idtipo = "";
             var descuento = 0;
             if ($(this).val() != "") {
@@ -2244,7 +2276,7 @@
             }
             var precio_total = parseFloat($(".m_articulo_precioTotal[codigo='" + codigo + "']").val());
             // alert(precio_total);
-            if(idtipo == "P") {
+            if (idtipo == "P") {
 
                 descuento = precio_total * porcentaje_descuento / 100;
             } else {
@@ -2261,13 +2293,35 @@
 
             var nuevo_total = precio_total - descuento;
             // alert(nuevo_total);
-            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
-            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
-            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
+           
+            var monto_exonerado = 0;
+            var monto_afecto = 0;
+            // var monto_inafecto = 0;
+            var impuestos = 0;
+            var valor_igv = parseFloat($("#valor_igv").val());
+            var monto_subtotal = nuevo_total;
+            
+            if(impuesto_articulo == "0") {
+                monto_exonerado = nuevo_total;
+            } else {
+                monto_afecto = nuevo_total;
+                impuestos = nuevo_total * valor_igv / 100;
+                nuevo_total = nuevo_total + impuestos;
+            }
+            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(monto_exonerado.toFixed(2));
+            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(monto_exonerado.toFixed(2));
+            
+            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(2));
+            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
-            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(2));
-            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(2));
+            $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
+            $(".monto_afecto[codigo=" + codigo + "]").find("p").text(monto_afecto.toFixed(2));
+
+            $("input[name='impuestos[]'][codigo=" + codigo + "]").val(impuestos.toFixed(2));
+            $(".impuestos[codigo=" + codigo + "]").find("p").text(impuestos.toFixed(2));
+
             $(".total[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(2));
+            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
 
             // console.log();
             calcular_totales();
@@ -2295,7 +2349,7 @@
                 // alert();
 
                 idtipo = $(this).find("option[value='" + $(this).val() + "']").attr("idtipo");
-                if(idtipo == "P") {
+                if (idtipo == "P") {
 
                     porTotal = Number((Number(porc) * Number($("#t_monto_subtotal").val())) / 100);
                 } else {
@@ -2332,7 +2386,7 @@
             }
 
             var codigo = $(this).attr("codigo");
-            var precio = parseFloat($("#cosMs_" + codigo).val());
+            var precio = parseFloat($("#precio_unitario_" + codigo).val());
             var precio_total = cantidad * precio;
             var costo = parseFloat($("#costo_" + codigo).val());
 
@@ -2391,7 +2445,7 @@
                 t_nOperGratuita += parseFloat(nOperGratuita.value);
             });
             // alert(t_nOperGratuita);
-            if(isNaN(t_nOperGratuita)) {
+            if (isNaN(t_nOperGratuita)) {
                 t_nOperGratuita = 0;
             }
             $("#monto_descuento_detalle").val(t_monto_descuento.toFixed(2));
@@ -2433,37 +2487,37 @@
         function obtener_descuentos(codigo, idarticulo) {
             var idDescSele = $("#descuento_" + codigo);
             var hoy = new Date();
-            var hAnio=hoy.getFullYear();
-            var hmes=hoy.getMonth()+1;
-            if(Number(hmes)<10){
-                hmes='0'+String(hmes);
+            var hAnio = hoy.getFullYear();
+            var hmes = hoy.getMonth() + 1;
+            if (Number(hmes) < 10) {
+                hmes = '0' + String(hmes);
             }
 
-            var hdia=hoy.getDate();
-            if(Number(hdia)<10){
-                hdia='0'+String(hdia);
+            var hdia = hoy.getDate();
+            if (Number(hdia) < 10) {
+                hdia = '0' + String(hdia);
             }
-            var actu=hAnio+'-'+hmes+'-'+hdia;
+            var actu = hAnio + '-' + hmes + '-' + hdia;
 
             idDescSele.append('<option value="" selected>Seleccionar</option>');
             _.each(DescuentosSele, function (item) {
                 // idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
 
-                var mo=idMoneda.val();
-                if(item.nIdProducto==idarticulo || item.cTipoAplica=='T'){
-                       var por=Number(item.nPorcDescuento);
-                       var monto=Number(item.nMonto);
-                    if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0) && item.cTipoAplica=='L'){
-                        if(item.dFecIni<=actu && item.dFecFin>actu){
-                            var valDes=item.id+'*'+por+'*'+monto;
+                var mo = idMoneda.val();
+                if (item.nIdProducto == idarticulo || item.cTipoAplica == 'T') {
+                    var por = Number(item.nPorcDescuento);
+                    var monto = Number(item.nMonto);
+                    if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0) && item.cTipoAplica == 'L') {
+                        if (item.dFecIni <= actu && item.dFecFin > actu) {
+                            var valDes = item.id + '*' + por + '*' + monto;
                             // console.log(valDes,idDescuento);
                             // if(valDes==idDescuento){
                             //     selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" selected>'+item.descripcion+'</option>');
                             // }else{
-                                idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+                            idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
                             // }
-                            
-                             
+
+
                         }
                     }
                 }
@@ -2476,6 +2530,7 @@
             naturalezaGeneral = "S";
             var idLocali = $("#" + ident);
             var id = idl;
+            // alert(id);
             RESTService.get('register_movements/getLocaStock', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
@@ -2522,7 +2577,7 @@
         }
         $scope.datos_credito = function () {
             // $("#idconyugue").focus();
-            
+
 
             if (articulo_mov_det.html() == "") {
                 AlertFactory.textType({
@@ -2575,7 +2630,7 @@
         });
 
         $scope.guardar_solicitud = function () {
-           
+
             var bval = true;
             bval = bval && cCodConsecutivo.required();
             bval = bval && idMoneda.required();
@@ -2584,31 +2639,41 @@
             bval = bval && documento_or.required();
 
             if (bval) {
-
-                if($("#tipo_solicitud").val() == "1") {
+                if ($("#tipo_solicitud").val() == "1") {
                     var cont = 0;
                     $.each($("select[name='idalmacen[]']"), function (indexInArray, idalmacen) {
-                        console.log(idalmacen);
-                        if(idalmacen.value == "") {
+                        // console.log(idalmacen);
+                        if (idalmacen.value == "") {
                             idalmacen.classList.add("border-red");
                             idalmacen.focus();
-                            cont ++;
-                           
+                            cont++;
+
                         }
                     });
-                    
+
                     $.each($("select[name='idlocalizacion[]']"), function (indexInArray, idlocalizacion) {
-                        console.log(idlocalizacion);
-                        if(idlocalizacion.value == "") {
+                        // console.log(idlocalizacion);
+                        if (idlocalizacion.value == "") {
                             idlocalizacion.classList.add("border-red");
                             idlocalizacion.focus();
-                            cont ++;
-                         
+                            cont++;
+
+                        }
+                    });
+
+                    $.each($("select[name='idlote[]']"), function (indexInArray, idlote) {
+                        // console.log(idlote);
+                        var lote_articulo = idlote.getAttribute("lote_articulo");
+                        if (lote_articulo == "1" && idlote.value == "") {
+                            idlote.classList.add("border-red");
+                            idlote.focus();
+                            cont++;
+
                         }
                     });
                 }
                 // alert(cont);
-                if(cont > 0) {
+                if (cont > 0) {
 
                     return false;
                 }
@@ -2641,36 +2706,37 @@
         }
 
 
-        $scope.enviar_solicitud = function() {
+        $scope.enviar_solicitud = function () {
             var bval = true;
             bval = bval && cCodConsecutivo.required();
             bval = bval && nConsecutivo.required();
             bval = bval && $("#estado").required();
-         
+
 
             if (bval) {
-                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize(),
-                function (data, textStatus, jqXHR) {
-                    if(data.status == "i") {
-                        $("#estado").val(data.datos[0].estado);
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'La solicitud se envio correctamente.',
-                            type: 'success'
-                        });
-                    } else {
-                        AlertFactory.textType({
-                            title: '',
-                            message: data.msg,
-                            type: 'info'
-                        });
-                    }
-                    
+                // alert($("#estado").val());
+                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize()+"&estado="+$("#estado").val(),
+                    function (data, textStatus, jqXHR) {
+                        if (data.status == "i") {
+                            $("#estado").val(data.datos[0].estado);
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'La solicitud se envio correctamente.',
+                                type: 'success'
+                            });
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
+                        }
 
-                }, "json");
+
+                    }, "json");
             }
 
-            
+
         }
 
         $(document).on("change", "#tipo_solicitud", function () {
@@ -2686,13 +2752,23 @@
 
             if (tipo_solicitud == "3") {
                 $(".convenio").show();
-
+                // $("#cuota_inicial").val("");
+                $("#nro_cuotas").attr("readonly", "readonly");
+            
             } else {
+                if(tipo_solicitud == "2") {
+                    $("#nro_cuotas").removeAttr("readonly");
+                    $(".inputs-credito").removeAttr("readonly");
+                }
 
+                if(tipo_solicitud == "1") {
+                    $(".montos-credito").val(0);
+                    $(".inputs-credito").attr("readonly", "readonly");
+                }
                 $(".convenio").hide();
             }
 
-            if(tipo_solicitud == "2" || tipo_solicitud == "3") {
+            if (tipo_solicitud == "2" || tipo_solicitud == "3") {
                 var t_monto_total = $("#desTotal").val();
                 // alert(t_monto_total);
                 $("#monto_venta").val(t_monto_total);
@@ -2700,6 +2776,31 @@
                 $("#cuota_inicial").attr("max", t_monto_total);
             }
         });
+
+        function find_solicitud(id) {
+
+            $.post("solicitud/find", { id: id },
+                function (data, textStatus, jqXHR) {
+                    console.log(data);
+                    Helpers.set_datos_formulario("formulario-solicitud", data.solicitud);
+                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito);
+
+                    if (data.solicitud_articulo.length > 0) {
+                        for (var i = 0; i < data.solicitud_articulo.length; i++) {
+
+                            var codigo = Math.random().toString(36).substr(2, 18);
+
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat);
+
+                        }
+                    }
+
+
+                    $("#modalSolicitud").modal("show");
+                },
+                "json"
+            );
+        }
 
         var search = getFormSearch('frm-search-brand', 'search_b', 'LoadRecordsButtonBrand');
 
@@ -2786,6 +2887,19 @@
 
                 }
 
+            },
+            recordsLoaded: function (event, data) {
+                $('.edit-solicitud').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    find_solicitud(id);
+                    e.preventDefault();
+                });
+                $('.eliminar-Orden').click(function (e) {
+                    var ide = $(this).attr('data-ide');
+                    idOrdenDelete.val(ide);
+                    modalDeleteOrden.modal("show");
+                    e.preventDefault();
+                });
             },
             formCreated: function (event, data) {
 

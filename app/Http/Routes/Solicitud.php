@@ -14,6 +14,8 @@ Route::post('solicitud/guardar_solicitud', ['as' => 'solicitud.guardar_solicitud
 Route::post('solicitud/factor_credito', ['as' => 'solicitud.factor_credito', 'uses' => 'SolicitudController@factor_credito']);
 Route::post('solicitud/enviar_solicitud', ['as' => 'solicitud.enviar_solicitud', 'uses' => 'SolicitudController@enviar_solicitud']);
 
+Route::post('solicitud/find', ['as' => 'solicitud.find', 'uses' => 'SolicitudController@find']);
+
 
 Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudController@excel']);
 

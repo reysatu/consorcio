@@ -67,9 +67,9 @@ class BaseModel extends Model
                 }
 
                 $where = array();
-                foreach ($parametros["primary_key"] as $k => $v) {
-                    array_push($where, $v);
-                }
+                $where = $parametros["primary_key"];
+               
+            
 
                 $update = DB::table($parametros["tabla"])
                 ->where($where);
