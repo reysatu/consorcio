@@ -62,7 +62,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <div class="btn-group">
-                                      <button type="button" id="btn_apertura" class="btn btn-success btn-sm">  <span class="fa fa-plus"></span>Movimiento de caja </button>
+                                      <button type="button" id="btn_MovimientoInicio" class="btn btn-success btn-sm">  <span class="fa fa-plus"></span>Movimiento de caja </button>
                                       <button type="button" id="btn_imprimirCaja" class="btn btn-info btn-sm">  <span class="fa fa-file-pdf-o"></span> Imprimir </button>
                                 </div>
                             </div>    
@@ -375,4 +375,72 @@
                     </div>
                 </div>
             </div>
+</div>
+<div class="modal" id="modalMovimientoCaja" role="dialog">
+    <div class="modal-dialog" role="document">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id="titleModalGrupoContable">Agregar Movimiento</h4>
+        </div>
+        <div class="modal-body">
+              <div class="form-horizontal">
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger hide" role="alert" id="msg_cont">
+                            <span class="fa fa-warning"></span>
+                            Debe seleccionar un Artículo
+                        </div> 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tipo</label>
+                            <div class="col-sm-4">
+                                <select  class="form-control input-sm" id="tipoMovimientoAdd">
+                                    <option value="">Seleccionar</option>
+                                    <option value="ING">INGRESO</option>
+                                    <option value="EGR">EGRESO</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-3 control-label">Forma de pago</label>
+                            <div class="col-sm-3">
+                                <select  class="form-control input-sm" id="formaPagoAdd" disabled>
+                                    <option value="EFE">EFECTIVO</option>   
+                                </select>
+                            </div>
+                           
+                        </div>
+                        <div class="form-group">
+                             <label class="col-sm-2 control-label">Moneda</label>
+                            <div class="col-sm-4">
+                                <select  class="form-control input-sm" id="idMonedaAdd">
+                                    <option value="">Seleccionar</option>
+                                    <option value="1">SOLES</option>
+                                    <option value="2">US DOLLAR</option>
+                                </select>
+                            </div>
+                            <label class="col-sm-3 control-label">Monto</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control input-sm" id="montoAdd"  onkeypress="return validDecimals(event, this, 2)" placeholder="0.00">
+                            </div>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Concepto</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control input-sm" id="conceptoAdd">
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                 </div>   
+              </div>  
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="saveAddMovimientoCaja()" >Guardar</button>  
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+      
+    </div>
 </div>

@@ -15,6 +15,7 @@ use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Requests\MovimientoCajaRequest;
 use DateTime;
 use DateTimeZone;
+use DB;
 class MovimientoCajaController extends Controller
 {
      use CajaDiariaDetalleTrait;
@@ -23,13 +24,85 @@ class MovimientoCajaController extends Controller
     {
 //        $this->middleware('json');
     }
+    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $dataCaja = $recaj->find($id);
+            $datoDet = [];
+            $total=0;
+            $totalEgre=0;
+            $totalOtrosI=0;
+            $dataCajadia=[];
+            if($data['idMonedaAdd']=='1'){
+                if($data['tipoMovimientoAdd']=='ING'){
+                    $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
+                    $totalEgre=floatval($dataCaja->totalEgresos);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
+                }else{
+                    $total=floatval($dataCaja->totalEfectivo)-floatval($data['montoAdd']);
+                    $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos);
+
+                }
+                $dataCajadia['totalOtrosIngresos'] =  $totalOtrosI;
+                $dataCajadia['totalEfectivo'] =  $total;
+                $dataCajadia['totalEgresos'] =  $totalEgre;
+            }else{
+                 if($data['tipoMovimientoAdd']=='ING'){
+                    $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
+                    $totalEgre=floatval($dataCaja->totalEgresosDol);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);
+                }else{
+                    $total=floatval($dataCaja->totalEfectivoDol)-floatval($data['montoAdd']);
+                    $totalEgre=floatval($dataCaja->totalEgresosDol)+floatval($data['montoAdd']);
+                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol);
+                }
+                $dataCajadia['totalOtrosIngresosDol'] =  $totalOtrosI;
+                $dataCajadia['totalEfectivoDol'] =  $total;
+                $dataCajadia['totalEgresosDol'] =  $totalEgre;
+            }
+            
+
+            
+            $recaj->update($id, $dataCajadia); 
+
+            $iddet = 'consecutivo';
+            $tabledet = "ERP_CajaDiariaDetalle";
+            $datoDet['codigoTipo'] =strtoupper($data['tipoMovimientoAdd']);
+            $datoDet['codigoFormaPago'] =strtoupper($data['formaPagoAdd']);
+            $datoDet['idMoneda'] =strtoupper($data['idMonedaAdd']);
+            $datoDet['monto'] =strtoupper($data['montoAdd']);
+            $datoDet['descripcion'] =strtoupper($data['conceptoAdd']);
+            $datoDet['idCajaDiaria'] =$id;
+            
+            $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
+            $repo->create($datoDet);
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+            ]);
+
+
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
     public function pdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
     {          
            
             $usuario=auth()->id();
-            date_default_timezone_set('UTC');
+            date_default_timezone_set('America/Lima');
             $fechacA= date("Y-m-d");
             $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
             $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
@@ -50,8 +123,10 @@ class MovimientoCajaController extends Controller
                 'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
                  'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
                 'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
             ]);
     }
+
  
     public function all(Request $request, CajaDiariaDetalleInterface $repo)
     {
@@ -97,6 +172,7 @@ class MovimientoCajaController extends Controller
             $dataCajaDetForDol = $recaj->getCajaDetForDol($date,$usuario);
             $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($date,$usuario);
         $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($date,$usuario);
+
         $fechacA= date("Y-m-d H:i:s");
 
         return response()->json([

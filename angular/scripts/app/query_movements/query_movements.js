@@ -81,10 +81,12 @@
                     list: false
                 },
                 fecha_proceso_s: {
-                    title: 'F. Proceso'
+                    title: 'F. Proceso',
+                    sorting: false,
                 },
                 fecha_registro_s: {
-                    title: 'F. Registro'
+                    title: 'F. Registro',
+                     sorting: false,
                 },
                 Articulo: {
                     title: 'Articulo'

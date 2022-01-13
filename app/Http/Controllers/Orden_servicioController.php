@@ -38,6 +38,9 @@ class Orden_servicioController extends Controller
                 $get_vehiculo=$repo->get_vehiSerie($data[0]->cPlacaVeh);
             }
             $get_distrito=$repo->get_distrito_print($data_cliente[0]->ubigeo);
+            $getClienteNuevo=$repo->get_clienteNuevo($data[0]->idCliente);
+            date_default_timezone_set('UTC');
+            $fechacAc= date("H:i:s");
             return response()->json([
                 'status' => true,
                 'data' => $data,
@@ -48,6 +51,8 @@ class Orden_servicioController extends Controller
                 'nr'=>$valtodo[1],
                 'get_distrito'=>$get_distrito,
                 'get_vehiculo'=>$get_vehiculo,
+                'getClienteNuevo'=>$getClienteNuevo,
+                'fechacAc'=>$fechacAc
             ]);
     }
 
@@ -375,6 +380,22 @@ class Orden_servicioController extends Controller
             $val=$repo->destroy_orden($valtodo[0],$valtodo[1]);
         // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
         //     DB::commit();
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+     public function get_cliente_persona($id, Orden_servicioInterface $repo, Request $request)
+    {   try {
+            $val=$repo->get_clientePersona($id);
             return response()->json([
                 'status' => true,
                 'data'=>$val,

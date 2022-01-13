@@ -1024,7 +1024,7 @@ function create_pdf_ordenServicio(response) {
         if(vto==15){
             sistDirecc_x='X';
         };
-        if(vto==16){
+        if(vto==25){
             otro_x='X';
         };
        
@@ -1032,6 +1032,7 @@ function create_pdf_ordenServicio(response) {
     
 
     var docDefinition = {
+
            content: [
         {
             text: ""+response.con+'  '+response.nr+"",
@@ -1351,6 +1352,433 @@ function create_pdf_ordenServicio(response) {
             fontSize: 10,
         },
 
+
+    ],
+    styles: {
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'right',
+            margin: [0, 20, 0, 80]
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+function create_pdf_ordenServicioXpress(response) {
+     var data=response.data;
+    console.log(response.data);
+    var dataCli=response.data_cliente;
+    var getClienteNuevo=response.getClienteNuevo;
+    var horaReal=response.fechacAc;
+    console.log(getClienteNuevo);
+    console.log(dataCli);
+    console.log(response.data_matenimiento);
+    console.log(response.data_detalle);
+    console.log(response.con);
+    console.log(response.nr);
+    console.log(data.dFecRec2);
+    console.log(data.dFecEntrega2);
+    var data_dis=response.get_distrito;
+    var get_vehiculo=response.get_vehiculo;
+    var modelo=get_vehiculo[0].Modelo;
+    console.log(data[0].idcCondicionPago);
+    var horaEnt=data[0].horaRec;
+    var horaEntre=data[0].horaEnt;
+    var dni='';
+    var ruc=''; 
+    console.log("****");
+    console.log(dataCli[0].documento);
+    console.log("****");
+    if(dataCli[0].tipodoc=='01'){
+        dni=dataCli[0].documento;
+    }else{
+       ruc=dataCli[0].documento;
+    }
+    var clienteNuevo='';
+    if(getClienteNuevo[0].cantidadCliente==0){
+        clienteNuevo='X';
+    }
+    console.log("clientes");
+    console.log(clienteNuevo);
+    var razonsocial_cliente=dataCli[0].razonsocial_cliente;
+    var documento=dataCli[0].documento;
+    var direccion=dataCli[0].direccion;
+    var distrito=data_dis[0].cDistrito;
+    var telefono=dataCli[0].telefono;
+    var correo_electronico=dataCli[0].correo_electronico;
+    var celular=dataCli[0].celular;
+    var cMotor=data[0].cMotor;
+    var cChasis=data[0].cChasis;
+    var iAnioFab=data[0].iAnioFab;
+    var cColor=data[0].cColor;
+    var cPlacaVeh=data[0].cPlacaVeh;
+    var nKilometraje=data[0].nKilometraje;
+
+    var mo_revision=Number(data[0].mo_revision);
+    var mo_mecanica=Number(data[0].mo_mecanica);
+    var terceros=Number(data[0].terceros);
+    var otros_mo=Number(data[0].otros_mo);
+    var sub_mo=mo_revision+mo_mecanica+terceros+otros_mo;
+    sub_mo=sub_mo.toFixed(2);
+    var respuestos=Number(data[0].respuestos);
+    var accesorios=Number(data[0].accesorios);
+    var lubricantes=Number(data[0].lubricantes);
+    var otros_rep=Number(data[0].otros_rep);
+    var cObservaciones=data[0].cObservaciones;
+    var sub_re= respuestos+accesorios+lubricantes+otros_rep;
+    sub_re=sub_re.toFixed(2);
+    var total=Number(data[0].total);
+
+
+    var mcondicionPago='';
+    if(data[0].idcCondicionPago=='9'){
+        mcondicionPago=394;
+    }else if(data[0].idcCondicionPago=='10'){
+          mcondicionPago=455;
+    }else{
+         mcondicionPago=500;
+    };
+    var tipoSer='';
+    if(data[0].id_tipo=='1'){
+        tipoSer=166;
+    }else if(data[0].id_tipo=='2'){
+        tipoSer=236;
+    }else{
+        tipoSer=200;
+    }
+    
+    var cambioAciete_X="";
+    var cambioAcieteFiltro_X="";
+    var cambioConjuntoTransmision_X="";
+    var otro_x="";
+    var ajusteLubriCadena_X="";
+    var reemplazoLamparas_X="";
+    var revision_X="";
+    var reemplazoCables_X="";
+    var reemplazoPastilla_X="";
+    var cambioNeumatico_X="";
+    var hondaAcces_X="";
+
+    var fechRecep= moment(data.dFecRec2).format('DD/MM/YYYY');
+    var fechEntrega= moment(data.dFecEntrega2).format('DD/MM/YYYY');
+
+    var data_matenimiento=response.data_matenimiento;
+    _.each(data_matenimiento, function (b) {
+        var vto=b.idMantenimiento;
+        
+        if(vto==2){
+            cambioAciete_X='X';
+        };
+        if(vto==16){
+            cambioAcieteFiltro_X='X';
+        };
+        if(vto==17){
+            cambioConjuntoTransmision_X='X';
+        };
+        if(vto==24){
+            ajusteLubriCadena_X='X';
+        };
+        if(vto==18){
+            reemplazoLamparas_X='X';
+        };
+        if(vto==19){
+            revision_X='X';
+        };
+        if(vto==20){
+            reemplazoCables_X='X';
+        };
+        if(vto==21){
+            reemplazoPastilla_X='X';
+        };
+        if(vto==22){
+            cambioNeumatico_X='X';
+        };
+        if(vto==23){
+            hondaAcces_X='X';
+        };
+        if(vto==25){
+            otro_x='X';
+        };
+       
+    });
+    
+
+    var docDefinition = {
+        pageSize: {
+    width: 800,
+    height: 'auto'
+  },
+        pageMargins: [ 200, 200, 200, 200 ],
+           content: [
+        {
+            text: ""+response.con+'  '+response.nr+"",
+
+            fontSize: 14,
+             bold: true,
+            absolutePosition: { x:479 , y: 64 }
+        },
+        // {
+        //     text: 'X',
+        //     fontSize: 14,
+        //     bold: true,
+        //     absolutePosition: { x:mcondicionPago , y: 90 }
+        // },
+        
+        // {
+        //     text: fechEntrega,
+        //     absolutePosition: { x:329 , y: 107 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        
+        {
+            text: razonsocial_cliente,
+            absolutePosition: { x:102 , y: 225 },////////////esto 
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: modelo+' / ' +iAnioFab,
+            absolutePosition: { x:374 , y: 225 },///////esto
+            bold: true,
+            fontSize: 10,
+        },
+
+        {
+            text: fechRecep,
+            bold: true,
+            fontSize: 10,
+            absolutePosition: { x:578 , y: 225 }///////esto
+        },
+         {
+            text: cChasis,
+            absolutePosition: { x:85 , y: 248 },//////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: cPlacaVeh,
+            absolutePosition: { x:340 , y: 248 },/////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: Number(nKilometraje),
+            absolutePosition: { x:476 , y: 248 },/////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text:horaEnt,
+            absolutePosition: { x:595 , y: 248 },////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: clienteNuevo,
+            absolutePosition: { x:61 , y: 272 },////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: telefono,
+            absolutePosition: { x:238 , y: 272 },////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: celular,
+            absolutePosition: { x:408 , y: 272 },////esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: horaEntre,
+            absolutePosition: { x:571 , y: 272 },///esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: horaReal,
+            absolutePosition: { x:629 , y: 272 },///esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: direccion,
+            absolutePosition: { x:68 , y: 298 },//esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: distrito,
+            absolutePosition: { x:374 , y: 298 },//esto
+            bold: true,
+            fontSize: 10,
+        },
+        {
+            text: correo_electronico,
+            absolutePosition: { x:68 , y: 342 },//esto
+            bold: true,
+            fontSize: 10,
+        },
+        // {
+        //     text: "razonsocial_cliente",
+        //     absolutePosition: { x:102 , y: 214 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        // {
+        //     text: dni,
+        //     absolutePosition: { x:76 , y: 233 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        // {
+        //     text: telefono,
+        //     absolutePosition: { x:76 , y: 253 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        // {
+        //     text: correo_electronico,
+        //     absolutePosition: { x:152 , y: 233 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        
+        // {
+        //     text: 'X',
+        //     absolutePosition: { x:285 , y: tipoSer },
+        //     bold: true,
+        //     fontSize: 14,
+        // },
+        
+        //  {
+        //     text: cMotor,
+        //     absolutePosition: { x:420 , y: 163 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        
+        
+        //  {
+        //     text: cColor,
+        //     absolutePosition: { x:420 , y: 214 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+        //  {
+        //     text: cPlacaVeh,
+        //     absolutePosition: { x:420 , y: 233 },
+        //     bold: true,
+        //     fontSize: 10,
+        // },
+         
+
+        
+         {
+            text: cambioAciete_X,
+            absolutePosition: { x:68 , y: 149 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: cambioAcieteFiltro_X,
+            absolutePosition: { x:68 , y: 160 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: cambioConjuntoTransmision_X,
+            absolutePosition: { x:68 , y: 172 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: ajusteLubriCadena_X,
+            absolutePosition: { x:68 , y: 183 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: reemplazoLamparas_X,
+            absolutePosition: { x:68 , y: 195 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: otro_x,
+            absolutePosition: { x:68 , y: 210 },
+            bold: true,
+            fontSize: 14,
+        },///
+         {
+            text: revision_X,
+            absolutePosition: { x:251 , y: 149 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: reemplazoCables_X,
+            absolutePosition: { x:251 , y: 160 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: reemplazoPastilla_X,
+            absolutePosition: { x:251 , y: 172 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: cambioNeumatico_X,
+            absolutePosition: { x:251 , y: 183 },
+            bold: true,
+            fontSize: 14,
+        },
+         {
+            text: hondaAcces_X,
+            absolutePosition: { x:251 , y: 195 },
+            bold: true,
+            fontSize: 14,
+        },
+        {
+            text: hondaAcces_X,
+            absolutePosition: { x:251 , y: 195 },
+            bold: true,
+            fontSize: 14,
+        },
+        {
+            text: "ST-"+ response.nr,
+            fontSize: 12,
+             bold: true,
+            absolutePosition: { x:479 , y: 172 }
+        },
+        {
+            text:Number(total).toFixed(2),
+            fontSize: 12,
+             bold: true,
+            absolutePosition: { x:479 , y: 195 }
+        }
 
     ],
     styles: {
@@ -1772,6 +2200,9 @@ function create_pdf_qualityControl(response) {
 function create_pdf_movimientoCaja(response) {
     var data=response.dataCaDet;
     var fec=response.feca;
+    var dataCaja=response.dataMc;
+    var totalefectSol= dataCaja[0].totalEfectivo;
+    var totalefectDol= dataCaja[0].totalEfectivoDol;
     var fecAct=response.fechacA;
     var dataCajaDetForSol=response.dataCajaDetForSol;
     var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
@@ -1860,7 +2291,7 @@ function create_pdf_movimientoCaja(response) {
 
                         },
                         { 
-                            text: totalSolesEfec.toFixed(2),
+                            text:Number(totalefectSol).toFixed(2),
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'right' 
@@ -2004,7 +2435,7 @@ function create_pdf_movimientoCaja(response) {
 
                         },
                         { 
-                            text: totalDolEfec.toFixed(2),
+                            text: Number(totalefectDol).toFixed(2),
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'right' 

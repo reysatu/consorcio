@@ -186,7 +186,12 @@
                  var data = {
                         id: id,        
                 };
+              if(id_tipo.val()=="3"){
+                $scope.loadOrdenServicioXpressPDF('orden_servicios/pdf', data);
+              }else{
+
               $scope.loadOrdenServicioPDF('orden_servicios/pdf', data);
+              }
             }
         });
          btn_cancelar.click(function () {
@@ -1182,12 +1187,12 @@
                      var por=Number(item.nPorcDescuento);
                      var monto=Number(item.nMonto);
                     if(item.cTipoAplica=='T'){
-                        if(item.idMoneda==mo || item.nPorcDescuento!=0){
-                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
-                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                            }
+                        // if(item.idMoneda==mo || item.nPorcDescuento!=0){
+                        //     if(item.nSaldoUso>0 || item.nLimiteUso==0){
+                        //           selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                        //     }
                           
-                        }
+                        // }
                     }else{
                          if(item.idMoneda==mo || item.nPorcDescuento!=0){
                             if(item.nSaldoUso>0 || item.nLimiteUso==0){
@@ -2546,7 +2551,47 @@ function llenarTablas(Consecutivo){
     var code = (e.keyCode ? e.keyCode : e.which);
         if(code==13){
               $('#show_loading').removeClass('ng-hide');
-                getDatosCliente();
+                 var documentoEnvio=documento.val();
+                 RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function(response) {
+                             if (!_.isUndefined(response.status) && response.status) {
+                                    var dataPersona=response.data;
+                                    if(dataPersona.length==0){
+                                        console.log("no hay en persona");
+                                         getDatosCliente();
+                                    }else{
+                                        console.log(dataPersona);
+                                        console.log("si hay ");
+                                         tipodoc.val(dataPersona[0].cTipodocumento).trigger('change');
+                                         var nclie=dataPersona[0].cRazonsocial;
+                                         if(nclie.length==0){
+                                            razonsocial_cliente.val(dataPersona[0].cNombrePersona);
+                                         }else{
+                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                         }
+                                        
+                                        documento.val(dataPersona[0].cNumerodocumento);
+                                        // contacto.val(dataPersona[0].contacto);
+                                        direccion.val(dataPersona[0].cDireccion);
+                                        correo_electronico.val(dataPersona[0].cEmail);
+                                        celular.val(dataPersona[0].cCelular);
+                                       
+                                        cEstadoCivil.val(dataPersona[0].cEstadoCivil);
+                                      
+                                         getDepartamento(dataPersona[0].cDepartamento);
+                                         getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
+                                         getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                    }
+
+
+                             }else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Hubo un error . Intente nuevamente.',
+                                    type: 'info'
+                                });
+                            }
+                           });
+               
         }
 });
 function getDatosCliente(){

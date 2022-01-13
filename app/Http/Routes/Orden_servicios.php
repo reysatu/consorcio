@@ -53,3 +53,5 @@ Route::put('orden_servicios/createVehiOrden/{id}', ['as' => 'orden_servicios.cre
 Route::put('orden_servicios/createClienteOrden/{id}', ['as' => 'orden_servicios.createClienteOrden', 'uses' => 'CustomerController@createUpdate']);
 
 Route::get('orden_servicios/data_formCliOrden', ['as' => 'orden_servicios.data_formCliOrden', 'uses' => 'CustomerController@data_form']);
+
+Route::get('orden_servicios/get_cliente_persona/{id}', ['as' => 'orden_servicios.get_cliente_persona', 'uses' => 'Orden_servicioController@get_cliente_persona']);

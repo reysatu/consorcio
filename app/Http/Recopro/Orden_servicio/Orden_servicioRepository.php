@@ -167,6 +167,11 @@ where IdTipoDocumento in ('01','03')");
         $mostrar3=DB::select("select des.nPorcDescuento as porDes , des.nMonto as montoDes, ore.IdTipoDocumento as idDocumentoVenta, cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago  left join ERP_Descuentos as des on des.id=ore.nIdDscto where ore.cCodConsecutivo='$conse' and ore.nConsecutivo='$nro'");
           return $mostrar3;
     }
+    public function get_clienteNuevo($idCliente)
+    {
+        $mostrar3=DB::select("select COUNT(idCliente)as cantidadCliente from ERP_OrdenServicio where idCliente='$idCliente'");
+          return $mostrar3;
+    }
      public function find_orden_cliente($idCliente)
     {
       $mostrar3=DB::select("SELECT * FROM ERP_Clientes as cl inner join ERP_TipoCliente as ti on cl.id_tipocli=ti.id where cl.id='$idCliente'");
@@ -288,6 +293,11 @@ where IdTipoDocumento in ('01','03')");
     public function getcodigo_proforma(){
    
           $mostrar3=DB::select("select * from ERP_Consecutivos where cCodTipoCons='PROFORMA'");
+          return $mostrar3;
+    }
+    public function get_clientePersona($documento){
+   
+          $mostrar3=DB::select("SELECT * FROM ERP_Persona as ti left join ERP_Ubigeo as ub on ti.cUbigeo=ub.cCodUbigeo where ti.cNumerodocumento='$documento'");
           return $mostrar3;
     }
      public function destroy_orden($id,$no)

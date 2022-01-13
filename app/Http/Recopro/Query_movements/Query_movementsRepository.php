@@ -20,7 +20,7 @@ class Query_movementsRepository implements Query_movementsInterface
     }
 
     public function all()
-    {
+    { 
         return $this->model->get();
     }
       public function allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin)
@@ -63,7 +63,7 @@ class Query_movementsRepository implements Query_movementsInterface
      public function search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin)
     {
         return $this->model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin){
-            $q->where('Articulo', 'LIKE', '%'.$s.'%')->orderByRaw('fecha_registro DESC');
+            $q->orderByRaw('fecha_registro DESC');
             if(!empty($fecha_inicio) and !empty($fecha_fin) ){
                 $q->whereDate('fecha_registro','>=',$fecha_inicio);
                 $q->whereDate('fecha_registro','<=',$fecha_fin);

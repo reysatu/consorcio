@@ -20,3 +20,5 @@ Route::post('customers/getTipoPersona', 'CustomerController@getTipoPersona');
 Route::post('customers/getTipoCliente', 'CustomerController@getTipoCliente');
 Route::post('customers/getTipoDocumentoVenta', 'CustomerController@getTipoDocumentoVenta');
 Route::get('customers/find/{id}', ['as' => 'customers.find', 'uses' => 'CustomerController@find']);
+
+Route::get('customers/get_cliente_personaCus/{id}', ['as' => 'customers.get_cliente_personaCus', 'uses' => 'Orden_servicioController@get_cliente_persona']);
