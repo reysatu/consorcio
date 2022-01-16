@@ -31,7 +31,7 @@ class SolicitudController extends Controller
     public function all(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
@@ -117,29 +117,33 @@ class SolicitudController extends Controller
             }
           
             if(isset($data["series_id"])) {
-                $idSeries = explode(",", $data["series_id"]);
-                $idarticulos = explode(",", $data["articulos_id"]);
-                
-                if(count($idSeries) >  0) {
-                    DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
-                   
+
+                for ($s=0; $s < count($data["series_id"]); $s++) { 
+                    $idSeries = explode(",", $data["series_id"][$s]);
+                    $idarticulos = explode(",", $data["articulos_id"][$s]);
                     
-                    $data_detalle = $data;
-                  
-                    for ($i=0; $i < count($idSeries); $i++) { 
-                        if($i == 0) {
-    
-                            $data_detalle["id"][$i] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
-                        } else {
-                            $data_detalle["id"][$i] = $data_detalle["id"][$i-1] + 1;
+                    if(count($idSeries) >  0) {
+                        DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+                       
+                        
+                        $data_detalle = $data;
+                      
+                        for ($i=0; $i < count($idSeries); $i++) { 
+                            if($i == 0) {
+        
+                                $data_detalle["id"][$i] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
+                            } else {
+                                $data_detalle["id"][$i] = $data_detalle["id"][$i-1] + 1;
+                            }
+                            $data_detalle["idSerie"] = $idSeries[$i];
+                            $data_detalle["idarticulo"] = $idarticulos[$i];
                         }
-                        $data_detalle["idSerie"] = $idSeries[$i];
-                        $data_detalle["idarticulo"] = $idarticulos[$i];
+                        // print_r($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                       
                     }
-                    // print_r($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                   
                 }
+               
             }
 
             
@@ -262,6 +266,10 @@ class SolicitudController extends Controller
             $data_update["estado"] = "3"; // por aprobar
            
             $res["msg"] = $Repo->envio_aprobar_solicitud($data_update);
+        }
+
+        if(!empty($res["msg"])) {
+            $res["status"] = "ei";
         }
         // exit;
         // print_r($res); exit;

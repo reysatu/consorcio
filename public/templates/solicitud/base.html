@@ -687,7 +687,7 @@
                             <span class="fa fa-save"></span>
                             Terminada
                         </button> -->
-                        <button type="button" id="" class="btn btn-danger btn-sm " disabled>
+                        <button type="button" id="aprobaciones" class="btn btn-danger btn-sm " style="display: none;" >
                             <span class="fa fa-check"></span>
                             Aprobaciones
                         </button>
@@ -901,7 +901,7 @@
                                 <label class="col-sm-1 control-label">Cantidad</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="cantProductoMss" class="form-control input-sm"
-                                        onkeypress="return soloNumeros(event)">
+                                        onkeypress="return soloNumeros(event)" value="1">
                                 </div>
                             </div>
                             <br>
@@ -1024,8 +1024,14 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Monto Alquiler</label>
-                            <input type="number" class="form-control input-sm " id="monto_alquiler"
+                         
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="monto_alquiler"
                                 name="monto_alquiler">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Profesión</label>
@@ -1338,7 +1344,7 @@
                             <button type="button" id="btn_editar_fiadorconyugue" data-tipo="fiadorconyugue"
                                 class="btn btn-danger-admin btn-sm btn-editar-persona">
                                 <span class="fa fa-save"></span>
-                                Editar Fiador/Conyugue
+                                Editar <br>Fiador/Conyugue
                             </button>
                         </div>
                     </div>

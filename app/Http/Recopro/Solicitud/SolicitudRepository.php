@@ -162,17 +162,33 @@ class SolicitudRepository implements SolicitudInterface
     }
 
     public function envio_aprobar_solicitud($data) {
-        $sql = "SET NOCOUNT ON; EXEC VTA_EnvioAprobarSol '{$data["cCodConsecutivo"]}', {$data["nConsecutivo"]}, ".auth()->id().", ''";
+        $sql = "
+        DECLARE	@return_value int,
+		@sMensaje varchar(250)
+        SELECT	@sMensaje = N''''''
+
+        EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
+                @cCodConsecutivo = N'{$data["cCodConsecutivo"]}',
+                @nConsecutivo = {$data["nConsecutivo"]},
+                @Usuario = ".auth()->id().",
+                @sMensaje = @sMensaje OUTPUT
+
+        SELECT	@sMensaje as 'msg'";
 
         // echo $sql; exit;
-        $res = DB::statement($sql);
+        $res = DB::select($sql);
+        
 
-        return $res;
+        return $res[0]->msg;
     }
 
     public function get_solicitud($cCodConsecutivo, $nConsecutivo) {
 
-        $sql = "SELECT * FROM ERP_Solicitud WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id
+        FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
+        LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
+        WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
         return $result;

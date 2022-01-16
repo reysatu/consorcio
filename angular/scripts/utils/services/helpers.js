@@ -48,6 +48,7 @@
         }
 
         function set_datos_formulario(id_form, datos) {
+            // console.log(datos);
             var elementos = document.getElementById(id_form).getElementsByClassName("form-control");
             // console.log(elementos);
 
@@ -80,7 +81,11 @@
                                 
                             }
                         }
-                        elementos[i].value = formato_fecha(datos[elementos[i].name], "user");
+                        // console.log(elementos[i].name+" = "+datos[elementos[i].name]);
+
+                        // elementos[i].value = formato_fecha(datos[elementos[i].name], "user");
+                        elementos[i].value = datos[elementos[i].name];
+                        // console.log(elementos[i].value );
                     }
                        
                     
