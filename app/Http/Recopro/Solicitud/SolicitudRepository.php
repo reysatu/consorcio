@@ -29,6 +29,17 @@ class SolicitudRepository implements SolicitudInterface
         });
     }
 
+    public function search_ventas($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->whereIn('estado', [2, 4])
+                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        });
+    }
+
     public function all()
     {
         return $this->model->all();
@@ -196,8 +207,13 @@ class SolicitudRepository implements SolicitudInterface
 
     public function get_solicitud_articulo($cCodConsecutivo, $nConsecutivo) {
 
-        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote FROM ERP_SolicitudArticulo AS sa
+        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote, a.description AS almacen, CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, l.descripcion AS localizacion, CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat
+        FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
+        LEFT JOIN ERP_Localizacion AS l ON(l.idLocalizacion=sa.idlocalizacion)
+        LEFT JOIN ERP_Lote AS lo ON(lo.idLote=sa.idlote)
+        LEFT JOIN ERP_Descuentos AS d ON(d.id=sa.iddescuento)
         WHERE sa.cCodConsecutivo='{$cCodConsecutivo}' AND sa.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
@@ -211,6 +227,7 @@ class SolicitudRepository implements SolicitudInterface
 
         return $result;
     }
+    
 
     public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo) {
 
@@ -220,6 +237,12 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
     }
 
+
+    public function get_formas_pago(){
+   
+        $mostrar3=DB::select("select * from ERP_FormasPago");
+        return $mostrar3;
+  }
 
 
 

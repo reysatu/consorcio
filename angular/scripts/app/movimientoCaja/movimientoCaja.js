@@ -9,12 +9,11 @@
         .controller('movimientoCajaCtrl', movimientoCajaCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    movimientoCajaCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify'];
+    movimientoCajaCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify', 'Helpers'];
 
-    function movimientoCajaCtrl($scope, _, RESTService, AlertFactory, Notify)
+    function movimientoCajaCtrl($scope, _, RESTService, AlertFactory, Notify, Helpers)
     {
-        
-
+        // Helpers.saludo();
         // var modalMovCaj=$("#modalMovCaj");
         // var titleModalMovCaj=$("#titleModalMovCaj");
  
@@ -1190,7 +1189,569 @@
                 filtro_monedaMovi:$('#filtro_monedaMovi').val()
             });
         }, true);
+
+
+        // ##################################################################### //
+        // ######################### SOLICITUD / VENTA ######################### //
+        // ##################################################################### //
+
+        var search_solicitud = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');
+
+        var table_container_solicitud = $("#table_container_solicitud");
+
+        table_container_solicitud.jtable({
+            title: "Lista de Solicitudes",
+            paging: true,
+            sorting: true,
+            actions: {
+                listAction: base_url + '/solicitud/list_ventas',
+            },
+            // messages: {
+            //     addNewRecord: 'Nueva Caja',
+            //     editRecord: 'Editar Caja'
+            // },
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_solicitud
+                }
+                // , {
+                //     cssClass: 'btn-primary',
+                //     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
+                //     click: function () {
+                //         $scope.openDoc('solicitud/excel', {});
+                //     }
+                // }, {
+                //     cssClass: 'btn-danger-admin',
+                //     text: '<i class="fa fa-plus"></i> Nueva Solicitud',
+                //     click: function () {
+                //         newSolicitud();
+                //     }
+                // }
+                ]
+            },
+            fields: {
+                cCodConsecutivo: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'Código',
+                },
+                nConsecutivo: {
+                    title: 'Nro',
+
+
+                },
+
+                fecha_solicitud: {
+                    title: 'Fecha Solicitud',
+                    display: function (data) {
+                        return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
+                    }
+
+                },
+                tipo_solicitud: {
+                    title: 'Tipo Solicitud',
+                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                estado: {
+                    title: 'Estado',
+                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
+                },
+                edit: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="emitir-comprobante" data-estado="'+ data.record.estado
+                        +'" data-id="' + data.record.cCodConsecutivo
+                            + '_' + data.record.nConsecutivo + '" title="Emitir Comprobante"><i class="fa fa-money fa-1-5x"></i></a>';
+                    }
+
+                }
+
+            },
+            recordsLoaded: function (event, data) {
+                $('.emitir-comprobante').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    
+                    find_solicitud(id);
+                    e.preventDefault();
+                });
+                $('.eliminar-Orden').click(function (e) {
+                    var ide = $(this).attr('data-ide');
+                    var estado = $(this).data('estado');
+
+                    if(estado != "1") {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'No se puede eliminar, la solicitud ya no se encuentra en estado Registrado',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+                    idOrdenDelete.val(ide);
+                    modalDeleteOrden.modal("show");
+                    e.preventDefault();
+                });
+            },
+            formCreated: function (event, data) {
+
+                //data.form.find('input[name="convenio"]').attr('onkeypress','return soloLetras(event)');
+                $('#Edit-activo').parent().addClass('i-checks');
+
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green'
+                }).on('ifChanged', function (e) {
+                    $(e.target).click();
+                    if (e.target.value == 'S') {
+                        $("#Edit-activo").val("N");
+                        $(".i-checks span").text("Inactivo");
+
+                    } else {
+                        $("#Edit-activo").val("S");
+                        $(".i-checks span").text("Activo");
+                    };
+                });
+            },
+            formSubmitting: function (event, data) {
+                var bval = true;
+                
+                bval = bval && data.form.find('input[name="nombre_caja"]').required();
+                bval = bval && data.form.find('input[name="usuario"]').required();
+                bval = bval && data.form.find('input[name="activo"]').required();
+                return bval;
+            }
+        });
+
+        generateSearchForm('frm-search-solicitud', 'LoadRecordsButtonSolicitud', function () {
+            table_container_solicitud.jtable('load', {
+                search: $('#search_b_solicitud').val()
+            });
+        }, true);
+
+        var cCodConsecutivo = $("#cCodConsecutivo");
+
+        var tipoCliente_or = $("#tipoCliente_or");
+        var id_tipocli = $("#id_tipocli");
+        var id_cliente_tipo_or = $("#id_cliente_tipo_or");
+
+        var tipodoc = $("#tipodoc");
+        var razonsocial_cliente = $("#razonsocial_cliente");
+        var btn_cerrar = $("#btn_cerrar");
+        var documento = $("#documento");
+        var contacto = $("#contacto");
+        var direccion = $("#direccion");
+        var correo_electronico = $("#correo_electronico");
+        var id_tipoDoc_Venta_or = $("#id_tipoDoc_Venta_or");
+        var celular = $("#celular");
+        var telefono = $("#telefono");
+        var cliente_id = $("#cliente_id");
+        var distrito = $('#distrito');
+        var distrito_ver = $('#distrito_ver');
+        var nConsecutivo = $('#nConsecutivo');
+
+        var idDocumentoCli = $("#idDocumentoCli");
+        var documento_or = $("#documento_or");
+        var razonsocial_cliente_or = $("#razonsocial_cliente_or");
+        var contacto_or = $("#contacto_or");
+        var direccion_or = $("#direccion_or");
+        var correo_electronico_or = $("#correo_electronico_or");
+        var celular_or = $("#celular_or");
+        var telefono_or = $("#telefono_or");
+        var cliente_id_or = $("#cliente_id_or");
+        var distrito_or = $('#distrito_or');
+        var redondeo;
+        var idMoneda = $("#IdMoneda");
+        var idcCondicionPago = $("#idcCondicionPago");
+        var id_tipoDoc_Venta = $("#id_tipoDoc_Venta");
+        var AlmacenesSele;//variable para guardar almacenes
+        var LotesSele;//variable para guardar lotes
+        var DescuentosSele;//variable para guardar los decuentos
+        var LocalizacionesSele;//variable para guardar localizaciones del almacen
+        var idconvenio = $("#idconvenio");
+        var idvendedor = $("#idvendedor");
+        var articulo_mov_det = $("#articulo_mov_det");
+        var totalDescuento = $("#totalDescuento");
+
+        $scope.datos_credito = function () {
+            // $("#idconyugue").focus();
+
+
+            if (articulo_mov_det.html() == "") {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Debe ingresar al menos un articulo al detalle!',
+                    type: 'info'
+                });
+                return false;
+            }
+
+            $("#modal-creditos").modal("show");
+        }
+
+        $scope.emitir_comprobante = function () {
+            // $("#idconyugue").focus();
+
+            // alert($("#desTotal").val());
+            var total = parseFloat($("#desTotal").val());
+            $("#total_pagar").val(total.toFixed(2));
+            $("#monto").val(total.toFixed(2));
+            $("#modal-emitir-comprobante").modal("show");
+        }
+
+        $scope.agregar_formas_pago = function () {
+            // $("#idconyugue").focus();
+
+            // alert($("#desTotal").val());
+            var total = parseFloat($("#desTotal").val());
+            
+            $("#monto_p").val(total.toFixed(2));
+            $("#modal-formas-pago").modal("show");
+        }
+
+        $scope.guardar_forma_pago = function () {
+
+            var forma_pago = $("#forma_pago").val();
+            var noperacion = $("#noperacion").val();
+            var tarjeta = $("#tarjeta").val();
+            var monto_p = parseFloat($("#monto_p").val());
+            var html = "<tr>";
+            html += '   <td>'+forma_pago+'</td>';
+            html += '   <td>'+tarjeta+'</td>';
+            html += '   <td>'+noperacion+'</td>';
+            html += '</tr>';
+        }
+
+        $(document).on("change", "#tipo_solicitud", function () {
+            var tipo_solicitud = $(this).val();
+            // alert("change " + tipo_solicitud);   
+            if (tipo_solicitud == "1" || tipo_solicitud == "3") {
+                $(".credito").hide();
+
+            } else {
+
+                $(".credito").show();
+            }
+
+            if (tipo_solicitud == "3") {
+                $(".convenio").show();
+                // $("#cuota_inicial").val("");
+                // $("#nro_cuotas").attr("readonly", "readonly");
+            
+            } else {
+                if(tipo_solicitud == "2") {
+                    // $("#nro_cuotas").removeAttr("readonly");
+                    // $(".inputs-credito").removeAttr("readonly");
+                }
+
+                if(tipo_solicitud == "1") {
+                    $(".montos-credito").val(0);
+                    // $(".inputs-credito").attr("readonly", "readonly");
+                }
+                $(".convenio").hide();
+            }
+
+            if (tipo_solicitud == "2" || tipo_solicitud == "3") {
+                var t_monto_total = $("#desTotal").val();
+                // alert(t_monto_total);
+                $("#monto_venta").val(t_monto_total);
+                $("#total_financiado").val(t_monto_total);
+                $("#cuota_inicial").attr("max", t_monto_total);
+            }
+        });
+
+        function obtener_data_for_solicitud() {
+            RESTService.all('solicitud/data_form', '', function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    if (response.parametro_igv.length > 0) {
+                        // alert(response.parametro_igv[0].value);
+                        $("#valor_igv").val(response.parametro_igv[0].value);
+                    }
+                    redondeo = response.dataredondeo
+                    // descuentos = response.descuentos;
+                    var hoy = new Date();
+                    var hAnio = hoy.getFullYear();
+                    var hmes = hoy.getMonth() + 1;
+                    if (Number(hmes) < 10) {
+                        hmes = '0' + String(hmes);
+                    }
+
+                    var hdia = hoy.getDate();
+                    if (Number(hdia) < 10) {
+                        hdia = '0' + String(hdia);
+                    }
+                    var actu = hAnio + '-' + hmes + '-' + hdia;
+                    totalDescuento.append('<option value="">Seleccionar</option>');
+                    _.each(response.descuentos, function (item) {
+                        if (item.cTipoAplica == 'T') {
+                            var mo = idMoneda.val();
+                            var por = Number(item.nPorcDescuento);
+                            var monto = Number(item.nMonto);
+                            if ((item.idMoneda == mo || item.nPorcDescuento != '0') && (item.nSaldoUso > 0 || item.nLimiteUso == '0')) {
+                                if (item.dFecIni <= actu && item.dFecFin > actu) {
+                                    totalDescuento.append('<option idTipo="' + item.idTipo + '" value="' + item.id + '*' + por + '*' + monto + '" >' + item.descripcion + '</option>');
+                                }
+                            }
+                        }
+                    });
+                    cCodConsecutivo.append('<option value="">Seleccionar</option>');
+                    _.each(response.codigo, function (item) {
+                        cCodConsecutivo.append('<option value="' + item.cCodConsecutivo + '">' + item.cCodConsecutivo + '</option>');
+                    });
+
+                    $("#forma_pago").append('<option value="">Seleccionar</option>');
+                    _.each(response.formas_pago, function (item) {
+                        $("#forma_pago").append('<option value="' + item.codigo_formapago + '">' + item.descripcion_subtipo + '</option>');
+                    });
+
+                    // console.log(cCodConsecutivo);
+                    // cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+'</option>');
+                    idcCondicionPago.append('<option value="">Seleccionar</option>');
+                    _.each(response.condicion_pago, function (item) {
+                        idcCondicionPago.append('<option value="' + item.id + '">' + item.description + '</option>');
+                    });
+                    // _.each(response.tipo_servicio, function (item) {
+                    //     id_tipo.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                    // });
+                    idDocumentoCli.append('<option value="">Seleccionar</option>');
+                    _.each(response.tipo_document, function (item) {
+                        idDocumentoCli.append('<option value="' + item.Codigo + '">' + item.TipoDocumento + '</option>');
+                    });
+                    id_tipoDoc_Venta_or.append('<option value="">Seleccionar</option>');
+                    _.each(response.tipo_document_venta, function (item) {
+                        id_tipoDoc_Venta_or.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
+                    });
+                    id_tipoDoc_Venta.append('<option value="">Seleccionar</option>');
+                    _.each(response.tipo_document_venta, function (item) {
+                        id_tipoDoc_Venta.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
+                    });
+                    // gru_revisiones.append('<option value="" selected>Seleccionar </option>');
+                    // _.each(response.revisiones, function (item) {
+                    //     gru_revisiones.append('<option value="' + item.id + '*' + item.nombre + '*' + item.mo_revision + '*' + item.mo_mecanica + '*' + item.terceros + '*' + item.otros_mo + '*' + item.repuestos + '*' + item.accesorios + '*' + item.lubricantes + '*' + item.otros_rep + '">' + item.nombre + '</option>');
+                    // });
+                    // idTecnico.append('<option value="">Seleccionar</option>');
+                    // _.each(response.tecnico, function (item) {
+                    //     idTecnico.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                    // });
+                    // idAsesor.append('<option value="">Seleccionar</option>');
+                    // _.each(response.asesor, function (item) {
+                    //     idAsesor.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                    // });
+                    // id_tipomant.append('<option value="">Seleccionar</option>');
+                    // _.each(response.tipoMantenimiento, function (item) {
+                    //     id_tipomant.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                    // });
+
+                    // servicios = response.servicios;
+                    idMoneda.append('<option value="">Seleccionar</option>');
+                    _.each(response.moneda, function (item) {
+                        idMoneda.append('<option data-simbolo="' + item.Simbolo + '" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
+                    });
+
+                    idconvenio.append('<option value="">Seleccionar</option>');
+                    _.each(response.convenios, function (item) {
+                        idconvenio.append('<option value="' + item.idconvenio + '">' + item.descripcionconvenio + '</option>');
+                    });
+
+                    idvendedor.append('<option value="">Seleccionar</option>');
+                    _.each(response.vendedores, function (item) {
+                        idvendedor.append('<option  value="' + item.idvendedor + '">' + item.descripcion + '</option>');
+                    });
+                    // console.log(idvendedor);
+
+                    // $("#idconyugue").append('<option value="">Seleccionar</option>');
+                    // _.each(response.personas, function (item) {
+                    //     $("#idconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    // });
+
+                    // $("#idfiador").append('<option value="">Seleccionar</option>');
+                    // _.each(response.personas, function (item) {
+                    //     $("#idfiador").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    // });
+
+                    // $("#idfiadorconyugue").append('<option value="">Seleccionar</option>');
+                    // _.each(response.personas, function (item) {
+                    //     $("#idfiadorconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
+                    // });
+                    // totales = response.totales;
+                    // tipo_totales_slec.append('<option value="">Tipo</option>');
+                    // _.each(response.totales, function (item) {
+                    //     tipo_totales_slec.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                    // });
+
+
+
+
+                    AlmacenesSele = response.almacen_usuario;
+                    LotesSele = response.lotes;
+                    DescuentosSele = response.descuentos;
+
+
+
+                }
+            }, function () {
+                obtener_data_for_solicitud();
+            });
+        }
+
+        obtener_data_for_solicitud();
+
+        function getCliente()   {
+            var bval = true;
+            bval = bval && documento_or.required();
+            if (bval) {
+                var id = documento_or.val();
+                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var datos = response.data;
+                        if (datos.length == 0) {
+                            titleModalClientes.html('Nuevo Cliente');
+                            modaClientes.modal('show');
+                            var bandera = 'xxxxx';
+                            getDepartamento(bandera);
+                            distrito_ver.val("");
+                            distrito_or.val("");
+                            idDocumentoCli.val("");
+                            razonsocial_cliente_or.val("");
+                            documento.val(documento_or.val());
+                            documento_or.val("");
+                            contacto_or.val("");
+                            direccion_or.val("");
+                            correo_electronico_or.val("");
+                            id_tipoDoc_Venta_or.val("").trigger('change');
+                            celular_or.val("");
+                            telefono_or.val("");
+                            cliente_id_or.val("");
+                            tipoCliente_or.val("");
+                            id_tipocli.data("prev", id_cliente_tipo_or.val());
+                            id_tipocli.val(id_cliente_tipo_or.val());
+                            // id_cliente_tipo_or.val("")
+                            // llenarServicios();
+                        } else {
+                            distrito_ver.val(datos[0].cDistrito);
+                            distrito_or.val(datos[0].ubigeo);
+                            idDocumentoCli.val(datos[0].tipodoc).trigger('change');
+                            razonsocial_cliente_or.val(datos[0].razonsocial_cliente);
+                            documento_or.val(datos[0].documento);
+                            contacto_or.val(datos[0].contacto);
+                            direccion_or.val(datos[0].direccion);
+                            correo_electronico_or.val(datos[0].correo_electronico);
+    
+                            celular_or.val(datos[0].celular);
+                            telefono_or.val(datos[0].telefono);
+                            cliente_id_or.val(datos[0].idCliente);
+                            tipoCliente_or.val(datos[0].tipo_cliente_descr).trigger('change');
+                            id_cliente_tipo_or.val(datos[0].id_tipocli)
+                            id_tipocli.data("prev", id_cliente_tipo_or.val());
+                            id_tipoDoc_Venta_or.val(datos[0].IdTipoDocumento).trigger("change");
+                            if (nConsecutivo.val() == "") {
+                                id_tipoDoc_Venta_or.focus();
+                            }
+    
+                            id_tipoDoc_Venta_or.removeAttr("disabled");
+    
+                        }
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error . Intente nuevamente.',
+                            type: 'info'
+                        });
+                    }
+    
+    
+                });
+            }
+        }
+
+        $(document).on("change", "#IdMoneda", function () {
+            if ($(this).val() != "") {
+
+                var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+                // alert("hola " + simbolo);
+                $(".simbolo-moneda").text(simbolo);
+            }
+        })
+
+        function find_solicitud(id) {
+            $("#formulario-solicitud").find("input").attr("readonly", "readonly");
+            $("#formulario-solicitud").find("select").attr("disabled", "disabled");
+            $("#formulario-creditos").find("input").attr("readonly", "readonly");
+            $("#formulario-creditos").find("select").attr("disabled", "disabled");
+    
+            $.post("solicitud/find", { id: id },
+                function (data, textStatus, jqXHR) {
+                    // console.log(data);
+                    Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
+                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    $("#documento_or").val(data.solicitud[0].documento);   
+                    getCliente();
+                    $("#tipo_solicitud").trigger("change");
+                    $("#IdMoneda").trigger("change");
+
+                    if(data.solicitud_credito.length > 0) {
+    
+                        $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);   
+                        $("#monto_financiado").val(data.solicitud_credito[0].monto_financiado);   
+                        $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);   
+                        $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);   
+                        $("#intereses").val(data.solicitud_credito[0].intereses);   
+                    }
+    
+                    if (data.solicitud_articulo.length > 0) {
+                        $("#articulo_mov_det").html("");
+                        var html = '';
+                        for (var i = 0; i < data.solicitud_articulo.length; i++) {
+                            html += '<tr>';
+                            html += '   <td>'+data.solicitud_articulo[i].producto+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].almacen+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].localizacion+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].lote+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].cantidad+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].precio_unitario+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].cOperGrat+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].precio_total+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].descuento+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].porcentaje_descuento+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_descuento+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_subtotal+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_exonerado+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_afecto+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_inafecto+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].impuestos+'</td>';
+                            html += '   <td>'+data.solicitud_articulo[i].monto_total+'</td>';
+                            html += '</tr>';
+   
+                        }
+                        $("#articulo_mov_det").html(html);
+                    }
+    
+    
+                    $("#enviar_solicitud").show();
+                    $("#aprobaciones").show();
+                    $("#modalSolicitud").modal("show");
+                },
+                "json"
+            );
+        }
+
+
+        
+
+
+
+
+
+
+
     }
+
+    
 
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider

@@ -35,6 +35,14 @@ class SolicitudController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
+    
+    public function list_ventas(Request $request, SolicitudInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
+    }
 
     public function create(SolicitudInterface $repo, SolicitudRequest $request)
     {
@@ -196,6 +204,7 @@ class SolicitudController extends Controller
         // $tipo_servicio = $repo_orden->gettipo_servicio();
         $tipo_document = $repo_orden->gettipo_document();
         $tipo_document_venta=$repo_orden->gettipo_document_venta();
+        $formas_pago=$Repo->get_formas_pago();
         // $revisiones = $repo_orden->getrevisiones();
         // $tecnico = $repo_orden->gettecnico();
         // $asesor = $repo_orden->getasesor();
@@ -225,6 +234,7 @@ class SolicitudController extends Controller
             'moneda'=>$moneda,
             // 'asesor'=>$asesor,
             'descuentos'=>$descuentos,
+            'formas_pago'=>$formas_pago,
             // 'servicios'=>$servicios,
             // 'totales'=>$totales,
             // 'tipoMantenimiento'=>$tipoMantenimiento,

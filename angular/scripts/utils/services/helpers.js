@@ -13,7 +13,6 @@
 
     function Helpers(_) {
        
-
         var helpers = {
             saludo: saludo,
             formato_fecha: formato_fecha,

@@ -2882,7 +2882,7 @@
             );
         }
 
-        var search = getFormSearch('frm-search-brand', 'search_b', 'LoadRecordsButtonBrand');
+        var search = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');
 
         var table_container_solicitud = $("#table_container_solicitud");
 
@@ -2945,10 +2945,8 @@
 
                 },
                 estado: {
-                    key: false,
-                    create: false,
-                    edit: false,
-                    list: false
+                    title: 'Estado',
+                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
                 },
                 edit: {
                     width: '1%',
@@ -3038,9 +3036,9 @@
             }
         });
 
-        generateSearchForm('frm-search-brand', 'LoadRecordsButtonBrand', function () {
+        generateSearchForm('frm-search-solicitud', 'LoadRecordsButtonSolicitud', function () {
             table_container_solicitud.jtable('load', {
-                search: $('#search_b').val()
+                search: $('#search_b_solicitud').val()
             });
         }, true);
     }
