@@ -27,6 +27,7 @@
         function formato_fecha(fecha, formato) {
 
             if (fecha != null) {
+               
                 var date = fecha.toString().split(/[\/.-]/);
                 if (formato == "user") {
                     // var array = fecha.toString().split(/[\/.-]/);

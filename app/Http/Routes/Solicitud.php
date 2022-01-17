@@ -16,6 +16,7 @@ Route::post('solicitud/factor_credito', ['as' => 'solicitud.factor_credito', 'us
 Route::post('solicitud/enviar_solicitud', ['as' => 'solicitud.enviar_solicitud', 'uses' => 'SolicitudController@enviar_solicitud']);
 
 Route::post('solicitud/find', ['as' => 'solicitud.find', 'uses' => 'SolicitudController@find']);
+Route::post('solicitud/mostrar_aprobaciones', ['as' => 'solicitud.mostrar_aprobaciones', 'uses' => 'SolicitudController@mostrar_aprobaciones']);
 
 
 Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudController@excel']);

@@ -2068,6 +2068,7 @@
                         aartMSE = arrTSE;
                     }
                     $('#tr_idArticulo' + code).remove();
+                    calcular_totales();
                 });
                 e.preventDefault();
             });
@@ -2353,50 +2354,47 @@
             var val = $(this).val();
             var idtipo = "";
             var porTotal = 0.0;
-            if (val == "") {
+            var code = "";
+            var porc = 0;
+            var mont = 0;
+            if (val == "" || val == null) {
 
                 porcentajeTotal.val(0);
                 montoTotal.val(0);
 
 
             } else {
-
+                // console.log(val);
                 var arrayRe = val.split("*");
-                var code = arrayRe[0];
-                var porc = parseFloat(arrayRe[1]);
-                var mont = parseFloat(arrayRe[2]);
+                code = arrayRe[0];
+                porc = parseFloat(arrayRe[1]);
+                mont = parseFloat(arrayRe[2]);
                 // alert();
 
-                idtipo = $(this).find("option[value='" + $(this).val() + "']").attr("idtipo");
-                if (idtipo == "P") {
-
-                    porTotal = Number((Number(porc) * Number($("#desTotal").val())) / 100);
-                } else {
-                    porTotal = mont;
-                }
-
-                // alert("desc " + porTotal.toFixed(2));
-
-                $("#porcentajeTotal").val(porc);
-                $("#montoTotal").val(porTotal.toFixed(2));
+                
             }
-            var totalDes = $("#desTotal").val();
+
+            idtipo = $(this).find("option[value='" + $(this).val() + "']").attr("idtipo");
+            if (idtipo == "P") {
+
+                porTotal = Number((Number(porc) * Number($("#desTotal").attr("importe_original"))) / 100);
+            } else {
+                porTotal = mont;
+            }
+
+            // alert("desc " + porTotal.toFixed(2));
+            $("#porcentajeTotal").val(porc);
+            $("#montoTotal").val(porTotal.toFixed(2));
+
+            var totalDes = parseFloat($("#desTotal").attr("importe_original"));
             totalDes = Number(totalDes);
-            // alert(totalDes);
-            if (totalDescuento.val() != '') {
-                // if(montoTotal.val()<1){
-                //         var por=Number(porcentajeTotal.val());
-                //         totalDes=totalDes-por;
-                //     }else{
-
-                //         totalDes=Number(totalDes)-Number(montoTotal.val());
-                //     }
-                totalDes = totalDes - porTotal;
-                // alert(totalDes);
-            }
-            // alert(totalDes);
+           
+            totalDes = totalDes - porTotal;
+      
             desTotal.val(totalDes.toFixed(2));
-            $("#tipo_solicitud").trigger("change");
+            // $("#tipo_solicitud").trigger("change");
+            // $("#cuota_inicial").trigger("keyup");
+            // $("#nro_cuotas").trigger("keyup");
 
         });
 
@@ -2477,6 +2475,7 @@
             $("#t_monto_inafecto").val(t_monto_inafecto.toFixed(2));
             $("#t_impuestos").val(t_impuestos.toFixed(2));
             $("#desTotal").val(t_total.toFixed(2));
+            $("#desTotal").attr("importe_original", t_total.toFixed(2));
             $("#t_nOperGratuita").val(t_nOperGratuita.toFixed(2));
             // console.log(t_monto_descuento, t_monto_subtotal, t_monto_exonerado, t_monto_afecto, t_monto_inafecto, t_impuestos, t_total);
 
@@ -2634,20 +2633,36 @@
 
             $.post("solicitud/factor_credito", { nro_cuotas: nro_cuotas },
                 function (data, textStatus, jqXHR) {
+                    calcular_totales();
                     var porcentaje = 0;
+                    var intereses = 0;
+                    var valor_cuota = 0;
+
                     if (data.length > 0) {
                         porcentaje = parseFloat(data[0].porcentaje);
                     }
 
-                    var valor_cuota = total_financiado * porcentaje;
-                    // console.log(valor_cuota);
-                    var intereses = (Math.round(valor_cuota) * nro_cuotas) - total_financiado;
-                    // console.log(intereses);
-                    $("#valor_cuota").val(valor_cuota.toFixed(0));
-                    if(intereses > 0) {
-                        $("#intereses").val(intereses.toFixed(2));
-                    }
+                    if(porcentaje > 0) {
 
+                        valor_cuota = total_financiado * porcentaje;
+                    } else {
+                        valor_cuota = total_financiado / nro_cuotas;
+                    }
+                    // console.log(valor_cuota);
+                    if(porcentaje > 0) {
+            
+                        intereses = (Math.ceil(valor_cuota) * nro_cuotas) - total_financiado;
+                    }
+                    // console.log(intereses);
+                    $("#valor_cuota").val(Math.ceil(valor_cuota));
+                    var nuevo_total = parseFloat($("#desTotal").val());
+                    
+
+                    $("#intereses").val(intereses.toFixed(2));
+                    nuevo_total += intereses;
+                    $("#desTotal").val(nuevo_total.toFixed(2));
+                    $("#desTotal").attr("importe_original", nuevo_total.toFixed(2));
+                    totalDescuento.trigger("change");
                 },
                 "json"
             );
@@ -2662,8 +2677,13 @@
             bval = bval && $("#tipo_solicitud").required();
             bval = bval && idvendedor.required();
             bval = bval && documento_or.required();
+            if($("#tipo_solicitud").val() == "2") {
+                bval = bval && $("#cuota_inicial").required();
+                bval = bval && $("#nro_cuotas").required();
+            }
 
             if (bval) {
+                
                 if ($("#tipo_solicitud").val() == "1") {
                     var cont = 0;
                     $.each($("select[name='idalmacen[]']"), function (indexInArray, idalmacen) {
@@ -2770,6 +2790,40 @@
             }
         }
 
+        $scope.mostrar_aprobaciones = function () {
+            var bval = true;
+            bval = bval && cCodConsecutivo.required();
+            bval = bval && nConsecutivo.required();
+
+            if(bval) {
+                $.post("solicitud/mostrar_aprobaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
+                    function (data, textStatus, jqXHR) {
+                        if(data.length > 0) {
+                            var html = '';
+                            $("#detalle-aprobaciones").html("");
+                            for (var i = 0; i < data.length; i++) {
+                                html += '<tr>';
+                                html += '   <td>'+data[i].aprobacion+'</td>';
+                                html += '   <td>'+data[i].nOrden+'</td>';
+                                html += '   <td>'+data[i].usuario+'</td>';
+                                html += '   <td>'+data[i].dFecReg+'</td>';
+                                html += '   <td>'+data[i].iEstado+'</td>';
+                                html += '   <td>'+data[i].cObservacion+'</td>';
+                                html += '</tr>';
+                            }
+                            $("#detalle-aprobaciones").html(html);
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'No hay datos!',
+                                type: 'info'
+                            });
+                        }
+                    },
+                    "json"
+                );
+            }
+        }
 
         $scope.enviar_solicitud = function () {
             var bval = true;
@@ -2783,12 +2837,14 @@
                 $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize()+"&estado="+$("#estado").val(),
                     function (data, textStatus, jqXHR) {
                         if (data.status == "i") {
-                            $("#estado").val(data.datos[0].estado);
+                            $("#estado").val(data.datos.estado);
+                            // alert($("#estado option[value='"+$("#estado").val()+"']").text());
                             AlertFactory.textType({
                                 title: '',
-                                message: 'La solicitud se envio correctamente.',
+                                message: 'La solicitud se envio correctamente. Se cambio al estado: '+$("#estado option[value='"+$("#estado").val()+"']").text(),
                                 type: 'success'
                             });
+
                             $("#aprobaciones").show();
                         } else {
                             AlertFactory.textType({
@@ -2868,7 +2924,7 @@
 
                             var codigo = Math.random().toString(36).substr(2, 18);
 
-                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento);
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
 
                         }
                     }

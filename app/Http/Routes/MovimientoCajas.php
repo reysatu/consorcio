@@ -32,4 +32,5 @@ Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
 
 Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');
 
+
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);

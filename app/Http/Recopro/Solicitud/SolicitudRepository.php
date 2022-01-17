@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: JAIR
@@ -143,36 +144,39 @@ class SolicitudRepository implements SolicitudInterface
         return $mostrar3;
     }
 
-    public function obtener_personas() {
+    public function obtener_personas()
+    {
         $mostrar3 = DB::select("select * from ERP_Persona");
         return $mostrar3;
     }
 
-    public function get_parametro_cuotas() {
+    public function get_parametro_cuotas()
+    {
         $param = DB::select("select * from ERP_Parametros WHERE id=4");
-        if(count($param) > 0) {
+        if (count($param) > 0) {
             return $param[0]->value;
         } else {
             return 0;
         }
-
     }
 
 
-    public function get_factor_credito($nro_cuotas, $param_nro_cuotas) {
+    public function get_factor_credito($nro_cuotas, $param_nro_cuotas)
+    {
         $sql = "SELECT * FROM ERP_FactorCredito WHERE nrocuotas = {$nro_cuotas}  AND nrocuotas > {$param_nro_cuotas}";
         // die($sql);
         return DB::select($sql);
     }
 
 
-    public function get_parametro_igv() {
+    public function get_parametro_igv()
+    {
         $param = DB::select("select * from ERP_Parametros WHERE id=1");
         return $param;
-
     }
 
-    public function envio_aprobar_solicitud($data) {
+    public function envio_aprobar_solicitud($data)
+    {
         $sql = "
         DECLARE	@return_value int,
 		@sMensaje varchar(250)
@@ -181,21 +185,22 @@ class SolicitudRepository implements SolicitudInterface
         EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
                 @cCodConsecutivo = N'{$data["cCodConsecutivo"]}',
                 @nConsecutivo = {$data["nConsecutivo"]},
-                @Usuario = ".auth()->id().",
+                @Usuario = " . auth()->id() . ",
                 @sMensaje = @sMensaje OUTPUT
 
         SELECT	@sMensaje as 'msg'";
 
         // echo $sql; exit;
         $res = DB::select($sql);
-        
+
 
         return $res[0]->msg;
     }
 
-    public function get_solicitud($cCodConsecutivo, $nConsecutivo) {
+    public function get_solicitud($cCodConsecutivo, $nConsecutivo)
+    {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
@@ -205,9 +210,10 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
     }
 
-    public function get_solicitud_articulo($cCodConsecutivo, $nConsecutivo) {
+    public function get_solicitud_articulo($cCodConsecutivo, $nConsecutivo)
+    {
 
-        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote, a.description AS almacen, CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, l.descripcion AS localizacion, CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat
+        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote, a.description AS almacen, CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, l.descripcion AS localizacion, CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
@@ -220,16 +226,18 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
     }
 
-    public function get_solicitud_detalle($cCodConsecutivo, $nConsecutivo) {
+    public function get_solicitud_detalle($cCodConsecutivo, $nConsecutivo)
+    {
 
         $sql = "SELECT * FROM ERP_SolicitudDetalle WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
         return $result;
     }
-    
 
-    public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo) {
+
+    public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo)
+    {
 
         $sql = "SELECT * FROM ERP_SolicitudCredito WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
@@ -238,12 +246,23 @@ class SolicitudRepository implements SolicitudInterface
     }
 
 
-    public function get_formas_pago(){
-   
-        $mostrar3=DB::select("select * from ERP_FormasPago");
+    public function get_formas_pago()
+    {
+
+        $mostrar3 = DB::select("select * from ERP_FormasPago");
         return $mostrar3;
-  }
+    }
+
+    public function mostrar_aprobaciones($cCodConsecutivo, $nConsecutivo) {
+
+        $sql = "SELECT sc.*, u.name AS usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg FROM ERP_SolicitudConformidad AS sc
+        INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
+        INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
+        WHERE sc.cCodConsecutivo='{CodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
+
+        $result = DB::select($sql);
+        return $result;
 
 
-
+    }
 }

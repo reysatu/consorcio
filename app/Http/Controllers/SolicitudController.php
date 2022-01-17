@@ -281,6 +281,8 @@ class SolicitudController extends Controller
         if(!empty($res["msg"])) {
             $res["status"] = "ei";
         }
+
+        $res["datos"] = $data_update;
         // exit;
         // print_r($res); exit;
         // print_R($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
@@ -305,5 +307,12 @@ class SolicitudController extends Controller
         return response()->json($response);
     }
 
+
+    public function mostrar_aprobaciones(SolicitudInterface $Repo, Request $request) {
+        $data = $request->all();
+
+        $response = $Repo->mostrar_aprobaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        return response()->json($response);
+    }
  
 }

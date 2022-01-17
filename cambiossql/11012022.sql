@@ -64,3 +64,13 @@ CREATE TABLE ERP_VentaFormaPago(
     constraint pk_venta_forma_pago PRIMARY key(idventa, consecutivo),
 		constraint fk_formas_pago_venta_forma_pago FOREIGN KEY(codigo_formapago) REFERENCES ERP_FormasPago(codigo_formapago)
 );
+
+
+
+ALTER TABLE [dbo].[ERP_ConsecutivosComprobantes] ADD [IdTipoDocumento] varchar(5) NULL
+GO
+
+ALTER TABLE [dbo].[ERP_ConsecutivosComprobantes] ADD CONSTRAINT [fk_tipo_documento_consecutivos_comprobantes] FOREIGN KEY ([IdTipoDocumento]) REFERENCES [dbo].[ERP_TipoDocumento] ([IdTipoDocumento]);
+
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [intereses] decimal(18,5) NULL;
