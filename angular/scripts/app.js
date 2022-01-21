@@ -94,6 +94,7 @@
         'sys.app.revision_cas',
         //Ventas
         'sys.app.solicitud',
+        
         'sys.app.movimientoCajas',
         // Almacen
         'sys.app.receptions',

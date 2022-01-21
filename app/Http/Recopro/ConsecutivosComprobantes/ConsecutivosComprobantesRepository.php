@@ -94,4 +94,13 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
        
         DB::table('ERP_ConsecutivoComprobanteUsuario')->where('idConsecutivo',$id)->where('idUsuario',$usua)->delete();
     }
+
+    public function obtener_consecutivo_comprobante($tipo_documento) {
+        
+
+        $sql = "SELECT * FROM ERP_ConsecutivosComprobantes WHERE IdTipoDocumento={$tipo_documento}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
 }

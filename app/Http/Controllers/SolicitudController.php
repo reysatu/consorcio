@@ -31,9 +31,17 @@ class SolicitudController extends Controller
     public function all(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
+    }
+    
+    public function list_ventas(Request $request, SolicitudInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
     }
 
     public function create(SolicitudInterface $repo, SolicitudRequest $request)
@@ -71,18 +79,24 @@ class SolicitudController extends Controller
             if($data["nConsecutivo"] == "") {
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
-                $data["origen"] = "O";
+                $data["origen"] = "V";
                 $data["estado"] = "1";
 
                 // print_r($this->preparar_datos("dbo.ERP_Solicitud", $data));
                 // exit;
                
                 $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                if($data["tipo_solicitud"] != "1") {
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                }
                 $repo->actualizar_correlativo($data["cCodConsecutivo"], $data["nConsecutivo"]);
             } else {
                 $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-                $this->base_model->modificar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                if($data["tipo_solicitud"] != "1") {
+                    $this->base_model->modificar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+                }
+               
             }   
 
             
@@ -111,29 +125,33 @@ class SolicitudController extends Controller
             }
           
             if(isset($data["series_id"])) {
-                $idSeries = explode(",", $data["series_id"]);
-                $idarticulos = explode(",", $data["articulos_id"]);
-                
-                if(count($idSeries) >  0) {
-                    DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
-                   
+
+                for ($s=0; $s < count($data["series_id"]); $s++) { 
+                    $idSeries = explode(",", $data["series_id"][$s]);
+                    $idarticulos = explode(",", $data["articulos_id"][$s]);
                     
-                    $data_detalle = $data;
-                  
-                    for ($i=0; $i < count($idSeries); $i++) { 
-                        if($i == 0) {
-    
-                            $data_detalle["id"][$i] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
-                        } else {
-                            $data_detalle["id"][$i] = $data_detalle["id"][$i-1] + 1;
+                    if(count($idSeries) >  0) {
+                        DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+                       
+                        
+                        $data_detalle = $data;
+                      
+                        for ($i=0; $i < count($idSeries); $i++) { 
+                            if($i == 0) {
+        
+                                $data_detalle["id"][$i] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
+                            } else {
+                                $data_detalle["id"][$i] = $data_detalle["id"][$i-1] + 1;
+                            }
+                            $data_detalle["idSerie"] = $idSeries[$i];
+                            $data_detalle["idarticulo"] = $idarticulos[$i];
                         }
-                        $data_detalle["idSerie"] = $idSeries[$i];
-                        $data_detalle["idarticulo"] = $idarticulos[$i];
+                        // print_r($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                       
                     }
-                    // print_r($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                   
                 }
+               
             }
 
             
@@ -186,6 +204,7 @@ class SolicitudController extends Controller
         // $tipo_servicio = $repo_orden->gettipo_servicio();
         $tipo_document = $repo_orden->gettipo_document();
         $tipo_document_venta=$repo_orden->gettipo_document_venta();
+        $formas_pago=$Repo->get_formas_pago();
         // $revisiones = $repo_orden->getrevisiones();
         // $tecnico = $repo_orden->gettecnico();
         // $asesor = $repo_orden->getasesor();
@@ -201,6 +220,7 @@ class SolicitudController extends Controller
         $vendedores = $Repo->obtener_vendedores($usuario);
         $personas = $Repo->obtener_personas($usuario);
         $parametro_igv =  $Repo->get_parametro_igv();
+        $dataredondeo = $repo_orden->get_redondeo();
 
         return response()->json([
             'status' => true,
@@ -214,6 +234,7 @@ class SolicitudController extends Controller
             'moneda'=>$moneda,
             // 'asesor'=>$asesor,
             'descuentos'=>$descuentos,
+            'formas_pago'=>$formas_pago,
             // 'servicios'=>$servicios,
             // 'totales'=>$totales,
             // 'tipoMantenimiento'=>$tipoMantenimiento,
@@ -225,6 +246,7 @@ class SolicitudController extends Controller
             'vendedores'=>$vendedores,
             'personas'=>$personas,
             'parametro_igv'=>$parametro_igv,
+            'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
         ]);
     }
 
@@ -243,21 +265,54 @@ class SolicitudController extends Controller
     public function enviar_solicitud(SolicitudInterface $Repo, Request $request) {
         $data = $request->all();
         $res = array("status" => "i");
+        $data_update = array();
+        $data_update["cCodConsecutivo"] = $data["cCodConsecutivo"];
+        $data_update["nConsecutivo"] = $data["nConsecutivo"];
         if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
-            $data["estado"] = "2"; // vigente
+            $data_update["estado"] = "2"; // vigente
    
 
         } else {
-            $data["estado"] = "3"; // por aprobar
+            $data_update["estado"] = "3"; // por aprobar
            
-            $Repo->envio_aprobar_solicitud($data);
+            $res["msg"] = $Repo->envio_aprobar_solicitud($data_update);
         }
 
-        $res = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
-        echo json_encode($res);
+        if(!empty($res["msg"])) {
+            $res["status"] = "ei";
+        }
+
+        $res["datos"] = $data_update;
+        // exit;
+        // print_r($res); exit;
+        // print_R($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+        $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+        // echo json_encode($res);
+
+        return response()->json($res);
     }
 
-    
+    public function find(SolicitudInterface $Repo, Request $request) {
+        $data = $request->all();
+        $arr = explode("_", $data["id"]);
+        $cCodConsecutivo = $arr[0];
+        $nConsecutivo = $arr[1];
+        $response = array();
 
+        $response["solicitud"] = $Repo->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_articulo"] = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_detalle"] = $Repo->get_solicitud_detalle($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_credito"] = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        return response()->json($response);
+    }
+
+
+    public function mostrar_aprobaciones(SolicitudInterface $Repo, Request $request) {
+        $data = $request->all();
+
+        $response = $Repo->mostrar_aprobaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        return response()->json($response);
+    }
  
 }

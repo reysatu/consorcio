@@ -188,4 +188,12 @@ class ConsecutivosComprobantesController extends Controller
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CONSECUTIVOS COMPROBANTES', 'ConsecutivosComprobantes');
     }
+
+    public function obtener_consecutivo_comprobante(ConsecutivosComprobantesInterface $repo, Request $request) {
+
+        $data = $request->all();
+        $consecutivo_comprobante = $repo->obtener_consecutivo_comprobante($data["tipo_documento"]);
+
+        return response()->json($consecutivo_comprobante);
+    }
 }

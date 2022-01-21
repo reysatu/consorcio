@@ -177,3 +177,10 @@ alter table ERP_SolicitudArticulo add cOperGrat varchar(1) -- Check operacion gr
 go
 alter table ERP_SolicitudArticulo add nOperGratuita decimal (18,5) 
 go
+
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [cCodConsecutivoO] varchar(10) NULL
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [nConsecutivoO] int NULL
+go

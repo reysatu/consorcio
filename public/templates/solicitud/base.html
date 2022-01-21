@@ -218,18 +218,19 @@
                                                 name="fecha_vencimiento">
                                         </div>
 
+                                       
+
+                                        <label class="col-sm-1 control-label">Vendedor</label>
+                                        <div class="col-sm-3">
+                                            <select id="idvendedor" name="idvendedor" style="width: 100%;"
+                                                class="form-control input-sm js-example-responsive"></select>
+                                        </div>
                                         <div class="convenio" style="display: none;">
                                             <label class="col-sm-1 control-label">Convenio</label>
                                             <div class="col-sm-2">
                                                 <select id="idconvenio" name="idconvenio"
                                                     class="form-control input-sm"></select>
                                             </div>
-                                        </div>
-
-                                        <label class="col-sm-1 control-label">Vendedor</label>
-                                        <div class="col-sm-2">
-                                            <select id="idvendedor" name="idvendedor" style="width: 100%;"
-                                                class="form-control input-sm js-example-responsive"></select>
                                         </div>
                                         
                                     </div>
@@ -448,9 +449,9 @@
                                                             <th width="110px">Almacen</th>
                                                             <th width="110px">Localización</th>
                                                             <th width="110px">Lote</th>
-                                                            <th width="30px">Cantidad</th>
-                                                            <th width="60px">Precio</th>
-                                                            <th width="60px">Operació_n Gratuita</th>
+                                                            <th width="40px">Cantidad</th>
+                                                            <th width="40px">Precio</th>
+                                                            <th width="60px">Operación Gratuita</th>
                                                             <th width="60px">Precio Total</th>
                                                             <th width="60px">Descuento</th>
                                                             <th width="60px">Porcentaje Descuento</th>
@@ -501,14 +502,14 @@
                                                 <label class="col-sm-6 control-label">Monto Venta</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" readonly="readonly"
-                                                        class="form-control input-sm " id="monto_venta"
+                                                        class="form-control input-sm" id="monto_venta"
                                                         name="monto_venta">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-6 control-label">Cuota Inicial</label>
                                                 <div class="col-sm-6">
-                                                    <input type="number" class="form-control input-sm "
+                                                    <input type="number" class="form-control input-sm  montos-credito inputs-credito"
                                                         id="cuota_inicial" name="cuota_inicial">
                                                 </div>
                                             </div>
@@ -516,15 +517,15 @@
                                                 <label class="col-sm-6 control-label">Monto Financiado</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" readonly="readonly"
-                                                        class="form-control input-sm " id="total_financiado"
+                                                        class="form-control input-sm  montos-credito" id="total_financiado"
                                                         name="total_financiado">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-6 control-label">Cuotas</label>
                                                 <div class="col-sm-6">
-                                                    <input type="number" autofocus="autofocus"
-                                                        class="form-control input-sm " id="nro_cuotas"
+                                                    <input type="number"
+                                                        class="form-control input-sm  montos-credito inputs-credito" id="nro_cuotas"
                                                         name="nro_cuotas">
                                                 </div>
                                             </div>
@@ -532,7 +533,7 @@
                                                 <label class="col-sm-6 control-label">Valor Cuota</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" readonly="readonly"
-                                                        class="form-control input-sm " id="valor_cuota"
+                                                        class="form-control input-sm  montos-credito" id="valor_cuota"
                                                         name="valor_cuota">
                                                 </div>
                                             </div>
@@ -540,7 +541,7 @@
                                                 <label class="col-sm-6 control-label">Intereses</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" readonly="readonly"
-                                                        class="form-control input-sm " id="intereses" name="intereses">
+                                                        class="form-control input-sm montos-credito" id="intereses" name="intereses">
                                                 </div>
                                             </div>
 
@@ -590,10 +591,19 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <input type="hidden" name="t_nOperGratuita" id="t_nOperGratuita" value="0">
+                                              
                                                 <label class="col-sm-6 control-label">Monto Sub Total</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" id="t_monto_subtotal" name="t_monto_subtotal"
+                                                        class="form-control input-sm" value="0" readonly />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                               
+                                                <label class="col-sm-6 control-label">Operación Gratuita</label>
+                                                <div class="col-sm-6">
+                                                    <input type="number" name="t_nOperGratuita" id="t_nOperGratuita"
                                                         class="form-control input-sm" value="0" readonly />
                                                 </div>
                                             </div>
@@ -677,7 +687,7 @@
                             <span class="fa fa-save"></span>
                             Terminada
                         </button> -->
-                        <button type="button" id="" class="btn btn-danger btn-sm " disabled>
+                        <button type="button" id="aprobaciones" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm " style="display: none;" >
                             <span class="fa fa-check"></span>
                             Aprobaciones
                         </button>
@@ -891,7 +901,7 @@
                                 <label class="col-sm-1 control-label">Cantidad</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="cantProductoMss" class="form-control input-sm"
-                                        onkeypress="return soloNumeros(event)">
+                                        onkeypress="return soloNumeros(event)" value="1">
                                 </div>
                             </div>
                             <br>
@@ -968,7 +978,7 @@
                                 </div>
                                 <label class="col-sm-2 control-label">Cantidad</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control input-sm" id="cantProductoMN">
+                                    <input type="text" value="1" class="form-control input-sm" id="cantProductoMN">
                                 </div>
                             </div>
                         </div>
@@ -1014,8 +1024,14 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Monto Alquiler</label>
-                            <input type="number" class="form-control input-sm " id="monto_alquiler"
+                         
+                            <div class="input-group">
+                                <span class="input-group-addon input-sm">
+                                    <strong class="simbolo-moneda"></strong>
+                                </span>
+                                <input type="number" class="form-control input-sm " id="monto_alquiler"
                                 name="monto_alquiler">
+                            </div>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Profesión</label>
@@ -1328,7 +1344,7 @@
                             <button type="button" id="btn_editar_fiadorconyugue" data-tipo="fiadorconyugue"
                                 class="btn btn-danger-admin btn-sm btn-editar-persona">
                                 <span class="fa fa-save"></span>
-                                Editar Fiador/Conyugue
+                                Editar <br>Fiador/Conyugue
                             </button>
                         </div>
                     </div>
@@ -1502,5 +1518,51 @@
                 </div>
             </form>
         </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="modal-aprobaciones" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="">Aprobaciones</h4>
+            </div>
+            <form id="formulario-aprobaciones">
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <th>Aprobación</th>
+                                            <th>Orden</th>
+                                            <th>Usuario</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                            <th>Observación</th>
+                                        </thead>
+                                        <tbody id="detalle-aprobaciones">
+    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>

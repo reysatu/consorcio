@@ -1,3 +1,35 @@
+CREATE TABLE ERP_Venta(
+		idventa int not null,
+		tipo_comprobante varchar(5),
+		serie_comprobante varchar(10),
+		numero_comprobante varchar(10),
+		cCodConsecutivo_solicitud varchar(5),
+		nConsecutivo_solicitud int,
+		condicion_pago varchar(10),
+		fecha_emision datetime,
+		idcliente int,
+		clase_comprobante varchar(1),
+		iddescuento int,
+		t_porcentaje_descuento decimal(18,5),
+		t_monto_descuento decimal(18,5),
+		t_monto_subtotal decimal(18,5),
+		t_monto_exonerado decimal(18,5),
+		t_monto_afecto decimal(18,5),
+		t_monto_inafecto decimal(18,5),
+		t_impuestos decimal(18,5),
+		t_monto_total decimal(18,5),
+		monto_descuento_detalle decimal(18,5),
+		user_created int,
+		user_updated int,
+		user_deleted int,
+		created_at datetime,
+		updated_at datetime,
+		deleted_at datetime,   
+    constraint pk_venta PRIMARY key(idventa),
+		constraint fk_clientes_venta FOREIGN KEY(idcliente) REFERENCES ERP_Clientes(id)
+);
+
+
 CREATE TABLE ERP_SolicitudArticulo(
 	id int not null,
     cCodConsecutivo varchar(10) not null,
