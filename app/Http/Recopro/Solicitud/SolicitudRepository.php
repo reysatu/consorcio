@@ -200,10 +200,12 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
+        LEFT JOIN ERP_Vendedores AS v ON(v.idvendedor=s.idvendedor)
+        LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
         WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
@@ -213,14 +215,42 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud_articulo($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote, a.description AS almacen, CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, l.descripcion AS localizacion, CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie
+        $sql = "SELECT sa.*, p.description AS producto, p.impuesto, p.lote, 
+        CASE WHEN a.description IS NULL THEN '-.-' ELSE a.description END AS almacen, 
+        CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, 
+        CASE WHEN l.descripcion IS NULL THEN '-.-' ELSE l.descripcion END AS localizacion, 
+        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
         LEFT JOIN ERP_Localizacion AS l ON(l.idLocalizacion=sa.idlocalizacion)
         LEFT JOIN ERP_Lote AS lo ON(lo.idLote=sa.idlote)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=sa.iddescuento)
+        
         WHERE sa.cCodConsecutivo='{$cCodConsecutivo}' AND sa.nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+
+    public function get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "SELECT sa.*, p.*, c.descripcion AS categoria,
+        CASE WHEN m.description IS NULL THEN '.' ELSE  m.description END AS marca,
+        CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
+        s.nombreSerie AS serie, cv.idCatVeh 
+       
+        FROM ERP_SolicitudArticulo AS sa
+        INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        LEFT JOIN ERP_Marcas AS m ON(m.id=p.idMarca)
+        LEFT JOIN ERP_Modelo AS mo ON(mo.idModelo=p.idModelo)
+        LEFT JOIN ERP_Serie AS s ON(s.idArticulo=p.id)
+        
+        INNER JOIN ERP_Categoria AS c ON(c.idCategoria=p.idCategoria)
+        INNER JOIN ERP_CategoriaVeh AS cv ON(cv.idCatVeh=p.idCatVeh)
+        WHERE sa.cCodConsecutivo='{$cCodConsecutivo}' AND sa.nConsecutivo={$nConsecutivo} AND p.idCategoria IN(1,2)";
         $result = DB::select($sql);
 
         return $result;
@@ -240,6 +270,18 @@ class SolicitudRepository implements SolicitudInterface
     {
 
         $sql = "SELECT * FROM ERP_SolicitudCredito WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento,
+        CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado
+         FROM ERP_SolicitudCronograma AS sc
+        WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
         return $result;

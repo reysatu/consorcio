@@ -75,12 +75,18 @@ class SolicitudController extends Controller
             $descuento_id = $desc[0];
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
+
+            //SALDOS
+            $data["saldo"] = $data["t_monto_total"];
+            $data["facturado"] = 0;
+            $data["pagado"] = 0;
         
             if($data["nConsecutivo"] == "") {
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
                 $data["origen"] = "V";
                 $data["estado"] = "1";
+               
 
                 // print_r($this->preparar_datos("dbo.ERP_Solicitud", $data));
                 // exit;

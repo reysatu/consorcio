@@ -2741,7 +2741,7 @@
 
                                 var cant = series_id[ar].value.split(",");
 
-                                if(cant != cantidad) {
+                                if(cant.length != cantidad) {
                                     AlertFactory.textType({
                                         title: '',
                                         message: 'Por Favor Agregue la cantidad de '+cantidad+' series del producto: '+producto,
@@ -2912,7 +2912,8 @@
                     if(data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);   
-                        $("#monto_financiado").val(data.solicitud_credito[0].monto_financiado);   
+                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);  
+                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta); 
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);   
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);   
                         $("#intereses").val(data.solicitud_credito[0].intereses);   

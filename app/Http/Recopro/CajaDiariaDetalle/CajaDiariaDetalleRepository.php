@@ -124,6 +124,34 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         $model->update($attributes);
         $model->delete();
      
+
+
     }
+    
+
+    public function get_condicion_pago($dias) {
+        $sql = "SELECT * FROM ERP_CondicionPago AS cp WHERE cp.days={$dias}";
+
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_caja_diaria() {
+        $idusuario = auth()->id();
+        $fechacA = date("Y-m-d");
+        $sql = "SELECT * FROM ERP_CajaDiaria 
+        WHERE idUsuario='$idusuario' AND FORMAT(fechaCaja, 'yyyy-MM-dd')='$fechacA'";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+
+    public function get_empresa() {
+        $sql = "SELECT * FROM ERP_Compania";
+        $result = DB::select($sql);
+        return $result;
+    }
+    
 
 }
