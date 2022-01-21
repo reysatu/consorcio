@@ -56,7 +56,7 @@
                     key: true,
                     create: false,
                     edit: false,
-                    list: false
+                    list: true
                 },
                 Articulo: {
                     title: 'Articulo'
@@ -202,7 +202,7 @@
                 }
             }, function () {
                 getDataFiltro();
-            });
+            }); 
         }
          $("#btn_exportar_QS").click(function(e){
             var data_excel = {
@@ -215,12 +215,24 @@
             //             $scope.openDoc('projects/excel', data_excel);
               $scope.openDoc('query_stocks/excel',data_excel);
         });
+         $("#btn_exportar_QS_PDF").click(function(e){
+            var data_pdf = {
+                            filtro_idAlm: $('#filtro_idAlm').val(),
+                            filtro_idLoc: $('#filtro_idLoc').val(),
+                            filtro_cate: $('#filtro_cate').val(),
+                            filtro_art: $('#filtro_art').val(),
+                            search: '',
+             };
+            $scope.loadQueryStockPDF('query_stocks/pdf', data_pdf);
+            //             $scope.openDoc('projects/excel', data_pdf);
+            // $scope.openDoc('query_movements/pdf',data_pdf);
+        });
         $(".jtable-title-text").removeClass('col-md-4');
         $(".jtable-title-text").addClass('col-md-3');
 
         $(".jtable-toolbar").removeClass('col-md-8');
         $(".jtable-toolbar").addClass('col-md-9');
-    }
+    } 
 
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider

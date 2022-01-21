@@ -41,6 +41,30 @@ class Register_movementRepository implements Register_movementInterface
         });
 
     }
+    public function searchMovCierre($s,$perido_busquedad)
+
+    {   
+        $anio='';
+        $mes='';
+        if($perido_busquedad){
+            $valtodo=explode("-", $perido_busquedad);
+            $anio=$valtodo[0];
+            if(!isset($valtodo[1])){
+              $anio='';  
+              $mes='';  
+            }else{
+                $mes=$valtodo[1]; 
+            }
+            
+        }
+        return $this->model->where(function($q) use ($s,$anio,$mes){
+            $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->whereYear('fecha_registro',$anio)->whereMonth('fecha_registro',$mes)->orderByRaw('created_at DESC');
+            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->whereYear('fecha_registro',$anio)->whereMonth('fecha_registro',$mes);
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%')->whereYear('fecha_registro',$anio)->whereMonth('fecha_registro',$mes);
+            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->whereYear('fecha_registro',$anio)->whereMonth('fecha_registro',$mes);
+        });
+
+    }
      public function search_entrega($s)
     {
         return $this->model->where(function($q) use ($s){

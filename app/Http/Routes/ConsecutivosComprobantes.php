@@ -13,6 +13,9 @@ Route::post('consecutivos_comprobantes/update', ['as' => 'consecutivos_comproban
 Route::get('consecutivos_comprobantes/excel', ['as' => 'consecutivos_comprobantes.excel', 'uses' => 'ConsecutivosComprobantesController@excel']);
 
 Route::post('consecutivos_comprobantes/getTiendas', 'ShopController@getTiendas');
+
+Route::post('consecutivos_comprobantes/getDocumentos', 'ConsecutivosComprobantesController@getDocumentos');
+
 Route::put('consecutivos_comprobantes/saveComprobante/{id}', ['as' => 'consecutivos_comprobantes.saveComprobante', 'uses' => 'ConsecutivosComprobantesController@createUpdate']);
 Route::get('consecutivos_comprobantes/find/{id}', ['as' => 'consecutivos_comprobantes.find', 'uses' => 'ConsecutivosComprobantesController@find']);
 
@@ -23,4 +26,8 @@ Route::get('consecutivos_comprobantes/data_formDescCc', ['as' => 'consecutivos_c
 Route::get('consecutivos_comprobantes/data_formJerConComp', ['as' => 'consecutivos_comprobantes.data_formJerConComp', 'uses' => 'ConfigJerarquiaController@data_form']);
 
 
+Route::get('consecutivos_comprobantes/data_form', ['as' => 'consecutivos_comprobantes.data_form', 'uses' => 'ConsecutivosComprobantesController@data_form']);
+
+
 Route::post('consecutivos_comprobantes/obtener_consecutivo_comprobante', 'ConsecutivosComprobantesController@obtener_consecutivo_comprobante');
+

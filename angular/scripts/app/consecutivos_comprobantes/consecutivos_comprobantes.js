@@ -13,10 +13,10 @@
 
     function ConsecutivosComprobantesCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
-        
+         
         var modalConsecutivoCombro=$("#modalConsecutivoCombro");
         var titleConsecutivoCombro=$("#titleConsecutivoCombro");
-
+        var idTipoDocumento=$("#IdTipoDocumento");
         var id_consecutivo=$("#id_consecutivo");
         var idtienda=$("#idtienda");
         var serie=$("#serie");
@@ -30,7 +30,7 @@
 
         idtienda.select2();
         idusuario.select2();
-       
+        idTipoDocumento.select2();
         longitud.keyup(function(){
           
             cambiarLongitud();
@@ -55,6 +55,7 @@
                     actual.val(data_p.actual);
                     ultimo.val(data_p.ultimo);
                     longitud.val(data_p.longitud);
+                    idTipoDocumento.val(data_p.IdTipoDocumento).trigger("change");
                    console.log(data_p);
                    console.log(data_detalle);
                     if(data_detalle!=[]){
@@ -85,7 +86,7 @@
             longitud.val("");
             idusuario.val("").trigger("change");
             tableDetalleConsecutivo.html("");
-            
+            idTipoDocumento.val("").trigger("change");
         }
          idusuario.change(function () {
             var user=$(this).val();
@@ -107,7 +108,7 @@
             bval = bval && numero.required();
             bval = bval && actual.required();
             bval = bval && ultimo.required();
-
+            bval = bval && idTipoDocumento.required();
            if($("#tableDetalleConsecutivo").html()==''){
                AlertFactory.showWarning({
                     title: '',
@@ -150,6 +151,7 @@
                     'actual':actual.val(),
                     'ultimo':ultimo.val(),
                     'longitud':longitud.val(),
+                    'IdTipoDocumento':idTipoDocumento.val(),
                     'idUsuario':idUsuario,
                     'idConsedet':idConsedet,
                  };
@@ -281,6 +283,23 @@
         }
         getDataJerarquiaForm();
 
+          function getDataForm () {
+            RESTService.all('consecutivos_comprobantes/data_form', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var documentos=response.documento;
+                     idTipoDocumento.append('<option value="" selected>Seleccionar</option>');
+                    _.each(documentos, function(item) {
+                        idTipoDocumento.append('<option value="'+item.IdTipoDocumento+'">'+item.Descripcion+'</option>');
+                    });
+                }
+            }, function() {
+                getDataForm();
+            });
+        }
+        getDataForm();
+
+
+
         var search = getFormSearch('frm-search-brand', 'search_b', 'LoadRecordsButtonCompro');
 
         var table_container_consecutivos_comprobantes = $("#table_container_consecutivos_comprobantes");
@@ -326,6 +345,10 @@
                     title: 'Tienda',
                     options: base_url + '/consecutivos_comprobantes/getTiendas' 
 
+                },
+                IdTipoDocumento:{
+                     title: 'Tipo Documento',
+                    options: base_url + '/consecutivos_comprobantes/getDocumentos' 
                 },
                 serie: {
                     title: 'Serie'

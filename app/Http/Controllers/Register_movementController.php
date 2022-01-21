@@ -25,7 +25,7 @@ class Register_movementController extends Controller
 {
      use Register_movementTrait;
 
-    public function __construct()
+    public function __construct() 
     {
 //        $this->middleware('json');
     }

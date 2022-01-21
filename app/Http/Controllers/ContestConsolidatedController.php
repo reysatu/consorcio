@@ -129,6 +129,6 @@ class ContestConsolidatedController extends Controller
         $data = $this->getData($requirements, $requirementRepo);
 
         $data = $this->excelConsolidated($data);
-        return generateDataPDF($data, 'portrait', 'logo.png', 2);
-    }
+        return generateDataPDF($data, 'portrait', 'logo.jpg', 2);
+    } 
 }

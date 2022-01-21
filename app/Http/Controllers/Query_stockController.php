@@ -88,4 +88,26 @@ class Query_stockController extends Controller
             ]);
         }
     }
+      public function pdf(Request $request, Query_stockInterface $repo)
+    {       
+            date_default_timezone_set('America/Lima');
+            $fechacA= date("d/m/Y");
+            $s = $request->input('search', '');
+            $filtro_art =  $request->input('filtro_art');
+            $filtro_idAlm =  $request->input('filtro_idAlm');
+            $filtro_idLoc =  $request->input('filtro_idLoc');
+            $filtro_cate =  $request->input('filtro_cate');
+            
+            $data =$repo->allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate);
+            return response()->json([
+                'status' => true,
+                'filtro_art'=>$filtro_art,
+                'filtro_idAlm'=>$filtro_idAlm,
+                'filtro_idLoc'=>$filtro_idLoc,
+                'filtro_cate'=>$filtro_cate,
+                'data' => $data,
+                'fechacA'=>$fechacA,
+               
+            ]);
+    }
 } 
