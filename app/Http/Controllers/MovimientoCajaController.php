@@ -160,7 +160,7 @@ class MovimientoCajaController extends Controller
     {   
         $date=$id;
         $usuario=auth()->id();
-        date_default_timezone_set('UTC');
+        date_default_timezone_set('America/Lima');
         $dataMc = $recaj->get_cajaActual($date,$usuario);
         $dataCA = $recaj->getCajaAbierta($date,$usuario);
         $dataCaDet = $recaj->getCajaDetalle($date,$usuario);

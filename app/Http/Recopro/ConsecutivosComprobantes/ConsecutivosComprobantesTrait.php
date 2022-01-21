@@ -14,7 +14,7 @@ trait ConsecutivosComprobantesTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['SERIE', 'NUMERO', 'TIENDA', 'ACTUAL', 'ULTIMO', 'LONGITUD', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['SERIE','TIPO DOCUMENTO', 'NUMERO', 'TIENDA', 'ACTUAL', 'ULTIMO', 'LONGITUD', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             // $usuarios=[];
@@ -24,6 +24,7 @@ trait ConsecutivosComprobantesTrait
             // $usuarios = implode(',', $usuarios);
             $columns[] = [
                 ['left', $i->serie],
+                ['left', $i->tipo_documento->Descripcion],
                 ['left', $i->numero],
                 ['left', $i->tienda_d->descripcion],
                 ['left', $i->actual],

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\DocumentType\DocumentTypeInterface;
 use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuarioInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesTrait;
 use App\Http\Requests\ConsecutivosComprobantesRequest;
@@ -21,12 +22,27 @@ class ConsecutivosComprobantesController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
+    } 
+     public function data_form (ConsecutivosComprobantesInterface $moventRepo)
+    {
+       
+        $documento = $moventRepo->getDocumentos();
+      
+        return response()->json([
+            'status' => true,
+            'documento' => $documento,
+           
+        ]);
+    }
+     public function getDocumentos(Request $request, DocumentTypeInterface $repo)
+    {
+        return parseSelect($repo->all(), 'IdTipoDocumento', 'Descripcion');
     }
 
     public function all(Request $request, ConsecutivosComprobantesInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id_consecutivo', 'numero', 'serie', 'actual', 'ultimo', 'longitud', 'idtienda'];
+        $params = ['id_consecutivo','IdTipoDocumento', 'numero', 'serie', 'actual', 'ultimo', 'longitud', 'idtienda'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'id_consecutivo', $params);
     }

@@ -13,3 +13,4 @@ Route::post('query_stocks/update', ['as' => 'query_stocks.update', 'uses' => 'Qu
 Route::get('query_stocks/excel', ['as' => 'query_stocks.excel', 'uses' => 'Query_stockController@excel']);
 Route::get('query_stocks/getDataFiltro', 'Query_stockController@getDataFiltro');
 Route::get('query_stocks/get_localizacion/{id}', ['as' => 'query_stocks.get_localizacion', 'uses' => 'Query_stockController@get_localizacion_al']);
+Route::get('query_stocks/pdf', ['as' => 'query_stocks.pdf', 'uses' => 'Query_stockController@pdf']);

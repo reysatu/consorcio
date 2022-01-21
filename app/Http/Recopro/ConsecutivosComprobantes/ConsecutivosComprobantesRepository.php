@@ -72,6 +72,11 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
         $mostrar=DB::select("select * from ERP_ConsecutivoComprobanteUsuario as de inner join ERP_Usuarios as us on us.id=de.idUsuario where de.idConsecutivo='$id'");
         return $mostrar; 
     }
+      public function getDocumentos()
+    {   
+        $mostrar=DB::select("SELECT * FROM ERP_TipoDocumento");
+        return $mostrar; 
+    }
     public function get_consecutivo($table,$id)
     {     
         $mostrar = DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");

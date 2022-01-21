@@ -20,7 +20,32 @@ use App\Http\Recopro\Brand\BrandInterface;
 use App\Http\Recopro\Brand\BrandRepository;
 use App\Http\Recopro\Bancos\Bancos;
 use App\Http\Recopro\Bancos\BancosInterface;
-use App\Http\Recopro\Bancos\BancosRepository;
+use App\Http\Recopro\Bancos\BancosRepository; 
+
+use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre; 
+use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
+use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreRepository;
+
+use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierre; 
+use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreInterface;
+use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreRepository;
+
+use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierre; 
+use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierreInterface;
+use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierreRepository;
+
+use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierre; 
+use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierreInterface;
+use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierreRepository;
+
+use App\Http\Recopro\Periodo\Periodo; 
+use App\Http\Recopro\Periodo\PeriodoInterface;
+use App\Http\Recopro\Periodo\PeriodoRepository;
+
+
+use App\Http\Recopro\Compania\Compania; 
+use App\Http\Recopro\Compania\CompaniaInterface;
+use App\Http\Recopro\Compania\CompaniaRepository;
 
 use App\Http\Recopro\TiposMovimiento\TiposMovimiento;
 use App\Http\Recopro\TiposMovimiento\TiposMovimientoInterface;
@@ -588,6 +613,12 @@ class AppServiceProvider extends ServiceProvider
         $this->registerBancos();
         $this->registerFactorCredito();
         $this->registerTiposMovimiento();
+        $this->registerMovimiento_cierre();
+        $this->registerMovimiento_Articulo_cierre();
+        $this->registerMovimiento_Detalle_cierre();
+        $this->registerView_movimiento_cierre();
+        $this->registerPeriodo();
+        $this->registerCompania();
         $this->registerFormasPago();
         $this->registerCajaUsuario();
         $this->registerCajaDiaria();
@@ -858,6 +889,54 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(TiposMovimientoInterface::class, function ($app) {
             return new TiposMovimientoRepository(new TiposMovimiento());
+        });
+    }
+    public function registerMovimiento_cierre()
+    {
+        $app = $this->app;
+
+        $app->bind(Movimiento_cierreInterface::class, function ($app) {
+            return new Movimiento_cierreRepository(new Movimiento_cierre());
+        });
+    }
+    public function registerMovimiento_Articulo_cierre()
+    {
+        $app = $this->app;
+
+        $app->bind(Movimiento_Articulo_cierreInterface::class, function ($app) {
+            return new Movimiento_Articulo_cierreRepository(new Movimiento_Articulo_cierre());
+        });
+    }
+    public function registerMovimiento_Detalle_cierre()
+    {
+        $app = $this->app;
+
+        $app->bind(Movimiento_Detalle_cierreInterface::class, function ($app) {
+            return new Movimiento_Detalle_cierreRepository(new Movimiento_Detalle_cierre());
+        });
+    }
+    public function registerView_movimiento_cierre()
+    {
+        $app = $this->app;
+
+        $app->bind(View_movimiento_cierreInterface::class, function ($app) {
+            return new View_movimiento_cierreRepository(new View_movimiento_cierre());
+        });
+    }
+    public function registerPeriodo()
+    {
+        $app = $this->app;
+
+        $app->bind(PeriodoInterface::class, function ($app) {
+            return new PeriodoRepository(new Periodo());
+        });
+    }
+    public function registerCompania()
+    {
+        $app = $this->app;
+
+        $app->bind(CompaniaInterface::class, function ($app) {
+            return new CompaniaRepository(new Compania());
         });
     }
 

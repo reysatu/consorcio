@@ -66,7 +66,7 @@
                     key: true,
                     create: false,
                     edit: false,
-                    list: false
+                    list: true
                 },
                 id: {
                     key: false,
@@ -110,10 +110,10 @@
                     title: 'Ori.',
                     width: '3%'
                 },
-                idOrigen: {
-                    title: 'Id',
-                    width: '3%'
-                },
+                // idOrigen: {
+                //     title: 'Id',
+                //     width: '3%'
+                // },
                 Almacen: {
                     title: 'Alm.',
                     width: '6%'
@@ -259,6 +259,25 @@
              };
             //             $scope.openDoc('projects/excel', data_excel);
             $scope.openDoc('query_movements/excel',data_excel);
+        });
+        $("#btn_exportar_QM_PDF").click(function(e){
+            var data_pdf = {
+                            filtro_idAlm:$('#filtro_idAlm').val(),
+                            filtro_idLoc:$('#filtro_idLoc').val(),
+                            filtro_nat:$('#filtro_nat').val(),
+                            filtro_oper:$('#filtro_oper').val(),
+                            filtro_cate:$('#filtro_cate').val(),
+                            filtro_art:$('#filtro_art').val(),
+                            n_movimiento:$('#n_movimiento').val(),
+                            cod_lote:$('#cod_lote').val(),
+                            cod_serie:$('#cod_serie').val(),
+                            fecha_inicio:$('#fecha_inicio').val(),
+                            fecha_fin:$('#fecha_fin').val(),
+                            search: '',
+             };
+                $scope.loadQueryMovimientoPDF('query_movements/pdf', data_pdf);
+            //             $scope.openDoc('projects/excel', data_pdf);
+            // $scope.openDoc('query_movements/pdf',data_pdf);
         });
         generateSearchForm('frm-search-Query_Movement', 'LoadRecordsButtonQuery_Movement', function(){
             table_container_Query_Movement.jtable('load', {

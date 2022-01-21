@@ -2078,22 +2078,24 @@
                     title: '#',
                     key: true,
                     create: false,
+                    listClass: 'text-center',
                 },
                 idTipoOperacion: {
                     title: 'Tipo Operación',
-                    options: base_url + '/operations/getAll' 
+                    options: base_url + '/register_movements/getAllOperationRegMov' 
                 },
                 idUsuario: {
                     title: 'Usuario',
-                    options: base_url + '/users/getAll' 
-                },
+                    options: base_url + '/register_movements/getAllUserRegMov' 
+                }, 
                 estado: {
                     title: 'Estado',
                     values: { '0': 'Registrado', '1': 'Procesado' },
                     type: 'checkbox',
                     defaultValue: 'A',
                    
-                },edit: {
+                },
+                edit: {
                     width: '1%',
                     sorting: false,
                     edit: false,

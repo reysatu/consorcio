@@ -24,7 +24,7 @@ class Query_stockRepository implements Query_stockInterface
         return $this->model->get();
     }
     public function allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate)
-    {       $dato=$this->model->get();
+    {       $dato=$this->model->Where('Total','>',0)->get();
             if(!empty($filtro_art)){
             $dato=$dato->Where('Articulo',$filtro_art);
             }
@@ -42,7 +42,7 @@ class Query_stockRepository implements Query_stockInterface
      public function search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate)
     {   
         return $this->model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate) {
-            $q->where('Articulo', 'LIKE', '%'.$s.'%')->orderByRaw('Articulo DESC');
+            $q->where('Articulo', 'LIKE', '%'.$s.'%')->Where('Total','>',0)->orderByRaw('Articulo DESC');
             if(!empty($filtro_art)){
              $q->Where('Articulo',$filtro_art);
             }

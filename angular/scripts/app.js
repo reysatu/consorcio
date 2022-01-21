@@ -77,9 +77,9 @@
         'sys.app.cobradors',
         'sys.app.configJerarquias',
         'sys.app.personas',
-
+        'sys.app.movimiento_cierres',
         'sys.app.factor_credito',
-
+        'sys.app.periodos',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
@@ -125,6 +125,7 @@
         'sys.app.purchase_payments',
         'sys.app.writing_checks',
         'sys.app.petty_cash',
+        'sys.app.companias',
         //Servicio tecnico 
         'sys.app.devolucion_servicesTecnicos',
         'sys.app.entrega_servicesTecnicos',
@@ -355,6 +356,54 @@
                         // });
                        
                         create_pdf_transfer(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+         $scope.loadQueryStockPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_Querystock(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+        $scope.loadQueryMovimientoPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        create_pdf_Querymovimiento(response);
                        
                     }
                     angular.element('#show_loading').addClass('ng-hide');

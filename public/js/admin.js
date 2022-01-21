@@ -356,6 +356,22 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearchCierre(form_id, input_id, btn_id,val_busquedad,estado,idMovimiento) {
+    var estado='b';
+    return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="input-group input-group-sm">' +
+          '<input type="hidden"  value="'+val_busquedad+'" name="perido_busquedad" id="perido_busquedad"/>' +
+          '<input type="hidden"  value="'+estado+'" name="estado_busquedad" id="estado_busquedad"/>' +
+          '<input type="hidden"  value="'+idMovimiento+'" name="idMovimientoBusquedad" id="idMovimientoBusquedad"/>' +
+        '<input type="text" id="' + input_id + '" value="" name="search" class="form-control" autocomplete="off" placeholder="Nro de Movimiento" />' +
+        '<span class="input-group-btn">' +
+        '<button type="submit" id="' + btn_id + '" class="btn btn-danger-admin">' +
+        '<i class="fa fa-search"></i>' +
+        '</button>' +
+        '</span>' +
+        '</div>' +
+        '</form>';
+}
 function getFormSearch_MovimientoCaja(form_id, input_id, btn_id) {
     return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
         '<div class="form-group">'+
@@ -384,20 +400,27 @@ function getFormSearch2(form_id, input_id, btn_id) {
             '<div class="col-md-2"><select id="filtro_cate" style="margin-right:5px"  name="filtro_cate" class="form-control input-sm"></select></div>'+
             '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idAlm" name="filtro_idAlm" class="form-control input-sm"></select></div>'+
             '<div class="col-md-2"><select style="margin-right:5px" id="filtro_idLoc"  name="filtro_idLoc"  class="form-control input-sm"></select></div>'+
-            '<div class="col-md-2"><div class="input-group input-group-sm">' +
-            '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
-            '<span class="input-group-btn">' +
-            '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
-            '<i class="fa fa-search"></i>' +
-            '</button>' +
-            '</span>' +
-            '<span class="input-group-btn">' +
-            '<button  type="button"  id="btn_exportar_QS" class="btn-primary  btn-sm">' +
-            '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
-            '</button>' +
-            '</span>' +
-            '</div></div>' +
-            '</div>'+
+            '<div class="col-md-2">'+
+                '<div class="input-group input-group-sm">' +
+                    '<input value="a" type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+                        '<span class="input-group-btn">' +
+                            '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                            '<i class="fa fa-search"></i>' +
+                            '</button>' +
+                            '<button  type="button"  id="btn_exportar_QS" class="btn-primary  btn-sm">' +
+                             '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+                             '</button>' +
+                        '</span>' +
+                '</div>'+
+            '</div>' +
+        '</div>'+
+        '<div class="form-group">'+
+                '<div class="col-md-2 col-md-offset-10">'+
+                    '<button  type="button"  id="btn_exportar_QS_PDF" class="btn-success  btn-sm">' +
+                        '<i class="fa fa-file-pdf-o">Exportar a Pdf</i>'+
+                    '</button>' +
+                '</div>' +
+        '</div>'+
         '</form>';
 }
 function getFormSearch3(form_id, input_id, btn_id) {
@@ -428,6 +451,10 @@ function getFormSearch3(form_id, input_id, btn_id) {
         '</button>' +
         '<button  type="button"  id="btn_exportar_QM" class="btn-primary  btn-sm">' +
         '<i class="fa fa-file-excel-o">Exportar a Excel</i>' +
+        '</button>' +
+         '</button>' +
+        '<button  type="button"  id="btn_exportar_QM_PDF" class="btn-success  btn-sm">' +
+        '<i class="fa fa-file-pdf-o">Exportar a Pdf</i>' +
         '</button>' +
         '</span>' +
         // '<span class="input-group-btn">' +
@@ -2904,7 +2931,1177 @@ function create_pdf_transfer(response) {
     // }
 
 }
+function create_pdf_Querystock(response) {
+     var filtro_art=response.filtro_art;  
+     var filtro_idAlm=response.filtro_idAlm;  
+     var filtro_idLoc=response.filtro_idLoc;
+     var filtro_cate=response.filtro_cate;
+     var data=response.data;
+     var fechacA=response.fechacA;
+     console.log(data);
+     console.log(filtro_art);
+     console.log("jsjhsjsjhs");
+   
+     if(!filtro_art){
+        filtro_art='TODOS'
+     };
+      if(!filtro_idAlm){
+        filtro_idAlm='TODOS'
+     };
+      if(!filtro_idLoc){
+        filtro_idLoc='TODOS'
+     };
+      if(!filtro_cate){
+        filtro_cate='TODOS'
+     };
+ 
+  
+    var dataFiltros=[];
+    var datafs=[
+                         
+                        { 
+                            text: 'ARTÍCULO :',
+                            fontSize: 9 ,
+                         
+                            bold: true,
 
+                        },
+                          { 
+                            text:filtro_art,
+                            fontSize: 9 ,
+
+                        },
+                          { 
+                            text:'CATEGORÍA :',
+                            fontSize: 9 ,
+                            bold: true,
+
+                        },
+                        { 
+                            text: filtro_cate,
+                            fontSize: 9 ,
+                           
+
+                        },
+                         { 
+                            text:'ALMACÉN :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+
+                        { 
+                            text: filtro_idAlm,
+                            fontSize: 9 ,
+                        
+
+                        },
+                          { 
+                            text:'LOCALIZACIÓN :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+                        { 
+                            text: filtro_idLoc,
+                            fontSize: 9 ,
+                        },
+                         
+                    ];
+     dataFiltros.push(datafs);
+
+     var dataDolMovimienQuery=[];
+     var tituloDolFormQuery=[
+                         { 
+                            text:'Id',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text:'Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Categoría',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Uni',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Alm.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Loc.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Lote',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'Serie',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Disponible',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                        { 
+                            text: 'Remitido',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'S.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Tránsito',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'Costo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'C.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+   
+
+      dataDolMovimienQuery.push(tituloDolFormQuery) ;
+      var todol=0;
+       data.map(function(index) {
+            todol=Number(todol)+Number(index.Costo_Promedio_Unitario);
+            var tituloDolFormQueryData=[];
+             tituloDolFormQueryData=[
+                        { 
+                            text:index.id,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Articulo,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Categoria,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Unidad,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Almacen,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Localizacion,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Lote,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:index.Serie,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:Number(index.Disponible),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Remitido),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: Number(index.Total),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Transito),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:Number(index.Costo_Promedio_Unitario).toFixed(2),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:Number(index.Costo_Total).toFixed(2),
+                            fontSize: 7 ,
+
+                        },
+                    ];
+             dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
+       });
+   for (var i = 0; i < 5; i++) {
+    var tituloDolFormQueryData=[];
+      if(i==4){
+        tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'TOTAL COSTO',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                            bold:true,
+
+                        },
+                         { 
+                            text:todol.toFixed(2),
+                            fontSize: 7 ,
+
+                        },
+                    ];
+      }else{
+            
+             tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false],
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false], 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                            border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                    ];
+            
+      }
+       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
+    }
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            content: [ 
+
+                        { text: 'REPORTE DE STOCK A LA FECHA : '+fechacA, style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
+                        {  
+                            style: 'tableExample',
+                            table: {
+                                body: dataFiltros,
+                            },
+                            margin: [10, 0, 0, 10],
+                            layout: 'noBorders',
+
+                        },
+                        {  
+                            style: 'tableExample',
+                            widths: [60, 60,60, 60,60, 60,40, 60,60, 60,60, 60,60, 60,60, 60,60, 60],
+                            table: {
+                                body: dataDolMovimienQuery,
+                            },
+                            margin: [10, 0, 0, 10],
+
+                        },
+
+                  
+            
+                    ]
+                };
+
+
+    var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+   
+
+}
+function create_pdf_Querymovimiento(response) {
+     var filtro_art=response.filtro_art;  
+     var filtro_idAlm=response.filtro_idAlm;  
+     var filtro_idLoc=response.filtro_idLoc;
+     var filtro_cate=response.filtro_cate;
+     var filtro_nat=response.filtro_nat;
+     var filtro_oper=response.filtro_oper;
+     var n_movimiento=response.n_movimiento;
+     var cod_lote=response.cod_lote;
+     var cod_serie=response.cod_serie;
+     var fecha_inicio=response.fecha_inicio;
+     var fecha_fin=response.fecha_fin;
+     var fechacA=response.fechacA;
+     // if(fecha_inicio=='')
+   
+     if(!filtro_art){
+        filtro_art='TODOS'
+     };
+      if(!filtro_idAlm){
+        filtro_idAlm='TODOS'
+     };
+      if(!filtro_idLoc){
+        filtro_idLoc='TODOS'
+     };
+      if(!filtro_cate){
+        filtro_cate='TODOS'
+     };
+     if(!filtro_nat){
+        filtro_nat='TODOS'
+     };
+      if(!filtro_oper){
+        filtro_oper='TODOS'
+     };
+      if(!n_movimiento){
+        n_movimiento='TODOS'
+     };
+      if(!cod_lote){
+        cod_lote='TODOS'
+     };
+      if(!cod_serie){
+        cod_serie='TODOS'
+     };
+      if(!fecha_inicio){
+        fecha_inicio='TODOS'
+     };
+      if(!fecha_fin){
+        fecha_fin='TODOS'
+     }; 
+     var data=response.data;
+    // var operacion=response.operacion;
+    // var mov_ar=response.movimiento_Ar;
+    // var mov_det=response.data_movimiento_serie;
+    var dataFiltros=[];
+    var datafs=[
+                         { 
+                            text:'F.INICIO :',
+                            fontSize: 9 ,
+                            bold: true,
+                        },
+                        { 
+                            text:fecha_inicio,
+                            fontSize: 9 ,
+
+                        },
+                        { 
+                            text: 'F.FIN :',
+                            fontSize: 9 ,
+                          
+                            bold: true,
+                        },
+                          { 
+                            text:fecha_fin,
+                            fontSize: 9 ,
+
+                        },
+                        { 
+                            text: 'ARTÍCULO :',
+                            fontSize: 9 ,
+                         
+                            bold: true,
+
+                        },
+                          { 
+                            text:filtro_art,
+                            fontSize: 9 ,
+
+                        },
+                        { 
+                            text: 'OPERACIÓN :',
+                            fontSize: 9 ,
+                            bold: true, 
+
+                        },
+                         { 
+                            text:filtro_oper,
+                            fontSize: 9 ,
+
+                        },
+                        { 
+                            text: 'NATURALEZA :',
+                            fontSize: 9 ,
+                            bold: true,
+
+                        },
+                        { 
+                            text: filtro_nat,
+                            fontSize: 9 ,
+                        },
+                          { 
+                            text:'CATEGORÍA :',
+                            fontSize: 9 ,
+                            bold: true,
+
+                        },
+                        { 
+                            text: filtro_cate,
+                            fontSize: 9 ,
+                           
+
+                        },
+                         
+                    ];
+     dataFiltros.push(datafs);
+
+    var dataFiltros2=[];
+    var datafs2=[
+                         { 
+                            text:'ALMACÉN :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+
+                        { 
+                            text: filtro_idAlm,
+                            fontSize: 9 ,
+                        
+
+                        },
+                          { 
+                            text:'LOCALIZACIÓN :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+                        { 
+                            text: filtro_idLoc,
+                            fontSize: 9 ,
+                        },
+                          { 
+                            text:'N° MOVIMIENTO :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+                        { 
+                            text: n_movimiento,
+                            fontSize: 9 ,
+
+                        },
+                          { 
+                            text:'COD. LOTE :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+                        { 
+                            text: cod_lote,
+                            fontSize: 9 ,
+
+                        },
+                          { 
+                            text:'COD. SERIE :',
+                            fontSize: 9 ,
+                             bold: true,
+
+                        },
+                        { 
+                            text: cod_serie,
+                            fontSize: 9 ,
+
+                        },
+                    ];
+     dataFiltros2.push(datafs2);  
+
+     var dataDolMovimienQuery=[];
+     var tituloDolFormQuery=[
+                         { 
+                            text:'Id',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text:'F.Proceso',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'F.Registro',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'F.Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Categoría',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Uni.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Tip.Ope.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'Nat',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Ori',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                        { 
+                            text: 'Alm.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Loc.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Cant.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'C.Unitario',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'P.Unitario',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'C.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'P.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Lote',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Serie',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+   
+//    idTransaccion
+// id
+// fecha_registro
+// fecha_proceso_s
+// fecha_registro_s
+// idArticulo
+// Articulo
+// Unidad
+// Categoria
+// Tipo_Operacion
+// Naturaleza
+// Origen
+// idOrigen
+// Almacen
+// Localizacion
+// Cantidad
+// Costo_Unitario
+// Precio_Unitario
+// Costo_Total
+// Precio_Total
+// Lote
+// Serie
+      dataDolMovimienQuery.push(tituloDolFormQuery) ;
+      var totalCosto=0;
+       data.map(function(index) {
+            totalCosto=Number(totalCosto)+Number(index.Costo_Total);
+            var tituloDolFormQueryData=[];
+             tituloDolFormQueryData=[
+                        { 
+                            text:index.idTransaccion,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.fecha_proceso_s,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.fecha_registro_s,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Articulo,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Categoria,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Unidad,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Tipo_Operacion,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:index.Naturaleza,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Origen,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Almacen,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Localizacion,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Cantidad),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:Number(index.Costo_Unitario).toFixed(2),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:Number(index.Precio_Unitario).toFixed(2),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: Number(index.Costo_Total).toFixed(2),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Precio_Total).toFixed(2),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Lote,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Serie,
+                            fontSize: 7 ,
+
+                        },
+                    ];
+             dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
+       });
+    console.log(data);
+ for (var i = 0; i < 5; i++) {
+    var tituloDolFormQueryData=[];
+      if(i==4){
+        tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                            bold:true,
+
+                        },
+                         { 
+                            text:'TOTAL COSTO',
+                            fontSize: 7 ,
+                            bold:true,
+                        },
+                         { 
+                            text:totalCosto.toFixed(2),
+                            fontSize: 7 ,
+                            alignment: 'center',
+                            bold:true,
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                            bold:true,
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+
+                        },
+                    ];
+      }else{
+            
+             tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false],
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false], 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                            border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                    ];
+            
+      }
+       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
+    }
+     
+
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            content: [ 
+
+                        { text: 'REPORTE DE MOVIMIENTO A LA FECHA : '+fechacA, style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
+                        {  
+                            style: 'tableExample',
+                            table: {
+                                body: dataFiltros,
+                            },
+                            margin: [10, 0, 0, 10],
+                            layout: 'noBorders',
+
+                        },
+                        {  
+                            style: 'tableExample',
+                            table: {
+                                body: dataFiltros2,
+                            },
+                            margin: [10, 0, 0, 10],
+                            layout: 'noBorders',
+
+                        },
+
+                        {  
+                            style: 'tableExample',
+                            widths: [60, 60,60, 60,60, 60,40, 60,60, 60,60, 60,60, 60,60, 60,60, 60],
+                            table: {
+                                body: dataDolMovimienQuery,
+                            },
+                            margin: [10, 0, 0, 10],
+
+                        },
+                  
+            
+                    ]
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+   
+
+}
 function create_pdf_movimiento(response) {
     var data_p = response.data;
     var operacion=response.operacion;

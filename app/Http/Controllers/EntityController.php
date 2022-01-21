@@ -134,5 +134,5 @@ class EntityController extends Controller
     {
         $data = $this->generateDataExcel($repo->all());
         return generateDataPDF($data, 'landscape', 'logo.png');
-    }
+    } 
 }

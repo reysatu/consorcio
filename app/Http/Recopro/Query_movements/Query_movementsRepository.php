@@ -158,5 +158,40 @@ class Query_movementsRepository implements Query_movementsInterface
           $mostrar2=DB::select("select * from ERP_Naturaleza_Operacion");
           return $mostrar2;
     }
+    // public function getDataPDF($filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin){
+    //        $dato=$this->model;
+    //         if(!empty($fecha_inicio) and !empty($fecha_fin) ){
+    //             $dato=$dato->whereDate('fecha_registro','>=',$fecha_inicio);
+    //             $dato=$dato->whereDate('fecha_registro','<=',$fecha_fin);
+    //         }
+    //         if(!empty($filtro_art)){
+    //         $dato=$dato->Where('Articulo',$filtro_art);
+    //         }
+    //         if(!empty($filtro_idAlm)){
+    //          $dato=$dato->Where('Almacen',$filtro_idAlm);
+    //         }
+    //         if(!empty($filtro_idLoc)){
+    //          $dato=$dato->Where('Localizacion',$filtro_idLoc);
+    //         }
+    //         if(!empty($filtro_cate)){
+    //          $dato=$dato->Where('Categoria',$filtro_cate);
+    //         }
+    //         if(!empty($filtro_nat)){
+    //           $dato=$dato->Where('Naturaleza',$filtro_nat);
+    //         }
+    //         if(!empty($filtro_oper)){
+    //           $dato=$dato->Where('Tipo_Operacion',$filtro_oper);
+    //         }
+    //         if(!empty($n_movimiento)){
+    //           $dato=$dato->Where('idOrigen',$n_movimiento);
+    //         }
+    //         if(!empty($cod_lote)){
+    //           $dato=$dato->Where('Lote',$cod_lote);
+    //         }
+    //          if(!empty($cod_serie)){
+    //           $dato=$dato->Where('Serie',$cod_serie);
+    //         }
+    //        return $dato->get();
+    // }
 
 }
