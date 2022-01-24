@@ -2904,8 +2904,12 @@
             $.post("solicitud/find", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
+                 
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    if(data.solicitud_credito.length > 0) {
+                        Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    }
+
                     $("#documento_or").val(data.solicitud[0].documento);   
                     getCliente();
                     $("#tipo_solicitud").trigger("change");

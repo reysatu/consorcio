@@ -1873,7 +1873,9 @@
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    if(data.solicitud_credito.length > 0) {
+                        Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    }
                     $("#correo_electronico").val(data.solicitud[0].correo_electronico);
 
                     $("#documento_or").val(data.solicitud[0].documento);
