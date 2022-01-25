@@ -2989,12 +2989,10 @@
                 },
                 nConsecutivo: {
                     title: 'Nro',
-
-
                 },
 
                 fecha_solicitud: {
-                    title: 'Fecha Solicitud',
+                    title: 'Fecha',
                     display: function (data) {
                         return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
@@ -3003,6 +3001,41 @@
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+                    
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+                    
+
+                },
+                moneda: {
+                    title: 'Moneda',
+                    
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+                    
+
+                },
+                pagado: {
+                    title: 'Pagado',
+                    
+
+                },
+                saldo: {
+                    title: 'Saldo',
+                    
+
+                },
+                facturado: {
+                    title: 'Facturado',
+                    
 
                 },
                 estado: {

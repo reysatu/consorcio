@@ -141,6 +141,20 @@ class CajaDiariaRepository implements CajaDiariaInterface
         $mostrar=DB::select("select * from ERP_Moneda");
         return $mostrar; 
     }
+
+    public function update_totales($data) {
+
+        $sql_update = "UPDATE ERP_CajaDiaria SET totalEfectivo = totalEfectivo + {$data["totalEfectivo"]},
+        totalNoEfectivo = totalNoEfectivo + {$data["totalNoEfectivo"]},
+        totalEfectivoDol = totalEfectivoDol + {$data["totalEfectivoDol"]},
+        totalNoEfectivoDol = totalNoEfectivoDol + {$data["totalNoEfectivoDol"]}
+        WHERE idCajaDiaria={$data["idCajaDiaria"]}";
+
+        $result = DB::statement($sql_update);
+        
+        return $result; 
+    }
+
     //  public function getDenominacionView($id)
     // {   
     //     $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id'");

@@ -1239,7 +1239,7 @@
                 },
 
                 fecha_solicitud: {
-                    title: 'Fecha Solicitud',
+                    title: 'Fecha',
                     display: function (data) {
                         return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
@@ -1248,6 +1248,41 @@
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+                    
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+                    
+
+                },
+                moneda: {
+                    title: 'Moneda',
+                    
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+                    
+
+                },
+                pagado: {
+                    title: 'Pagado',
+                    
+
+                },
+                saldo: {
+                    title: 'Saldo',
+                    
+
+                },
+                facturado: {
+                    title: 'Facturado',
+                    
 
                 },
                 estado: {
@@ -1408,19 +1443,27 @@
             // $("#idconyugue").focus();
             // alert($("#desTotal").val());
 
-            
-
             var total = parseFloat($("#desTotal").val());
             var cuota_inicial = parseFloat($("#cuota_inicial").val());
             var saldo = parseFloat($("#saldo").val());
             var pagado = parseFloat($("#pagado").val());
             var facturado = parseFloat($("#facturado").val());
             var total_financiado = parseFloat($("#total_financiado").val());
+           
+            if(isNaN(pagado)) {
+                pagado = 0;
+            }
+            if(isNaN(facturado)) {
+                facturado = 0;
+            }
 
-            if(cuota_inicial > 0 && pagado == 0) {
-                total = cuota_inicial;
-            } else {
-                total = total_financiado;
+            if(cuota_inicial > 0) {
+                if(pagado == 0) {
+                    total = cuota_inicial;
+                } else {
+                    total = total_financiado;
+
+                }
             }
 
             $("#total_pagar").val(total.toFixed(2));
@@ -1432,7 +1475,6 @@
 
         $scope.agregar_formas_pago = function () {
             // $("#idconyugue").focus();
-
             // alert($("#desTotal").val());
             var total = parseFloat($("#total_pagar").val());
             var subtotal_montos_pago = sumar_montos_formas_pago();
@@ -1445,7 +1487,10 @@
                 });
                 return false;
             }
+
             $("#monto_p").val(total.toFixed(2));
+            $("#forma_pago").val("EFE");
+            $("#moneda").val($("#IdMoneda").val());
             $("#modal-formas-pago").modal("show");
         }
 
@@ -1497,8 +1542,15 @@
         $scope.guardar_forma_pago = function () {
             var bval = true;
             bval = bval && $("#forma_pago").required();
-            bval = bval && $("#noperacion").required();
-            bval = bval && $("#tarjeta").required();
+            if($("#forma_pago").val() == "TCR" || $("#forma_pago").val() == "TDE") {
+                bval = bval && $("#noperacion").required();
+                bval = bval && $("#tarjeta").required();
+            } 
+
+            if($("#forma_pago").val() == "DEP" || $("#forma_pago").val() == "ELE" || $("#forma_pago").val() == "TRA") {
+                bval = bval && $("#noperacion").required();
+            }
+            
             bval = bval && $("#moneda").required();
             bval = bval && $("#monto_p").required();
 
@@ -1860,6 +1912,16 @@
                 var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
                 // alert("hola " + simbolo);
                 $(".simbolo-moneda").text(simbolo);
+                $(".simbolo-moneda-2").text(simbolo);
+            }
+        })
+
+        $(document).on("change", "#moneda", function () {
+            if ($(this).val() != "") {
+
+                var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+                // alert("hola " + simbolo);
+                $(".simbolo-moneda-2").text(simbolo);
             }
         })
 
@@ -1882,6 +1944,7 @@
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
+                    $("#moneda").trigger("change");
 
                     if (data.solicitud_credito.length > 0) {
 

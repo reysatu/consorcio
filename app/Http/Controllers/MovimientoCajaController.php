@@ -234,7 +234,7 @@ class MovimientoCajaController extends Controller
         return generateExcel($this->generateDataExcel($repo->allExcel()), 'LISTA DE MOVIMIENTOS DE CAJA', 'Movimientos de caja');
     }
 
-    public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC) {
+    public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio) {
 
         $data = $request->all();
 
@@ -430,7 +430,9 @@ class MovimientoCajaController extends Controller
             $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
             $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
 
-            $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
+            
+            $caja_diaria_repositorio->update_montos($update_caja_diaria);
+            // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
 
             $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
 
