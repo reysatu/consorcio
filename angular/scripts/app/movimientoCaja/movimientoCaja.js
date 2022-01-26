@@ -1641,8 +1641,9 @@
                             }
 
                             // PARA TODOS
-                            // alert("ticket");
+                            alert("imprimir_comprobante");
                             window.open("movimientoCajas/imprimir_ticket/"+id);
+                            window.open("movimientoCajas/imprimir_comprobante/"+id);
                          
                         } else {
                             AlertFactory.textType({

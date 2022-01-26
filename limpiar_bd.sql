@@ -31,3 +31,5 @@ select * from ERP_FormasPago;
 update ERP_Solicitud set saldo=0, facturado=0, pagado=0 where cCodConsecutivo='SOL' AND nConsecutivo=38
 select * from ERP_Solicitud where cCodConsecutivo='SOL' AND nConsecutivo=38
 select * from ERP_SolicitudCredito where cCodConsecutivo='SOL' AND nConsecutivo=38
+
+

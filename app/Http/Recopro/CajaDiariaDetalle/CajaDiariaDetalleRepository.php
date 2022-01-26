@@ -163,6 +163,12 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         $result = DB::select($sql);
         return $result;
     }
+
+    public function get_tiendas() {
+        $sql = "SELECT * FROM ERP_Tienda WHERE estado='A'";
+        $result = DB::select($sql);
+        return $result;
+    }
     
 
     public function get_tienda() {
@@ -178,9 +184,22 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
     
     public function get_venta($idventa) {
-        $sql = "SELECT v.*, m.Descripcion AS moneda
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*
         FROM ERP_Venta AS v 
         INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
+        INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
+        INNER JOIN ERP_CondicionPago AS c ON(c.id=v.condicion_pago)
+        WHERE v.idventa={$idventa}";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_venta_detalle($idventa) {
+        $sql = "SELECT vd.*, p.description AS producto
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
+        INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
+       
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
