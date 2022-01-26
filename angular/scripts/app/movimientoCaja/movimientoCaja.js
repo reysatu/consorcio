@@ -1641,7 +1641,7 @@
                             }
 
                             // PARA TODOS
-                            alert("ticket");
+                            // alert("ticket");
                             window.open("movimientoCajas/imprimir_ticket/"+id);
                          
                         } else {
