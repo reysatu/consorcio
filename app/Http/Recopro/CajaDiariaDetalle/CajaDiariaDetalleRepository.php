@@ -140,8 +140,19 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
     public function get_caja_diaria() {
         $idusuario = auth()->id();
         $fechacA = date("Y-m-d");
-        $sql = "SELECT * FROM ERP_CajaDiaria 
-        WHERE idUsuario='$idusuario' AND FORMAT(fechaCaja, 'yyyy-MM-dd')='$fechacA'";
+        $sql = "SELECT * FROM ERP_CajaDiaria AS cd
+        INNER JOIN ERP_Cajas AS c ON(c.idcaja=cd.idCaja)
+        WHERE cd.idUsuario='$idusuario' AND FORMAT(cd.fechaCaja, 'yyyy-MM-dd')='$fechacA'";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_cajero() {
+        $idusuario = auth()->id();
+        $fechacA = date("Y-m-d");
+        $sql = "SELECT u.* FROM ERP_CajaDiaria AS cd
+        INNER JOIN ERP_Usuarios AS u ON(cd.idUsuario=u.id)
+        WHERE cd.idUsuario='$idusuario' AND FORMAT(fechaCaja, 'yyyy-MM-dd')='$fechacA'";
         $result = DB::select($sql);
         return $result;
     }
@@ -149,6 +160,37 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
     public function get_empresa() {
         $sql = "SELECT * FROM ERP_Compania";
+        $result = DB::select($sql);
+        return $result;
+    }
+    
+
+    public function get_tienda() {
+        $caja_diaria = $this->get_caja_diaria();
+        $sql = "SELECT t.* FROM ERP_Cajas AS c
+        INNER JOIN ERP_Tienda AS t ON(c.idtienda=t.idTienda)
+        WHERE c.idcaja={$caja_diaria[0]->idCaja}";
+
+        $result = DB::select($sql);
+        return $result;
+    }
+
+
+    
+    public function get_venta($idventa) {
+        $sql = "SELECT v.*, m.Descripcion AS moneda
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
+        WHERE v.idventa={$idventa}";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_venta_formas_pago($idventa) {
+        $sql = "SELECT vfp.*
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_VentaFormaPago AS vfp ON(v.idventa=vfp.idventa)
+        WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
     }

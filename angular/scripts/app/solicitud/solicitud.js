@@ -2767,6 +2767,7 @@
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
+                            LoadRecordsButtonSolicitud.click();
                             $("#nConsecutivo").val(data.datos[0].nConsecutivo);
                             $("#estado").val(data.datos[0].estado);
                             AlertFactory.textType({

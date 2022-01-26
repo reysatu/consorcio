@@ -1625,20 +1625,24 @@
                             $("#formulario-formas-pago").trigger("reset");
                             $("#detalle-formas-pago").html("");
                             $("#articulo_mov_det").html("");
+                            LoadRecordsButtonSolicitud.click();
                             AlertFactory.textType({
                                 title: '',
                                 message: 'El documento se facturó correctamente.',
                                 type: 'success'
                             });
 
-                            // CUANDO ES CREDITO Y ESTA EN ESTADO YA FACTURADO
-                            if(data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
-                                // alert("imprimir cronoggrama");
+                            // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud+ "|" + data.datos[0].idventa;
 
-                                var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud;
-                                
+                            if(data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
+
                                 window.open("movimientoCajas/imprimir_cronograma/"+id);
                             }
+
+                            // PARA TODOS
+                            alert("ticket");
+                            window.open("movimientoCajas/imprimir_ticket/"+id);
                          
                         } else {
                             AlertFactory.textType({

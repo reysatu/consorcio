@@ -16,3 +16,6 @@ INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodig
 INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
 GO
 
+
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [idmoneda] varchar(5) NULL;
