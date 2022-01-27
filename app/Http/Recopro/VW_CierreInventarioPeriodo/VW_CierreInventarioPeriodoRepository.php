@@ -6,52 +6,39 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Periodo;
+namespace App\Http\Recopro\VW_CierreInventarioPeriodo;
 use Illuminate\Support\Facades\DB;
 
-class PeriodoRepository implements PeriodoInterface
+class VW_CierreInventarioPeriodoRepository implements VW_CierreInventarioPeriodoInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(Periodo $model)
+    public function __construct(VW_CierreInventarioPeriodo $model)
     {
         $this->model = $model; 
        
-    }
-      public function update_mr($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'A';
-        $this->model->where('periodo',$id)->update($attributes);
-    }
-     public function update_mc($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'C';
-        $this->model->where('periodo',$id)->update($attributes);
-    }
-      public function update_pc($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'P';
-        $this->model->where('periodo',$id)->update($attributes);
     }
 
     public function all()
     {
         return $this->model->get();
     }
-    public function search($s)
+     public function search($s,$perido_busquedad)
     {
-        return $this->model->where(function($q) use ($s){
-            $q->where('periodo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+        return $this->model->where(function($q) use ($s,$perido_busquedad){
+            $q->where('idDetalle', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('disponible', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('en_transito', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('remitido', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('total', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('reservado', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('Almacen', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('costo', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('Naturaleza', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('Articulo', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->orWhere('Localizacion', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
         });
 
-    }
-     public function find($id)
-    {
-        return $this->model->find($id);
     }
     public function allActive()
     {
@@ -92,5 +79,6 @@ class PeriodoRepository implements PeriodoInterface
     {
         return $this->model->where('periodo', $code)->first();
     }
+
 
 }

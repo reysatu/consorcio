@@ -348,6 +348,7 @@ class Register_movementController extends Controller
     public function find($id, Register_movementInterface $repo)
     {
         try {
+            $operaciones = $repo->getOperationFind();
             $data = $repo->find($id);
             $data_movimiento_Articulo = $repo->get_movement_articulo($id);
             $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
@@ -358,6 +359,7 @@ class Register_movementController extends Controller
             $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
 
             return response()->json([
+                   'operaciones'=>$operaciones,
                 'status' => true,
                 'data' => $data,
                  'movimiento_Ar'=>$data_movimiento_Articulo,
@@ -377,11 +379,13 @@ class Register_movementController extends Controller
     public function getLocaStock($id, Register_movementInterface $repo){
 
         try {
+        
             $data = $repo->getLocaStock($id);
             $LocalizacionAlmacen=$repo->getLocalizacioAlmacen($id);
             return response()->json([
                 'status' => true,
                 'data' => $data,
+             
                 'LocalizacionAlmacen'=>$LocalizacionAlmacen,
             ]);
 

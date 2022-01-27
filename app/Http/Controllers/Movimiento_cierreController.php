@@ -12,6 +12,8 @@ use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreTrait;
 use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierreTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
+use App\Http\Recopro\Periodo\PeriodoInterface;
+use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoInterface;
 use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierreInterface;
 use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreInterface;
@@ -31,9 +33,11 @@ class Movimiento_cierreController extends Controller
         try {
           
             $data = $repo->find_moviCierre($id);
+            $periodos = $repo->getPeriodos();
             return response()->json([
                 'status' => true,
                 'data' => $data,
+                'periodos'=>$periodos,
             ]);
 
         } catch (\Exception $e) {
@@ -43,87 +47,38 @@ class Movimiento_cierreController extends Controller
             ]);
         }
     }
-    public function list_movimientosCerrados(Request $request, Register_movementInterface $repo,Movimiento_cierreInterface $repoCi)
+    public function list_movimientosCerrados(Request $request, VW_CierreInventarioPeriodoInterface $repo)
     {
         $s = $request->input('search', '');
+        // $estado_busquedad = $request->input('estado_busquedad');
+        // $idMovimientoBusquedad = $request->input('idMovimientoBusquedad');
         $perido_busquedad = $request->input('perido_busquedad');
-        $estado_busquedad = $request->input('estado_busquedad');
-        $idMovimientoBusquedad = $request->input('idMovimientoBusquedad');
-        $params = ['idTipoOperacion','idUsuario','estado','idMovimiento','fecha_registro'];
-        if($estado_busquedad==''){
+        $params = ['idDetalle', 'disponible','en_transito','remitido','total','reservado','periodo','Almacen','costo','Naturaleza','Articulo','Localizacion'];
 
-            return parseList($repo->searchMovCierre($s,$perido_busquedad), $request, 'idMovimiento', $params);
+        if($perido_busquedad==''){
+           return parseList($repo->search($s,''), $request, 'idDetalle', $params);
         }else{
-             return parseList($repoCi->search($s,$perido_busquedad), $request, 'idMovimiento', $params);
+            $perido_busquedad = $request->input('perido_busquedad');
+            $porciones = explode("*", $perido_busquedad);
+            return parseList($repo->search($s,$porciones[0]), $request, 'idDetalle', $params);
         }
        
     }
     public function all(Request $request, View_movimiento_cierreInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idUsuario','estado','periodo'];
+        $params = ['periodo','estado'];
         return parseList($repo->search($s), $request, 'periodo', $params);
     }
-    public function createUpdate($id, Movimiento_cierreInterface $repo, Request $request, View_movimiento_cierreInterface $repoView,Movimiento_Articulo_cierreInterface $repoArCie,Movimiento_Detalle_cierreInterface $repoArDetalle  )
+    public function createUpdate($id, PeriodoInterface $repo, Request $request)
     {
        
         try {
             $data = $request->all();
             $periodo = $data['periodo'];
+            $porciones = explode("*", $periodo);
             $estado = $data['estado'];
-            if($estado==''){
-                $movimiento=$repo->getMovimientosCierre($periodo);
-                $w = $repoView->findByCode($periodo);
-                if ($w) {
-                    throw new \Exception('Ya existe un cierre en ese periodo. Por favor ingrese otro periodo.');
-                }
-                foreach($movimiento as $row){
-                 $movimiento_articulo=$repo->getMovimientosCierreArticulo($row->idMovimiento);
-                foreach($movimiento_articulo as $rowArt){
-                     $datoAr=[];   
-                     $datoAr['idMovimiento'] = $rowArt->idMovimiento;
-                     $datoAr['idArticulo'] = $rowArt->idArticulo;
-                     $datoAr['idAlmacen'] = $rowArt->idAlmacen;
-                     $datoAr['idLocalizacion'] = $rowArt->idLocalizacion;
-                     $datoAr['idLote'] = $rowArt->idLote;
-                     $datoAr['cantidad'] = $rowArt->cantidad;
-                     $datoAr['costo'] = $rowArt->costo;
-                     $datoAr['costo_total'] = $rowArt->costo_total;
-                     $datoAr['consecutivo'] = $rowArt->consecutivo;
-                     $datoAr['precio'] = $rowArt->precio;
-                     $datoAr['precio_total'] = $rowArt->precio_total;
-                     $datoAr['periodo'] = $periodo;
-                     $repoArCie->create($datoAr);
-                 }
-                $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($row->idMovimiento);
-                foreach($movimiento_articulo_detalle as $rowArtDet){
-                     $datoArDet=[];   
-                     $datoArDet['idMovimiento'] = $rowArtDet->idMovimiento;
-                     $datoArDet['idArticulo'] = $rowArtDet->idArticulo;
-                     $datoArDet['consecutivo'] = $rowArtDet->consecutivo;
-                     $datoArDet['serie'] = $rowArtDet->serie;
-                     $datoArDet['periodo'] = $periodo;
-                     $repoArDetalle->create($datoArDet);
-                 }      
-                 $dato=[];   
-                 $dato['idMovimiento'] = $row->idMovimiento;
-                 $dato['idTipoOperacion'] = $row->idTipoOperacion;
-                 $dato['fecha_registro'] = $row->fecha_registro;
-                 $dato['fecha_proceso'] = $row->fecha_proceso;
-                 $dato['idUsuario'] = $row->idUsuario;
-                 $dato['naturaleza'] = $row->naturaleza;
-                 $dato['observaciones'] = $row->observaciones;
-                 $dato['idMoneda'] = $row->idMoneda;
-                 $dato['cCodConsecutivo'] = $row->cCodConsecutivo;
-                 $dato['nConsecutivo'] = $row->nConsecutivo;
-                 $dato['periodo'] = $periodo;
-                 $dato['estado'] = 'C';
-                 $repo->create($dato);
-                };
-            }else if($estado=='P'){
-                 $repo->update_mc($periodo);
-            };
-           
+            $repo->update_mc($porciones[0]);
             DB::commit();
             return response()->json([
                 'status' => true,
@@ -137,12 +92,13 @@ class Movimiento_cierreController extends Controller
             ]);
         }
     } 
-    public function reversarCierre($id, Movimiento_cierreInterface $repo, Request $request, View_movimiento_cierreInterface $repoView)
+    public function reversarCierre($id, Movimiento_cierreInterface $repo, Request $request, View_movimiento_cierreInterface $repoView,PeriodoInterface $peri)
     {
        
         try {
             $data = $request->all();
             $reversar=$repo->reversarMovimientos($id);
+            $peri->update_mr($id);
             DB::commit();
             return response()->json([
                 'status' => true,
@@ -156,63 +112,90 @@ class Movimiento_cierreController extends Controller
             ]);
         }
     } 
-     public function createUpdatePreCierre($id, Movimiento_cierreInterface $repo, Request $request,View_movimiento_cierreInterface $repoView,Movimiento_Articulo_cierreInterface $repoArCie,Movimiento_Detalle_cierreInterface $repoArDetalle)
+     public function createUpdatePreCierre($id, Movimiento_cierreInterface $repo, Request $request,View_movimiento_cierreInterface $repoView,Movimiento_Articulo_cierreInterface $repoArCie,Movimiento_Detalle_cierreInterface $repoArDetalle, PeriodoInterface $repoPeri)
     {
        
         try {
             $data = $request->all();
             $periodo = $data['periodo'];
             $estado = $data['estado'];
-            if($estado==''){
+            $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($periodo);
+            if(empty($movimiento_articulo_detalle)){
+                 throw new \Exception('No existe información para ese periodo,Por favor ingrese otro periodo.');
+            }
+            $w = $repoView->findByCode($periodo);
+            if ($w) {
+                throw new \Exception('Ya existe un cierre en ese periodo. Por favor ingrese otro periodo.');
+            }
+             
                 $movimiento=$repo->getMovimientosCierre($periodo);
-                $w = $repoView->findByCode($periodo);
-                if ($w) {
-                    throw new \Exception('Ya existe un cierre en ese periodo. Por favor ingrese otro periodo.');
-                }
-                foreach($movimiento as $row){
-                $movimiento_articulo=$repo->getMovimientosCierreArticulo($row->idMovimiento);
-                foreach($movimiento_articulo as $rowArt){
+                foreach($movimiento as $rowArt){
                      $datoAr=[];   
-                     $datoAr['idMovimiento'] = $rowArt->idMovimiento;
                      $datoAr['idArticulo'] = $rowArt->idArticulo;
                      $datoAr['idAlmacen'] = $rowArt->idAlmacen;
-                     $datoAr['idLocalizacion'] = $rowArt->idLocalizacion;
-                     $datoAr['idLote'] = $rowArt->idLote;
-                     $datoAr['cantidad'] = $rowArt->cantidad;
+                     $datoAr['disponible'] = $rowArt->disponible;
+                     $datoAr['en_transito'] = $rowArt->en_transito;
+                     $datoAr['remitido'] = $rowArt->remitido;
+                     $datoAr['total'] = $rowArt->total;
+                     $datoAr['reservado'] = $rowArt->reservado;
+                     $datoAr['periodo'] =  $periodo;
                      $datoAr['costo'] = $rowArt->costo;
-                     $datoAr['costo_total'] = $rowArt->costo_total;
-                     $datoAr['consecutivo'] = $rowArt->consecutivo;
-                     $datoAr['precio'] = $rowArt->precio;
-                     $datoAr['precio_total'] = $rowArt->precio_total;
-                     $datoAr['periodo'] = $periodo;
+                     $repo->create($datoAr);
+                  }
+                $movimiento_articulo=$repo->getMovimientosCierreArticulo($periodo);
+                // $movimiento_articulo_detalle=$repoArCie->getMovimientosCierreArticuloDetalle($row->idMovimiento);
+                foreach($movimiento_articulo as $rowArtLoc){
+                    $datoAr=[];   
+                     $datoAr['idArticulo'] = $rowArtLoc->idArticulo;
+                     $datoAr['idAlmacen'] = $rowArtLoc->idAlmacen;
+                     $datoAr['disponible'] = $rowArtLoc->disponible;
+                     $datoAr['idLocalizacion'] = $rowArtLoc->idLocalizacion;
+                     $datoAr['disponible'] = $rowArtLoc->disponible;
+                     $datoAr['en_transito'] = $rowArtLoc->en_transito;
+                     $datoAr['remitido'] = $rowArtLoc->remitido;
+                     $datoAr['total'] = $rowArtLoc->total;
+                     $datoAr['reservado'] = $rowArtLoc->reservado;
+                     $datoAr['periodo'] =  $periodo;
+                     $datoAr['costo'] = $rowArtLoc->costo;
                      $repoArCie->create($datoAr);
-                 }
-                $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($row->idMovimiento);
-                foreach($movimiento_articulo_detalle as $rowArtDet){
-                     $datoArDet=[];   
-                     $datoArDet['idMovimiento'] = $rowArtDet->idMovimiento;
-                     $datoArDet['idArticulo'] = $rowArtDet->idArticulo;
-                     $datoArDet['consecutivo'] = $rowArtDet->consecutivo;
-                     $datoArDet['serie'] = $rowArtDet->serie;
-                     $datoArDet['periodo'] = $periodo;
-                     $repoArDetalle->create($datoArDet);
-                 }     
-                 $dato=[];   
-                 $dato['idMovimiento'] = $row->idMovimiento;
-                 $dato['idTipoOperacion'] = $row->idTipoOperacion;
-                 $dato['fecha_registro'] = $row->fecha_registro;
-                 $dato['fecha_proceso'] = $row->fecha_proceso;
-                 $dato['idUsuario'] = $row->idUsuario;
-                 $dato['naturaleza'] = $row->naturaleza;
-                 $dato['observaciones'] = $row->observaciones;
-                 $dato['idMoneda'] = $row->idMoneda;
-                 $dato['cCodConsecutivo'] = $row->cCodConsecutivo;
-                 $dato['nConsecutivo'] = $row->nConsecutivo;
-                 $dato['periodo'] = $periodo;
-                 $dato['estado'] = 'P';
-                 $repo->create($dato);
-                };
-            }
+                 } 
+                  $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($periodo);
+                // $movimiento_articulo_detalle=$repoArCie->getMovimientosCierreArticuloDetalle($row->idMovimiento);
+                foreach($movimiento_articulo_detalle as $rowArtLoc){
+                    $datoAr=[];   
+                     $datoAr['idArticulo'] = $rowArtLoc->idArticulo;
+                     $datoAr['idAlmacen'] = $rowArtLoc->idAlmacen;
+                     $datoAr['disponible'] = $rowArtLoc->disponible;
+                     $datoAr['idLocalizacion'] = $rowArtLoc->idLocalizacion;
+                     $datoAr['TipoId'] = $rowArtLoc->TipoId;
+                     $datoAr['idDetalle'] = $rowArtLoc->idDetalle;
+
+                     $datoAr['disponible'] = $rowArtLoc->disponible;
+                     $datoAr['en_transito'] = $rowArtLoc->en_transito;
+                     $datoAr['remitido'] = $rowArtLoc->remitido;
+                     $datoAr['total'] = $rowArtLoc->total;
+                     $datoAr['reservado'] = $rowArtLoc->reservado;
+                     $datoAr['periodo'] =  $periodo;
+                     $datoAr['costo'] = $rowArtLoc->costo;
+                     $repoArDetalle->create($datoAr);
+                 } 
+                $repoPeri->update_pc($periodo);     
+                //  $dato=[];   
+                //  $dato['idMovimiento'] = $row->idMovimiento;
+                //  $dato['idTipoOperacion'] = $row->idTipoOperacion;
+                //  $dato['fecha_registro'] = $row->fecha_registro;
+                //  $dato['fecha_proceso'] = $row->fecha_proceso;
+                //  $dato['idUsuario'] = $row->idUsuario;
+                //  $dato['naturaleza'] = $row->naturaleza;
+                //  $dato['observaciones'] = $row->observaciones;
+                //  $dato['idMoneda'] = $row->idMoneda;
+                //  $dato['cCodConsecutivo'] = $row->cCodConsecutivo;
+                //  $dato['nConsecutivo'] = $row->nConsecutivo;
+                //  $dato['periodo'] = $periodo;
+                //  $dato['estado'] = 'P';
+                //  $repo->create($dato);
+                // };
+          
            
             DB::commit();
             return response()->json([
@@ -303,6 +286,6 @@ class Movimiento_cierreController extends Controller
 
     public function excel(View_movimiento_cierreInterface $repo)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CIERRE DE MOVIMIENTOS CERRADOS', 'Cierre');
+        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CIERRE DE INVENTARIO', 'Cierre');
     }
 }

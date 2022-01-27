@@ -21,12 +21,12 @@ class ProductRepository implements ProductInterface
     public function search($s)
     {
         return $this->model->where(function ($q) use ($s) {
-            $q->orWhere('description', 'LIKE', '%' . $s . '%');
+            $q->orWhere('description', 'LIKE', '%' . $s . '%')->orderByRaw('created_at DESC');;
             $q->orWhere('code_matrix', 'LIKE', '%' . $s . '%');
             $q->orWhere('code_article', 'LIKE', '%' . $s . '%');
         });
     }
-     public function searchTrans($s)
+     public function searchTrans($s) 
     {
         return $this->model->where(function($q) use ($s){
             $q->where('description', 'LIKE', '%'.$s.'%')->where('type_id','!=',3)->where('type_id','!=',2);
@@ -227,4 +227,9 @@ class ProductRepository implements ProductInterface
 
         return DB::select($sql);
     }
+     public function getCategoriaVehicular(){
+          $mostrar2=DB::select("SELECT * FROM ERP_CategoriaVeh where estado='A'");
+          return $mostrar2;
+    }
+
 }

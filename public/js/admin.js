@@ -5,7 +5,18 @@
 var cargando = '<div class="text-center" style="color:#fff;padding:1em"><i class="fa fa-spinner fa-spin"></i></div>';
 
 var icon_select = 'circle-o';
-
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 var mensajes_validador = function (data) {
     var div_mensaje = $(".mensajes_validador");
 
@@ -363,7 +374,7 @@ function getFormSearchCierre(form_id, input_id, btn_id,val_busquedad,estado,idMo
           '<input type="hidden"  value="'+val_busquedad+'" name="perido_busquedad" id="perido_busquedad"/>' +
           '<input type="hidden"  value="'+estado+'" name="estado_busquedad" id="estado_busquedad"/>' +
           '<input type="hidden"  value="'+idMovimiento+'" name="idMovimientoBusquedad" id="idMovimientoBusquedad"/>' +
-        '<input type="text" id="' + input_id + '" value="" name="search" class="form-control" autocomplete="off" placeholder="Nro de Movimiento" />' +
+        '<input type="text" id="' + input_id + '" value="" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
         '<span class="input-group-btn">' +
         '<button type="submit" id="' + btn_id + '" class="btn btn-danger-admin">' +
         '<i class="fa fa-search"></i>' +
@@ -2938,6 +2949,8 @@ function create_pdf_Querystock(response) {
      var filtro_cate=response.filtro_cate;
      var data=response.data;
      var fechacA=response.fechacA;
+     var simboloMoneda=response.simboloMoneda;
+     var img=response.img;
      console.log(data);
      console.log(filtro_art);
      console.log("jsjhsjsjhs");
@@ -3091,13 +3104,13 @@ function create_pdf_Querystock(response) {
 
                         },
                          { 
-                            text:'Costo',
+                            text:'Costo '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
 
                         },
                         { 
-                            text: 'C.Total',
+                            text: 'Costo Total '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'center' 
@@ -3111,6 +3124,10 @@ function create_pdf_Querystock(response) {
        data.map(function(index) {
             todol=Number(todol)+Number(index.Costo_Promedio_Unitario);
             var tituloDolFormQueryData=[];
+             var cu=Number(index.Costo_Promedio_Unitario).toFixed(2);
+            var pu=Number(index.Costo_Total).toFixed(2);
+            cu = addCommas(cu);
+            pu = addCommas(pu);
              tituloDolFormQueryData=[
                         { 
                             text:index.id,
@@ -3178,19 +3195,21 @@ function create_pdf_Querystock(response) {
 
                         },
                         { 
-                            text:Number(index.Costo_Promedio_Unitario).toFixed(2),
+                            text:cu,
                             fontSize: 7 ,
                             alignment: 'center' 
 
                         },
                          { 
-                            text:Number(index.Costo_Total).toFixed(2),
+                            text:pu,
                             fontSize: 7 ,
 
                         },
                     ];
              dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
        });
+     var todolt=Number(todol).toFixed(2); 
+     todolt = addCommas(todolt);  
    for (var i = 0; i < 5; i++) {
     var tituloDolFormQueryData=[];
       if(i==4){
@@ -3198,77 +3217,80 @@ function create_pdf_Querystock(response) {
                         { 
                             text:'',
                             fontSize: 7 ,
-
+                             border: [false, false, false, false],
                         },
                         { 
                             text:'',
                             fontSize: 7 ,
-
+                             border: [false, false, false, false],
                         },
                         { 
                             text: '',
                             fontSize: 7 ,
-                            alignment: 'center' 
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
 
                         },
                           { 
                             text:'',
                             fontSize: 7 ,
-
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' 
-
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
+                             border: [false, false, false, false],
 
                         },
                         { 
                             text: '',
                             fontSize: 7 ,
-                            alignment: 'center' 
+                            alignment: 'center',
+                             border: [false, false, false, false],
 
                         },
                          { 
                             text:'',
                             fontSize: 7 ,
-
+                             border: [false, false, false, false],
                         },
                         { 
                             text:'',
                             fontSize: 7 ,
-                            alignment: 'center' 
-
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
                         },
                           { 
                             text:'',
                             fontSize: 7 ,
-
+                             border: [false, false, false, false],
                         },
                         { 
                             text: '',
                             fontSize: 7 ,
-                            alignment: 'center' 
-
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
                         },
                           { 
                             text:'',
                             fontSize: 7 ,
-
+                             border: [false, false, false, false],
                         },
                         { 
-                            text:'TOTAL COSTO',
+                            text:'Total costo inventario '+simboloMoneda[0].Simbolo,
                             fontSize: 7 ,
                             alignment: 'center',
                             bold:true,
 
                         },
                          { 
-                            text:todol.toFixed(2),
+                            text:todolt,
                             fontSize: 7 ,
 
                         },
@@ -3365,7 +3387,12 @@ function create_pdf_Querystock(response) {
    var docDefinition = {
             pageOrientation: 'landscape',
             content: [ 
-
+                         {
+                            image: img,
+                            width:120,
+                            height:50,
+                            absolutePosition: { x: 50, y: 15 }
+                        },
                         { text: 'REPORTE DE STOCK A LA FECHA : '+fechacA, style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
                         {  
                             style: 'tableExample',
@@ -3411,6 +3438,8 @@ function create_pdf_Querymovimiento(response) {
      var fecha_inicio=response.fecha_inicio;
      var fecha_fin=response.fecha_fin;
      var fechacA=response.fechacA;
+     var simboloMoneda=response.simboloMoneda;
+     var img=response.img;
      // if(fecha_inicio=='')
    
      if(!filtro_art){
@@ -3586,7 +3615,7 @@ function create_pdf_Querymovimiento(response) {
      var dataDolMovimienQuery=[];
      var tituloDolFormQuery=[
                          { 
-                            text:'Id',
+                            text:'Id Origen',
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
 
@@ -3605,18 +3634,12 @@ function create_pdf_Querymovimiento(response) {
 
                         },
                           { 
-                            text:'F.Artículo',
+                            text:'Artículo',
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
 
                         },
-                        { 
-                            text: 'Categoría',
-                            fillColor: '#eeeeee',
-                            fontSize: 8 ,
-                            alignment: 'center' 
-
-                        },
+                       
                           { 
                             text:'Uni.',
                             fillColor: '#eeeeee',
@@ -3664,26 +3687,26 @@ function create_pdf_Querymovimiento(response) {
 
                         },
                          { 
-                            text:'C.Unitario',
+                            text:'C.Unitario '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
 
                         },
                         { 
-                            text: 'P.Unitario',
+                            text: 'P.Unitario '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'center' 
 
                         },
                           { 
-                            text:'C.Total',
+                            text:'C.Total '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
 
                         },
                         { 
-                            text: 'P.Total',
+                            text: 'P.Total '+simboloMoneda[0].Simbolo,
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'center' 
@@ -3731,9 +3754,17 @@ function create_pdf_Querymovimiento(response) {
        data.map(function(index) {
             totalCosto=Number(totalCosto)+Number(index.Costo_Total);
             var tituloDolFormQueryData=[];
-             tituloDolFormQueryData=[
+            var cu=Number(index.Costo_Unitario).toFixed(2);
+            var pu=Number(index.Precio_Unitario).toFixed(2);
+            var ct=Number(index.Costo_Total).toFixed(2);
+            var pt=Number(index.Precio_Total).toFixed(2);
+            cu = addCommas(cu);
+            pu = addCommas(pu);
+            ct = addCommas(ct);
+            pt = addCommas(pt);
+                         tituloDolFormQueryData=[
                         { 
-                            text:index.idTransaccion,
+                            text:index.idOrigen,
                             fontSize: 7 ,
 
                         },
@@ -3751,12 +3782,6 @@ function create_pdf_Querymovimiento(response) {
                           { 
                             text:index.Articulo,
                             fontSize: 7 ,
-
-                        },
-                        { 
-                            text:index.Categoria,
-                            fontSize: 7 ,
-                            alignment: 'center' 
 
                         },
                           { 
@@ -3798,24 +3823,24 @@ function create_pdf_Querymovimiento(response) {
 
                         },
                         { 
-                            text:Number(index.Costo_Unitario).toFixed(2),
+                            text:cu,
                             fontSize: 7 ,
                             alignment: 'center' 
 
                         },
                          { 
-                            text:Number(index.Precio_Unitario).toFixed(2),
+                            text:pu,
                             fontSize: 7 ,
 
                         },
                         { 
-                            text: Number(index.Costo_Total).toFixed(2),
+                            text: ct,
                             fontSize: 7 ,
                             alignment: 'center' 
 
                         },
                           { 
-                            text:Number(index.Precio_Total).toFixed(2),
+                            text:pt,
                             fontSize: 7 ,
 
                         },
@@ -3831,231 +3856,240 @@ function create_pdf_Querymovimiento(response) {
 
                         },
                     ];
-             dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
+                   
+                  
+             dataDolMovimienQuery.push(tituloDolFormQueryData) ;     
+             
        });
     console.log(data);
- for (var i = 0; i < 5; i++) {
-    var tituloDolFormQueryData=[];
-      if(i==4){
-        tituloDolFormQueryData=[
-                        { 
-                            text:'',
-                            fontSize: 7 ,
+ // for (var i = 0; i < 5; i++) {
+ //    var tituloDolFormQueryData=[];
+ //      if(i==4){
+ //        tituloDolFormQueryData=[
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' 
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' 
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' 
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' 
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' 
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' 
 
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' 
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' 
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' 
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' 
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center',
-                            bold:true,
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center',
+ //                            bold:true,
 
-                        },
-                         { 
-                            text:'TOTAL COSTO',
-                            fontSize: 7 ,
-                            bold:true,
-                        },
-                         { 
-                            text:totalCosto.toFixed(2),
-                            fontSize: 7 ,
-                            alignment: 'center',
-                            bold:true,
+ //                        },
+ //                         { 
+ //                            text:'TOTAL COSTO',
+ //                            fontSize: 7 ,
+ //                            bold:true,
+ //                        },
+ //                         { 
+ //                            text:totalCosto.toFixed(2),
+ //                            fontSize: 7 ,
+ //                            alignment: 'center',
+ //                            bold:true,
 
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center',
-                            bold:true,
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center',
+ //                            bold:true,
 
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
 
-                        },
-                    ];
-      }else{
+ //                        },
+ //                    ];
+ //      }else{
             
-             tituloDolFormQueryData=[
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            border: [false, false, false, false],
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center',
-                             border: [false, false, false, false],
+ //             tituloDolFormQueryData=[
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center',
+ //                             border: [false, false, false, false],
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
 
 
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center',
-                             border: [false, false, false, false], 
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center',
+ //                             border: [false, false, false, false], 
 
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
 
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                            border: [false, false, false, false],
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
-                            border: [false, false, false, false],
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                             border: [false, false, false, false],
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                             border: [false, false, false, false],
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                             border: [false, false, false, false],
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                        { 
-                            text: '',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                             border: [false, false, false, false],
-                        },
-                          { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                        { 
-                            text:'',
-                            fontSize: 7 ,
-                            alignment: 'center' ,
-                             border: [false, false, false, false],
-                        },
-                         { 
-                            text:'',
-                            fontSize: 7 ,
-                             border: [false, false, false, false],
-                        },
-                    ];
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                            border: [false, false, false, false],
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text: '',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                          { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                        { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                            alignment: 'center' ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                         { 
+ //                            text:'',
+ //                            fontSize: 7 ,
+ //                             border: [false, false, false, false],
+ //                        },
+ //                    ];
             
-      }
-       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
-    }
+ //      }
+ //       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
+ //    }
      
 
    var docDefinition = {
             pageOrientation: 'landscape',
             content: [ 
+                        {
+                            image: img,
+                            width:120,
+                            height:50,
+                            absolutePosition: { x: 50, y: 15 }
+                        },
 
                         { text: 'REPORTE DE MOVIMIENTO A LA FECHA : '+fechacA, style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
                         {  

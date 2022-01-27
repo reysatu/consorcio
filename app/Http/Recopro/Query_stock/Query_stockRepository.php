@@ -18,7 +18,10 @@ class Query_stockRepository implements Query_stockInterface
         $this->model = $model; 
        
     }
-
+    public function getSimboloMoneda(){
+          $mostrar2=DB::select("select * from ERP_Moneda where idMoneda='1'");
+          return $mostrar2;
+    }
     public function all()
     {
         return $this->model->get();

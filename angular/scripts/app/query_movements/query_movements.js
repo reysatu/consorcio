@@ -66,7 +66,7 @@
                     key: true,
                     create: false,
                     edit: false,
-                    list: true
+                    list: false,
                 },
                 id: {
                     key: false,
@@ -110,10 +110,10 @@
                     title: 'Ori.',
                     width: '3%'
                 },
-                // idOrigen: {
-                //     title: 'Id',
-                //     width: '3%'
-                // },
+                idOrigen: {
+                    title: 'Id',
+                    width: '3%'
+                },
                 Almacen: {
                     title: 'Alm.',
                     width: '6%'

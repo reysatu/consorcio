@@ -48,6 +48,15 @@ class CompaniaRepository implements CompaniaInterface
     {
        return $this->model->where('estado', self::$_ACTIVE)->get();
     }
+     public function findByCode($code)
+    {
+        return $this->model->where('Ruc', $code)->first();
+    }
+    
+    public function find($id)
+    {
+        return $this->model->find($id);
+    }
      public function create(array $attributes)
     {
         $attributes['user_created'] = auth()->id();
