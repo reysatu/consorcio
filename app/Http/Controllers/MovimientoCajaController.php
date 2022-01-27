@@ -12,16 +12,25 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
+use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Customer\CustomerInterface;
+use App\Http\Recopro\Persona\PersonaInterface;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Requests\MovimientoCajaRequest;
+use App\Models\BaseModel;
 use DateTime;
 use DateTimeZone;
 use DB;
+use Exception;
+use PDF;
+
 class MovimientoCajaController extends Controller
 {
      use CajaDiariaDetalleTrait;
 
     public function __construct()
     {
+        $this->base_model = new BaseModel();
 //        $this->middleware('json');
     }
     public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj)
@@ -223,5 +232,492 @@ class MovimientoCajaController extends Controller
     public function excel(CajaDiariaDetalleInterface $repo)
     {
         return generateExcel($this->generateDataExcel($repo->allExcel()), 'LISTA DE MOVIMIENTOS DE CAJA', 'Movimientos de caja');
+    }
+
+    public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio) {
+
+        $data = $request->all();
+
+        // print_r($data); exit;
+        $result = array();
+       
+        try {
+            DB::beginTransaction();
+
+            // print_r($this->preparar_datos("dbo.ERP_VentaFormaPago", $data));
+            // exit;
+            $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            $solicitud_articulo = $solicitud_repositorio->get_solicitud_articulo($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
+
+            $data_venta = (array)$solicitud[0];
+            $data_venta["descuento_id"] = explode("*", $solicitud[0]->descuento_id)[0];
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+            $data_venta["serie_comprobante"] = $data["serie_comprobante"];
+            $data_venta["numero_comprobante"] = $data["numero_comprobante"];
+            $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
+            $data_venta["nConsecutivo_solicitud"] = $data["nConsecutivo"];
+            $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
+            $data_venta["user_updated"] = "";
+            $data_venta["updated_at"] = "";
+
+            $condicion_pago = array();
+
+            //CONTADO
+            if($solicitud[0]->tipo_solicitud == "1") {
+                $dias = 0;
+                $data_venta["tipo_comprobante"] = "0";
+
+                $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
+                $update_solicitud["saldo"] = "0";
+                $update_solicitud["pagado"] = $solicitud[0]->t_monto_total;
+                $update_solicitud["facturado"] = $solicitud[0]->t_monto_total;
+                $update_solicitud["estado"] = "6"; // ESTADO FACTURADO DE LA SOLICITUD
+
+                $data_venta["saldo"] = "0";
+                $data_venta["pagado"] = $solicitud[0]->t_monto_total;
+
+            }
+
+            //CREDITO DIRECTO
+            if($solicitud[0]->tipo_solicitud == "2") {
+                $dias = $solicitud_credito[0]->nro_cuotas * 30;
+                
+            }
+            // CREDITO FINANCIERO
+            if($solicitud[0]->tipo_solicitud == "3") {
+                $dias = 30;
+                
+            }
+
+            if(count($solicitud_credito) > 0) {
+
+                if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                    $data_venta["tipo_comprobante"] = "1";
+                    $data_venta["saldo"] = "0";
+                    $data_venta["pagado"] = $solicitud_credito[0]->cuota_inicial;
+
+                    $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                    $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
+                    $update_solicitud["estado"] = "3"; // ESTADO POR APROBAR DE LA SOLICITUD
+                    $update_solicitud["saldo"] = $solicitud_credito[0]->total_financiado;
+                    $update_solicitud["pagado"] = $solicitud_credito[0]->cuota_inicial;
+                    $update_solicitud["facturado"] = $solicitud_credito[0]->cuota_inicial;
+                    // print_r($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+
+                    // enviamos aprobar la solicitud cuando se hace la venta de la cuota inicial
+                    $data_envio_sol = array();
+                    $data_envio_sol["cCodConsecutivo"] = $data["cCodConsecutivo_solicitud"];
+                    $data_envio_sol["nConsecutivo"] = $data["cCodConsecutivo_solicitud"];
+                    
+                    $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
+                } else {
+
+
+                    $data_venta["tipo_comprobante"] = "0";
+                    $data_venta["saldo"] = $solicitud_credito[0]->total_financiado;
+                    $data_venta["pagado"] = "0";
+                   
+                    $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                    $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
+                    $update_solicitud["facturado"] = $solicitud[0]->t_monto_total;
+                    $update_solicitud["estado"] = "6"; // ESTADO FACTURADO DE LA SOLICITUD
+
+                    //GENERAMOS EL CRONOGRAMA DE PAGOS
+                    $fecha = $solicitud[0]->fecha_solicitud;
+                    for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
+
+                        $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                        $data_cronograma = array();
+                        $data_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                        $data_cronograma["nConsecutivo"] = $data["nConsecutivo"];
+                        $data_cronograma["nrocuota"] = $c;
+                        $data_cronograma["fecha_vencimiento"] = $fecha;
+                        $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota;
+                        $data_cronograma["int_moratorio"] = "0";
+                        $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota;
+                        $data_cronograma["monto_pago"] = "0";
+                        // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                        $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                        // print_r($res);   
+                    }
+                    
+
+                }
+            }
+            
+            //ACTUALIZAMOS LOS SALDOS EN SOLICITUD
+            $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+
+
+            $condicion_pago = $repo->get_condicion_pago($dias);
+            
+            if(count($condicion_pago) <= 0) {
+               
+                throw new Exception("No hay una condicion de pago para ".$dias." dias");
+            }
+
+            $data_venta["condicion_pago"] = $condicion_pago[0]->id;
+
+
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+
+            for ($i=0; $i < count($solicitud_articulo); $i++) { 
+                if($solicitud_articulo[$i]->cOperGrat == "-.-") {
+                    $solicitud_articulo[$i]->cOperGrat = "";
+                    // echo "ola";
+                }
+                $data_venta_detalle = (array)$solicitud_articulo[$i];
+                $data_venta_detalle["idventa"] = $data_venta["idventa"];
+               
+                
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                // print_r($res);
+            }
+            
+         
+            $data_formas_pago = $data;
+            // var_dump($data["codigo_formapago"]); exit;
+            $efectivo_soles = 0;
+            $no_efectivo_soles = 0;
+            $efectivo_dolares = 0;
+            $no_efectivo_dolares = 0;
+
+            for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
+                $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
+               
+                if($i == 0) {
+
+                    $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                   
+                } else {
+                    $data_formas_pago["consecutivo"][$i] = $data_formas_pago["consecutivo"][$i-1] + 1;
+                }
+
+                $data_caja_detalle = array();
+                $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                $data_caja_detalle["codigoTipo"] = "VTA";
+                $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$i];
+                $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$i];
+                $data_caja_detalle["monto"] = $data["monto_pago"][$i];
+                $data_caja_detalle["descripcion"] = "Ingreso por Venta";
+                $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$i];
+                $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$i];
+
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+
+                if($data["IdMoneda"][$i] == "1") {
+                    if($data["codigo_formapago"][$i] == "EFE") {
+                        $efectivo_soles += (float)$data["monto_pago"][$i];
+                    } else {
+                        $no_efectivo_soles += (float)$data["monto_pago"][$i];
+                    }
+                }
+
+                if($data["IdMoneda"][$i] == "2") {
+                    if($data["codigo_formapago"][$i] == "EFE") {
+                        $efectivo_dolares += (float)$data["monto_pago"][$i];
+                    } else {
+                        $no_efectivo_dolares += (float)$data["monto_pago"][$i];
+                    }
+                }
+            }
+
+
+            //ACTUALIZAMOS MONTOS EN CAJA DIARIA
+            $update_caja_diaria = array();
+            $update_caja_diaria["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+            $update_caja_diaria["totalEfectivo"] = $efectivo_soles;
+            $update_caja_diaria["totalNoEfectivo"] = $no_efectivo_soles;
+            $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
+            $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
+
+            
+            $caja_diaria_repositorio->update_totales($update_caja_diaria);
+            // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
+
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
+
+            $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+            
+            $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
+            $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
+            DB::commit();
+            return response()->json($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ei"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }
+
+    }
+
+    public function get_caja_diaria(CajaDiariaDetalleInterface $repo) {
+        $result = $repo->get_caja_diaria();
+        return response()->json($result);
+
+    }
+
+    public function subfijo($xx)
+    { // esta función regresa un subfijo para la cifra
+        $xx = trim($xx);
+        $xstrlen = strlen($xx);
+        if ($xstrlen == 1 || $xstrlen == 2 || $xstrlen == 3)
+            $xsub = "";
+        //
+        if ($xstrlen == 4 || $xstrlen == 5 || $xstrlen == 6)
+            $xsub = "MIL";
+        //
+        return $xsub;
+    }
+
+    public function convertir($xcifra)
+    {
+        $xarray = array(
+            0 => "CERO",
+            1 => "UN", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE",
+            "DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE",
+            "VEINTI", 30 => "TREINTA", 40 => "CUARENTA", 50 => "CINCUENTA", 60 => "SESENTA", 70 => "SETENTA", 80 => "OCHENTA", 90 => "NOVENTA",
+            100 => "CIENTO", 200 => "DOSCIENTOS", 300 => "TRESCIENTOS", 400 => "CUATROCIENTOS", 500 => "QUINIENTOS", 600 => "SEISCIENTOS", 700 => "SETECIENTOS", 800 => "OCHOCIENTOS", 900 => "NOVECIENTOS"
+        );
+        //
+        $xcifra = trim($xcifra);
+        $xlength = strlen($xcifra);
+        $xpos_punto = strpos($xcifra, ".");
+        $xaux_int = $xcifra;
+        $xdecimales = "00";
+        if (!($xpos_punto === false)) {
+            if ($xpos_punto == 0) {
+                $xcifra = "0" . $xcifra;
+                $xpos_punto = strpos($xcifra, ".");
+            }
+            $xaux_int = substr($xcifra, 0, $xpos_punto); // obtengo el entero de la cifra a convertir
+            $xdecimales = substr($xcifra . "00", $xpos_punto + 1, 2); // obtengo los valores decimales
+        }
+
+        $XAUX = str_pad($xaux_int, 18, " ", STR_PAD_LEFT); // ajusto la longitud de la cifra, para que sea divisible por centenas de miles (grupos de 6)
+        $xcadena = "";
+        for ($xz = 0; $xz < 3; $xz++) {
+            $xaux = substr($XAUX, $xz * 6, 6);
+            $xi = 0;
+            $xlimite = 6; // inicializo el Ytador de centenas xi y establezco el límite a 6 dígitos en la parte entera
+            $xexit = true; // bandera para Ytrolar el ciclo del While
+            while ($xexit) {
+                if ($xi == $xlimite) { // si ya llegó al límite máximo de enteros
+                    break; // termina el ciclo
+                }
+
+                $x3digitos = ($xlimite - $xi) * -1; // comienzo Y los tres primeros digitos de la cifra, comenzando por la izquierda
+                $xaux = substr($xaux, $x3digitos, abs($x3digitos)); // obtengo la centena (los tres dígitos)
+                for ($xy = 1; $xy < 4; $xy++) { // ciclo para revisar centenas, decenas y unidades, en ese orden
+                    switch ($xy) {
+                        case 1: // checa las centenas
+                            if (substr($xaux, 0, 3) < 100) { // si el grupo de tres dígitos es menor a una centena ( < 99) no hace nada y pasa a revisar las decenas
+
+                            } else {
+                                $key = (int) substr($xaux, 0, 3);
+                                if (TRUE === array_key_exists($key, $xarray)) {  // busco si la centena es número redondo (100, 200, 300, 400, etc..)
+                                    $xseek = $xarray[$key];
+                                    $xsub = $this->subfijo($xaux); // devuelve el subfijo correspondiente (Millón, Millones, Mil o nada)
+                                    if (substr($xaux, 0, 3) == 100)
+                                        $xcadena = " " . $xcadena . " CIEN " . $xsub;
+                                    else
+                                        $xcadena = " " . $xcadena . " " . $xseek . " " . $xsub;
+                                    $xy = 3; // la centena fue redonda, entonces termino el ciclo del for y ya no reviso decenas ni unidades
+                                } else { // entra aquí si la centena no fue numero redondo (101, 253, 120, 980, etc.)
+                                    $key = (int) substr($xaux, 0, 1) * 100;
+                                    $xseek = $xarray[$key]; // toma el primer caracter de la centena y lo multiplica por cien y lo busca en el arreglo (para que busque 100,200,300, etc)
+                                    $xcadena = " " . $xcadena . " " . $xseek;
+                                } // ENDIF ($xseek)
+                            } // ENDIF (substr($xaux, 0, 3) < 100)
+                            break;
+                        case 2: // checa las decenas (Y la misma lógica que las centenas)
+                            if (substr($xaux, 1, 2) < 10) {
+                            } else {
+                                $key = (int) substr($xaux, 1, 2);
+                                if (TRUE === array_key_exists($key, $xarray)) {
+                                    $xseek = $xarray[$key];
+                                    $xsub = $this->subfijo($xaux);
+                                    if (substr($xaux, 1, 2) == 20)
+                                        $xcadena = " " . $xcadena . " VEINTE " . $xsub;
+                                    else
+                                        $xcadena = " " . $xcadena . " " . $xseek . " " . $xsub;
+                                    $xy = 3;
+                                } else {
+                                    $key = (int) substr($xaux, 1, 1) * 10;
+                                    $xseek = $xarray[$key];
+                                    if (20 == substr($xaux, 1, 1) * 10)
+                                        $xcadena = " " . $xcadena . " " . $xseek;
+                                    else
+                                        $xcadena = " " . $xcadena . " " . $xseek . " Y ";
+                                } // ENDIF ($xseek)
+                            } // ENDIF (substr($xaux, 1, 2) < 10)
+                            break;
+                        case 3: // checa las unidades
+                            if (substr($xaux, 2, 1) < 1) { // si la unidad es cero, ya no hace nada
+
+                            } else {
+                                $key = (int) substr($xaux, 2, 1);
+                                $xseek = $xarray[$key]; // obtengo directamente el valor de la unidad (del uno al nueve)
+                                $xsub = $this->subfijo($xaux);
+                                $xcadena = " " . $xcadena . " " . $xseek . " " . $xsub;
+                            } // ENDIF (substr($xaux, 2, 1) < 1)
+                            break;
+                    } // END SWITCH
+                } // END FOR
+                $xi = $xi + 3;
+            } // ENDDO
+
+            if (substr(trim($xcadena), -5, 5) == "ILLON") // si la cadena obtenida termina en MILLON o BILLON, entonces le agrega al final la Yjuncion DE
+                $xcadena .= " DE";
+
+            if (substr(trim($xcadena), -7, 7) == "ILLONES") // si la cadena obtenida en MILLONES o BILLONES, entoncea le agrega al final la Yjuncion DE
+                $xcadena .= " DE";
+
+            // ----------- esta línea la puedes cambiar de acuerdo a tus necesidades o a tu país -------
+            if (trim($xaux) != "") {
+                switch ($xz) {
+                    case 0:
+                        if (trim(substr($XAUX, $xz * 6, 6)) == "1")
+                            $xcadena .= "UN BILLON ";
+                        else
+                            $xcadena .= " BILLONES ";
+                        break;
+                    case 1:
+                        if (trim(substr($XAUX, $xz * 6, 6)) == "1")
+                            $xcadena .= "UN MILLON ";
+                        else
+                            $xcadena .= " MILLONES ";
+                        break;
+                    case 2:
+                        if ($xcifra < 1) {
+                            $xcadena = "$xdecimales/100 SOLES";
+                        }
+                        if ($xcifra >= 1 && $xcifra < 2) {
+                            $xcadena = "UNO Y $xdecimales/100 SOLES ";
+                        }
+                        if ($xcifra >= 2) {
+                            $xcadena .= " Y $xdecimales/100 SOLES "; //
+                        }
+                        break;
+                } // endswitch ($xz)
+            } // ENDIF (trim($xaux) != "")
+            // ------------------      en este caso, para México se usa esta leyenda     ----------------
+            $xcadena = str_replace("VEINTI ", "VEINTI", $xcadena); // quito el espacio para el VEINTI, para que quede: VEINTICUATRO, VEINTIUN, VEINTIDOS, etc
+            $xcadena = str_replace("  ", " ", $xcadena); // quito espacios dobles
+            $xcadena = str_replace("UN UN", "UN", $xcadena); // quito la duplicidad
+            $xcadena = str_replace("  ", " ", $xcadena); // quito espacios dobles
+            $xcadena = str_replace("BILLON DE MILLONES", "BILLON DE", $xcadena); // corrigo la leyenda
+            $xcadena = str_replace("BILLONES DE MILLONES", "BILLONES DE", $xcadena); // corrigo la leyenda
+            $xcadena = str_replace("DE UN", "UN", $xcadena); // corrigo la leyenda
+        } // ENDFOR ($xz)
+        return trim($xcadena);
+    }
+
+    
+
+    public function imprimir_cronograma($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+
+        $datos = array();
+        $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        $datos["empresa"] = $repo->get_empresa(); 
+        $datos["solicitud_credito"] = $solicitud_credito; 
+        $datos["solicitud"] = $solicitud; 
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+
+        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+        $datos["fiador"] = $persona_repositorio->find($idfiador);
+        $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        $pdf = PDF::loadView("solicitud.cronograma", $datos);
+
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("cronograma.pdf"); // ver
+
+    }
+
+    public function imprimir_ticket($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+        $idventa = $array[2];
+
+        $datos = array();
+        $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        $datos["empresa"] = $repo->get_empresa(); 
+        $datos["tienda"] = $repo->get_tienda(); 
+        $datos["venta"] = $repo->get_venta($idventa); 
+        $datos["cajero"] = $repo->get_cajero(); 
+        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
+        $datos["solicitud_credito"] = $solicitud_credito; 
+        $datos["solicitud"] = $solicitud; 
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+
+        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+        $datos["fiador"] = $persona_repositorio->find($idfiador);
+        $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        $pdf = PDF::loadView("solicitud.ticket", $datos);
+        $pdf->setPaper('b7', 'portrait');
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("ticket.pdf"); // ver
+
+    }
+
+
+    public function imprimir_comprobante($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+        $idventa = $array[2];
+
+        $datos = array();
+        $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        $datos["empresa"] = $repo->get_empresa(); 
+        $datos["tienda"] = $repo->get_tienda(); 
+        $datos["venta"] = $repo->get_venta($idventa); 
+        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        $datos["cajero"] = $repo->get_cajero(); 
+        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        $datos["tiendas"] = $repo->get_tiendas(); 
+        $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
+        $datos["solicitud_credito"] = $solicitud_credito; 
+        $datos["solicitud"] = $solicitud; 
+        $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+
+        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+        $datos["fiador"] = $persona_repositorio->find($idfiador);
+        $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        $pdf = PDF::loadView("solicitud.comprobante", $datos);
+      
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("comprobante.pdf"); // ver
+
     }
 }

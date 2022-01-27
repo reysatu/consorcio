@@ -31,7 +31,7 @@ class SolicitudController extends Controller
     public function all(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
@@ -39,7 +39,7 @@ class SolicitudController extends Controller
     public function list_ventas(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'estado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
     }
@@ -75,12 +75,18 @@ class SolicitudController extends Controller
             $descuento_id = $desc[0];
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
+
+            //SALDOS
+            $data["saldo"] = $data["t_monto_total"];
+            $data["facturado"] = 0;
+            $data["pagado"] = 0;
         
             if($data["nConsecutivo"] == "") {
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
                 $data["origen"] = "V";
                 $data["estado"] = "1";
+               
 
                 // print_r($this->preparar_datos("dbo.ERP_Solicitud", $data));
                 // exit;

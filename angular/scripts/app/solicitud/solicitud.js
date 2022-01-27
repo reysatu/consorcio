@@ -2741,7 +2741,7 @@
 
                                 var cant = series_id[ar].value.split(",");
 
-                                if(cant != cantidad) {
+                                if(cant.length != cantidad) {
                                     AlertFactory.textType({
                                         title: '',
                                         message: 'Por Favor Agregue la cantidad de '+cantidad+' series del producto: '+producto,
@@ -2767,6 +2767,7 @@
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
+                            LoadRecordsButtonSolicitud.click();
                             $("#nConsecutivo").val(data.datos[0].nConsecutivo);
                             $("#estado").val(data.datos[0].estado);
                             AlertFactory.textType({
@@ -2904,15 +2905,20 @@
             $.post("solicitud/find", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
+                 
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    if(data.solicitud_credito.length > 0) {
+                        Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    }
+
                     $("#documento_or").val(data.solicitud[0].documento);   
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     if(data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);   
-                        $("#monto_financiado").val(data.solicitud_credito[0].monto_financiado);   
+                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);  
+                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta); 
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);   
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);   
                         $("#intereses").val(data.solicitud_credito[0].intereses);   
@@ -2984,12 +2990,10 @@
                 },
                 nConsecutivo: {
                     title: 'Nro',
-
-
                 },
 
                 fecha_solicitud: {
-                    title: 'Fecha Solicitud',
+                    title: 'Fecha',
                     display: function (data) {
                         return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
@@ -2998,6 +3002,41 @@
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+                    
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+                    
+
+                },
+                moneda: {
+                    title: 'Moneda',
+                    
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+                    
+
+                },
+                pagado: {
+                    title: 'Pagado',
+                    
+
+                },
+                saldo: {
+                    title: 'Saldo',
+                    
+
+                },
+                facturado: {
+                    title: 'Facturado',
+                    
 
                 },
                 estado: {

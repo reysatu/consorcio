@@ -31,6 +31,11 @@ Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
 Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
 
 Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');
+Route::post('movimientoCajas/guardar_comprobante', 'MovimientoCajaController@guardar_comprobante');
+Route::post('movimientoCajas/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
+Route::get('movimientoCajas/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
+Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket');
+Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 
 
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);

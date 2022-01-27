@@ -98,9 +98,18 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
     public function obtener_consecutivo_comprobante($tipo_documento) {
         
 
-        $sql = "SELECT * FROM ERP_ConsecutivosComprobantes WHERE IdTipoDocumento={$tipo_documento}";
+        $sql = "SELECT cc.*, (cc.actual + 1) AS actual FROM ERP_ConsecutivosComprobantes AS cc WHERE cc.IdTipoDocumento={$tipo_documento}";
         $result = DB::select($sql);
 
         return $result;
+    }
+
+    public function actualizar_correlativo($serie, $actual)
+    {
+        $r = DB::table("ERP_ConsecutivosComprobantes")
+            ->where("serie", $serie)
+            ->update(array("actual" => $actual));
+        
+        return $r;
     }
 }

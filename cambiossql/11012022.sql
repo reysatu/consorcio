@@ -74,3 +74,64 @@ ALTER TABLE [dbo].[ERP_ConsecutivosComprobantes] ADD CONSTRAINT [fk_tipo_documen
 
 
 ALTER TABLE [dbo].[ERP_Solicitud] ADD [intereses] decimal(18,5) NULL;
+
+
+ALTER TABLE [dbo].[ERP_VentaDetalle] ADD [IdMoneda] varchar(5) NULL
+
+
+EXEC sp_rename '[dbo].[ERP_Venta].[tipo_comprobante]', 'IdTipoDocumento', 'COLUMN'
+GO
+
+EXEC sp_rename '[dbo].[ERP_Venta].[clase_comprobante]', 'tipo_comprobante', 'COLUMN'
+GO
+
+ALTER TABLE [dbo].[ERP_Venta] ALTER COLUMN [tipo_comprobante] varchar(1) COLLATE Modern_Spanish_CI_AS NOT NULL
+GO
+
+IF ((SELECT COUNT(*) FROM ::fn_listextendedproperty('MS_Description',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'tipo_comprobante')) > 0)
+  EXEC sp_updateextendedproperty
+'MS_Description', N'1 -> anticipo
+0 -> normal',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'tipo_comprobante'
+ELSE
+  EXEC sp_addextendedproperty
+'MS_Description', N'1 -> anticipo
+0 -> normal',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'tipo_comprobante';
+
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [saldo] decimal(18,5) NULL
+GO
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [pagado] decimal(18,5) NULL;
+
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [saldo] decimal(18,5) NULL
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [facturado] decimal(18,5) NULL
+GO
+
+ALTER TABLE [dbo].[ERP_Solicitud] ADD [pagado] decimal(18,5) NULL;
+
+ALTER TABLE [dbo].[ERP_Venta] ALTER COLUMN [condicion_pago] int NULL;
+
+ALTER TABLE [dbo].[ERP_Venta] ADD CONSTRAINT [fk_condicion_pago_venta] FOREIGN KEY ([condicion_pago]) REFERENCES [dbo].[ERP_CondicionPago] ([id]);
+
+EXEC sp_rename '[dbo].[ERP_Venta].[iddescuento]', 'descuento_id', 'COLUMN';
+
+ALTER TABLE [dbo].[ERP_VentaDetalle] DROP COLUMN [IdMoneda];
+
+ALTER TABLE [dbo].[ERP_VentaFormaPago] ADD [IdMoneda] varchar(5) NULL;
+
+
+-- Renombra tabla Compania
+exec sp_rename 'Compania', 'ERP_Compania'
+go

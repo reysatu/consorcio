@@ -124,6 +124,95 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         $model->update($attributes);
         $model->delete();
      
+
+
     }
+    
+
+    public function get_condicion_pago($dias) {
+        $sql = "SELECT * FROM ERP_CondicionPago AS cp WHERE cp.days={$dias}";
+
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+    public function get_caja_diaria() {
+        $idusuario = auth()->id();
+        $fechacA = date("Y-m-d");
+        $sql = "SELECT * FROM ERP_CajaDiaria AS cd
+        INNER JOIN ERP_Cajas AS c ON(c.idcaja=cd.idCaja)
+        WHERE cd.idUsuario='$idusuario' AND FORMAT(cd.fechaCaja, 'yyyy-MM-dd')='$fechacA'";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_cajero() {
+        $idusuario = auth()->id();
+        $fechacA = date("Y-m-d");
+        $sql = "SELECT u.* FROM ERP_CajaDiaria AS cd
+        INNER JOIN ERP_Usuarios AS u ON(cd.idUsuario=u.id)
+        WHERE cd.idUsuario='$idusuario' AND FORMAT(fechaCaja, 'yyyy-MM-dd')='$fechacA'";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+
+    public function get_empresa() {
+        $sql = "SELECT * FROM ERP_Compania";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_tiendas() {
+        $sql = "SELECT * FROM ERP_Tienda WHERE estado='A'";
+        $result = DB::select($sql);
+        return $result;
+    }
+    
+
+    public function get_tienda() {
+        $caja_diaria = $this->get_caja_diaria();
+        $sql = "SELECT t.* FROM ERP_Cajas AS c
+        INNER JOIN ERP_Tienda AS t ON(c.idtienda=t.idTienda)
+        WHERE c.idcaja={$caja_diaria[0]->idCaja}";
+
+        $result = DB::select($sql);
+        return $result;
+    }
+
+
+    
+    public function get_venta($idventa) {
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
+        INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
+        INNER JOIN ERP_CondicionPago AS c ON(c.id=v.condicion_pago)
+        WHERE v.idventa={$idventa}";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_venta_detalle($idventa) {
+        $sql = "SELECT vd.*, p.description AS producto
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
+        INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
+       
+        WHERE v.idventa={$idventa}";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_venta_formas_pago($idventa) {
+        $sql = "SELECT vfp.*
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_VentaFormaPago AS vfp ON(v.idventa=vfp.idventa)
+        WHERE v.idventa={$idventa}";
+        $result = DB::select($sql);
+        return $result;
+    }
+    
 
 }

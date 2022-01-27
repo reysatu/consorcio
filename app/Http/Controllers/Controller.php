@@ -165,4 +165,24 @@ class Controller extends BaseController
         $parametros["tabla"] = $table;
         return $parametros;
     }
+
+
+    // $fecha en formato yyyy-mm-dd
+    public function sumar_restar_dias($fecha, $operacion, $dias) {
+     
+        $fecha = strtotime($operacion . $dias . " day", strtotime($fecha));
+        $fecha = date("Y-m-d", $fecha);
+        $date  = explode("-", $fecha);
+        $mes   = $date[1];
+        if ($date[1] < 0) {
+            $mes = "0" . $mes;
+        }
+
+        $dia = $date[2];
+        if ($date[2] < 0) {
+            $dia = "0" . $dia;
+        }
+
+        return $date[0] . "-" . $mes . "-" . $dia;
+    }
 }

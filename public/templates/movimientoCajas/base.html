@@ -899,8 +899,10 @@
                                             <div class="form-group">
                                                 <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                                 <div class="col-sm-3 col-md-offset-1">
-                                                    <input id="desTotal" name="t_monto_total"
-                                                        class="form-control input-sm" readonly value="0" />
+                                                    <input id="desTotal" name="t_monto_total" class="form-control input-sm" readonly value="0" />
+                                                    <input type="hidden" id="saldo" name="saldo" class="form-control" />
+                                                    <input type="hidden" id="pagado" name="pagado" class="form-control" />
+                                                    <input type="hidden" id="facturado" name="facturado" class="form-control" />
                                                 </div>
                                             </div>
                                         </div>
@@ -1356,7 +1358,14 @@
                         <div class="form-group">
                             <label for="" class="control-label col-md-3">Total a Pagar</label>
                             <div class="col-md-3">
-                                <input type="text" readonly="readonly" id="total_pagar" name="total_pagar" class="form-control input-sm">
+                               
+                                <div class="input-group">
+                                    <span class="input-group-addon input-sm">
+                                        <strong class="simbolo-moneda"></strong>
+                                    </span>
+                                  
+                                    <input type="text" readonly="readonly" id="total_pagar" name="total_pagar" class="form-control input-sm">
+                                </div>
                             </div>
                         </div>
 
@@ -1364,7 +1373,14 @@
                             <label for="" class="control-label col-md-3">Formas de Pago</label>
                             <label for="" class="control-label col-md-1">Total</label>
                             <div class="col-md-3">
-                                <input type="text" id="monto" name="monto" class="form-control input-sm">
+                                <div class="input-group">
+                                    <span class="input-group-addon input-sm">
+                                        <strong class="simbolo-moneda"></strong>
+                                    </span>
+                                    <input type="text" id="monto" name="monto" class="form-control input-sm">
+                                </div>
+                               
+                               
                             </div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-primary btn-sm" id="agregar-formas-pago" ng-click="agregar_formas_pago()">Agregar</button>
@@ -1376,6 +1392,7 @@
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
+                                            <th>Moneda</th>
                                             <th>Tipo</th>
                                             <th>Tarjeta/Concepto/Cuenta/Banco Ref.</th>
                                             <th>Nro Operación</th>
@@ -1393,6 +1410,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-admin btn-sm" ng-click="emitir()" >Emitir</button>
                     <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
                 </div>
             </form>
@@ -1436,11 +1454,23 @@
                                 <input type="text" id="tarjeta" name="tarjeta" class="form-control input-sm">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label for="" class="control-label col-md-4">Moneda</label>
+                            <div class="col-md-3">
+                                <select id="moneda" name="moneda" class="form-control input-sm"></select>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label for="" class="control-label col-md-4">Monto</label>
                             <div class="col-md-3">
-                                <input type="number" id="monto_p" name="monto_p" class="form-control input-sm">
+                                <div class="input-group">
+                                    <span class="input-group-addon input-sm">
+                                        <strong class="simbolo-moneda-2"></strong>
+                                    </span>
+                                    <input type="number" id="monto_p" name="monto_p" class="form-control input-sm">
+                                </div>
+                               
                             </div>
                         </div>
 

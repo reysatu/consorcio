@@ -584,8 +584,6 @@
             bval = bval && idCaja.required();
             bval = bval && idUsuario.required();
 
-
-
             if ($("#table_demoninacionesSoles").html() == '') {
                 AlertFactory.showWarning({
                     title: '',
@@ -1241,7 +1239,7 @@
                 },
 
                 fecha_solicitud: {
-                    title: 'Fecha Solicitud',
+                    title: 'Fecha',
                     display: function (data) {
                         return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
@@ -1250,6 +1248,41 @@
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+                    
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+                    
+
+                },
+                moneda: {
+                    title: 'Moneda',
+                    
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+                    
+
+                },
+                pagado: {
+                    title: 'Pagado',
+                    
+
+                },
+                saldo: {
+                    title: 'Saldo',
+                    
+
+                },
+                facturado: {
+                    title: 'Facturado',
+                    
 
                 },
                 estado: {
@@ -1274,8 +1307,24 @@
             recordsLoaded: function (event, data) {
                 $('.emitir-comprobante').click(function (e) {
                     var id = $(this).attr('data-id');
+                    $.post("movimientoCajas/get_caja_diaria", {  },
+                        function (data, textStatus, jqXHR) {
+                            // console.log();
 
-                    find_solicitud(id);
+                            if(data.length > 0) {
+                                
+                                find_solicitud(id);
+                            } else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Primero debe apertura la caja del día',
+                                    type: 'info'
+                                });
+                                return false;
+                            }
+                        },
+                        "json"
+                    );
                     e.preventDefault();
                 });
                 $('.eliminar-Orden').click(function (e) {
@@ -1392,9 +1441,31 @@
 
         $scope.emitir_comprobante = function () {
             // $("#idconyugue").focus();
-
             // alert($("#desTotal").val());
+
             var total = parseFloat($("#desTotal").val());
+            var cuota_inicial = parseFloat($("#cuota_inicial").val());
+            var saldo = parseFloat($("#saldo").val());
+            var pagado = parseFloat($("#pagado").val());
+            var facturado = parseFloat($("#facturado").val());
+            var total_financiado = parseFloat($("#total_financiado").val());
+           
+            if(isNaN(pagado)) {
+                pagado = 0;
+            }
+            if(isNaN(facturado)) {
+                facturado = 0;
+            }
+
+            if(cuota_inicial > 0) {
+                if(pagado == 0) {
+                    total = cuota_inicial;
+                } else {
+                    total = total_financiado;
+
+                }
+            }
+
             $("#total_pagar").val(total.toFixed(2));
             $("#monto").val(total.toFixed(2));
             $("#id_tipoDoc_Venta_or").trigger("change");
@@ -1404,9 +1475,8 @@
 
         $scope.agregar_formas_pago = function () {
             // $("#idconyugue").focus();
-
             // alert($("#desTotal").val());
-            var total = parseFloat($("#desTotal").val());
+            var total = parseFloat($("#total_pagar").val());
             var subtotal_montos_pago = sumar_montos_formas_pago();
             var saldo = total_pagar - subtotal_montos_pago; 
             if(saldo <= 0) {
@@ -1417,19 +1487,32 @@
                 });
                 return false;
             }
+
             $("#monto_p").val(total.toFixed(2));
+            $("#forma_pago").val("EFE");
+            $("#moneda").val($("#IdMoneda").val());
             $("#modal-formas-pago").modal("show");
         }
 
-        $(document).on("change", "#id_tipoDoc_Venta_or", function () {
+        $(document).on("change", "#id_tipoDoc_Venta_or", function (event, serie_comprobante) {
+            // console.log(IdTipoDocumento, serie_comprobante);
             var tipo_documento = $(this).val();
             $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
                     $("#serie_comprobante").html("");
                     $("#serie_comprobante").append('<option value="">Seleccionar</option>');
                     _.each(data, function (item) {
-                        $("#serie_comprobante").append('<option numero="'+item.numero+'" value="' + item.serie + '">' + item.serie + '</option>');
+                        if(serie_comprobante == item.serie) {
+                            $("#serie_comprobante").append('<option selected="selected" actual="'+item.actual+'" value="' + item.serie + '">' + item.serie + '</option>');
+                        } else{ 
+                            $("#serie_comprobante").append('<option actual="'+item.actual+'" value="' + item.serie + '">' + item.serie + '</option>');
+                        }
+                        
                     });
+
+                    if(typeof serie_comprobante != "undefined") {
+                        $("#serie_comprobante").trigger("change");
+                    }
                 },
                 "json"
             );
@@ -1439,8 +1522,8 @@
             var serie_comprobante = $(this).val();
             if(serie_comprobante != "") {
 
-                var numero = $("#serie_comprobante option[value="+serie_comprobante+"]").attr("numero");
-                $("#numero_comprobante").val(numero);
+                var actual = $("#serie_comprobante option[value="+serie_comprobante+"]").attr("actual");
+                $("#numero_comprobante").val(actual);
             }
             // alert(numero);
         });
@@ -1455,20 +1538,43 @@
             }
             return subtotal_montos_pago;
         };
+
         $scope.guardar_forma_pago = function () {
+            var bval = true;
+            bval = bval && $("#forma_pago").required();
+            if($("#forma_pago").val() == "TCR" || $("#forma_pago").val() == "TDE") {
+                bval = bval && $("#noperacion").required();
+                bval = bval && $("#tarjeta").required();
+            } 
+
+            if($("#forma_pago").val() == "DEP" || $("#forma_pago").val() == "ELE" || $("#forma_pago").val() == "TRA") {
+                bval = bval && $("#noperacion").required();
+            }
+            
+            bval = bval && $("#moneda").required();
+            bval = bval && $("#monto_p").required();
+
+            if(!bval) {
+                return false;
+            }
 
             var serie_comprobante = $("#serie_comprobante").val();
             var numero_comprobante = $("#numero_comprobante").val();
             var forma_pago = $("#forma_pago").val();
+            var forma_pago_text = $("#forma_pago option[value="+forma_pago+"]").text();
+            var moneda = $("#moneda").val();
+            var moneda_text = $("#moneda option[value="+moneda+"]").text();
             var noperacion = $("#noperacion").val();
             var tarjeta = $("#tarjeta").val();
             var monto_p = parseFloat($("#monto_p").val());
             var html = "<tr>";
+            html += '   <input type="hidden" name="IdMoneda[]" value="'+moneda+'" />';
             html += '   <input type="hidden" name="codigo_formapago[]" value="'+forma_pago+'" />';
             html += '   <input type="hidden" name="nrotarjeta[]" value="'+tarjeta+'" />';
             html += '   <input type="hidden" name="nrooperacion[]" value="'+noperacion+'" />';
             html += '   <input type="hidden" name="monto_pago[]" value="'+monto_p+'" />';
-            html += '   <td>' + forma_pago + '</td>';
+            html += '   <td>' + moneda_text + '</td>';
+            html += '   <td>' + forma_pago_text + '</td>';
             html += '   <td>' + tarjeta + '</td>';
             html += '   <td>' + noperacion + '</td>';
             html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
@@ -1485,6 +1591,73 @@
 
             $("#monto").val(saldo);
             $("#modal-formas-pago").modal("hide");
+        }
+
+        $scope.emitir = function () {
+
+            var bval = true;
+            bval = bval && $("#serie_comprobante").required();
+            bval = bval && $("#numero_comprobante").required();
+            bval = bval && $("#correo_electronico").required();
+
+            if($("#detalle-formas-pago").html() == "") {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Debe ingresar al menos 1 registro al detalle',
+                    type: 'info'
+                });
+
+                return false;
+            }
+
+            if(bval) {
+                $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val(),
+                    function (data, textStatus, jqXHR) {
+                        
+                        if (data.status == "i") {
+                            
+                            // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
+                            $("#modal-emitir-comprobante").modal("hide");
+                            $("#modalSolicitud").modal("hide");
+                            $("#formulario-solicitud").trigger("reset");
+                            $("#formulario-creditos").trigger("reset");
+                            $("#formulario-emitir-comprobante").trigger("reset");
+                            $("#formulario-formas-pago").trigger("reset");
+                            $("#detalle-formas-pago").html("");
+                            $("#articulo_mov_det").html("");
+                            LoadRecordsButtonSolicitud.click();
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'El documento se facturó correctamente.',
+                                type: 'success'
+                            });
+
+                            // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud+ "|" + data.datos[0].idventa;
+
+                            if(data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
+
+                                window.open("movimientoCajas/imprimir_cronograma/"+id);
+                            }
+
+                            // PARA TODOS
+                            alert("imprimir_comprobante");
+                            window.open("movimientoCajas/imprimir_ticket/"+id);
+                            window.open("movimientoCajas/imprimir_comprobante/"+id);
+                         
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
+                        }
+                        // console.log(data);
+                    },
+                    "json"
+                );
+            }
+           
         }
 
         $(document).on("click", ".eliminar-forma-pago", function () {
@@ -1526,13 +1699,7 @@
                 $(".convenio").hide();
             }
 
-            if (tipo_solicitud == "2" || tipo_solicitud == "3") {
-                var t_monto_total = $("#desTotal").val();
-                // alert(t_monto_total);
-                $("#monto_venta").val(t_monto_total);
-                $("#total_financiado").val(t_monto_total);
-                $("#cuota_inicial").attr("max", t_monto_total);
-            }
+            
         });
 
         function obtener_data_for_solicitud() {
@@ -1621,6 +1788,11 @@
                     idMoneda.append('<option value="">Seleccionar</option>');
                     _.each(response.moneda, function (item) {
                         idMoneda.append('<option data-simbolo="' + item.Simbolo + '" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
+                    });
+
+                    $("#moneda").append('<option value="">Seleccionar</option>');
+                    _.each(response.moneda, function (item) {
+                        $("#moneda").append('<option data-simbolo="' + item.Simbolo + '" value="' + item.IdMoneda + '">' + item.Descripcion + '</option>');
                     });
 
                     idconvenio.append('<option value="">Seleccionar</option>');
@@ -1745,6 +1917,16 @@
                 var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
                 // alert("hola " + simbolo);
                 $(".simbolo-moneda").text(simbolo);
+                $(".simbolo-moneda-2").text(simbolo);
+            }
+        })
+
+        $(document).on("change", "#moneda", function () {
+            if ($(this).val() != "") {
+
+                var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+                // alert("hola " + simbolo);
+                $(".simbolo-moneda-2").text(simbolo);
             }
         })
 
@@ -1758,18 +1940,22 @@
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    if(data.solicitud_credito.length > 0) {
+                        Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                    }
                     $("#correo_electronico").val(data.solicitud[0].correo_electronico);
 
                     $("#documento_or").val(data.solicitud[0].documento);
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
+                    $("#moneda").trigger("change");
 
                     if (data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
-                        $("#monto_financiado").val(data.solicitud_credito[0].monto_financiado);
+                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);
+                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta);
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
                         $("#intereses").val(data.solicitud_credito[0].intereses);
