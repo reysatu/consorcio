@@ -17,6 +17,7 @@ use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Venta\VentaInterface;
 use App\Http\Requests\MovimientoCajaRequest;
 use App\Models\BaseModel;
 use DateTime;
@@ -272,6 +273,10 @@ class MovimientoCajaController extends Controller
             $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
             $data_venta["user_updated"] = "";
             $data_venta["updated_at"] = "";
+
+            $data_venta["idcajero"] = auth()->id();
+            $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+            $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
 
             $condicion_pago = array();
 
@@ -709,7 +714,7 @@ class MovimientoCajaController extends Controller
         $datos = array();
         $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
-
+        
         $datos["empresa"] = $repo->get_empresa(); 
         $datos["solicitud_credito"] = $solicitud_credito; 
         $datos["solicitud"] = $solicitud; 
@@ -740,10 +745,13 @@ class MovimientoCajaController extends Controller
         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
 
         $datos["empresa"] = $repo->get_empresa(); 
-        $datos["tienda"] = $repo->get_tienda(); 
+        // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
-        $datos["cajero"] = $repo->get_cajero(); 
-        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+        // $datos["cajero"] = $repo->get_cajero(); 
+        // $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
         $datos["solicitud_credito"] = $solicitud_credito; 
         $datos["solicitud"] = $solicitud; 
@@ -775,11 +783,12 @@ class MovimientoCajaController extends Controller
         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
 
         $datos["empresa"] = $repo->get_empresa(); 
-        $datos["tienda"] = $repo->get_tienda(); 
+        // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+        
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
-        $datos["cajero"] = $repo->get_cajero(); 
-        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        // $datos["cajero"] = $repo->get_cajero(); 
+        // $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
         $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
         $datos["solicitud_credito"] = $solicitud_credito; 
@@ -808,4 +817,13 @@ class MovimientoCajaController extends Controller
 
         return response()->json($result);
     }
+
+    public function list_comprobantes(Request $request, VentaInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado"];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->search($s), $request, 'idventa', $params);
+    }
+
 }

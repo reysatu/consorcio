@@ -27,3 +27,4 @@ S -> SALIDA
 'SCHEMA', N'dbo',
 'TABLE', N'ERP_CajaDiariaDetalle',
 'COLUMN', N'naturaleza';
+

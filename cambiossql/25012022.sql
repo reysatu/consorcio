@@ -12,7 +12,7 @@ CASE WHEN s.facturado IS NULL THEN 0 ELSE s.facturado END AS facturado
 
 FROM ERP_Solicitud AS s
 INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
-INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+INNER JOIN ERP_TABLASUNAT AS tc ON(tc.cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
 INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
 GO
 
