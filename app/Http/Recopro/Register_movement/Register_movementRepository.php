@@ -154,6 +154,12 @@ ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr
          $destroy=DB::select("SET NOCOUNT ON; EXEC AL_Registra_Movimiento '$id'");
          return $destroy;
     }
+    public function getProductoFactura($codigo)
+    {
+      
+         $mostrar=DB::select("select * from ERP_Productos where code_article='$codigo'");
+         return $mostrar; 
+    }
     public function destroy($id)
     {
       

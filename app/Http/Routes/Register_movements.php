@@ -50,6 +50,10 @@ Route::get('register_movements/find/{id}', ['as' => 'register_movements.find', '
 
 Route::get('register_movements/pdf', 'Register_movementController@pdf');
 
+Route::post('register_movements/xml', 'Register_movementController@xmlcargar');
+
 Route::post('register_movements/getAllOperationRegMov', 'OperationController@getAll'); 
 
 Route::post('register_movements/getAllUserRegMov', 'UserController@getAll');
+
+Route::get('register_movements/archivoTxt', 'Register_movementController@archivoTxt');

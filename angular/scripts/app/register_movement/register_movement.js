@@ -13,6 +13,7 @@
 
     function Register_MovementCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
+        var xmlAdd=$("#xmlAdd");
         var  aartML= []; //arrays para guardas los datos de lotes
         var  acodigos=[];//arrays de codigos;
         var  alotML=[];
@@ -36,6 +37,7 @@
         var costoNa=$("#costoNa");
         var costoAS=$("#costoAS");
         var costoAL=$("#costoAL");
+        var btn_xml=$("#btn_xml");
         var idTransferenciaProcesar=$("#idTransferenciaProcesar");
         var LocalizacionesSele;//variable para guardar localizaciones del almacen
         var AlmacenesSele;//variable para guardar almacenes
@@ -54,7 +56,7 @@
         var fecha_registro=$("#fecha_registro");
         var modalMovimietoArticulo=$("#modalMovimietoArticulo");
         var titlemodalMovimietoArticulo=$("#titlemodalMovimietoArticulo");
-        var modalLote=$("#modalLote");
+        var modalLote=$("#modalLote"); 
         var modalSerie=$("#modalSerie");
         var modalKit=$("#modalKit");
         var modalNada=$("#modalNada");
@@ -184,7 +186,21 @@
         btnguardarMovimiento.click(function(e){
             saveMovimientoCab();
         });
-
+        
+          xmlAdd.change(function (e) {
+             const file = e.currentTarget.files[0];
+              if (file.type !== 'text/xml') {
+                //reseteo el valor del input
+                e.currentTarget.value = '';
+                //muestro una alerta (estas alertas son feas,
+                //ya tu las puedes cambiar por una librería o una alerta tuya)
+                AlertFactory.textType({
+                                title: '',
+                                message: 'Ingrese un archivo xml',
+                                type: 'info'
+                            });
+            }
+          });
          function cleanmodalProcesarTransferencia(){
           
             idTransferenciaProcesar.val("");
@@ -434,6 +450,7 @@
          function cleanMovimiento () {
             cleanRequired();
             getDataFormMovement();
+            xmlAdd.val("");
             titlemodalMovimieto.html('');
             idMovimiento.val('');
             idTipoOperacion.val('');
@@ -563,6 +580,160 @@
           }
                     
         });
+         $('#btn_xml').click(function(e){
+            var bval = true;
+            bval = bval && idTipoOperacion.required();
+            bval = bval && idMoneda.required();
+            bval = bval && fecha_registro.required();
+            bval = bval && xmlAdd.required();
+            if(idTipoOperacion.val()!='1*E'){
+                  AlertFactory.textType({
+                                title: '',
+                                message: 'La operación deber ser tipo compra',
+                                type: 'info'
+                        });
+                   bval=false;      
+            }
+            if (bval) {
+                if(idMovimiento.val()==""){
+                    saveMovimientoCab(); 
+                }
+                cargarXML2(); 
+            }
+        });
+         function cargarXML(xml) {
+               var docXML = xml.responseXML;
+                var tabla = "<tr><th>Artista</th><th>Titulo</th></tr>";
+                var discos = docXML.getElementsByTagName("CD");
+                for (var i = 0; i < discos.length; i++) {
+                    tabla += "<tr><td>";
+                    tabla += discos[i].getElementsByTagName("ARTIST")[0].textContent;
+                    tabla += "</td><td>";
+                    tabla += discos[i].getElementsByTagName("TITLE")[0].textContent;
+                    tabla += "</td></tr>";
+                }
+             // document.getElementById("demo").innerHTML = tabla;
+          
+        }
+         function cargarXML2() {
+        
+              var formData = new FormData();
+        
+          formData.append('file',xmlAdd[0].files[0]);
+
+          console.log(FormData);
+             $.ajax({
+                url: base_url + '/register_movements/xml',
+                type: 'post',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // var xml=response.info;
+                    // var xmlDoc  = $.parseXML(xml);
+                    //   var $xml = $( xmlDoc );
+                    //  var title = $xml.find( "DigestValue" );
+                    // console.log(title);
+
+                    console.log(response.Result);
+                    if(!response.Result){
+                         AlertFactory.textType({
+                                title: '',
+                                message: 'Hay un inconvenientes con el xml',
+                                type: 'info'
+                        }); 
+                    }else{
+                        if(response.monedFac==idMoneda.val()){
+                            var idProd=response.arrayIdsProdE;
+                            var costPd=response.arrayCostoUnE;
+                            var descPd=response.arrayDescripE;
+                            var cantPd=response.arrayCantidaE;
+                            var codPdN=response.arrayCodProdN;
+                            var desPdN=response.arrayDescripN;
+                            var canPdN=response.arrayCantidaN;
+                            var cosPdN=response.arrayCostoUnN;
+                            articulo_mov_det.html("");
+                            var grubNa={};
+                            for (var i in idProd){
+                                var codigo=Math.random().toString(36).substr(2, 18);
+                                 grubNa={
+                                       'identificador': codigo,
+                                       'idProducto':idProd[i],
+                                }
+                                aartMN.push(grubNa);
+                                var ver='A';
+                                var tipoArt='NA';
+                                var codl="";
+                                var datl="";
+                                var idAlmacen="";
+                                var idLocalizacion="";
+                                var costo=Number(costPd[i]);
+                                var costo_total="";
+                                var precio="";
+                                var precioTotal="";
+                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                            }
+                            if(codPdN.length!=0){
+                                 AlertFactory.textType({
+                                title: '',
+                                message: 'Existen Articulos que no están registrados en el sistema',
+                                type: 'info'
+                                }); 
+                                    const a = document.createElement("a");
+                                    var contenido = [];
+                                    contenido.push("#  CÓDIGO    DESCRIPCIÓN    CANTIDAD     COSTO UNITARIO  \n");
+                                    for (var i in codPdN){
+                                        contenido.push(i+" "+codPdN[i]+"  "+ desPdN[i]+"   ,  "+ Number(canPdN[i])+"   ,   "+Number(cosPdN[i])+"\n");
+                                    }
+
+                                     var contenidoAdd = contenido.join("");
+                                    const archivo = new Blob([contenidoAdd], { type: 'text/plain' });
+                                    const url = URL.createObjectURL(archivo);
+                                    a.href = url;
+                                    a.download ="Articulos no registrados "+fecha_registro.val()+".txt";
+                                    a.click();
+                                    URL.revokeObjectURL(url);
+                            }
+                          
+                        }else{
+                             AlertFactory.textType({
+                                title: '',
+                                message: 'La moneda del xml no coincide con el movimiento',
+                                type: 'info'
+                            }); 
+                        }
+                        // console.log("2");
+                    }
+   
+
+                },
+                error: function (ajaxContext) {
+                    // angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+          
+        }
+        function getFiles()
+{
+    var idFiles=document.getElementById("xmlAdd");
+    // Obtenemos el listado de archivos en un array
+    var archivos=idFiles.files;
+    // Creamos un objeto FormData, que nos permitira enviar un formulario
+    // Este objeto, ya tiene la propiedad multipart/form-data
+    var data=new FormData();
+    // Recorremos todo el array de archivos y lo vamos añadiendo all
+    // objeto data
+    for(var i=0;i<archivos.length;i++)
+    {
+        // Al objeto data, le pasamos clave,valor
+        data.append("archivo"+i,archivos[i]);
+    }
+    return data;
+}
          $scope.ProcesarTransferencia = function(){
             var id=idTransferenciaProcesar.val();
             RESTService.get('register_movements/procesarTransferencia', id, function(response) {
