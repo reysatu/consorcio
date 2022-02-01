@@ -21,6 +21,8 @@ use App\Http\Requests\Register_movementRequest;
 use App\Http\Recopro\Serie\SerieInterface;
 use Carbon\Carbon;
 use DB;
+
+use Illuminate\Support\Facades\Storage;
 class Register_movementController extends Controller
 {
      use Register_movementTrait;
@@ -54,6 +56,98 @@ class Register_movementController extends Controller
         return response()->json([
             'Result' => 'OK',
             'Record' => []
+        ]);
+    }
+     public function xmlcargar(Request $request,Register_movementInterface $repo)
+    {   
+        // $s = $request->input('search', '');
+        $imagePath = 'xml/';
+        $fileXml = $request->file('file');
+        $nombre = $fileXml->getClientOriginalName();
+        $ruta = public_path("xml/".$nombre);
+        copy($fileXml, $ruta);
+        // $xmlString = file_get_contents(public_path("img/products/".$nombre));
+        // $xmlObject = simplexml_load_string($xmlString);
+                   
+        // $json = json_encode($xmlObject);
+        // $phpArray = json_decode($json, true);
+        // $nombre='catalogo.xml'; 
+       $xml = simplexml_load_file(public_path("xml/".$nombre));
+       $valor = $xml->xpath("cac:InvoiceLine");
+       $valorMoneda = $xml->xpath("cbc:DocumentCurrencyCode");
+       $monedFac=$valorMoneda[0]->__toString();
+       $mone='';
+       if($monedFac=='USD'){
+        $mone='2';
+       }else if($monedFac=='PEN'){
+         $mone='1';
+       }
+       $arrayIdsProdE=[];
+       $arrayCodProdE=[];
+       $arrayDescripE=[];
+       $arrayCantidaE=[];
+       $arrayCostoUnE=[];
+       $arrayCodProdN=[];
+       $arrayDescripN=[];
+       $arrayCantidaN=[];
+       $arrayCostoUnN=[];
+       foreach ($valor as $elemento) {
+        $valorIgv=$elemento->xpath("cac:TaxTotal/cbc:TaxAmount");
+        $valorCant=$elemento->xpath("cbc:InvoicedQuantity");
+        $valorDescr=$elemento->xpath("cac:Item/cbc:Description");
+        $valorProdu=$elemento->xpath("cac:Item/cac:SellersItemIdentification/cbc:ID");
+        $valorImpor=$elemento->xpath("cbc:LineExtensionAmount");
+        $valorCosto=$elemento->xpath("cac:PricingReference/cac:AlternativeConditionPrice/cbc:PriceAmount");
+        $descrProd=$valorDescr[0]->__toString();
+        $codigProd=$valorProdu[0]->__toString();
+        $cantiProd=$valorCant[0]->__toString();
+        $igvProd=$valorIgv[0]->__toString();
+        $imporProd=$valorImpor[0]->__toString();
+        $costoProd=$valorCosto[0]->__toString();
+        $val=$repo->getProductoFactura($codigProd); 
+         if (empty($val)) {
+
+                array_push($arrayCodProdN,$codigProd);
+                array_push($arrayDescripN,$descrProd);
+                array_push($arrayCantidaN,$cantiProd);
+                array_push($arrayCostoUnN,$costoProd);
+            }else{
+                array_push($arrayIdsProdE,$val[0]->id);
+                array_push($arrayCodProdE,$codigProd);
+                array_push($arrayDescripE,$descrProd);
+                array_push($arrayCantidaE,$cantiProd);
+                array_push($arrayCostoUnE,$costoProd);
+            } 
+       }
+
+     
+
+       // var_dump($arrayCodProdE);
+       // echo("-------");
+       // var_dump($arrayCodProdN);
+       // echo($valor[0]->__toString());
+        // $namespaces =$xml->Invoice->getNameSpaces(true);
+        // $media = $xml->Invoice->children($namespaces['cac']);
+         
+        
+        // $media = $xml->Invoice->children($namespaces['media']);
+        // echo "El thumbnail es:" .$media->thumbnail."<br>";
+     
+        unlink(public_path("xml/".$nombre));     
+          return response()->json([
+            'Result' => 'OK',
+            'Record' => [],
+            'arrayIdsProdE'=>$arrayIdsProdE,
+            'arrayCodProdE'=>$arrayCodProdE,
+            'arrayDescripE'=>$arrayDescripE,
+            'arrayCantidaE'=>$arrayCantidaE,
+            'arrayCostoUnE'=>$arrayCostoUnE,
+            'arrayCodProdN'=>$arrayCodProdN,
+            'arrayDescripN'=>$arrayDescripN,
+            'arrayCantidaN'=>$arrayCantidaN,
+            'arrayCostoUnN'=>$arrayCostoUnN,
+            'monedFac'=>$mone,
+
         ]);
     }
     public function procesarTransferencia($id, Register_movementInterface $repo, Request $request)
