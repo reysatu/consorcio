@@ -30,7 +30,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+ 
 class ProductController extends Controller
 {
     use ProductTrait;
@@ -254,7 +254,7 @@ class ProductController extends Controller
         return response()->json(['Result' => 'OK']);
     }
  
-    public function data_form(TypeInterface $typeRepo,ModeloInterface $modeloRepo, CategoryInterface $categoriaRepo, BrandInterface $brandRepo, FamilyInterface $familyRepo,SubFamilyInterface $subfamilyRepo ,HeadAccountanInterface $headRepo,MeasureInterface $unidad)
+    public function data_form(TypeInterface $typeRepo,ModeloInterface $modeloRepo, CategoryInterface $categoriaRepo, BrandInterface $brandRepo, FamilyInterface $familyRepo,SubFamilyInterface $subfamilyRepo ,HeadAccountanInterface $headRepo,MeasureInterface $unidad,ProductInterface $repo)
     {
         $modelo = parseSelectOnly($modeloRepo->allActive(), 'idModelo', 'descripcion');
         $categoria = parseSelectOnly($categoriaRepo->allActive(), 'idCategoria', 'descripcion');
@@ -263,17 +263,19 @@ class ProductController extends Controller
         $marca = parseSelectOnly($brandRepo->all(), 'id', 'description');
         $grupoContable = parseSelectOnly($headRepo->allActive(), 'idGrupoContableCabecera', 'descripcion'); 
         $unidadMedida = parseSelectOnly($unidad->allActive(), 'IdUnidadMedida', 'Descripcion'); 
-        $types = parseSelectOnly($typeRepo->all(), 'id', 'description');
-        return response()->json([
+        $types = parseSelectOnly($typeRepo->all(), 'id', 'description'); 
+        $cateVehicular=$repo->getCategoriaVehicular();
+        return response()->json([ 
             'status' => true,
             'modelo' => $modelo,
             'categoria' => $categoria,
             'familia' => $familia,
             'subfamilia' => $subfamilia,
             'marca' => $marca,
-            'grupocontable' => $grupoContable,
+            'grupocontable' => $grupoContable, 
             'types' => $types,
             'unidadMedida'=>$unidadMedida,
+            'cateVehicular'=>$cateVehicular,
         ]);
     }
 

@@ -38,9 +38,17 @@ use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierre;
 use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierreInterface;
 use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierreRepository;
 
+use App\Http\Recopro\CategoriaVehicular\CategoriaVehicular; 
+use App\Http\Recopro\CategoriaVehicular\CategoriaVehicularInterface;
+use App\Http\Recopro\CategoriaVehicular\CategoriaVehicularRepository;
+
 use App\Http\Recopro\Periodo\Periodo; 
 use App\Http\Recopro\Periodo\PeriodoInterface;
 use App\Http\Recopro\Periodo\PeriodoRepository;
+
+use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodo; 
+use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoInterface;
+use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoRepository;
 
 
 use App\Http\Recopro\Compania\Compania; 
@@ -618,6 +626,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMovimiento_Detalle_cierre();
         $this->registerView_movimiento_cierre();
         $this->registerPeriodo();
+        $this->registerVW_CierreInventarioPeriodo();
+        $this->registerCategoriaVehicular();
         $this->registerCompania();
         $this->registerFormasPago();
         $this->registerCajaUsuario();
@@ -923,12 +933,28 @@ class AppServiceProvider extends ServiceProvider
             return new View_movimiento_cierreRepository(new View_movimiento_cierre());
         });
     }
+     public function registerVW_CierreInventarioPeriodo()
+    {
+        $app = $this->app;
+
+        $app->bind(VW_CierreInventarioPeriodoInterface::class, function ($app) {
+            return new VW_CierreInventarioPeriodoRepository(new VW_CierreInventarioPeriodo());
+        });
+    }
     public function registerPeriodo()
     {
         $app = $this->app;
 
         $app->bind(PeriodoInterface::class, function ($app) {
             return new PeriodoRepository(new Periodo());
+        });
+    }
+    public function registerCategoriaVehicular()
+    {
+        $app = $this->app;
+
+        $app->bind(CategoriaVehicularInterface::class, function ($app) {
+            return new CategoriaVehicularRepository(new CategoriaVehicular());
         });
     }
     public function registerCompania()

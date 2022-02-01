@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\Periodo;
+<?php namespace App\Http\Recopro\CategoriaVehicular;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -8,20 +8,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class Periodo extends Model
+class CategoriaVehicular extends Model
 {
   
-    protected $table = 'ERP_Periodo';
+    protected $table = 'ERP_CategoriaVeh';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'periodo';
+    protected $primaryKey = 'idCatVeh';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['periodo','fechaInicio','fechaFin','estado','user_created','user_updated'];
+    protected $fillable = ['idCatVeh', 'descripcion','estado','user_created','user_updated'];
     
      public function user_c()
     {

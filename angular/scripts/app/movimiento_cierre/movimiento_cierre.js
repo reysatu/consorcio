@@ -100,21 +100,26 @@
             savePreCierre();
         });
          function saveReversar(){
-                var id=periodo.val();
+             
+                    var periodos=periodo.val();
+                var myArray = periodos.split("*");
+                var periodoEnvi=myArray[0];
+                   var id=periodoEnvi;
               RESTService.get('movimiento_cierres/reversarCierre', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     AlertFactory.textType({
                             title: '',
-                            message: 'El registro se guardó correctamente',
+                            message: 'El registro se reversó correctamente',
                             type: 'success'
                         });
                         btnPreCierre.prop('disabled',false);
                         btnReversar.prop('disabled',false);
-                        btnCierreInventario.prop('disabled',false);
+                        btnCierreInventario.prop('disabled',true);
                         periodo.prop('disabled',false);
                         estado.val("");
                         periodo.val("").trigger("change");
                         $("#LoadRecordsButtonMovimiento_cierre").click();
+                        $("#LoadRecordsButtonMovimiento_cierre2").click();
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -125,12 +130,19 @@
             });
          }
          function findRegister_movementCierre(id){
-            titlemodalMovimietoCierre.html('Editar Cierre');
+            titlemodalMovimietoCierre.html('Ver Cierre');
              RESTService.get('movimiento_cierres/findMov', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                    estado.val(data_p[0].estado)
-                    periodo.val(data_p[0].periodo).trigger("change");
+                    periodo.html("");
+                        periodo.append('<option value="">Seleccionar</option>');
+                       _.each(response.periodos, function(item) {
+                        periodo.append('<option value="'+item.periodo+'*'+item.estado+'">'+item.periodo+'</option>');
+                    });
+                  
+                    var per=data_p[0].periodo+'*'+data_p[0].estado;
+                    console.log(per);
+                    periodo.val(per).trigger("change");
                     periodo.prop('disabled',true);
                     if(estado.val()=='C'){
                         btnPreCierre.prop('disabled',true);
@@ -138,7 +150,10 @@
                         btnCierreInventario.prop('disabled',true);
                     }else if(estado.val()=='P'){
                          btnPreCierre.prop('disabled',true);
+                         btnReversar.prop('disabled',false);
+                         btnCierreInventario.prop('disabled',false);
                     }
+                    $("#LoadRecordsButtonMovimiento_cierre2").click();
                     modalMovimietoCierre.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -153,9 +168,13 @@
         function savePreCierre(){
             var bval =true;
             bval = bval && periodo.required();
+
             if(bval){
+                var periodos=periodo.val();
+                var myArray = periodos.split("*");
+                var periodoEnvi=myArray[0];
                 var params = {
-                    'periodo':periodo.val(),
+                    'periodo':periodoEnvi,
                     'estado':estado.val(),
                 };
                
@@ -172,7 +191,8 @@
                         btnReversar.prop('disabled',false);
                         btnCierreInventario.prop('disabled',false);
                         estado.val('P');
-                        $("#LoadRecordsButtonMovimiento_cierre").click();
+                         $('#LoadRecordsButtonMovimiento_cierre2').click();
+                        $('#LoadRecordsButtonMovimiento_cierre').click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
@@ -208,7 +228,8 @@
                         btnReversar.prop('disabled',true);
                         btnCierreInventario.prop('disabled',true);
                         estado.val('C');
-                        $("#LoadRecordsButtonMovimiento_cierre").click();
+                        $('#LoadRecordsButtonMovimiento_cierre2').click();
+                        $('#LoadRecordsButtonMovimiento_cierre').click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
@@ -227,10 +248,10 @@
                 if (!_.isUndefined(response.status) && response.status) {
                         var periodosTotal=response.periodos;
                         console.log(periodosTotal);
+                        periodo.html("");
                         periodo.append('<option value="">Seleccionar</option>');
                        _.each(response.periodos, function(item) {
-                        periodo.append('<option value="'+item.periodo+'">'+item.periodo+'</option>');
-
+                        periodo.append('<option value="'+item.periodo+'*'+item.estado+'">'+item.periodo+'</option>');
                     });
                 } 
             }, function() {
@@ -243,10 +264,13 @@
         {
             titlemodalMovimietoCierre.html('Nuevo Cierre');
             modalMovimietoCierre.modal('show');
-             $('#table_container_Movimiento_cierre2').jtable('reload');
+             $('#LoadRecordsButtonMovimiento_cierre2').click();
         }
         periodo.change(function () {
-             $('#LoadRecordsButtonMovimiento_cierre2').click();
+             var periodos=periodo.val();
+             var myArray = periodos.split("*");
+             estado.val(myArray[1]);
+            
         });
         
         var search = getFormSearch('frm-search-Movimiento_cierre', 'search_b', 'LoadRecordsButtonMovimiento_cierre');
@@ -254,7 +278,7 @@
         var table_container_Movimiento_cierre = $("#table_container_Movimiento_cierre");
 
         table_container_Movimiento_cierre.jtable({
-            title: "Lista de Cierres de Movimientos",
+            title: "Lista de Cierres de Inventario",
             paging: true,
             sorting: true,
             actions: { 
@@ -288,18 +312,13 @@
                     key: true,
                     create: false,
                 },
-               
-                idUsuario: {
-                    title: 'Usuario',
-                    options: base_url + '/movimiento_cierres/getAllUserRegMov' 
-                },
-                estado: {
+                  estado: {
                     title: 'Estado',
-                    values: { 'P': 'Pre-Cierre', 'C': 'Cerrado' },
+                    values: { 'C': 'Cerrado', 'A': 'Abierto' ,'P':'Pre-Cerrado'},
                     type: 'checkbox',
                     defaultValue: 'A',
-                   
-                },edit: {
+                }
+                ,edit: {
                     width: '1%',
                     sorting: false,
                     edit: false,
@@ -376,46 +395,38 @@
                 }]
             },
             fields: {
-                idMovimiento: {
+                idDetalle: {
                     title: '#',
                     key: true,
                     create: false,
+                    list:false,
                 },
-                idTipoOperacion: {
-                    title: 'Tipo Operación',
-                    options: base_url + '/movimiento_cierres/getAllOperationMovCier' 
+                Almacen: {
+                    title: 'Almacen',
                 },
-                idUsuario: {
-                    title: 'Usuario',
-                    options: base_url + '/movimiento_cierres/getAllUserRegMov' 
+                Localizacion: {
+                    title: 'Localizacion',
+                    
                 },
-                 fecha_registro: {
-                      title: 'Fecha Registro',
-                    display: function (data) {
-                            return moment(data.record.fecha_registro).format('DD/MM/YYYY');
-                    }
-                  
+                 Articulo: {
+                    title: 'Articulo',
                 },
-                estado: {
-                    title: 'Estado',
-                    values: { '0': 'Registrado', '1': 'Procesado','P':'Pre-Cierrado','C':'Cerrado' },
-                    type: 'checkbox',
-                    defaultValue: 'A',
-                   
-                }
-                // ,edit: {
-                //     width: '1%',
-                //     sorting: false,
-                //     edit: false,
-                //     create: false,
-                //     listClass: 'text-center',
-                //     display: function (data) {
-                //         return '<a href="javascript:void(0)" class="edit-idMovimiento" data-id="'+data.record.idMovimiento
-                //             +'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
-                //     }
-
-                // },
-
+                 costo: {
+                      title: 'Costo',
+                },
+                disponible: {
+                      title: 'disponible',
+                },
+                 en_transito: {
+                      title: 'en_transito',
+                },
+                 remitido: {
+                      title: 'remitido',
+                },
+                total: {
+                      title: 'total',
+                },
+               
             },
              recordsLoaded: function(event, data) {
                 $('.edit-idMovimiento').click(function(e){
@@ -456,8 +467,8 @@
             $("#table_container_Movimiento_cierre2").jtable('load', {
                 search: $('#search_b2').val(),
                 perido_busquedad:$('#periodo').val(),
-                estado_busquedad:$('#estado').val(),
-                idMovimientoBusquedad:$('#idMovimiento').val(),
+                // estado_busquedad:$('#estado').val(),
+                // idMovimientoBusquedad:$('#idMovimiento').val(),
             });
         }, true);
     }

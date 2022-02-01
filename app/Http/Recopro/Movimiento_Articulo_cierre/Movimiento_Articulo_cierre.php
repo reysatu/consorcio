@@ -11,17 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Movimiento_Articulo_cierre extends Model
 {
   
-    protected $table = 'ERP_Movimiento_Articulo_cierre';
+    protected $table = 'ERP_almacen_stock_localizacion_cierre';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'idMovimiento';
+    protected $primaryKey = 'idArticulo';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento', 'idArticulo','idAlmacen','idLocalizacion','idLote','cantidad','costo','costo_total','user_created','user_updated','consecutivo','precio','precio_total','periodo'];
+    protected $fillable = [ 'idArticulo','idAlmacen','idLocalizacion','disponible','en_transito','remitido','user_created','user_updated','total','reservado','periodo','costo'];
     
      public function user_c()
     {

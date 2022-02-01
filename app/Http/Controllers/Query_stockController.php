@@ -97,7 +97,12 @@ class Query_stockController extends Controller
             $filtro_idAlm =  $request->input('filtro_idAlm');
             $filtro_idLoc =  $request->input('filtro_idLoc');
             $filtro_cate =  $request->input('filtro_cate');
-            
+            $simboloMoneda = $repo->getSimboloMoneda();
+              $img='logo.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
             $data =$repo->allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate);
             return response()->json([
                 'status' => true,
@@ -107,7 +112,8 @@ class Query_stockController extends Controller
                 'filtro_cate'=>$filtro_cate,
                 'data' => $data,
                 'fechacA'=>$fechacA,
-               
+                'simboloMoneda'=>$simboloMoneda,
+                 'img'=>$image,
             ]);
     }
 } 

@@ -14,7 +14,7 @@ trait View_movimiento_cierreTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['PERIODO','USUARIO','ESTADO'];
+        $columns[] = ['PERIODO','ESTADO'];
 
         foreach ($info as $i) {
             $estado="CERRADO";
@@ -23,14 +23,13 @@ trait View_movimiento_cierreTrait
             };
             $columns[] = [
                 ['left', $i->periodo],
-                ['left', $i->user_u->name],
                 ['left', $estado],
             ];
         }
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE MOVIMIENTOS CERRADOS'
+            'title' => 'LISTA DE CIERRE DE INVENTARIO'
         ];
 
         return $data;

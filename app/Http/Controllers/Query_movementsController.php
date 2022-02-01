@@ -35,7 +35,7 @@ class Query_movementsController extends Controller
         $cod_serie = $request->input('cod_serie');
         $fecha_inicio = $request->input('fecha_inicio');
         $fecha_fin = $request->input('fecha_fin');
-
+ 
         $params = ['idTransaccion','id','fecha_registro','fecha_proceso_s','fecha_registro_s','idArticulo','Articulo','Unidad','Categoria','Tipo_Operacion','Naturaleza','Origen','idOrigen','Almacen','Localizacion','Cantidad','Costo_Unitario','Precio_Unitario','Costo_Total','Precio_Total','Lote','Serie'];
         return parseList($repo->search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin), $request, 'id', $params);
     }
@@ -102,6 +102,7 @@ class Query_movementsController extends Controller
             $fecha_inicio=$request->input('fecha_inicio');
             $fecha_fin=$request->input('fecha_fin');
             $data = $repo->allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate,$filtro_nat,$filtro_oper,$n_movimiento,$cod_lote,$cod_serie,$fecha_inicio,$fecha_fin);
+            $simboloMoneda = $repo->getSimboloMoneda();
             // $operacion = $repo->get_movimiento($id);
             // $data = $repo->find($id); 
             // $data_movimiento_Articulo=$repo->get_movement_articulo_print($id);
@@ -118,7 +119,11 @@ class Query_movementsController extends Controller
             // $type_image = pathinfo($path, PATHINFO_EXTENSION);
             // $image = file_get_contents($path);
             // $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
-
+            $img='logo.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
             return response()->json([
                 'status' => true,
                 'filtro_art'=>$filtro_art,
@@ -134,6 +139,8 @@ class Query_movementsController extends Controller
                 'fecha_fin'=>$fecha_fin,
                 'data' => $data,
                 'fechacA'=>$fechacA,
+                'simboloMoneda'=>$simboloMoneda,
+                 'img'=>$image,
                
             ]);
     }

@@ -30,7 +30,7 @@ class Movimiento_cierreRepository implements Movimiento_cierreInterface
      public function all_devolucion_servicio()
     {
         return $this->model->get()->where('naturaleza','D');
-    }
+    } 
      public function search($s,$perido_busquedad)
     {
         $anio='';
@@ -54,12 +54,7 @@ class Movimiento_cierreRepository implements Movimiento_cierreInterface
         });
 
     }
-     public function update_mc($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'C';
-        $this->model->where('periodo',$id)->update($attributes);
-    }
+    
     
      
     
@@ -93,32 +88,63 @@ class Movimiento_cierreRepository implements Movimiento_cierreInterface
     }
      
     public function getPeriodos(){
-         $mostrar=DB::select("select * from ERP_Periodo where estado='A'");
+         $mostrar=DB::select("select * from ERP_Periodo");
          return $mostrar;
 
     }
     public function find_moviCierre($fechaFiltro){
-         $mostrar=DB::select("SELECT DISTINCT periodo,idUsuario,estado FROM ERP_Movimiento_cierre where periodo='$fechaFiltro'");
+         $mostrar=DB::select("SELECT * FROM ERP_Periodo where periodo='$fechaFiltro'");
          return $mostrar;
 
     }
     public function getMovimientosCierre($fechaFiltro){
-         $mostrar=DB::select(" SELECT * from ERP_Movimiento where FORMAT(fecha_registro,'yyyy-MM')='$fechaFiltro'");
+         $mostrar=DB::select("select idArticulo,
+idAlmacen,
+disponible,
+en_transito,
+remitido,
+total,
+reservado,
+costo
+from ERP_almacen_stock D
+inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
          return $mostrar;
 
     }
-    public function getMovimientosCierreArticulo($idMovimiento){
-         $mostrar=DB::select("select * from ERP_Movimiento_Articulo where idMovimiento='$idMovimiento'");
+    public function getMovimientosCierreArticulo($fechaFiltro){
+         $mostrar=DB::select("select idArticulo,
+idAlmacen,
+idLocalizacion,
+disponible,
+en_transito,
+remitido,
+total,
+reservado,
+costo
+from ERP_almacen_stock_localizacion D
+inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
          return $mostrar;
     }
-    public function getMovimientosCierreArticuloDetalle($idMovimiento){
-         $mostrar=DB::select("select * from ERP_Movimiento_Detalle where idMovimiento='$idMovimiento'");
+    public function getMovimientosCierreArticuloDetalle($fechaFiltro){
+         $mostrar=DB::select("select idArticulo,
+idAlmacen,
+idLocalizacion,
+TipoId,
+idDetalle,
+disponible,
+en_transito,
+remitido,
+total,
+reservado,
+costo
+from ERP_almacen_stock_localizacion_detalle D
+inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
          return $mostrar;
     }
      public function reversarMovimientos($id)
     {
-        DB::table('ERP_Movimiento_cierre')->where('periodo',$id)->delete();
-        DB::table('ERP_Movimiento_Articulo_cierre')->where('periodo',$id)->delete();
-        DB::table('ERP_Movimiento_Detalle_cierre')->where('periodo',$id)->delete();
+        DB::table('ERP_almacen_stock_cierre')->where('periodo',$id)->delete();
+        DB::table('ERP_almacen_stock_localizacion_detalle_cierre')->where('periodo',$id)->delete();
+        DB::table('ERP_almacen_stock_localizacion_cierre')->where('periodo',$id)->delete();
     }
 }

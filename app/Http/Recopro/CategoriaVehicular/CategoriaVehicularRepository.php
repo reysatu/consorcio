@@ -6,52 +6,30 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Periodo;
+namespace App\Http\Recopro\CategoriaVehicular;
 use Illuminate\Support\Facades\DB;
 
-class PeriodoRepository implements PeriodoInterface
+class CategoriaVehicularRepository implements CategoriaVehicularInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(Periodo $model)
+    public function __construct(CategoriaVehicular $model)
     {
         $this->model = $model; 
        
-    }
-      public function update_mr($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'A';
-        $this->model->where('periodo',$id)->update($attributes);
-    }
-     public function update_mc($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'C';
-        $this->model->where('periodo',$id)->update($attributes);
-    }
-      public function update_pc($id)
-    {
-        $attributes['user_updated'] = auth()->id();
-        $attributes['estado'] = 'P';
-        $this->model->where('periodo',$id)->update($attributes);
     }
 
     public function all()
     {
         return $this->model->get();
     }
-    public function search($s)
+     public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('periodo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
+            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
         });
 
-    }
-     public function find($id)
-    {
-        return $this->model->find($id);
     }
     public function allActive()
     {
@@ -88,9 +66,9 @@ class PeriodoRepository implements PeriodoInterface
         $model->delete();
      
     }
-      public function findByCode($code)
+    public function findByCode($code)
     {
-        return $this->model->where('periodo', $code)->first();
+        return $this->model->where('idCatVeh', $code)->first();
     }
 
 }

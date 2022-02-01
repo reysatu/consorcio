@@ -1,6 +1,6 @@
 <div class="panel panel-danger-admin">
     <div class="panel-heading">
-        Gestión de  Cierres de Movimientos
+        Gestión de  Cierres de Inventario
     </div>
     <div class="panel-body">
         <div class="row">
@@ -31,19 +31,20 @@
                                         </div>
                                         <label class="col-sm-1 control-label">Estado</label>
                                         <div class="col-sm-2">
-                                           <select id="estado" class="form-control input-sm" disabled>
+                                            <select id="estado" disabled class="form-control input-sm" >
                                                 <option value=""></option>
-                                                <option value="P">Pre-Cerrado</option>
+                                                <option value="A" >Abierto</option>
+                                                <option value="P">Precerrado</option>
                                                 <option value="C">Cerrado</option>
                                             </select>
                                         </div>
                                         <div class="col-sm-4">
                                              <label class="col-sm-4  control-label">&nbsp;</label>
-                                                <button type="button" class="btn btn-danger-admin btn-sm" id="btnPreCierre">
+                                                <button type="button"  class="btn btn-danger-admin btn-sm" id="btnPreCierre">
                                                     <span class="fa fa-save"></span>
                                                     Pre-Cierre
                                                 </button>
-                                                 <button type="button"  class="btn btn-info btn-sm" id="btnReversar">
+                                                 <button type="button" disabled  class="btn btn-info btn-sm" id="btnReversar">
                                                     <span class="fa fa-times"></span>
                                                     Reversar
                                                  </button>
@@ -56,7 +57,7 @@
                         </div>  
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btnCierreInventario" >
+                        <button type="button" class="btn btn-danger-admin btn-sm" disabled  id="btnCierreInventario" >
                             <span class="fa fa-save"></span>
                             Cierre de Inventario
                         </button>

@@ -10,3 +10,128 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modalCompania" role="dialog">
+            <div class="modal-dialog "  style="width:40%;"  role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="titleModalCompania"></h4>
+                    </div>
+                    <form id="formulario-persona">
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="hidden" id="IdCompania" >
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Ruc</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Ruc" maxlength="11" >
+                                        </div>
+                                    </div>
+                                     <div class="form-group">
+                                         <label class="col-sm-2  control-label">Razón Social</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control input-sm" id="RazonSocial">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Nombre Comercial</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control input-sm" id="NombreComercial">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                          <label class="col-sm-2 control-label">Dirección</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control input-sm" id="Direccion">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Telefóno 1</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Telefono1" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2  control-label">Telefóno 2</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Telefono2">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Telefóno 3</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Telefono3">
+                                        </div>
+                                    </div>
+                                     <div class="form-group">
+                                         <label class="col-sm-2  control-label">Telefóno 4</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Telefono4">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">Estado</label>
+                                        <div class="col-sm-10">
+                                            <label class="checkbox-inline i-checks">
+                                                <input type="checkbox" id="Estado" checked>
+                                                <span id="state_text">Activo</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Contacto</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Contacto">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Correo</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Correo">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Base</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="Base">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Ruta Data</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="RutaData">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Ruta Log</label>
+                                        <div class="col-sm-10">
+                                           <input type="text" class="form-control input-sm" id="RutaLog">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                         <label class="col-sm-2  control-label">Fecha Backup</label>
+                                        <div class="col-sm-10">
+                                           <input type="date" class="form-control input-sm" id="FechaUltBackup">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>  
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-admin btn-sm"  id=""  ng-click="saveCompania()">
+                            <span class="fa fa-save"></span>
+                            Guardar
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+                            <span class="fa fa-times"></span> Cerrar
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+</div>

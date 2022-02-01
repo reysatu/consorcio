@@ -199,6 +199,16 @@
             RESTService.get('register_movements/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
+                    var opera_fin_data=response.operaciones;
+                    console.log(opera_fin_data);
+                    console.log("dddddd");
+                    idTipoOperacion.html("");
+                    idTipoOperacion.append('<option value="" selected>Seleccionar</option>');
+                     _.each(response.operaciones, function(item) {
+                        idTipoOperacion.append('<option value="'+item.idTipoOperacion+'*'+item.idNaturaleza+'">'+item.descripcion+'</option>');
+                    });
+                    console.log(data_p);
+
                     titlemodalMovimieto.html('Editar Movimiento '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
@@ -206,6 +216,7 @@
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
                     naturalezaGeneral=data_p.naturaleza;
+                    console.log("entro1");
                     if(lotE!=''){
                          lotE.map(function(index) {
                                 var grubLE={
@@ -230,10 +241,14 @@
                             aartMSE.push(grubSE);
                         });
                     }
+                    console.log("entro2");
 
                     idTipoOperacion.val(data_p.idTipoOperacion+'*'+data_p.naturaleza).trigger('change');
+                     console.log("entro3");
                     idTipoOperacion.prop('disabled',true);
+                    
                     idTipoOperacion.trigger('change');
+                   
                     idMovimiento.val(data_p.idMovimiento);
                     idMoneda.val(data_p.idMoneda).trigger('change');
                     fecha_registro.val(data_p.fecha_registro);
@@ -262,6 +277,7 @@
                     var mov_ar=response.movimiento_Ar;
                     console.log(mov_ar);
                     console.log("ddd");
+
                      mov_ar.map(function(index) {
                         var ver='A';
                         var tipo='NA';
@@ -417,6 +433,7 @@
         }
          function cleanMovimiento () {
             cleanRequired();
+            getDataFormMovement();
             titlemodalMovimieto.html('');
             idMovimiento.val('');
             idTipoOperacion.val('');
@@ -2009,10 +2026,13 @@
         function getDataFormMovement () {
             RESTService.all('register_movements/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    console.log(response.operaciones);
+                    idTipoOperacion.html("");
                     idTipoOperacion.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.operaciones, function(item) {
                         idTipoOperacion.append('<option value="'+item.IdTipoOperacion+'*'+item.idNaturaleza+'">'+item.descripcion+'</option>');
                     });
+                    idMoneda.html("");
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.moneda, function(item) {
                         idMoneda.append('<option  value="'+item.Value+'">'+item.DisplayText+'</option>');

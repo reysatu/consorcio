@@ -26,8 +26,8 @@ class View_movimiento_cierreRepository implements View_movimiento_cierreInterfac
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('periodo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->where('periodo', 'LIKE', '%'.$s.'%');
+         
         });
 
     }

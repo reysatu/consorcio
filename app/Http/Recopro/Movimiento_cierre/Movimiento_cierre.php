@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Movimiento_cierre extends Model
 {
   
-    protected $table = 'ERP_Movimiento_cierre';
+    protected $table = 'ERP_almacen_stock_cierre';
 
     public $timestamps = true;
 
@@ -23,7 +23,7 @@ class Movimiento_cierre extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento','idTipoOperacion','fecha_registro','fecha_proceso','idUsuario','naturaleza','observaciones','consecutivo','idMoneda','estado','user_created','user_updated','cCodConsecutivo','nConsecutivo','periodo'];
+    protected $fillable = ['idArticulo','idAlmacen','disponible','en_transito','remitido','user_created','user_updated','total','reservado','periodo','costo'];
     
      public function user_c()
     {

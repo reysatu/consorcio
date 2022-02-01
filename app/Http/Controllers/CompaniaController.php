@@ -12,13 +12,14 @@ use App\Http\Recopro\Compania\CompaniaTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Compania\CompaniaInterface;
 use App\Http\Requests\CompaniaRequest;
+use DB;
 class CompaniaController extends Controller
 {
      use CompaniaTrait;
 
     public function __construct()
     {
-//        $this->middleware('json');
+//        $this->middleware('json'); 
     }
 
     public function all(Request $request, CompaniaInterface $repo)
@@ -27,6 +28,48 @@ class CompaniaController extends Controller
         $s = $request->input('search', '');
         $params = ['IdCompania', 'RutaData','RutaLog','FechaUltBackup','Estado','Base','Correo','Contacto','Telefono4','Telefono3','Telefono2','RazonSocial','NombreComercial','Direccion','Ruc','Telefono1'];
         return parseList($repo->search($s), $request, 'IdCompania', $params);
+    }
+    public function createUpdate($id, CompaniaInterface $repo, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $table="ERP_Compania";
+            $idt='IdCompania';
+            $data['Ruc'] = $data['Ruc'];
+            $data['NombreComercial'] = $data['NombreComercial'];
+            $data['Direccion'] = $data['Direccion'];
+            $data['Telefono1'] = $data['Telefono1'];
+            $data['Telefono2'] = $data['Telefono2'];
+            $data['Telefono3'] = $data['Telefono3'];
+            $data['Telefono4'] = $data['Telefono4'];
+            $data['Estado'] =$data['Estado'];
+            $data['Contacto'] =$data['Contacto'];
+            $data['Correo'] = $data['Correo'];
+            $w = $repo->findByCode($data['Ruc']);
+            if ($id != 0) {
+                if ($w && $w->IdCompania != $id) {
+                    throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
+                }
+                $repo->update($id, $data);
+            } else {
+                if ($w) {
+                    throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
+                }
+                $data['IdCompania'] = $repo->get_consecutivo($table,$idt);
+                $repo->create($data);
+            };
+            DB::commit();
+            return response()->json([
+                'status' => true,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function create(CompaniaInterface $repo, Request $request)
@@ -56,6 +99,28 @@ class CompaniaController extends Controller
             'Record' => []
         ]);
     }
+     public function find($id, CompaniaInterface $repo)
+    {
+        try {
+            $data = $repo->find($id);
+            // $data['dFechacaducidad2']='';
+          
+            // if($data[0]->dFechacaducidad!=null){
+            //     $data['dFechacaducidad2']=date("Y-m-d", strtotime($data[0]->dFechacaducidad));
+            // }
+           
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    } 
 
     public function update(CompaniaInterface $repo, Request $request)
     {

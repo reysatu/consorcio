@@ -30,14 +30,14 @@
         var p_description_detail = $("#p_description_detail");
         var idKit=$("#idKit");
         var modalArticulo = $('#modalArticulo');
-        var p_code_article = $("#code_article");
+        var p_code_article = $("#code_article"); 
         var p_code_matrix = $("#code_matrix");
         var table_container_cc2=$("#table_container_cc2");
         var motor = $("#motor");
         var chasis = $("#chasis");
         var anio_modelo = $("#anio_modelo");
         var anio_fabricacion = $("#anio_fabricacion");
-
+        var idCatVeh=$("#idCatVeh");
         var color = $("#color");
         var p_costo=$("#p_costo");
         var p_id_unidad_medidad=$("#p_id_unidad_medidad");
@@ -83,6 +83,7 @@
         p_id_familia.select2();
         p_id_subfamilia.select2();
         p_id_grupocontable.select2();
+        idCatVeh.select2();
         // btn_kit.prop('disabled',true) 
        
         
@@ -110,6 +111,7 @@
             anio_modelo.val('');
             anio_fabricacion.val('');
             color.val('');
+            idCatVeh.val("").trigger("change");
             p_id_modelo.html('');
             p_id_modelo.append('<option value="" selected>Seleccione</option>');
             p_id_categoria.val('').trigger('change');
@@ -264,6 +266,7 @@
                     p_id_subfamilia.val(data_p.idSubFamilia).trigger('change');
                     p_id_modelo.val(data_p.idModelo).trigger('change');
                     p_id_tipo.val(data_p.type_id).trigger('change');
+                    idCatVeh.val(data_p.idCatVeh).trigger("change");
                     p_id_grupocontable.val(data_p.idGrupoContableCabecera).trigger('change');                  
                     // p_retention_id.val(data_p.retention_id).trigger('change');
 
@@ -433,6 +436,7 @@
                     'cantidadKit':cantidadKit,
                     'idKit':kitid,
                     'um_id':p_id_unidad_medidad.val(),
+                    'idCatVeh':idCatVeh.val(),
                 };
              
                
@@ -463,6 +467,7 @@
         function getDataForm () {
             RESTService.all('articles/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    var cave=response.cateVehicular;
                      p_id_tipo.append('<option value="" selected>Seleccionar</option>');
                     _.each(response.types, function(item) {
                         p_id_tipo.append('<option value="'+item.Value+'">'+item.DisplayText+'</option>');
@@ -471,6 +476,10 @@
                      _.each(response.unidadMedida, function(item) {
                         p_id_unidad_medidad.append('<option value="'+item.Value+'">'+item.DisplayText+'</option>');
                     });
+                        idCatVeh.append('<option value="" selected>Seleccionar</option>');
+                      cave.map(function (index) {
+                         idCatVeh.append('<option value="'+index.idCatVeh+'">'+index.descripcion+'</option>');
+                      });
 
 
                     //  p_id_modelo.append('<option value="" selected>Seleccionar</option>');

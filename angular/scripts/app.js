@@ -80,6 +80,7 @@
         'sys.app.movimiento_cierres',
         'sys.app.factor_credito',
         'sys.app.periodos',
+        'sys.app.categoriaVehiculars',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

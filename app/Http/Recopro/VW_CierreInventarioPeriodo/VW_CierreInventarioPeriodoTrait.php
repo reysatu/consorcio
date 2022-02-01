@@ -6,15 +6,15 @@
  * Time: 11:36 AM
  */
 
-namespace App\Http\Recopro\Periodo;
+namespace App\Http\Recopro\VW_CierreInventarioPeriodo;
 
 use Carbon\Carbon;
 
-trait PeriodoTrait
+trait VW_CierreInventarioPeriodoTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['PERIODO','ESTADO','FECHA INICIO','FECHA FIN','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['CATEGORÍA','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $estado="ACTIVO";
@@ -22,10 +22,8 @@ trait PeriodoTrait
                 $estado='INACTIVO';
             };
             $columns[] = [
-                ['left', $i->periodo],
+                ['left', $i->descripcion],
                 ['left', $estado],
-                ['left', $i->fechaInicio],
-                ['left', $i->fechaFin],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
                 ['left', $i->user_u->name],
@@ -35,7 +33,7 @@ trait PeriodoTrait
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE PERIODO'
+            'title' => 'LISTA DE CATEGORÍAS'
         ];
 
         return $data;

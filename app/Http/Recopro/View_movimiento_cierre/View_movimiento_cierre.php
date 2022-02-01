@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class View_movimiento_cierre extends Model
 {
   
-    protected $table = 'ERP_VW_MovimientosCerrados';
+    protected $table = 'ERP_VW_CierreInventario';
 
     public $timestamps = true;
 
@@ -22,10 +22,10 @@ class View_movimiento_cierre extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['periodo', 'estado','idUsuario'];
+    protected $fillable = ['periodo','estado'];
     
-    public function user_u()
-    {
-        return $this->belongsTo(User::class, 'idUsuario');
-    }
+    // public function user_u()
+    // {
+    //     return $this->belongsTo(User::class, 'idUsuario');
+    // }
 }
