@@ -136,6 +136,40 @@ class MovimientoCajaController extends Controller
                  'dataMc'=>$dataMc,
             ]);
     }
+     public function pdf_diario(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
+    {          
+           
+            $id = $request->input('id');
+            // $porciones = explode("/", $id);
+            $usuario=auth()->id();
+            date_default_timezone_set('America/Lima');
+            // $fechacA= date("Y-m-d") $porciones[2].'-'.$porciones[1].'-'.$porciones[0];
+            $fechacA=$id;
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+                'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+            ]);
+    }
 
  
     public function all(Request $request, CajaDiariaDetalleInterface $repo)

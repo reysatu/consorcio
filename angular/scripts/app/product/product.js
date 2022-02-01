@@ -478,7 +478,7 @@
                     });
                         idCatVeh.append('<option value="" selected>Seleccionar</option>');
                       cave.map(function (index) {
-                         idCatVeh.append('<option value="'+index.idCatVeh+'">'+index.descripcion+'</option>');
+                         idCatVeh.append('<option value="'+index.idCatVeh+'">'+index.idCatVeh+' '+index.descripcion+'</option>');
                       });
 
 

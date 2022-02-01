@@ -47,12 +47,13 @@ class CompaniaController extends Controller
             $data['Contacto'] =$data['Contacto'];
             $data['Correo'] = $data['Correo'];
             $w = $repo->findByCode($data['Ruc']);
-            if ($id != 0) {
+            if ($id !== '0') { 
                 if ($w && $w->IdCompania != $id) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }
-                $repo->update($id, $data);
+                $repo->update($id, $data); 
             } else {
+
                 if ($w) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }

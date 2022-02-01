@@ -33,6 +33,9 @@
        var rutaLog=$("#RutaLog");
        var fechaUltBackup=$("#FechaUltBackup");
        var state_text=$("#state_text");
+       var lema1=$("#lema1");
+       var lema2=$("#lema2");
+       var direcciones_oficinas=$("#direcciones_oficinas");
 
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
@@ -76,6 +79,9 @@
             rutaData.val("");
             rutaData.val("");
             rutaLog.val("");
+            lema1.val("");
+            lema2.val("");
+            direcciones_oficinas.val("");
             fechaUltBackup.val("");
              estado.prop('checked', true).iCheck('update');
                $scope.chkState();
@@ -154,6 +160,9 @@
                     'Telefono2':telefono2.val(),
                     'Telefono3':telefono3.val(),
                     'Telefono4':telefono4.val(),
+                    'lema1':lema1.val(),
+                    'lema2':lema2.val(),
+                    'direcciones_oficinas':direcciones_oficinas.val(),
                     'Estado':((estado.prop('checked')) ? '1' : '0'),
                     'Contacto':contacto.val(),
                     'Correo':correo.val(),
