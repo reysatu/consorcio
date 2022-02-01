@@ -8,6 +8,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\DocumentType\DocumentTypeInterface;
 use App\Http\Recopro\ConsecutivoComprobanteUsuario\ConsecutivoComprobanteUsuarioInterface;
@@ -189,10 +191,11 @@ class ConsecutivosComprobantesController extends Controller
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CONSECUTIVOS COMPROBANTES', 'ConsecutivosComprobantes');
     }
 
-    public function obtener_consecutivo_comprobante(ConsecutivosComprobantesInterface $repo, Request $request) {
+    public function obtener_consecutivo_comprobante(ConsecutivosComprobantesInterface $repo, Request $request, CajaDiariaDetalleInterface $caja_repo) {
 
         $data = $request->all();
-        $consecutivo_comprobante = $repo->obtener_consecutivo_comprobante($data["tipo_documento"]);
+        $caja_diaria = $caja_repo->get_caja_diaria();
+        $consecutivo_comprobante = $repo->obtener_consecutivo_comprobante($data["tipo_documento"], $caja_diaria[0]->idtienda);
 
         return response()->json($consecutivo_comprobante);
     }

@@ -7,8 +7,8 @@ GO
 
 CREATE VIEW [dbo].[ERP_view_solicitud] AS SELECT s.cCodConsecutivo, s.nConsecutivo, s.fecha_solicitud, s.tipo_solicitud, s.estado, s.idconvenio, s.descuento_id, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, s.t_monto_total,
 CASE WHEN s.saldo IS NULL THEN 0 ELSE s.saldo END AS saldo,
-CASE WHEN s.pagado IS NULL THEN 0 ELSE s.saldo END AS pagado,
-CASE WHEN s.facturado IS NULL THEN 0 ELSE s.saldo END AS facturado
+CASE WHEN s.pagado IS NULL THEN 0 ELSE s.pagado END AS pagado,
+CASE WHEN s.facturado IS NULL THEN 0 ELSE s.facturado END AS facturado
 
 FROM ERP_Solicitud AS s
 INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)

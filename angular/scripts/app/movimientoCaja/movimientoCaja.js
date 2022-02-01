@@ -1567,18 +1567,30 @@
             var noperacion = $("#noperacion").val();
             var tarjeta = $("#tarjeta").val();
             var monto_p = parseFloat($("#monto_p").val());
+            var tipo_cambio = (!isNaN(parseFloat($("#tipo_cambio").val()))) ? parseFloat($("#tipo_cambio").val()) : 0;
+            var monto_local = (!isNaN(parseFloat($("#monto_local").val()))) ? parseFloat($("#monto_local").val()) : 0;
+            var monto_aplicar = (!isNaN(parseFloat($("#monto_aplicar").val()))) ? parseFloat($("#monto_aplicar").val()) : 0;
+            var monto_vuelto = (!isNaN(parseFloat($("#monto_vuelto").val()))) ? parseFloat($("#monto_vuelto").val()) : 0;
             var html = "<tr>";
             html += '   <input type="hidden" name="IdMoneda[]" value="'+moneda+'" />';
             html += '   <input type="hidden" name="codigo_formapago[]" value="'+forma_pago+'" />';
             html += '   <input type="hidden" name="nrotarjeta[]" value="'+tarjeta+'" />';
             html += '   <input type="hidden" name="nrooperacion[]" value="'+noperacion+'" />';
             html += '   <input type="hidden" name="monto_pago[]" value="'+monto_p+'" />';
+            html += '   <input type="hidden" name="monto_moneda_documento[]" value="'+monto_local+'" />';
+            html += '   <input type="hidden" name="monto_aplicado_documento[]" value="'+monto_aplicar+'" />';
+            html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="'+tipo_cambio+'" />';
+            html += '   <input type="hidden" name="vuelto[]" value="'+monto_vuelto+'" />';
             html += '   <td>' + moneda_text + '</td>';
             html += '   <td>' + forma_pago_text + '</td>';
-            html += '   <td>' + tarjeta + '</td>';
             html += '   <td>' + noperacion + '</td>';
-            html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
+            html += '   <td>' + tarjeta + '</td>';
+            // html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
             html += '   <td>' + monto_p + '</td>';
+            html += '   <td>' + tipo_cambio + '</td>';
+            html += '   <td>' + monto_local +'</td>';
+            html += '   <td>' + monto_aplicar +'</td>';
+            html += '   <td>' + monto_vuelto +'</td>';
             html += '   <td><button title="Eliminar Registro" class="btn btn-danger btn-xs eliminar-forma-pago" type="button"><i class="fa fa-trash"></i></button></td>';
             html += '</tr>';
             $("#detalle-formas-pago").append(html);
@@ -1641,7 +1653,7 @@
                             }
 
                             // PARA TODOS
-                            alert("imprimir_comprobante");
+                            // alert("imprimir_comprobante");   
                             window.open("movimientoCajas/imprimir_ticket/"+id);
                             window.open("movimientoCajas/imprimir_comprobante/"+id);
                          
@@ -1683,18 +1695,11 @@
 
             if (tipo_solicitud == "3") {
                 $(".convenio").show();
-                // $("#cuota_inicial").val("");
-                // $("#nro_cuotas").attr("readonly", "readonly");
 
             } else {
-                if (tipo_solicitud == "2") {
-                    // $("#nro_cuotas").removeAttr("readonly");
-                    // $(".inputs-credito").removeAttr("readonly");
-                }
-
+            
                 if (tipo_solicitud == "1") {
                     $(".montos-credito").val(0);
-                    // $(".inputs-credito").attr("readonly", "readonly");
                 }
                 $(".convenio").hide();
             }
@@ -1921,12 +1926,48 @@
             }
         })
 
-        $(document).on("change", "#moneda", function () {
-            if ($(this).val() != "") {
+        $(document).on("keyup", "#monto_p", function () {
+            $("#moneda").trigger("change");
+        })
 
-                var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
-                // alert("hola " + simbolo);
+        $(document).on("change", "#moneda", function () {
+            var idmoneda = $(this).val();
+            if (idmoneda != "") {
+
+                var simbolo = $(this).find("option[value=" + idmoneda+ "]").data("simbolo");
+                
                 $(".simbolo-moneda-2").text(simbolo);
+
+                $.post("movimientoCajas/obtener_tipo_cambio_venta", { idmoneda: idmoneda },
+                    function (data, textStatus, jqXHR) {
+                        if(data.length > 0) {
+                            var tipo_cambio = 0;
+                            if(data[0].tipo_cambio_venta != null) {
+                                tipo_cambio = data[0].tipo_cambio_venta;
+
+                            }
+                            $("#tipo_cambio").val(tipo_cambio);
+
+                            var monto_p = parseFloat($("#monto_p").val()); // monto pagar  x forma de pago
+                            var monto = parseFloat($("#monto").val()); // monto total que se debe pagar
+                            var monto_convertido = 0;
+                            var vuelto = 0;
+
+                            if(tipo_cambio > 0) {
+                                monto_convertido = monto_p * tipo_cambio;
+                                vuelto = monto_convertido - monto;
+                                $("#monto_local").val(monto_convertido.toFixed(2));
+                                $("#monto_aplicar").val(monto.toFixed(2));
+                                $("#monto_vuelto").val(vuelto.toFixed(2));
+                            } else {
+                                $("#monto_local").val(monto.toFixed(2));
+                                $("#monto_aplicar").val(monto.toFixed(2));
+                                $("#monto_vuelto").val(0);
+                            }
+                        }
+                    },
+                    "json"
+                );
             }
         })
 
@@ -1958,6 +1999,7 @@
                         $("#monto_venta").val(data.solicitud_credito[0].monto_venta);
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
+                        $("#valor_cuota_final").val(data.solicitud_credito[0].valor_cuota_final);
                         $("#intereses").val(data.solicitud_credito[0].intereses);
                     }
 
@@ -1977,6 +2019,7 @@
                             html += '   <td>' + data.solicitud_articulo[i].descuento + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].porcentaje_descuento + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].monto_descuento + '</td>';
+                            html += '   <td>' + data.solicitud_articulo[i].monto_descuento_prorrateado + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].monto_subtotal + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].monto_exonerado + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].monto_afecto + '</td>';
@@ -1990,8 +2033,8 @@
                     }
 
 
-                    $("#enviar_solicitud").show();
-                    $("#aprobaciones").show();
+                    // $("#enviar_solicitud").show();
+                    // $("#aprobaciones").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
@@ -1999,6 +2042,7 @@
         }
 
 
+     
 
 
 

@@ -431,7 +431,7 @@
                                     <div class="form-group">
                                         <input type="hidden" id="ident_detalle">
                                         <div class="col-sm-2">
-                                            <button type="button" class="btn btn-danger-admin btn-sm"
+                                            <button id="agregar-articulo" type="button" class="btn btn-danger-admin btn-sm"
                                                 ng-click="addArticulo()">
                                                 <span class="fa fa-plus"></span>
                                                 Agregar Artículo
@@ -456,6 +456,7 @@
                                                             <th width="60px">Descuento</th>
                                                             <th width="60px">Porcentaje Descuento</th>
                                                             <th width="60px">M. Descuento</th>
+                                                            <th width="60px">Desc.In Total</th>
                                                             <th width="60px">M. Subtotal</th>
 
                                                             <th width="60px">M. Exonerado</th>
@@ -544,6 +545,13 @@
                                                         class="form-control input-sm montos-credito" id="intereses" name="intereses">
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-6 control-label">Valor Cuota Final</label>
+                                                <div class="col-sm-6">
+                                                    <input type="number" readonly="readonly"
+                                                        class="form-control input-sm montos-credito" id="valor_cuota_final" name="valor_cuota_final">
+                                                </div>
+                                            </div>
 
                                             <!-- <div class="form-group">
                                             <label class="col-sm-6 control-label">M.O Revisión</label>
@@ -583,11 +591,38 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="col-sm-6 control-label">Monto Descuento</label>
+                                                <label class="col-sm-6 control-label">Monto Descuento Detalle</label>
                                                 <div class="col-sm-6">
                                                     <input type="number" id="monto_descuento_detalle"
                                                         name="monto_descuento_detalle" class="form-control input-sm"
                                                         value="0" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-6  control-label">
+                                                    Descuento Total
+                                                </label>
+                                                <div class="col-sm-6 ">
+                                                    <select id="totalDescuento" name="descuento_id"
+                                                        class="totalDescuento form-control input-sm"
+                                                        style="width: 100%" /> </select>
+                                                </div>
+                                               
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-6  control-label">
+                                                    Descuento (Porcentaje/Monto) Total
+                                                </label>
+                                                <div class="col-sm-3">
+                                                    <input id="porcentajeTotal" name="t_porcentaje_descuento"
+                                                        class="form-control input-sm" value="0" readonly />
+                                                </div>
+                                                <!-- <label class="col-sm-1  control-label">
+                                                    Monto
+                                                </label> -->
+                                                <div class="col-sm-3">
+                                                    <input id="t_monto_descuento" name="t_monto_descuento"
+                                                        class="form-control input-sm" readonly />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -596,6 +631,9 @@
                                                 <div class="col-sm-6">
                                                     <input type="number" id="t_monto_subtotal" name="t_monto_subtotal"
                                                         class="form-control input-sm" value="0" readonly />
+
+                                                        <input type="hidden" id="subtotal_detalle"
+                                                        name="subtotal_detalle" class="form-control input-sm" value="0"  />
                                                 </div>
                                             </div>
 
@@ -612,6 +650,9 @@
                                                 <div class="col-sm-6">
                                                     <input type="number" id="t_monto_exonerado" name="t_monto_exonerado"
                                                         class="form-control input-sm" value="0" readonly />
+                                                    
+                                                    <input type="hidden" id="monto_exonerado_detalle"
+                                                        name="monto_exonerado_detalle" class="form-control input-sm" value="0"  />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -619,6 +660,9 @@
                                                 <div class="col-sm-6">
                                                     <input type="number" id="t_monto_afecto" name="t_monto_afecto"
                                                         class="form-control input-sm" value="0" readonly />
+
+                                                        <input type="hidden" id="monto_afecto_detalle"
+                                                        name="monto_afecto_detalle" class="form-control input-sm" value="0"  />
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -626,6 +670,8 @@
                                                 <div class="col-sm-6">
                                                     <input id="t_monto_inafecto" name="t_monto_inafecto"
                                                         class="form-control input-sm" value="0" readonly />
+                                                    <input type="hidden" id="monto_inafecto_detalle"
+                                                        name="monto_inafecto_detalle" class="form-control input-sm" value="0"  />
                                                 </div>
                                             </div>
 
@@ -634,11 +680,22 @@
                                                 <div class="col-sm-6">
                                                     <input id="t_impuestos" name="t_impuestos"
                                                         class="form-control input-sm" readonly value="0" />
+                                                    <input type="hidden" id="impuestos_detalle"
+                                                        name="impuestos_detalle" class="form-control input-sm" value="0"  />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-6 control-label">Total</label>
+                                                <div class="col-sm-6">
+                                                    <input id="desTotal" name="t_monto_total"
+                                                        class="form-control input-sm" readonly value="0" />
+                                                    <input type="hidden" id="monto_total_detalle"
+                                                        name="monto_total_detalle" class="form-control input-sm" value="0"  />
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <div class="col-md-12 ">
+                                        <!-- <div class="col-md-12 ">
                                             <div class="form-group">
                                                 <label class="col-sm-2  control-label">
                                                     Descuento
@@ -659,18 +716,12 @@
                                                     Monto
                                                 </label>
                                                 <div class="col-sm-3">
-                                                    <input id="montoTotal" name="t_monto_descuento"
+                                                    <input id="t_monto_descuento" name="t_monto_descuento"
                                                         class="form-control input-sm" readonly />
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
-                                                <div class="col-sm-3 col-md-offset-1">
-                                                    <input id="desTotal" name="t_monto_total"
-                                                        class="form-control input-sm" readonly value="0" />
-                                                </div>
-                                            </div>
-                                        </div>
+                                           
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

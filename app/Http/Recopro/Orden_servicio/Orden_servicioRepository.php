@@ -307,11 +307,33 @@ where IdTipoDocumento in ('01','03')");
          return $destroy;
     }
     public function cambio_tipo($moneda,$fecha)
-    {
+    { 
+          echo "SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'";
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'");
          return $destroy;
     }
+
+      public function cambio_tipo_venta($moneda,$fecha) { 
+            
+            $pdo=DB::connection()->getPdo();
+            $sql = "DECLARE	@return_value int,
+		@nTCCompra money,
+		@nTCVenta money
+
+            EXEC	@return_value = [dbo].[CO_Obtiene_TC]
+                        @nSunat = 0,
+                        @nMoneda = {$moneda},
+                        @dFecha = N'{$fecha}',
+                        @nTCCompra = @nTCCompra OUTPUT,
+                        @nTCVenta = @nTCVenta OUTPUT
+
+            SELECT	@nTCCompra AS tipo_cambio_compra,
+                        @nTCVenta AS tipo_cambio_venta";
+
+            $destroy=DB::select($sql);
+            return $destroy;
+      }
      public function destroy_orden_mantenimiento($id,$no,$mant)
     {
          $pdo=DB::connection()->getPdo();

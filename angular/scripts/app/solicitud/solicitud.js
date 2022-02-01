@@ -30,7 +30,7 @@
         var descuentos;
         var servicios;
         var porcentajeTotal = $("#porcentajeTotal");
-        var montoTotal = $("#montoTotal");
+        // var t_monto_descuento = $("#t_monto_descuento");
         var valor_moneda;
         var btn_save_cliente = $("#btn_save_cliente");
         var id_tipoDoc_Venta = $("#id_tipoDoc_Venta");
@@ -182,6 +182,7 @@
             }
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
+            habilitar_inputs();
             $("#enviar_solicitud").hide();
             $("#aprobaciones").hide();
             $("#articulo_mov_det").html("");
@@ -634,7 +635,7 @@
 
 
 
-                            id_tipoDoc_Venta_or.removeAttr("disabled");
+                   
 
                             // llenarServicios();
 
@@ -1394,7 +1395,7 @@
             $("#lote_articulo").val(lote);
             $("#posee-serie").val(serie);
             // alert("focusss selectsssss");
-           
+
             modalNada.modal('show');
             $("#cantProductoMN").focus();
             $("#cantProductoMN").select();
@@ -1906,7 +1907,7 @@
             //     var td4 = $('<td></td>');
             //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
             // }else{
-            var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' +precionew+ '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
+            var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' + precionew + '" impuesto_articulo="' + impuesto_articulo + '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text" codigo="' + codigo + '"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
             var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" />');
             // }
 
@@ -1920,7 +1921,7 @@
             // }else{
             if (ver == 'A') {
                 var td3 = $('<td style="width: 40px !important;" class="text-center"></td>');
-                var inp3 = $('<input onkeypress="return soloNumeros(event)" type="text" style="width: 40px !important;" id="canMs_' + codigo + '" codigo="' + codigo + '" onkeypress="return soloNumeros(event)" codigo="' + codigo + '" name="cantidad[]" class="m_articulo_cantidad form-control input-sm" value="' + cantProducto + '" />');
+                var inp3 = $('<input type="text" style="width: 40px !important;" id="canMs_' + codigo + '" codigo="' + codigo + '" onkeypress="return soloNumeros(event)" codigo="' + codigo + '" name="cantidad[]" class="m_articulo_cantidad form-control input-sm" value="' + cantProducto + '" />');
             } else {
                 var td3 = $('<td style="width: 30px !important;"><p>' + cantProducto + '</p></td>');
                 var inp3 = $('<input type="hidden" style="width: 30px !important;" id="canMs_' + codigo + '" class="m_articulo_cantidad"  impuesto_articulo="' + impuesto_articulo + '" codigo="' + codigo + '" name="cantidad[]" value="' + cantProducto + '" />');
@@ -1978,7 +1979,12 @@
                 button_series = '&nbsp;&nbsp;<button data-cantidad="' + cantProducto + '" class="btn btn-success btn-xs agregar-series" data-tipo="' + tipo + '" title="Agregar Series" data-id="' + codigo + '" data-idarticulo="' + idProducto + '" data-articulo="' + desProducto + '" data-costo="' + costo + '"  data-posee-serie="' + posee_serie + '" type="button"><span class="fa fa-plus"></span>&nbsp;Agregar Series</button>';
             }
 
-            var btn3 = $('<center><button class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
+            var desactivar_del = "";
+            if($("#estado").val() == "4") {
+                desactivar_del = 'disabled="disabled"';
+            }
+
+            var btn3 = $('<center><button '+desactivar_del+' class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
             // td6.append(btn1);
 
             var monto_exonerado = 0;
@@ -1998,7 +2004,9 @@
                 pretotal = pretotal + impuestos;
             }
 
-            var html = '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
+            var html = '<td codigo="' + codigo + '" class="monto_descuento_prorrateado"><p>0</p><input type="hidden" codigo="' + codigo + '" name="monto_descuento_prorrateado[]" value="0"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
+
             html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
             html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
             html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
@@ -2011,7 +2019,11 @@
                 check = "checked";
             }
 
-            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass" type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
+            var disabled_check = "";
+            if($("#estado").val() == "4") {
+                disabled_check = 'disabled="disabled"';
+            }
+            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass"  '+disabled_check+' type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
 
 
             td8.append(btn3);
@@ -2022,8 +2034,8 @@
             obtener_descuentos(codigo, idProducto);
             obtener_lotes(codigo);
 
-            if(iddescuento != "") {
-                $("#descuento_"+codigo).val(iddescuento).trigger("change");
+            if (iddescuento != "") {
+                $("#descuento_" + codigo).val(iddescuento).trigger("change");
             }
 
 
@@ -2240,7 +2252,7 @@
                     message: 'El precio del producto solo se puede ajustar +- ' + redondeo,
                     type: 'info'
                 });
-                
+
                 $(this).val(precioOr);
 
 
@@ -2279,22 +2291,41 @@
             }
         })
 
-        $(document).on("change", ".select_descuento", function () {
-            // alert($(this).attr("codigo"));
+        function calcular_totales_detalle(codigo, impuesto_articulo) {
             var porcentaje_descuento = 0;
             var monto_descuento = 0;
-            var tipo_descuento = $(this).val();
-            var codigo = $(this).attr("codigo");
-            var impuesto_articulo = $(this).attr("impuesto_articulo");
+            // var tipo_descuento = $(this).val();
+            // var codigo = $(this).attr("codigo");
+            // var impuesto_articulo = $(this).attr("impuesto_articulo");
             var idtipo = "";
             var descuento = 0;
-            if ($(this).val() != "") {
 
-                porcentaje_descuento = parseFloat($(this).find("option[value=" + $(this).val() + "]").attr("nPorcDescuento"));
-                monto_descuento = parseFloat($(this).find("option[value=" + $(this).val() + "]").attr("nMonto"));
-                idtipo = $(this).find("option[value=" + $(this).val() + "]").attr("idtipo");
-            }
             var precio_total = parseFloat($(".m_articulo_precioTotal[codigo='" + codigo + "']").val());
+            
+            //PRORRATEO EN CASO DE EXISTIR DESCUENTO SOBRE EL TOTAL
+            var descuento_total = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
+            var monto_descuento_prorrateado = 0;
+        
+            var sum_precios = 0;
+            $.each($("input[name='precio_unitario[]']"), function (indexInArray, precio_unitario) {
+                // alert(typeof nOperGratuita.value);
+                sum_precios += parseFloat(precio_unitario.value);
+
+            });
+
+            monto_descuento_prorrateado = precio_total * descuento_total / sum_precios;
+            // alert(monto_descuento_prorrateado);
+            $("input[name='monto_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_descuento_prorrateado.toFixed(2));
+            $(".monto_descuento_prorrateado[codigo=" + codigo + "]").find("p").text(monto_descuento_prorrateado.toFixed(2));
+            
+            var dom_descuento = $("#descuento_"+codigo);
+
+            if (dom_descuento.val() != "") {
+                porcentaje_descuento = parseFloat(dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("nPorcDescuento"));
+                monto_descuento = parseFloat(dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("nMonto"));
+                idtipo = dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("idtipo");
+            }
+            
             // alert(precio_total);
             if (idtipo == "P") {
 
@@ -2311,27 +2342,32 @@
             $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(descuento.toFixed(2));
             $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(descuento.toFixed(2));
 
-            var nuevo_total = precio_total - descuento;
-            // alert(nuevo_total);
+            var nuevo_total = precio_total - descuento - monto_descuento_prorrateado;
            
+            // alert(nuevo_total);
+
             var monto_exonerado = 0;
             var monto_afecto = 0;
             // var monto_inafecto = 0;
             var impuestos = 0;
             var valor_igv = parseFloat($("#valor_igv").val());
             var monto_subtotal = nuevo_total;
-            
-            if(impuesto_articulo == "0") {
+
+            if (impuesto_articulo == "0") {
                 monto_exonerado = nuevo_total;
             } else {
                 monto_afecto = nuevo_total;
                 impuestos = nuevo_total * valor_igv / 100;
                 nuevo_total = nuevo_total + impuestos;
             }
+
+            var monto_subtotal_sin_descuento_prorrateado = precio_total - descuento;
+
             $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(monto_exonerado.toFixed(2));
             $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(monto_exonerado.toFixed(2));
-            
+
             $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(2));
+            $("input[name='monto_subtotal_sin_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_subtotal_sin_descuento_prorrateado.toFixed(2));
             $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
             $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
@@ -2343,8 +2379,10 @@
             $(".total[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(2));
             $("input[name='monto_total[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
 
-            // console.log();
-            calcular_totales();
+        }
+
+        $(document).on("change", ".select_descuento", function () {
+        
             totalDescuento.trigger("change");
 
         });
@@ -2360,7 +2398,7 @@
             if (val == "" || val == null) {
 
                 porcentajeTotal.val(0);
-                montoTotal.val(0);
+                $("#t_monto_descuento").val(0);
 
 
             } else {
@@ -2371,27 +2409,38 @@
                 mont = parseFloat(arrayRe[2]);
                 // alert();
 
-                
+
             }
+
+            var total_sin_descuento_prorrateado = 0;
+
+            $.each($("input[name='monto_subtotal_sin_descuento_prorrateado[]']"), function (indexInArray, monto_subtotal_sin_descuento_prorrateado) {
+               
+                total_sin_descuento_prorrateado += parseFloat(monto_subtotal_sin_descuento_prorrateado.value);
+
+            });
+
+            // alert(total_sin_descuento_prorrateado);
 
             idtipo = $(this).find("option[value='" + $(this).val() + "']").attr("idtipo");
             if (idtipo == "P") {
 
-                porTotal = Number((Number(porc) * Number($("#desTotal").attr("importe_original"))) / 100);
+                porTotal = Number((Number(porc) * Number(total_sin_descuento_prorrateado)) / 100);
             } else {
                 porTotal = mont;
             }
 
             // alert("desc " + porTotal.toFixed(2));
             $("#porcentajeTotal").val(porc);
-            $("#montoTotal").val(porTotal.toFixed(2));
+            $("#t_monto_descuento").val(porTotal.toFixed(2));
 
-            var totalDes = parseFloat($("#desTotal").attr("importe_original"));
-            totalDes = Number(totalDes);
-           
-            totalDes = totalDes - porTotal;
-      
-            desTotal.val(totalDes.toFixed(2));
+            // var totalDes = parseFloat($("#desTotal").attr("importe_original"));
+            // totalDes = Number(totalDes);
+
+            // totalDes = totalDes - porTotal;
+
+            // desTotal.val(totalDes.toFixed(2));
+            calcular_totales();
             // $("#tipo_solicitud").trigger("change");
             // $("#cuota_inicial").trigger("keyup");
             // $("#nro_cuotas").trigger("keyup");
@@ -2429,6 +2478,16 @@
             var t_impuestos = 0;
             var t_total = 0;
             var t_nOperGratuita = 0;
+
+        
+            $.each($("input[name='precio_unitario[]']"), function (indexInArray, precio_unitario) {
+                // alert(typeof nOperGratuita.value);
+                var codigo = precio_unitario.getAttribute("codigo");
+                var impuesto_articulo = precio_unitario.getAttribute("impuesto_articulo");
+                // console.log(precio_unitario);
+                calcular_totales_detalle(codigo, impuesto_articulo);
+
+            });
 
             $.each($("input[name='monto_descuento[]']"), function (indexInArray, monto_descuento) {
                 t_monto_descuento += parseFloat(monto_descuento.value);
@@ -2468,16 +2527,81 @@
             if (isNaN(t_nOperGratuita)) {
                 t_nOperGratuita = 0;
             }
+
+
+
+
+            var descuento_total = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
+
+          
+
+            // if(descuento_total > 0) {
+            //     // alert(descuento_total);
+            //     $.each($("input[name='precio_unitario[]']"), function (indexInArray, monto_descuento_prorrateo) {
+            //         // alert(typeof nOperGratuita.value);
+            //         var codigo = monto_descuento_prorrateo.getAttribute("codigo");
+            //         // console.log(codigo);
+            //         $(".select_descuento[codigo='"+codigo+"']").trigger("change");
+            //     });
+            // }
+
+            // TOTALES CREDITO
+
+            var monto_venta = t_total;
+            var cuota_inicial = (!isNaN(parseFloat($("#cuota_inicial").val()))) ? parseFloat($("#cuota_inicial").val()) : 0;
+            // alert(monto_venta);
+            if ($("#tipo_solicitud").val() != "1") {
+                $("#monto_venta").val(monto_venta.toFixed(2));
+                $("#cuota_inicial").attr("max", monto_venta.toFixed(2));
+                var total_financiado = monto_venta - cuota_inicial;
+                $("#total_financiado").val(total_financiado.toFixed(2));
+            }
+
+            // MONTOS TOTALES DEL DETALLE
             $("#monto_descuento_detalle").val(t_monto_descuento.toFixed(2));
-            $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2));
-            $("#t_monto_exonerado").val(t_monto_exonerado.toFixed(2));
-            $("#t_monto_afecto").val(t_monto_afecto.toFixed(2));
+            $("#subtotal_detalle").val(t_monto_subtotal.toFixed(2));
+            $("#monto_exonerado_detalle").val(t_monto_exonerado.toFixed(2));
+            $("#monto_afecto_detalle").val(t_monto_afecto.toFixed(2));
+            $("#monto_inafecto_detalle").val(t_monto_inafecto.toFixed(2));
+            $("#impuestos_detalle").val(t_impuestos.toFixed(2));
+            $("#monto_total_detalle").val(t_total.toFixed(2));
+
+
+            // TOTALES FINALES
+            var intereses = (!isNaN(parseFloat($("#intereses").val()))) ? parseFloat($("#intereses").val()) : 0;
+
+            t_monto_subtotal = intereses + t_monto_subtotal;
+            $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2)); // antes
+
+            // alert("d" + t_monto_subtotal);
+            // $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2));
+
+            var monto_exonerado = 0;
+            var monto_afecto = 0;
+            var valor_igv = 0;
+            var impuestos = 0;
+            var total = 0;
+
+            if (t_impuestos > 0) {
+                valor_igv = parseFloat($("#valor_igv").val());
+                impuestos = t_monto_subtotal * valor_igv / 100;
+                monto_afecto = t_monto_subtotal;
+            } else {
+                monto_exonerado = t_monto_subtotal;
+            }
+
+
+            $("#t_monto_exonerado").val(monto_exonerado.toFixed(2));
+            $("#t_monto_afecto").val(monto_afecto.toFixed(2));
             $("#t_monto_inafecto").val(t_monto_inafecto.toFixed(2));
-            $("#t_impuestos").val(t_impuestos.toFixed(2));
-            $("#desTotal").val(t_total.toFixed(2));
-            $("#desTotal").attr("importe_original", t_total.toFixed(2));
+            $("#t_impuestos").val(impuestos.toFixed(2));
+
+            total = monto_exonerado + monto_afecto + t_monto_inafecto + impuestos;
+            $("#desTotal").val(total.toFixed(2));
+            // $("#desTotal").attr("importe_original", total.toFixed(2));
             $("#t_nOperGratuita").val(t_nOperGratuita.toFixed(2));
             // console.log(t_monto_descuento, t_monto_subtotal, t_monto_exonerado, t_monto_afecto, t_monto_inafecto, t_impuestos, t_total);
+
 
         }
 
@@ -2584,14 +2708,18 @@
                         }
                     });
                 } else {
-                    if (naturalezaGeneral != 'C') {
+                    
+                    if($("#tipo_solicitud").val() == "1") {
+                        if (naturalezaGeneral != 'C') {
 
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'No se pudo obtener las Localizaciones. Intente nuevamente.',
-                            type: 'info'
-                        });
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'No se pudo obtener las Localizaciones. Intente nuevamente.',
+                                type: 'info'
+                            });
+                        }
                     }
+                    
                 }
 
             });
@@ -2613,14 +2741,14 @@
         }
 
         $(document).on("keyup", "#cuota_inicial", function () {
-            var cuota_inicial = parseFloat($(this).val());
-            var monto_venta = parseFloat($("#monto_venta").val());
-            if (isNaN(cuota_inicial)) {
-                cuota_inicial = 0;
-            }
+            // var cuota_inicial = parseFloat($(this).val());
+            // var monto_venta = parseFloat($("#monto_venta").val());
+            // if (isNaN(cuota_inicial)) {
+            //     cuota_inicial = 0;
+            // }
 
-            var total_financiado = monto_venta - cuota_inicial;
-            $("#total_financiado").val(total_financiado.toFixed(2));
+            // var total_financiado = monto_venta - cuota_inicial;
+            // $("#total_financiado").val(total_financiado.toFixed(2));
             $("#nro_cuotas").trigger("keyup");
         });
 
@@ -2642,26 +2770,38 @@
                         porcentaje = parseFloat(data[0].porcentaje);
                     }
 
-                    if(porcentaje > 0) {
+                    if (porcentaje > 0) {
 
                         valor_cuota = total_financiado * porcentaje;
                     } else {
                         valor_cuota = total_financiado / nro_cuotas;
                     }
                     // console.log(valor_cuota);
-                    if(porcentaje > 0) {
-            
+                    if (porcentaje > 0) {
+
                         intereses = (Math.ceil(valor_cuota) * nro_cuotas) - total_financiado;
                     }
                     // console.log(intereses);
                     $("#valor_cuota").val(Math.ceil(valor_cuota));
                     var nuevo_total = parseFloat($("#desTotal").val());
                     
+                    // CALCULAR NUEVO IGV PARA VALOR CUOTA FINAL IGV
+                    var t_impuestos = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
+                 
+                    var valor_igv = parseFloat($("#valor_igv").val());
+                    var valor_cuota_final = Math.ceil(valor_cuota);
+
+                
+                    if(t_impuestos > 0) {
+                        valor_cuota_final = valor_cuota_final + (valor_cuota_final * valor_igv / 100);
+                    }
+                   
 
                     $("#intereses").val(intereses.toFixed(2));
+                    $("#valor_cuota_final").val(valor_cuota_final.toFixed(2));
                     nuevo_total += intereses;
                     $("#desTotal").val(nuevo_total.toFixed(2));
-                    $("#desTotal").attr("importe_original", nuevo_total.toFixed(2));
+                    // $("#desTotal").attr("importe_original", nuevo_total.toFixed(2));
                     totalDescuento.trigger("change");
                 },
                 "json"
@@ -2677,13 +2817,13 @@
             bval = bval && $("#tipo_solicitud").required();
             bval = bval && idvendedor.required();
             bval = bval && documento_or.required();
-            if($("#tipo_solicitud").val() == "2") {
+            if ($("#tipo_solicitud").val() == "2") {
                 bval = bval && $("#cuota_inicial").required();
                 bval = bval && $("#nro_cuotas").required();
             }
 
             if (bval) {
-                
+
                 if ($("#tipo_solicitud").val() == "1") {
                     var cont = 0;
                     $.each($("select[name='idalmacen[]']"), function (indexInArray, idalmacen) {
@@ -2725,14 +2865,14 @@
                         var posee_serie = articulos_id[ar].getAttribute("posee-serie");
                         var cantidad = articulos_id[ar].getAttribute("cantidad");
                         var producto = articulos_id[ar].getAttribute("producto");
-                        if(posee_serie == "1") {
+                        if (posee_serie == "1") {
                             // console.log(series_id);
                             // console.log(ar, series_id[ar]);
-                            if(typeof series_id[ar] == "undefined" ) {
+                            if (typeof series_id[ar] == "undefined") {
                                 // console.log(series_id[ar]);
                                 AlertFactory.textType({
                                     title: '',
-                                    message: 'Por Favor Agregue las series del producto: '+producto,
+                                    message: 'Por Favor Agregue las series del producto: ' + producto,
                                     type: 'info'
                                 });
 
@@ -2741,10 +2881,10 @@
 
                                 var cant = series_id[ar].value.split(",");
 
-                                if(cant.length != cantidad) {
+                                if (cant.length != cantidad) {
                                     AlertFactory.textType({
                                         title: '',
-                                        message: 'Por Favor Agregue la cantidad de '+cantidad+' series del producto: '+producto,
+                                        message: 'Por Favor Agregue la cantidad de ' + cantidad + ' series del producto: ' + producto,
                                         type: 'info'
                                     });
 
@@ -2752,7 +2892,7 @@
                                 }
                             }
                         }
-                        
+
                     }
 
                     // return false;
@@ -2762,7 +2902,7 @@
 
                     return false;
                 }
-                
+
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
 
@@ -2796,20 +2936,20 @@
             bval = bval && cCodConsecutivo.required();
             bval = bval && nConsecutivo.required();
 
-            if(bval) {
+            if (bval) {
                 $.post("solicitud/mostrar_aprobaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
                     function (data, textStatus, jqXHR) {
-                        if(data.length > 0) {
+                        if (data.length > 0) {
                             var html = '';
                             $("#detalle-aprobaciones").html("");
                             for (var i = 0; i < data.length; i++) {
                                 html += '<tr>';
-                                html += '   <td>'+data[i].aprobacion+'</td>';
-                                html += '   <td>'+data[i].nOrden+'</td>';
-                                html += '   <td>'+data[i].usuario+'</td>';
-                                html += '   <td>'+data[i].dFecReg+'</td>';
-                                html += '   <td>'+data[i].iEstado+'</td>';
-                                html += '   <td>'+data[i].cObservacion+'</td>';
+                                html += '   <td>' + data[i].aprobacion + '</td>';
+                                html += '   <td>' + data[i].nOrden + '</td>';
+                                html += '   <td>' + data[i].usuario + '</td>';
+                                html += '   <td>' + data[i].dFecReg + '</td>';
+                                html += '   <td>' + data[i].iEstado + '</td>';
+                                html += '   <td>' + data[i].cObservacion + '</td>';
                                 html += '</tr>';
                             }
                             $("#detalle-aprobaciones").html(html);
@@ -2835,14 +2975,14 @@
 
             if (bval) {
                 // alert($("#estado").val());
-                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize()+"&estado="+$("#estado").val(),
+                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize() + "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
                         if (data.status == "i") {
                             $("#estado").val(data.datos.estado);
                             // alert($("#estado option[value='"+$("#estado").val()+"']").text());
                             AlertFactory.textType({
                                 title: '',
-                                message: 'La solicitud se envio correctamente. Se cambio al estado: '+$("#estado option[value='"+$("#estado").val()+"']").text(),
+                                message: 'La solicitud se envio correctamente. Se cambio al estado: ' + $("#estado option[value='" + $("#estado").val() + "']").text(),
                                 type: 'success'
                             });
 
@@ -2877,14 +3017,14 @@
                 $(".convenio").show();
                 // $("#cuota_inicial").val("");
                 $("#nro_cuotas").attr("readonly", "readonly");
-            
+
             } else {
-                if(tipo_solicitud == "2") {
+                if (tipo_solicitud == "2") {
                     $("#nro_cuotas").removeAttr("readonly");
                     $(".inputs-credito").removeAttr("readonly");
                 }
 
-                if(tipo_solicitud == "1") {
+                if (tipo_solicitud == "1") {
                     $(".montos-credito").val(0);
                     $(".inputs-credito").attr("readonly", "readonly");
                 }
@@ -2892,11 +3032,7 @@
             }
 
             if (tipo_solicitud == "2" || tipo_solicitud == "3") {
-                var t_monto_total = $("#desTotal").val();
-                // alert(t_monto_total);
-                $("#monto_venta").val(t_monto_total);
-                $("#total_financiado").val(t_monto_total);
-                $("#cuota_inicial").attr("max", t_monto_total);
+                calcular_totales();
             }
         });
 
@@ -2905,23 +3041,23 @@
             $.post("solicitud/find", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
-                 
+
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    if(data.solicitud_credito.length > 0) {
+                    if (data.solicitud_credito.length > 0) {
                         Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
                     }
 
-                    $("#documento_or").val(data.solicitud[0].documento);   
+                    $("#documento_or").val(data.solicitud[0].documento);
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
-                    if(data.solicitud_credito.length > 0) {
+                    if (data.solicitud_credito.length > 0) {
 
-                        $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);   
-                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);  
-                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta); 
-                        $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);   
-                        $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);   
-                        $("#intereses").val(data.solicitud_credito[0].intereses);   
+                        $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
+                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);
+                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta);
+                        $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
+                        $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
+                        $("#intereses").val(data.solicitud_credito[0].intereses);
                     }
 
                     if (data.solicitud_articulo.length > 0) {
@@ -2935,13 +3071,61 @@
                         }
                     }
 
-
-                    $("#enviar_solicitud").show();
+                    if(data.solicitud[0].estado != "4") {
+                        habilitar_inputs();
+                        $("#enviar_solicitud").show();
+                    } else {
+                        deshabilitar_inputs();
+                    }
                     $("#aprobaciones").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
             );
+        }
+
+        function habilitar_inputs() {
+
+            $("#agregar-articulo").show();
+            $("#btn_editar_cliente").show();
+           
+            $("#btn_editar_conyugue").show();
+            $("#btn_editar_fiador").show();
+            $("#btn_editar_fiadorconyugue").show();
+            
+            $("#cCodConsecutivo").removeAttr("disabled");
+            $("#IdMoneda").removeAttr("disabled");
+            $("#id_tipoDoc_Venta_or").removeAttr("disabled");
+            $("#tipo_solicitud").removeAttr("disabled");
+            $("#idconvenio").removeAttr("disabled");
+            $("#idvendedor").removeAttr("disabled");
+            $("#totalDescuento").removeAttr("disabled");
+
+            $("#fecha_vencimiento").removeAttr("readonly");
+            $("#documento_or").removeAttr("readonly");
+            $("#comentarios").removeAttr("readonly");
+           
+        }
+
+        function deshabilitar_inputs() {
+    
+            $("#formulario-solicitud").find("input").attr("readonly", "readonly");
+            $("#formulario-solicitud").find("select").attr("disabled", "disabled");
+            $("#formulario-solicitud").find("textarea").attr("readonly", "readonly");
+            $("#formulario-creditos").find("input").attr("readonly", "readonly");
+            $("#formulario-creditos").find("select").attr("disabled", "disabled");
+
+            $("#agregar-articulo").hide();
+            $("#btn_editar_cliente").hide();
+            $("#enviar_solicitud").hide();
+            $("#btn_editar_conyugue").hide();
+            $("#btn_editar_fiador").hide();
+            $("#btn_editar_fiadorconyugue").hide();
+            $(".m_articulo_idAlm").removeAttr("disabled");
+            $(".m_articulo_idLoc").removeAttr("disabled");
+            $(".select_lote").removeAttr("disabled");
+           
+   
         }
 
         var search = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');
@@ -3006,37 +3190,37 @@
                 },
                 tipo_documento: {
                     title: 'Tipo Doc.',
-                    
+
 
                 },
                 numero_documento: {
                     title: 'N° Documento',
-                    
+
 
                 },
                 moneda: {
                     title: 'Moneda',
-                    
+
 
                 },
                 t_monto_total: {
                     title: 'Monto',
-                    
+
 
                 },
                 pagado: {
                     title: 'Pagado',
-                    
+
 
                 },
                 saldo: {
                     title: 'Saldo',
-                    
+
 
                 },
                 facturado: {
                     title: 'Facturado',
-                    
+
 
                 },
                 estado: {
@@ -3050,8 +3234,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="edit-solicitud" data-estado="'+ data.record.estado
-                        +'" data-id="' + data.record.cCodConsecutivo
+                        return '<a href="javascript:void(0)" class="edit-solicitud" data-estado="' + data.record.estado
+                            + '" data-id="' + data.record.cCodConsecutivo
                             + '_' + data.record.nConsecutivo + '" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
@@ -3062,8 +3246,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a data-target="#"  data-estado="'+ data.record.estado
-                        +'" data-ide="' + data.record.cCodConsecutivo + '_' + data.record.nConsecutivo + '"   title="Eliminar" class="jtable-command-button eliminar-solicitud"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
+                        return '<a data-target="#"  data-estado="' + data.record.estado
+                            + '" data-ide="' + data.record.cCodConsecutivo + '_' + data.record.nConsecutivo + '"   title="Eliminar" class="jtable-command-button eliminar-solicitud"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
                     }
 
                 }
@@ -3074,7 +3258,7 @@
                     var id = $(this).attr('data-id');
                     var estado = $(this).data('estado');
 
-                    if(estado != "1") {
+                    if (estado != "1" && estado != "4") {
                         AlertFactory.textType({
                             title: '',
                             message: 'No se puede modificar, la solicitud ya no se encuentra en estado Registrado',
@@ -3082,6 +3266,8 @@
                         });
                         return false;
                     }
+
+                   
                     find_solicitud(id);
                     e.preventDefault();
                 });
@@ -3089,7 +3275,7 @@
                     var ide = $(this).attr('data-ide');
                     var estado = $(this).data('estado');
 
-                    if(estado != "1") {
+                    if (estado != "1") {
                         AlertFactory.textType({
                             title: '',
                             message: 'No se puede eliminar, la solicitud ya no se encuentra en estado Registrado',
@@ -3136,7 +3322,12 @@
                 search: $('#search_b_solicitud').val()
             });
         }, true);
+
+
+
     }
+
+
 
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider
