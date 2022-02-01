@@ -2042,7 +2042,144 @@
         }
 
 
-     
+        var search_comprobantes = getFormSearch('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonSolicitud');
+
+        var table_container_comprobantes = $("#table_container_comprobantes");
+
+        table_container_comprobantes.jtable({
+            title: "Lista de Comprobantes",
+            paging: true,
+            sorting: true,
+            actions: {
+                listAction: base_url + '/movimientoCajas/list_comprobantes',
+            },
+        
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_comprobantes
+                }]
+            },
+            fields: {
+                idventa: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false,
+                    title: 'Código',
+                },
+                cCodConsecutivo_solicitud: {
+                    title: 'cCodConsecutivo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                nConsecutivo_solicitud: {
+                    title: 'nConsecutivo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                tipo_solicitud: {
+                    title: 'tipo_solicitud',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                estado: {
+                    title: 'estado',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                serie_comprobante: {
+                    title: 'Serie',
+
+                },
+                numero_comprobaante: {
+                    title: 'Número',
+                    
+
+                },
+                fecha_emision: {
+                    title: 'Fecha',
+                    display: function (data) {
+                        return moment(data.record.fecha_emision).format('DD/MM/YYYY');
+                    }
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+                    
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+                    
+
+                },
+                moneda: {
+                    title: 'Moneda',
+                    
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+                    
+
+                },
+                pagado: {
+                    title: 'Pagado',
+                    
+
+                },
+                saldo: {
+                    title: 'Saldo',
+                    
+
+                },
+               
+                edit: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="imprimir-comprobante" data-estado="'+data.record.estado+'"  data-tipo_solicitud="'+data.record.tipo_solicitud+'"  data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" title="Imprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
+                    }
+
+                }
+
+            },
+            recordsLoaded: function (event, data) {
+                $('.imprimir-comprobante').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    var tipo_solicitud = $(this).attr('data-tipo_solicitud');
+                    var estado = $(this).attr('data-estado');
+
+                    if(tipo_solicitud != "1" && estado == "6") {
+                        window.open("movimientoCajas/imprimir_cronograma/"+id);
+                    }
+
+                    window.open("movimientoCajas/imprimir_ticket/"+id);
+                    window.open("movimientoCajas/imprimir_comprobante/"+id);
+                   
+                    e.preventDefault();
+                });
+                
+            }
+        });
+
+        generateSearchForm('frm-search-comprobantes', 'LoadRecordsButtonSolicitud', function () {
+            table_container_comprobantes.jtable('load', {
+                search: $('#search_b_comprobantes').val()
+            });
+        }, true);
 
 
 

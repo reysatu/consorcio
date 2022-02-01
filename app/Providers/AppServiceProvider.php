@@ -139,6 +139,10 @@ use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 
 
+use App\Http\Recopro\Venta\Venta;
+use App\Http\Recopro\Venta\VentaInterface;
+use App\Http\Recopro\Venta\VentaRepository;
+
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantes;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesRepository;
@@ -647,6 +651,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCajas();
         $this->registerVendedores();
         $this->registerSolicitud();
+        $this->registerVenta();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
         $this->registerTypePerson();
@@ -1117,6 +1122,16 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(SolicitudInterface::class, function ($app) {
             return new SolicitudRepository(new Solicitud());
+        });
+    }
+
+    
+    public function registerVenta()
+    {
+        $app = $this->app;
+
+        $app->bind(VentaInterface::class, function ($app) {
+            return new VentaRepository(new Venta());
         });
     }
 

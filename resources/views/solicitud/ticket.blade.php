@@ -89,8 +89,8 @@
            
             <div class="col" style="width: 100%; text-align: center; line-height: 20px;">
                 <label for="">{{ $empresa[0]->RazonSocial }}</label><br>
-                <label for="">{{ $tienda[0]->descripcion }} </label><br>
-                <label for="">{{ $tienda[0]->direccion }}</label>
+                <label for="">{{ $venta[0]->tienda }} </label><br>
+                <label for="">{{ $venta[0]->direccion_tienda }}</label>
             </div>            
         </div>
         <div class="clear"></div>
@@ -152,8 +152,8 @@
            
         <div class="col" style="width: 100%; line-height: 20px; margin-top: 5px;">
             <label for="">Impreso: <?php echo date("d-m-Y H:i:s") ?></label><br>
-            <label for="">Caja: {{ $caja_diaria[0]->nombre_caja }} </label><br>
-            <label for="">Cajero(a): {{ $cajero[0]->name }}</label><br>
+            <label for="">Caja: {{ $venta[0]->nombre_caja }} </label><br>
+            <label for="">Cajero(a): {{ $venta[0]->cajero }}</label><br>
             <label for="">Vendedor: {{ $solicitud[0]->vendedor }}</label><br>
             
         </div>            

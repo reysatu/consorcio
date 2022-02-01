@@ -1,0 +1,24 @@
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[ERP_view_venta] AS SELECT v.idventa, v.serie_comprobante, v.numero_comprobante, v.fecha_emision, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, v.t_monto_total,
+CASE WHEN v.saldo IS NULL THEN 0 ELSE v.saldo END AS saldo,
+CASE WHEN v.pagado IS NULL THEN 0 ELSE v.pagado END AS pagado, v.cCodConsecutivo_solicitud, v.nConsecutivo_solicitud
+
+FROM ERP_Venta AS v
+INNER JOIN ERP_Clientes AS c ON(v.idcliente=c.id)
+INNER JOIN ERP_TABLASUNAT AS tc ON(tc.cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+GO
+
+
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [idcajero] int NULL
+GO
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [idtienda] int NULL;
+ALTER TABLE [dbo].[ERP_Venta] ADD [idcaja] int NULL;

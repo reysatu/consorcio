@@ -41,4 +41,6 @@ Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imp
 Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 
 
+Route::post('movimientoCajas/list_comprobantes', ['as' => 'movimientoCajas.list_comprobantes', 'uses' => 'MovimientoCajaController@list_comprobantes']);
+
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
