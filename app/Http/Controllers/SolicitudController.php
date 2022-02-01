@@ -227,6 +227,8 @@ class SolicitudController extends Controller
         $personas = $Repo->obtener_personas($usuario);
         $parametro_igv =  $Repo->get_parametro_igv();
         $dataredondeo = $repo_orden->get_redondeo();
+      
+        // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
 
         return response()->json([
             'status' => true,
@@ -252,6 +254,7 @@ class SolicitudController extends Controller
             'vendedores'=>$vendedores,
             'personas'=>$personas,
             'parametro_igv'=>$parametro_igv,
+          
             'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
         ]);
     }

@@ -14,6 +14,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\Customer\CustomerInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Requests\MovimientoCajaRequest;
@@ -235,14 +236,25 @@ class MovimientoCajaController extends Controller
     }
 
     public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio) {
-
+        // ini_Set("display_errors", 1);
+        // error_reporting(E_ALL);
         $data = $request->all();
 
         // print_r($data); exit;
         $result = array();
        
+  
+       
         try {
             DB::beginTransaction();
+       
+            $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
+            if(count($ticket) <= 0) {
+                throw new Exception("Cree una serie y consecutivo de ticket");
+            }
+            // return $ticket;
+            $serie_ticket = $ticket[0]->serie;
+            $consecutivo_ticket = $ticket[0]->actual;
 
             // print_r($this->preparar_datos("dbo.ERP_VentaFormaPago", $data));
             // exit;
@@ -308,16 +320,19 @@ class MovimientoCajaController extends Controller
 
                     // enviamos aprobar la solicitud cuando se hace la venta de la cuota inicial
                     $data_envio_sol = array();
-                    $data_envio_sol["cCodConsecutivo"] = $data["cCodConsecutivo_solicitud"];
-                    $data_envio_sol["nConsecutivo"] = $data["cCodConsecutivo_solicitud"];
+                    $data_envio_sol["cCodConsecutivo"] = $data_venta["cCodConsecutivo_solicitud"];
+                    $data_envio_sol["nConsecutivo"] = $data_venta["nConsecutivo_solicitud"];
                     
                     $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
                 } else {
 
-
+                    //SEGUNDA VENTA DEL CREDITO POR EL SALDO
                     $data_venta["tipo_comprobante"] = "0";
                     $data_venta["saldo"] = $solicitud_credito[0]->total_financiado;
                     $data_venta["pagado"] = "0";
+                    $data_venta["anticipo"] = $solicitud_credito[0]->cuota_inicial;
+
+                
                    
                     $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
                     $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
@@ -360,9 +375,17 @@ class MovimientoCajaController extends Controller
 
             $data_venta["condicion_pago"] = $condicion_pago[0]->id;
 
+         
+
 
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
-
+            // PARA TICKET
+            $data_ticket = $data_venta;
+            $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+            $data_ticket["serie_comprobante"] = $serie_ticket;
+            $data_ticket["numero_comprobante"] = $consecutivo_ticket;
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
+           
             for ($i=0; $i < count($solicitud_articulo); $i++) { 
                 if($solicitud_articulo[$i]->cOperGrat == "-.-") {
                     $solicitud_articulo[$i]->cOperGrat = "";
@@ -374,7 +397,27 @@ class MovimientoCajaController extends Controller
                 
                 $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
                 // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+               
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+
+              
+                // print_r($res);
+            }
+
+
+            //PARA TICKET
+
+            for ($i=0; $i < count($solicitud_articulo); $i++) { 
+                if($solicitud_articulo[$i]->cOperGrat == "-.-") {
+                    $solicitud_articulo[$i]->cOperGrat = "";
+                    // echo "ola";
+                }
+              
+                $data_ticket_detalle =  (array)$solicitud_articulo[$i];
+                $data_ticket_detalle["idventa"] = $data_ticket["idventa"];                
+                $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
                 // print_r($res);
             }
             
@@ -410,6 +453,22 @@ class MovimientoCajaController extends Controller
 
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
 
+                if($data["vuelto"][$i] > 0) {
+                    $data_caja_detalle = array();
+                    $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                    $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                    $data_caja_detalle["codigoTipo"] = "VTA";
+                    $data_caja_detalle["codigoFormaPago"] = "EFE";
+                    $data_caja_detalle["idMoneda"] = $solicitud[0]->idmoneda;
+                    $data_caja_detalle["monto"] = $data["vuelto"][$i];
+                    $data_caja_detalle["descripcion"] = "Vuelto por Venta";
+                    $data_caja_detalle["nroTarjeta"] = "";
+                    $data_caja_detalle["nroOperacion"] = "";
+    
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+                }
+
+
                 if($data["IdMoneda"][$i] == "1") {
                     if($data["codigo_formapago"][$i] == "EFE") {
                         $efectivo_soles += (float)$data["monto_pago"][$i];
@@ -442,7 +501,28 @@ class MovimientoCajaController extends Controller
 
             $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
 
+            //  PARA TICKET
+            $data_formas_pago_ticket = $data;
+            for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
+                $data_formas_pago_ticket["idventa"][$i] = $data_ticket["idventa"];
+               
+                if($i == 0) {
+
+                    $data_formas_pago_ticket["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                   
+                } else {
+                    $data_formas_pago_ticket["consecutivo"][$i] = $data_formas_pago_ticket["consecutivo"][$i-1] + 1;
+                }
+
+                
+            }
+
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
+
+
+
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+            $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
@@ -719,5 +799,13 @@ class MovimientoCajaController extends Controller
         // return $pdf->download("ficha_asociado.pdf"); // descargar
         return $pdf->stream("comprobante.pdf"); // ver
 
+    }
+
+    public function obtener_tipo_cambio_venta(Orden_servicioInterface $repo_orden, Request $request) {
+        $data = $request->all();
+        $fecha_actual = date("Y-m-d");
+        $result = $repo_orden->cambio_tipo_venta($data["idmoneda"], $fecha_actual);
+
+        return response()->json($result);
     }
 }
