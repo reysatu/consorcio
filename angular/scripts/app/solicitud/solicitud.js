@@ -2966,6 +2966,23 @@
             }
         }
 
+        $scope.imprimir_solicitud = function () {
+           
+            var cCodConsecutivo = $("#cCodConsecutivo").val();
+            var nConsecutivo = $("#nConsecutivo").val();
+
+            var id = cCodConsecutivo + "|" + nConsecutivo;
+            if($("#tipo_solicitud").val() == "1" || $("#tipo_solicitud").val() == "3") {
+                window.open("solicitud/imprimir_solicitud/"+id);
+            } else {
+                alert("no hay formato para la solicitud");
+            }
+
+            
+
+           
+        }
+
         $scope.enviar_solicitud = function () {
             var bval = true;
             bval = bval && cCodConsecutivo.required();
