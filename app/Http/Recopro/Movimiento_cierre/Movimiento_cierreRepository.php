@@ -98,47 +98,61 @@ class Movimiento_cierreRepository implements Movimiento_cierreInterface
 
     }
     public function getMovimientosCierre($fechaFiltro){
-         $mostrar=DB::select("select idArticulo,
+        $user_created = auth()->id();
+        $user_updated = auth()->id();
+         $mostrar=DB::insert("insert into ERP_almacen_stock_cierre (idArticulo,
 idAlmacen,
 disponible,
 en_transito,
 remitido,
-total,
-reservado,
-costo
+costo,periodo,user_created,user_updated,created_at,updated_at,total,reservado)
+select idArticulo,
+idAlmacen,
+disponible,
+en_transito,
+remitido,
+costo,'$fechaFiltro','$user_created','$user_updated',FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),total,reservado
 from ERP_almacen_stock D
-inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
+inner join ERP_Productos P on P.id = D.idArticulo");
          return $mostrar;
 
     }
     public function getMovimientosCierreArticulo($fechaFiltro){
-         $mostrar=DB::select("select idArticulo,
+          $user_created = auth()->id();
+        $user_updated = auth()->id();
+         $mostrar=DB::insert("insert into ERP_almacen_stock_localizacion_cierre (idArticulo,
 idAlmacen,
-idLocalizacion,
 disponible,
 en_transito,
 remitido,
-total,
-reservado,
-costo
+costo,periodo,user_created,user_updated,created_at,updated_at,total,reservado,idLocalizacion)
+select idArticulo,
+idAlmacen,
+disponible,
+en_transito,
+remitido,
+costo,'$fechaFiltro','$user_created','$user_updated',FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),total,reservado,idLocalizacion
 from ERP_almacen_stock_localizacion D
-inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
+inner join ERP_Productos P on P.id = D.idArticulo");
          return $mostrar;
     }
     public function getMovimientosCierreArticuloDetalle($fechaFiltro){
-         $mostrar=DB::select("select idArticulo,
+          $user_created = auth()->id();
+        $user_updated = auth()->id();
+         $mostrar=DB::insert("insert into ERP_almacen_stock_localizacion_detalle_cierre (idArticulo,
 idAlmacen,
-idLocalizacion,
-TipoId,
-idDetalle,
 disponible,
 en_transito,
 remitido,
-total,
-reservado,
-costo
+costo,periodo,user_created,user_updated,created_at,updated_at,total,reservado,idLocalizacion,TipoId,idDetalle)
+select idArticulo,
+idAlmacen,
+disponible,
+en_transito,
+remitido,
+costo,'$fechaFiltro','$user_created','$user_updated',FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),total,reservado,idLocalizacion,TipoId,idDetalle
 from ERP_almacen_stock_localizacion_detalle D
-inner join ERP_Productos P on P.id = D.idArticulo where FORMAT(D.created_at,'yyyy-MM')='$fechaFiltro'");
+inner join ERP_Productos P on P.id = D.idArticulo");
          return $mostrar;
     }
      public function reversarMovimientos($id)

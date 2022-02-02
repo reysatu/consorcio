@@ -119,66 +119,18 @@ class Movimiento_cierreController extends Controller
             $data = $request->all();
             $periodo = $data['periodo'];
             $estado = $data['estado'];
-            $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($periodo);
-            if(empty($movimiento_articulo_detalle)){
-                 throw new \Exception('No existe información para ese periodo,Por favor ingrese otro periodo.');
-            }
+            
             $w = $repoView->findByCode($periodo);
             if ($w) {
                 throw new \Exception('Ya existe un cierre en ese periodo. Por favor ingrese otro periodo.');
             }
              
                 $movimiento=$repo->getMovimientosCierre($periodo);
-                foreach($movimiento as $rowArt){
-                     $datoAr=[];   
-                     $datoAr['idArticulo'] = $rowArt->idArticulo;
-                     $datoAr['idAlmacen'] = $rowArt->idAlmacen;
-                     $datoAr['disponible'] = $rowArt->disponible;
-                     $datoAr['en_transito'] = $rowArt->en_transito;
-                     $datoAr['remitido'] = $rowArt->remitido;
-                     $datoAr['total'] = $rowArt->total;
-                     $datoAr['reservado'] = $rowArt->reservado;
-                     $datoAr['periodo'] =  $periodo;
-                     $datoAr['costo'] = $rowArt->costo;
-                     $repo->create($datoAr);
-                  }
+               
                 $movimiento_articulo=$repo->getMovimientosCierreArticulo($periodo);
-                // $movimiento_articulo_detalle=$repoArCie->getMovimientosCierreArticuloDetalle($row->idMovimiento);
-                foreach($movimiento_articulo as $rowArtLoc){
-                    $datoAr=[];   
-                     $datoAr['idArticulo'] = $rowArtLoc->idArticulo;
-                     $datoAr['idAlmacen'] = $rowArtLoc->idAlmacen;
-                     $datoAr['disponible'] = $rowArtLoc->disponible;
-                     $datoAr['idLocalizacion'] = $rowArtLoc->idLocalizacion;
-                     $datoAr['disponible'] = $rowArtLoc->disponible;
-                     $datoAr['en_transito'] = $rowArtLoc->en_transito;
-                     $datoAr['remitido'] = $rowArtLoc->remitido;
-                     $datoAr['total'] = $rowArtLoc->total;
-                     $datoAr['reservado'] = $rowArtLoc->reservado;
-                     $datoAr['periodo'] =  $periodo;
-                     $datoAr['costo'] = $rowArtLoc->costo;
-                     $repoArCie->create($datoAr);
-                 } 
-                  $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($periodo);
-                // $movimiento_articulo_detalle=$repoArCie->getMovimientosCierreArticuloDetalle($row->idMovimiento);
-                foreach($movimiento_articulo_detalle as $rowArtLoc){
-                    $datoAr=[];   
-                     $datoAr['idArticulo'] = $rowArtLoc->idArticulo;
-                     $datoAr['idAlmacen'] = $rowArtLoc->idAlmacen;
-                     $datoAr['disponible'] = $rowArtLoc->disponible;
-                     $datoAr['idLocalizacion'] = $rowArtLoc->idLocalizacion;
-                     $datoAr['TipoId'] = $rowArtLoc->TipoId;
-                     $datoAr['idDetalle'] = $rowArtLoc->idDetalle;
-
-                     $datoAr['disponible'] = $rowArtLoc->disponible;
-                     $datoAr['en_transito'] = $rowArtLoc->en_transito;
-                     $datoAr['remitido'] = $rowArtLoc->remitido;
-                     $datoAr['total'] = $rowArtLoc->total;
-                     $datoAr['reservado'] = $rowArtLoc->reservado;
-                     $datoAr['periodo'] =  $periodo;
-                     $datoAr['costo'] = $rowArtLoc->costo;
-                     $repoArDetalle->create($datoAr);
-                 } 
+            
+                $movimiento_articulo_detalle=$repo->getMovimientosCierreArticuloDetalle($periodo);
+              
                 $repoPeri->update_pc($periodo);     
                 //  $dato=[];   
                 //  $dato['idMovimiento'] = $row->idMovimiento;

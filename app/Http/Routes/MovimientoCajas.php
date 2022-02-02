@@ -28,6 +28,8 @@ Route::post('movimientoCajas/getMonedasMoc', 'CurrencyController@getAll');
 
 Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
 
+Route::get('movimientoCajas/pdf_diario', 'MovimientoCajaController@pdf_diario');
+
 Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
 
 Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');

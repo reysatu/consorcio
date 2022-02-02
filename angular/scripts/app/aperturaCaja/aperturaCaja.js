@@ -106,6 +106,15 @@
                 }
             });
         }
+        function printCaja(id) {
+          var ide =moment(id).format('YYYY-MM-DD');
+            var data = {
+                id: ide,
+            };
+        
+            $scope.loadMovimientoCajaPDF('movimientoCajas/pdf_diario', data);
+          
+        }
         function getDataFormDescuento () {
             RESTService.all('descuentos/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -577,6 +586,16 @@
                         return '<a href="javascript:void(0)" title="Editar" class="edit_cont" data-code="' +
                             data.record.idCajaDiaria + '"><i class="fa fa-pencil-square-o fa-1-5x fa-green"></i></a>';
                     }
+                }, print: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" title="Imprimir" class="print_content" data-code="' +
+                            data.record.fechaCaja + '"><i class="fa fa-print fa-1-5x fa-blue"></i></a>';
+                    }
                 }
 
             },
@@ -584,6 +603,11 @@
                 $('.edit_cont').click(function (e) {
                     var id = $(this).attr('data-code');
                     findCajaDiaria(id);
+                    e.preventDefault();
+                });
+                  $('.print_content').click(function (e) {
+                    var id = $(this).attr('data-code');
+                    printCaja(id);
                     e.preventDefault();
                 });
             },
