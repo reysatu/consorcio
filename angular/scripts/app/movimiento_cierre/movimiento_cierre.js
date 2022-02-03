@@ -444,12 +444,20 @@
                  Remitido: {
                       title: 'Remitido',
                 },
+                 Total: {
+                      title: 'Total',
+                },
                 CostoCierre: {
                       title: 'Costo',
                 },
-                Total: {
-                      title: 'Total',
+                TotalCosto: {
+                    title: 'Total Costo',
+                    display: function (data) {
+                        var total=Number(data.record.Total)*Number(data.record.CostoCierre);
+                        return total.toFixed(2);
+                    },
                 },
+               
                
             },
              recordsLoaded: function(event, data) {

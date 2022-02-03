@@ -3499,17 +3499,17 @@ function create_pdf_QuerystockCierre(response) {
                             alignment: 'center' 
 
                         },
-                          { 
-                            text:'S.Total',
-                            fillColor: '#eeeeee',
-                            fontSize: 8 ,
-
-                        },
                         { 
                             text: 'Tránsito',
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
                             alignment: 'center' 
+
+                        },
+                          { 
+                            text:'S.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
 
                         },
                          { 
