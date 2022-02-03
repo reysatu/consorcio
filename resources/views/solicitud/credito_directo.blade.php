@@ -82,21 +82,56 @@
 
         }
 
-        #tabla, #tabla tr, #tabla td {
-            width: 100%; 
-            border: 1px solid black;  
+        #tabla,
+        #tabla tr,
+        #tabla td {
+            width: 100%;
+            border: 1px solid black;
             border-collapse: collapse;
         }
 
-        #tabla_2, #tabla_2 td {
-            width: 100%; 
-            border-left: 1px solid black;  
-            border-right: 1px solid black;  
-            border-bottom: 1px solid black;  
+        #tabla_3,
+        #tabla_3 tr,
+        #tabla_3 td {
+            width: 100%;
+            border: 1px solid black;
             border-collapse: collapse;
         }
 
-   
+
+        #tabla_2,
+        #tabla_2 td {
+            width: 100%;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        #tabla_4,
+        #tabla_4 tr,
+        #tabla_4 td {
+            width: 100%;
+            border: none;
+            border-collapse: none;
+        }
+
+        #tabla_5,
+        #tabla_5 tr,
+        #tabla_5 td {
+            width: 100%;
+            border: none;
+            border-collapse: none;
+        }
+
+        
+        #tabla_6,
+        #tabla_6 tr,
+        #tabla_6 td {
+            width: 100%;
+            border: none;
+            border-collapse: none;
+        }
     </style>
 
 </head>
@@ -106,33 +141,33 @@
     <header style="">
         <table style="width: 100%;">
 
-          <tr>
-              <td style="width: 15%;"><strong>Compañia </strong></td>
-              <td colspan="2" style="width: 45%;"><strong>{{ $empresa[0]->RazonSocial }}</strong></td>
-              <td style="width: 10%;">Fecha </td>
-              <td colspan="2" style="width: 30%;"><?php echo date("d/m/Y"); ?></td>
-          </tr>
-          <tr>
-              <td style="width: 15%;">R.U.C. </td>
-              <td colspan="5" style="width: 85%;">{{ $empresa[0]->Ruc }}</td>
-              
-          </tr>
-          <tr>
-              <td style="width: 15%;">Dirección </td>
-              <td colspan="5" style="width: 85%;">{{ $empresa[0]->Direccion }}</td>
-              
-          </tr>
-          <tr>
-              <td style="width: 15%;">Teléfono </td>
-              <td style="width: 15%;">{{ $empresa[0]->Telefono1 }}</td>
-              <td style="width: 10%;">Estado </td>
-              <td style="width: 10%;">{{ $solicitud[0]->estado }}</td>
-              <td style="width: 30%;"><strong>NÚMERO SOLICITUD: </strong></td>
-              <td style="width: 20%;"><strong>{{ $solicitud[0]->cCodConsecutivo }}-{{ $solicitud[0]->nConsecutivo }}</strong></td>
-              
-          </tr>
-         
-      </table>
+            <tr>
+                <td style="width: 15%;"><strong>Compañia </strong></td>
+                <td colspan="2" style="width: 45%;"><strong>{{ $empresa[0]->RazonSocial }}</strong></td>
+                <td style="width: 10%;">Fecha </td>
+                <td colspan="2" style="width: 30%;"><?php echo date("d/m/Y"); ?></td>
+            </tr>
+            <tr>
+                <td style="width: 15%;">R.U.C. </td>
+                <td colspan="5" style="width: 85%;">{{ $empresa[0]->Ruc }}</td>
+
+            </tr>
+            <tr>
+                <td style="width: 15%;">Dirección </td>
+                <td colspan="5" style="width: 85%;">{{ $empresa[0]->Direccion }}</td>
+
+            </tr>
+            <tr>
+                <td style="width: 15%;">Teléfono </td>
+                <td style="width: 15%;">{{ $empresa[0]->Telefono1 }}</td>
+                <td style="width: 10%;">Estado </td>
+                <td style="width: 10%;">{{ $solicitud[0]->estado }}</td>
+                <td style="width: 30%;"><strong>NÚMERO SOLICITUD: </strong></td>
+                <td style="width: 20%;"><strong>{{ $solicitud[0]->cCodConsecutivo }}-{{ $solicitud[0]->nConsecutivo }}</strong></td>
+
+            </tr>
+
+        </table>
 
 
 
@@ -141,144 +176,294 @@
     <main>
 
         <table id="tabla" style="">
-        
+
             <tr>
-                <td style="width: 20%;"><strong>Fecha Solicitud </strong></td>
-                <td style="width: 20%;"><strong>Tipo Solicitud </strong></td>
-                <td style="width: 25%;"><strong>Convenio </strong></td>
-                <td style="width: 35%;"><strong>Vendedor </strong></td>
-                
+                <td style="width: 22%;"><strong>Fecha Solicitud </strong>{{ $solicitud[0]->fecha_solicitud_user }}</td>
+                <td style="width: 25%;"><strong>Tipo Solicitud: </strong>{{ $titulo }}</td>
+                <td style="width: 25%;"><strong>Convenio: </strong>{{ $solicitud[0]->convenio }}</td>
+                <td style="width: 28%;"><strong>Vendedor </strong>{{ $solicitud[0]->vendedor }}</td>
+
             </tr>
-            <!-- <tr>
-                <td style="width: 15%;">Doc. del Ciente: </td>
-                <td style="width: 12%;">{{ $cliente[0]->documento }}</td>
-                <td style="width: 15%;">Forma de Pago: </td>
-                <td style="width: 12%;">{{ $titulo }}</td>
-                <td style="width: 6%;">Vendedor: </td>
-                <td style="width: 40%;">{{ $solicitud[0]->vendedor }}</td>
-            </tr>
-            <tr>
-                <td style="width: 15%;">Fecha Documento: </td>
-                <td style="width: 12%;">{{ $solicitud[0]->fecha_solicitud_user }}</td>
-                <td style="width: 15%;">Fecha Vencimiento: </td>
-                <td style="width: 12%;">{{ $solicitud[0]->fecha_vencimiento_user }}</td>
-                <td style="width: 6%;">Estado: </td>
-                <td style="width: 40%;">{{ $solicitud[0]->estado }}</td>
-            </tr>
-            <tr>
-                <td style="width: 20%;">Comentarios: </td>
-                <td colspan="5" style="width: 80%;">{{ $solicitud[0]->comentarios }}</td>
-            </tr> -->
-           
+
+
         </table>
-      
 
 
-        <table id="tabla_2" style="width: 100%; font-size: 10px !important;">
+
+        <table id="tabla_2" style="width: 100%;">
             <tr style="">
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">#</td>
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">Código</td>
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">Descripción</td>
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">Und</td>
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">Cantidad</td>
-                <td style="border-bottom: 1px solid black; border-right: 1px solid black;">P. Unit.</td>
-                <td style="border-bottom: 1px solid black;">Monto Total</td>
+                <td style=""><strong>Lista de Precios</strong></td>
+                <td style=""><strong>Código</strong></td>
+                <td style=""><strong>Cantidad</strong></td>
+                <td style=""><strong>Descripción Producto</strong></td>
+
 
             </tr>
 
             <?php
-            // $total_importe = 0;
-            // $total_interes = 0;
-            // $total = 0;
-            // $total_amortizacion = 0;
-            // $total_saldo = 0;
-            $i = 1;
+
+
             foreach ($solicitud_articulo as $key => $value) {
-                // $total_importe += (float)$value->valor_cuota;
-                // $total += (float)($value->int_moratorio + $value->valor_cuota);
-                // $total_amortizacion += (float)$value->monto_pago;
-                // $total_saldo += (float)$value->saldo_cuota;
                 echo '<tr>';
-                echo '  <td>' . $i . '</td>';
-                echo '  <td>' . $value->idproducto . '</td>';
-                echo '  <td>' . $value->producto . '</td>';
-                echo '  <td>' . $value->unidad . '</td>';
-                echo '  <td>' . $value->cantidad . '</td>';
-
                 echo '  <td>' . $value->precio_unitario . '</td>';
-                echo '  <td>' . $value->precio_total . '</td>';
-
-
+                echo '  <td>' . $value->idproducto . '</td>';
+                echo '  <td>' . $value->cantidad . '</td>';
+                echo '  <td>' . $value->producto . '</td>';
                 echo '</tr>';
-
-                $i++;
             }
-            // echo '<tr>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '  <td style="border-top: 1px solid black;">'.$total_importe.'</td>';
-            // echo '  <td style="border-top: 1px solid black;">'.$total_interes.'</td>';
-            // echo '  <td style="border-top: 1px solid black;">'.$total.'</td>';
-            // echo '  <td style="border-top: 1px solid black;">'.$total_amortizacion.'</td>';
-            // echo '  <td style="border-top: 1px solid black;">'.$total_saldo.'</td>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '  <td style="border-top: 1px solid black;"></td>';
-            // echo '</tr>';
+
             ?>
         </table>
-        
 
-            <br>
-        <table style="width: 100%;">
+
+        <br>
+        <table id="tabla_3" style="width: 100%;">
             <tr>
-                <td style="width: 75%;"></td>
-                <td style="width: 25%;">
-                    <table>
-                        <tr>
-                            <td>Monto Afecto</td>
-                            <td>
-                                <?php 
-                                    if($solicitud[0]->t_impuestos > 0) {
-                                        echo $solicitud[0]->t_monto_afecto;
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Monto No Afecto</td>
-                            <td>
-                                <?php 
-                                    if($solicitud[0]->t_impuestos <= 0) {
-                                        echo $solicitud[0]->t_monto_exonerado;
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>(-) Descuentos</td>
-                            <td>
-                                <?php echo (float)$solicitud[0]->monto_descuento_detalle + (float)$solicitud[0]->t_monto_descuento; ?> 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>(+) Impuestos</td>
-                            <td>{{ $solicitud[0]->t_impuestos }}</td>
-                        </tr>
+                <td colspan="6" style="font-weight: bold; width: 50%;">COMENTARIOS:</td>
+                <td colspan="6" style="font-weight: bold; text-align: center; width: 50%;">V°B° GERENCIA:</td>
 
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 50px; width: 50%;">{{ $solicitud[0]->comentarios }}</td>
+                <td colspan="6" style="height: 50px; width: 50%;"></td>
+
+            </tr>
+            <tr>
+                <td colspan="6" style="font-weight: bold; text-align: center; width: 50%;">INFORMACION DEL CRÉDITO:</td>
+                <td colspan="3" style="font-weight: bold; text-align: center; width: 25%">V°B° JEFE DE TIENDA:</td>
+                <td colspan="3" style="font-weight: bold; text-align: center; width: 25%">V°B° CREDITOS:</td>
+
+            </tr>
+            <tr>
+                <td colspan="6"  style="height: 50px; width: 50%;">
+                    <table id="tabla_6">
                         <tr>
-                            <td style="border-top: 1px solid black;"><strong>Monto Total</strong></td>
-                            <td style="border-top: 1px solid black;"><strong>{{ $solicitud[0]->t_monto_total }}</strong></td>
+                            <td style="height: 50px; width: 25%;">
+                                <table id="tabla_4">
+                                    <tr>
+                                        <td style="font-weight: bold; width: 60%;">Lista de Precios: </td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->monto_venta }}</td>
+
+
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; width: 60%;">Intereses: </td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->intereses }}</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; width: 60%;">&nbsp;</td>
+                                        <td style="width: 40%;">&nbsp;</td>
+
+                                    </tr>
+
+
+                                </table>
+                            </td>
+                            <td style="height: 50px; width: 25%;">
+                                <table id="tabla_5">
+                                    <tr>
+
+
+                                        <td style="font-weight: bold; width: 60%;">Cuota Inicial: </td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->cuota_inicial }}</td>
+                                    </tr>
+                                    <tr>
+
+                                        <td style="font-weight: bold; width: 60%;">Valor de Cuota: </td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->valor_cuota }}</td>
+                                    </tr>
+                                    <tr>
+
+                                        <td style="font-weight: bold; width: 60%;">Nro Cuotas: </td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud_credito[0]->nro_cuotas }}</td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                        <tr style="">
+                            <td style="border-top: 1px solid black; font-weight: bold;">TOTAL FINANCIADO</td>
+                            <td style="border-top: 1px solid black; font-weight: bold;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->total_financiado }}</td>
                         </tr>
                     </table>
-            
                 </td>
-               
+                <td colspan="3" style="height: 50px; width: 25%;"></td>
+                <td colspan="3" style="height: 50px; width: 25%;"></td>
+
             </tr>
+
+            <tr>
+                <td colspan="6" style="font-weight: bold; text-align: center;">DATOS DEL COMPRADOR</td>
+                <td colspan="6" style="font-weight: bold; text-align: center;">DATOS DEL FIADOR</td>
+            </tr>
+
+       
+            <tr>
+                <td colspan="3" style="text-align: center;"><strong>R.U.C.</strong><br>{{ $cliente[0]->documento }}</td>
+                <td colspan="3" style="text-align: center;"><strong>Correo Electrónico</strong><br>{{ $cliente[0]->correo_electronico }}</td>
+                <td colspan="3" style="text-align: center;"><strong>R.U.C.</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cNumerodocumento : ""; ?></td>
+                <td colspan="3" style="text-align: center;"><strong>Correo Electrónico</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cEmail : ""; ?></td>
+            </tr>
+            <tr>
+                <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br>{{ $cliente[0]->razonsocial_cliente }}</td>
+                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br></td>
+                <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cNombrePersona : ""; ?></td>
+                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->dFechaNacimiento : ""; ?></td>
+            </tr>
+            <tr>
+                <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNumerodocumento : ""; ?></td>
+                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->edad : ""; ?></td>
+                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cEstadoCivil : ""; ?></td>
+                <td colspan="1" style=""><strong>C.F.</strong></td>
+                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cCelular : ""; ?></td>
+
+                <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cNumerodocumento : ""; ?></td>
+                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->edad : ""; ?></td>
+                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cEstadoCivil : ""; ?></td>
+                <td colspan="1" style=""><strong>C.F.</strong></td>
+                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cCelular : ""; ?></td>
+            </tr>
+
+            <tr>
+                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                
+            </tr>
+
+            <tr>
+                <td colspan="6" style="">
+                    <strong>Departamento: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->cDepartamento : ""; ?><br>
+                    <strong>Provincia: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->cProvincia : ""; ?><br>
+                    <strong>Distrito: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->cDistrito : ""; ?><br>
+                </td>
+                <td colspan="6" style="">
+                    <strong>Departamento: </strong><?php echo (isset($fiador[0])) ? $fiador[0]->cDepartamento : ""; ?><br>
+                    <strong>Provincia: </strong><?php echo (isset($fiador[0])) ? $fiador[0]->cProvincia : ""; ?><br>
+                    <strong>Distrito: </strong><?php echo (isset($fiador[0])) ? $fiador[0]->cDistrito : ""; ?><br>
+                </td>
+                
+            </tr>
+            <tr>
+                <td colspan="6" style="">
+                    <strong>Barrio / Sector: </strong><br>
+                    <strong>Zona / Lugar: </strong><br>
+                    <strong>Domicilio: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->direccion : ""; ?><br>
+                    <strong>Referencia: </strong><br>
+                </td>
+                <td colspan="6" style="">
+                    <strong>Barrio / Sector: </strong><br>
+                    <strong>Zona / Lugar: </strong><br>
+                    <strong>Domicilio: </strong><?php echo (isset($fiador[0])) ? $fiador[0]->cDireccion : ""; ?><br>
+                    <strong>Referencia: </strong><?php echo (isset($fiador[0])) ? $fiador[0]->cReferencia : ""; ?><br>
+                </td>
+                
+            </tr>
+
+            <tr>
+                <td colspan="6" style="">
+                    <strong>Vivienda: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tipo_vivienda : ""; ?><br>
+                    <strong>Propietario: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->propietario : ""; ?><br>
+                    <strong>Mnt. Alquiler: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->monto_alquiler : ""; ?><br>
+                  
+                </td>
+                <td colspan="6" style="">
+                    <strong>Vivienda: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tipo_vivienda_fiador : ""; ?><br>
+                    <strong>Propietario: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->propietario_fiador : ""; ?><br>
+                    <strong>Mnt. Alquiler: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->monto_alquiler_fiador : ""; ?><br>
+                </td>
+                
+            </tr>
+
+            <tr>
+                <td colspan="6" style="">
+                    <strong>Profesión / Ocupación: </strong><br><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->profesion : ""; ?><br>
+                   
+                </td>
+                <td colspan="6" style="">
+                    <strong>Profesión / Ocupación: </strong><br><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->profesion_fiador : ""; ?><br>
+                </td>
+                
+            </tr>   
+            <tr>
+                <td colspan="6" style="">
+                    <strong>Dependiente: </strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->centro_trabajo : ""; ?><br>
+                    <strong>Cargo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->cargo : ""; ?>&nbsp;&nbsp;&nbsp;<strong>T.Lab.</strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tiempo_laboral : ""; ?><br>
+                    <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_trabajo : ""; ?><br>
+                   
+                </td>
+                <td colspan="6" style="">
+                    <strong>Dependiente: </strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->centro_trabajo_fiador : ""; ?><br>
+                    <strong>Cargo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->cargo_fiador : ""; ?>&nbsp;&nbsp;&nbsp;<strong>T.Lab.</strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tiempo_laboral_fiador : ""; ?><br>
+                    <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_trabajo_fiador : ""; ?><br>
+                </td>
+                
+            </tr>  
+            <tr>
+                <td colspan="6" style="">
+                <strong>Independiente: </strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->actividad_negocio : ""; ?><br>
+                    <strong>Cargo: &nbsp;&nbsp;&nbsp; T.Lab.</strong><br>
+                    <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_negocio : ""; ?><br>
+                   
+                </td>
+                <td colspan="6" style="">
+                    <strong>Independiente: </strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->actividad_negocio_fiador : ""; ?><br>
+                    <strong>Cargo: &nbsp;&nbsp;&nbsp; T.Lab.</strong><br>
+                    <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_negocio_fiador : ""; ?><br>
+                </td>
+                
+            </tr>  
+          
+
+            <tr>
+                <td colspan="3" style="">
+                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_mensual : ""; ?><br>    
+                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_conyugue : ""; ?>
+                </td>
+                <td colspan="3" style="">
+                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->otros_ingresos : ""; ?><br>  
+                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->total_ingresos : ""; ?>
+                </td>
+                <td colspan="3" style="">
+                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_mensual_fiador : ""; ?><br>    
+                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_conyugue_fiador : ""; ?>
+                </td>
+                <td colspan="3" style="">
+                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->otros_ingresos_fiador : ""; ?><br>  
+                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->total_ingresos_fiador : ""; ?>
+                </td>
+                
+                
+            </tr>  
+           
         </table>
 
-    
+        <table style="width: 100%;">
+            <tr>
+                <td style="border: none !important; text-align: center;"><strong>DECLARO BAJO JURAMENTO QUE LA INFORMACIÓN PROPORCIONADA ES VERDADERA AUTORIZO A QUE SE VERIFIQUE LOS DATOS CONSIGNADOS EN LA PRESENTE.</strong></td>
+            </tr>>
+        </table>
+
+            
+        <br><br><br><br><br><br>
+            
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
+                <td></td>
+                <td style="text-align: center; border-top: 1px solid black;"><strong>Firma del Conyugue</strong></td>
+                <td></td>
+                <td style="text-align: center; border-top: 1px solid black;"><strong>Firma del Fiador Solidario</strong></td>
+                <td></td>
+                <td style="text-align: center; border-top: 1px solid black;"><strong>Firma del Conyugue del Fiador</strong></td>
+            </tr>>
+        </table>
+
+
 
 
 

@@ -207,12 +207,13 @@ class SolicitudRepository implements SolicitudInterface
         WHEN s.estado = 4 THEN 'Aprobado'
         WHEN s.estado = 5 THEN 'Rechazado'
         WHEN s.estado = 6 THEN 'Facturado'
-        WHEN s.estado = 7 THEN 'Despachado' END AS estado
+        WHEN s.estado = 7 THEN 'Despachado' END AS estado, conv.descripcionconvenio AS convenio
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
         LEFT JOIN ERP_Vendedores AS v ON(v.idvendedor=s.idvendedor)
         LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
+        LEFT JOIN ERP_Convenios AS conv ON(conv.idconvenio=s.idconvenio)
         WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
