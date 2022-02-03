@@ -3425,6 +3425,407 @@ function create_pdf_Querystock(response) {
    
 
 }
+function create_pdf_QuerystockCierre(response) {
+     var data=response.data;
+     var fechacA=response.fechacA;
+     var simboloMoneda=response.simboloMoneda;
+     var img=response.img;
+     var periodo=response.periodo;
+     var estado=response.estado;
+     var dataDolMovimienQuery=[];
+     var tituloDolFormQuery=[
+                         { 
+                            text:'Id',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text:'Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Categoría',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Uni',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Alm.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'Loc.',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Lote',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'Serie',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Disponible',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                        { 
+                            text: 'Remitido',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:'S.Total',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Tránsito',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:'Costo '+simboloMoneda[0].Simbolo,
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'Costo Total '+simboloMoneda[0].Simbolo,
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+   
+
+      dataDolMovimienQuery.push(tituloDolFormQuery) ;
+      var todol=0;
+       data.map(function(index) {
+            todol=Number(todol)+Number(index.Costo_Promedio_Unitario);
+            var tituloDolFormQueryData=[];
+             var cu=Number(index.Costo_Promedio_Unitario).toFixed(2);
+            var pu=Number(index.Costo_Total).toFixed(2);
+            cu = addCommas(cu);
+            pu = addCommas(pu);
+             tituloDolFormQueryData=[
+                        { 
+                            text:index.id,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Articulo,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Categoria,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Unidad,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:index.Almacen,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:index.Localizacion,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: index.Lote,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:index.Serie,
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:Number(index.Disponible),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Remitido),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text: Number(index.Total),
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                          { 
+                            text:Number(index.Transito),
+                            fontSize: 7 ,
+
+                        },
+                        { 
+                            text:cu,
+                            fontSize: 7 ,
+                            alignment: 'center' 
+
+                        },
+                         { 
+                            text:pu,
+                            fontSize: 7 ,
+
+                        },
+                    ];
+             dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
+       });
+     var todolt=Number(todol).toFixed(2); 
+     todolt = addCommas(todolt);  
+   for (var i = 0; i < 5; i++) {
+    var tituloDolFormQueryData=[];
+      if(i==4){
+        tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false],
+
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'Total costo inventario '+simboloMoneda[0].Simbolo,
+                            fontSize: 7 ,
+                            alignment: 'center',
+                            bold:true,
+
+                        },
+                         { 
+                            text:todolt,
+                            fontSize: 7 ,
+
+                        },
+                    ];
+      }else{
+            
+             tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false],
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center',
+                             border: [false, false, false, false], 
+
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                            border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text: '',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            alignment: 'center' ,
+                             border: [false, false, false, false],
+                        },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                    ];
+            
+      }
+       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
+    }
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            content: [ 
+                         {
+                            image: img,
+                            width:120,
+                            height:50,
+                            absolutePosition: { x: 50, y: 15 }
+                        },
+                        { text: 'REPORTE DE CIERRE DE INVENTARIO PERIODO: '+ periodo +'    ESTADO: '+estado.toUpperCase() ,style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
+                       
+                        {  
+                            style: 'tableExample',
+                            widths: [60, 60,60, 60,60, 60,40, 60,60, 60,60, 60,60, 60,60, 60,60, 60],
+                            table: {
+                                body: dataDolMovimienQuery,
+                            },
+                            margin: [10, 0, 0, 10],
+
+                        },
+
+                  
+            
+                    ]
+                };
+
+
+    var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+   
+
+}
 function create_pdf_Querymovimiento(response) {
      var filtro_art=response.filtro_art;  
      var filtro_idAlm=response.filtro_idAlm;  

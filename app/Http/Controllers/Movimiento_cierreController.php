@@ -18,6 +18,7 @@ use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\View_movimiento_cierre\View_movimiento_cierreInterface;
 use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreInterface;
 use App\Http\Recopro\Movimiento_Detalle_cierre\Movimiento_Detalle_cierreInterface;
+use App\Http\Recopro\Query_stock\Query_stockInterface;
 use App\Http\Requests\Movimiento_cierreRequest;
 use DB;
 class Movimiento_cierreController extends Controller
@@ -27,6 +28,35 @@ class Movimiento_cierreController extends Controller
     public function __construct() 
     {
 //        $this->middleware('json');
+    } 
+       public function pdf(Request $request, VW_CierreInventarioPeriodoInterface $repo, Query_stockInterface $repoStoc)
+    {       
+            date_default_timezone_set('America/Lima');
+            $fechacA= date("d/m/Y");
+            $s = "a";
+            $porciones="";
+            $perido_busquedad = $request->input('periodo');
+            $estado = $request->input('estado');
+            if(!empty($perido_busquedad)){
+                $porciones = explode("*", $perido_busquedad);
+                $porciones=$porciones[0];
+            }
+            $simboloMoneda = $repoStoc->getSimboloMoneda();
+              $img='logo.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            $data =$repo->search_periodo($porciones);
+            return response()->json([
+                'status' => true,
+                'data' => $data,
+                'fechacA'=>$fechacA,
+                'simboloMoneda'=>$simboloMoneda,
+                 'img'=>$image,
+                   'periodo'=>$porciones,
+                   'estado'=>$estado,
+            ]);
     }
     public function findMov($id, Movimiento_cierreInterface $repo)
     {
@@ -53,14 +83,14 @@ class Movimiento_cierreController extends Controller
         // $estado_busquedad = $request->input('estado_busquedad');
         // $idMovimientoBusquedad = $request->input('idMovimientoBusquedad');
         $perido_busquedad = $request->input('perido_busquedad');
-        $params = ['idDetalle', 'disponible','en_transito','remitido','total','reservado','periodo','Almacen','costo','Naturaleza','Articulo','Localizacion'];
+        $params =  ['id','Articulo','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
 
         if($perido_busquedad==''){
-           return parseList($repo->search($s,''), $request, 'idDetalle', $params);
+           return parseList($repo->search($s,''), $request, 'id', $params);
         }else{
             $perido_busquedad = $request->input('perido_busquedad');
             $porciones = explode("*", $perido_busquedad);
-            return parseList($repo->search($s,$porciones[0]), $request, 'idDetalle', $params);
+            return parseList($repo->search($s,$porciones[0]), $request, 'id', $params);
         }
        
     }

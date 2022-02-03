@@ -15,13 +15,13 @@ class VW_CierreInventarioPeriodo extends Model
 
     public $timestamps = true;
 
-    protected $primaryKey = 'idDetalle';
+    protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['idDetalle', 'disponible','en_transito','remitido','total','reservado','periodo','Almacen','costo','Naturaleza','Articulo','Localizacion'];
+    protected $fillable = ['id','Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
     
      
 
