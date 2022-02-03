@@ -28,4 +28,6 @@ Route::put('movimiento_cierres/saveMovimientArticuloPreCierre/{id}', ['as' => 'm
 
 Route::get('movimiento_cierres/findMov/{id}', ['as' => 'movimiento_cierres.findMov', 'uses' => 'Movimiento_cierreController@findMov']);
 
-Route::get('movimiento_cierres/reversarCierre/{id}', ['as' => 'movimiento_cierres.reversarCierre', 'uses' => 'Movimiento_cierreController@reversarCierre']);
+Route::get('movimiento_cierres/reversarCierre/{id}', ['as' => 'movimiento_cierres.reversarCierre', 'uses' => 'Movimiento_cierreController@reversarCierre']);  
+
+Route::get('movimiento_cierres/pdf', ['as' => 'movimiento_cierres.pdf', 'uses' => 'Movimiento_cierreController@pdf']);

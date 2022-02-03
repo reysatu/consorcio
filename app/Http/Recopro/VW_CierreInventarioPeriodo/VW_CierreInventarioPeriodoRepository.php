@@ -23,20 +23,28 @@ class VW_CierreInventarioPeriodoRepository implements VW_CierreInventarioPeriodo
     {
         return $this->model->get();
     }
+    public function search_periodo($perido_busquedad)
+    {
+         return $this->model->where('Periodo',$perido_busquedad)->get();
+
+    }
+    
      public function search($s,$perido_busquedad)
     {
         return $this->model->where(function($q) use ($s,$perido_busquedad){
-            $q->where('idDetalle', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('disponible', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('en_transito', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('remitido', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('total', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('reservado', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('Almacen', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('costo', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('Naturaleza', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('Articulo', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
-            $q->orWhere('Localizacion', 'LIKE', '%'.$s.'%')->where('periodo',$perido_busquedad);
+            $q->where('id', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Articulo', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Unidad', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Almacen', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Localizacion', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Lote', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Serie', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Disponible', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Transito', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Remitido', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Total', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('CostoCierre', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
+            $q->orWhere('Periodo', 'LIKE', '%'.$s.'%')->where('Periodo',$perido_busquedad);
         });
 
     }

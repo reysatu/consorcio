@@ -111,6 +111,9 @@
                     rutaData.val(data_p.RutaData);
                     rutaData.val(data_p.RutaData);
                     rutaLog.val(data_p.RutaLog);
+                    lema1.val(data_p.lema1);
+                    lema2.val(data_p.lema2);
+                    direcciones_oficinas.val(data_p.direcciones_oficinas);
                     var chk_state = (data_p.Estado == '1');
                     
                     estado.prop('checked', chk_state).iCheck('update');

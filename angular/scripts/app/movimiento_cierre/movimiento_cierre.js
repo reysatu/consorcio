@@ -24,6 +24,7 @@
         var table_movi_cierre=$("#table_movi_cierre");
         var btnCierreInventario=$("#btnCierreInventario");
         var idMovimiento=$("#idMovimiento");
+        var btnImprimir=$("#btnImprimir");
         periodo.select2();
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
@@ -31,6 +32,20 @@
         };
          modalMovimietoCierre.on('hidden.bs.modal', function (e) {
             cleanMoCi();
+        });
+         $("#btnImprimir").click(function(e){
+            if(periodo.val()!=''){
+                if(estado.val()!=''){
+                 var data_pdf = {
+                            periodo: periodo.val(),
+                            estado:$("#estado option:selected").text(),
+                }
+                 $scope.loadQueryStockPDFCierre('movimiento_cierres/pdf', data_pdf);
+             };
+                       //             $scope.openDoc('projects/excel', data_pdf);
+            }
+           
+            // $scope.openDoc('query_movements/pdf',data_pdf);
         });  
          function cleanMoCi(){
             periodo.val("").trigger("change");
@@ -395,7 +410,7 @@
                 }]
             },
             fields: {
-                idDetalle: {
+                id: {
                     title: '#',
                     key: true,
                     create: false,
@@ -411,20 +426,29 @@
                  Articulo: {
                     title: 'Articulo',
                 },
-                 costo: {
+                Unidad: {
+                      title: 'Unidad',
+                },
+                 Lote: {
+                      title: 'Lote',
+                },
+                 Serie: {
+                      title: 'Serie',
+                },
+                Disponible: {
+                      title: 'Disponible',
+                },
+                 Transito: {
+                      title: 'En transito',
+                },
+                 Remitido: {
+                      title: 'Remitido',
+                },
+                CostoCierre: {
                       title: 'Costo',
                 },
-                disponible: {
-                      title: 'disponible',
-                },
-                 en_transito: {
-                      title: 'en_transito',
-                },
-                 remitido: {
-                      title: 'remitido',
-                },
-                total: {
-                      title: 'total',
+                Total: {
+                      title: 'Total',
                 },
                
             },
