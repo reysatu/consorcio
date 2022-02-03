@@ -15,7 +15,7 @@
     {
         var  modalMovimietoCierre=$("#modalMovimietoCierre");
         var  titlemodalMovimietoCierre=$("#titlemodalMovimietoCierre");
-
+ 
 
         var periodo=$("#periodo");
         var estado=$("#estado");
@@ -446,12 +446,14 @@
                 },
                  Total: {
                       title: 'Total',
+                         width: '10%',
                 },
                 CostoCierre: {
                       title: 'Costo',
                 },
                 TotalCosto: {
-                    title: 'Total Costo',
+                    title: 'Costo Total',
+                     width: '10%',
                     display: function (data) {
                         var total=Number(data.record.Total)*Number(data.record.CostoCierre);
                         return total.toFixed(2);

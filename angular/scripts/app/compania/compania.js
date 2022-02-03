@@ -94,7 +94,8 @@
             RESTService.get('companias/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                    fechaUltBackup.val(data_p.FechaUltBackup);
+                    var fec=moment(data_p.FechaUltBackup).format('YYYY-MM-DD');
+                    fechaUltBackup.val(fec);
                     idCompania.val(data_p.IdCompania);
                     ruc.val(data_p.Ruc);
                     nombreComercial.val(data_p.NombreComercial);
