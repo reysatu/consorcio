@@ -22,3 +22,6 @@ GO
 
 ALTER TABLE [dbo].[ERP_Venta] ADD [idtienda] int NULL;
 ALTER TABLE [dbo].[ERP_Venta] ADD [idcaja] int NULL;
+
+
+EXEC sp_rename '[dbo].[ERP_SolicitudCredito].[centra_trabajo]', 'centro_trabajo', 'COLUMN';

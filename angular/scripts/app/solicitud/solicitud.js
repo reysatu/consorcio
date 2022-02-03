@@ -3061,6 +3061,7 @@
                     $("#documento_or").val(data.solicitud[0].documento);
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
+                    $("#IdMoneda").trigger("change");
                     if (data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);

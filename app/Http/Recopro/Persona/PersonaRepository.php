@@ -33,7 +33,7 @@ class PersonaRepository implements PersonaInterface
     }
      public function find($id)
     {
-        $mostra=DB::select("SELECT * FROM ERP_Persona as ti left join ERP_Ubigeo as ub on ti.cUbigeo=ub.cCodUbigeo where ti.idPersona=$id");
+        $mostra=DB::select("SELECT ti.*, ub.*, DATEDIFF(yy,ti.dFechanacimiento, GETDATE()) AS edad FROM ERP_Persona as ti left join ERP_Ubigeo as ub on ti.cUbigeo=ub.cCodUbigeo where ti.idPersona=$id");
         return $mostra;
     }
      public function findByCode($code)

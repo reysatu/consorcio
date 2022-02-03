@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalle;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
+use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Solicitud\SolicitudTrait;
@@ -328,7 +329,7 @@ class SolicitudController extends Controller
         return response()->json($response);
     }
 
-    public function imprimir_solicitud($id, SolicitudInterface $Repo, CajaDiariaDetalleInterface $repo_caja, CustomerInterface $cliente_repositorio) {
+    public function imprimir_solicitud($id, SolicitudInterface $Repo, CajaDiariaDetalleInterface $repo_caja, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
 
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
@@ -346,6 +347,15 @@ class SolicitudController extends Controller
 
         $datos["solicitud"] = $solicitud; 
         $datos["solicitud_articulo"] = $solicitud_articulo; 
+
+        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+
+        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+        $datos["fiador"] = $persona_repositorio->find($idfiador);
+
+        $idfiadorconyugue = (!empty($solicitud_credito[0]->idfiadorconyugue)) ? $solicitud_credito[0]->idfiadorconyugue : "0";
+        $datos["fiadorconyugue"] = $persona_repositorio->find($idfiadorconyugue);
 
         $nombre_pdf = "";
         $titulo = "";

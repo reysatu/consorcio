@@ -1991,7 +1991,7 @@
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
                     $("#moneda").trigger("change");
-
+                 
                     if (data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
