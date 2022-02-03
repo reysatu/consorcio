@@ -342,7 +342,7 @@ class SolicitudController extends Controller
         $solicitud_articulo = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
         $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
         $datos["empresa"] = $repo_caja->get_empresa(); 
-        // $datos["solicitud_credito"] = $solicitud_credito; 
+        $datos["solicitud_credito"] = $solicitud_credito; 
 
         $datos["solicitud"] = $solicitud; 
         $datos["solicitud_articulo"] = $solicitud_articulo; 
@@ -366,7 +366,13 @@ class SolicitudController extends Controller
         // echo "<pre>";
         // print_r($datos);
         // exit;
-        $pdf = PDF::loadView("solicitud.contado_financiado", $datos);
+
+        if($solicitud[0]->tipo_solicitud != 2) {
+
+            $pdf = PDF::loadView("solicitud.contado_financiado", $datos);
+        } else {
+            $pdf = PDF::loadView("solicitud.credito_directo", $datos);
+        }
 
         
 

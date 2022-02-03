@@ -2972,15 +2972,9 @@
             var nConsecutivo = $("#nConsecutivo").val();
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
-            if($("#tipo_solicitud").val() == "1" || $("#tipo_solicitud").val() == "3") {
-                window.open("solicitud/imprimir_solicitud/"+id);
-            } else {
-                alert("no hay formato para la solicitud");
-            }
+   
+            window.open("solicitud/imprimir_solicitud/"+id);
 
-            
-
-           
         }
 
         $scope.enviar_solicitud = function () {

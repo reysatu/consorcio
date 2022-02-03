@@ -308,7 +308,7 @@ where IdTipoDocumento in ('01','03')");
     }
     public function cambio_tipo($moneda,$fecha)
     { 
-          echo "SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'";
+      //     echo "SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'";
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC CO_Obtiene_TC_CV_Msj '0','$moneda','$fecha','V'");
          return $destroy;
