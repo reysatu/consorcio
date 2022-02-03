@@ -822,7 +822,7 @@ class MovimientoCajaController extends Controller
         
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
         // $datos["cajero"] = $repo->get_cajero(); 
-        // $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
         $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
         $datos["solicitud_credito"] = $solicitud_credito; 

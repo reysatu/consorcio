@@ -8,6 +8,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalle;
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
+use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
@@ -15,6 +18,7 @@ use App\Http\Recopro\Solicitud\SolicitudTrait;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\SolicitudRequest;
 use App\Models\BaseModel;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -322,6 +326,58 @@ class SolicitudController extends Controller
 
         $response = $Repo->mostrar_aprobaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
         return response()->json($response);
+    }
+
+    public function imprimir_solicitud($id, SolicitudInterface $Repo, CajaDiariaDetalleInterface $repo_caja, CustomerInterface $cliente_repositorio) {
+
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+
+        $datos = array();
+
+        $solicitud = $Repo->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+        
+        $solicitud_articulo = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+        $datos["empresa"] = $repo_caja->get_empresa(); 
+        $datos["solicitud_credito"] = $solicitud_credito; 
+
+        $datos["solicitud"] = $solicitud; 
+        $datos["solicitud_articulo"] = $solicitud_articulo; 
+
+        $nombre_pdf = "";
+        $titulo = "";
+        if($solicitud[0]->tipo_solicitud == 1) {
+            $nombre_pdf = "contado.pdf";
+            $titulo = "Contado";
+
+        } elseif($solicitud[0]->tipo_solicitud == 2) {
+            $nombre_pdf = "credito_directo.pdf";
+            $titulo = "Crédito Directo";
+        } elseif($solicitud[0]->tipo_solicitud == 3) {
+            $nombre_pdf = "credito_financiero.pdf";
+
+            $titulo = "Crédito Financiero";
+        }
+
+        $datos["titulo"] = $titulo;
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+
+        if($solicitud[0]->tipo_solicitud != 2) {
+
+            $pdf = PDF::loadView("solicitud.contado_financiado", $datos);
+        } else {
+            $pdf = PDF::loadView("solicitud.credito_directo", $datos);
+        }
+
+        
+
+        return $pdf->stream($nombre_pdf); // ver
+        // return $pdf->stream("credito_directo.pdf"); // ver
     }
  
 }

@@ -2966,6 +2966,17 @@
             }
         }
 
+        $scope.imprimir_solicitud = function () {
+           
+            var cCodConsecutivo = $("#cCodConsecutivo").val();
+            var nConsecutivo = $("#nConsecutivo").val();
+
+            var id = cCodConsecutivo + "|" + nConsecutivo;
+   
+            window.open("solicitud/imprimir_solicitud/"+id);
+
+        }
+
         $scope.enviar_solicitud = function () {
             var bval = true;
             bval = bval && cCodConsecutivo.required();

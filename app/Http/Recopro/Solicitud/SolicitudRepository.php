@@ -200,7 +200,14 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user,
+        CASE WHEN s.estado = 1 THEN 'Registrado'
+        WHEN s.estado = 2 THEN 'Vigente'
+        WHEN s.estado = 3 THEN 'Por Aprobar'
+        WHEN s.estado = 4 THEN 'Aprobado'
+        WHEN s.estado = 5 THEN 'Rechazado'
+        WHEN s.estado = 6 THEN 'Facturado'
+        WHEN s.estado = 7 THEN 'Despachado' END AS estado
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
@@ -219,7 +226,7 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN a.description IS NULL THEN '-.-' ELSE a.description END AS almacen, 
         CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, 
         CASE WHEN l.descripcion IS NULL THEN '-.-' ELSE l.descripcion END AS localizacion, 
-        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie
+        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
