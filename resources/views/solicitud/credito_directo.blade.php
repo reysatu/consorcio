@@ -309,7 +309,7 @@
                 <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br>{{ $cliente[0]->razonsocial_cliente }}</td>
                 <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br></td>
                 <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cNombrePersona : ""; ?></td>
-                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->dFechaNacimiento : ""; ?></td>
+                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->dFechanacimiento : ""; ?></td>
             </tr>
             <tr>
                 <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNumerodocumento : ""; ?></td>

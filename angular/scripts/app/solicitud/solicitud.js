@@ -182,6 +182,7 @@
             }
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
+            $("#imprimir-solicitud").hide();
             habilitar_inputs();
             $("#enviar_solicitud").hide();
             $("#aprobaciones").hide();
@@ -2917,6 +2918,7 @@
                             });
                             // alert("show");
                             $("#enviar_solicitud").show();
+                            $("#imprimir-solicitud").show();
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -3090,6 +3092,7 @@
                         deshabilitar_inputs();
                     }
                     $("#aprobaciones").show();
+                    $("#imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
@@ -3104,6 +3107,7 @@
             $("#btn_editar_conyugue").show();
             $("#btn_editar_fiador").show();
             $("#btn_editar_fiadorconyugue").show();
+           
             
             $("#cCodConsecutivo").removeAttr("disabled");
             $("#IdMoneda").removeAttr("disabled");
@@ -3116,6 +3120,7 @@
             $("#fecha_vencimiento").removeAttr("readonly");
             $("#documento_or").removeAttr("readonly");
             $("#comentarios").removeAttr("readonly");
+
            
         }
 
@@ -3132,6 +3137,7 @@
             $("#enviar_solicitud").hide();
             $("#btn_editar_conyugue").hide();
             $("#btn_editar_fiador").hide();
+       
             $("#btn_editar_fiadorconyugue").hide();
             $(".m_articulo_idAlm").removeAttr("disabled");
             $(".m_articulo_idLoc").removeAttr("disabled");

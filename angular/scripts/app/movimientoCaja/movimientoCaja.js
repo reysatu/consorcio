@@ -2042,7 +2042,7 @@
         }
 
 
-        var search_comprobantes = getFormSearch('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonSolicitud');
+        var search_comprobantes = getFormSearch('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
 
         var table_container_comprobantes = $("#table_container_comprobantes");
 
@@ -2175,7 +2175,7 @@
             }
         });
 
-        generateSearchForm('frm-search-comprobantes', 'LoadRecordsButtonSolicitud', function () {
+        generateSearchForm('frm-search-comprobantes', 'LoadRecordsButtonComprobantes', function () {
             table_container_comprobantes.jtable('load', {
                 search: $('#search_b_comprobantes').val()
             });
