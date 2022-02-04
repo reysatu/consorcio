@@ -182,7 +182,7 @@ class SolicitudRepository implements SolicitudInterface
 		@sMensaje varchar(250)
         SELECT	@sMensaje = N''''''
 
-        EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
+        SET NOCOUNT ON; EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
                 @cCodConsecutivo = N'{$data["cCodConsecutivo"]}',
                 @nConsecutivo = {$data["nConsecutivo"]},
                 @Usuario = " . auth()->id() . ",

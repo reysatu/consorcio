@@ -363,7 +363,7 @@ class MovimientoCajaController extends Controller
                     $data_envio_sol["nConsecutivo"] = $data_venta["nConsecutivo_solicitud"];
                     
                     $res = $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
-                    if(isset($res[0]->msg)) {
+                    if(isset($res[0]->msg) && $res[0]->msg != "OK") {
                         throw new Exception($res[0]->msg);
                     }
                 

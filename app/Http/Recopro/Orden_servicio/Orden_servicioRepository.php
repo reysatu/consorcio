@@ -321,7 +321,7 @@ where IdTipoDocumento in ('01','03')");
 		@nTCCompra money,
 		@nTCVenta money
 
-            EXEC	@return_value = [dbo].[CO_Obtiene_TC]
+            SET NOCOUNT ON; EXEC	@return_value = [dbo].[CO_Obtiene_TC]
                         @nSunat = 0,
                         @nMoneda = {$moneda},
                         @dFecha = N'{$fecha}',
