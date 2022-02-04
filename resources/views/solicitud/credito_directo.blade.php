@@ -327,7 +327,7 @@
 
             <tr>
                 <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
-                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cNombrePersona : ""; ?></td>
                 
             </tr>
 
