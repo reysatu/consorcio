@@ -362,7 +362,8 @@ class MovimientoCajaController extends Controller
                     $data_envio_sol["cCodConsecutivo"] = $data_venta["cCodConsecutivo_solicitud"];
                     $data_envio_sol["nConsecutivo"] = $data_venta["nConsecutivo_solicitud"];
                     
-                    $solicitud_repositorio->($data_envio_sol);
+                    $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
+                
                 } else {
 
                     //SEGUNDA VENTA DEL CREDITO POR EL SALDO
