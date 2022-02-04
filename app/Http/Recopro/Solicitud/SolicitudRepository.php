@@ -193,8 +193,8 @@ class SolicitudRepository implements SolicitudInterface
         // echo $sql; exit;
         $res = DB::select($sql);
 
-
-        return $res[0]->msg;
+        // print_r($res);
+        return $res;
     }
 
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
