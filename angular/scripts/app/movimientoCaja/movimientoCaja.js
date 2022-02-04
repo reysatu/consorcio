@@ -2031,8 +2031,6 @@
                         }
                         $("#articulo_mov_det").html(html);
                     }
-
-
                     // $("#enviar_solicitud").show();
                     // $("#aprobaciones").show();
                     $("#modalSolicitud").modal("show");

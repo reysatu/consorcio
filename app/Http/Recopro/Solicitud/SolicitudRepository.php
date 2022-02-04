@@ -188,7 +188,7 @@ class SolicitudRepository implements SolicitudInterface
                 @Usuario = " . auth()->id() . ",
                 @sMensaje = @sMensaje OUTPUT
 
-        SELECT	@sMensaje as 'msg'";
+        SELECT	@return_value AS 'return_value', @sMensaje as 'msg'";
 
         // echo $sql; exit;
         $res = DB::select($sql);

@@ -328,8 +328,7 @@ where IdTipoDocumento in ('01','03')");
                         @nTCCompra = @nTCCompra OUTPUT,
                         @nTCVenta = @nTCVenta OUTPUT
 
-            SELECT	@nTCCompra AS tipo_cambio_compra,
-                        @nTCVenta AS tipo_cambio_venta";
+            SELECT @return_value AS 'return_value', @nTCCompra AS tipo_cambio_compra, @nTCVenta AS tipo_cambio_venta";
 
             $destroy=DB::select($sql);
             return $destroy;
