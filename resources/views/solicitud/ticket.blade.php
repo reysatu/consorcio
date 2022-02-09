@@ -112,9 +112,9 @@
     <div class="row">
            
         <div class="col" style="width: 100%; line-height: 20px; margin-top: 5px;">
-            <label for="">SOL. VENTA REF:</label><br>
+            <label for="">SOL. VENTA REF: {{ $solicitud[0]->cCodConsecutivo }}-{{ $solicitud[0]->nConsecutivo }}</label><br>
             <label for="">CLIENTE: {{ $cliente[0]->razonsocial_cliente }} </label><br>
-            <label for="">RECIBO N°: {{ $solicitud[0]->cCodConsecutivo }}-{{ $solicitud[0]->nConsecutivo }}</label><br>
+            <label for="">RECIBO N°: {{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</label><br>
             <label for="">CORRELATIVO N°: {{ $solicitud[0]->nConsecutivo }}</label><br>
             <label for="">FECHA: <?php echo date("d-m-Y H:i"); ?></label><br>
             <label for="">MONEDA: {{ $venta[0]->moneda }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T/C: </label><br>

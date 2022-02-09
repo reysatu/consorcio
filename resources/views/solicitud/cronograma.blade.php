@@ -209,7 +209,7 @@
                         </tr>
                         <tr>
                             <td style="width: 20%;">N° DOC:</td>
-                            <td style="width: 80%;"></td>
+                            <td style="width: 80%;"><?php echo (isset($venta[0])) ? $venta[0]->serie_comprobante : ""; ?>-<?php echo (isset($venta[0])) ? $venta[0]->numero_comprobante : ""; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">N° Cuotas:</td>

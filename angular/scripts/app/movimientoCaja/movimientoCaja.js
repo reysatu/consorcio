@@ -1442,14 +1442,20 @@
         $scope.emitir_comprobante = function () {
             // $("#idconyugue").focus();
             // alert($("#desTotal").val());
-
             var total = parseFloat($("#desTotal").val());
             var cuota_inicial = parseFloat($("#cuota_inicial").val());
             var saldo = parseFloat($("#saldo").val());
             var pagado = parseFloat($("#pagado").val());
             var facturado = parseFloat($("#facturado").val());
             var total_financiado = parseFloat($("#total_financiado").val());
+            var t_monto_subtotal = parseFloat($("#t_monto_subtotal").val());
+            var valor_igv = parseFloat($("#valor_igv").val());
+            var t_impuestos = parseFloat($("#t_impuestos").val());
            
+            if(isNaN(valor_igv)) {
+                valor_igv = 0;
+            }
+
             if(isNaN(pagado)) {
                 pagado = 0;
             }
@@ -1459,13 +1465,19 @@
 
             if(cuota_inicial > 0) {
                 if(pagado == 0) {
-                    total = cuota_inicial;
+                    if(t_impuestos > 0) {
+                        total = cuota_inicial + (cuota_inicial * valor_igv) / 100;
+                    } else {
+                        total = cuota_inicial;
+                    }
                 } else {
-                    total = total_financiado;
-
+                    total = t_monto_subtotal - cuota_inicial;
+                    if(t_impuestos > 0) {
+                        total = total + (total * valor_igv) / 100;
+                    }
+                
                 }
             }
-
             $("#total_pagar").val(total.toFixed(2));
             $("#monto").val(total.toFixed(2));
             $("#id_tipoDoc_Venta_or").trigger("change");
@@ -1491,6 +1503,8 @@
             $("#monto_p").val(total.toFixed(2));
             $("#forma_pago").val("EFE");
             $("#moneda").val($("#IdMoneda").val());
+            $(".clean-monto").val(0);
+            $("#monto_aplicar").val(total.toFixed(2));
             $("#modal-formas-pago").modal("show");
         }
 
@@ -1529,7 +1543,8 @@
         });
 
         function sumar_montos_formas_pago() {
-            var montos_pago = $("input[name='monto_pago[]']");
+            // var montos_pago = $("input[name='monto_pago[]']");
+            var montos_pago = $("input[name='monto_aplicado_documento[]']");
             var subtotal_montos_pago = 0;
 
             for (var i = 0; i < montos_pago.length; i++) {
@@ -1541,6 +1556,7 @@
 
         $scope.guardar_forma_pago = function () {
             var bval = true;
+            var vuelto_real = parseFloat($("#vuelto_real").val());
             bval = bval && $("#forma_pago").required();
             if($("#forma_pago").val() == "TCR" || $("#forma_pago").val() == "TDE") {
                 bval = bval && $("#noperacion").required();
@@ -1553,6 +1569,18 @@
             
             bval = bval && $("#moneda").required();
             bval = bval && $("#monto_p").required();
+            
+            if(vuelto_real < 0) {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'El monto a pagar no cubre el monto a aplicar!',
+                    type: 'info'
+                });
+
+                return false;
+            }
+
+          
 
             if(!bval) {
                 return false;
@@ -1611,7 +1639,7 @@
             bval = bval && $("#serie_comprobante").required();
             bval = bval && $("#numero_comprobante").required();
             bval = bval && $("#correo_electronico").required();
-
+            // alert($("#detalle-formas-pago").html());
             if($("#detalle-formas-pago").html() == "") {
                 AlertFactory.textType({
                     title: '',
@@ -1652,10 +1680,12 @@
                                 window.open("movimientoCajas/imprimir_cronograma/"+id);
                             }
 
-                            // PARA TODOS
-                            // alert("imprimir_comprobante");   
-                            window.open("movimientoCajas/imprimir_ticket/"+id);
                             window.open("movimientoCajas/imprimir_comprobante/"+id);
+                            
+                            
+                            id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud+ "|" + data.datos[0].idventa_ticket;
+                            window.open("movimientoCajas/imprimir_ticket/"+id);
+                           
                          
                         } else {
                             AlertFactory.textType({
@@ -1930,6 +1960,23 @@
             $("#moneda").trigger("change");
         })
 
+        $(document).on("keyup", "#monto_aplicar", function () {
+            var monto_aplicar = parseFloat($(this).val());
+            var monto = parseFloat($("#monto").val()); // monto total que se debe pagar
+            if(monto_aplicar > monto) {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'El monto aplicar no debe ser mayor al monto total a pagar',
+                    type: 'info'
+                });
+                $("#guardar_forma_pago").attr("disabled", "disabled");
+                return false;
+            } else {
+                $("#guardar_forma_pago").removeAttr("disabled");
+            }
+            $("#moneda").trigger("change");
+        })
+
         $(document).on("change", "#moneda", function () {
             var idmoneda = $(this).val();
             if (idmoneda != "") {
@@ -1941,29 +1988,41 @@
                 $.post("movimientoCajas/obtener_tipo_cambio_venta", { idmoneda: idmoneda },
                     function (data, textStatus, jqXHR) {
                         if(data.length > 0) {
-                            var tipo_cambio = 0;
+                            var tipo_cambio = 1;
                             if(data[0].tipo_cambio_venta != null) {
                                 tipo_cambio = data[0].tipo_cambio_venta;
 
                             }
-                            $("#tipo_cambio").val(tipo_cambio);
+                            if(tipo_cambio == 1) {
+                                $("#tipo_cambio").val(0);
+                            } else {
+
+                                $("#tipo_cambio").val(tipo_cambio);
+                            }
 
                             var monto_p = parseFloat($("#monto_p").val()); // monto pagar  x forma de pago
-                            var monto = parseFloat($("#monto").val()); // monto total que se debe pagar
+                            var monto = parseFloat($("#monto_aplicar").val()); // monto aplicar que se debe pagar
                             var monto_convertido = 0;
                             var vuelto = 0;
 
-                            if(tipo_cambio > 0) {
-                                monto_convertido = monto_p * tipo_cambio;
-                                vuelto = monto_convertido - monto;
-                                $("#monto_local").val(monto_convertido.toFixed(2));
-                                $("#monto_aplicar").val(monto.toFixed(2));
-                                $("#monto_vuelto").val(vuelto.toFixed(2));
-                            } else {
-                                $("#monto_local").val(monto.toFixed(2));
-                                $("#monto_aplicar").val(monto.toFixed(2));
-                                $("#monto_vuelto").val(0);
+                            monto_convertido = monto_p * tipo_cambio;
+                            vuelto = monto_convertido - monto;
+                            $("#vuelto_real").val(vuelto.toFixed(2));
+                            if(vuelto < 0) {
+                                vuelto = 0;
                             }
+                            $("#monto_local").val(monto_convertido.toFixed(2));
+                            // $("#monto_aplicar").val(monto.toFixed(2));
+                            $("#monto_vuelto").val(vuelto.toFixed(2));
+
+
+                            // if(tipo_cambio > 0) {
+                               
+                            // } else {
+                            //     $("#monto_local").val(monto.toFixed(2));
+                            //     $("#monto_aplicar").val(monto.toFixed(2));
+                            //     $("#monto_vuelto").val(0);
+                            // }
                         }
                     },
                     "json"
@@ -2094,11 +2153,25 @@
                     list: false,
 
                 },
+                IdTipoDocumento: {
+                    title: 'IdTipoDocumento',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                anticipo: {
+                    title: 'anticipo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
                 serie_comprobante: {
                     title: 'Serie',
 
                 },
-                numero_comprobaante: {
+                numero_comprobante: {
                     title: 'Número',
                     
 
@@ -2148,7 +2221,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="imprimir-comprobante" data-estado="'+data.record.estado+'"  data-tipo_solicitud="'+data.record.tipo_solicitud+'"  data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" title="Imprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="imprimir-comprobante" data-estado="'+data.record.estado+'"  data-tipo_solicitud="'+data.record.tipo_solicitud+'" data-idtipodocumento="'+data.record.IdTipoDocumento+'"  data-anticipo="'+data.record.anticipo+'" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" title="Imprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
                     }
 
                 }
@@ -2158,14 +2231,19 @@
                 $('.imprimir-comprobante').click(function (e) {
                     var id = $(this).attr('data-id');
                     var tipo_solicitud = $(this).attr('data-tipo_solicitud');
+                    var idtipodocumento = $(this).attr('data-idtipodocumento');
                     var estado = $(this).attr('data-estado');
+                   
+                    if(idtipodocumento == "12") {
 
-                    if(tipo_solicitud != "1" && estado == "6") {
-                        window.open("movimientoCajas/imprimir_cronograma/"+id);
+                        window.open("movimientoCajas/imprimir_ticket/"+id);
+                    } else {
+                        window.open("movimientoCajas/imprimir_comprobante/"+id);
+                        if(tipo_solicitud != "1" && estado == "6") {
+                            window.open("movimientoCajas/imprimir_cronograma/"+id);
+                        }
+    
                     }
-
-                    window.open("movimientoCajas/imprimir_ticket/"+id);
-                    window.open("movimientoCajas/imprimir_comprobante/"+id);
                    
                     e.preventDefault();
                 });
