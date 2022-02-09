@@ -1321,6 +1321,13 @@
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.newPrecio != "") {
                             precio = response.newPrecio;
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Ingrese el precio del producto.',
+                                type: 'info'
+                            });
+                            return false;
                         }
 
                         var impuesto_articulo = $("#impuesto_articulo").val();
