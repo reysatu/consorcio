@@ -289,7 +289,10 @@ class SolicitudController extends Controller
         } else {
             $data_update["estado"] = "3"; // por aprobar
            
-            $res["msg"] = $Repo->envio_aprobar_solicitud($data_update);
+            $result = $Repo->envio_aprobar_solicitud($data_update);
+            if(isset($result[0]->msg) && $result[0]->msg != "OK") {
+                $res["msg"] = $result[0]->msg;
+            }
         }
 
         if(!empty($res["msg"])) {

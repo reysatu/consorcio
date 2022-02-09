@@ -27,7 +27,7 @@ class VentaRepository implements VentaInterface
                 ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
                 ->where('fecha_emision', 'LIKE', '%' . $s . '%')
                 ->where('numero_documento', 'LIKE', '%' . $s . '%');
-        });
+        })->orderBy('fecha_emision', 'DESC');
     }
 
  

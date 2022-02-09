@@ -321,15 +321,14 @@ where IdTipoDocumento in ('01','03')");
 		@nTCCompra money,
 		@nTCVenta money
 
-            EXEC	@return_value = [dbo].[CO_Obtiene_TC]
+            SET NOCOUNT ON; EXEC	@return_value = [dbo].[CO_Obtiene_TC]
                         @nSunat = 0,
                         @nMoneda = {$moneda},
                         @dFecha = N'{$fecha}',
                         @nTCCompra = @nTCCompra OUTPUT,
                         @nTCVenta = @nTCVenta OUTPUT
 
-            SELECT	@nTCCompra AS tipo_cambio_compra,
-                        @nTCVenta AS tipo_cambio_venta";
+            SELECT @return_value AS 'return_value', @nTCCompra AS tipo_cambio_compra, @nTCVenta AS tipo_cambio_venta";
 
             $destroy=DB::select($sql);
             return $destroy;

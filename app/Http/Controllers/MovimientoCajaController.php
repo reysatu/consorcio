@@ -277,12 +277,23 @@ class MovimientoCajaController extends Controller
 
         // print_r($data); exit;
         $result = array();
-       
-  
-       
+    
         try {
             DB::beginTransaction();
-       
+            $igv = 0;
+            $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
+
+            if(count($parametro_igv) <= 0) {
+                throw new Exception("Por favor cree el parametro IGV!");
+            }
+
+            $parametro_anticipo = $repo->get_parametro_anticipo();
+
+            if(count($parametro_anticipo) <= 0) {
+                throw new Exception("Por favor cree el parametro con el id del producto de anticipo!");
+            }
+
+
             $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
             if(count($ticket) <= 0) {
                 throw new Exception("Cree una serie y consecutivo de ticket");
@@ -345,14 +356,45 @@ class MovimientoCajaController extends Controller
             if(count($solicitud_credito) > 0) {
 
                 if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
-                    $data_venta["tipo_comprobante"] = "1";
+
+                    // OBTENER PRODUCTO ANTICIPO
+
+                    $data_venta["tipo_comprobante"] = "1"; // 1 anticipo, 0 normal
                     $data_venta["saldo"] = "0";
                     $data_venta["pagado"] = $solicitud_credito[0]->cuota_inicial;
+
+                     //CAMBIAMOS DATOS DE LA VENTA PARA ANTICIPO
+                    $data_venta["descuento_id"] = "";
+                    $data_venta["t_porcentaje_descuento"] = "";
+                    $data_venta["t_monto_descuento"] = "";
+                    $data_venta["t_monto_subtotal"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["t_monto_exonerado"] = "";
+                    $data_venta["t_monto_afecto"] = "";
+                    $data_venta["t_monto_inafecto"] = "";
+                    $data_venta["t_impuestos"] = "";
+                    $data_venta["t_monto_total"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["monto_descuento_detalle"] = "";
+
+                    
+
+                    $data_venta["saldo"] = "0";
+                    if($solicitud[0]->t_impuestos > 0) {
+                        // print_r($parametro_igv);
+                        $igv = $parametro_igv[0]->value;
+                        $data_venta["t_impuestos"] = $solicitud_credito[0]->cuota_inicial * $igv / 100;
+                        $data_venta["t_monto_afecto"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta["t_monto_total"] = $data_venta["t_impuestos"] + $data_venta["t_monto_afecto"];
+                    } else {
+                        $data_venta["t_monto_exonerado"] = $solicitud_credito[0]->cuota_inicial;
+                    }
+
+                    
+                    $data_venta["pagado"] = $data_venta["t_monto_total"];
 
                     $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
                     $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
                     $update_solicitud["estado"] = "3"; // ESTADO POR APROBAR DE LA SOLICITUD
-                    $update_solicitud["saldo"] = $solicitud_credito[0]->total_financiado;
+                    $update_solicitud["saldo"] = $solicitud[0]->t_monto_total - $data_venta["t_monto_total"];
                     $update_solicitud["pagado"] = $solicitud_credito[0]->cuota_inicial;
                     $update_solicitud["facturado"] = $solicitud_credito[0]->cuota_inicial;
                     // print_r($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
@@ -362,16 +404,44 @@ class MovimientoCajaController extends Controller
                     $data_envio_sol["cCodConsecutivo"] = $data_venta["cCodConsecutivo_solicitud"];
                     $data_envio_sol["nConsecutivo"] = $data_venta["nConsecutivo_solicitud"];
                     
-                    $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
+                    $res = $solicitud_repositorio->envio_aprobar_solicitud($data_envio_sol);
+                    if(isset($res[0]->msg) && $res[0]->msg != "OK") {
+                        throw new Exception($res[0]->msg);
+                    }
+                
                 } else {
 
                     //SEGUNDA VENTA DEL CREDITO POR EL SALDO
                     $data_venta["tipo_comprobante"] = "0";
-                    $data_venta["saldo"] = $solicitud_credito[0]->total_financiado;
+                    $data_venta["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
                     $data_venta["pagado"] = "0";
                     $data_venta["anticipo"] = $solicitud_credito[0]->cuota_inicial;
 
-                
+                    //CAMBIAMOS DATOS DE LA SEGUNDA VENTA DEL CREDITO
+                    $data_venta["descuento_id"] = "";
+                    $data_venta["t_porcentaje_descuento"] = "";
+                    $data_venta["t_monto_descuento"] = "";
+                    $data_venta["t_monto_subtotal"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["t_monto_exonerado"] = "";
+                    $data_venta["t_monto_afecto"] = "";
+                    $data_venta["t_monto_inafecto"] = "";
+                    $data_venta["t_impuestos"] = "";
+                   
+                    $data_venta["monto_descuento_detalle"] = "";
+
+                    
+                    if($solicitud[0]->t_impuestos > 0) {
+                        // print_r($parametro_igv);
+                        $igv = $parametro_igv[0]->value;
+                        $data_venta["t_impuestos"] = $data_venta["t_monto_subtotal"] * $igv / 100;
+                        $data_venta["t_monto_afecto"] = $data_venta["t_monto_subtotal"];
+                      
+                    } else {
+                        $data_venta["t_monto_exonerado"] = $data_venta["t_monto_subtotal"];
+                    }
+
+                    $data_venta["t_monto_total"] = $data_venta["t_monto_exonerado"] + $data_venta["t_monto_afecto"] + $data_venta["t_impuestos"];
+
                    
                     $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
                     $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
@@ -421,6 +491,7 @@ class MovimientoCajaController extends Controller
             // PARA TICKET
             $data_ticket = $data_venta;
             $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+            $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
             $data_ticket["numero_comprobante"] = $consecutivo_ticket;
             $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
@@ -432,7 +503,56 @@ class MovimientoCajaController extends Controller
                 }
                 $data_venta_detalle = (array)$solicitud_articulo[$i];
                 $data_venta_detalle["idventa"] = $data_venta["idventa"];
-               
+                
+                if(count($solicitud_credito) > 0) {
+
+                    if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                        //CUOTA INICIAL
+                        $data_venta_detalle["idarticulo"] = $parametro_anticipo[0]->value;
+                        $data_venta_detalle["um_id"] = "07"; //codigo unidad
+                        $data_venta_detalle["cantidad"] = 1;
+                        $data_venta_detalle["precio_unitario"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta_detalle["iddescuento"] = "";
+                        $data_venta_detalle["porcentaje_descuento"] = "";
+                        $data_venta_detalle["precio_total"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta_detalle["monto_descuento"] = "";
+                        $data_venta_detalle["monto_subtotal"] = "";
+                        $data_venta_detalle["monto_exonerado"] = "";
+                        if($solicitud[0]->t_impuestos > 0) {
+                            $data_venta_detalle["monto_afecto"] = $solicitud_credito[0]->cuota_inicial;
+                        } else {
+                            $data_venta_detalle["monto_exonerado"] = $solicitud_credito[0]->cuota_inicial;
+                        }
+                       
+                        $data_venta_detalle["monto_inafecto"] = "";
+                        $data_venta_detalle["impuestos"] = "";
+                        $data_venta_detalle["monto_total"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta_detalle["cOperGrat"] = "";
+                        $data_venta_detalle["nOperGratuita"] = "";
+
+                    } else {
+                        //SEGUNDA VENTA DEL CREDITO
+                       
+                       //PRORRATEAMOS
+                    
+                        $data_venta_detalle["precio_total"] = round($solicitud_articulo[$i]->precio_total * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_venta_detalle["monto_descuento"] = round($solicitud_articulo[$i]->monto_descuento * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_venta_detalle["monto_subtotal"] = round($solicitud_articulo[$i]->monto_subtotal * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_venta_detalle["monto_exonerado"] = round($solicitud_articulo[$i]->monto_exonerado * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                       
+                        $data_venta_detalle["monto_afecto"] = round($solicitud_articulo[$i]->monto_afecto * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                       
+                       
+                        $data_venta_detalle["monto_inafecto"] = round($solicitud_articulo[$i]->monto_inafecto * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_venta_detalle["impuestos"] = round($solicitud_articulo[$i]->impuestos * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_venta_detalle["monto_total"] = round($solicitud_articulo[$i]->monto_total * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                   
+                        $data_venta_detalle["nOperGratuita"] = round($solicitud_articulo[$i]->nOperGratuita * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+
+                        $data_venta_detalle["monto_descuento_prorrateado"] = round($solicitud_articulo[$i]->monto_descuento_prorrateado * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+
+                    }
+                }
                 
                 $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
                 // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
@@ -456,11 +576,60 @@ class MovimientoCajaController extends Controller
                 $data_ticket_detalle["idventa"] = $data_ticket["idventa"];                
                 $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
 
+                
+                if(count($solicitud_credito) > 0) {
+
+                    if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                        //CUOTA INICIAL
+                        $data_ticket_detalle["idarticulo"] = $parametro_anticipo[0]->value;
+                        $data_ticket_detalle["um_id"] = "07"; //codigo unidad
+                        $data_ticket_detalle["cantidad"] = 1;
+                        $data_ticket_detalle["precio_unitario"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_ticket_detalle["iddescuento"] = "";
+                        $data_ticket_detalle["porcentaje_descuento"] = "";
+                        $data_ticket_detalle["precio_total"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_ticket_detalle["monto_descuento"] = "";
+                        $data_ticket_detalle["monto_subtotal"] = "";
+                        $data_ticket_detalle["monto_exonerado"] = "";
+                        if($solicitud[0]->t_impuestos > 0) {
+                            $data_ticket_detalle["monto_afecto"] = $solicitud_credito[0]->cuota_inicial;
+                        } else {
+                            $data_ticket_detalle["monto_exonerado"] = $solicitud_credito[0]->cuota_inicial;
+                        }
+                       
+                        $data_ticket_detalle["monto_inafecto"] = "";
+                        $data_ticket_detalle["impuestos"] = "";
+                        $data_ticket_detalle["monto_total"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_ticket_detalle["cOperGrat"] = "";
+                        $data_ticket_detalle["nOperGratuita"] = "";
+
+                    } else {
+                        //SEGUNDA VENTA DEL CREDITO
+
+                        $data_ticket_detalle["precio_total"] = round($solicitud_articulo[$i]->precio_total * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_ticket_detalle["monto_descuento"] = round($solicitud_articulo[$i]->monto_descuento * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_ticket_detalle["monto_subtotal"] = round($solicitud_articulo[$i]->monto_subtotal * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_ticket_detalle["monto_exonerado"] = round($solicitud_articulo[$i]->monto_exonerado * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                       
+                        $data_ticket_detalle["monto_afecto"] = round($solicitud_articulo[$i]->monto_afecto * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                       
+                       
+                        $data_ticket_detalle["monto_inafecto"] = round($solicitud_articulo[$i]->monto_inafecto * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_ticket_detalle["impuestos"] = round($solicitud_articulo[$i]->impuestos * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                        $data_ticket_detalle["monto_total"] = round($solicitud_articulo[$i]->monto_total * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                   
+                        $data_ticket_detalle["nOperGratuita"] = round($solicitud_articulo[$i]->nOperGratuita * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+
+                        $data_ticket_detalle["monto_descuento_prorrateado"] = round($solicitud_articulo[$i]->monto_descuento_prorrateado * $data_venta["t_monto_total"] / $solicitud_articulo[$i]->monto_total, 2);
+                    }
+                }
+
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
                 // print_r($res);
             }
+                
             
-         
+            // GUARDAR FORMAS DE PAGO EN VENTA Y CAJA   
             $data_formas_pago = $data;
             // var_dump($data["codigo_formapago"]); exit;
             $efectivo_soles = 0;
@@ -489,6 +658,7 @@ class MovimientoCajaController extends Controller
                 $data_caja_detalle["descripcion"] = "Ingreso por Venta";
                 $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$i];
                 $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$i];
+                $data_caja_detalle["naturaleza"] = "E";
 
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
 
@@ -503,6 +673,7 @@ class MovimientoCajaController extends Controller
                     $data_caja_detalle["descripcion"] = "Vuelto por Venta";
                     $data_caja_detalle["nroTarjeta"] = "";
                     $data_caja_detalle["nroOperacion"] = "";
+                    $data_caja_detalle["naturaleza"] = "S";
     
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
                 }
@@ -565,6 +736,7 @@ class MovimientoCajaController extends Controller
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
+            $result["datos"][0]["idventa_ticket"] = $data_ticket["idventa"];
             DB::commit();
             return response()->json($result);
         } catch (\Exception $e) {
@@ -745,11 +917,16 @@ class MovimientoCajaController extends Controller
         $cCodConsecutivo = $array[0];
         $nConsecutivo = $array[1];
 
+
+
         $datos = array();
+
+    
         $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
         
         $datos["empresa"] = $repo->get_empresa(); 
+        $datos["venta"] = $repo->get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo); 
         $datos["solicitud_credito"] = $solicitud_credito; 
         $datos["solicitud"] = $solicitud; 
         $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
@@ -855,7 +1032,7 @@ class MovimientoCajaController extends Controller
     public function list_comprobantes(Request $request, VentaInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado"];
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idventa', $params);
     }

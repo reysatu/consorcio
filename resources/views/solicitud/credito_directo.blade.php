@@ -15,16 +15,16 @@
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
             margin-top: 3cm;
-            margin-left: 0.5cm;
-            margin-right: 0.5cm;
+            margin-left: 0.3cm;
+            margin-right: 0.3cm;
             margin-bottom: 2cm;
         }
 
         header {
             position: fixed;
             top: 0.9cm;
-            left: 0.5cm;
-            right: 0.5cm;
+            left: 0.3cm;
+            right: 0.3cm;
             height: 3cm;
             /* text-align: center; */
             /* line-height: 0.8cm; */
@@ -37,7 +37,7 @@
             font-family: 'Roboto', sans-serif;
             box-sizing: border-box;
             /* font-weight: bold; */
-            font-size: 12px;
+            font-size: 11px;
         }
 
 
@@ -161,7 +161,7 @@
                 <td style="width: 15%;">Teléfono </td>
                 <td style="width: 15%;">{{ $empresa[0]->Telefono1 }}</td>
                 <td style="width: 10%;">Estado </td>
-                <td style="width: 10%;">{{ $solicitud[0]->estado }}</td>
+                <td style="width: 10%;">{{ $solicitud[0]->estado_user }}</td>
                 <td style="width: 30%;"><strong>NÚMERO SOLICITUD: </strong></td>
                 <td style="width: 20%;"><strong>{{ $solicitud[0]->cCodConsecutivo }}-{{ $solicitud[0]->nConsecutivo }}</strong></td>
 
@@ -206,7 +206,7 @@
             foreach ($solicitud_articulo as $key => $value) {
                 echo '<tr>';
                 echo '  <td>' . $value->precio_unitario . '</td>';
-                echo '  <td>' . $value->idproducto . '</td>';
+                echo '  <td>' . $value->code_article . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
                 echo '  <td>' . $value->producto . '</td>';
                 echo '</tr>';
@@ -307,9 +307,9 @@
             </tr>
             <tr>
                 <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br>{{ $cliente[0]->razonsocial_cliente }}</td>
-                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br></td>
+                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $cliente[0]->dFechanacimiento : ""; ?></td>
                 <td colspan="4" style=""><strong>Apellidos y Nombres o Razon Social</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cNombrePersona : ""; ?></td>
-                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->dFechaNacimiento : ""; ?></td>
+                <td colspan="2" style=""><strong>Fec. Nacimiento</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->dFechanacimiento : ""; ?></td>
             </tr>
             <tr>
                 <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNumerodocumento : ""; ?></td>
@@ -327,7 +327,7 @@
 
             <tr>
                 <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
-                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                <td colspan="6" style=""><strong>Apellidos y Nombres del Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cNombrePersona : ""; ?></td>
                 
             </tr>
 
@@ -349,7 +349,7 @@
                     <strong>Barrio / Sector: </strong><br>
                     <strong>Zona / Lugar: </strong><br>
                     <strong>Domicilio: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->direccion : ""; ?><br>
-                    <strong>Referencia: </strong><br>
+                    <strong>Referencia: </strong><?php echo (isset($cliente[0])) ? $cliente[0]->cReferencia : ""; ?><br>
                 </td>
                 <td colspan="6" style="">
                     <strong>Barrio / Sector: </strong><br>
@@ -404,15 +404,15 @@
             <tr>
                 <td colspan="6" style="">
                 <strong>Independiente: </strong><br>
-                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->actividad_negocio : ""; ?><br>
-                    <strong>Cargo: &nbsp;&nbsp;&nbsp; T.Lab.</strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->razon_social_negocio : ""; ?><br>
+                    <strong>Cargo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->cargo_independiente : ""; ?>&nbsp;&nbsp;&nbsp;<strong>T.Lab.</strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tiempo_laboral_independiente : ""; ?><br>
                     <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_negocio : ""; ?><br>
                    
                 </td>
                 <td colspan="6" style="">
                     <strong>Independiente: </strong><br>
-                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->actividad_negocio_fiador : ""; ?><br>
-                    <strong>Cargo: &nbsp;&nbsp;&nbsp; T.Lab.</strong><br>
+                    <strong>Centro Trabajo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->razon_social_negocio_fiador : ""; ?><br>
+                    <strong>Cargo: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->cargo_independiente_fiador : ""; ?>&nbsp;&nbsp;&nbsp;<strong>T.Lab.</strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->tiempo_laboral_independiente_fiador : ""; ?><br>
                     <strong>Dirección: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->direccion_negocio_fiador : ""; ?><br>
                 </td>
                 

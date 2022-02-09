@@ -182,6 +182,7 @@
             }
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
+            $("#imprimir-solicitud").hide();
             habilitar_inputs();
             $("#enviar_solicitud").hide();
             $("#aprobaciones").hide();
@@ -1216,6 +1217,11 @@
                         edit: false,
                         list: false
                     },
+                    um_id: {
+                        create: false,
+                        edit: false,
+                        list: false
+                    },
                     code_article: {
                         title: 'Código'
 
@@ -1236,7 +1242,7 @@
                         listClass: 'text-center',
                         display: function (data) {
                             return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-costo="' + data.record.costo + '" data-name="' +
-                                data.record.description + '" data-type="' + data.record.type_id + '"  data-serie="' + data.record.serie + '" data-lote="' + data.record.lote + '" data-code="' + data.record.id + '" data-impuesto="' + data.record.impuesto + '"><i class="fa fa-' +
+                                data.record.description + '" data-type="' + data.record.type_id + '"  data-um_id="' + data.record.um_id + '"     data-serie="' + data.record.serie + '" data-lote="' + data.record.lote + '" data-code="' + data.record.id + '" data-impuesto="' + data.record.impuesto + '"><i class="fa fa-' +
                                 icon_select + ' fa-1-5x"></i></a>';
                         }
                     }
@@ -1250,8 +1256,9 @@
                         var lote = $(this).attr('data-lote');
                         var costo = $(this).attr('data-costo');
                         var impuesto = $(this).attr('data-impuesto');
+                        var um_id = $(this).attr('data-um_id');
 
-                        seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto);
+                        seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto, um_id);
                         e.preventDefault();
                     });
                 }
@@ -1314,14 +1321,22 @@
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.newPrecio != "") {
                             precio = response.newPrecio;
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Ingrese el precio del producto.',
+                                type: 'info'
+                            });
+                            return false;
                         }
 
                         var impuesto_articulo = $("#impuesto_articulo").val();
                         var lote_articulo = $("#lote_articulo").val();
                         var cOperGrat = "N"
                         var posee_serie = $("#posee-serie").val();
+                        var um_id = $("#um_id").val();
                         // alert("antes " + posee_serie);
-                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie);
+                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie, um_id);
                         modalNada.modal('hide');
                         modalMovimietoArticulo.modal('hide');
                     } else {
@@ -1352,7 +1367,7 @@
             }
         });
 
-        function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto) {
+        function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto, um_id) {
             // comentado por manuel 02/01/2022
             // alert("idTipoArt " + idTipoArt);
             // alert("lote " + lote);
@@ -1394,6 +1409,7 @@
             $("#impuesto_articulo").val(impuesto);
             $("#lote_articulo").val(lote);
             $("#posee-serie").val(serie);
+            $("#um_id").val(um_id);
             // alert("focusss selectsssss");
 
             modalNada.modal('show');
@@ -1862,14 +1878,30 @@
 
 
 
-        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie) {
-            // alert("durante " + posee_serie);
-            // var precio = 0;
-            // if (response.newPrecio != "") {
-            //     precio = response.newPrecio;
-            // }
+        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id) {
+            // alert(impuesto_articulo);
 
-            // alert(precio);
+            if($("#articulo_mov_det").html() != "") {
+                if(parseFloat($("#t_impuestos").val()) > 0) {
+                    if(impuesto_articulo != 1) {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Todos los productos del detalle deben tener activo la opcion de  calcular impuestos',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+                } else {
+                    if(impuesto_articulo != 0) {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Todos los productos del detalle no deben tener activo la opcion de  calcular impuestos',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+                }
+            }
             acodigos.push(codigo);
             // alert(costo+" c "+ costo_total+" c "+ precio);
             // console.log(idLocalizacion);
@@ -1900,7 +1932,8 @@
             // }else{
             // precionew = "";
             var tdpr = $('<td><p>0</p></td>');
-            var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  />');
+           
+            var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  /><input type="hidden"  name="um_id[]" id="um_id_' + codigo + '"  value="'+um_id+'" class="form-control input-sm"  />');
             // }
 
             // if(naturalezaGeneral=="E" || naturalezaGeneral=="C"){
@@ -2917,6 +2950,7 @@
                             });
                             // alert("show");
                             $("#enviar_solicitud").show();
+                            $("#imprimir-solicitud").show();
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -2974,6 +3008,17 @@
             var id = cCodConsecutivo + "|" + nConsecutivo;
    
             window.open("solicitud/imprimir_solicitud/"+id);
+
+        }
+
+        $scope.imprimir_cronograma = function () {
+           
+            var cCodConsecutivo = $("#cCodConsecutivo").val();
+            var nConsecutivo = $("#nConsecutivo").val();
+
+            var id = cCodConsecutivo + "|" + nConsecutivo;
+   
+            window.open("movimientoCajas/imprimir_cronograma/"+id);
 
         }
 
@@ -3070,6 +3115,22 @@
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
                         $("#intereses").val(data.solicitud_credito[0].intereses);
+                        $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
+                        $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
+                        $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
+
+                        if(data.solicitud_credito[0].documento_fiador != null) {
+                            getPersona("fiador");
+                        }
+
+                        if(data.solicitud_credito[0].documento_conyugue != null) {
+                            getPersona("conyugue");
+                        }
+                        
+                        if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
+                            getPersona("documento_fiadorconyugue");
+                        }
+                       
                     }
 
                     if (data.solicitud_articulo.length > 0) {
@@ -3083,13 +3144,18 @@
                         }
                     }
 
-                    if(data.solicitud[0].estado != "4") {
+                    if(data.solicitud[0].estado == "1") {
                         habilitar_inputs();
                         $("#enviar_solicitud").show();
                     } else {
+                        
                         deshabilitar_inputs();
                     }
+                    if(data.solicitud[0].estado == "6" && data.solicitud[0].tipo_solicitud == "2") {
+                        $("#imprimir-cronograma").show();
+                    }
                     $("#aprobaciones").show();
+                    $("#imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
@@ -3104,6 +3170,7 @@
             $("#btn_editar_conyugue").show();
             $("#btn_editar_fiador").show();
             $("#btn_editar_fiadorconyugue").show();
+           
             
             $("#cCodConsecutivo").removeAttr("disabled");
             $("#IdMoneda").removeAttr("disabled");
@@ -3116,7 +3183,12 @@
             $("#fecha_vencimiento").removeAttr("readonly");
             $("#documento_or").removeAttr("readonly");
             $("#comentarios").removeAttr("readonly");
-           
+
+            $("#formulario-creditos").find("input").removeAttr("readonly");
+            $("#formulario-creditos").find("select").removeAttr("disabled");
+            $(".datos-persona").attr("readonly", "readonly");
+            $(".select-persona").attr("disabled", "disabled");
+            // alert("hola 2");
         }
 
         function deshabilitar_inputs() {
@@ -3132,12 +3204,15 @@
             $("#enviar_solicitud").hide();
             $("#btn_editar_conyugue").hide();
             $("#btn_editar_fiador").hide();
+       
             $("#btn_editar_fiadorconyugue").hide();
-            $(".m_articulo_idAlm").removeAttr("disabled");
-            $(".m_articulo_idLoc").removeAttr("disabled");
-            $(".select_lote").removeAttr("disabled");
-           
-   
+    
+            if($("#estado").val() == "4") {
+                $(".m_articulo_idAlm").removeAttr("disabled");
+                $(".m_articulo_idLoc").removeAttr("disabled");
+                $(".select_lote").removeAttr("disabled");
+            }
+
         }
 
         var search = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');
@@ -3270,14 +3345,14 @@
                     var id = $(this).attr('data-id');
                     var estado = $(this).data('estado');
 
-                    if (estado != "1" && estado != "4") {
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'No se puede modificar, la solicitud ya no se encuentra en estado Registrado',
-                            type: 'info'
-                        });
-                        return false;
-                    }
+                    // if (estado != "1" && estado != "4") {
+                    //     AlertFactory.textType({
+                    //         title: '',
+                    //         message: 'No se puede modificar, la solicitud ya no se encuentra en estado Registrado',
+                    //         type: 'info'
+                    //     });
+                    //     return false;
+                    // }
 
                    
                     find_solicitud(id);

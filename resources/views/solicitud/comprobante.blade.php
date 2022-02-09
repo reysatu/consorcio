@@ -176,7 +176,7 @@
                   
                     echo '<tr>';
                     echo '  <td>'.$value->cantidad.'</td>';
-                    echo '  <td>'.$value->unidad.'</td>';
+                    echo '  <td>'.$value->unidad_medida.'</td>';
                     echo '  <td>'.$value->producto.'</td>';
                     echo '  <td>'.$value->precio_unitario.'</td>';
                    

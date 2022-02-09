@@ -125,17 +125,17 @@
                 <td style="width: 15%;">Doc. del Ciente: </td>
                 <td style="width: 12%;">{{ $cliente[0]->documento }}</td>
                 <td style="width: 15%;">Forma de Pago: </td>
-                <td style="width: 12%;">{{ $titulo }}</td>
+                <td style="width: 26%;">{{ $titulo }} - {{ $solicitud[0]->convenio }}</td>
                 <td style="width: 6%;">Vendedor: </td>
-                <td style="width: 40%;">{{ $solicitud[0]->vendedor }}</td>
+                <td style="width: 26%;">{{ $solicitud[0]->vendedor }}</td>
             </tr>
             <tr>
                 <td style="width: 15%;">Fecha Documento: </td>
                 <td style="width: 12%;">{{ $solicitud[0]->fecha_solicitud_user }}</td>
                 <td style="width: 15%;">Fecha Vencimiento: </td>
-                <td style="width: 12%;">{{ $solicitud[0]->fecha_vencimiento_user }}</td>
+                <td style="width: 26%;">{{ $solicitud[0]->fecha_vencimiento_user }}</td>
                 <td style="width: 6%;">Estado: </td>
-                <td style="width: 40%;">{{ $solicitud[0]->estado }}</td>
+                <td style="width: 26%;">{{ $solicitud[0]->estado_user }}</td>
             </tr>
             <tr>
                 <td style="width: 20%;">Comentarios: </td>
@@ -174,7 +174,7 @@
                 echo '  <td>' . $i . '</td>';
                 echo '  <td>' . $value->idproducto . '</td>';
                 echo '  <td>' . $value->producto . '</td>';
-                echo '  <td>' . $value->unidad . '</td>';
+                echo '  <td>' . $value->unidad_medida . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
 
                 echo '  <td>' . $value->precio_unitario . '</td>';
@@ -205,12 +205,12 @@
             <br>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 75%;"></td>
-                <td style="width: 25%;">
-                    <table>
+                <td style="width: 70%;"></td>
+                <td style="width: 30%;">
+                    <table style="width: 100%;">
                         <tr>
                             <td>Monto Afecto</td>
-                            <td>
+                            <td align="right">
                                 <?php 
                                     if($solicitud[0]->t_impuestos > 0) {
                                         echo $solicitud[0]->t_monto_afecto;
@@ -220,7 +220,7 @@
                         </tr>
                         <tr>
                             <td>Monto No Afecto</td>
-                            <td>
+                            <td align="right">
                                 <?php 
                                     if($solicitud[0]->t_impuestos <= 0) {
                                         echo $solicitud[0]->t_monto_exonerado;
@@ -230,18 +230,18 @@
                         </tr>
                         <tr>
                             <td>(-) Descuentos</td>
-                            <td>
+                            <td align="right">
                                 <?php echo (float)$solicitud[0]->monto_descuento_detalle + (float)$solicitud[0]->t_monto_descuento; ?> 
                             </td>
                         </tr>
                         <tr>
                             <td>(+) Impuestos</td>
-                            <td>{{ $solicitud[0]->t_impuestos }}</td>
+                            <td align="right">{{ $solicitud[0]->t_impuestos }}</td>
                         </tr>
 
                         <tr>
                             <td style="border-top: 1px solid black;"><strong>Monto Total</strong></td>
-                            <td style="border-top: 1px solid black;"><strong>{{ $solicitud[0]->t_monto_total }}</strong></td>
+                            <td style="border-top: 1px solid black;" align="right"><strong>{{ $solicitud[0]->t_monto_total }}</strong></td>
                         </tr>
                     </table>
             
