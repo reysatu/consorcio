@@ -46,6 +46,10 @@ use App\Http\Recopro\Periodo\Periodo;
 use App\Http\Recopro\Periodo\PeriodoInterface;
 use App\Http\Recopro\Periodo\PeriodoRepository;
 
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitud; 
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudInterface;
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudRepository;
+
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodo; 
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoInterface;
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoRepository;
@@ -630,6 +634,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMovimiento_Detalle_cierre();
         $this->registerView_movimiento_cierre();
         $this->registerPeriodo();
+        $this->registerAprobacionSolicitud();
         $this->registerVW_CierreInventarioPeriodo();
         $this->registerCategoriaVehicular();
         $this->registerCompania();
@@ -952,6 +957,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(PeriodoInterface::class, function ($app) {
             return new PeriodoRepository(new Periodo());
+        });
+    }
+      public function registerAprobacionSolicitud()
+    {
+        $app = $this->app;
+
+        $app->bind(AprobacionSolicitudInterface::class, function ($app) {
+            return new AprobacionSolicitudRepository(new AprobacionSolicitud());
         });
     }
     public function registerCategoriaVehicular()

@@ -93,6 +93,7 @@
         'sys.app.approval_autonomy',
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
+        'sys.app.aprobacionSolicituds',
         //Ventas
         'sys.app.solicitud',
         
