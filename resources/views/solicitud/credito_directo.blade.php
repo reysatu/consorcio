@@ -284,7 +284,7 @@
                         </tr>
                         <tr style="">
                             <td style="border-top: 1px solid black; font-weight: bold;">TOTAL FINANCIADO</td>
-                            <td style="border-top: 1px solid black; font-weight: bold;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->total_financiado }}</td>
+                            <td style="border-top: 1px solid black; font-weight: bold;" align="right">{{ $solicitud[0]->Simbolo }} <?php echo $solicitud_credito[0]->monto_venta + $solicitud_credito[0]->intereses;  ?></td>
                         </tr>
                     </table>
                 </td>

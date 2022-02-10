@@ -312,7 +312,8 @@ class SolicitudRepository implements SolicitudInterface
 
     public function mostrar_aprobaciones($cCodConsecutivo, $nConsecutivo) {
 
-        $sql = "SELECT sc.*, u.name AS usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg FROM ERP_SolicitudConformidad AS sc
+        $sql = "SELECT sc.*, u.name AS nombre_usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg, u.username AS usuario, CASE WHEN sc.iEstado = 1 THEN 'Aprobado'  WHEN sc.iEstado = 2 THEN 'Rechazado' END AS iEstado, FORMAT(sc.updated_at, 'dd/MM/yyyy') AS updated_at
+        FROM ERP_SolicitudConformidad AS sc
         INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
         INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
         WHERE sc.cCodConsecutivo='{CodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";

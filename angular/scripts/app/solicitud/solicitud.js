@@ -691,11 +691,11 @@
 
                         }
                     } else {
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'Hubo un error . Intente nuevamente.',
-                            type: 'info'
-                        });
+                        // AlertFactory.textType({
+                        //     title: '',
+                        //     message: 'Hubo un error . Intente nuevamente.',
+                        //     type: 'info'
+                        // });
                     }
 
 
@@ -2846,6 +2846,7 @@
 
             var bval = true;
             bval = bval && cCodConsecutivo.required();
+           
             bval = bval && idMoneda.required();
             bval = bval && $("#tipo_solicitud").required();
             bval = bval && idvendedor.required();
@@ -2936,7 +2937,7 @@
                     return false;
                 }
 
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
+                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize()+"&cCodConsecutivo="+cCodConsecutivo.val()+"&tipo_solicitud="+$("#tipo_solicitud").val()+"&idmoneda="+$("#IdMoneda").val()+"&id_tipoDoc_Venta_or="+$("#id_tipoDoc_Venta_or").val()+"&idvendedor="+$("#idvendedor").val()+"&descuento_id="+$("#totalDescuento").val(),
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
@@ -2978,12 +2979,19 @@
                             $("#detalle-aprobaciones").html("");
                             for (var i = 0; i < data.length; i++) {
                                 html += '<tr>';
-                                html += '   <td>' + data[i].aprobacion + '</td>';
-                                html += '   <td>' + data[i].nOrden + '</td>';
+                                // html += '   <td>' + data[i].aprobacion + '</td>';
+                                // html += '   <td>' + data[i].nOrden + '</td>';
+                                // html += '   <td>' + data[i].usuario + '</td>';
+                                // html += '   <td>' + data[i].dFecReg + '</td>';
+                                // html += '   <td>' + data[i].iEstado + '</td>';
+                                // html += '   <td>' + data[i].cObservacion + '</td>';
+
                                 html += '   <td>' + data[i].usuario + '</td>';
-                                html += '   <td>' + data[i].dFecReg + '</td>';
+                                html += '   <td>' + data[i].nombre_usuario + '</td>';
                                 html += '   <td>' + data[i].iEstado + '</td>';
                                 html += '   <td>' + data[i].cObservacion + '</td>';
+                                html += '   <td>' + data[i].dFecReg + '</td>';
+                                html += '   <td>' + data[i].updated_at + '</td>';
                                 html += '</tr>';
                             }
                             $("#detalle-aprobaciones").html(html);
@@ -3034,6 +3042,7 @@
                 $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize() + "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
                         if (data.status == "i") {
+                            LoadRecordsButtonSolicitud.click();
                             $("#estado").val(data.datos.estado);
                             // alert($("#estado option[value='"+$("#estado").val()+"']").text());
                             AlertFactory.textType({
@@ -3041,7 +3050,6 @@
                                 message: 'La solicitud se envio correctamente. Se cambio al estado: ' + $("#estado option[value='" + $("#estado").val() + "']").text(),
                                 type: 'success'
                             });
-
                             $("#aprobaciones").show();
                         } else {
                             AlertFactory.textType({
@@ -3107,6 +3115,19 @@
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
+                    
+
+                    if (data.solicitud_articulo.length > 0) {
+                        $("#articulo_mov_det").html("");
+                        for (var i = 0; i < data.solicitud_articulo.length; i++) {
+
+                            var codigo = Math.random().toString(36).substr(2, 18);
+
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
+
+                        }
+                    }
+
                     if (data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
@@ -3114,6 +3135,7 @@
                         $("#monto_venta").val(data.solicitud_credito[0].monto_venta);
                         $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
+                        $("#valor_cuota_final").val(data.solicitud_credito[0].valor_cuota_final);
                         $("#intereses").val(data.solicitud_credito[0].intereses);
                         $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
@@ -3132,18 +3154,7 @@
                         }
                        
                     }
-
-                    if (data.solicitud_articulo.length > 0) {
-                        $("#articulo_mov_det").html("");
-                        for (var i = 0; i < data.solicitud_articulo.length; i++) {
-
-                            var codigo = Math.random().toString(36).substr(2, 18);
-
-                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
-
-                        }
-                    }
-
+                    
                     if(data.solicitud[0].estado == "1") {
                         habilitar_inputs();
                         $("#enviar_solicitud").show();
@@ -3210,7 +3221,7 @@
             if($("#estado").val() == "4") {
                 $(".m_articulo_idAlm").removeAttr("disabled");
                 $(".m_articulo_idLoc").removeAttr("disabled");
-                $(".select_lote").removeAttr("disabled");
+                // $(".select_lote").removeAttr("disabled");
             }
 
         }

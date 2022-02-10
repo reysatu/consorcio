@@ -15,7 +15,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 3cm;
+            margin-top: 4cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -26,7 +26,7 @@
             top: 0.9cm;
             left: 1cm;
             right: 1cm;
-            height: 3cm;
+            height: 4cm;
             /* text-align: center; */
             line-height: 0.8cm;
             font-family: 'Times New Roman' !important;
@@ -101,14 +101,15 @@
         <div class="row">
             <div class="col" style="width: 70%; text-align: center; line-height: 18px;">
                <?php 
-                    foreach ($tiendas as $key => $value) {
-                        echo $value->descripcion."-".$value->direccion."; ";
-                    }
+                    // foreach ($tiendas as $key => $value) {
+                    //     echo $value->descripcion."-".$value->direccion."; ";
+                    // }
                ?>
+               {{ $empresa[0]->direcciones_oficinas }}
                <br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">VENTA DE </label><br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">Motocicletas, Motokars, Generadores, Motobombas, Distribuidor de repuestos Honda</label><br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">SOMOS DISTRIBUIDORES AUTORIZADOS HONDA</label>
+         
+               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema1 }}</label><br>
+               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema2 }}</label>
             </div>
             <div class="col" style="width: 30%;">
                 <table style="width: 100%; border: 1px solid black; text-align: center; font-weight: bold; font-size: 18px !important; line-height: 25px;">
@@ -197,7 +198,17 @@
         <table style="width: 100%;">
             <tr>
                 <td style="width: 20%;">Condicion de Pago:</td>
-                <td style="width: 80%;">{{ $venta[0]->condicion_pago }}</td>
+                <td style="width: 80%;">
+                <?php 
+                    if($venta[0]->tipo_comprobante == "1") {
+                        echo "Contado";
+                    } else {
+                        echo $venta[0]->condicion_pago;
+                    }
+
+                ?>
+                
+                </td>
                
             </tr>
         </table>
@@ -233,19 +244,19 @@
                     <strong style="text-align: center !important;">BIENES TRANSFERIDOS EN LA AMAZONIA PARA SER CONSUMIDOS EN LA AMAZONIA</strong>
                 </td>
                 <td style="width: 30%;">
-                    <table>
+                    <table style="width: 100%;">
                         <tr>
                             <td>Valor de Venta</td>
                             <td>{{ $venta[0]->Simbolo }} </td>
                             <td style="text-align: right; border: 1px solid black;">
                                 
                                 <?php 
-                                    if($venta[0]->t_impuestos > 0) {
-                                        echo $venta[0]->t_monto_afecto;
-                                    } else {
-                                        echo $venta[0]->t_monto_exonerado;
-                                    }
-                                    
+                                    // if($venta[0]->t_impuestos > 0) {
+                                    //     echo $venta[0]->t_monto_afecto;
+                                    // } else {
+                                    //     echo $venta[0]->t_monto_exonerado;
+                                    // }
+                                    echo $venta[0]->t_monto_subtotal;
                                 ?>
                             </td>
                         </tr>
@@ -257,7 +268,12 @@
                         <tr>
                             <td>Precio Venta</td>
                             <td>{{ $venta[0]->Simbolo }}</td>
-                            <td style="text-align: right; border: 1px solid black;">{{ $venta[0]->t_monto_total }}</td>
+                            <td style="text-align: right; border: 1px solid black;">
+                                <?php 
+                                    // echo $venta[0]->t_monto_total;
+                                    echo $venta[0]->t_monto_subtotal + $venta[0]->t_impuestos;
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </td>

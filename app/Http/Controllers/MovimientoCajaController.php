@@ -490,6 +490,7 @@ class MovimientoCajaController extends Controller
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
             $data_ticket = $data_venta;
+            $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
             $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
@@ -674,8 +675,16 @@ class MovimientoCajaController extends Controller
                     $data_caja_detalle["nroTarjeta"] = "";
                     $data_caja_detalle["nroOperacion"] = "";
                     $data_caja_detalle["naturaleza"] = "S";
-    
+                    
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+
+                    if($data["IdMoneda"][$i] == "1") {
+                        $efectivo_soles -= $data["vuelto"][$i];
+                    }
+
+                    if($data["IdMoneda"][$i] == "2") {
+                        $efectivo_dolares -= $data["vuelto"][$i];
+                    }
                 }
 
 
@@ -958,6 +967,8 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+        $idventa_comprobante = (isset($datos["venta"][0]->idventa_comprobante)) ? $datos["venta"][0]->idventa_comprobante : "0";
+        $datos["venta_comprobante"] = $repo->get_venta($idventa_comprobante); 
         // echo "<pre>";
         // print_r($datos);
         // exit;

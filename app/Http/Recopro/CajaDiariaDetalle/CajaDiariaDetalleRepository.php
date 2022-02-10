@@ -213,6 +213,9 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+
+  
+
     public function get_venta_detalle($idventa) {
         $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida
         FROM ERP_Venta AS v 
@@ -220,15 +223,17 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
         LEFT JOIN ERP_UnidadMedida AS um ON(um.IdUnidadMedida=vd.um_id)
        
+       
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
     }
 
     public function get_venta_formas_pago($idventa) {
-        $sql = "SELECT vfp.*
+        $sql = "SELECT vfp.*, m.Descripcion AS moneda
         FROM ERP_Venta AS v 
         INNER JOIN ERP_VentaFormaPago AS vfp ON(v.idventa=vfp.idventa)
+        LEFT JOIN ERP_Moneda AS m ON(vfp.IdMoneda=m.IdMoneda)
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
