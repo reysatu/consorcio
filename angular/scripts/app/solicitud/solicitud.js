@@ -1879,7 +1879,7 @@
 
 
         function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id) {
-            // alert(impuesto_articulo);
+           
 
             if($("#articulo_mov_det").html() != "") {
                 if(parseFloat($("#t_impuestos").val()) > 0) {
@@ -1940,6 +1940,7 @@
             //     var td4 = $('<td></td>');
             //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
             // }else{
+                // alert("precio new " + precionew);      
             var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' + precionew + '" impuesto_articulo="' + impuesto_articulo + '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text" codigo="' + codigo + '"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
             var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" />');
             // }
@@ -2188,10 +2189,10 @@
                 $("#Al_" + codigo).val(idAlmacen).trigger('change');
                 $("#" + codigo).val(idLocalizacion).trigger('change');
 
-                $("#cosMs_" + codigo).val(Number(costo));
-                var cos = Number(costo_total);
-                $("#tr_idArticulo" + codigo).find("td:eq(5)").children("p").text(cos);
-                $("#tr_idArticulo" + codigo).find("td:eq(5)").children("input").val(cos);
+                // $("#cosMs_" + codigo).val(Number(costo));
+                // var cos = Number(costo_total);
+                // $("#tr_idArticulo" + codigo).find("td:eq(5)").children("p").text(cos);
+                // $("#tr_idArticulo" + codigo).find("td:eq(5)").children("input").val(cos);
             };
 
             calcular_totales();
