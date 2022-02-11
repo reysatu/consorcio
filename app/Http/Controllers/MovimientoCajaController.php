@@ -1007,8 +1007,9 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
-        
+        $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         // $datos["cajero"] = $repo->get_cajero(); 
         $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
@@ -1024,6 +1025,11 @@ class MovimientoCajaController extends Controller
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+
         $pdf = PDF::loadView("solicitud.comprobante", $datos);
       
         // return $pdf->save("ficha_asociado.pdf"); // guardar

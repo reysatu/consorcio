@@ -187,6 +187,36 @@
                     echo '</tr>';
 
                 }
+
+                if(count($venta_anticipo) > 0) {
+                    $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
+                    $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
+                    $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
+                    $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
+                    $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
+                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                    echo '<tr>';
+                    echo '  <td>1</td>';
+                    echo '  <td>UND</td>';
+                    echo '  <td>(-) ANTICIPO '.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
+                    echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
+                    echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
+                    echo '</tr>';
+                    echo '<tr>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '  <td>
+                                Marca              : '.$marca.'<br>
+                                Modelo             : '.$modelo.'<br>
+                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Color              : '.$color.'<br>
+                                # Serie            : '.$serie.'<br>
+                                # Motor            : '.$motor.'<br>
+                            </td>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '</tr>';
+                }
                 
             ?>
         </table>
@@ -195,22 +225,67 @@
         <br>
        
 
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 20%;">Condicion de Pago:</td>
-                <td style="width: 80%;">
-                <?php 
-                    if($venta[0]->tipo_comprobante == "1") {
-                        echo "Contado";
-                    } else {
-                        echo $venta[0]->condicion_pago;
-                    }
-
-                ?>
+        <table style="width: 100%;">               
+            <?php 
+                if(count($venta_anticipo) > 0) {
+                    echo '<tr>';
+                    echo '  <td style="width: 15%;">Condicion de Pago:</td>';
+                    echo '  <td style="width: 20%;">';
+                    
+                        if($venta[0]->tipo_comprobante == "1") {
+                            echo "Contado";
+                        } else {
+                            echo $venta[0]->condicion_pago;
+                        }
+    
                 
-                </td>
-               
-            </tr>
+                    
+                    echo '  </td>';
+                    if(count($venta_anticipo) > 0) {
+                        echo '  <td style="width: 20%;">Cuota Mensual:</td>';
+                        echo '  <td style="width: 15%;">'.$solicitud_credito[0]->valor_cuota_final.'</td>';
+                    }
+                    echo '  <td width: 30%;></td>';
+
+                    echo '</tr>';
+                    if(count($venta_anticipo) > 0) {
+                        echo '<tr>';
+                        echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';
+                        echo '  <td>'.$solicitud[0]->t_monto_total.'</td>';
+                        echo '</tr>';
+
+                        echo '<tr>';
+                        echo '  <td colspan="2">Inicial Doc.</td>';
+                        echo '  <td>'.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
+                        echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
+                        echo '</tr>';
+
+                        echo '<tr>';
+                        echo '  <td colspan="3">Importe a Financiar</td>';
+                        echo '  <td>'.($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total).'</td>';
+                        echo '</tr>';
+                    }
+                    
+                } else {
+                    echo '<tr>';
+                    echo '  <td style="width: 15%;">Condicion de Pago:</td>';
+                    echo '  <td style="width: 20%;">';
+                    
+                        if($venta[0]->tipo_comprobante == "1") {
+                            echo "Contado";
+                        } else {
+                            echo $venta[0]->condicion_pago;
+                        }
+    
+                
+                    
+                    echo '  </td>';
+                    
+                }
+                
+            ?>
+                
+           
         </table>
         <br>
         <br>

@@ -200,7 +200,7 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user,
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Simbolo AS simbolo_moneda,
         CASE WHEN s.estado = 1 THEN 'Registrado'
         WHEN s.estado = 2 THEN 'Vigente'
         WHEN s.estado = 3 THEN 'Por Aprobar'
@@ -251,7 +251,7 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN m.description IS NULL THEN '.' ELSE  m.description END AS marca,
         CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
         s.nombreSerie AS serie, cv.idCatVeh,
-        s.motor, s.color
+        s.motor, s.color, s.anio_fabricacion
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         LEFT JOIN ERP_Marcas AS m ON(m.id=p.idMarca)
