@@ -176,19 +176,19 @@
                     $total += (float)($value->precio_total);
                   
                     echo '<tr>';
-                    echo '  <td>'.$value->cantidad.'</td>';
+                    echo '  <td>'.number_format($value->cantidad, 2).'</td>';
                     echo '  <td>'.$value->unidad_medida.'</td>';
                     echo '  <td>'.$value->producto.'</td>';
-                    echo '  <td>'.$value->precio_unitario.'</td>';
+                    echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
                    
-                    echo '  <td>'.$value->precio_total.'</td>';
+                    echo '  <td>'.number_format($value->precio_total, 2).'</td>';
                    
 
                     echo '</tr>';
 
                 }
 
-                if(count($venta_anticipo) > 0) {
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
@@ -196,11 +196,11 @@
                     $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
                     $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
                     echo '<tr>';
-                    echo '  <td>1</td>';
+                    echo '  <td>1.00</td>';
                     echo '  <td>UND</td>';
                     echo '  <td>(-) ANTICIPO '.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
-                    echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
-                    echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
                     echo '</tr>';
                     echo '<tr>';
                     echo '  <td></td>';
@@ -227,7 +227,7 @@
 
         <table style="width: 100%;">               
             <?php 
-                if(count($venta_anticipo) > 0) {
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
                     echo '<tr>';
                     echo '  <td style="width: 15%;">Condicion de Pago:</td>';
                     echo '  <td style="width: 20%;">';
@@ -243,26 +243,27 @@
                     echo '  </td>';
                     if(count($venta_anticipo) > 0) {
                         echo '  <td style="width: 20%;">Cuota Mensual:</td>';
-                        echo '  <td style="width: 15%;">'.$solicitud_credito[0]->valor_cuota_final.'</td>';
+                        echo '  <td style="width: 15%;">'.number_format($solicitud_credito[0]->valor_cuota_final, 2).'</td>';
                     }
                     echo '  <td width: 30%;></td>';
 
                     echo '</tr>';
                     if(count($venta_anticipo) > 0) {
+                        $importe_financiar = ($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total);
                         echo '<tr>';
                         echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';
-                        echo '  <td>'.$solicitud[0]->t_monto_total.'</td>';
+                        echo '  <td>'.number_format($solicitud[0]->t_monto_total, 2).'</td>';
                         echo '</tr>';
 
                         echo '<tr>';
                         echo '  <td colspan="2">Inicial Doc.</td>';
                         echo '  <td>'.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
-                        echo '  <td>-'.$venta_anticipo[0]->t_monto_total.'</td>';
+                        echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
                         echo '</tr>';
 
                         echo '<tr>';
                         echo '  <td colspan="3">Importe a Financiar</td>';
-                        echo '  <td>'.($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total).'</td>';
+                        echo '  <td>'.number_format($importe_financiar, 2).'</td>';
                         echo '</tr>';
                     }
                     
@@ -331,14 +332,14 @@
                                     // } else {
                                     //     echo $venta[0]->t_monto_exonerado;
                                     // }
-                                    echo $venta[0]->t_monto_subtotal;
+                                    echo number_format($venta[0]->t_monto_subtotal, 2);
                                 ?>
                             </td>
                         </tr>
                         <tr>
                             <td>18% I.G.V.</td>
                             <td>{{ $venta[0]->Simbolo }}</td>
-                            <td style="text-align: right; border: 1px solid black;">{{ $venta[0]->t_impuestos }}</td>
+                            <td style="text-align: right; border: 1px solid black;"><?php echo number_format($venta[0]->t_impuestos, 2); ?></td>
                         </tr>
                         <tr>
                             <td>Precio Venta</td>
@@ -346,7 +347,8 @@
                             <td style="text-align: right; border: 1px solid black;">
                                 <?php 
                                     // echo $venta[0]->t_monto_total;
-                                    echo $venta[0]->t_monto_subtotal + $venta[0]->t_impuestos;
+                                    $total = $venta[0]->t_monto_subtotal + $venta[0]->t_impuestos;
+                                    echo number_format($total, 2);
                                 ?>
                             </td>
                         </tr>

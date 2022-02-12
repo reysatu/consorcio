@@ -254,9 +254,10 @@ class SolicitudRepository implements SolicitudInterface
         s.motor, s.color, s.anio_fabricacion
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        INNER JOIN ERP_SolicitudDetalle AS sd ON(sd.cCodConsecutivo=sa.cCodConsecutivo AND sd.nConsecutivo=sa.nConsecutivo AND sd.idarticulo=sa.idarticulo)
         LEFT JOIN ERP_Marcas AS m ON(m.id=p.idMarca)
         LEFT JOIN ERP_Modelo AS mo ON(mo.idModelo=p.idModelo)
-        LEFT JOIN ERP_Serie AS s ON(s.idArticulo=p.id)
+        LEFT JOIN ERP_Serie AS s ON(s.idSerie=sd.idSerie)
         
         INNER JOIN ERP_Categoria AS c ON(c.idCategoria=p.idCategoria)
         INNER JOIN ERP_CategoriaVeh AS cv ON(cv.idCatVeh=p.idCatVeh)
@@ -316,7 +317,7 @@ class SolicitudRepository implements SolicitudInterface
         FROM ERP_SolicitudConformidad AS sc
         INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
         INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
-        WHERE sc.cCodConsecutivo='{CodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
+        WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
 
         $result = DB::select($sql);
         return $result;

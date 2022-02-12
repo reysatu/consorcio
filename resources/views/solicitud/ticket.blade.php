@@ -144,15 +144,15 @@
                 echo '  <td>'.$value->codigo_formapago.'</td>';
                 echo '  <td>'.$value->moneda.'</td>';
                 echo '  <td>'.$serie.'-'.$numero.'</td>';
-                echo '  <td>'.$value->monto_tipo_cambio_soles.'</td>';
-                echo '  <td>'.$value->monto_aplicado_moneda_documento.'</td>';
+                echo '  <td>'.number_format($value->monto_tipo_cambio_soles, 2).'</td>';
+                echo '  <td>'.number_format($value->monto_aplicado_moneda_documento, 2).'</td>';
                 echo '</tr>';
-                $total += (float) $value->monto_pago;
+                $total += (float) $value->monto_aplicado_moneda_documento;
             }
         ?>
         <tr>
             <td style="border-top: 1px dashed black;" colspan="4">TOTAL ABONADO</td>
-            <td style="border-top: 1px dashed black;" colspan="1">{{ $total }}</td>  
+            <td style="border-top: 1px dashed black;" colspan="1"><?php echo number_format($total, 2); ?></td>  
         </tr>
     </table>
     <br>

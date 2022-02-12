@@ -1365,6 +1365,15 @@
             } else {
                 $(".btn_guardarOrden").removeAttr("disabled");
             }
+
+            if($("#estado").val() == "1" || $("#estado").val() == "4") {
+                $(".btn_guardarOrden").removeAttr("disabled");
+            } else {
+              
+                $(".btn_guardarOrden").attr("disabled", "disabled");
+            }
+
+ 
         });
 
         function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto, um_id) {
@@ -3163,9 +3172,12 @@
                         
                         deshabilitar_inputs();
                     }
+
                     if(data.solicitud[0].estado == "6" && data.solicitud[0].tipo_solicitud == "2") {
                         $("#imprimir-cronograma").show();
                     }
+
+                 
                     $("#aprobaciones").show();
                     $("#imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
@@ -3200,6 +3212,9 @@
             $("#formulario-creditos").find("select").removeAttr("disabled");
             $(".datos-persona").attr("readonly", "readonly");
             $(".select-persona").attr("disabled", "disabled");
+
+            $("#total_ingresos").attr("readonly", "readonly");
+            $("#total_ingresos_fiador").attr("readonly", "readonly");
             // alert("hola 2");
         }
 
@@ -3227,6 +3242,77 @@
 
         }
 
+        function calcular_total_ingresos_comprador() {
+            
+            var ingreso_neto_mensual = 0;
+            var ingreso_neto_conyugue = 0;
+            var otros_ingresos = 0;
+            var total_ingresos = 0;
+    
+            if (!isNaN($("#ingreso_neto_mensual").val())) {
+                ingreso_neto_mensual = parseFloat($("#ingreso_neto_mensual").val());
+            }
+
+            if (!isNaN($("#ingreso_neto_conyugue").val())) {
+                ingreso_neto_conyugue = parseFloat($("#ingreso_neto_conyugue").val());
+            }
+
+            if (!isNaN($("#otros_ingresos").val())) {
+                otros_ingresos = parseFloat($("#otros_ingresos").val());
+            }
+
+            total_ingresos = ingreso_neto_mensual + ingreso_neto_conyugue + otros_ingresos;
+            
+    
+
+            $("#total_ingresos").val(total_ingresos); 
+        }
+
+        function calcular_total_ingresos_fiador() {
+            var ingreso_neto_mensual_fiador = 0;
+            var ingreso_neto_conyugue_fiador = 0;
+            var otros_ingresos_fiador = 0;
+            var total_ingresos_fiador = 0;
+    
+            if (!isNaN($("#ingreso_neto_mensual_fiador").val())) {
+                ingreso_neto_mensual_fiador = parseFloat($("#ingreso_neto_mensual_fiador").val());
+            }
+
+            if (!isNaN($("#ingreso_neto_conyugue_fiador").val())) {
+                ingreso_neto_conyugue_fiador = parseFloat($("#ingreso_neto_conyugue_fiador").val());
+            }
+
+            if (!isNaN($("#otros_ingresos_fiador").val())) {
+                otros_ingresos_fiador = parseFloat($("#otros_ingresos_fiador").val());
+            }
+            
+            total_ingresos_fiador = ingreso_neto_mensual_fiador + ingreso_neto_conyugue_fiador + otros_ingresos_fiador;
+            $("#total_ingresos_fiador").val(total_ingresos_fiador);   
+        }
+
+        $(document).on("keyup", "#ingreso_neto_mensual", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_conyugue", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#otros_ingresos", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_mensual_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_conyugue_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
+
+        $(document).on("keyup", "#otros_ingresos_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
         var search = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');
 
         var table_container_solicitud = $("#table_container_solicitud");
@@ -3345,8 +3431,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a data-target="#"  data-estado="' + data.record.estado
-                            + '" data-ide="' + data.record.cCodConsecutivo + '_' + data.record.nConsecutivo + '"   title="Eliminar" class="jtable-command-button eliminar-solicitud"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
+                        return '<a data-target="#"  data-cCodConsecutivo="' + data.record.cCodConsecutivo + '" data-nConsecutivo="' + data.record.nConsecutivo + '"  data-estado="' + data.record.estado
+                            + '" data-id="' + data.record.cCodConsecutivo + '_' + data.record.nConsecutivo + '"   title="Eliminar" class="jtable-command-button eliminar-solicitud"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
                     }
 
                 }
@@ -3370,10 +3456,12 @@
                     find_solicitud(id);
                     e.preventDefault();
                 });
-                $('.eliminar-Orden').click(function (e) {
-                    var ide = $(this).attr('data-ide');
+                $('.eliminar-solicitud').click(function (e) {
+                    var id = $(this).attr('data-id');
                     var estado = $(this).data('estado');
-
+                    var ccodconsecutivo = $(this).data('ccodconsecutivo');
+                    var nconsecutivo = $(this).data('nconsecutivo');
+                  
                     if (estado != "1") {
                         AlertFactory.textType({
                             title: '',
@@ -3382,8 +3470,29 @@
                         });
                         return false;
                     }
-                    idOrdenDelete.val(ide);
-                    modalDeleteOrden.modal("show");
+                    $.post("solicitud/eliminar_solicitud", { cCodConsecutivo : ccodconsecutivo, nConsecutivo: nconsecutivo},
+                        function (data, textStatus, jqXHR) {
+                            console.log(data);
+                            if (data.status == "e") {
+                                LoadRecordsButtonSolicitud.click();
+                             
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'La solicitud se eliminó correctamente.',
+                                    type: 'success'
+                                });
+                              
+                            } else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: data.msg,
+                                    type: 'info'
+                                });
+                            }
+                        },
+                        "json"
+                    );
+                  
                     e.preventDefault();
                 });
             },

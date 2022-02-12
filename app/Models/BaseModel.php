@@ -97,36 +97,63 @@ class BaseModel extends Model
     }
 
 
-    public function eliminar($array) {
+    public function eliminar($parametros) {
         try {
+            $where = array();
+            $where = $parametros["primary_key"];
 
-            $estado = DB::table($array[0])->where($array[1], $_REQUEST["id"])->delete();
+            $delete = DB::table($parametros["tabla"])
+            ->where($where);
+
+            $estado =  $delete->delete();
+            
+            // $estado = DB::table($array[0])->where($array[1], $_REQUEST["id"])->delete();
         
             if ($estado) {
 
-                return array(
-                    "status" => "e",
-                    "id" => $_REQUEST["id"],
-                    "type" => "success",
-                    "msg" => "SE ELIMINO CORRECTAMENTE!"
-                );
+                $parametros["status"] = "e";
+                // $parametros["id"] = $valorid;
+                $parametros["msg"] = "SE ELIMINO CORRECTAMENTE!";
+                $parametros["type"] = "success";
+    
+                return $parametros;
+
+                // return array(
+                //     "status" => "e",
+                //     "id" => $_REQUEST["id"],
+                //     "type" => "success",
+                //     "msg" => "SE ELIMINO CORRECTAMENTE!"
+                // );
             } else {
-                return array(
-                    "status" => "ee",
-                    "id" => $_REQUEST["id"],
-                    "type" => "error",
-                    "msg" => "ERROR AL ELIMINAR!"
-                );
+
+                $parametros["status"] = "ee";
+                // $parametros["id"] = $valorid;
+                $parametros["msg"] = "ERROR AL ELIMINAR!";
+                $parametros["type"] = "error";
+    
+                return $parametros;
+
+                // return array(
+                //     "status" => "ee",
+                //     "id" => $_REQUEST["id"],
+                //     "type" => "error",
+                //     "msg" => "ERROR AL ELIMINAR!"
+                // );
             }
         
         } catch (\Illuminate\Database\QueryException $e) {
-           
-            return array(
-                "status" => "ee",
-                "id" => $_REQUEST["id"],
-                "msg" => $e->getMessage(),
-                "type" => "error"
-            );
+            $parametros["status"] = "ee";
+            // $parametros["id"] = $valorid;
+            $parametros["msg"] = $e->getMessage();
+            $parametros["type"] = "error";
+            return $parametros;
+
+            // return array(
+            //     "status" => "ee",
+            //     "id" => $_REQUEST["id"],
+            //     "msg" => $e->getMessage(),
+            //     "type" => "error"
+            // );
            
         }
 

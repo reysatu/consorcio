@@ -678,11 +678,11 @@ class MovimientoCajaController extends Controller
                     
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
 
-                    if($data["IdMoneda"][$i] == "1") {
+                    if($solicitud[0]->idmoneda == "1") {
                         $efectivo_soles -= $data["vuelto"][$i];
                     }
 
-                    if($data["IdMoneda"][$i] == "2") {
+                    if($solicitud[0]->idmoneda == "2") {
                         $efectivo_dolares -= $data["vuelto"][$i];
                     }
                 }
@@ -942,6 +942,9 @@ class MovimientoCajaController extends Controller
         $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
         $datos["conyugue"] = $persona_repositorio->find($idconyugue);
 
+        $idfiadorconyugue = (!empty($solicitud_credito[0]->idfiadorconyugue)) ? $solicitud_credito[0]->idfiadorconyugue : "0";
+        $datos["fiadorconyugue "] = $persona_repositorio->find($idfiadorconyugue);
+
         $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
@@ -1053,5 +1056,7 @@ class MovimientoCajaController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idventa', $params);
     }
+
+   
 
 }
