@@ -1366,13 +1366,12 @@
                 $(".btn_guardarOrden").removeAttr("disabled");
             }
 
-            if($("#estado").val() == "1" || $("#estado").val() == "4") {
+            if($("#estado").val() == "1" || $("#estado").val() == "4" || $("#estado").val() == "") {
                 $(".btn_guardarOrden").removeAttr("disabled");
             } else {
               
                 $(".btn_guardarOrden").attr("disabled", "disabled");
             }
-
  
         });
 
