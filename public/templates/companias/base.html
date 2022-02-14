@@ -19,7 +19,7 @@
                         </button>
                         <h4 class="modal-title" id="titleModalCompania"></h4>
                     </div>
-                    <form id="formulario-persona">
+                    <form id="formulario-compania" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-horizontal">
                             <div class="row">
@@ -28,56 +28,56 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Ruc</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Ruc" maxlength="11" >
+                                           <input type="text" name="Ruc" class="form-control input-sm" id="Ruc" maxlength="11" >
                                         </div>
                                     </div>
                                      <div class="form-group">
                                          <label class="col-sm-2  control-label">Razón Social</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control input-sm" id="RazonSocial">
+                                            <input type="text" class="form-control input-sm" name="RazonSocial" id="RazonSocial">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Nombre Comercial</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control input-sm" id="NombreComercial">
+                                            <input type="text" class="form-control input-sm" id="NombreComercial" name="NombreComercial">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                           <label class="col-sm-2 control-label">Dirección</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control input-sm" id="Direccion">
+                                            <input type="text" class="form-control input-sm" id="Direccion" name="Direccion">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Telefóno 1</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Telefono1" value="">
+                                           <input type="text" class="form-control input-sm" id="Telefono1" name="Telefono1" value="">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2  control-label">Telefóno 2</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Telefono2">
+                                           <input type="text" class="form-control input-sm" id="Telefono2" name="Telefono2">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Telefóno 3</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Telefono3">
+                                           <input type="text" class="form-control input-sm" id="Telefono3" name="Telefono3">
                                         </div>
                                     </div>
                                      <div class="form-group">
                                          <label class="col-sm-2  control-label">Telefóno 4</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Telefono4">
+                                           <input type="text" class="form-control input-sm" id="Telefono4" name="Telefono4">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Estado</label>
                                         <div class="col-sm-10">
                                             <label class="checkbox-inline i-checks">
-                                                <input type="checkbox" id="Estado" checked>
+                                                <input type="checkbox" id="Estado" name="Estado" checked>
                                                 <span id="state_text">Activo</span>
                                             </label>
                                         </div>
@@ -85,19 +85,19 @@
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Contacto</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Contacto">
+                                           <input type="text" class="form-control input-sm" id="Contacto" name="Contacto">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Correo</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Correo">
+                                           <input type="text" class="form-control input-sm" id="Correo" name="Correo">
                                         </div>
                                     </div>
                                      <div class="form-group">
                                          <label class="col-sm-2  control-label">Lema 1</label>
                                         <div class="col-sm-10">
-                                            <textarea class="form-control input-sm" id="lema1"  maxlength="1000" rows="3" cols="50">
+                                            <textarea class="form-control input-sm" id="lema1"  name="lema1"  maxlength="1000" rows="3" cols="50">
 
                                             </textarea>
                                          <!--   <input type="text"  id="lema1" maxlength="100"> -->
@@ -106,7 +106,7 @@
                                      <div class="form-group">
                                          <label class="col-sm-2  control-label">Lema 2</label>
                                         <div class="col-sm-10">
-                                             <textarea class="form-control input-sm" id="lema2"  maxlength="1000" rows="3" cols="50">
+                                             <textarea class="form-control input-sm" id="lema2"  name="lema2"  maxlength="1000" rows="3" cols="50">
 
                                             </textarea> 
                                         </div>
@@ -114,7 +114,7 @@
                                      <div class="form-group">
                                          <label class="col-sm-2  control-label">Direcciones oficinas</label>
                                         <div class="col-sm-10">
-                                             <textarea class="form-control input-sm" id="direcciones_oficinas"  maxlength="1000" rows="3" cols="50">
+                                             <textarea class="form-control input-sm" id="direcciones_oficinas"  name="direcciones_oficinas" maxlength="1000" rows="3" cols="50">
 
                                             </textarea> 
                                         </div>
@@ -122,27 +122,34 @@
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Base</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="Base">
+                                           <input type="text" class="form-control input-sm" id="Base" name="Base">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Ruta Data</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="RutaData">
+                                           <input type="text" class="form-control input-sm" id="RutaData"  name="RutaData">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Ruta Log</label>
                                         <div class="col-sm-10">
-                                           <input type="text" class="form-control input-sm" id="RutaLog">
+                                           <input type="text" class="form-control input-sm" id="RutaLog" name="RutaLog">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                          <label class="col-sm-2  control-label">Fecha Backup</label>
                                         <div class="col-sm-10">
-                                           <input type="date" class="form-control input-sm" id="FechaUltBackup">
+                                           <input type="date" class="form-control input-sm" id="FechaUltBackup" name="FechaUltBackup">
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-2  control-label">Logo</label>
+                                       <div class="col-sm-10">
+                                          <input type="file" class="form-control input-sm" id="file" name="file">
+                                       </div>
+                                   </div>
                                 </div>
                             </div>   
                         </div>  

@@ -155,47 +155,65 @@
              bval = false;
             };
             if(bval){
-                 var params = {
-                    'Ruc':ruc.val(),
-                    'NombreComercial':nombreComercial.val(),
-                    'RazonSocial':razonSocial.val(),
-                    'Direccion':direccion.val(),
-                    'Telefono1':telefono1.val(),
-                    'Telefono2':telefono2.val(),
-                    'Telefono3':telefono3.val(),
-                    'Telefono4':telefono4.val(),
-                    'lema1':lema1.val(),
-                    'lema2':lema2.val(),
-                    'direcciones_oficinas':direcciones_oficinas.val(),
-                    'Estado':((estado.prop('checked')) ? '1' : '0'),
-                    'Contacto':contacto.val(),
-                    'Correo':correo.val(),
-                    'Base':base.val(),
-                    'RutaData':rutaData.val(),
-                    'RutaData':rutaData.val(),
-                    'RutaLog':rutaLog.val(),
-                    'FechaUltBackup':fechaUltBackup.val(),
-                 };
+                //  var params = {
+                //     'Ruc':ruc.val(),
+                //     'NombreComercial':nombreComercial.val(),
+                //     'RazonSocial':razonSocial.val(),
+                //     'Direccion':direccion.val(),
+                //     'Telefono1':telefono1.val(),
+                //     'Telefono2':telefono2.val(),
+                //     'Telefono3':telefono3.val(),
+                //     'Telefono4':telefono4.val(),
+                //     'lema1':lema1.val(),
+                //     'lema2':lema2.val(),
+                //     'direcciones_oficinas':direcciones_oficinas.val(),
+                //     'Estado':((estado.prop('checked')) ? '1' : '0'),
+                //     'Contacto':contacto.val(),
+                //     'Correo':correo.val(),
+                //     'Base':base.val(),
+                //     'RutaData':rutaData.val(),
+                //     'RutaData':rutaData.val(),
+                //     'RutaLog':rutaLog.val(),
+                //     'FechaUltBackup':fechaUltBackup.val(),
+                //  };
+
                 var idPe = (idCompania.val() === '') ? 0 : idCompania.val();
-                  RESTService.updated('companias/createCompania', idPe, params, function(response) {
-                    if (!_.isUndefined(response.status) && response.status) {
-                        modalCompania.modal('hide');
-                         AlertFactory.textType({
-                            title: '',
-                            message: 'El registro se guardó correctamente',
-                            type: 'success'
-                        });
-                        LoadRecordsButtonCompania.click();
-                    } else {
-                        var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo guardar la compania. Intente nuevamente.' : response.message;
-                        AlertFactory.textType({
-                            title: '',
-                            message: msg_,
-                            type: 'info'
-                        });
-                    }
+
+                var formData = new FormData(document.getElementById("formulario-compania"));
+
+                console.log(formData);
+                
+                $.ajax({
+                    url: 'companias/createCompania/' + idPe,
+                    type: "post",
+                    dataType: "json",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                }).done(function(res){
+                    console.log(res);
                 });
+                
+                //   RESTService.updated('companias/createCompania', idPe, params, function(response) {
+                //     if (!_.isUndefined(response.status) && response.status) {
+                //         modalCompania.modal('hide');
+                //          AlertFactory.textType({
+                //             title: '',
+                //             message: 'El registro se guardó correctamente',
+                //             type: 'success'
+                //         });
+                //         LoadRecordsButtonCompania.click();
+                //     } else {
+                //         var msg_ = (_.isUndefined(response.message)) ?
+                //             'No se pudo guardar la compania. Intente nuevamente.' : response.message;
+                //         AlertFactory.textType({
+                //             title: '',
+                //             message: msg_,
+                //             type: 'info'
+                //         });
+                //     }
+                // });
             }
 
         };       

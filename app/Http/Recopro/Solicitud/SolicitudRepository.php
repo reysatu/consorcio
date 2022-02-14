@@ -207,7 +207,8 @@ class SolicitudRepository implements SolicitudInterface
         WHEN s.estado = 4 THEN 'Aprobado'
         WHEN s.estado = 5 THEN 'Rechazado'
         WHEN s.estado = 6 THEN 'Facturado'
-        WHEN s.estado = 7 THEN 'Despachado' END AS estado_user, conv.descripcionconvenio AS convenio
+        WHEN s.estado = 7 THEN 'Despachado' END AS estado_user, 
+        conv.descripcionconvenio AS convenio
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)

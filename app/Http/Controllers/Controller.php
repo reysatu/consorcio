@@ -185,4 +185,48 @@ class Controller extends BaseController
 
         return $date[0] . "-" . $mes . "-" . $dia;
     }
+
+
+    public function SubirArchivo($archivo, $ruta, $newname = "") {
+        ini_set('memory_limit', '2024M');
+        ini_set('upload_max_filesize', '2024M');
+        $dir_subida = $ruta;
+        
+        if ($newname != "") {
+            $exts = explode(".", $archivo['name']);
+
+            if (count($exts) > 0) {
+                $ext = $exts[count($exts) - 1];
+            } else {
+                $ext = "jpg";
+            }
+
+            $filename = $newname . "." . $ext;
+        } else {
+            $filename = $archivo['name'];
+        }
+
+        $fichero_subido = $dir_subida . basename($filename);
+        //SI NO EXISTE LA CARPETA LO CREAMOS CON TODOS LOS PERMISOS
+        if (!file_exists($ruta)) {
+            mkdir($ruta, 0777, true);
+        }
+
+        $response = array();
+        if (move_uploaded_file($archivo['tmp_name'], $fichero_subido)) {
+            chmod($fichero_subido, 0777);
+            $response["response"]   = "OK";
+            $response["NombreFile"] = $filename;
+
+        } else {
+            $response["response"]   = "ERROR";
+            $response["NombreFile"] = $filename;
+
+        }
+        return $response;
+    }
+
+
+
+  
 }

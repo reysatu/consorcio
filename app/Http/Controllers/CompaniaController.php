@@ -34,6 +34,12 @@ class CompaniaController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->all();
+            $nombre = $data["RazonSocial"];
+            $nombre = str_replace(" ", "_",  $nombre);
+            $nombre = str_replace(".", "_",  $nombre);
+
+            $response = $this->SubirArchivo($data["file"],  base_path("public/logos/"), $nombre);
+
             $table="ERP_Compania";
             $idt='IdCompania';
             $data['Ruc'] = $data['Ruc'];
