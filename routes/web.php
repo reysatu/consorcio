@@ -78,6 +78,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Shops.php';
 
+    require app_path() . '\Http\Routes\ResetearContrasenias.php';
+
     require app_path() . '\Http\Routes\Categories.php';
 
     require app_path() . '\Http\Routes\Operations.php';
@@ -171,9 +173,13 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\CategoriaVehiculars.php';
 
+    require app_path() . '\Http\Routes\AprobacionSolicituds.php';
+
     // Routes Ventas
 
     require app_path() . '\Http\Routes\Solicitud.php';
+
+      require app_path() . '\Http\Routes\Asignacioncobradors.php';
 
     //Route Purchases
 

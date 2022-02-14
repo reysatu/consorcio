@@ -35,6 +35,16 @@ class MovimientoCajaController extends Controller
         $this->base_model = new BaseModel();
 //        $this->middleware('json');
     }
+    public function data_formIncio (CajaDiariaDetalleInterface $moventRepo)
+    {
+        $cuenta_bancarias = $moventRepo->getcuentas_bancarias();
+        $bancos = $moventRepo->getbancos();
+        return response()->json([
+            'status' => true,
+            'cuenta_bancarias' => $cuenta_bancarias,
+            'bancos'=>$bancos,
+        ]);
+    }
     public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj)
     {
         DB::beginTransaction();
@@ -85,10 +95,21 @@ class MovimientoCajaController extends Controller
             $datoDet['codigoFormaPago'] =strtoupper($data['formaPagoAdd']);
             $datoDet['idMoneda'] =strtoupper($data['idMonedaAdd']);
             $datoDet['monto'] =strtoupper($data['montoAdd']);
-            $datoDet['descripcion'] =strtoupper($data['conceptoAdd']);
+            $datoDet['descripcion'] =strtoupper($data['conceptoAdd']); 
             $datoDet['idCajaDiaria'] =$id;
-            
             $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
+            if($data['tipoMovimientoAdd']=='ING'){
+                  $datoDet['naturaleza'] ='E';
+            }else{
+                 $datoDet['naturaleza'] ='S';
+            }   
+
+            if($data['tipoMovimientoAdd']=='BCO'){
+                 $datoDet['nroOperacion'] =$data['nrOperacion'];
+                 $datoDet['banco'] =$data['idBanco'];
+                 $datoDet['numero_cuenta'] =$data['idCuenta'];
+                 $datoDet['descripcion'] =$data['bancoText'].','.$data['numero_cuenta']; 
+            }
             $repo->create($datoDet);
 
             DB::commit();

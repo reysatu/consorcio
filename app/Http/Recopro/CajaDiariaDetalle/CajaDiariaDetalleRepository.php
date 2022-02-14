@@ -23,6 +23,16 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
     {
         return $this->model->get();
     }
+     public function getcuentas_bancarias()
+    {   
+        $mostrar=DB::select("select * from ERP_CuentasBancarias");
+        return $mostrar; 
+    }
+     public function getbancos()
+    {   
+        $mostrar=DB::select("select * from ERP_Bancos");
+        return $mostrar; 
+    }
     public function allExcel()
     {   $idusuario=auth()->id();
         date_default_timezone_set('UTC');

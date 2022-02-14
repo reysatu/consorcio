@@ -46,6 +46,10 @@ use App\Http\Recopro\Periodo\Periodo;
 use App\Http\Recopro\Periodo\PeriodoInterface;
 use App\Http\Recopro\Periodo\PeriodoRepository;
 
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitud; 
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudInterface;
+use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudRepository;
+
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodo; 
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoInterface;
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoRepository;
@@ -138,6 +142,9 @@ use App\Http\Recopro\Solicitud\Solicitud;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_Asignacion;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionRepository;
 
 use App\Http\Recopro\Venta\Venta;
 use App\Http\Recopro\Venta\VentaInterface;
@@ -215,6 +222,10 @@ use App\Http\Recopro\Type_vehiculo\Type_vehiculoRepository;
 use App\Http\Recopro\List_precio\List_precio;
 use App\Http\Recopro\List_precio\List_precioInterface;
 use App\Http\Recopro\List_precio\List_precioRepository;
+
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronograma;
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaRepository;
 
 use App\Http\Recopro\Objetivo\Objetivo;
 use App\Http\Recopro\Objetivo\ObjetivoInterface;
@@ -630,6 +641,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMovimiento_Detalle_cierre();
         $this->registerView_movimiento_cierre();
         $this->registerPeriodo();
+        $this->registerAprobacionSolicitud();
+        $this->registerSolicitud_Asignacion();
         $this->registerVW_CierreInventarioPeriodo();
         $this->registerCategoriaVehicular();
         $this->registerCompania();
@@ -698,6 +711,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCurrency();
         $this->registerMeasure();
         $this->registerType_vehiculo();
+        $this->registerSolicitudCronograma();
         $this->registerList_precio();
         $this->registerObjetivo();
         $this->registerList_precio_detalle();
@@ -952,6 +966,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(PeriodoInterface::class, function ($app) {
             return new PeriodoRepository(new Periodo());
+        });
+    }
+      public function registerSolicitud_Asignacion()
+    {
+        $app = $this->app;
+
+        $app->bind(Solicitud_AsignacionInterface::class, function ($app) {
+            return new Solicitud_AsignacionRepository(new Solicitud_Asignacion());
+        });
+    }
+      public function registerAprobacionSolicitud()
+    {
+        $app = $this->app;
+
+        $app->bind(AprobacionSolicitudInterface::class, function ($app) {
+            return new AprobacionSolicitudRepository(new AprobacionSolicitud());
         });
     }
     public function registerCategoriaVehicular()
@@ -1509,6 +1539,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(MeasureInterface::class, function ($app) {
             return new MeasureRepository(new Measure());
+        });
+    }
+     public function registerSolicitudCronograma()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCronogramaInterface::class, function ($app) {
+            return new SolicitudCronogramaRepository(new SolicitudCronograma());
         });
     }
     public function registerList_precio_detalle()

@@ -81,6 +81,7 @@
         'sys.app.factor_credito',
         'sys.app.periodos',
         'sys.app.categoriaVehiculars',
+        'sys.app.resetearContrasenias',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',
@@ -93,6 +94,7 @@
         'sys.app.approval_autonomy',
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
+        'sys.app.aprobacionSolicituds',
         //Ventas
         'sys.app.solicitud',
         
@@ -129,11 +131,13 @@
         'sys.app.petty_cash',
         'sys.app.companias',
         //Servicio tecnico 
+        'sys.app.asignacioncobradors',
         'sys.app.devolucion_servicesTecnicos',
         'sys.app.entrega_servicesTecnicos',
         'sys.app.quality_controls',
         // Reportes
-        'sys.app.stocks'
+        'sys.app.stocks',
+
     ]).run(Run)
         .controller('OverloadCtrl', OverloadCtrl)
         .config(Config);

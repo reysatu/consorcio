@@ -367,6 +367,32 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearchAsignacion(form_id, input_id, btn_id) {
+   return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+            '<div class="form-group">'+
+                '<div class="col-md-2">'+
+                    '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+                '</div>'+
+                '<label class="col-sm-3 control-label">Rango de días vencidos</label>'+
+                '<div class="col-md-2">'+
+                    '<input type="number" class="form-control input-sm"  id="idInicio">'+
+                '</div>'+
+                '<div class="col-md-2">'+
+                    '<input type="number" class="form-control input-sm"  id="idFin">'+
+                '</div>'+
+                '<div class="col-md-1">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</div>'+
+                '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_exportar_dd" class="btn-danger-admin  btn-sm">' +
+                            '<i class="fa fa-plus"> Cobrador</i>' +
+                    '</button>' +
+                '</div>'+           
+            '</div>'+
+         '</form>';
+}
 function getFormSearchCierre(form_id, input_id, btn_id,val_busquedad,estado,idMovimiento) {
     var estado='b';
     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
@@ -3121,8 +3147,10 @@ function create_pdf_Querystock(response) {
 
       dataDolMovimienQuery.push(tituloDolFormQuery) ;
       var todol=0;
+      console.log(data);
+      console.log("FF1");
        data.map(function(index) {
-            todol=Number(todol)+Number(index.Costo_Promedio_Unitario);
+            todol=Number(todol)+Number(index.Costo_Total);
             var tituloDolFormQueryData=[];
              var cu=Number(index.Costo_Promedio_Unitario).toFixed(2);
             var pu=Number(index.Costo_Total).toFixed(2);
@@ -3208,6 +3236,7 @@ function create_pdf_Querystock(response) {
                     ];
              dataDolMovimienQuery.push(tituloDolFormQueryData) ;        
        });
+         console.log("FF3");
      var todolt=Number(todol).toFixed(2); 
      todolt = addCommas(todolt);  
    for (var i = 0; i < 5; i++) {

@@ -20,25 +20,39 @@ class SolicitudRepository implements SolicitudInterface
         $this->model = $model;
     }
 
-    public function search($s)
+    public function search($s) 
     {
         return $this->model->orWhere(function ($q) use ($s) {
             $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-        })->orderBy('fecha_solicitud', 'DESC');
+        });
+    }
+    public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
+    {
+
+        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin) {
+            $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+             if(!empty($filtro_tienda)){
+              $q->Where('nCodTienda',$filtro_tienda);
+            }
+        });
     }
 
     public function search_ventas($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
+
             $q->whereIn('estado', [2, 4])
                 ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-        })->orderBy('fecha_solicitud', 'DESC');
+        });
     }
 
     public function all()
@@ -182,19 +196,19 @@ class SolicitudRepository implements SolicitudInterface
 		@sMensaje varchar(250)
         SELECT	@sMensaje = N''''''
 
-        SET NOCOUNT ON; EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
+        EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
                 @cCodConsecutivo = N'{$data["cCodConsecutivo"]}',
                 @nConsecutivo = {$data["nConsecutivo"]},
                 @Usuario = " . auth()->id() . ",
                 @sMensaje = @sMensaje OUTPUT
 
-        SELECT	@return_value AS 'return_value', @sMensaje as 'msg'";
+        SELECT	@sMensaje as 'msg'";
 
         // echo $sql; exit;
         $res = DB::select($sql);
 
-        // print_r($res);
-        return $res;
+
+        return $res[0]->msg;
     }
 
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
@@ -207,15 +221,16 @@ class SolicitudRepository implements SolicitudInterface
         WHEN s.estado = 4 THEN 'Aprobado'
         WHEN s.estado = 5 THEN 'Rechazado'
         WHEN s.estado = 6 THEN 'Facturado'
+
         WHEN s.estado = 7 THEN 'Despachado' END AS estado_user, 
         conv.descripcionconvenio AS convenio
+
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
         LEFT JOIN ERP_Descuentos AS d ON(d.id=s.descuento_id)
         LEFT JOIN ERP_Vendedores AS v ON(v.idvendedor=s.idvendedor)
         LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
         LEFT JOIN ERP_Convenios AS conv ON(conv.idconvenio=s.idconvenio)
-       
         WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
@@ -229,10 +244,9 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN a.description IS NULL THEN '-.-' ELSE a.description END AS almacen, 
         CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, 
         CASE WHEN l.descripcion IS NULL THEN '-.-' ELSE l.descripcion END AS localizacion, 
-        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto, um.Abreviatura AS unidad_medida, p.code_article
+        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
-        LEFT JOIN ERP_UnidadMedida AS um ON(um.IdUnidadMedida=sa.um_id)
         LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
         LEFT JOIN ERP_Localizacion AS l ON(l.idLocalizacion=sa.idlocalizacion)
         LEFT JOIN ERP_Lote AS lo ON(lo.idLote=sa.idlote)
@@ -251,8 +265,10 @@ class SolicitudRepository implements SolicitudInterface
         $sql = "SELECT sa.*, p.*, c.descripcion AS categoria,
         CASE WHEN m.description IS NULL THEN '.' ELSE  m.description END AS marca,
         CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
+       
         s.nombreSerie AS serie, cv.idCatVeh,
         s.motor, s.color, s.anio_fabricacion
+
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         INNER JOIN ERP_SolicitudDetalle AS sd ON(sd.cCodConsecutivo=sa.cCodConsecutivo AND sd.nConsecutivo=sa.nConsecutivo AND sd.idarticulo=sa.idarticulo)
@@ -281,12 +297,7 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, f.cNumerodocumento AS documento_fiador, cy.cNumerodocumento AS documento_conyugue, fc.cNumerodocumento AS documento_fiadorconyugue 
-        FROM ERP_SolicitudCredito  AS s
-        LEFT JOIN ERP_Persona AS f ON(f.idPersona=s.idfiador)
-        LEFT JOIN ERP_Persona AS cy ON(cy.idPersona=s.idconyugue)
-        LEFT JOIN ERP_Persona AS fc ON(fc.idPersona=s.idfiadorconyugue)
-        WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
+        $sql = "SELECT * FROM ERP_SolicitudCredito WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
         return $result;

@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\Solicitud;
+<?php namespace App\Http\Recopro\Solicitud_Asignacion;
 
 use App\Http\Recopro\User\User;
 // use App\Http\Recopro\Shop\Shop;
@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 4/5/2017
  * Time: 6:54 PM
  */
-class Solicitud extends Model
+class Solicitud_Asignacion extends Model
 {
    
 
-    protected $table = 'ERP_view_solicitud';
+    protected $table = 'ERP_view_solicitud_Asignacion';
 
-    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante'];
+    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante','Cobrador'];
     protected $primaryKey = 'cCodConsecutivo';
     protected $keyType = 'string';
     public $incrementing = false;
