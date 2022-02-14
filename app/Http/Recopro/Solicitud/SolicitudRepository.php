@@ -20,15 +20,27 @@ class SolicitudRepository implements SolicitudInterface
         $this->model = $model;
     }
 
-    public function search($s) 
+    public function search($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
             $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-        });
+        })->orderBy('fecha_solicitud', 'DESC');
     }
+
+    public function search_ventas($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->whereIn('estado', [2, 4])
+                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_solicitud', 'DESC');
+    }
+    
     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
     {
 
@@ -43,17 +55,7 @@ class SolicitudRepository implements SolicitudInterface
         });
     }
 
-    public function search_ventas($s)
-    {
-        return $this->model->orWhere(function ($q) use ($s) {
-
-            $q->whereIn('estado', [2, 4])
-                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-        });
-    }
+   
 
     public function all()
     {
@@ -244,9 +246,10 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN a.description IS NULL THEN '-.-' ELSE a.description END AS almacen, 
         CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, 
         CASE WHEN l.descripcion IS NULL THEN '-.-' ELSE l.descripcion END AS localizacion, 
-        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto
+        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto, um.Abreviatura AS unidad_medida, p.code_article
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        LEFT JOIN ERP_UnidadMedida AS um ON(um.IdUnidadMedida=sa.um_id)
         LEFT JOIN ERP_Almacen AS a ON(a.id=sa.idalmacen)
         LEFT JOIN ERP_Localizacion AS l ON(l.idLocalizacion=sa.idlocalizacion)
         LEFT JOIN ERP_Lote AS lo ON(lo.idLote=sa.idlote)
