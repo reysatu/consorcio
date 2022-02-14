@@ -12,7 +12,7 @@ use App\Http\Recopro\Cobrador\CobradorTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Cobrador\CobradorInterface;
 use App\Http\Requests\CobradorRequest;
-use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
 use DB;
 class AsignacioncobradorController extends Controller
@@ -48,14 +48,14 @@ class AsignacioncobradorController extends Controller
         }
     } 
 
-    public function all(Request $request,SolicitudInterface $repo)
+    public function all(Request $request,Solicitud_AsignacionInterface $repo)
     {
         $s = $request->input('search', '');
         $filtro_tienda = $request->input('filtro_tienda', '');
         $idInicio = $request->input('idInicio', '');
         $idFin = $request->input('idFin', '');
 
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado','Cobrador'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin), $request, 'cCodConsecutivo', $params);
     }

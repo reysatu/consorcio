@@ -56,7 +56,8 @@
                             message: 'Se asignó el cobrador correctamente.',
                             type: 'success'
                         });
-                        // $("#LoadRecordsButtonAsignacioncobrador").click();
+                         modalCobradores.modal('hide');
+                        $("#LoadRecordsButtonAsignacioncobrador").click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar. Intente nuevamente.' : response.message;
@@ -86,7 +87,7 @@
         var table_container_Asignacioncobrador = $("#table_container_Asignacioncobrador");
 
         table_container_Asignacioncobrador.jtable({
-            title: "Lista de Categorías",
+            title: "Lista de Solicitudes",
             paging: true,
             sorting: true,
             actions: { 
@@ -252,6 +253,11 @@
 
 
                 },
+                Cobrador: {
+                    title: 'Cobrador',
+
+
+                },
                 estado: {
                     title: 'Estado',
                     options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
@@ -330,7 +336,7 @@
                       });
                        $("#filtro_tienda").append('<option value="" selected>Tiendas</option>');
                        tiendas.map(function (index) {
-                         $("#filtro_tienda").append('<option value="2">'+index.descripcion+'</option>');
+                         $("#filtro_tienda").append('<option value="'+index.idTienda+'">'+index.descripcion+'</option>');
                       });
                 }
             }, function() {
