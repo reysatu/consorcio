@@ -27,20 +27,20 @@ class Query_stockRepository implements Query_stockInterface
         return $this->model->get();
     }
     public function allFiltro($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate)
-    {       $dato=$this->model->Where('Total','>',0)->get();
-            if(!empty($filtro_art)){
-            $dato=$dato->Where('Articulo',$filtro_art);
-            }
+    {       $dato=$this->model->Where('Total','>',0);
+            if(!empty($filtro_art)){ 
+            $dato=$dato->Where('Articulo',$filtro_art)->Where('Total','>',0); 
+            } 
             if(!empty($filtro_idAlm)){
-             $dato=$dato->Where('Almacen',$filtro_idAlm);
+             $dato=$dato->Where('Almacen',$filtro_idAlm)->Where('Total','>',0);
             }
             if(!empty($filtro_idLoc)){
-             $dato=$dato->Where('Localizacion',$filtro_idLoc);
+             $dato=$dato->Where('Localizacion',$filtro_idLoc)->Where('Total','>',0);
             }
             if(!empty($filtro_cate)){
-             $dato=$dato->Where('Categoria',$filtro_cate);
+             $dato=$dato->Where('Categoria',$filtro_cate)->Where('Total','>',0);
             }
-           return $dato;
+          return $dato->get();
     }
      public function search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate)
     {   

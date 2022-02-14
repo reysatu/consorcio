@@ -48,6 +48,16 @@ class ProductController extends Controller
         return parseList($repo->search($s), $request, 'id', $params);
 
     }
+    public function data_form_dd(Precios_productoInterface $repo)
+    {
+      
+        $userid=auth()->id();
+        return response()->json([ 
+            'status' => true,
+            'userid' => $userid,
+            
+        ]);
+    }
 
 
 

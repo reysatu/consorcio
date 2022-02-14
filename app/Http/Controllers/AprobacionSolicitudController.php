@@ -25,6 +25,7 @@ class AprobacionSolicitudController extends Controller
     public function AprobarRechazarSolicitud($id, AprobacionSolicitudInterface $repo,Request $request)
     {
        
+        try {
             $data = $request->all();
             $res = array("status" => "i");
             $data_update = array();
@@ -34,9 +35,20 @@ class AprobacionSolicitudController extends Controller
                 $data_update['aprobaComentario']=null;
             }
             $data_update['iEstado'] = $data['iEstado'];
-            $res["msg"] = $repo->aprobarRechazar($data_update);
-           return response()->json($res);
-     
+            $res = $repo->aprobarRechazar($data_update);
+            $val=$res[0]->msg;
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'msg'=>$val,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     } 
          public function getVentas($id, AprobacionSolicitudInterface $repo)
     {
@@ -54,7 +66,24 @@ class AprobacionSolicitudController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-    } 
+    }
+          public function getAprobadores($id, AprobacionSolicitudInterface $repo)
+    {
+        try {
+            $todo=explode("*", $id);
+            $data = $repo->getAprobadores($todo[0],$todo[1]);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }  
 
     public function all(Request $request, AprobacionSolicitudInterface $repo)
     {

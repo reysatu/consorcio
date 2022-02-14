@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Cobrador;
+namespace App\Http\Recopro\SolicitudCronograma;
 use Illuminate\Support\Facades\DB;
 
-class CobradorRepository implements CobradorInterface
+class SolicitudCronogramaRepository implements SolicitudCronogramaInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(Cobrador $model)
+    public function __construct(SolicitudCronograma $model)
     {
         $this->model = $model; 
        
@@ -23,29 +23,12 @@ class CobradorRepository implements CobradorInterface
     {
         return $this->model->get();
     }
-     public function search($s)
+     public function search($cCodConsecutivo,$nConsecutivo)
     {
-        return $this->model->where(function($q) use ($s){
-            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('dFecCre DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+        return $this->model->where(function($q) use ($cCodConsecutivo,$nConsecutivo){
+            $q->where('cCodConsecutivo',$cCodConsecutivo)->where('nConsecutivo',$nConsecutivo);
         });
 
-    } 
-    public function asignar_cobrador($codCons,$nCod,$idCobrador)
-    {
-
-        $sql = "UPDATE ERP_Solicitud SET idCobrador = '$idCobrador' WHERE cCodConsecutivo='$codCons' and nConsecutivo='$nCod'";
-        $result = DB::update($sql);
-
-        return $result;
-    }
-    public function getCobrador(){
-          $mostrar2=DB::select("select * from ERP_Cobrador where estado='A'");
-          return $mostrar2;
-    }
-     public function getTienda(){
-          $mostrar2=DB::select("select * from ERP_Tienda where estado='A'");
-          return $mostrar2;
     }
     public function allActive()
     {
@@ -53,8 +36,8 @@ class CobradorRepository implements CobradorInterface
     }
      public function create(array $attributes)
     {
-        $attributes['cIdUsuCre'] = auth()->id();
-        $attributes['cIdUsuMod'] = auth()->id();
+        $attributes['user_created'] = auth()->id();
+        $attributes['user_updated'] = auth()->id();
         return $this->model->create($attributes);
     }
     public function get_consecutivo($table,$id)

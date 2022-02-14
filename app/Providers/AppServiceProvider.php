@@ -220,6 +220,10 @@ use App\Http\Recopro\List_precio\List_precio;
 use App\Http\Recopro\List_precio\List_precioInterface;
 use App\Http\Recopro\List_precio\List_precioRepository;
 
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronograma;
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
+use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaRepository;
+
 use App\Http\Recopro\Objetivo\Objetivo;
 use App\Http\Recopro\Objetivo\ObjetivoInterface;
 use App\Http\Recopro\Objetivo\ObjetivoRepository;
@@ -703,6 +707,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCurrency();
         $this->registerMeasure();
         $this->registerType_vehiculo();
+        $this->registerSolicitudCronograma();
         $this->registerList_precio();
         $this->registerObjetivo();
         $this->registerList_precio_detalle();
@@ -1522,6 +1527,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(MeasureInterface::class, function ($app) {
             return new MeasureRepository(new Measure());
+        });
+    }
+     public function registerSolicitudCronograma()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCronogramaInterface::class, function ($app) {
+            return new SolicitudCronogramaRepository(new SolicitudCronograma());
         });
     }
     public function registerList_precio_detalle()

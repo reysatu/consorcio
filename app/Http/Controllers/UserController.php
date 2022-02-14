@@ -14,7 +14,7 @@ use App\Http\Requests\UserNewRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use DB;
 class UserController extends Controller
 {
     public function __construct()
@@ -41,6 +41,7 @@ class UserController extends Controller
             'Record' => []
         ]);
     }
+    
 
     public function update(UserInterface $repo, UserEditRequest $request)
     {
@@ -88,7 +89,7 @@ class UserController extends Controller
             'Result' => 'OK',
             'Options' => $users
         ]);
-    }
+    } 
 
     public function reset($id, Request $request, UserInterface $userRepo)
     {

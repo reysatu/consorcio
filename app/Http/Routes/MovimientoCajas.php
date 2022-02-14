@@ -15,11 +15,16 @@ Route::get('movimientoCajas/excel', ['as' => 'movimientoCajas.excel', 'uses' => 
 Route::get('movimientoCajas/data_form/{id}', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
 Route::get('movimientoCajas/data_formUsu', ['as' => 'movimientoCajas.data_formUsu', 'uses' => 'DescuentoController@data_form']);
 
+
+Route::get('movimientoCajas/getCuentaBancaria/{id}', ['as' => 'movimientoCajas.getCuentaBancaria', 'uses' => 'MovimientoCajaController@getCuentaBancaria']);
+
 Route::get('movimientoCajas/getDenominaciones/{id}', ['as' => 'movimientoCajas.getDenominaciones', 'uses' => 'CajaDiariaController@getDenominaciones']);
 
 Route::get('movimientoCajas/getDenominacionesView/{id}', ['as' => 'movimientoCajas.getDenominacionesView', 'uses' => 'CajaDiariaController@getDenominacionesView']);
-
+ 
 Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'uses' => 'CajaDiariaController@data_form']);
+
+Route::get('movimientoCajas/data_formIncio', ['as' => 'movimientoCajas.data_formIncio', 'uses' => 'MovimientoCajaController@data_formIncio']);
 
 Route::put('movimientoCajas/saveCajasDiarias/{id}', ['as' => 'movimientoCajas.saveCajasDiarias', 'uses' => 'CajaDiariaController@createUpdate']);
 

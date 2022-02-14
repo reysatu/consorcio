@@ -12,9 +12,15 @@
     AprobacionSolicitudCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
     function AprobacionSolicitudCtrl($scope, _, RESTService, AlertFactory, Helpers)
-    {     
+    {  
+
+        var modalVerAproba=$("#modalVerAproba");   
+        var btn_verAprobacio=$(".btn_verAprobacio");
+
+        var titleModalProduct=$("#titleModalProduct");
         var estadoApro=$("#estadoApro");
         var btn_Aprobar=$(".btn_Aprobar");
+        var btn_Rechazar=$(".btn_Rechazar");
         var aprobacion_ventas=$("#aprobacion_ventas");
         var aprobaComentario=$("#AprobaComentario");
         var modalSolicitud = $('#modalSolicitud');
@@ -148,7 +154,59 @@
           modalAprobar.on('hidden.bs.modal', function (e) {
             cleanAprobar();
         });
+              modalVerAproba.on('hidden.bs.modal', function (e) {
+            cleanAprobadores();
+        });
+        function cleanAprobadores() {
+           $("#aprobadores_table").html("");
+        }
+
+        btn_verAprobacio.click(function (e) {
+             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+              RESTService.get('aprobacionSolicituds/getAprobadores', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                     data_p.map(function(index) {
+                        var com='';
+                        if(index.cObservacion!=null){
+                            com=index.cObservacion;
+                        }
+                        var est='Por Aprobar'; 
+                                if(index.iEstado==1){
+                                    est='Aprobado';
+                                }else if(index.iEstado==2){
+                                    est='Rechazado';
+                                };
+                         var fre=moment(index.dFecReg).format('DD/MM/YYYY');;
+                         var fmo=moment(index.updated_at).format('DD/MM/YYYY');;      
+
+                        addAprobadores(index.name,com,est,fre,fmo);
+                         });
+                  
+                    modalVerAproba.modal('show');
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                        type: 'error'
+                    });
+                } 
+            });
+        
+        });
+          function addAprobadores(Aprbador,comentarios,estadoText,fre,fmo){
+                var tr = $('<tr></tr>');
+                var td1 = $('<td id="tr_identO ">' + Aprbador + '</td>');
+                var tda = $('<td>' + comentarios + '</td>');
+                var tdb = $('<td>' + fre + '</td>');
+                var td2 = $('<td>' + fmo + '</td>');
+                var td3 = $('<td>' + estadoText + '</td>');
+                tr.append(td1).append(tda).append(tdb).append(td2).append(td3);
+                $("#aprobadores_table").append(tr);
+        }  
         function cleanAprobar() {
+            titleModalProduct.html("");
            $("#aprobacion_ventas").html("");
             $("#AprobaComentario").val("");
         }
@@ -200,7 +258,6 @@
             $("#formulario-persona").trigger("reset");
             $("#AprobaComentario").val("");
         }
-
         function obtener_data_for_solicitud() {
             RESTService.all('solicitud/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -417,13 +474,16 @@
                 findPersona(id);
             }
         });
-         btn_Aprobar.click(function (e) {
+         btn_Rechazar.click(function (e) {
              var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
               RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                      data_p.map(function(index) {
+                                console.log(Number(index.saldo));
+                                if(Number(index.saldo)>0){
                                   addToDetaApro(index.Descripcion,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo))
+                                }
                          });
                   
 
@@ -450,6 +510,56 @@
                     // getDepartamentoPersona(data_p[0].cDepartamento);
                     // getProvinciaPersona(data_p[0].cProvincia, data_p[0].cDepartamento);
                     // getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
+                    titleModalProduct.html("Rechazar");
+                    estadoApro.val("2");
+                    modalAprobar.modal('show');
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
+        
+        });
+         btn_Aprobar.click(function (e) {
+             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+              RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                     data_p.map(function(index) {
+                                  console.log(Number(index.saldo));
+                                if(Number(index.saldo)>0){
+                                  addToDetaApro(index.Descripcion,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo))
+                                }
+                                 });
+                  
+
+                    // idPersona.val(data_p[0].idPersona);
+                    // cTipopersona.val(data_p[0].cTipopersona).trigger('change');
+                    // cDireccion.val(data_p[0].cDireccion);
+                    // cReferencia.val(data_p[0].cReferencia);
+                    // cDigitoVerificador.val(data_p[0].cDigitoVerificador);
+                    // cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
+                    // cNumerodocumento.val(data_p[0].cNumerodocumento);
+                    // dFechacaducidad.val(data_p.dFechacaducidad2);
+
+                    // cEmail.val(data_p[0].cEmail);
+                    // cCelular.val(data_p[0].cCelular);
+                    // dFechanacimiento.val(data_p.dFechanacimiento2);
+                    // cEstadoCivil.val(data_p[0].cEstadoCivil).trigger('change');;
+                    // cApepat.val(data_p[0].cApepat);
+                    // cApemat.val(data_p[0].cApemat);
+                    // cNombres.val(data_p[0].cNombres);
+                    // cRazonsocial.val(data_p[0].cRazonsocial);
+                    // cNombrePersona.val(data_p[0].cNombrePersona);
+                    // cSexo.val(data_p[0].cSexo);
+
+                    // getDepartamentoPersona(data_p[0].cDepartamento);
+                    // getProvinciaPersona(data_p[0].cProvincia, data_p[0].cDepartamento);
+                    // getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
+                    titleModalProduct.html("Aprobar");
                     estadoApro.val("1");
                     modalAprobar.modal('show');
                 } else {
@@ -954,13 +1064,25 @@
                 var idPe =0;
                 RESTService.updated('aprobacionSolicituds/AprobarRechazar', idPe, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
-                        console.log(response.msg);
+                        var ms=response.msg;
+                        console.log(ms);
+                        if(ms!='OK'){
+                            AlertFactory.textType({
+                            title: '',
+                            message: ms,
+                            type: 'info'
+                            });
+                        }else{
+                           AlertFactory.textType({
+                            title: '',
+                            message: 'El registro se guardó correctamente',
+                            type: 'success'
+                        });
+                          modalAprobar.modal("hide"); 
+                        }
+                        LoadRecordsButtonAprobacionSolicitud.click(); 
                         // modalPersona.modal('hide');
-                        // AlertFactory.textType({
-                        //     title: '',
-                        //     message: 'El registro se guardó correctamente',
-                        //     type: 'success'
-                        // });
+                       
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar la persona. Intente nuevamente.' : response.message;

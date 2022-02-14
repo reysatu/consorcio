@@ -22,6 +22,10 @@ class AprobacionSolicitudRepository implements AprobacionSolicitudInterface
         $mostrar=DB::select("select * from ERP_Venta as ve inner join ERP_Clientes as cl on cl.id = ve.idCliente inner join ERP_TipoDocumento as td on ve.IdTipoDocumento=td.IdTipoDocumento where   cCodConsecutivo_solicitud='$cCod' and nConsecutivo_solicitud='$nr'");
          return $mostrar; 
     }
+       public function getAprobadores($cCod,$nr){
+        $mostrar=DB::select("select * from ERP_SolicitudConformidad as sl inner join ERP_Usuarios as us on sl.nIdUsuario=us.id  where cCodConsecutivo='$cCod' AND nConsecutivo='$nr'");
+         return $mostrar; 
+    }
     public function all()
     {
         return $this->model->get();
@@ -29,45 +33,47 @@ class AprobacionSolicitudRepository implements AprobacionSolicitudInterface
     public function aprobarRechazar($data)
 
     {
+
+        
+        
         $sql = "
         DECLARE @return_value int,
         @sMensaje varchar(250)
         SELECT  @sMensaje = N''''''
 
-        EXEC    @return_value = [dbo].[VTA_AprobarRechazarSol]
-                @nCodConformidad = {$data["nCodConformidad"]},
+        SET NOCOUNT ON; EXEC    @return_value = [dbo].[VTA_AprobarRechazarSol]
+                @nCodConformidad = '{$data["nCodConformidad"]}',
                 @Usuario = " . auth()->id() . ",
-                @iEstado = {$data["iEstado"]},
-                @cComentarios = {$data["aprobaComentario"]},
+                @iEstado = '{$data["iEstado"]}',
+                @cComentarios = '{$data["aprobaComentario"]}',
                 @sMensaje = @sMensaje OUTPUT
 
-        SELECT  @sMensaje as 'msg'";
-
+        SELECT  @return_value AS 'return_value', @sMensaje as 'msg'";
         // echo $sql; exit;
-        $res = DB::select($sql);
+      $res = DB::select($sql);
 
-
-        return $res[0]->msg;
+        // print_r($res);
+        return $res;
     }
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('Conformidad', 'LIKE', '%'.$s.'%');
-            $q->orWhere('Codigo', 'LIKE', '%'.$s.'%');
-            $q->orWhere('Consecutivo', 'LIKE', '%'.$s.'%');
-            $q->orWhere('IdUsuario', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Usuario', 'LIKE', '%'.$s.'%');      
-            $q->orWhere('EstadoAprob', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Fecha', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('FechaVenc', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('EstadoSol', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Saldo', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Total', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Moneda', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('Cliente', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('NumeroDoc', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('TipoDoc', 'LIKE', '%'.$s.'%'); 
-            $q->orWhere('TipoSolicitud', 'LIKE', '%'.$s.'%'); 
+            $q->where('Conformidad', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id());
+            $q->orWhere('Codigo', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id());
+            $q->orWhere('Consecutivo', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id());
+            $q->orWhere('IdUsuario', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Usuario', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id());      
+            $q->orWhere('EstadoAprob', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Fecha', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('FechaVenc', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('EstadoSol', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Saldo', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Total', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Moneda', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('Cliente', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('NumeroDoc', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('TipoDoc', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
+            $q->orWhere('TipoSolicitud', 'LIKE', '%'.$s.'%')->where('IdUsuario',auth()->id()); 
         });
 
     }

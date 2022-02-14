@@ -21,6 +21,11 @@
         //     titleModalMovCaj.html('Nuevo Movimiento de caja');
         //     modalMovCaj.modal('show');
         // }
+        var cuentas_bancarias;
+        var nrOperacion=$("#nrOperacion");
+        var banco=$("#banco");
+        var cuentaBancaria=$("#cuentaBancaria");
+
         var tipoMovimientoAdd = $("#tipoMovimientoAdd");
         var idMonedaAdd = $("#idMonedaAdd");
         var conceptoAdd = $("#conceptoAdd");
@@ -76,6 +81,12 @@
             idMonedaAdd.val("");
             conceptoAdd.val("");
             montoAdd.val("");
+            cuentaBancaria.val("");
+            nrOperacion.prop('disabled', true);
+            nrOperacion.val("");
+            banco.prop('disabled', true);
+            cuentaBancaria.prop('disabled', true);
+            banco.val("").trigger("change");
         }
 
         modalMovimientoCaja.on('hidden.bs.modal', function (e) {
@@ -107,6 +118,20 @@
             }
 
         });
+        tipoMovimientoAdd.change(function (e) {
+             if(tipoMovimientoAdd.val()=='BCO'){
+                   nrOperacion.prop('disabled', false);
+                    banco.prop('disabled', false);
+                    cuentaBancaria.prop('disabled', false);
+             }else{
+                    nrOperacion.prop('disabled', true);
+                    nrOperacion.val("");
+                    banco.prop('disabled', true);
+                    banco.val("").trigger("change");
+                    cuentaBancaria.prop('disabled', true);
+                    cuentaBancaria.val("");
+             }
+          });
         $('#btn_Mcierra').click(function (e) {
             if (estadoMc.val() == "") {
                 AlertFactory.textType({
@@ -277,6 +302,42 @@
                 }
             });
         }
+          banco.change(function (e) {
+            cargarCuentasBancarias();
+          });
+          idMonedaAdd.change(function (e) {
+           cargarCuentasBancarias();
+          });
+        function cargarCuentasBancarias() {
+           var bval=true;
+            cuentaBancaria.html("");
+             cuentaBancaria.append('<option value="">Seleccionar</option>');
+             bval = bval && idMonedaAdd.required();
+             bval = bval && banco.required(); 
+            if (bval) {
+                  _.each(cuentas_bancarias, function (item) {
+                        if(item.idbanco==banco.val() && item.IdMoneda==idMonedaAdd.val()){
+                               cuentaBancaria.append('<option value="' + item.id_cuentabancaria+'*'+item.numero_cuenta+'">' + item.numero_cuenta+' '+item.descripcion_cuenta+ '</option>');
+                        }
+                     
+            });
+            } 
+        }
+      
+        function getDataFormCajaInicio() {
+            RESTService.all('movimientoCajas/data_formIncio', '', function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    banco.append('<option value="">Seleccionar</option>');
+                     _.each(response.bancos, function (item) {
+                        banco.append('<option value="' + item.idbanco + '">' + item.descripcion + '</option>');
+                    });
+                    cuentas_bancarias=response.cuenta_bancarias;
+                }
+            }, function () {
+                getDataFormCajaInicio();
+            });
+        }
+        getDataFormCajaInicio();
         function getDataFormDescuento() {
             RESTService.all('movimientoCajas/data_formUsu', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -302,6 +363,8 @@
                     });
                     idUsuario.val(response.usuario).trigger("change");
                     usuarioActual = response.usuario;
+                    
+                    cuentaBancaria
                 }
             }, function () {
                 getDataFormCajaDiaria();
@@ -529,14 +592,29 @@
             bval = bval && tipoMovimientoAdd.required();
             bval = bval && idMonedaAdd.required();
             bval = bval && montoAdd.required();
-            bval = bval && conceptoAdd.required();
+          
+            if(tipoMovimientoAdd.val()=='BCO'){
+                bval = bval && nrOperacion.required();
+                bval = bval && banco.required();
+                bval = bval && cuentaBancaria.required();
+            }
+            if(tipoMovimientoAdd.val()!='BCO'){
+                 bval = bval && conceptoAdd.required(); 
+            }
             if (bval) {
+                var to=cuentaBancaria.val();
+                var toCuenta=to.split('*');
                 var params = {
                     'tipoMovimientoAdd': tipoMovimientoAdd.val(),
                     'idMonedaAdd': idMonedaAdd.val(),
                     'montoAdd': montoAdd.val(),
                     'conceptoAdd': conceptoAdd.val(),
                     'formaPagoAdd': formaPagoAdd.val(),
+                    'nrOperacion':nrOperacion.val(),
+                    'bancoText':$("#banco option:selected"). text(),
+                    'idBanco':banco.val(),
+                    'idCuenta':toCuenta[0],
+                    'numero_cuenta':toCuenta[1],
                 };
                 var id = idcajaMC.val();
                 RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {

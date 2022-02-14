@@ -14,3 +14,4 @@ Route::get('aprobacionSolicituds/excel', ['as' => 'aprobacionSolicituds.excel', 
 Route::post('aprobacionSolicituds/find', ['as' => 'solicitud.find', 'uses' => 'SolicitudController@find']);
 Route::get('aprobacionSolicituds/getVentas/{id}', ['as' => 'aprobacionSolicituds.getVentas', 'uses' => 'AprobacionSolicitudController@getVentas']);
 Route::put('aprobacionSolicituds/AprobarRechazar/{id}', ['as' => 'aprobacionSolicituds.AprobarRechazar', 'uses' => 'AprobacionSolicitudController@AprobarRechazarSolicitud']);
+Route::get('aprobacionSolicituds/getAprobadores/{id}', ['as' => 'aprobacionSolicituds.getAprobadores', 'uses' => 'AprobacionSolicitudController@getAprobadores']);
