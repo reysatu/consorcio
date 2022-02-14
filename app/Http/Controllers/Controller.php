@@ -189,7 +189,7 @@ class Controller extends BaseController
 
     public function SubirArchivo($archivo, $ruta, $newname = "") {
         $archivo = (array) $archivo;
-        print_r($archivo);
+        // print_r($archivo);
         ini_set('memory_limit', '2024M');
         ini_set('upload_max_filesize', '2024M');
         $dir_subida = $ruta;
