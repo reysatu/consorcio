@@ -40,7 +40,7 @@ class SolicitudRepository implements SolicitudInterface
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
-    
+
     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
     {
 
@@ -198,19 +198,19 @@ class SolicitudRepository implements SolicitudInterface
 		@sMensaje varchar(250)
         SELECT	@sMensaje = N''''''
 
-        EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
+        SET NOCOUNT ON; EXEC	@return_value = [dbo].[VTA_EnvioAprobarSol]
                 @cCodConsecutivo = N'{$data["cCodConsecutivo"]}',
                 @nConsecutivo = {$data["nConsecutivo"]},
                 @Usuario = " . auth()->id() . ",
                 @sMensaje = @sMensaje OUTPUT
 
-        SELECT	@sMensaje as 'msg'";
+        SELECT	@return_value AS 'return_value', @sMensaje as 'msg'";
 
         // echo $sql; exit;
         $res = DB::select($sql);
 
-
-        return $res[0]->msg;
+        // print_r($res);
+        return $res;
     }
 
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
@@ -297,10 +297,15 @@ class SolicitudRepository implements SolicitudInterface
     }
 
 
-    public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo)
+       public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT * FROM ERP_SolicitudCredito WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $sql = "SELECT s.*, f.cNumerodocumento AS documento_fiador, cy.cNumerodocumento AS documento_conyugue, fc.cNumerodocumento AS documento_fiadorconyugue 
+        FROM ERP_SolicitudCredito  AS s
+        LEFT JOIN ERP_Persona AS f ON(f.idPersona=s.idfiador)
+        LEFT JOIN ERP_Persona AS cy ON(cy.idPersona=s.idconyugue)
+        LEFT JOIN ERP_Persona AS fc ON(fc.idPersona=s.idfiadorconyugue)
+        WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
 
         return $result;
