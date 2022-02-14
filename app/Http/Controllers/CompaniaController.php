@@ -39,7 +39,9 @@ class CompaniaController extends Controller
             $nombre = str_replace(".", "_",  $nombre);
 
             $response = $this->SubirArchivo($data["file"],  base_path("public/logos/"), $nombre);
+            $data["ruta_logo"] = base_path("public/logos/").$response["NombreFile"];
 
+            print_r($response); exit;
             $table="ERP_Compania";
             $idt='IdCompania';
             $data['Ruc'] = $data['Ruc'];
