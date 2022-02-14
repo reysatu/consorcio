@@ -511,6 +511,7 @@ class MovimientoCajaController extends Controller
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
             $data_ticket = $data_venta;
+            $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
             $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
@@ -695,8 +696,16 @@ class MovimientoCajaController extends Controller
                     $data_caja_detalle["nroTarjeta"] = "";
                     $data_caja_detalle["nroOperacion"] = "";
                     $data_caja_detalle["naturaleza"] = "S";
-    
+                    
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+
+                    if($solicitud[0]->idmoneda == "1") {
+                        $efectivo_soles -= $data["vuelto"][$i];
+                    }
+
+                    if($solicitud[0]->idmoneda == "2") {
+                        $efectivo_dolares -= $data["vuelto"][$i];
+                    }
                 }
 
 
@@ -954,6 +963,9 @@ class MovimientoCajaController extends Controller
         $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
         $datos["conyugue"] = $persona_repositorio->find($idconyugue);
 
+        $idfiadorconyugue = (!empty($solicitud_credito[0]->idfiadorconyugue)) ? $solicitud_credito[0]->idfiadorconyugue : "0";
+        $datos["fiadorconyugue "] = $persona_repositorio->find($idfiadorconyugue);
+
         $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
@@ -979,6 +991,8 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+        $idventa_comprobante = (isset($datos["venta"][0]->idventa_comprobante)) ? $datos["venta"][0]->idventa_comprobante : "0";
+        $datos["venta_comprobante"] = $repo->get_venta($idventa_comprobante); 
         // echo "<pre>";
         // print_r($datos);
         // exit;
@@ -1017,8 +1031,9 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
-        
+        $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         // $datos["cajero"] = $repo->get_cajero(); 
         $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
@@ -1034,6 +1049,11 @@ class MovimientoCajaController extends Controller
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+
         $pdf = PDF::loadView("solicitud.comprobante", $datos);
       
         // return $pdf->save("ficha_asociado.pdf"); // guardar
@@ -1057,5 +1077,7 @@ class MovimientoCajaController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idventa', $params);
     }
+
+   
 
 }

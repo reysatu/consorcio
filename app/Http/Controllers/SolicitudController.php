@@ -81,12 +81,13 @@ class SolicitudController extends Controller
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
 
-            //SALDOS
-            $data["saldo"] = $data["t_monto_total"];
-            $data["facturado"] = 0;
-            $data["pagado"] = 0;
+            
         
             if($data["nConsecutivo"] == "") {
+                //SALDOS
+                $data["saldo"] = $data["t_monto_total"];
+                $data["facturado"] = 0;
+                $data["pagado"] = 0;
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);
                 $data["fecha_solicitud"] = date("Y-m-d H:i:s");
                 $data["origen"] = "V";
@@ -391,6 +392,27 @@ class SolicitudController extends Controller
 
         return $pdf->stream($nombre_pdf); // ver
         // return $pdf->stream("credito_directo.pdf"); // ver
+    }
+
+    public function eliminar_solicitud(Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();
+        
+        try {
+            DB::beginTransaction();
+
+            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data));
+            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data));
+            $result = $this->base_model->eliminar($this->preparar_datos("dbo.ERP_Solicitud", $data));
+        
+            DB::commit();
+            return response()->json($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ee"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }
     }
  
 }

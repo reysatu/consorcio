@@ -1186,7 +1186,7 @@
                                     <strong class="simbolo-moneda"></strong>
                                 </span>
                                 <input type="number" class="form-control input-sm " id="total_ingresos"
-                                name="total_ingresos">
+                                name="total_ingresos" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -1392,7 +1392,7 @@
                                 <span class="input-group-addon input-sm">
                                     <strong class="simbolo-moneda"></strong>
                                 </span>
-                                <input type="number" class="form-control input-sm " id="total_ingresos_fiador"
+                                <input type="number" readonly="readonly" class="form-control input-sm " id="total_ingresos_fiador"
                                 name="total_ingresos_fiador">
                             </div>
                         </div>
@@ -1629,12 +1629,20 @@
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
-                                            <th>Aprobación</th>
+                                            <!-- <th>Aprobación</th>
                                             <th>Orden</th>
                                             <th>Usuario</th>
                                             <th>Fecha</th>
                                             <th>Estado</th>
+                                            <th>Observación</th> -->
+
+                                            <th>Usuario</th>
+                                            <th>Nombre Usuario</th>
+                                            <th>Estado</th>
+                                            
                                             <th>Observación</th>
+                                            <th>Fecha Registro </th>
+                                            <th>Fecha Modificación</th>
                                         </thead>
                                         <tbody id="detalle-aprobaciones">
     

@@ -15,16 +15,16 @@
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
             margin-top: 3cm;
-            margin-left: 0.3cm;
-            margin-right: 0.3cm;
+            margin-left: 0.5cm;
+            margin-right: 0.5cm;
             margin-bottom: 2cm;
         }
 
         header {
             position: fixed;
             top: 0.9cm;
-            left: 0.3cm;
-            right: 0.3cm;
+            left: 0.5cm;
+            right: 0.5cm;
             height: 3cm;
             /* text-align: center; */
             /* line-height: 0.8cm; */
@@ -205,7 +205,7 @@
 
             foreach ($solicitud_articulo as $key => $value) {
                 echo '<tr>';
-                echo '  <td>' . $value->precio_unitario . '</td>';
+                echo '  <td>' . number_format($value->precio_unitario, 2) . '</td>';
                 echo '  <td>' . $value->code_article . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
                 echo '  <td>' . $value->producto . '</td>';
@@ -242,13 +242,14 @@
                                 <table id="tabla_4">
                                     <tr>
                                         <td style="font-weight: bold; width: 60%;">Lista de Precios: </td>
-                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->monto_venta }}</td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} <?php echo number_format($solicitud_credito[0]->monto_venta, 2); ?></td>
 
 
                                     </tr>
                                     <tr>
                                         <td style="font-weight: bold; width: 60%;">Intereses: </td>
-                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->intereses }}</td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} 
+                                    <?php echo number_format($solicitud_credito[0]->intereses, 2)?></td>
 
                                     </tr>
                                     <tr>
@@ -266,12 +267,13 @@
 
 
                                         <td style="font-weight: bold; width: 60%;">Cuota Inicial: </td>
-                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->cuota_inicial }}</td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} 
+                                    <?php echo number_format($solicitud_credito[0]->cuota_inicial, 2); ?></td>
                                     </tr>
                                     <tr>
 
                                         <td style="font-weight: bold; width: 60%;">Valor de Cuota: </td>
-                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->valor_cuota }}</td>
+                                        <td style="width: 40%;" align="right">{{ $solicitud[0]->Simbolo }} <?php echo number_format($solicitud_credito[0]->valor_cuota, 2)?></td>
                                     </tr>
                                     <tr>
 
@@ -284,7 +286,14 @@
                         </tr>
                         <tr style="">
                             <td style="border-top: 1px solid black; font-weight: bold;">TOTAL FINANCIADO</td>
-                            <td style="border-top: 1px solid black; font-weight: bold;" align="right">{{ $solicitud[0]->Simbolo }} {{ $solicitud_credito[0]->total_financiado }}</td>
+                            <td style="border-top: 1px solid black; font-weight: bold;" align="right">
+                                {{ $solicitud[0]->Simbolo }} 
+                                <?php 
+                                    $total_financiado = $solicitud_credito[0]->monto_venta + $solicitud_credito[0]->intereses;  
+
+                                    echo number_format($total_financiado , 2);
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </td>
@@ -421,20 +430,20 @@
 
             <tr>
                 <td colspan="3" style="">
-                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_mensual : ""; ?><br>    
-                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_conyugue : ""; ?>
+                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->ingreso_neto_mensual, 2) : ""; ?><br>    
+                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->ingreso_neto_conyugue, 2) : ""; ?>
                 </td>
                 <td colspan="3" style="">
-                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->otros_ingresos : ""; ?><br>  
-                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->total_ingresos : ""; ?>
+                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->otros_ingresos, 2): ""; ?><br>  
+                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->total_ingresos, 2) : ""; ?>
                 </td>
                 <td colspan="3" style="">
-                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_mensual_fiador : ""; ?><br>    
-                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->ingreso_neto_conyugue_fiador : ""; ?>
+                    <strong>Ingreso Neto Mensual: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->ingreso_neto_mensual_fiador, 2) : ""; ?><br>    
+                    <strong>Ingreso Conyugue: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->ingreso_neto_conyugue_fiador, 2) : ""; ?>
                 </td>
                 <td colspan="3" style="">
-                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->otros_ingresos_fiador : ""; ?><br>  
-                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? $solicitud_credito[0]->total_ingresos_fiador : ""; ?>
+                    <strong>Otros Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->otros_ingresos_fiador, 2) : ""; ?><br>  
+                    <strong>Total Ingresos: </strong><?php echo (isset($solicitud_credito[0])) ? number_format($solicitud_credito[0]->total_ingresos_fiador, 2) : ""; ?>
                 </td>
                 
                 

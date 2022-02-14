@@ -1566,9 +1566,10 @@
         $scope.agregar_formas_pago = function () {
             // $("#idconyugue").focus();
             // alert($("#desTotal").val());
-            var total = parseFloat($("#total_pagar").val());
+            var total_pagar = parseFloat($("#total_pagar").val());
             var subtotal_montos_pago = sumar_montos_formas_pago();
             var saldo = total_pagar - subtotal_montos_pago; 
+            // alert();
             if(saldo <= 0) {
                 AlertFactory.textType({
                     title: '',
@@ -1578,11 +1579,11 @@
                 return false;
             }
 
-            $("#monto_p").val(total.toFixed(2));
+            $("#monto_p").val(saldo.toFixed(2));
             $("#forma_pago").val("EFE");
             $("#moneda").val($("#IdMoneda").val());
             $(".clean-monto").val(0);
-            $("#monto_aplicar").val(total.toFixed(2));
+            $("#monto_aplicar").val(saldo.toFixed(2));
             $("#modal-formas-pago").modal("show");
         }
 
@@ -1622,7 +1623,7 @@
 
         function sumar_montos_formas_pago() {
             // var montos_pago = $("input[name='monto_pago[]']");
-            var montos_pago = $("input[name='monto_aplicado_documento[]']");
+            var montos_pago = $("input[name='monto_aplicado_moneda_documento[]']");
             var subtotal_montos_pago = 0;
 
             for (var i = 0; i < montos_pago.length; i++) {
@@ -1684,7 +1685,7 @@
             html += '   <input type="hidden" name="nrooperacion[]" value="'+noperacion+'" />';
             html += '   <input type="hidden" name="monto_pago[]" value="'+monto_p+'" />';
             html += '   <input type="hidden" name="monto_moneda_documento[]" value="'+monto_local+'" />';
-            html += '   <input type="hidden" name="monto_aplicado_documento[]" value="'+monto_aplicar+'" />';
+            html += '   <input type="hidden" name="monto_aplicado_moneda_documento[]" value="'+monto_aplicar+'" />';
             html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="'+tipo_cambio+'" />';
             html += '   <input type="hidden" name="vuelto[]" value="'+monto_vuelto+'" />';
             html += '   <td>' + moneda_text + '</td>';
@@ -2108,6 +2109,54 @@
             }
         })
 
+        function getPersona(tipo) {
+            //    alert(tipo);
+            var bval = true;
+            bval = bval && $("#documento_" + tipo).required();
+            if (bval) {
+                var id = $("#documento_" + tipo).val();
+                RESTService.get('personas/get_persona_documento', id, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var datos = response.data;
+                        if (datos.length == 0) {
+                            $("#titleModalPersona").html('Nueva Persona');
+                            $("#modalPersona").modal('show');
+                            $("#formulario-persona").trigger("reset");
+                            $("#tipo_persona").val(tipo);
+                            var bandera = 'xxxxx';
+                            getDepartamentoPersona(bandera);
+                            $("#cNumerodocumento").val($("#documento_" + tipo).val());
+                            $("#cNumerodocumento").focus();
+                            $("." + tipo).val("");
+
+                        } else {
+
+                            // alert(tipo);
+                            // alert(datos[0].cTipodocumento);
+                            $("#tipo_documento_" + tipo).val(datos[0].cTipodocumento);
+                            $("#id" + tipo).val(datos[0].idPersona);
+                            // alert($("#nombres_" + tipo).val());
+                            $("#nombres_" + tipo).val(datos[0].cNombres);
+                            // alert(datos[0].cNombres);
+                            // alert($("#nombres_" + tipo).val());
+                            $("#apellido_paterno_" + tipo).val(datos[0].cApepat);
+                            $("#apellido_materno_" + tipo).val(datos[0].cApemat);
+
+                        }
+                    } else {
+                        // AlertFactory.textType({
+                        //     title: '',
+                        //     message: 'Hubo un error . Intente nuevamente.',
+                        //     type: 'info'
+                        // });
+                    }
+
+
+                });
+            }
+        }
+
+
         function find_solicitud(id) {
             $("#formulario-solicitud").find("input").attr("readonly", "readonly");
             $("#formulario-solicitud").find("select").attr("disabled", "disabled");
@@ -2138,6 +2187,21 @@
                         $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
                         $("#valor_cuota_final").val(data.solicitud_credito[0].valor_cuota_final);
                         $("#intereses").val(data.solicitud_credito[0].intereses);
+                        $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
+                        $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
+                        $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
+
+                        if(data.solicitud_credito[0].documento_fiador != null) {
+                            getPersona("fiador");
+                        }
+
+                        if(data.solicitud_credito[0].documento_conyugue != null) {
+                            getPersona("conyugue");
+                        }
+                        
+                        if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
+                            getPersona("documento_fiadorconyugue");
+                        }
                     }
 
                     if (data.solicitud_articulo.length > 0) {

@@ -15,7 +15,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 3cm;
+            margin-top: 4cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -26,7 +26,7 @@
             top: 0.9cm;
             left: 1cm;
             right: 1cm;
-            height: 3cm;
+            height: 4cm;
             /* text-align: center; */
             line-height: 0.8cm;
             font-family: 'Times New Roman' !important;
@@ -101,14 +101,15 @@
         <div class="row">
             <div class="col" style="width: 70%; text-align: center; line-height: 18px;">
                <?php 
-                    foreach ($tiendas as $key => $value) {
-                        echo $value->descripcion."-".$value->direccion."; ";
-                    }
+                    // foreach ($tiendas as $key => $value) {
+                    //     echo $value->descripcion."-".$value->direccion."; ";
+                    // }
                ?>
+               {{ $empresa[0]->direcciones_oficinas }}
                <br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">VENTA DE </label><br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">Motocicletas, Motokars, Generadores, Motobombas, Distribuidor de repuestos Honda</label><br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">SOMOS DISTRIBUIDORES AUTORIZADOS HONDA</label>
+         
+               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema1 }}</label><br>
+               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema2 }}</label>
             </div>
             <div class="col" style="width: 30%;">
                 <table style="width: 100%; border: 1px solid black; text-align: center; font-weight: bold; font-size: 18px !important; line-height: 25px;">
@@ -175,16 +176,46 @@
                     $total += (float)($value->precio_total);
                   
                     echo '<tr>';
-                    echo '  <td>'.$value->cantidad.'</td>';
+                    echo '  <td>'.number_format($value->cantidad, 2).'</td>';
                     echo '  <td>'.$value->unidad_medida.'</td>';
                     echo '  <td>'.$value->producto.'</td>';
-                    echo '  <td>'.$value->precio_unitario.'</td>';
+                    echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
                    
-                    echo '  <td>'.$value->precio_total.'</td>';
+                    echo '  <td>'.number_format($value->precio_total, 2).'</td>';
                    
 
                     echo '</tr>';
 
+                }
+
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
+                    $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
+                    $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
+                    $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
+                    $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
+                    $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
+                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                    echo '<tr>';
+                    echo '  <td>1.00</td>';
+                    echo '  <td>UND</td>';
+                    echo '  <td>(-) ANTICIPO '.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                    echo '</tr>';
+                    echo '<tr>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '  <td>
+                                Marca              : '.$marca.'<br>
+                                Modelo             : '.$modelo.'<br>
+                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Color              : '.$color.'<br>
+                                # Serie            : '.$serie.'<br>
+                                # Motor            : '.$motor.'<br>
+                            </td>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '</tr>';
                 }
                 
             ?>
@@ -194,12 +225,68 @@
         <br>
        
 
-        <table style="width: 100%;">
-            <tr>
-                <td style="width: 20%;">Condicion de Pago:</td>
-                <td style="width: 80%;">{{ $venta[0]->condicion_pago }}</td>
-               
-            </tr>
+        <table style="width: 100%;">               
+            <?php 
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
+                    echo '<tr>';
+                    echo '  <td style="width: 15%;">Condicion de Pago:</td>';
+                    echo '  <td style="width: 20%;">';
+                    
+                        if($venta[0]->tipo_comprobante == "1") {
+                            echo "Contado";
+                        } else {
+                            echo $venta[0]->condicion_pago;
+                        }
+    
+                
+                    
+                    echo '  </td>';
+                    if(count($venta_anticipo) > 0) {
+                        echo '  <td style="width: 20%;">Cuota Mensual:</td>';
+                        echo '  <td style="width: 15%;">'.number_format($solicitud_credito[0]->valor_cuota_final, 2).'</td>';
+                    }
+                    echo '  <td width: 30%;></td>';
+
+                    echo '</tr>';
+                    if(count($venta_anticipo) > 0) {
+                        $importe_financiar = ($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total);
+                        echo '<tr>';
+                        echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';
+                        echo '  <td>'.number_format($solicitud[0]->t_monto_total, 2).'</td>';
+                        echo '</tr>';
+
+                        echo '<tr>';
+                        echo '  <td colspan="2">Inicial Doc.</td>';
+                        echo '  <td>'.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
+                        echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                        echo '</tr>';
+
+                        echo '<tr>';
+                        echo '  <td colspan="3">Importe a Financiar</td>';
+                        echo '  <td>'.number_format($importe_financiar, 2).'</td>';
+                        echo '</tr>';
+                    }
+                    
+                } else {
+                    echo '<tr>';
+                    echo '  <td style="width: 15%;">Condicion de Pago:</td>';
+                    echo '  <td style="width: 20%;">';
+                    
+                        if($venta[0]->tipo_comprobante == "1") {
+                            echo "Contado";
+                        } else {
+                            echo $venta[0]->condicion_pago;
+                        }
+    
+                
+                    
+                    echo '  </td>';
+                    
+                }
+                
+            ?>
+                
+           
         </table>
         <br>
         <br>
@@ -233,31 +320,37 @@
                     <strong style="text-align: center !important;">BIENES TRANSFERIDOS EN LA AMAZONIA PARA SER CONSUMIDOS EN LA AMAZONIA</strong>
                 </td>
                 <td style="width: 30%;">
-                    <table>
+                    <table style="width: 100%;">
                         <tr>
                             <td>Valor de Venta</td>
                             <td>{{ $venta[0]->Simbolo }} </td>
                             <td style="text-align: right; border: 1px solid black;">
                                 
                                 <?php 
-                                    if($venta[0]->t_impuestos > 0) {
-                                        echo $venta[0]->t_monto_afecto;
-                                    } else {
-                                        echo $venta[0]->t_monto_exonerado;
-                                    }
-                                    
+                                    // if($venta[0]->t_impuestos > 0) {
+                                    //     echo $venta[0]->t_monto_afecto;
+                                    // } else {
+                                    //     echo $venta[0]->t_monto_exonerado;
+                                    // }
+                                    echo number_format($venta[0]->t_monto_subtotal, 2);
                                 ?>
                             </td>
                         </tr>
                         <tr>
                             <td>18% I.G.V.</td>
                             <td>{{ $venta[0]->Simbolo }}</td>
-                            <td style="text-align: right; border: 1px solid black;">{{ $venta[0]->t_impuestos }}</td>
+                            <td style="text-align: right; border: 1px solid black;"><?php echo number_format($venta[0]->t_impuestos, 2); ?></td>
                         </tr>
                         <tr>
                             <td>Precio Venta</td>
                             <td>{{ $venta[0]->Simbolo }}</td>
-                            <td style="text-align: right; border: 1px solid black;">{{ $venta[0]->t_monto_total }}</td>
+                            <td style="text-align: right; border: 1px solid black;">
+                                <?php 
+                                    // echo $venta[0]->t_monto_total;
+                                    $total = $venta[0]->t_monto_subtotal + $venta[0]->t_impuestos;
+                                    echo number_format($total, 2);
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </td>

@@ -214,7 +214,7 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user,
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Simbolo AS simbolo_moneda,
         CASE WHEN s.estado = 1 THEN 'Registrado'
         WHEN s.estado = 2 THEN 'Vigente'
         WHEN s.estado = 3 THEN 'Por Aprobar'
@@ -262,13 +262,16 @@ class SolicitudRepository implements SolicitudInterface
         $sql = "SELECT sa.*, p.*, c.descripcion AS categoria,
         CASE WHEN m.description IS NULL THEN '.' ELSE  m.description END AS marca,
         CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
-        s.nombreSerie AS serie, cv.idCatVeh 
        
+        s.nombreSerie AS serie, cv.idCatVeh,
+        s.motor, s.color, s.anio_fabricacion
+
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
+        INNER JOIN ERP_SolicitudDetalle AS sd ON(sd.cCodConsecutivo=sa.cCodConsecutivo AND sd.nConsecutivo=sa.nConsecutivo AND sd.idarticulo=sa.idarticulo)
         LEFT JOIN ERP_Marcas AS m ON(m.id=p.idMarca)
         LEFT JOIN ERP_Modelo AS mo ON(mo.idModelo=p.idModelo)
-        LEFT JOIN ERP_Serie AS s ON(s.idArticulo=p.id)
+        LEFT JOIN ERP_Serie AS s ON(s.idSerie=sd.idSerie)
         
         INNER JOIN ERP_Categoria AS c ON(c.idCategoria=p.idCategoria)
         INNER JOIN ERP_CategoriaVeh AS cv ON(cv.idCatVeh=p.idCatVeh)
@@ -319,10 +322,11 @@ class SolicitudRepository implements SolicitudInterface
 
     public function mostrar_aprobaciones($cCodConsecutivo, $nConsecutivo) {
 
-        $sql = "SELECT sc.*, u.name AS usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg FROM ERP_SolicitudConformidad AS sc
+        $sql = "SELECT sc.*, u.name AS nombre_usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg, u.username AS usuario, CASE WHEN sc.iEstado = 1 THEN 'Aprobado'  WHEN sc.iEstado = 2 THEN 'Rechazado' END AS iEstado, FORMAT(sc.updated_at, 'dd/MM/yyyy') AS updated_at
+        FROM ERP_SolicitudConformidad AS sc
         INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
         INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
-        WHERE sc.cCodConsecutivo='{CodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
+        WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
 
         $result = DB::select($sql);
         return $result;

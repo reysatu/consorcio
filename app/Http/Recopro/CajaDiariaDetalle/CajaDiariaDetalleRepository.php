@@ -194,7 +194,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
     
     public function get_venta($idventa) {
-        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos
         FROM ERP_Venta AS v 
         INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
         INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
@@ -223,6 +223,23 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+    public function get_venta_anticipo($cCodConsecutivo, $nConsecutivo) {
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja
+        FROM ERP_Venta AS v 
+        INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
+        INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
+        INNER JOIN ERP_CondicionPago AS c ON(c.id=v.condicion_pago)
+        LEFT JOIN ERP_Usuarios AS u ON(v.idcajero=u.id)
+        LEFT JOIN ERP_Tienda AS t ON(v.idtienda=t.idTienda)
+        LEFT JOIN ERP_Cajas AS cc ON(cc.idcaja=v.idcaja)
+        WHERE  v.cCodConsecutivo_solicitud='{$cCodConsecutivo}' AND v.nConsecutivo_solicitud={$nConsecutivo} AND v.tipo_comprobante = '1'";
+        // die($sql);
+        $result = DB::select($sql);
+        return $result;
+    }
+
+  
+
     public function get_venta_detalle($idventa) {
         $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida
         FROM ERP_Venta AS v 
@@ -230,15 +247,17 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
         LEFT JOIN ERP_UnidadMedida AS um ON(um.IdUnidadMedida=vd.um_id)
        
+       
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
     }
 
     public function get_venta_formas_pago($idventa) {
-        $sql = "SELECT vfp.*
+        $sql = "SELECT vfp.*, m.Descripcion AS moneda
         FROM ERP_Venta AS v 
         INNER JOIN ERP_VentaFormaPago AS vfp ON(v.idventa=vfp.idventa)
+        LEFT JOIN ERP_Moneda AS m ON(vfp.IdMoneda=m.IdMoneda)
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;

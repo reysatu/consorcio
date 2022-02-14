@@ -140,7 +140,7 @@
                         </tr>
                         <tr>
                             <td style="width: 20%;">CODIGO</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cNumeroDocumento)) ? $conyugue[0]->cNumeroDocumento : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->idPersona)) ? $conyugue[0]->idPersona : ""; ?></td>
                         </tr>
                     </table>   
                 </td>
@@ -154,23 +154,23 @@
                         </tr>
                         <tr >
                             <td style="width: 20%;">NOMBRE</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cNombrePersona)) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($fiador[0]->cNombrePersona)) ? $fiador[0]->cNombrePersona : ""; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">DIRECCIÓN</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cDireccion)) ? $conyugue[0]->cDireccion : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($fiador[0]->cDireccion)) ? $fiador[0]->cDireccion : ""; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">REFERENCIA</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cReferencia)) ? $conyugue[0]->cReferencia : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($fiador[0]->cReferencia)) ? $fiador[0]->cReferencia : ""; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">CONYUGUE</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cNombrePersona)) ? $conyugue[0]->cNombrePersona : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($fiadorconyugue[0]->cNombrePersona)) ? $fiadorconyugue[0]->cNombrePersona : ""; ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">TLF.</td>
-                            <td style="width: 80%;"><?php echo (isset($conyugue[0]->cCelular)) ? $conyugue[0]->cCelular : ""; ?></td>
+                            <td style="width: 80%;"><?php echo (isset($fiador[0]->cCelular)) ? $fiador[0]->cCelular : ""; ?></td>
                         </tr>
                         <tr>
                             <td colspan="2"><br></td>
@@ -221,15 +221,15 @@
                         </tr>
                         <tr>
                             <td style="width: 20%;">C. INICIAL:</td>
-                            <td style="width: 80%;">{{ $solicitud_credito[0]->cuota_inicial }}</td>
+                            <td style="width: 80%;"><?php echo number_format($solicitud_credito[0]->cuota_inicial, 2); ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">ACTA. INI:</td>
-                            <td style="width: 80%;">{{ $solicitud_credito[0]->cuota_inicial }}</td>
+                            <td style="width: 80%;"><?php echo number_format($solicitud_credito[0]->cuota_inicial, 2); ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">TOTAL:</td>
-                            <td style="width: 80%;">{{ $solicitud[0]->t_monto_total }}</td>
+                            <td style="width: 80%;"><?php echo number_format($solicitud[0]->t_monto_total, 2); ?></td>
                         </tr>
                         <tr>
                             <td style="width: 20%;">VENDEDOR</td>
@@ -313,20 +313,21 @@
                 foreach ($solicitud_cronograma as $key => $value) {
                     $total_importe += (float)$value->valor_cuota;
                     $total += (float)($value->int_moratorio + $value->valor_cuota);
+                    $subtotal = (float)($value->int_moratorio + $value->valor_cuota);
                     $total_amortizacion += (float)$value->monto_pago;
                     $total_saldo += (float)$value->saldo_cuota;
                     echo '<tr>';
                     echo '  <td>'.$value->fecha_vencimiento.'</td>';
                     echo '  <td>'.$value->nrocuota.'</td>';
-                    echo '  <td>'.$value->int_moratorio.'</td>';
-                    echo '  <td>'.$value->valor_cuota.'</td>';
-                    echo '  <td>0</td>';
-                    echo '  <td>'.($value->int_moratorio + $value->valor_cuota).'</td>';
-                    echo '  <td>'.$value->monto_pago.'</td>';
-                    echo '  <td>'.$value->saldo_cuota.'</td>';
+                    echo '  <td>'.number_format($value->int_moratorio, 2).'</td>';
+                    echo '  <td>'.number_format($value->valor_cuota, 2).'</td>';
+                    echo '  <td>0.00</td>';
+                    echo '  <td>'.number_format($subtotal, 2).'</td>';
+                    echo '  <td>'.number_format($value->monto_pago, 2).'</td>';
+                    echo '  <td>'.number_format($value->saldo_cuota, 2).'</td>';
                     echo '  <td>'.$value->estado.'</td>';
                     echo '  <td>-.-</td>';
-                    echo '  <td>'.($value->int_moratorio + $value->valor_cuota).'</td>';
+                    echo '  <td>'.number_format($subtotal, 2).'</td>';
 
                     echo '</tr>';
 
@@ -335,11 +336,11 @@
                 echo '  <td style="border-top: 1px solid black;"></td>';
                 echo '  <td style="border-top: 1px solid black;"></td>';
                 echo '  <td style="border-top: 1px solid black;"></td>';
-                echo '  <td style="border-top: 1px solid black;">'.$total_importe.'</td>';
-                echo '  <td style="border-top: 1px solid black;">'.$total_interes.'</td>';
-                echo '  <td style="border-top: 1px solid black;">'.$total.'</td>';
-                echo '  <td style="border-top: 1px solid black;">'.$total_amortizacion.'</td>';
-                echo '  <td style="border-top: 1px solid black;">'.$total_saldo.'</td>';
+                echo '  <td style="border-top: 1px solid black;">'.number_format($total_importe, 2).'</td>';
+                echo '  <td style="border-top: 1px solid black;">'.number_format($total_interes, 2).'</td>';
+                echo '  <td style="border-top: 1px solid black;">'.number_format($total, 2).'</td>';
+                echo '  <td style="border-top: 1px solid black;">'.number_format($total_amortizacion, 2).'</td>';
+                echo '  <td style="border-top: 1px solid black;">'.number_format($total_saldo, 2).'</td>';
                 echo '  <td style="border-top: 1px solid black;"></td>';
                 echo '  <td style="border-top: 1px solid black;"></td>';
                 echo '  <td style="border-top: 1px solid black;"></td>';

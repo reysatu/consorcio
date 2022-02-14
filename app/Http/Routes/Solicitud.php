@@ -14,6 +14,7 @@ Route::post('solicitud/update', ['as' => 'solicitud.update', 'uses' => 'Solicitu
 Route::post('solicitud/guardar_solicitud', ['as' => 'solicitud.guardar_solicitud', 'uses' => 'SolicitudController@guardar_solicitud']);
 Route::post('solicitud/factor_credito', ['as' => 'solicitud.factor_credito', 'uses' => 'SolicitudController@factor_credito']);
 Route::post('solicitud/enviar_solicitud', ['as' => 'solicitud.enviar_solicitud', 'uses' => 'SolicitudController@enviar_solicitud']);
+Route::post('solicitud/eliminar_solicitud', ['as' => 'solicitud.eliminar_solicitud', 'uses' => 'SolicitudController@eliminar_solicitud']);
 
 Route::post('solicitud/find', ['as' => 'solicitud.find', 'uses' => 'SolicitudController@find']);
 Route::post('solicitud/mostrar_aprobaciones', ['as' => 'solicitud.mostrar_aprobaciones', 'uses' => 'SolicitudController@mostrar_aprobaciones']);
