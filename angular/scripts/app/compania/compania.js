@@ -181,7 +181,7 @@
 
                 var formData = new FormData(document.getElementById("formulario-compania"));
 
-                console.log(formData);
+                // console.log(formData);
                 
                 $.ajax({
                     url: 'companias/createCompania/' + idPe,
@@ -191,8 +191,25 @@
                     cache: false,
                     contentType: false,
                     processData: false
-                }).done(function(res){
-                    console.log(res);
+                }).done(function(response){
+                    // console.log(res);
+                    if (!_.isUndefined(response.status) && response.status) {
+                        modalCompania.modal('hide');
+                            AlertFactory.textType({
+                            title: '',
+                            message: 'El registro se guardó correctamente',
+                            type: 'success'
+                        });
+                        LoadRecordsButtonCompania.click();
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar la compania. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
                 });
                 
                 //   RESTService.updated('companias/createCompania', idPe, params, function(response) {

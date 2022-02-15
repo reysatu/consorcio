@@ -34,40 +34,41 @@ class CompaniaController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->all();
+            $datos = array();
             $nombre = $data["RazonSocial"];
             $nombre = str_replace(" ", "_",  $nombre);
             $nombre = str_replace(".", "_",  $nombre);
             if(isset($_FILES["file"]) && !empty($_FILES["file"])) {
                 $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
-                $data["ruta_logo"] = "logos/".$response["NombreFile"];
+                $datos["ruta_logo"] = "logos/".$response["NombreFile"];
             }
           
            
             $table="ERP_Compania";
             $idt='IdCompania';
-            $data['Ruc'] = $data['Ruc'];
-            $data['NombreComercial'] = $data['NombreComercial'];
-            $data['Direccion'] = $data['Direccion'];
-            $data['Telefono1'] = $data['Telefono1'];
-            $data['Telefono2'] = $data['Telefono2'];
-            $data['Telefono3'] = $data['Telefono3'];
-            $data['Telefono4'] = $data['Telefono4'];
-            $data['Estado'] =$data['Estado'];
-            $data['Contacto'] =$data['Contacto'];
-            $data['Correo'] = $data['Correo'];
+            $datos['Ruc'] = $data['Ruc'];
+            $datos['NombreComercial'] = $data['NombreComercial'];
+            $datos['Direccion'] = $data['Direccion'];
+            $datos['Telefono1'] = $data['Telefono1'];
+            $datos['Telefono2'] = $data['Telefono2'];
+            $datos['Telefono3'] = $data['Telefono3'];
+            $datos['Telefono4'] = $data['Telefono4'];
+            $datos['Estado'] =$data['Estado'];
+            $datos['Contacto'] =$data['Contacto'];
+            $datos['Correo'] = $data['Correo'];
             $w = $repo->findByCode($data['Ruc']);
             if ($id !== '0') { 
                 if ($w && $w->IdCompania != $id) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }
-                $repo->update($id, $data); 
+                $repo->update($id, $datos); 
             } else {
 
                 if ($w) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }
-                $data['IdCompania'] = $repo->get_consecutivo($table,$idt);
-                $repo->create($data);
+                $datos['IdCompania'] = $repo->get_consecutivo($table,$idt);
+                $repo->create($datos);
             };
             DB::commit();
             return response()->json([

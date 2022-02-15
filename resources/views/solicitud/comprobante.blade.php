@@ -116,8 +116,12 @@
                     // foreach ($tiendas as $key => $value) {
                     //     echo $value->descripcion."-".$value->direccion."; ";
                     // }
+                    $direcciones = explode("|", $empresa[0]->direcciones_oficinas);
+                    for ($i=0; $i < count($direcciones); $i++) { 
+                        echo $direcciones[$i]."<br>";
+                    }
                ?>
-               {{ $empresa[0]->direcciones_oficinas }}
+            
                <br>
          
                <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema1 }}</label><br>
