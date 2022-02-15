@@ -10,3 +10,4 @@ Homestead.yaml
 .env
 /public/js/recopro.min.js
 composer.lock
+/public/logos
