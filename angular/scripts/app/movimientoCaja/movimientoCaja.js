@@ -1583,8 +1583,11 @@
             $("#forma_pago").val("EFE");
             $("#moneda").val($("#IdMoneda").val());
             $(".clean-monto").val(0);
+            $("#noperacion").val("");
+            $("#tarjeta").val("");
             $("#monto_aplicar").val(saldo.toFixed(2));
             $("#modal-formas-pago").modal("show");
+
         }
 
         $(document).on("change", "#id_tipoDoc_Venta_or", function (event, serie_comprobante) {

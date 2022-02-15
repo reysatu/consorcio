@@ -954,7 +954,7 @@ class MovimientoCajaController extends Controller
     
         $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
-        
+       
         $datos["empresa"] = $repo->get_empresa(); 
         $datos["venta"] = $repo->get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo); 
         $datos["solicitud_credito"] = $solicitud_credito; 
@@ -964,12 +964,15 @@ class MovimientoCajaController extends Controller
         $datos["conyugue"] = $persona_repositorio->find($idconyugue);
 
         $idfiadorconyugue = (!empty($solicitud_credito[0]->idfiadorconyugue)) ? $solicitud_credito[0]->idfiadorconyugue : "0";
-        $datos["fiadorconyugue "] = $persona_repositorio->find($idfiadorconyugue);
-
+        
+        $datos["fiadorconyugue"] = $persona_repositorio->find($idfiadorconyugue);
+      
         $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        //   echo "<pre>";
+        // print_r($datos); exit;
         $pdf = PDF::loadView("solicitud.cronograma", $datos);
 
         // return $pdf->save("ficha_asociado.pdf"); // guardar

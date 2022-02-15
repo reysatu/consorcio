@@ -11,5 +11,5 @@ Route::post('companias/create', ['as' => 'companias.create', 'uses' => 'Compania
 Route::post('companias/delete', ['as' => 'companias.delete', 'uses' => 'CompaniaController@destroy']);
 Route::post('companias/update', ['as' => 'companias.update', 'uses' => 'CompaniaController@update']);
 Route::get('companias/excel', ['as' => 'companias.excel', 'uses' => 'CompaniaController@excel']); 
-Route::put('companias/createCompania/{id}', ['as' => 'companias.createCompania', 'uses' => 'CompaniaController@createUpdate']);
+Route::post('companias/createCompania/{id}', ['as' => 'companias.createCompania', 'uses' => 'CompaniaController@createUpdate']);
 Route::get('companias/find/{id}', ['as' => 'companias.find', 'uses' => 'CompaniaController@find']);

@@ -15,7 +15,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 4cm;
+            margin-top: 7.2cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -26,7 +26,7 @@
             top: 0.9cm;
             left: 1cm;
             right: 1cm;
-            height: 4cm;
+            height: 7.2cm;
             /* text-align: center; */
             line-height: 0.8cm;
             font-family: 'Times New Roman' !important;
@@ -99,13 +99,29 @@
 
     <header style="">
         <div class="row">
+            <div class="col" style="width: 35%; /*border: 1px solid black;*/ text-align: center;">
+                <img style="width: 100%; height: 123px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
+            </div>
+            <div class="col" style="width: 65%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
+                {{ $empresa[0]->RazonSocial }}
+              
+            </div>
+        </div>
+        <div class="clear">
+
+        </div>
+        <div class="row">
             <div class="col" style="width: 70%; text-align: center; line-height: 18px;">
                <?php 
                     // foreach ($tiendas as $key => $value) {
                     //     echo $value->descripcion."-".$value->direccion."; ";
                     // }
+                    $direcciones = explode("|", $empresa[0]->direcciones_oficinas);
+                    for ($i=0; $i < count($direcciones); $i++) { 
+                        echo $direcciones[$i]."<br>";
+                    }
                ?>
-               {{ $empresa[0]->direcciones_oficinas }}
+            
                <br>
          
                <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema1 }}</label><br>
