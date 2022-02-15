@@ -3004,6 +3004,7 @@
                                 html += '</tr>';
                             }
                             $("#detalle-aprobaciones").html(html);
+                            $("#modal-aprobaciones").modal("show");
                         } else {
                             AlertFactory.textType({
                                 title: '',

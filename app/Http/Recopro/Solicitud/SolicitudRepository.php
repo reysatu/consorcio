@@ -338,7 +338,7 @@ class SolicitudRepository implements SolicitudInterface
         INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
         INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
         WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
-
+    // die($sql);
         $result = DB::select($sql);
         return $result;
 

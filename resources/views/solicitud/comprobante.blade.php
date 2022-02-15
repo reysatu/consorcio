@@ -99,10 +99,10 @@
 
     <header style="">
         <div class="row">
-            <div class="col" style="width: 20%; /*border: 1px solid black;*/ text-align: center;">
-                <img width="100" height="115" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
+            <div class="col" style="width: 35%; /*border: 1px solid black;*/ text-align: center;">
+                <img style="width: 100%; height: 123px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
             </div>
-            <div class="col" style="width: 80%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
+            <div class="col" style="width: 65%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
                 {{ $empresa[0]->RazonSocial }}
               
             </div>

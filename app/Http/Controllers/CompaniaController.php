@@ -37,9 +37,11 @@ class CompaniaController extends Controller
             $nombre = $data["RazonSocial"];
             $nombre = str_replace(" ", "_",  $nombre);
             $nombre = str_replace(".", "_",  $nombre);
-           
-            $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
-            $data["ruta_logo"] = "logos/".$response["NombreFile"];
+            if(isset($_FILES["file"]) && !empty($_FILES["file"])) {
+                $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
+                $data["ruta_logo"] = "logos/".$response["NombreFile"];
+            }
+          
            
             $table="ERP_Compania";
             $idt='IdCompania';
