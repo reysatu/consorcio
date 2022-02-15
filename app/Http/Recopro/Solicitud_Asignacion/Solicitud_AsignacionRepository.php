@@ -31,8 +31,14 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
     }
     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
     {
-
-        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin) {
+        $solitud=[];
+        if($idInicio!='' && $idFin!=''){
+            $mostrar3 = DB::select("select *,  DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) as fe from ERP_SolicitudCronograma  where saldo_cuota>0  and DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) BETWEEN '$idInicio' AND '$idFin'");
+            foreach ($mostrar3 as $row) {
+               array_push($solitud, $row->nConsecutivo);
+            } 
+        }
+        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin,$solitud) {
             $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
@@ -40,6 +46,10 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
              if(!empty($filtro_tienda)){
               $q->Where('nCodTienda',$filtro_tienda);
             }
+            if($idInicio!='' && $idFin!=''){
+                  $q->whereIn('nConsecutivo',$solitud);
+            }
+          
         });
     }
 

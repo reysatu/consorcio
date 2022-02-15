@@ -20,7 +20,7 @@
         var titleModalProduct=$("#titleModalProduct");
         var estadoApro=$("#estadoApro");
         var btn_Aprobar=$(".btn_Aprobar");
-        var btn_Rechazar=$(".btn_Rechazar");
+        var btn_Rechazar=$(".btn_Rechazar"); 
         var aprobacion_ventas=$("#aprobacion_ventas");
         var aprobaComentario=$("#AprobaComentario");
         var modalSolicitud = $('#modalSolicitud');
@@ -154,6 +154,10 @@
           modalAprobar.on('hidden.bs.modal', function (e) {
             cleanAprobar();
         });
+             modalSolicitud.on('hidden.bs.modal', function (e) {
+                        btn_Aprobar.prop('disabled',false);
+                         btn_Rechazar.prop('disabled',false);
+        });
               modalVerAproba.on('hidden.bs.modal', function (e) {
             cleanAprobadores();
         });
@@ -257,9 +261,10 @@
             $("#formulario-creditos").trigger("reset");
             $("#formulario-persona").trigger("reset");
             $("#AprobaComentario").val("");
+
         }
         function obtener_data_for_solicitud() {
-            RESTService.all('solicitud/data_form', '', function (response) {
+            RESTService.all('aprobacionSolicituds/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     if (response.parametro_igv.length > 0) {
                         // alert(response.parametro_igv[0].value);
@@ -512,6 +517,7 @@
                     // getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
                     titleModalProduct.html("Rechazar");
                     estadoApro.val("2");
+
                     modalAprobar.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -1080,6 +1086,8 @@
                         });
                           modalAprobar.modal("hide"); 
                         }
+                         btn_Aprobar.prop('disabled',true);
+                         btn_Rechazar.prop('disabled',true);
                         LoadRecordsButtonAprobacionSolicitud.click(); 
                         // modalPersona.modal('hide');
                        
@@ -2976,7 +2984,7 @@
                 nro_cuotas = 0;
             }
 
-            $.post("solicitud/factor_credito", { nro_cuotas: nro_cuotas },
+            $.post("aprobacionSolicituds/factor_credito", { nro_cuotas: nro_cuotas },
                 function (data, textStatus, jqXHR) {
                     calcular_totales();
                     var porcentaje = 0;
@@ -3120,7 +3128,7 @@
                     return false;
                 }
 
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
+                $.post("aprobacionSolicituds/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize(),
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
@@ -3153,8 +3161,8 @@
             bval = bval && cCodConsecutivo.required();
             bval = bval && nConsecutivo.required();
 
-            if (bval) {
-                $.post("solicitud/mostrar_aprobaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
+            if (bval) { 
+                $.post("aprobacionSolicituds/mostrar_aprobaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
                     function (data, textStatus, jqXHR) {
                         if (data.length > 0) {
                             var html = '';
@@ -3190,7 +3198,7 @@
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
    
-            window.open("solicitud/imprimir_solicitud/"+id);
+            window.open("aprobacionSolicituds/imprimir_solicitud/"+id);
 
         }
 
@@ -3203,7 +3211,7 @@
 
             if (bval) {
                 // alert($("#estado").val());
-                $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize() + "&estado=" + $("#estado").val(),
+                $.post("aprobacionSolicituds/enviar_solicitud", $("#formulario-solicitud").serialize() + "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
                         if (data.status == "i") {
                             $("#estado").val(data.datos.estado);
@@ -3267,7 +3275,7 @@
 
         function find_solicitud(id) {
 
-            $.post("solicitud/find", { id: id },
+            $.post("aprobacionSolicituds/find", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
 

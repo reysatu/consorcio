@@ -14,7 +14,7 @@
     function AsignacioncobradorCtrl($scope, _, RESTService, AlertFactory, Helpers)
     {
         var modalCobradores=$("#modalCobradores");
-        var idCobrador=$("#idCobrador");
+        var idCobrador=$("#idCobrador"); 
         //  $scope.chkState = function () {
         //     var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
         //     state_state.html(txt_state2);
@@ -182,7 +182,10 @@
                                                     var dim=0;
                                                     if(total>0){
                                                         dim=total;
-                                                    }
+                                                    };
+                                                    if(Number(data.record.saldo_cuota)<=0){
+                                                        dim=0;
+                                                    };
                                                    return dim;
                                             }   
                                         },

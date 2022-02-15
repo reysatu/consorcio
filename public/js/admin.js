@@ -3560,7 +3560,7 @@ function create_pdf_QuerystockCierre(response) {
       dataDolMovimienQuery.push(tituloDolFormQuery) ;
       var todol=0;
        data.map(function(index) {
-            todol=Number(todol)+Number(index.Costo_Promedio_Unitario);
+            todol=Number(todol)+Number(index.Costo_Total);
             var tituloDolFormQueryData=[];
              var cu=Number(index.Costo_Promedio_Unitario).toFixed(2);
             var pu=Number(index.Costo_Total).toFixed(2);

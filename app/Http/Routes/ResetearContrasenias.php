@@ -13,3 +13,6 @@ Route::post('resetearContrasenias/update', ['as' => 'resetearContrasenias.update
 Route::get('resetearContrasenias/excel', ['as' => 'resetearContrasenias.excel', 'uses' => 'CategoryController@excel']);
 Route::put('resetearContrasenias/reset/{id}', 'UserController@reset');
 Route::get('resetearContrasenias/data_form', ['as' => 'resetearContrasenias.data_form', 'uses' => 'ProductController@data_form_dd']);
+
+
+Route::put('resetearContrasenias/change_password_user/{id}', ['as' => 'resetearContrasenias.change_password_user', 'uses' => 'ResetPasswordController@change_password_post_user']);
