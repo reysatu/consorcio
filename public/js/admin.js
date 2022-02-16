@@ -387,9 +387,19 @@ function getFormSearchAsignacion(form_id, input_id, btn_id) {
                 '</div>'+
                 '<div class="col-md-2">' +
                     '<button  type="button"  id="btn_exportar_dd" class="btn-danger-admin  btn-sm">' +
-                            '<i class="fa fa-plus"> Cobrador</i>' +
+                            '<i class="fa fa-plus">Asignar Cobrador</i>' +
                     '</button>' +
                 '</div>'+           
+            '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="idCobradorFiltro"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
             '</div>'+
          '</form>';
 }

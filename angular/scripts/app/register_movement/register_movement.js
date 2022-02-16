@@ -13,7 +13,7 @@
 
     function Register_MovementCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
-        var xmlAdd=$("#xmlAdd");
+        var xmlAdd=$("#xmlAdd"); 
         var  aartML= []; //arrays para guardas los datos de lotes
         var  acodigos=[];//arrays de codigos;
         var  alotML=[];
@@ -863,6 +863,7 @@
 
         }
         function addAlmaSelec(codigo){
+          console.log("entro1")
            var idAlmacenSele=$("#Al_"+codigo);
             idAlmacenSele.append('<option value="" selected>Seleccionar</option>');
               _.each(AlmacenesSele, function(item) {
@@ -891,7 +892,7 @@
             var id=idl;
              RESTService.get('register_movements/getLocaStock', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
-                    
+                        console.log("dddd");
                         idLocali.html('');
                         idLocali.append('<option value="" selected>Seleccionar</option>');
                       _.each(response.LocalizacionAlmacen, function(itemdos) {
@@ -1251,7 +1252,7 @@
             if(naturalezaGeneral=="C"){
                 var tdy = $('<td></td>');
                 var td2 = $('<td></td>');
-                var inpy=$('<select  data-arts="'+idProducto+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm" disabled></select>');
+                var inpy=$('<select  data-arts="'+idProducto+'" data-idLocalizacion="'+idLocalizacion+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm" disabled></select>');
                 var inpl=$('<select id="'+codigo+'" data-idArl="'+idProducto+'" class="m_articulo_idLoc form-control input-sm" disabled ></select>');
                 var td3 = $('<td><p></p></td>');
                 var inp3 = $('<input type="hidden" id="canMs_'+codigo+'" class="m_articulo_cantidad" value="0" />');
@@ -1265,7 +1266,7 @@
                 }
                 var td2 = $('<td></td>');
                 var tdy = $('<td></td>');
-                var inpy=$('<select  data-arts="'+idProducto+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm"></select>');
+                var inpy=$('<select  data-idLocalizacion="'+idLocalizacion+'" data-arts="'+idProducto+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm"></select>');
                 var inpl=$('<select id="'+codigo+'" data-idArl="'+idProducto+'" class="m_articulo_idLoc form-control input-sm"></select>');
             
             }
@@ -1300,7 +1301,7 @@
             articulo_mov_det.append(tr);
             addAlmaSelec(codigo);
             addlocSele(codigo);
-           
+           console.log("entro 123456");
             
             $('.verUpdate').click(function(e){
                 var tipShow = $(this).attr('data-tShow');
@@ -1427,14 +1428,15 @@
             //     var stock=getStock(idl,idAl);
             //     e.preventDefault();
             // });
-             $('.m_articulo_idAlm').change(function (e) {
-                var idl = $(this).val();
-                var ident=$(this).attr('data-idAraAl');
-                var idPrAl=$(this).attr('data-arts');
-
-                getLocaStock(idl,ident,idPrAl,idLocalizacion);
-                e.preventDefault();
-            }); 
+            //  $('.m_articulo_idAlm').change(function (e) {
+            //     var idl = $(this).val();
+            //     var ident=$(this).attr('data-idAraAl');
+            //     var idPrAl=$(this).attr('data-arts');
+            //     var idLocalizacion=$(this).attr('data-idLocalizacion');
+            //     console.log("entro33333");
+            //     getLocaStock(idl,ident,idPrAl,idLocalizacion);
+            //     e.preventDefault();
+            // }); 
             $('.m_articulo_cantidad').keyup(function (e) {
                 var cantidap = $(this).val();
                 var costo=$(this).closest("tr").find("td:eq(4)").children("input").val();
@@ -1489,6 +1491,14 @@
             };
 
         }
+        $(document).on("change", ".m_articulo_idAlm", function () {
+                 var idl = $(this).val();
+                var ident=$(this).attr('data-idAraAl');
+                var idPrAl=$(this).attr('data-arts');
+                var idLocalizacion=$(this).attr('data-idLocalizacion');
+                console.log("entro33333");
+                getLocaStock(idl,ident,idPrAl,idLocalizacion);
+        });
         $scope.addtableSerie = function(){
             if(identiSelec=="A"){
                 table_container_cc4.jtable('destroy');

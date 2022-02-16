@@ -28,7 +28,7 @@
         margin-right: -4px;
     }
 
-    .modal-dialog2 {
+    .modal-dialog2 { 
         display: inline-block;
         text-align: left;
         vertical-align: middle;
@@ -102,7 +102,12 @@
                                 <span class="fa fa-eye"></span>
                                 Ver aprobaciones
                             </button>
-                            <button type="button" id=""  class="btn btn-warning btn-sm btn_Aprobar">
+                           
+                            <button  type="button" id=""  class="btn btn-danger-admin btn-sm credito" ng-click="datos_credito()">
+                                <span class="fa fa-money"></span>
+                                Datos Crédito
+                            </button>
+                             <button type="button" id=""  class="btn btn-warning btn-sm btn_Aprobar">
                                 <span class="fa fa-save"></span>
                                 Aprobar
                             </button>
@@ -1203,11 +1208,6 @@
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
-                            <button type="button" id="btn_editar_conyugue" data-tipo="conyugue"
-                                class="btn btn-danger-admin btn-sm btn-editar-persona">
-                                <span class="fa fa-save"></span>
-                                Editar Conyugue
-                            </button>
                         </div>
                     </div>
 
@@ -1242,11 +1242,6 @@
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
-                            <button type="button" id="btn_editar_fiador" data-tipo="fiador"
-                                class="btn btn-danger-admin btn-sm btn-editar-persona">
-                                <span class="fa fa-save"></span>
-                                Editar Fiador
-                            </button>
                         </div>
                     </div>
                   
@@ -1395,11 +1390,6 @@
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
-                            <button type="button" id="btn_editar_fiadorconyugue" data-tipo="fiadorconyugue"
-                                class="btn btn-danger-admin btn-sm btn-editar-persona">
-                                <span class="fa fa-save"></span>
-                                Editar <br>Fiador/Conyugue
-                            </button>
                         </div>
                     </div>
 
@@ -1621,7 +1611,7 @@
     </div>
 </div>
 <div class="modal" id="modalAprobar" role="dialog" style="overflow-y: scroll;">
-            <div class="modal-dialog " role="document">
+            <div class="modal-dialog " style="width:80%;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1651,10 +1641,18 @@
                                             <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
                                                 <thead>
                                                     <tr class="danger_admin">
+                                                          
+                                                        <th>Cod Solicitud</th>
+                                                        <th>Nro Solicitud</th>
+                                                        <th>Moneda</th> 
+                                                        <th>Fecha Emisión</th> 
                                                         <th>Tipo Documento</th>
+                                                        <th>Condición Pago</th> 
                                                         <th>Serie</th>
                                                         <th>N°</th>
                                                         <th>Cliente</th>
+                                                        <th>Monto Total</th>
+                                                        <th>Pagado</th>
                                                         <th>Saldo</th>
                                                     </tr>
                                                 </thead>

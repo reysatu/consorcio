@@ -5,7 +5,7 @@
  * Date: 4/5/2017
  * Time: 6:59 PM
  */
-
+ 
 namespace App\Http\Controllers;
 
 use App\Http\Recopro\Cobrador\CobradorTrait;
@@ -54,10 +54,12 @@ class AsignacioncobradorController extends Controller
         $filtro_tienda = $request->input('filtro_tienda', '');
         $idInicio = $request->input('idInicio', '');
         $idFin = $request->input('idFin', '');
+        $idClienteFiltro = $request->input('idClienteFiltro', '');
+        $idCobradorFiltro = $request->input('idCobradorFiltro', '');
 
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado','Cobrador'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado','Cobrador','nCodTienda','tipoComprobanteText','idcliente','cliente'];
         // print_r($repo->search($s)); exit;
-        return parseList($repo->searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin), $request, 'cCodConsecutivo', $params);
+        return parseList($repo->searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro), $request, 'cCodConsecutivo', $params);
     }
     public function listCronograma(Request $request,SolicitudCronogramaInterface $repo)
     {
@@ -71,10 +73,12 @@ class AsignacioncobradorController extends Controller
     {
         $cobrador=$repo->getCobrador();
         $tienda=$repo->getTienda();
+        $cliente=$repo->getCliente();
         return response()->json([ 
             'status' => true,
             'cobrador' => $cobrador,
             'tienda' => $tienda,
+            'cliente'=>$cliente,
         ]);
     }
  

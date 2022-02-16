@@ -29,7 +29,7 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
         });
     }
-    public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
+    public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro) 
     {
         $solitud=[];
         if($idInicio!='' && $idFin!=''){
@@ -38,8 +38,8 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
                array_push($solitud, $row->nConsecutivo);
             } 
         }
-        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin,$solitud) {
-            $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin,$solitud,$idClienteFiltro,$idCobradorFiltro) {
+            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
@@ -48,6 +48,12 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
             }
             if($idInicio!='' && $idFin!=''){
                   $q->whereIn('nConsecutivo',$solitud);
+            }
+             if($idCobradorFiltro !='' ){
+                  $q->where('idCobrador',$idCobradorFiltro);
+            }
+            if($idClienteFiltro !='' ){
+                  $q->where('idCliente',$idClienteFiltro);
             }
           
         });
