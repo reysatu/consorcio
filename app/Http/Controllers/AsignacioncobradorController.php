@@ -24,7 +24,7 @@ class AsignacioncobradorController extends Controller
 //        $this->middleware('json');
     }
     public function createUpdate($id, CobradorInterface $repo, Request $request)
-    {
+    { 
        
         try { 
             $data = $request->all();

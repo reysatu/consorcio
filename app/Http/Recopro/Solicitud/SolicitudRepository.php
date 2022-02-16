@@ -41,19 +41,21 @@ class SolicitudRepository implements SolicitudInterface
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
-    public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
-    {
 
-        return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin) {
-            $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-             if(!empty($filtro_tienda)){
-              $q->Where('nCodTienda',$filtro_tienda);
-            }
-        });
-    }
+//     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
+//     {
+
+//         return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin) {
+//             $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+//                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+//                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+//                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+//              if(!empty($filtro_tienda)){
+//               $q->Where('nCodTienda',$filtro_tienda);
+//             }
+//         });
+//     }
+// >>>>>>> 4870a79d0dc412d8e5cb96175d98abd570e4358d
 
    
 

@@ -16,6 +16,8 @@
         var contrasenia=$("#contrasenia");
         var btn_ResetearCont=$("#btn_ResetearCont"); 
         var usuarioActual;
+        var new_pass=$("#new_pass");
+        var re_pass=$("#re_pass");
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_state.html(txt_state2);
@@ -33,18 +35,33 @@
                 getDataForProforma();
             });
         }
-        getDataForProforma();
+        getDataForProforma();  
         $('#btn_ResetearCont').click(function (e) {
 
             var bval = true;
-            bval = bval && contrasenia.required();
+            bval = bval && new_pass.required(); 
+            bval = bval && re_pass.required(); 
+            var newp=new_pass.val();
+            var cnep=re_pass.val();
+            if(newp.length<6 || cnep.length<6 ){
+                AlertFactory.textType({
+                            title: '',
+                            message: 'La contraseña no puede tener menos de 6 dígitos',
+                            type: 'info'
+                });
+                // bval=false;
+                return false;
 
+            } 
             if (bval) {
-                var id=usuarioActual;
-                var pass=contrasenia.val();
-                console.log(id);
-                console.log(pass);
-                RESTService.updated('resetearContrasenias/reset', id, {pass:pass}, function(response) {
+                var id=0;
+                var new_p=new_pass.val();
+                var re_p=re_pass.val();
+                  var params = {
+                    'new_pass': new_pass.val(),
+                    're_pass': re_pass.val(),
+                 };
+                RESTService.updated('resetearContrasenias/change_password_user', id, params, function(response) { 
                     if (!_.isUndefined(response.status) && response.status) {
                                 AlertFactory.textType({
                                     title: '',
@@ -52,12 +69,14 @@
                                     type: 'success'
                                 });
                     } else {
-                                AlertFactory.textType({
-                                    title: '',
-                                    message: 'Hubo un error al resetear la contraseña. Intente nuevamente.',
-                                    type: 'error'
-                                });
-                            }
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar resetear. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
                 }); 
             }  
         });

@@ -103,6 +103,7 @@ class SecurityController extends Controller
                 ]);
         }
     }
+    
 
     public function validateTextPass($text, $values)
     {

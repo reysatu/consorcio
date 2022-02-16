@@ -153,7 +153,7 @@
                     // });
                     e.preventDefault();
                 });
-            }
+            } 
         });
 
         generateSearchForm('frm-search-u', 'LoadRecordsButtonU', function(){
