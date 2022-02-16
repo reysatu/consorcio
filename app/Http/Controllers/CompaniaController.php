@@ -38,7 +38,8 @@ class CompaniaController extends Controller
             $nombre = $data["RazonSocial"];
             $nombre = str_replace(" ", "_",  $nombre);
             $nombre = str_replace(".", "_",  $nombre);
-            if(isset($_FILES["file"]) && !empty($_FILES["file"])) {
+        
+            if(!empty($_FILES["file"]["name"])) {
                 $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
                 $datos["ruta_logo"] = "logos/".$response["NombreFile"];
             }
@@ -56,6 +57,8 @@ class CompaniaController extends Controller
             $datos['Estado'] =$data['Estado'];
             $datos['Contacto'] =$data['Contacto'];
             $datos['Correo'] = $data['Correo'];
+            $datos['lema1'] = $data['lema1'];
+            $datos['lema2'] = $data['lema2'];
             $w = $repo->findByCode($data['Ruc']);
             if ($id !== '0') { 
                 if ($w && $w->IdCompania != $id) {

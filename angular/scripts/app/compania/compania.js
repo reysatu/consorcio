@@ -114,6 +114,7 @@
                     rutaLog.val(data_p.RutaLog);
                     lema1.val(data_p.lema1);
                     lema2.val(data_p.lema2);
+                    $("#ruta_logo").val(data_p.ruta_logo);
                     direcciones_oficinas.val(data_p.direcciones_oficinas);
                     var chk_state = (data_p.Estado == '1');
                     
