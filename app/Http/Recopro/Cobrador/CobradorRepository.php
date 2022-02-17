@@ -43,6 +43,10 @@ class CobradorRepository implements CobradorInterface
           $mostrar2=DB::select("select * from ERP_Cobrador where estado='A'");
           return $mostrar2;
     }
+    public function getCliente(){
+          $mostrar2=DB::select("select * from ERP_Clientes");
+          return $mostrar2;
+    }
      public function getTienda(){
           $mostrar2=DB::select("select * from ERP_Tienda where estado='A'");
           return $mostrar2;

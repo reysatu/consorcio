@@ -12,7 +12,7 @@
     AprobacionSolicitudCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
     function AprobacionSolicitudCtrl($scope, _, RESTService, AlertFactory, Helpers)
-    {  
+    {   
 
         var modalVerAproba=$("#modalVerAproba");   
         var btn_verAprobacio=$(".btn_verAprobacio");
@@ -484,10 +484,14 @@
               RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
+                    console.log(data_p);
                      data_p.map(function(index) {
                                 console.log(Number(index.saldo));
+
+                                var fecha_emi= moment(index.fecha_emision).format('DD/MM/YYYY');
+                                console.log("mal");
                                 if(Number(index.saldo)>0){
-                                  addToDetaApro(index.Descripcion,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo))
+                                  addToDetaApro(index.tipoDocumento,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo),index.moneda,index.cCodConsecutivo_solicitud,index.nConsecutivo_solicitud,fecha_emi,index.condicion_pago_text,Number(index.t_monto_total),index.pagado) 
                                 }
                          });
                   
@@ -536,8 +540,10 @@
                     var data_p = response.data;
                      data_p.map(function(index) {
                                   console.log(Number(index.saldo));
+                                  var fecha_emi= moment(index.fecha_emision).format('DD/MM/YYYY');
                                 if(Number(index.saldo)>0){
-                                  addToDetaApro(index.Descripcion,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo))
+                                    addToDetaApro(index.tipoDocumento,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo),index.moneda,index.cCodConsecutivo_solicitud,index.nConsecutivo_solicitud,fecha_emi,index.condicion_pago_text,Number(index.t_monto_total),index.pagado) 
+                               
                                 }
                                  });
                   
@@ -578,14 +584,22 @@
             });
         
         });
-        function addToDetaApro(TipoDocumento,Serie,Nr,cliente,saldo){
+                
+        function addToDetaApro(TipoDocumento,Serie,Nr,cliente,saldo,moneda,codConse,nConse,fecha_emi,condicion_pago_text,t_monto_total,pagado ){
                 var tr = $('<tr id="tr_contDetalle"></tr>');
-                var td1 = $('<td id="tr_identO ">' + TipoDocumento + '</td>');
+                var tdA = $('<td>' + codConse + '</td>');
+                var tdB = $('<td>' + nConse + '</td>');
+                var tdC = $('<td>' + moneda + '</td>');
+                var tdD = $('<td>' + fecha_emi + '</td>');
+                var td1 = $('<td >' + TipoDocumento + '</td>');
+                var td11 = $('<td>' + condicion_pago_text + '</td>');
                 var td2 = $('<td>' + Serie + '</td>');
                 var td3 = $('<td>' + Nr + '</td>');
                 var td4 = $('<td>' + cliente + '</td>');
+                var td41 = $('<td>' + t_monto_total + '</td>');
+                var td42 = $('<td>' + pagado + '</td>');
                 var td5 = $('<td>' + saldo + '</td>');
-                tr.append(td1).append(td2).append(td3).append(td4).append(td5);;
+                tr.append(tdA).append(tdB).append(tdC).append(tdD).append(td1).append(td11).append(td2).append(td3).append(td4).append(td41).append(td42).append(td5);
                 aprobacion_ventas.append(tr);
         }
         function findPersona(id) {
@@ -3307,6 +3321,33 @@
                             addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
 
                         }
+                    }
+                    console.log(data.solicitud_credito);
+                    if (data.solicitud_credito.length > 0) {
+
+                        $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
+                        $("#total_financiado").val(data.solicitud_credito[0].total_financiado);
+                        $("#monto_venta").val(data.solicitud_credito[0].monto_venta);
+                        $("#nro_cuotas").val(data.solicitud_credito[0].nro_cuotas);
+                        $("#valor_cuota").val(data.solicitud_credito[0].valor_cuota);
+                        $("#valor_cuota_final").val(data.solicitud_credito[0].valor_cuota_final);
+                        $("#intereses").val(data.solicitud_credito[0].intereses);
+                        $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
+                        $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
+                        $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
+
+                        if(data.solicitud_credito[0].documento_fiador != null) {
+                            getPersona("fiador");
+                        }
+
+                        if(data.solicitud_credito[0].documento_conyugue != null) {
+                            getPersona("conyugue");
+                        }
+                        
+                        if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
+                            getPersona("documento_fiadorconyugue");
+                        }
+                       
                     }
 
                     if(data.solicitud[0].estado != "4") {

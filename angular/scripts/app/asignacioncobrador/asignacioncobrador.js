@@ -20,7 +20,7 @@
         //     state_state.html(txt_state2);
         // };
          modalCobradores.on('hidden.bs.modal', function (e) {
-                    idCobrador.val("").trigger("change");
+                    idCobrador.val("").trigger("change"); 
         });
         $scope.savecobrador = function () {
             var bval = true;
@@ -216,6 +216,9 @@
                     }
 
                 },
+                tipoComprobanteText: {
+                    title: 'Tipo Comprobante',
+                },
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
@@ -260,6 +263,9 @@
                     title: 'Cobrador',
 
 
+                },
+                cliente: {
+                    title: 'Cliente',
                 },
                 estado: {
                     title: 'Estado',
@@ -316,6 +322,10 @@
                 filtro_tienda: $('#filtro_tienda').val(),
                 idInicio: $('#idInicio').val(),
                 idFin: $('#idFin').val(),
+                idClienteFiltro: $('#idClienteFiltro').val(),
+                idCobradorFiltro: $('#idCobradorFiltro').val(),
+                
+
             });
         }, true);
         $(".jtable-title-text").removeClass('col-md-4');
@@ -332,21 +342,34 @@
             RESTService.all('asignacioncobradors/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var cobradores=response.cobrador;
-                    var tiendas=response.tienda;
+                    var cobradores=response.cobrador;
+                    var clientes=response.cliente;
+                       var tiendas=response.tienda;
                       idCobrador.append('<option value="" selected>Seleccionar</option>');
                       cobradores.map(function (index) {
                          idCobrador.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                      });
+                      $("#idCobradorFiltro").append('<option value="" selected>Cobradores</option>');
+                      cobradores.map(function (index) {
+                         $("#idCobradorFiltro").append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                      });
+                      $("#idClienteFiltro").append('<option value="" selected>Clientes</option>');
+                      clientes.map(function (index) {
+                         $("#idClienteFiltro").append('<option value="'+index.id+'">'+index.razonsocial_cliente+'</option>');
                       });
                        $("#filtro_tienda").append('<option value="" selected>Tiendas</option>');
                        tiendas.map(function (index) {
                          $("#filtro_tienda").append('<option value="'+index.idTienda+'">'+index.descripcion+'</option>');
                       });
+
                 }
             }, function() {
                 getDataForm();
             });
         }
         getDataForm();
+        $("#idCobradorFiltro").select2();
+        $("#idClienteFiltro").select2();
     }
 
     function Config($stateProvider, $urlRouterProvider) {
