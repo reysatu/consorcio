@@ -662,6 +662,7 @@
             bval = bval && $("#documento_" + tipo).required();
             if (bval) {
                 var id = $("#documento_" + tipo).val();
+                // alert("#documento_" + tipo+ ": " + id);
                 RESTService.get('personas/get_persona_documento', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
@@ -3160,7 +3161,7 @@
                         }
                         
                         if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
-                            getPersona("documento_fiadorconyugue");
+                            getPersona("fiadorconyugue");
                         }
                        
                     }
