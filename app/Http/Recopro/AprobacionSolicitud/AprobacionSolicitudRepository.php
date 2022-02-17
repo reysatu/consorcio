@@ -18,8 +18,8 @@ class AprobacionSolicitudRepository implements AprobacionSolicitudInterface
         $this->model = $model; 
        
     }
-      public function getVentasAproba($cCod,$nr){
-        $mostrar=DB::select("select cp.description as condicion_pago_text , td.Descripcion as tipoDocumento, mo.Descripcion as moneda,* from ERP_Venta as ve inner join ERP_Clientes as cl on cl.id = ve.idCliente inner join ERP_TipoDocumento as td on ve.IdTipoDocumento=td.IdTipoDocumento inner join ERP_Moneda as mo on mo.IdMoneda=ve.IdMoneda inner join ERP_CondicionPago as cp on cp.id=ve.condicion_pago where   cCodConsecutivo_solicitud='$cCod' and nConsecutivo_solicitud='$nr'");
+      public function getVentasAproba($id){
+        $mostrar=DB::select("select cp.description as condicion_pago_text , td.Descripcion as tipoDocumento, mo.Descripcion as moneda,* from ERP_Venta as ve inner join ERP_Clientes as cl on cl.id = ve.idCliente inner join ERP_TipoDocumento as td on ve.IdTipoDocumento=td.IdTipoDocumento inner join ERP_Moneda as mo on mo.IdMoneda=ve.IdMoneda inner join ERP_CondicionPago as cp on cp.id=ve.condicion_pago where idCliente='$id'");
          return $mostrar; 
     }
        public function getAprobadores($cCod,$nr){

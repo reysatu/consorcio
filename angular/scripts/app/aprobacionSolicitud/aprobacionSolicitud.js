@@ -281,7 +281,7 @@
 
                     var hdia = hoy.getDate();
                     if (Number(hdia) < 10) {
-                        hdia = '0' + String(hdia);
+                        hdia = '0' + String(hdia); 
                     }
                     var actu = hAnio + '-' + hmes + '-' + hdia;
                     totalDescuento.append('<option value="">Seleccionar</option>');
@@ -393,7 +393,7 @@
 
 
 
-        // CLIENTES
+        // CLIENTES 
         var btn_editar_cliente = $("#btn_editar_cliente");
         var cEstadoCivil = $("#cEstadoCivil");
         btn_editar_cliente.click(function (e) {
@@ -406,7 +406,7 @@
             } else {
                 titleModalClientes.html('Editar Cliente');
                 var id = cliente_id_or.val();
-                RESTService.get('customers/find', id, function (response) {
+                RESTService.get('aprobacionSolicituds/findCustomer', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var data_p = response.data;
                         tipodoc.val(data_p[0].tipodoc).trigger('change');
@@ -480,7 +480,7 @@
             }
         });
          btn_Rechazar.click(function (e) {
-             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+             var id=cliente_id_or.val();
               RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
@@ -534,10 +534,14 @@
         
         });
          btn_Aprobar.click(function (e) {
-             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+             var id=cliente_id_or.val();
+             console.log("aprobar1");
+             console.log(id); 
               RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
+                    console.log("aprobar");
+                    console.log(data_p);
                      data_p.map(function(index) {
                                   console.log(Number(index.saldo));
                                   var fecha_emi= moment(index.fecha_emision).format('DD/MM/YYYY');
@@ -604,7 +608,7 @@
         }
         function findPersona(id) {
             titleModalPersona.html('Editar Persona');
-            RESTService.get('personas/find', id, function (response) {
+            RESTService.get('aprobacionSolicituds/findPersona', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -710,7 +714,7 @@
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
-                RESTService.updated('customers/createCliente', cli_id, params, function (response) {
+                RESTService.updated('aprobacionSolicituds/createClienteAproba', cli_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         documento_or.val(documento.val());
                         getCliente();
@@ -730,7 +734,7 @@
 
         };
         function getDataFormCustomer() {
-            RESTService.all('customers/data_form', '', function (response) {
+            RESTService.all('aprobacionSolicituds/data_formCustomer', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip = response.tipoc_doc;
                     var tipo_clie = response.tipo_clie;
@@ -781,7 +785,7 @@
             bval = bval && documento_or.required();
             if (bval) {
                 var id = documento_or.val();
-                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+                RESTService.get('aprobacionSolicituds/get_clienteAprobaciom', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -838,7 +842,7 @@
                     } else {
                         AlertFactory.textType({
                             title: '',
-                            message: 'Hubo un error . Intente nuevamente.',
+                            message: 'Hubo un error1 . Intente nuevamente.',
                             type: 'info'
                         });
                     }
@@ -853,10 +857,17 @@
         function getPersona(tipo) {
             //    alert(tipo);
             var bval = true;
+            console.log("entro2");
+            console.log(tipo);
             bval = bval && $("#documento_" + tipo).required();
             if (bval) {
-                var id = $("#documento_" + tipo).val();
-                RESTService.get('personas/get_persona_documento', id, function (response) {
+                var id = '40696351';
+                console.log("tew");
+                console.log($("#documento_fiadorconyugue").val())
+                console.log("fdsfdssaaaaaa");
+                console.log(id);
+                console.log("dhdhdh");
+                RESTService.get('aprobacionSolicituds/get_persona_documentoAprobac', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -887,7 +898,7 @@
                     } else {
                         AlertFactory.textType({
                             title: '',
-                            message: 'Hubo un error . Intente nuevamente.',
+                            message: 'Hubo un error2 . Intente nuevamente.',
                             type: 'info'
                         });
                     }
@@ -900,7 +911,7 @@
 
         function getDepartamentoPersona(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerDepartamentosApro', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     cRegion.html('');
@@ -925,7 +936,7 @@
             });
         }
         function getProvinciaPersona(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerProvinciasAprob', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -943,7 +954,7 @@
                 } else {
                     AlertFactory.textType({
                         title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
+                        message: 'Hubo un error3 . Intente nuevamente.',
                         type: 'error'
                     });
                 }
@@ -951,7 +962,7 @@
             });
         }
         function getDistritoPersona(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerDistritosApro', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -1182,7 +1193,7 @@
 
                 };
                 var idPe = (idPersona.val() === '') ? 0 : idPersona.val();
-                RESTService.updated('personas/createPersona', idPe, params, function (response) {
+                RESTService.updated('aprobacionSolicituds/createPersonaAprobac', idPe, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         // documento_or.val(documento.val());
                         getPersona($("#tipo_persona").val());
@@ -1208,7 +1219,7 @@
         };
         function getDepartamento(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerDepartamentosApro', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
@@ -1239,7 +1250,7 @@
         });
 
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerProvinciasAprob', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -1257,7 +1268,7 @@
                 } else {
                     AlertFactory.textType({
                         title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
+                        message: 'Hubo un error4 . Intente nuevamente.',
                         type: 'error'
                     });
                 }
@@ -1272,7 +1283,7 @@
 
         });
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('aprobacionSolicituds/TraerDistritosApro', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -1549,7 +1560,7 @@
                 var id_tipo_cliente = id_cliente_tipo_or.val();
                 var id = idProductoMN.val() + "_" + id_tipo_cliente + "_" + idMoneda.val();
                 // alert(id);
-                RESTService.get('orden_servicios/get_precios_list', id, function (response) {
+                RESTService.get('aprobacionSolicituds/get_precios_listAproba', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.newPrecio != "") {
                             precio = response.newPrecio;
@@ -1566,7 +1577,7 @@
                     } else {
                         AlertFactory.textType({
                             title: '',
-                            message: 'Hubo un error . Intente nuevamente.',
+                            message: 'Hubo un error5 . Intente nuevamente.',
                             type: 'info'
                         });
                     }
@@ -1672,7 +1683,7 @@
             bval = bval && cantProductoMss.required();
             if (bval) {
                 var id = idProductoMss.val() + '*' + cantProductoMss.val();
-                RESTService.get('register_movements/validateCantSerie', id, function (response) {
+                RESTService.get('aprobacionSolicituds/validateCantSerieAproba', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.data == 'N') {
                             AlertFactory.textType({
@@ -1720,9 +1731,9 @@
             identiSelec = "A";
             var search_cc4 = getFormSearch('frm-search-cc4', 'search_cc4', 'LoadRecordsButtonCC4');
             table_container_cc4 = $("#table_container_Series_Articulo");
-            var url = 'getProductoSerie';
+            var url = 'getProductoSerieAproba';
             if (naturalezaGeneral == "S") {
-                url = 'getProductoSerieStock';
+                url = 'getProductoSerieStockAproba';
             };
             table_container_cc4.jtable({
                 title: "Lista de Series",
@@ -1732,7 +1743,7 @@
                     listAction: function (postData, jtParams) {
                         return $.Deferred(function ($dfd) {
                             $.ajax({
-                                url: base_url + '/register_movements/' + url,
+                                url: base_url + '/aprobacionSolicituds/' + url,
                                 type: 'POST',
                                 dataType: 'json',
                                 data: { postData: postData, idProducto: idProducto },
@@ -2004,7 +2015,7 @@
 
                     if (bval) {
                         camposunicos = camposunicos.join(',');
-                        RESTService.get('register_movements/valida_series_serve', camposunicos, function (response) {
+                        RESTService.get('aprobacionSolicituds/valida_series_serveAproba', camposunicos, function (response) {
                             if (!_.isUndefined(response.status) && response.status) {
                                 if (cant == cont_table) {
                                     if (identSerAr.val() != "") {
@@ -2915,7 +2926,7 @@
             var idLocali = $("#" + ident);
             var id = idl;
             // alert(id);
-            RESTService.get('register_movements/getLocaStock', id, function (response) {
+            RESTService.get('aprobacionSolicituds/getLocaStockAproba', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
                     idLocali.html('');
@@ -3343,9 +3354,12 @@
                         if(data.solicitud_credito[0].documento_conyugue != null) {
                             getPersona("conyugue");
                         }
-                        
+                        // console.log("dddddddddddd");
+                        // console.log($("#documento_fiadorconyugue").val());
+                        // console.log("ddd");
+                        console.log(data.solicitud_credito[0].documento_fiadorconyugue);
                         if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
-                            getPersona("documento_fiadorconyugue");
+                            getPersona("fiadorconyugue");
                         }
                        
                     }
@@ -3406,6 +3420,77 @@
            
    
         }
+        function calcular_total_ingresos_comprador() {
+            
+            var ingreso_neto_mensual = 0;
+            var ingreso_neto_conyugue = 0;
+            var otros_ingresos = 0;
+            var total_ingresos = 0;
+    
+            if (!isNaN($("#ingreso_neto_mensual").val())) {
+                ingreso_neto_mensual = parseFloat($("#ingreso_neto_mensual").val());
+            }
+
+            if (!isNaN($("#ingreso_neto_conyugue").val())) {
+                ingreso_neto_conyugue = parseFloat($("#ingreso_neto_conyugue").val());
+            }
+
+            if (!isNaN($("#otros_ingresos").val())) {
+                otros_ingresos = parseFloat($("#otros_ingresos").val());
+            }
+
+            total_ingresos = ingreso_neto_mensual + ingreso_neto_conyugue + otros_ingresos;
+            
+    
+
+            $("#total_ingresos").val(total_ingresos); 
+        }
+
+        function calcular_total_ingresos_fiador() {
+            var ingreso_neto_mensual_fiador = 0;
+            var ingreso_neto_conyugue_fiador = 0;
+            var otros_ingresos_fiador = 0;
+            var total_ingresos_fiador = 0;
+    
+            if (!isNaN($("#ingreso_neto_mensual_fiador").val())) {
+                ingreso_neto_mensual_fiador = parseFloat($("#ingreso_neto_mensual_fiador").val());
+            }
+
+            if (!isNaN($("#ingreso_neto_conyugue_fiador").val())) {
+                ingreso_neto_conyugue_fiador = parseFloat($("#ingreso_neto_conyugue_fiador").val());
+            }
+
+            if (!isNaN($("#otros_ingresos_fiador").val())) {
+                otros_ingresos_fiador = parseFloat($("#otros_ingresos_fiador").val());
+            }
+            
+            total_ingresos_fiador = ingreso_neto_mensual_fiador + ingreso_neto_conyugue_fiador + otros_ingresos_fiador;
+            $("#total_ingresos_fiador").val(total_ingresos_fiador);   
+        }
+
+        $(document).on("keyup", "#ingreso_neto_mensual", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_conyugue", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#otros_ingresos", function () {
+            calcular_total_ingresos_comprador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_mensual_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
+
+        $(document).on("keyup", "#ingreso_neto_conyugue_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
+
+        $(document).on("keyup", "#otros_ingresos_fiador", function () {
+            calcular_total_ingresos_fiador();
+        });
         var search = getFormSearch('frm-search-AprobacionSolicitud', 'search_b', 'LoadRecordsButtonAprobacionSolicitud');
 
         var table_container_AprobacionSolicitud = $("#table_container_AprobacionSolicitud");
