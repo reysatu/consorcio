@@ -327,6 +327,13 @@ class MovimientoCajaController extends Controller
             // exit;
             $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
             $solicitud_articulo = $solicitud_repositorio->get_solicitud_articulo($data["cCodConsecutivo"], $data["nConsecutivo"]);
+
+            // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
+            $suma_precio_total = 0;
+            for ($sa=0; $sa < count($solicitud_articulo); $sa++) { 
+                $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
+            }
+
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
 
             $data_venta = (array)$solicitud[0];
@@ -556,25 +563,37 @@ class MovimientoCajaController extends Controller
                         //SEGUNDA VENTA DEL CREDITO
                        
                        //PRORRATEAMOS
+
+                        $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
+                        $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
+
                       
-                        $data_venta_detalle["precio_total"] = round($solicitud_articulo[$i]->precio_total * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_venta_detalle["monto_descuento"] = round($solicitud_articulo[$i]->monto_descuento * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_venta_detalle["monto_subtotal"] = round($solicitud_articulo[$i]->monto_subtotal * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+                        $data_venta_detalle["precio_total"] = round($subtotal, 2);
+                        $data_venta_detalle["monto_descuento"] = 0;
+                        $data_venta_detalle["monto_subtotal"] = round($subtotal, 2);
 
-                        $data_venta_detalle["precio_unitario"] = round( $data_venta_detalle["monto_subtotal"] / $solicitud_articulo[$i]->cantidad, 2);
+                        $data_venta_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
 
-                        $data_venta_detalle["monto_exonerado"] = round($solicitud_articulo[$i]->monto_exonerado * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                       
-                        $data_venta_detalle["monto_afecto"] = round($solicitud_articulo[$i]->monto_afecto * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                       
-                       
-                        $data_venta_detalle["monto_inafecto"] = round($solicitud_articulo[$i]->monto_inafecto * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_venta_detalle["impuestos"] = round($solicitud_articulo[$i]->impuestos * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_venta_detalle["monto_total"] = round($solicitud[0]->t_monto_total * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                   
-                        $data_venta_detalle["nOperGratuita"] = round($solicitud_articulo[$i]->nOperGratuita * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+                        if($solicitud_articulo[$i]->impuestos > 0) {
+                            $igv = $parametro_igv[0]->value;
+                            $data_venta_detalle["impuestos"] = $subtotal * $igv / 100;
+                            $data_venta_detalle["monto_afecto"]  = $subtotal;
+                        } else {
+                            $data_venta_detalle["monto_exonerado"] = $subtotal;
+                        }
 
-                        $data_venta_detalle["monto_descuento_prorrateado"] = round($solicitud_articulo[$i]->monto_descuento_prorrateado * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+    
+                        $data_venta_detalle["monto_total"] = $data_venta_detalle["monto_exonerado"] + $data_venta_detalle["monto_afecto"] + $data_venta_detalle["impuestos"];
+    
+                        $data_venta_detalle["monto_inafecto"] = 0;
+
+                        $data_venta_detalle["nOperGratuita"] = 0;
+                        if($solicitud_articulo[$i]->cOperGrat == "S") {
+
+                            $data_venta_detalle["nOperGratuita"] = round($subtotal, 2);
+                        }
+
+                        $data_venta_detalle["monto_descuento_prorrateado"] = 0;
 
                     }
                 }
@@ -631,24 +650,38 @@ class MovimientoCajaController extends Controller
                     } else {
                         //SEGUNDA VENTA DEL CREDITO
 
-                        $data_ticket_detalle["precio_total"] = round($solicitud_articulo[$i]->precio_total * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_ticket_detalle["monto_descuento"] = round($solicitud_articulo[$i]->monto_descuento * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_ticket_detalle["monto_subtotal"] = round($solicitud_articulo[$i]->monto_subtotal * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+                        $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
+                        $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
 
-                        $data_venta_detalle["precio_unitario"] = round($data_ticket_detalle["monto_subtotal"] / $solicitud_articulo[$i]->cantidad, 2);
+                      
+                        $data_ticket_detalle["precio_total"] = round($subtotal, 2);
+                        $data_ticket_detalle["monto_descuento"] = 0;
+                        $data_ticket_detalle["monto_subtotal"] = round($subtotal, 2);
 
-                        $data_ticket_detalle["monto_exonerado"] = round($solicitud_articulo[$i]->monto_exonerado * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                       
-                        $data_ticket_detalle["monto_afecto"] = round($solicitud_articulo[$i]->monto_afecto * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                       
-                       
-                        $data_ticket_detalle["monto_inafecto"] = round($solicitud_articulo[$i]->monto_inafecto * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_ticket_detalle["impuestos"] = round($solicitud_articulo[$i]->impuestos * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                        $data_ticket_detalle["monto_total"] = round($solicitud[0]->t_monto_total * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
-                   
-                        $data_ticket_detalle["nOperGratuita"] = round($solicitud_articulo[$i]->nOperGratuita * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+                        $data_ticket_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
 
-                        $data_ticket_detalle["monto_descuento_prorrateado"] = round($solicitud_articulo[$i]->monto_descuento_prorrateado * $solicitud[0]->t_monto_subtotal / $solicitud[0]->t_monto_total, 2);
+                        if($solicitud_articulo[$i]->impuestos > 0) {
+                            $igv = $parametro_igv[0]->value;
+                            $data_ticket_detalle["impuestos"] = $subtotal * $igv / 100;
+                            $data_ticket_detalle["monto_afecto"]  = $subtotal;
+                        } else {
+                            $data_ticket_detalle["monto_exonerado"] = $subtotal;
+                        }
+
+    
+                        $data_ticket_detalle["monto_total"] = $data_ticket_detalle["monto_exonerado"] + $data_ticket_detalle["monto_afecto"] + $data_ticket_detalle["impuestos"];
+    
+                        $data_ticket_detalle["monto_inafecto"] = 0;
+
+                        $data_ticket_detalle["nOperGratuita"] = 0;
+                        if($solicitud_articulo[$i]->cOperGrat == "S") {
+
+                            $data_ticket_detalle["nOperGratuita"] = round($subtotal, 2);
+                        }
+
+                        $data_ticket_detalle["monto_descuento_prorrateado"] = 0;
+
+                        
                     }
                 }
 
