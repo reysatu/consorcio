@@ -28,7 +28,7 @@ class AprobacionSolicitudController extends Controller
         try {
             $data = $request->all();
             $res = array("status" => "i");
-            $data_update = array();
+            $data_update = array(); 
             $data_update["nCodConformidad"] = $data["nCodConformidad"];
             $data_update['aprobaComentario'] =$data['aprobaComentario'];
             if(empty($data['aprobaComentario'])){
@@ -53,8 +53,7 @@ class AprobacionSolicitudController extends Controller
          public function getVentas($id, AprobacionSolicitudInterface $repo)
     {
         try {
-            $todo=explode("*", $id);
-            $data = $repo->getVentasAproba($todo[0],$todo[1]);
+            $data = $repo->getVentasAproba($id);
             return response()->json([
                 'status' => true,
                 'data' => $data

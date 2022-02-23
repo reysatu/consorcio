@@ -391,6 +391,16 @@ function getFormSearchAsignacion(form_id, input_id, btn_id) {
                     '</button>' +
                 '</div>'+           
             '</div>'+
+             '<div class="form-group">'+
+                '<label class="col-sm-2 control-label">Fecha Inicio</label>'+
+                '<div class="col-md-3">'+
+                     '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
+                '</div>'+
+                '<label class="col-sm-2 control-label">Fecha Fin</label>'+
+                '<div class="col-md-3">'+
+                    '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
+                '</div>'+
+            '</div>'+
             '<div class="form-group">'+
                
                 '<div class="col-md-5">'+

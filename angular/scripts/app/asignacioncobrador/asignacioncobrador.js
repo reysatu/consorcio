@@ -124,7 +124,7 @@
                 },
                 Cronograma: {
                     title: '',
-                    width: '5%',
+                    width: '1%',
                     sorting: false,
                     edit: false,
                     create: false,
@@ -204,9 +204,11 @@
                     edit: false,
                     list: true,
                     title: 'Código',
+                       width: '1%',
                 },
                 nConsecutivo: {
                     title: 'Nro',
+                       width: '1%',
                 },
 
                 fecha_solicitud: {
@@ -218,56 +220,76 @@
                 },
                 tipoComprobanteText: {
                     title: 'Tipo Comprobante',
+                       width: '1%',
+                },
+                serie_comprobante: {
+                    title: 'Serie',
+                       width: '1%',
+                },
+                numero_comprobante: {
+                    title: 'N°',
+                       width: '1%',
                 },
                 tipo_solicitud: {
+                       width: '1%',
                     title: 'Tipo Solicitud',
                     options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
 
                 },
                 tipo_documento: {
+                       width: '1%',
                     title: 'Tipo Doc.',
 
 
                 },
                 numero_documento: {
+                       width: '1%',
                     title: 'N° Documento',
 
 
                 },
                 moneda: {
+                       width: '1%',
                     title: 'Moneda',
 
 
                 },
                 t_monto_total: {
+                       width: '1%',
                     title: 'Monto',
 
 
                 },
                 pagado: {
+                       width: '1%',
                     title: 'Pagado',
 
 
                 },
                 saldo: {
+                       width: '1%',
                     title: 'Saldo',
 
 
                 },
                 facturado: {
+                       width: '1%',
                     title: 'Facturado',
 
 
                 },
                 Cobrador: {
                     title: 'Cobrador',
+                    width: '15%',
 
 
                 },
                 cliente: {
                     title: 'Cliente',
+                    width: '50%',
                 },
                 estado: {
+                       width: '1%',
                     title: 'Estado',
                     options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
                 },
@@ -324,6 +346,8 @@
                 idFin: $('#idFin').val(),
                 idClienteFiltro: $('#idClienteFiltro').val(),
                 idCobradorFiltro: $('#idCobradorFiltro').val(),
+                FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                FechaFinFiltro: $('#FechaFinFiltro').val(),
                 
 
             });
