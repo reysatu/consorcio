@@ -30,6 +30,18 @@ class VentaRepository implements VentaInterface
         })->orderBy('fecha_emision', 'DESC');
     }
 
+    public function search_creditos($s)
+    {   
+      
+
+        return $this->model->orWhere(function ($q) use ($s) {
+             $q->whereIn('estado', [2, 4])
+                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
+                ->where('numero_documento', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_emision', 'DESC');
+    }
  
 
     public function all()

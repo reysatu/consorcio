@@ -7,15 +7,15 @@
  * Time: 6:56 PM
  */
 
-namespace App\Http\Recopro\Solicitud;
+namespace App\Http\Recopro\SolicitudCredito;
 
 use Illuminate\Support\Facades\DB;
 
-class SolicitudRepository implements SolicitudInterface
+class SolicitudCreditoRepository implements SolicitudCreditoInterface
 {
     protected $model;
     private static $_ACTIVE = 'A';
-    public function __construct(Solicitud $model)
+    public function __construct(SolicitudCredito $model)
     {
         $this->model = $model;
     }
@@ -30,34 +30,7 @@ class SolicitudRepository implements SolicitudInterface
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
-    public function search_ventas($s)
-    {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('estado', [2, 4])
-                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-        })->orderBy('fecha_solicitud', 'DESC');
-    }
-
-
-//     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
-//     {
-
-//         return $this->model->orWhere(function ($q) use ($s,$filtro_tienda,$idInicio,$idFin) {
-//             $q->where('tipo_comprobante','>',0)->where('saldo','>',0)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-//                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-//                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-//                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
-//              if(!empty($filtro_tienda)){
-//               $q->Where('nCodTienda',$filtro_tienda);
-//             }
-//         });
-//     }
-// >>>>>>> 4870a79d0dc412d8e5cb96175d98abd570e4358d
-
-   
+ 
 
     public function all()
     {
@@ -218,7 +191,7 @@ class SolicitudRepository implements SolicitudInterface
     public function get_solicitud($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Simbolo AS simbolo_moneda, c.razonsocial_cliente,
+        $sql = "SELECT s.*, FORMAT(s.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento, FORMAT(s.fecha_solicitud, 'yyyy-MM-dd') AS fecha_solicitud, c.documento, CONCAT(d.id ,'*' , CAST(d.nPorcDescuento AS float), '*', CAST(d.nMonto AS FLOAT) ) AS descuento_id, c.correo_electronico, v.descripcion AS vendedor, m.*, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Descripcion AS moneda, FORMAT(s.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento_user, FORMAT(s.fecha_solicitud, 'dd/MM/yyyy') AS fecha_solicitud_user, m.Simbolo AS simbolo_moneda,
         CASE WHEN s.estado = 1 THEN 'Registrado'
         WHEN s.estado = 2 THEN 'Vigente'
         WHEN s.estado = 3 THEN 'Por Aprobar'
@@ -227,7 +200,7 @@ class SolicitudRepository implements SolicitudInterface
         WHEN s.estado = 6 THEN 'Facturado'
 
         WHEN s.estado = 7 THEN 'Despachado' END AS estado_user, 
-        conv.descripcionconvenio AS convenio, FORMAT(GETDATE(), 'yyyy-MM-dd') AS fecha_pago
+        conv.descripcionconvenio AS convenio
 
         FROM ERP_Solicitud AS s
         INNER JOIN ERP_Clientes AS c ON(c.id=s.idcliente)
@@ -317,7 +290,7 @@ class SolicitudRepository implements SolicitudInterface
     {
 
         $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento,
-        CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado, FORMAT(sc.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento_credito
+        CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado
          FROM ERP_SolicitudCronograma AS sc
         WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);

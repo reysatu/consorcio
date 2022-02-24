@@ -22,9 +22,9 @@
         //     modalMovCaj.modal('show');
         // }
         var cuentas_bancarias;
-        var nrOperacion=$("#nrOperacion");
-        var banco=$("#banco");
-        var cuentaBancaria=$("#cuentaBancaria");
+        var nrOperacion = $("#nrOperacion");
+        var banco = $("#banco");
+        var cuentaBancaria = $("#cuentaBancaria");
 
         var tipoMovimientoAdd = $("#tipoMovimientoAdd");
         var idMonedaAdd = $("#idMonedaAdd");
@@ -122,19 +122,19 @@
                }
         });
         tipoMovimientoAdd.change(function (e) {
-             if(tipoMovimientoAdd.val()=='BCO'){
-                   nrOperacion.prop('disabled', false);
-                    banco.prop('disabled', false);
-                    cuentaBancaria.prop('disabled', false);
-             }else{
-                    nrOperacion.prop('disabled', true);
-                    nrOperacion.val("");
-                    banco.prop('disabled', true);
-                    banco.val("").trigger("change");
-                    cuentaBancaria.prop('disabled', true);
-                    cuentaBancaria.val("");
-             }
-          });
+            if (tipoMovimientoAdd.val() == 'BCO') {
+                nrOperacion.prop('disabled', false);
+                banco.prop('disabled', false);
+                cuentaBancaria.prop('disabled', false);
+            } else {
+                nrOperacion.prop('disabled', true);
+                nrOperacion.val("");
+                banco.prop('disabled', true);
+                banco.val("").trigger("change");
+                cuentaBancaria.prop('disabled', true);
+                cuentaBancaria.val("");
+            }
+        });
         $('#btn_Mcierra').click(function (e) {
             if (estadoMc.val() == "") {
                 AlertFactory.textType({
@@ -305,36 +305,36 @@
                 }
             });
         }
-          banco.change(function (e) {
+        banco.change(function (e) {
             cargarCuentasBancarias();
-          });
-          idMonedaAdd.change(function (e) {
-           cargarCuentasBancarias();
-          });
+        });
+        idMonedaAdd.change(function (e) {
+            cargarCuentasBancarias();
+        });
         function cargarCuentasBancarias() {
-           var bval=true;
+            var bval = true;
             cuentaBancaria.html("");
-             cuentaBancaria.append('<option value="">Seleccionar</option>');
-             bval = bval && idMonedaAdd.required();
-             bval = bval && banco.required(); 
+            cuentaBancaria.append('<option value="">Seleccionar</option>');
+            bval = bval && idMonedaAdd.required();
+            bval = bval && banco.required();
             if (bval) {
-                  _.each(cuentas_bancarias, function (item) {
-                        if(item.idbanco==banco.val() && item.IdMoneda==idMonedaAdd.val()){
-                               cuentaBancaria.append('<option value="' + item.id_cuentabancaria+'*'+item.numero_cuenta+'">' + item.numero_cuenta+' '+item.descripcion_cuenta+ '</option>');
-                        }
-                     
-            });
-            } 
+                _.each(cuentas_bancarias, function (item) {
+                    if (item.idbanco == banco.val() && item.IdMoneda == idMonedaAdd.val()) {
+                        cuentaBancaria.append('<option value="' + item.id_cuentabancaria + '*' + item.numero_cuenta + '">' + item.numero_cuenta + ' ' + item.descripcion_cuenta + '</option>');
+                    }
+
+                });
+            }
         }
-      
+
         function getDataFormCajaInicio() {
             RESTService.all('movimientoCajas/data_formIncio', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     banco.append('<option value="">Seleccionar</option>');
-                     _.each(response.bancos, function (item) {
+                    _.each(response.bancos, function (item) {
                         banco.append('<option value="' + item.idbanco + '">' + item.descripcion + '</option>');
                     });
-                    cuentas_bancarias=response.cuenta_bancarias;
+                    cuentas_bancarias = response.cuenta_bancarias;
                 }
             }, function () {
                 getDataFormCajaInicio();
@@ -366,7 +366,7 @@
                     });
                     idUsuario.val(response.usuario).trigger("change");
                     usuarioActual = response.usuario;
-                    
+
                     cuentaBancaria
                 }
             }, function () {
@@ -610,29 +610,29 @@
             bval = bval && tipoMovimientoAdd.required();
             bval = bval && idMonedaAdd.required();
             bval = bval && montoAdd.required();
-          
-            if(tipoMovimientoAdd.val()=='BCO'){
+
+            if (tipoMovimientoAdd.val() == 'BCO') {
                 bval = bval && nrOperacion.required();
                 bval = bval && banco.required();
                 bval = bval && cuentaBancaria.required();
             }
-            if(tipoMovimientoAdd.val()!='BCO'){
-                 bval = bval && conceptoAdd.required(); 
+            if (tipoMovimientoAdd.val() != 'BCO') {
+                bval = bval && conceptoAdd.required();
             }
             if (bval) {
-                var to=cuentaBancaria.val();
-                var toCuenta=to.split('*');
+                var to = cuentaBancaria.val();
+                var toCuenta = to.split('*');
                 var params = {
                     'tipoMovimientoAdd': tipoMovimientoAdd.val(),
                     'idMonedaAdd': idMonedaAdd.val(),
                     'montoAdd': montoAdd.val(),
                     'conceptoAdd': conceptoAdd.val(),
                     'formaPagoAdd': formaPagoAdd.val(),
-                    'nrOperacion':nrOperacion.val(),
-                    'bancoText':$("#banco option:selected"). text(),
-                    'idBanco':banco.val(),
-                    'idCuenta':toCuenta[0],
-                    'numero_cuenta':toCuenta[1],
+                    'nrOperacion': nrOperacion.val(),
+                    'bancoText': $("#banco option:selected").text(),
+                    'idBanco': banco.val(),
+                    'idCuenta': toCuenta[0],
+                    'numero_cuenta': toCuenta[1],
                 };
                 var id = idcajaMC.val();
                 RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {
@@ -1348,37 +1348,37 @@
                 },
                 tipo_documento: {
                     title: 'Tipo Doc.',
-                    
+
 
                 },
                 numero_documento: {
                     title: 'N° Documento',
-                    
+
 
                 },
                 moneda: {
                     title: 'Moneda',
-                    
+
 
                 },
                 t_monto_total: {
                     title: 'Monto',
-                    
+
 
                 },
                 pagado: {
                     title: 'Pagado',
-                    
+
 
                 },
                 saldo: {
                     title: 'Saldo',
-                    
+
 
                 },
                 facturado: {
                     title: 'Facturado',
-                    
+
 
                 },
                 estado: {
@@ -1403,12 +1403,12 @@
             recordsLoaded: function (event, data) {
                 $('.emitir-comprobante').click(function (e) {
                     var id = $(this).attr('data-id');
-                    $.post("movimientoCajas/get_caja_diaria", {  },
+                    $.post("movimientoCajas/get_caja_diaria", {},
                         function (data, textStatus, jqXHR) {
                             // console.log();
 
-                            if(data.length > 0) {
-                                
+                            if (data.length > 0) {
+
                                 find_solicitud(id);
                             } else {
                                 AlertFactory.textType({
@@ -1535,49 +1535,128 @@
             $("#modal-creditos").modal("show");
         }
 
+        function select_comprobante(data) {
+            $("#serie_comprobante").html("");
+            $("#serie_comprobante").append('<option value="">Seleccionar</option>');
+            _.each(data, function (item) {
+                if (serie_comprobante == item.serie) {
+                    $("#serie_comprobante").append('<option selected="selected" actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                } else {
+                    $("#serie_comprobante").append('<option actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                }
+
+            });
+        }
+
         $scope.emitir_comprobante = function () {
             // $("#idconyugue").focus();
             // alert($("#desTotal").val());
-            var total = parseFloat($("#desTotal").val());
-            var cuota_inicial = parseFloat($("#cuota_inicial").val());
-            var saldo = parseFloat($("#saldo").val());
-            var pagado = parseFloat($("#pagado").val());
-            var facturado = parseFloat($("#facturado").val());
-            var total_financiado = parseFloat($("#total_financiado").val());
-            var t_monto_subtotal = parseFloat($("#t_monto_subtotal").val());
-            var valor_igv = parseFloat($("#valor_igv").val());
-            var t_impuestos = parseFloat($("#t_impuestos").val());
-           
-            if(isNaN(valor_igv)) {
-                valor_igv = 0;
-            }
 
-            if(isNaN(pagado)) {
-                pagado = 0;
-            }
-            if(isNaN(facturado)) {
-                facturado = 0;
-            }
 
-            if(cuota_inicial > 0) {
-                if(pagado == 0) {
-                    if(t_impuestos > 0) {
-                        total = cuota_inicial + (cuota_inicial * valor_igv) / 100;
-                    } else {
-                        total = cuota_inicial;
-                    }
-                } else {
-                    total = t_monto_subtotal - cuota_inicial;
-                    if(t_impuestos > 0) {
-                        total = total + (total * valor_igv) / 100;
-                    }
-                
+            if ($('#modalSolicitud').is(':visible')) {
+                var total = parseFloat($("#desTotal").val());
+                var cuota_inicial = parseFloat($("#cuota_inicial").val());
+                var saldo = parseFloat($("#saldo").val());
+                var pagado = parseFloat($("#pagado").val());
+                var facturado = parseFloat($("#facturado").val());
+                var total_financiado = parseFloat($("#total_financiado").val());
+                var t_monto_subtotal = parseFloat($("#t_monto_subtotal").val());
+                var valor_igv = parseFloat($("#valor_igv").val());
+                var t_impuestos = parseFloat($("#t_impuestos").val());
+
+                if (isNaN(valor_igv)) {
+                    valor_igv = 0;
                 }
+
+                if (isNaN(pagado)) {
+                    pagado = 0;
+                }
+                if (isNaN(facturado)) {
+                    facturado = 0;
+                }
+
+                if (cuota_inicial > 0) {
+                    if (pagado == 0) {
+                        if (t_impuestos > 0) {
+                            total = cuota_inicial + (cuota_inicial * valor_igv) / 100;
+                        } else {
+                            total = cuota_inicial;
+                        }
+                    } else {
+                        total = t_monto_subtotal - cuota_inicial;
+                        if (t_impuestos > 0) {
+                            total = total + (total * valor_igv) / 100;
+                        }
+
+                    }
+                }
+                $("#total_pagar").val(total.toFixed(2));
+                $("#monto").val(total.toFixed(2));
+                $("#id_tipoDoc_Venta_or").trigger("change");
+
+                $("#modal-emitir-comprobante").modal("show");
             }
-            $("#total_pagar").val(total.toFixed(2));
-            $("#monto").val(total.toFixed(2));
-            $("#id_tipoDoc_Venta_or").trigger("change");
-            $("#modal-emitir-comprobante").modal("show");
+
+
+            //  PARA PAGOS DE CUOTAS DE CREDITO
+            if ($('#modalSolicitudCredito').is(':visible')) {
+                $.post("movimientoCajas/obtener_consecutivo_comprobante", {},
+                    function (data, textStatus, jqXHR) {
+                        // console.log(data);
+                        if(data.length > 0) {
+                            select_comprobante(data);
+
+                            if (typeof serie_comprobante != "undefined") {
+                                $("#serie_comprobante").trigger("change");
+                            }
+
+                            var monto_pagar = sumar_montos_pago();
+                            if(monto_pagar == 0) {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'El monto a pagar esta en cero!',
+                                    type: 'info'
+                                });
+                                return false;
+                            }
+
+                            var check_cuota = $(".check-cuota");
+                            var checks = 0;
+                            for (var ii = 0; ii < check_cuota.length; ii++) {
+                                if($(check_cuota[ii]).is(":checked")) {
+                                    checks++;
+                                }
+                                
+                            }
+
+                            if(checks <= 0) {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Debe Seleccionar al menos una cuota a pagar!',
+                                    type: 'info'
+                                });
+                                return false;
+                            }
+
+                            // alert(checks);
+                            $("#total_pagar").val(monto_pagar.toFixed(2));
+                            $("#monto").val(monto_pagar.toFixed(2));
+                            $("#modal-emitir-comprobante").modal("show");
+                            
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Cree una serie y consecutivo de ticket!',
+                                type: 'info'
+                            });
+                        }
+                    },
+                    "json"
+                );
+                
+            }
+
+
 
         }
 
@@ -1586,9 +1665,9 @@
             // alert($("#desTotal").val());
             var total_pagar = parseFloat($("#total_pagar").val());
             var subtotal_montos_pago = sumar_montos_formas_pago();
-            var saldo = total_pagar - subtotal_montos_pago; 
+            var saldo = total_pagar - subtotal_montos_pago;
             // alert();
-            if(saldo <= 0) {
+            if (saldo <= 0) {
                 AlertFactory.textType({
                     title: '',
                     message: 'Ya se distribuyo el total!',
@@ -1613,18 +1692,9 @@
             var tipo_documento = $(this).val();
             $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
-                    $("#serie_comprobante").html("");
-                    $("#serie_comprobante").append('<option value="">Seleccionar</option>');
-                    _.each(data, function (item) {
-                        if(serie_comprobante == item.serie) {
-                            $("#serie_comprobante").append('<option selected="selected" actual="'+item.actual+'" value="' + item.serie + '">' + item.serie + '</option>');
-                        } else{ 
-                            $("#serie_comprobante").append('<option actual="'+item.actual+'" value="' + item.serie + '">' + item.serie + '</option>');
-                        }
-                        
-                    });
+                    select_comprobante(data);
 
-                    if(typeof serie_comprobante != "undefined") {
+                    if (typeof serie_comprobante != "undefined") {
                         $("#serie_comprobante").trigger("change");
                     }
                 },
@@ -1634,9 +1704,9 @@
 
         $(document).on("change", "#serie_comprobante", function () {
             var serie_comprobante = $(this).val();
-            if(serie_comprobante != "") {
+            if (serie_comprobante != "") {
 
-                var actual = $("#serie_comprobante option[value="+serie_comprobante+"]").attr("actual");
+                var actual = $("#serie_comprobante option[value=" + serie_comprobante + "]").attr("actual");
                 $("#numero_comprobante").val(actual);
             }
             // alert(numero);
@@ -1649,7 +1719,7 @@
 
             for (var i = 0; i < montos_pago.length; i++) {
                 subtotal_montos_pago += parseFloat(montos_pago[i].value);
-                
+
             }
             return subtotal_montos_pago;
         };
@@ -1658,19 +1728,19 @@
             var bval = true;
             var vuelto_real = parseFloat($("#vuelto_real").val());
             bval = bval && $("#forma_pago").required();
-            if($("#forma_pago").val() == "TCR" || $("#forma_pago").val() == "TDE") {
+            if ($("#forma_pago").val() == "TCR" || $("#forma_pago").val() == "TDE") {
                 bval = bval && $("#noperacion").required();
                 bval = bval && $("#tarjeta").required();
-            } 
+            }
 
-            if($("#forma_pago").val() == "DEP" || $("#forma_pago").val() == "ELE" || $("#forma_pago").val() == "TRA") {
+            if ($("#forma_pago").val() == "DEP" || $("#forma_pago").val() == "ELE" || $("#forma_pago").val() == "TRA") {
                 bval = bval && $("#noperacion").required();
             }
-            
+
             bval = bval && $("#moneda").required();
             bval = bval && $("#monto_p").required();
-            
-            if(vuelto_real < 0) {
+
+            if (vuelto_real < 0) {
                 AlertFactory.textType({
                     title: '',
                     message: 'El monto a pagar no cubre el monto a aplicar!',
@@ -1680,18 +1750,18 @@
                 return false;
             }
 
-          
 
-            if(!bval) {
+
+            if (!bval) {
                 return false;
             }
 
             var serie_comprobante = $("#serie_comprobante").val();
             var numero_comprobante = $("#numero_comprobante").val();
             var forma_pago = $("#forma_pago").val();
-            var forma_pago_text = $("#forma_pago option[value="+forma_pago+"]").text();
+            var forma_pago_text = $("#forma_pago option[value=" + forma_pago + "]").text();
             var moneda = $("#moneda").val();
-            var moneda_text = $("#moneda option[value="+moneda+"]").text();
+            var moneda_text = $("#moneda option[value=" + moneda + "]").text();
             var noperacion = $("#noperacion").val();
             var tarjeta = $("#tarjeta").val();
             var monto_p = parseFloat($("#monto_p").val());
@@ -1700,15 +1770,15 @@
             var monto_aplicar = (!isNaN(parseFloat($("#monto_aplicar").val()))) ? parseFloat($("#monto_aplicar").val()) : 0;
             var monto_vuelto = (!isNaN(parseFloat($("#monto_vuelto").val()))) ? parseFloat($("#monto_vuelto").val()) : 0;
             var html = "<tr>";
-            html += '   <input type="hidden" name="IdMoneda[]" value="'+moneda+'" />';
-            html += '   <input type="hidden" name="codigo_formapago[]" value="'+forma_pago+'" />';
-            html += '   <input type="hidden" name="nrotarjeta[]" value="'+tarjeta+'" />';
-            html += '   <input type="hidden" name="nrooperacion[]" value="'+noperacion+'" />';
-            html += '   <input type="hidden" name="monto_pago[]" value="'+monto_p+'" />';
-            html += '   <input type="hidden" name="monto_moneda_documento[]" value="'+monto_local+'" />';
-            html += '   <input type="hidden" name="monto_aplicado_moneda_documento[]" value="'+monto_aplicar+'" />';
-            html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="'+tipo_cambio+'" />';
-            html += '   <input type="hidden" name="vuelto[]" value="'+monto_vuelto+'" />';
+            html += '   <input type="hidden" name="IdMoneda[]" value="' + moneda + '" />';
+            html += '   <input type="hidden" name="codigo_formapago[]" value="' + forma_pago + '" />';
+            html += '   <input type="hidden" name="nrotarjeta[]" value="' + tarjeta + '" />';
+            html += '   <input type="hidden" name="nrooperacion[]" value="' + noperacion + '" />';
+            html += '   <input type="hidden" name="monto_pago[]" value="' + monto_p + '" />';
+            html += '   <input type="hidden" name="monto_moneda_documento[]" value="' + monto_local + '" />';
+            html += '   <input type="hidden" name="monto_aplicado_moneda_documento[]" value="' + monto_aplicar + '" />';
+            html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="' + tipo_cambio + '" />';
+            html += '   <input type="hidden" name="vuelto[]" value="' + monto_vuelto + '" />';
             html += '   <td>' + moneda_text + '</td>';
             html += '   <td>' + forma_pago_text + '</td>';
             html += '   <td>' + noperacion + '</td>';
@@ -1716,13 +1786,13 @@
             // html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
             html += '   <td>' + monto_p + '</td>';
             html += '   <td>' + tipo_cambio + '</td>';
-            html += '   <td>' + monto_local +'</td>';
-            html += '   <td>' + monto_aplicar +'</td>';
-            html += '   <td>' + monto_vuelto +'</td>';
+            html += '   <td>' + monto_local + '</td>';
+            html += '   <td>' + monto_aplicar + '</td>';
+            html += '   <td>' + monto_vuelto + '</td>';
             html += '   <td><button title="Eliminar Registro" class="btn btn-danger btn-xs eliminar-forma-pago" type="button"><i class="fa fa-trash"></i></button></td>';
             html += '</tr>';
             $("#detalle-formas-pago").append(html);
-        
+
             var total_pagar = parseFloat($("#total_pagar").val());
             var subtotal_montos_pago = sumar_montos_formas_pago();
             var saldo = total_pagar - subtotal_montos_pago;
@@ -1740,7 +1810,7 @@
             bval = bval && $("#numero_comprobante").required();
             bval = bval && $("#correo_electronico").required();
             // alert($("#detalle-formas-pago").html());
-            if($("#detalle-formas-pago").html() == "") {
+            if ($("#detalle-formas-pago").html() == "") {
                 AlertFactory.textType({
                     title: '',
                     message: 'Debe ingresar al menos 1 registro al detalle',
@@ -1750,12 +1820,12 @@
                 return false;
             }
 
-            if(bval) {
+            if (bval) {
                 $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val(),
                     function (data, textStatus, jqXHR) {
-                        
+
                         if (data.status == "i") {
-                            
+
                             // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
                             $("#modal-emitir-comprobante").modal("hide");
                             $("#modalSolicitud").modal("hide");
@@ -1773,20 +1843,20 @@
                             });
 
                             // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
-                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud+ "|" + data.datos[0].idventa;
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
 
-                            if(data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
+                            if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
 
-                                window.open("movimientoCajas/imprimir_cronograma/"+id);
+                                window.open("movimientoCajas/imprimir_cronograma/" + id);
                             }
 
-                            window.open("movimientoCajas/imprimir_comprobante/"+id);
-                            
-                            
-                            id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud+ "|" + data.datos[0].idventa_ticket;
-                            window.open("movimientoCajas/imprimir_ticket/"+id);
-                           
-                         
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+
+
+                            id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa_ticket;
+                            window.open("movimientoCajas/imprimir_ticket/" + id);
+
+
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -1799,7 +1869,7 @@
                     "json"
                 );
             }
-           
+
         }
 
         $(document).on("click", ".eliminar-forma-pago", function () {
@@ -1827,14 +1897,14 @@
                 $(".convenio").show();
 
             } else {
-            
+
                 if (tipo_solicitud == "1") {
                     $(".montos-credito").val(0);
                 }
                 $(".convenio").hide();
             }
 
-            
+
         });
 
         function obtener_data_for_solicitud() {
@@ -1881,15 +1951,12 @@
                         $("#forma_pago").append('<option value="' + item.codigo_formapago + '">' + item.descripcion_subtipo + '</option>');
                     });
 
-                    // console.log(cCodConsecutivo);
-                    // cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+'</option>');
+
                     idcCondicionPago.append('<option value="">Seleccionar</option>');
                     _.each(response.condicion_pago, function (item) {
                         idcCondicionPago.append('<option value="' + item.id + '">' + item.description + '</option>');
                     });
-                    // _.each(response.tipo_servicio, function (item) {
-                    //     id_tipo.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
-                    // });
+
                     idDocumentoCli.append('<option value="">Seleccionar</option>');
                     _.each(response.tipo_document, function (item) {
                         idDocumentoCli.append('<option value="' + item.Codigo + '">' + item.TipoDocumento + '</option>');
@@ -1902,22 +1969,6 @@
                     _.each(response.tipo_document_venta, function (item) {
                         id_tipoDoc_Venta.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
                     });
-                    // gru_revisiones.append('<option value="" selected>Seleccionar </option>');
-                    // _.each(response.revisiones, function (item) {
-                    //     gru_revisiones.append('<option value="' + item.id + '*' + item.nombre + '*' + item.mo_revision + '*' + item.mo_mecanica + '*' + item.terceros + '*' + item.otros_mo + '*' + item.repuestos + '*' + item.accesorios + '*' + item.lubricantes + '*' + item.otros_rep + '">' + item.nombre + '</option>');
-                    // });
-                    // idTecnico.append('<option value="">Seleccionar</option>');
-                    // _.each(response.tecnico, function (item) {
-                    //     idTecnico.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
-                    // });
-                    // idAsesor.append('<option value="">Seleccionar</option>');
-                    // _.each(response.asesor, function (item) {
-                    //     idAsesor.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
-                    // });
-                    // id_tipomant.append('<option value="">Seleccionar</option>');
-                    // _.each(response.tipoMantenimiento, function (item) {
-                    //     id_tipomant.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
-                    // });
 
                     // servicios = response.servicios;
                     idMoneda.append('<option value="">Seleccionar</option>');
@@ -1939,29 +1990,6 @@
                     _.each(response.vendedores, function (item) {
                         idvendedor.append('<option  value="' + item.idvendedor + '">' + item.descripcion + '</option>');
                     });
-                    // console.log(idvendedor);
-
-                    // $("#idconyugue").append('<option value="">Seleccionar</option>');
-                    // _.each(response.personas, function (item) {
-                    //     $("#idconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
-                    // });
-
-                    // $("#idfiador").append('<option value="">Seleccionar</option>');
-                    // _.each(response.personas, function (item) {
-                    //     $("#idfiador").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
-                    // });
-
-                    // $("#idfiadorconyugue").append('<option value="">Seleccionar</option>');
-                    // _.each(response.personas, function (item) {
-                    //     $("#idfiadorconyugue").append('<option value="' + item.idPersona + '">' + item.cNombres + ' ' + item.cApepat + ' ' + item.cApemat + '</option>');
-                    // });
-                    // totales = response.totales;
-                    // tipo_totales_slec.append('<option value="">Tipo</option>');
-                    // _.each(response.totales, function (item) {
-                    //     tipo_totales_slec.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
-                    // });
-
-
 
 
                     AlmacenesSele = response.almacen_usuario;
@@ -2063,7 +2091,7 @@
         $(document).on("keyup", "#monto_aplicar", function () {
             var monto_aplicar = parseFloat($(this).val());
             var monto = parseFloat($("#monto").val()); // monto total que se debe pagar
-            if(monto_aplicar > monto) {
+            if (monto_aplicar > monto) {
                 AlertFactory.textType({
                     title: '',
                     message: 'El monto aplicar no debe ser mayor al monto total a pagar',
@@ -2081,19 +2109,19 @@
             var idmoneda = $(this).val();
             if (idmoneda != "") {
 
-                var simbolo = $(this).find("option[value=" + idmoneda+ "]").data("simbolo");
-                
+                var simbolo = $(this).find("option[value=" + idmoneda + "]").data("simbolo");
+
                 $(".simbolo-moneda-2").text(simbolo);
 
                 $.post("movimientoCajas/obtener_tipo_cambio_venta", { idmoneda: idmoneda },
                     function (data, textStatus, jqXHR) {
-                        if(data.length > 0) {
+                        if (data.length > 0) {
                             var tipo_cambio = 1;
-                            if(data[0].tipo_cambio_venta != null) {
+                            if (data[0].tipo_cambio_venta != null) {
                                 tipo_cambio = data[0].tipo_cambio_venta;
 
                             }
-                            if(tipo_cambio == 1) {
+                            if (tipo_cambio == 1) {
                                 $("#tipo_cambio").val(0);
                             } else {
 
@@ -2108,7 +2136,7 @@
                             monto_convertido = monto_p * tipo_cambio;
                             vuelto = monto_convertido - monto;
                             $("#vuelto_real").val(vuelto.toFixed(2));
-                            if(vuelto < 0) {
+                            if (vuelto < 0) {
                                 vuelto = 0;
                             }
                             $("#monto_local").val(monto_convertido.toFixed(2));
@@ -2117,7 +2145,7 @@
 
 
                             // if(tipo_cambio > 0) {
-                               
+
                             // } else {
                             //     $("#monto_local").val(monto.toFixed(2));
                             //     $("#monto_aplicar").val(monto.toFixed(2));
@@ -2188,7 +2216,7 @@
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
-                    if(data.solicitud_credito.length > 0) {
+                    if (data.solicitud_credito.length > 0) {
                         Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
                     }
                     $("#correo_electronico").val(data.solicitud[0].correo_electronico);
@@ -2198,7 +2226,7 @@
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
                     $("#moneda").trigger("change");
-                 
+
                     if (data.solicitud_credito.length > 0) {
 
                         $("#cuota_inicial").val(data.solicitud_credito[0].cuota_inicial);
@@ -2212,15 +2240,15 @@
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
                         $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
 
-                        if(data.solicitud_credito[0].documento_fiador != null) {
+                        if (data.solicitud_credito[0].documento_fiador != null) {
                             getPersona("fiador");
                         }
 
-                        if(data.solicitud_credito[0].documento_conyugue != null) {
+                        if (data.solicitud_credito[0].documento_conyugue != null) {
                             getPersona("conyugue");
                         }
-                        
-                        if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
+
+                        if (data.solicitud_credito[0].documento_fiadorconyugue != null) {
                             getPersona("documento_fiadorconyugue");
                         }
                     }
@@ -2261,7 +2289,7 @@
             );
         }
 
-
+        //COMPROBANTES
         var search_comprobantes = getFormSearch('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
 
         var table_container_comprobantes = $("#table_container_comprobantes");
@@ -2273,7 +2301,7 @@
             actions: {
                 listAction: base_url + '/movimientoCajas/list_comprobantes',
             },
-        
+
             toolbar: {
                 items: [{
                     cssClass: 'buscador',
@@ -2336,7 +2364,7 @@
                 },
                 numero_comprobante: {
                     title: 'Número',
-                    
+
 
                 },
                 fecha_emision: {
@@ -2348,35 +2376,35 @@
                 },
                 tipo_documento: {
                     title: 'Tipo Doc.',
-                    
+
 
                 },
                 numero_documento: {
                     title: 'N° Documento',
-                    
+
 
                 },
                 moneda: {
                     title: 'Moneda',
-                    
+
 
                 },
                 t_monto_total: {
                     title: 'Monto',
-                    
+
 
                 },
                 pagado: {
                     title: 'Pagado',
-                    
+
 
                 },
                 saldo: {
                     title: 'Saldo',
-                    
+
 
                 },
-               
+
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -2384,7 +2412,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="imprimir-comprobante" data-estado="'+data.record.estado+'"  data-tipo_solicitud="'+data.record.tipo_solicitud+'" data-idtipodocumento="'+data.record.IdTipoDocumento+'"  data-anticipo="'+data.record.anticipo+'" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" title="Imprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="imprimir-comprobante" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '" data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" title="Imprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
                     }
 
                 }
@@ -2396,21 +2424,21 @@
                     var tipo_solicitud = $(this).attr('data-tipo_solicitud');
                     var idtipodocumento = $(this).attr('data-idtipodocumento');
                     var estado = $(this).attr('data-estado');
-                   
-                    if(idtipodocumento == "12") {
 
-                        window.open("movimientoCajas/imprimir_ticket/"+id);
+                    if (idtipodocumento == "12") {
+
+                        window.open("movimientoCajas/imprimir_ticket/" + id);
                     } else {
-                        window.open("movimientoCajas/imprimir_comprobante/"+id);
-                        if(tipo_solicitud != "1" && estado == "6") {
-                            window.open("movimientoCajas/imprimir_cronograma/"+id);
+                        window.open("movimientoCajas/imprimir_comprobante/" + id);
+                        if (tipo_solicitud != "1" && estado == "6") {
+                            window.open("movimientoCajas/imprimir_cronograma/" + id);
                         }
-    
+
                     }
-                   
+
                     e.preventDefault();
                 });
-                
+
             }
         });
 
@@ -2421,8 +2449,282 @@
         }, true);
 
 
+        function find_solicitud_credito(id) {
+
+            $.post("solicitud/find", { id: id },
+                function (data, textStatus, jqXHR) {
+
+                    if (data.solicitud.length > 0) {
+                        $("#documento_credito").val(data.solicitud[0].documento);
+                        $("#cliente_credito").val(data.solicitud[0].razonsocial_cliente);
+                        $("#monto_credito").val(data.solicitud[0].t_monto_total);
+                        $("#monto_pagado_credito").val(data.solicitud[0].pagado);
+                        $("#saldo_capital_credito").val(data.solicitud[0].saldo);
+                        $("#fecha_pago_credito").val(data.solicitud[0].fecha_pago);
+
+                        // $("#idmoneda_credito").val(data.solicitud[0].IdMoneda);
+                        // $("#simbolo_moneda_credito").val(data.solicitud[0].Simbolo);
+                        $(".simbolo-moneda").text(data.solicitud[0].simbolo_moneda);
+                        $(".simbolo-moneda-2").text(data.solicitud[0].simbolo_moneda);
+                    }
+
+                    var prox_venc = "";
+                    if (data.solicitud_cronograma.length > 0) {
+                        var html = "";
+                        for (var index = 0; index < data.solicitud_cronograma.length; index++) {
+                            //    console.log(data.solicitud_cronograma[index].saldo_cuota);
+                            if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc != "") {
+                                prox_venc = data.solicitud_cronograma[index].fecha_vencimiento_credito;
+
+                            }
+                            var saldo_pagar = parseFloat(data.solicitud_cronograma[index].valor_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio);
+                            html += '<tr>';
+                            html += '<td>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
+                            html += '<td>'+data.solicitud_cronograma[index].valor_cuota+'</td>';
+                            html += '<td>'+data.solicitud_cronograma[index].int_moratorio+'</td>';
+                            html += '<td>'+data.solicitud_cronograma[index].valor_cuota+'</td>';
+                            html += '<td>'+data.solicitud_cronograma[index].saldo_cuota+'</td>';
+                            html += '<td>'+data.solicitud_cronograma[index].int_moratorio+'</td>';
+                           
+                            html += '<td><center><input saldo_pagar="'+saldo_pagar.toFixed(2)+'"  type="checkbox" class="check-cuota" /></center></td>';
+                            html += '<td class="monto-pagar-cuota"></td>';
+                            html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
+                            html += '<td>'+saldo_pagar.toFixed(2)+'</td>';
+                            html += '</tr>';
+                        }
+                        $("#cuotas-credito").html(html);
+                        // alert(prox_venc);
+                        $("#prox_venc_credito").val(prox_venc);
+                    }
+
+                    $("#modalSolicitudCredito").modal("show");
+                },
+                "json"
+            );
+
+        }
+
+        $(document).on("click", ".check-cuota", function () {
+            var saldo_pagar = parseFloat($(this).attr("saldo_pagar"));
+            if($(this).is(":checked")) {
+
+                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(saldo_pagar);
+            } else {
+                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(0);
+            }
+            var monto_pagar = sumar_montos_pago();
+            $("#monto_pagar_credito").val(monto_pagar);
+        });
+
+        function sumar_montos_pago() {
+            var montos_pago = $(".monto-pagar-cuota");
+            var subtotal_montos_pago = 0;
+            var monto = 0;
+
+            for (var i = 0; i < montos_pago.length; i++) {
+                // console.log(montos_pago[i].textContent);
+                monto = parseFloat(montos_pago[i].textContent);
+                if(isNaN(monto)) {
+                    monto = 0;
+                }
+                // console.log(monto);
+                subtotal_montos_pago += parseFloat(monto);
+            }
+
+            return subtotal_montos_pago;
+        }
 
 
+        //CREDITOS
+        var search_solicitud_creditos = getFormSearch('frm-search-solicitud-creditos', 'search_b_solicitud_creditos', 'LoadRecordsButtonSolicitudCreditos');
+
+        var table_container_solicitud_creditos = $("#table_container_solicitud_creditos");
+
+        table_container_solicitud_creditos.jtable({
+            title: "Lista de Solicitudes de Crédito Pendientes",
+            paging: true,
+            sorting: true,
+            actions: {
+                listAction: base_url + '/solicitud/list_creditos',
+            },
+            // messages: {
+            //     addNewRecord: 'Nueva Caja',
+            //     editRecord: 'Editar Caja'
+            // },
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_solicitud_creditos
+                }
+                    // , {
+                    //     cssClass: 'btn-primary',
+                    //     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
+                    //     click: function () {
+                    //         $scope.openDoc('solicitud/excel', {});
+                    //     }
+                    // }, {
+                    //     cssClass: 'btn-danger-admin',
+                    //     text: '<i class="fa fa-plus"></i> Nueva Solicitud',
+                    //     click: function () {
+                    //         newSolicitud();
+                    //     }
+                    // }
+                ]
+            },
+            fields: {
+                cCodConsecutivo: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: true,
+                    title: 'Código',
+                },
+                nConsecutivo: {
+                    title: 'Nro',
+
+
+                },
+
+                fecha_solicitud: {
+                    title: 'Fecha',
+                    display: function (data) {
+                        return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
+                    }
+
+                },
+                tipo_solicitud: {
+                    title: 'Tipo Solicitud',
+                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+
+
+                },
+                moneda: {
+                    title: 'Moneda',
+
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+
+
+                },
+                pagado: {
+                    title: 'Pagado',
+
+
+                },
+                saldo: {
+                    title: 'Saldo',
+
+
+                },
+                facturado: {
+                    title: 'Facturado',
+
+
+                },
+                estado: {
+                    title: 'Estado',
+                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
+                },
+                edit: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="emitir-pago" data-estado="' + data.record.estado
+                            + '" data-id="' + data.record.cCodConsecutivo
+                            + '_' + data.record.nConsecutivo + '" title="Emitir Pago"><i class="fa fa-money fa-1-5x"></i></a>';
+                    }
+
+                }
+
+            },
+            recordsLoaded: function (event, data) {
+                $('.emitir-pago').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    $.post("movimientoCajas/get_caja_diaria", {},
+                        function (data, textStatus, jqXHR) {
+                            // console.log();
+
+                            if (data.length > 0) {
+
+                                find_solicitud_credito(id);
+                            } else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Primero debe apertura la caja del día',
+                                    type: 'info'
+                                });
+                                return false;
+                            }
+                        },
+                        "json"
+                    );
+                    e.preventDefault();
+                });
+                $('.eliminar-Orden').click(function (e) {
+                    var ide = $(this).attr('data-ide');
+                    var estado = $(this).data('estado');
+
+                    if (estado != "1") {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'No se puede eliminar, la solicitud ya no se encuentra en estado Registrado',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+                    idOrdenDelete.val(ide);
+                    modalDeleteOrden.modal("show");
+                    e.preventDefault();
+                });
+            },
+            formCreated: function (event, data) {
+
+                //data.form.find('input[name="convenio"]').attr('onkeypress','return soloLetras(event)');
+                $('#Edit-activo').parent().addClass('i-checks');
+
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green'
+                }).on('ifChanged', function (e) {
+                    $(e.target).click();
+                    if (e.target.value == 'S') {
+                        $("#Edit-activo").val("N");
+                        $(".i-checks span").text("Inactivo");
+
+                    } else {
+                        $("#Edit-activo").val("S");
+                        $(".i-checks span").text("Activo");
+                    };
+                });
+            },
+            formSubmitting: function (event, data) {
+                var bval = true;
+
+                bval = bval && data.form.find('input[name="nombre_caja"]').required();
+                bval = bval && data.form.find('input[name="usuario"]').required();
+                bval = bval && data.form.find('input[name="activo"]').required();
+                return bval;
+            }
+        });
+
+        generateSearchForm('frm-search-solicitud-creditos', 'LoadRecordsButtonSolicitudCreditos', function () {
+            table_container_solicitud_creditos.jtable('load', {
+                search: $('#search_b_solicitud_creditos').val()
+            });
+        }, true);
 
 
 

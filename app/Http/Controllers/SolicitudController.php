@@ -16,6 +16,7 @@ use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Solicitud\SolicitudTrait;
+use App\Http\Recopro\SolicitudCredito\SolicitudCreditoInterface;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\SolicitudRequest;
 use App\Models\BaseModel;
@@ -47,6 +48,14 @@ class SolicitudController extends Controller
         $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
+    }
+
+    public function list_creditos(Request $request, SolicitudCreditoInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
 
     public function create(SolicitudInterface $repo, SolicitudRequest $request)
@@ -321,6 +330,7 @@ class SolicitudController extends Controller
         $response["solicitud_articulo"] = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
         $response["solicitud_detalle"] = $Repo->get_solicitud_detalle($cCodConsecutivo, $nConsecutivo);
         $response["solicitud_credito"] = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+        $response["solicitud_cronograma"] = $Repo->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
 
         return response()->json($response);
     }

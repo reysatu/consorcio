@@ -150,6 +150,10 @@ use App\Http\Recopro\Solicitud\Solicitud;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 
+use App\Http\Recopro\SolicitudCredito\SolicitudCredito;
+use App\Http\Recopro\SolicitudCredito\SolicitudCreditoInterface;
+use App\Http\Recopro\SolicitudCredito\SolicitudCreditoRepository;
+
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_Asignacion;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionRepository;
@@ -674,6 +678,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCajas();
         $this->registerVendedores();
         $this->registerSolicitud();
+        $this->registerSolicitudCredito();
         $this->registerVenta();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
@@ -1178,6 +1183,15 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(SolicitudInterface::class, function ($app) {
             return new SolicitudRepository(new Solicitud());
+        });
+    }
+
+    public function registerSolicitudCredito()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCreditoInterface::class, function ($app) {
+            return new SolicitudCreditoRepository(new SolicitudCredito());
         });
     }
 
