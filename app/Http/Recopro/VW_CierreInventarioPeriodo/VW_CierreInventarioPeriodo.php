@@ -21,7 +21,7 @@ class VW_CierreInventarioPeriodo extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['id','Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
+    protected $fillable = ['code_article','id','Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
     
      
 

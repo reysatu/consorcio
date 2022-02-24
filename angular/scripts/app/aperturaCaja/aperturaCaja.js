@@ -18,10 +18,10 @@
         var modalAperturaCaja=$("#modalAperturaCaja");
         var titlemodalAperturaCaja=$("#titlemodalAperturaCaja");
         
-        var idUsuario=$("#idUsuario");
+        var idUsuario=$("#idUsuario");  
         var idCaja=$("#idCaja");
         var estado=$("#estado");
-
+        var btn_imprimirCaja=$("#btn_imprimirCaja");
         var ventanaP;
         
         var idCajaDiaria=$("#idCajaDiaria");
@@ -49,6 +49,17 @@
 
         idUsuario.select2();
         idCaja.select2();
+
+        btn_imprimirCaja.click(function (e) {
+                var data = {idUsuario:idUsuario.val(),fechaCaja:fechaCaja.val()};
+               
+                    if($("#estadReporte").val()==1){
+                       $scope.loadMovimientoCajaPDF('aperturaCajas/pdfdiar', data);
+                    }else if($("#estadReporte").val()==2){
+                       $scope.loadMovimientoCuadreCajaPDF('aperturaCajas/Cuadrepdfdiar', data);
+                    }
+            
+        });
          function findCajaDiaria(id) {
             titlemodalAperturaCaja.html('Editar Apertura de Caja');
             RESTService.get('aperturaCajas/find', id, function (response) {
@@ -112,11 +123,11 @@
                 id: ide,
             };
         
-            $scope.loadMovimientoCajaPDF('movimientoCajas/pdf_diario', data);
+            $scope.loadMovimientoCajaPDF('aperturaCajas/pdf_diarioApert', data);
           
         }
         function getDataFormDescuento () {
-            RESTService.all('descuentos/data_form', '', function(response) {
+            RESTService.all('aperturaCajas/data_formDesc', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         idUsuario.append('<option value="">Seleccionar</option>');
                        _.each(response.usuarios, function(item) {
@@ -190,7 +201,6 @@
                             var estadoCant='disabled';
                             addDenominacionDolar(c.id_denominacion,c.descripcion,Number(c.cantidad),Number(c.monto),estadoCant);
                         }
-                      
                     });
                      sumar_cantidades();
                      console.log(data_p);
@@ -212,21 +222,21 @@
                 var cantidadt=Number($(this).find("td:eq(1)").children("input").val());
                 var monto=Number($(this).find("td:eq(2)").children("input").val());
                 var subtota=cantidadt*monto;
-                totalt=totalt+subtota;
+                totalt=totalt+monto;
                 console.log("sumando2");
             });
-            totalSoles.val(totalt.toFixed(3));
+            totalSoles.val(totalt.toFixed(2));
             $("#table_demoninacionesDolares tr").each(function(){
                 var cantidadt=Number($(this).find("td:eq(1)").children("input").val());
                 var monto=Number($(this).find("td:eq(2)").children("input").val());
                 var subtota=cantidadt*monto;
-                totalD=totalD+subtota;
+                totalD=totalD+monto;
                 console.log("sumando2");
             });
-            totalDolares.val(totalD.toFixed(3));
+            totalDolares.val(totalD.toFixed(2));
             if(estado.val()==''){
-                totalEfectivo.val(totalt.toFixed(3));
-                totalEfectivoDol.val(totalD.toFixed(3));
+                totalEfectivo.val(totalt.toFixed(2));
+                totalEfectivoDol.val(totalD.toFixed(2));
             }
         }
         function generarTablaApertura(){
@@ -267,7 +277,7 @@
              var td2 =$('<td></td>');
              var td3 =$('<td></td>');
              var iddenominacion =$('<input type="hidden" name="idDenominacionS[]" class="idDenominacionS form-control input-sm"  value="' +idDenominacion+ '"  />');
-             var cantidad = $('<input type="text" name="cantidadS[]" class="cantidadS form-control input-sm"  value="' +cantidad+ '"  onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
+             var cantidad = $('<input type="text" name="cantidadS[]" class="cantidadS form-control input-sm"   value="' +cantidad+ '"  onkeypress="return soloNumeros(event)" '+estadoCant+'/>');
              var monto = $('<input type="text" name="montoS[]" class="montoS form-control input-sm"  value="' +monto+ '"  disabled/>');
              td1.append(iddenominacion);
              td2.append(cantidad);
@@ -301,7 +311,7 @@
             idUsuario.val(usuarioActual).trigger("change");
             idCaja.val("").trigger("change");
             estado.val("").trigger("change");
-
+            $("#estadReporte").val("");
             idCajaDiaria.val("");
             fechaCaja.val("");
             totalEfectivo.val("");
@@ -547,7 +557,7 @@
                 },
                 idCaja: {
                     title: 'Caja',
-                    options: base_url + '/cajas/getAll', 
+                    options: base_url + '/aperturaCajas/getAllApert', 
 
                 },
                 fechaCaja: {
@@ -558,7 +568,7 @@
                 },
                 idUsuario: {
                     title: 'Usuario',   
-                    options: base_url + '/users/getAll',
+                    options: base_url + '/aperturaCajas/getAllApeUser',
                 },
                  totalEfectivo: {
                     title: 'Total Soles',   
@@ -586,17 +596,18 @@
                         return '<a href="javascript:void(0)" title="Editar" class="edit_cont" data-code="' +
                             data.record.idCajaDiaria + '"><i class="fa fa-pencil-square-o fa-1-5x fa-green"></i></a>';
                     }
-                }, print: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center',
-                    display: function (data) {
-                        return '<a href="javascript:void(0)" title="Imprimir" class="print_content" data-code="' +
-                            data.record.fechaCaja + '"><i class="fa fa-print fa-1-5x fa-blue"></i></a>';
-                    }
-                }
+                },
+                //  print: {
+                //     width: '1%',
+                //     sorting: false,
+                //     edit: false,
+                //     create: false,
+                //     listClass: 'text-center', 
+                //     display: function (data) {
+                //         return '<a href="javascript:void(0)" title="Imprimir" class="print_content" data-code="' +
+                //             data.record.fechaCaja + '"><i class="fa fa-print fa-1-5x fa-blue"></i></a>';
+                //     }
+                // }
 
             },
             recordsLoaded: function (event, data) {

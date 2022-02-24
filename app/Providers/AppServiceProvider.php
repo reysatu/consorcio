@@ -26,6 +26,10 @@ use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreRepository;
 
+use App\Http\Recopro\View_PendienteCobro\View_PendienteCobro; 
+use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
+use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroRepository;
+
 use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierre; 
 use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreInterface;
 use App\Http\Recopro\Movimiento_Articulo_cierre\Movimiento_Articulo_cierreRepository;
@@ -53,6 +57,10 @@ use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudRepository;
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodo; 
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoInterface;
 use App\Http\Recopro\VW_CierreInventarioPeriodo\VW_CierreInventarioPeriodoRepository;
+
+use App\Http\Recopro\AprobacionTotal\AprobacionTotal; 
+use App\Http\Recopro\AprobacionTotal\AprobacionTotalInterface;
+use App\Http\Recopro\AprobacionTotal\AprobacionTotalRepository;
 
 
 use App\Http\Recopro\Compania\Compania; 
@@ -637,6 +645,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerFactorCredito();
         $this->registerTiposMovimiento();
         $this->registerMovimiento_cierre();
+        $this->registerView_PendienteCobro();
         $this->registerMovimiento_Articulo_cierre();
         $this->registerMovimiento_Detalle_cierre();
         $this->registerView_movimiento_cierre();
@@ -644,6 +653,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerAprobacionSolicitud();
         $this->registerSolicitud_Asignacion();
         $this->registerVW_CierreInventarioPeriodo();
+        $this->registerAprobacionTotal();
         $this->registerCategoriaVehicular();
         $this->registerCompania();
         $this->registerFormasPago();
@@ -920,6 +930,14 @@ class AppServiceProvider extends ServiceProvider
             return new TiposMovimientoRepository(new TiposMovimiento());
         });
     }
+     public function registerView_PendienteCobro()
+    {
+        $app = $this->app;
+
+        $app->bind(View_PendienteCobroInterface::class, function ($app) {
+            return new View_PendienteCobroRepository(new View_PendienteCobro());
+        });
+    }
     public function registerMovimiento_cierre()
     {
         $app = $this->app;
@@ -958,6 +976,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(VW_CierreInventarioPeriodoInterface::class, function ($app) {
             return new VW_CierreInventarioPeriodoRepository(new VW_CierreInventarioPeriodo());
+        });
+    }
+     public function registerAprobacionTotal()
+    {
+        $app = $this->app;
+
+        $app->bind(AprobacionTotalInterface::class, function ($app) {
+            return new AprobacionTotalRepository(new AprobacionTotal());
         });
     }
     public function registerPeriodo()

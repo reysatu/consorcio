@@ -19,6 +19,7 @@ use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Venta\VentaInterface;
 use App\Http\Requests\MovimientoCajaRequest;
+use App\Http\Recopro\Query_stock\Query_stockInterface;
 use App\Models\BaseModel;
 use DateTime;
 use DateTimeZone;
@@ -127,12 +128,172 @@ class MovimientoCajaController extends Controller
             ]);
         }
     }
+    public function Cuadrepdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    {          
+           
+            $usuario=auth()->id();
+            $nameuser=$repoQs->getUsuario($usuario);
+            date_default_timezone_set('America/Lima');
+               // date_default_timezone_set('UTC');
+            $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+            $dataDenomicacion=$recaj->getDenominaciones_actual($dataMc[0]->idCajaDiaria,$dataMc[0]->estado);
+            $simboloMoneda = $repoQs->getSimboloMoneda();
+            $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+                'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+                 'dataDenomicacion'=>$dataDenomicacion,
+                 'simboloMoneda'=>$simboloMoneda,
+                 'simboloMonedaDolar'=>$simboloMonedaDolar,
+                 'usuario'=>$nameuser[0]->name,
+            ]);
+    }
+    public function EmisionComprpdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    {          
+           
+            $usuario=auth()->id();
+            $nameuser=$repoQs->getUsuario($usuario);
+            date_default_timezone_set('America/Lima');
+               // date_default_timezone_set('UTC');
+            $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+            $dataDenomicacion=$recaj->getDenominaciones_actual($dataMc[0]->idCajaDiaria,$dataMc[0]->estado);
+            $simboloMoneda = $repoQs->getSimboloMoneda();
+            $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+                'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+                 'dataDenomicacion'=>$dataDenomicacion,
+                 'simboloMoneda'=>$simboloMoneda,
+                 'simboloMonedaDolar'=>$simboloMonedaDolar,
+                 'usuario'=>$nameuser[0]->name,
+            ]);
+    }
     public function pdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
     {          
            
             $usuario=auth()->id();
             date_default_timezone_set('America/Lima');
+            // date_default_timezone_set('UTC');
             $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+                'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+            ]);
+    }
+     public function pdfCuadreApert(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    {          
+           
+            $usuario=auth()->id();
+            $nameuser=$repoQs->getUsuario($usuario);
+            date_default_timezone_set('America/Lima');
+            $usuario = $request->input('idUsuario');
+            $fechacA = $request->input('fechaCaja');
+               // date_default_timezone_set('UTC');
+            // $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+            $dataDenomicacion=$recaj->getDenominaciones_actual($dataMc[0]->idCajaDiaria,$dataMc[0]->estado);
+            $simboloMoneda = $repoQs->getSimboloMoneda();
+            $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+                'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+                 'dataDenomicacion'=>$dataDenomicacion,
+                 'simboloMoneda'=>$simboloMoneda,
+                 'simboloMonedaDolar'=>$simboloMonedaDolar,
+                 'usuario'=>$nameuser[0]->name,
+            ]);
+    }
+    public function pdfdiarioApert(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
+    {          
+           
+            $usuario=auth()->id();
+            date_default_timezone_set('America/Lima');
+            $usuario = $request->input('idUsuario');
+            $fechacA = $request->input('fechaCaja');
+            // date_default_timezone_set('UTC');
+            // $fechacA= date("Y-m-d");
             $fechacAc= date("d/m/Y H:i:s");
             $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);

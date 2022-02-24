@@ -15,14 +15,14 @@
         text-align: center;
         padding: 0 !important;
     }
-    .danger_admin th{
+   #table_container_pendienteCobro thead tr th{
         background-color: #ec1415 !important;
         color:#fff;
     }
 
     .modal2:before {
         content: '';
-        display: inline-block;
+        display: inline-block; 
         height: 100%;
         vertical-align: middle;
         margin-right: -4px;
@@ -782,7 +782,7 @@
 
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header"> 
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title" id="titleModalClientes"></h4>
             </div>
@@ -1634,33 +1634,12 @@
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="general">
-                                    <div class="form-horizontal">
-                                        <br>
-                                     
-                                            <div class="table-responsive">
-                                            <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
-                                                <thead>
-                                                    <tr class="danger_admin">
-                                                          
-                                                        <th>Cod Solicitud</th>
-                                                        <th>Nro Solicitud</th>
-                                                        <th>Moneda</th> 
-                                                        <th>Fecha Emisión</th> 
-                                                        <th>Tipo Documento</th>
-                                                        <th>Condición Pago</th> 
-                                                        <th>Serie</th>
-                                                        <th>N°</th>
-                                                        <th>Cliente</th>
-                                                        <th>Monto Total</th>
-                                                        <th>Pagado</th>
-                                                        <th>Saldo</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="aprobacion_ventas"></tbody>
-                                            </table>
-                                            </div> 
-                                      
-                                    </div>
+                                    <br>
+                                  
+                                        <div class="col-md-12">
+                                            <div id="table_container_pendienteCobro" class="table-responsive"></div>
+                                        </div>
+                                   
                                 </div>
                                 <div role="tabpanel" class="tab-pane " id="sales">
                                     <div class="form-horizontal">

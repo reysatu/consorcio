@@ -46,7 +46,7 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
                 } 
         }   
         return $this->model->orWhere(function ($q) use ($s,$filtroFechaSol,$filtro_tienda,$idInicio,$idFin,$solitud,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro) {
-            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+            $q->whereIn('IdTipoDocumento', ['03','01'])->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
@@ -67,6 +67,16 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
             }
           
         });
+    }
+    public function searchAsignacionAproba($s,$idCliente)
+    {
+      
+        return $this->model->orWhere(function ($q) use ($s,$idCliente) {
+            $q->where('IdTipoDocumento','!=','12')->where('idcliente',$idCliente)->where('cCodConsecutivo', 'LIKE', '%' . $s . '%');
+                $q->orWhere('nConsecutivo', 'LIKE', '%' . $s . '%')->where('IdTipoDocumento','!=','12')->where('idcliente',$idCliente);
+                $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%')->where('IdTipoDocumento','!=','12')->where('idcliente',$idCliente);
+                $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%')->where('IdTipoDocumento','!=','12')->where('idcliente',$idCliente);
+        }); 
     }
 
     public function search_ventas($s)

@@ -1,8 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Created by PhpStorm. 
  * User: JAIR
- * Date: 4/5/2017
+ * Date: 4/5/2017 
  * Time: 6:59 PM
  */
 
@@ -33,6 +33,10 @@ Route::post('movimientoCajas/getMonedasMoc', 'CurrencyController@getAll');
 
 Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
 
+Route::get('movimientoCajas/Cuadrepdf', 'MovimientoCajaController@Cuadrepdf');
+
+Route::get('movimientoCajas/EmisionComprpdf', 'MovimientoCajaController@EmisionComprpdf');
+
 Route::get('movimientoCajas/pdf_diario', 'MovimientoCajaController@pdf_diario');
 
 Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
@@ -49,3 +53,5 @@ Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaControlle
 Route::post('movimientoCajas/list_comprobantes', ['as' => 'movimientoCajas.list_comprobantes', 'uses' => 'MovimientoCajaController@list_comprobantes']);
 
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
+
+Route::post('movimientoCajas/list_ventas', ['as' => 'movimientoCajas.list_ventas', 'uses' => 'SolicitudController@list_ventas']);

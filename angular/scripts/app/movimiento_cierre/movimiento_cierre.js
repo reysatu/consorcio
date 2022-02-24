@@ -423,6 +423,9 @@
                     title: 'Localizacion',
                     
                 },
+                code_article: {
+                    title: 'Cod. Artículo',
+                },
                  Articulo: {
                     title: 'Articulo',
                 },
