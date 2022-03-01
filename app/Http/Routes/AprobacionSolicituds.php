@@ -49,3 +49,9 @@ Route::post('aprobacionSolicituds/getProductoSerieStockAproba', ['as' => 'aproba
 Route::get('aprobacionSolicituds/valida_series_serveAproba/{id}', ['as' => 'aprobacionSolicituds.valida_series_serveAproba', 'uses' => 'Register_movementController@valida_series_serve']);
 
 Route::get('aprobacionSolicituds/getLocaStockAproba/{id}', ['as' => 'aprobacionSolicituds.getLocaStockAproba', 'uses' => 'Register_movementController@getLocaStock']);
+
+Route::post('aprobacionSolicituds/listAsigApro', ['as' => 'aprobacionSolicituds.listAsigApro', 'uses' => 'AsignacioncobradorController@allAproba']);
+
+Route::post('aprobacionSolicituds/totalesAproba', ['as' => 'aprobacionSolicituds.totalesAproba', 'uses' => 'AprobacionSolicitudController@allTotales']);
+
+Route::post('aprobacionSolicituds/listpendientesCobro', ['as' => 'aprobacionSolicituds.listpendientesCobro', 'uses' => 'AprobacionSolicitudController@listpendientesCobro']);

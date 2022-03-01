@@ -83,7 +83,7 @@ class Movimiento_cierreController extends Controller
         // $estado_busquedad = $request->input('estado_busquedad');
         // $idMovimientoBusquedad = $request->input('idMovimientoBusquedad');
         $perido_busquedad = $request->input('perido_busquedad');
-        $params =  ['id','Articulo','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
+        $params =  ['code_article','id','Articulo','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Transito','Remitido','Total','CostoCierre','Periodo'];
 
         if($perido_busquedad==''){
            return parseList($repo->search($s,''), $request, 'id', $params);

@@ -88,7 +88,12 @@ class CajaDiariaRepository implements CajaDiariaInterface
         $mostrar=DB::select("select * from ERP_CajaDiariaDetalle where idCajaDiaria='$id'");
         return $mostrar; 
     }
-    public function getDenominaciones($id)
+    public function getDenominaciones_actual($id,$estado)
+    {   
+        $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id' and tipo='$estado'");
+        return $mostrar; 
+    }
+     public function getDenominaciones($id)
     {   
         $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id'");
         return $mostrar; 

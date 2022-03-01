@@ -367,6 +367,26 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+// function getFormSearchAsigApro(form_id, input_id, btn_id) {
+//     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+//         '<div class="input-group input-group-sm">' +
+//         '<input type="text" id="' + input_id + '" name="search_c" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+//         '<span class="input-group-btn">' +
+//         '<button type="submit" id="' + btn_id + '" class="btn btn-danger-admin">' +
+//         '<i class="fa fa-search"></i>' +
+//         '</button>' +
+//         '</span>' +
+//         '</div>' +
+//         '</form>';
+// }
+function getFormSearchAsigApro(form_id, input_id, btn_id) {
+    return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<div class="input-group input-group-sm">' +
+        '<input type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+         '<input type="hidden" id="' + btn_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+        '</div>' +
+        '</form>';
+}
 function getFormSearchAsignacion(form_id, input_id, btn_id) {
    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
             '<div class="form-group">'+
@@ -2280,7 +2300,1183 @@ function create_pdf_qualityControl(response) {
     // }
 
 }
+function create_pdf_movimientoCuadreCaja(response) {
+    var dataDenomicacion=response.dataDenomicacion;
+    var simboloMoneda=response.simboloMoneda;
+    var simboloMonedaDolar=response.simboloMonedaDolar;
+    var usuario=response.usuario;
+    console.log(dataDenomicacion);
+    var data=response.dataCaDet;
+    var fec=response.feca;
+    var dataCaja=response.dataMc;
+    var totalefectSol= dataCaja[0].totalEfectivo;
+    var totalefectDol= dataCaja[0].totalEfectivoDol;
+    var fecAct=response.fechacA;
+    var dataCajaDetForSol=response.dataCajaDetForSol;
+    var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
+    var dataCajaDetForDol=response.dataCajaDetForDol;
+    var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
+    var dataCajaDetEfeSolAper=response.dataCajaDetEfeSolAper;
+    var dataCajaDetEfeDolAper=response.dataCajaDetEfeDolAper;
+    var dataSolesEfec=[];
+    var tableSolesDenomicacionFS=[];
+    var tableSolesDenomicacionFD=[];
+    var dataSolesMovimientos=[];
+    var totalSolesEfec=0; 
+    var totalSolesForm=0;
+    var tituloSolesEfec=[
+                    { 
+                        text: 'COMPROBANTES',
+                        fillColor: '#eeeeee',
+                        fontSize: 8 ,
+                        alignment: 'center' 
 
+                    },
+                       { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                             alignment: 'center' 
+
+                        },
+                    ];
+    var tituloSolesForm=[
+                        { 
+                            text:'MOVIMIENTO DE EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+      dataSolesEfec.push(tituloSolesEfec);
+      dataSolesMovimientos.push(tituloSolesForm) ;
+
+
+      var dataEfecSolApe=[
+                    { 
+                        text: 'APERTURA',
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:Number(dataCajaDetEfeSolAper[0].monto).toFixed(2),
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+      dataSolesMovimientos.push(dataEfecSolApe) ;
+      var dta=0;
+      var dtb=0;
+      var dtd=0;
+      var dts=0;
+      _.each(dataDenomicacion, function (b) {
+          if(b.idMoneda=='1'){
+            dts=dts+Number(b.monto);
+          }else{
+            dtd=dtd+Number(b.monto);
+          }
+
+     });
+    _.each(dataDenomicacion, function (b) {
+         if(b.idMoneda=='1'){
+            var dataTabla=[
+                    { 
+                        text: Number(b.valor).toFixed(2),
+                        fontSize: 8 ,
+                    },
+                   { 
+                        text:Number(b.cantidad),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+                    { 
+                        text:Number(b.monto).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+                    ];
+           if(Number(b.valor)>5){
+                dta=dta+Number(b.monto);
+           }else{
+                dtb=dtb+Number(b.monto);
+           }
+           if(Number(b.valor)==10){
+                console.log("entroab");
+                 var totalde=[
+                    { 
+                        text: "",
+                        fontSize: 8 ,
+                        border: [false, false, false, false],
+                    },
+                    { 
+                        text:"",
+                        fontSize: 8 ,
+                        alignment: 'right',
+                        border: [false, false, false, false],
+
+                    },
+                    { 
+                        text: simboloMoneda[0].Simbolo+" "+Number(dtb).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+
+                    ];
+                  tableSolesDenomicacionFS.push(totalde)     
+           }
+          tableSolesDenomicacionFS.push(dataTabla)  
+          if(Number(b.valor)==200){
+                 var totalde2=[
+                    { 
+                        text: "",
+                        fontSize: 8 ,
+                          border: [false, false, false, false],
+                    },
+                    { 
+                        text:"",
+                        fontSize: 8 ,
+                         alignment: 'right' ,
+                           border: [false, false, false, false],
+
+                    },
+                    { 
+                        text:  simboloMoneda[0].Simbolo+" "+Number(dta).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+
+                    ];
+                  tableSolesDenomicacionFS.push(totalde2)     
+            } 
+         }else{
+              var dataTablad=[
+                    { 
+                        text: Number(b.valor).toFixed(2),
+                        fontSize: 8 ,
+                    },
+                   { 
+                        text:Number(b.cantidad),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+                    { 
+                        text:Number(b.monto).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+                    ];
+                 tableSolesDenomicacionFD.push(dataTablad);    
+         };
+         
+    });
+     var totaldeT2=[
+                    { 
+                        text: "",
+                        fontSize: 8 ,
+                        border: [false, false, false, false],
+                    },
+                    { 
+                        text:"",
+                        fontSize: 8 ,
+                         alignment: 'right',
+                         border: [false, false, false, false],
+
+                    },
+                    { 
+                        text:  simboloMonedaDolar[0].Simbolo+" "+Number(dtd).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+
+                    ];
+    var tdsoles=Number(dta)+Number(dtb);
+    var totalde22=[
+                    { 
+                        text: "",
+                        fontSize: 8 ,
+                          border: [false, false, false, false],
+                    },
+                    { 
+                        text:"",
+                        fontSize: 8 ,
+                         alignment: 'right' ,
+                           border: [false, false, false, false],
+
+                    },
+                    { 
+                        text:  simboloMoneda[0].Simbolo+" "+Number(tdsoles).toFixed(2),
+                        fontSize: 8 ,
+                         alignment: 'right' 
+
+                    },
+
+                    ];
+                  tableSolesDenomicacionFS.push(totalde22);                       
+    tableSolesDenomicacionFD.push(totaldeT2);       
+    _.each(dataCajaDetEfeSol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalSolesEfec=Number(monto)+Number(totalSolesEfec);
+        var dataEfecSol=[
+                    { 
+                        text: b.descripcion_tipo,
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataSolesMovimientos.push(dataEfecSol)   ;        
+    });
+
+   totalSolesEfec=Number(totalSolesEfec)+Number(dataCajaDetEfeSolAper[0].monto);
+    var TotalSolesEfec=[
+                        { 
+                            text:'TOTAL EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text:Number(totalefectSol).toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(TotalSolesEfec)   ;
+    ////////////////
+    var titulo2SolesForm=[
+                        { 
+                            text:'VENTAS FORMA DE PAGO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: '',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(titulo2SolesForm);                 
+    //////////
+    _.each(dataCajaDetForSol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalSolesForm=Number(monto)+Number(totalSolesForm);
+        var dataFormSol=[
+                    { 
+                        text: b.descripcion_subtipo,
+                        fontSize: 8 ,
+                        
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataSolesMovimientos.push(dataFormSol)   ;        
+    });
+     // totalSolesForm=Number(totalSolesForm).toFixed(2);
+    var TotalSolesForm=[
+                        { 
+                            text:'TOTAL VENTA',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalSolesForm.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataSolesMovimientos.push(TotalSolesForm);
+
+    /////////////////////////////////////////////
+    var dataDolEfec=[];
+    var dataDolMovimientos=[];
+    var totalDolEfec=0; 
+    var totalDolForm=0;
+    var tituloDolEfec=[
+                    { 
+                        text: 'COMPROBANTES',
+                        fillColor: '#eeeeee',
+                        fontSize: 8 ,
+                        alignment: 'center' 
+
+                    },
+                       { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                             alignment: 'center' 
+
+                        },
+                    ];
+    var tituloDolForm=[
+                        { 
+                            text:'MOVIMIENTO DE EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: 'TOTAL',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];               
+      dataDolEfec.push(tituloDolEfec);
+      dataDolMovimientos.push(tituloDolForm) ;
+       var dataEfecDolApe=[
+                    { 
+                        text: 'APERTURA',
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:Number(dataCajaDetEfeDolAper[0].monto).toFixed(2),
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+      dataDolMovimientos.push(dataEfecDolApe) ;
+
+    _.each(dataCajaDetEfeDol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalDolEfec=Number(monto)+Number(totalDolEfec);
+        var dataEfecSol=[
+                    { 
+                        text: b.descripcion_tipo,
+                        fontSize: 8 ,
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataDolMovimientos.push(dataEfecSol)   ;        
+    });
+    totalDolEfec=Number(totalDolEfec)+Number(dataCajaDetEfeDolAper[0].monto);
+   
+    var TotalDolEfec=[
+                        { 
+                            text:'TOTAL EFECTIVO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: Number(totalefectDol).toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(TotalDolEfec)   ;
+    ////////////////
+    var titulo2DolForm=[
+                        { 
+                            text:'VENTAS FORMA DE PAGO',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: '',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'center' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(titulo2DolForm);                 
+    //////////
+    _.each(dataCajaDetForDol, function (b) {
+        var monto=Number(b.monto).toFixed(2);
+        totalDolForm=Number(monto)+Number(totalDolForm);
+        var dataFormSol=[
+                    { 
+                        text: b.descripcion_subtipo,
+                        fontSize: 8 ,
+                        
+
+                    },
+                       { 
+                            text:monto,
+                            fontSize: 8 ,
+                             alignment: 'right' 
+
+                        },
+                    ];
+         dataDolMovimientos.push(dataFormSol)   ;        
+    });
+     // totalDolForm=Number(totalDolForm).toFixed(2);
+    var TotalDolForm=[
+                        { 
+                            text:'TOTAL VENTA',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
+                            text: totalDolForm.toFixed(2),
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+                            alignment: 'right' 
+
+                        },
+                    ];
+    dataDolMovimientos.push(TotalDolForm);
+
+    var docDefinition = {
+        pageOrientation: 'landscape',
+           content: [
+        {
+            text: "Caja: "+fec,
+            fontSize: 15,
+            bold: true,
+            absolutePosition: { x:40 , y: 20 }
+        },
+         {
+            text: "Fecha de Impresión: "+fecAct,
+            fontSize: 15,
+            bold: true,
+            absolutePosition: { x:460 , y: 20 }
+        }, 
+        {
+            style: 'tableExample',
+            table: {
+                    body: [ 
+                            [  
+                               [     { text: 'SOLES', style: 'header',fontSize: 10},
+                                     {
+                                       style: 'tableExample',
+                                       table: {
+                                            widths: [250, 90],
+                                            body:  dataSolesMovimientos,
+                                        },
+                                
+                                     },
+                                ],
+                                [    { text: 'DÓLARES', style: 'header',fontSize: 10, margin: [20, 0, 0, 0]},
+                                     {  margin: [20, 0, 0, 0],
+                                        style: 'tableExample',
+                                         table: {
+                                            widths: [250, 90],
+                                            body:  dataDolMovimientos,
+                                        }
+                                     }
+                                ]
+
+                            ],
+                            [  
+                               [ 
+                               { text: 'DENOMINACIÓN', style: 'header',fontSize: 10},
+                               {
+                                       style: 'tableExample',
+                                       table: {
+                                             widths: [60,60, 90],
+                                            body:  tableSolesDenomicacionFS,
+                                        },
+                                
+                                     },
+                                ],
+                                [ 
+                                { text: 'DENOMINACIÓN', style: 'header',fontSize: 10,margin: [20, 0, 0, 0]},
+                                {     margin: [20, 0, 0, 0],
+                                       style: 'tableExample',
+                                       table: {
+                                            widths: [60,60, 90],
+                                            body:  tableSolesDenomicacionFD,
+                                        },
+                                
+                                },
+                                ] 
+                            ],
+                            [
+                                [
+                                 { text: 'Usuario: ' + usuario, style: 'header',fontSize: 12,margin: [0, 20, 0, 0]},
+                                ],
+                                [
+                                 { text: '', style: 'header',fontSize: 12,margin: [20, 0, 0, 0]},
+                                ]
+                            ],
+
+                         ],
+           
+            },
+              layout: 'noBorders',
+        },
+        // { text: 'SOLES', style: 'header',fontSize: 13},
+       
+        // {
+        //     text: "DÓLARES",
+        //     fontSize: 13,
+        //     bold: true,
+        //     absolutePosition: { x:460 , y: 40 }
+        // },  
+        // {  
+        //     absolutePosition: { x:460 , y: 60 },
+        //     style: 'tableExample',
+        //     table: {
+        //         widths: [250,90],
+        //         body: dataDolMovimientos,
+        //     }
+
+        // },
+        // {
+        //     text: '',
+        //     absolutePosition: { x: 300, y: 100 },
+        //     pageBreak: 'after'
+        // },
+        // { text: 'DOLARES', style: 'header',fontSize: 13},
+        // {
+        //     absolutePosition: { x:40 , y: 60 },
+        //     style: 'tableExample',
+        //     table: {
+        //         widths: [250, 90],
+        //         body: dataDolMovimientos,
+        //     }
+
+        // },
+        // {  
+        //     absolutePosition: { x:460 , y: 60 },
+        //     style: 'tableExample',
+        //     table: {
+        //         widths: [250,90],
+        //         body: dataDolMovimientos,
+        //     }
+
+        // },
+    ],
+    styles: {
+
+        header: {
+            fontSize: 18,
+            bold: true,
+            alignment: 'left',
+        },
+        subheader: {
+            fontSize: 14
+        },
+        superMargin: {
+            margin: [20, 0, 40, 0],
+            fontSize: 15
+        }
+    }
+                };
+   
+    var win = window.open('', '_blank');
+    // var win = window.open('', '_blank');
+   
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
+function create_pdf_emisionComproCaja(response) {
+    var dataDenomicacion=response.dataDenomicacion;
+    var simboloMoneda=response.simboloMoneda;
+    var simboloMonedaDolar=response.simboloMonedaDolar;
+    var usuario=response.usuario;
+    console.log(dataDenomicacion);
+    var data=response.dataCaDet;
+    var fec=response.feca;
+    var dataCaja=response.dataMc;
+    var totalefectSol= dataCaja[0].totalEfectivo;
+    var totalefectDol= dataCaja[0].totalEfectivoDol;
+    var fecAct=response.fechacA;
+    var dataCajaDetForSol=response.dataCajaDetForSol;
+    var dataCajaDetEfeSol=response.dataCajaDetEfeSol;
+    var dataCajaDetForDol=response.dataCajaDetForDol;
+    var dataCajaDetEfeDol=response.dataCajaDetEfeDol;
+    var dataCajaDetEfeSolAper=response.dataCajaDetEfeSolAper;
+    var dataCajaDetEfeDolAper=response.dataCajaDetEfeDolAper;
+    var dataSolesEfec=[];
+    var tableSolesDenomicacionFS=[];
+    var tableSolesDenomicacionFD=[];
+    var dataSolesMovimientos=[];
+    var totalSolesEfec=0; 
+    var totalSolesForm=0;
+    
+   //  var tituloSolesEfec=[
+   //                  { 
+   //                      text: 'COMPROBANTES',
+   //                      fillColor: '#eeeeee',
+   //                      fontSize: 8 ,
+   //                      alignment: 'center' 
+
+   //                  },
+   //                     { 
+   //                          text: 'TOTAL',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                           alignment: 'center' 
+
+   //                      },
+   //                  ];
+   //  var tituloSolesForm=[
+   //                      { 
+   //                          text:'MOVIMIENTO DE EFECTIVO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: 'TOTAL',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'center' 
+
+   //                      },
+   //                  ];               
+   //    dataSolesEfec.push(tituloSolesEfec);
+   //    dataSolesMovimientos.push(tituloSolesForm) ;
+
+
+   //    var dataEfecSolApe=[
+   //                  { 
+   //                      text: 'APERTURA',
+   //                      fontSize: 8 ,
+
+   //                  },
+   //                     { 
+   //                          text:Number(dataCajaDetEfeSolAper[0].monto).toFixed(2),
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //    dataSolesMovimientos.push(dataEfecSolApe) ;
+   //    var dta=0;
+   //    var dtb=0;
+   //    var dtd=0;
+   //    var dts=0;
+   //    _.each(dataDenomicacion, function (b) {
+   //        if(b.idMoneda=='1'){
+   //          dts=dts+Number(b.monto);
+   //        }else{
+   //          dtd=dtd+Number(b.monto);
+   //        }
+
+   //   });
+   //  _.each(dataDenomicacion, function (b) {
+   //       if(b.idMoneda=='1'){
+   //          var dataTabla=[
+   //                  { 
+   //                      text: Number(b.valor).toFixed(2),
+   //                      fontSize: 8 ,
+   //                  },
+   //                 { 
+   //                      text:Number(b.cantidad),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+   //                  { 
+   //                      text:Number(b.monto).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+   //                  ];
+   //         if(Number(b.valor)>5){
+   //              dta=dta+Number(b.monto);
+   //         }else{
+   //              dtb=dtb+Number(b.monto);
+   //         }
+   //         if(Number(b.valor)==10){
+   //              console.log("entroab");
+   //               var totalde=[
+   //                  { 
+   //                      text: "",
+   //                      fontSize: 8 ,
+   //                      border: [false, false, false, false],
+   //                  },
+   //                  { 
+   //                      text:"",
+   //                      fontSize: 8 ,
+   //                      alignment: 'right',
+   //                      border: [false, false, false, false],
+
+   //                  },
+   //                  { 
+   //                      text: simboloMoneda[0].Simbolo+" "+Number(dtb).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+
+   //                  ];
+   //                tableSolesDenomicacionFS.push(totalde)     
+   //         }
+   //        tableSolesDenomicacionFS.push(dataTabla)  
+   //        if(Number(b.valor)==200){
+   //               var totalde2=[
+   //                  { 
+   //                      text: "",
+   //                      fontSize: 8 ,
+   //                        border: [false, false, false, false],
+   //                  },
+   //                  { 
+   //                      text:"",
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' ,
+   //                         border: [false, false, false, false],
+
+   //                  },
+   //                  { 
+   //                      text:  simboloMoneda[0].Simbolo+" "+Number(dta).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+
+   //                  ];
+   //                tableSolesDenomicacionFS.push(totalde2)     
+   //          } 
+   //       }else{
+   //            var dataTablad=[
+   //                  { 
+   //                      text: Number(b.valor).toFixed(2),
+   //                      fontSize: 8 ,
+   //                  },
+   //                 { 
+   //                      text:Number(b.cantidad),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+   //                  { 
+   //                      text:Number(b.monto).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+   //                  ];
+   //               tableSolesDenomicacionFD.push(dataTablad);    
+   //       };
+         
+   //  });
+   //   var totaldeT2=[
+   //                  { 
+   //                      text: "",
+   //                      fontSize: 8 ,
+   //                      border: [false, false, false, false],
+   //                  },
+   //                  { 
+   //                      text:"",
+   //                      fontSize: 8 ,
+   //                       alignment: 'right',
+   //                       border: [false, false, false, false],
+
+   //                  },
+   //                  { 
+   //                      text:  simboloMonedaDolar[0].Simbolo+" "+Number(dtd).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+
+   //                  ];
+   //  var tdsoles=Number(dta)+Number(dtb);
+   //  var totalde22=[
+   //                  { 
+   //                      text: "",
+   //                      fontSize: 8 ,
+   //                        border: [false, false, false, false],
+   //                  },
+   //                  { 
+   //                      text:"",
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' ,
+   //                         border: [false, false, false, false],
+
+   //                  },
+   //                  { 
+   //                      text:  simboloMoneda[0].Simbolo+" "+Number(tdsoles).toFixed(2),
+   //                      fontSize: 8 ,
+   //                       alignment: 'right' 
+
+   //                  },
+
+   //                  ];
+   //                tableSolesDenomicacionFS.push(totalde22);                       
+   //  tableSolesDenomicacionFD.push(totaldeT2);       
+   //  _.each(dataCajaDetEfeSol, function (b) {
+   //      var monto=Number(b.monto).toFixed(2);
+   //      totalSolesEfec=Number(monto)+Number(totalSolesEfec);
+   //      var dataEfecSol=[
+   //                  { 
+   //                      text: b.descripcion_tipo,
+   //                      fontSize: 8 ,
+
+   //                  },
+   //                     { 
+   //                          text:monto,
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //       dataSolesMovimientos.push(dataEfecSol)   ;        
+   //  });
+
+   // totalSolesEfec=Number(totalSolesEfec)+Number(dataCajaDetEfeSolAper[0].monto);
+   //  var TotalSolesEfec=[
+   //                      { 
+   //                          text:'TOTAL EFECTIVO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text:Number(totalefectSol).toFixed(2),
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //  dataSolesMovimientos.push(TotalSolesEfec)   ;
+   //  ////////////////
+   //  var titulo2SolesForm=[
+   //                      { 
+   //                          text:'VENTAS FORMA DE PAGO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: '',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'center' 
+
+   //                      },
+   //                  ];
+   //  dataSolesMovimientos.push(titulo2SolesForm);                 
+   //  //////////
+   //  _.each(dataCajaDetForSol, function (b) {
+   //      var monto=Number(b.monto).toFixed(2);
+   //      totalSolesForm=Number(monto)+Number(totalSolesForm);
+   //      var dataFormSol=[
+   //                  { 
+   //                      text: b.descripcion_subtipo,
+   //                      fontSize: 8 ,
+                        
+
+   //                  },
+   //                     { 
+   //                          text:monto,
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //       dataSolesMovimientos.push(dataFormSol)   ;        
+   //  });
+   //   // totalSolesForm=Number(totalSolesForm).toFixed(2);
+   //  var TotalSolesForm=[
+   //                      { 
+   //                          text:'TOTAL VENTA',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: totalSolesForm.toFixed(2),
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //  dataSolesMovimientos.push(TotalSolesForm);
+
+   //  /////////////////////////////////////////////
+   //  var dataDolEfec=[];
+   //  var dataDolMovimientos=[];
+   //  var totalDolEfec=0; 
+   //  var totalDolForm=0;
+   //  var tituloDolEfec=[
+   //                  { 
+   //                      text: 'COMPROBANTES',
+   //                      fillColor: '#eeeeee',
+   //                      fontSize: 8 ,
+   //                      alignment: 'center' 
+
+   //                  },
+   //                     { 
+   //                          text: 'TOTAL',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                           alignment: 'center' 
+
+   //                      },
+   //                  ];
+   //  var tituloDolForm=[
+   //                      { 
+   //                          text:'MOVIMIENTO DE EFECTIVO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: 'TOTAL',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'center' 
+
+   //                      },
+   //                  ];               
+   //    dataDolEfec.push(tituloDolEfec);
+   //    dataDolMovimientos.push(tituloDolForm) ;
+   //     var dataEfecDolApe=[
+   //                  { 
+   //                      text: 'APERTURA',
+   //                      fontSize: 8 ,
+
+   //                  },
+   //                     { 
+   //                          text:Number(dataCajaDetEfeDolAper[0].monto).toFixed(2),
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //    dataDolMovimientos.push(dataEfecDolApe) ;
+
+   //  _.each(dataCajaDetEfeDol, function (b) {
+   //      var monto=Number(b.monto).toFixed(2);
+   //      totalDolEfec=Number(monto)+Number(totalDolEfec);
+   //      var dataEfecSol=[
+   //                  { 
+   //                      text: b.descripcion_tipo,
+   //                      fontSize: 8 ,
+
+   //                  },
+   //                     { 
+   //                          text:monto,
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //       dataDolMovimientos.push(dataEfecSol)   ;        
+   //  });
+   //  totalDolEfec=Number(totalDolEfec)+Number(dataCajaDetEfeDolAper[0].monto);
+   
+   //  var TotalDolEfec=[
+   //                      { 
+   //                          text:'TOTAL EFECTIVO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: Number(totalefectDol).toFixed(2),
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //  dataDolMovimientos.push(TotalDolEfec)   ;
+   //  ////////////////
+   //  var titulo2DolForm=[
+   //                      { 
+   //                          text:'VENTAS FORMA DE PAGO',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: '',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'center' 
+
+   //                      },
+   //                  ];
+   //  dataDolMovimientos.push(titulo2DolForm);                 
+   //  //////////
+   //  _.each(dataCajaDetForDol, function (b) {
+   //      var monto=Number(b.monto).toFixed(2);
+   //      totalDolForm=Number(monto)+Number(totalDolForm);
+   //      var dataFormSol=[
+   //                  { 
+   //                      text: b.descripcion_subtipo,
+   //                      fontSize: 8 ,
+                        
+
+   //                  },
+   //                     { 
+   //                          text:monto,
+   //                          fontSize: 8 ,
+   //                           alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //       dataDolMovimientos.push(dataFormSol)   ;        
+   //  });
+   //   // totalDolForm=Number(totalDolForm).toFixed(2);
+   //  var TotalDolForm=[
+   //                      { 
+   //                          text:'TOTAL VENTA',
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+
+   //                      },
+   //                      { 
+   //                          text: totalDolForm.toFixed(2),
+   //                          fillColor: '#eeeeee',
+   //                          fontSize: 8 ,
+   //                          alignment: 'right' 
+
+   //                      },
+   //                  ];
+   //  dataDolMovimientos.push(TotalDolForm);
+
+   //  var docDefinition = {
+   //      pageOrientation: 'landscape',
+   //         content: [
+   //      {
+   //          text: "Caja: "+fec,
+   //          fontSize: 15,
+   //          bold: true,
+   //          absolutePosition: { x:40 , y: 20 }
+   //      },
+   //       {
+   //          text: "Fecha de Impresión: "+fecAct,
+   //          fontSize: 15,
+   //          bold: true,
+   //          absolutePosition: { x:460 , y: 20 }
+   //      }, 
+   //      {
+   //          style: 'tableExample',
+   //          table: {
+   //                  body: [ 
+   //                          [  
+   //                             [     { text: 'SOLES', style: 'header',fontSize: 10},
+   //                                   {
+   //                                     style: 'tableExample',
+   //                                     table: {
+   //                                          widths: [250, 90],
+   //                                          body:  dataSolesMovimientos,
+   //                                      },
+                                
+   //                                   },
+   //                              ],
+   //                              [    { text: 'DÓLARES', style: 'header',fontSize: 10, margin: [20, 0, 0, 0]},
+   //                                   {  margin: [20, 0, 0, 0],
+   //                                      style: 'tableExample',
+   //                                       table: {
+   //                                          widths: [250, 90],
+   //                                          body:  dataDolMovimientos,
+   //                                      }
+   //                                   }
+   //                              ]
+
+   //                          ],
+   //                          [  
+   //                             [ 
+   //                             { text: 'DENOMINACIÓN', style: 'header',fontSize: 10},
+   //                             {
+   //                                     style: 'tableExample',
+   //                                     table: {
+   //                                           widths: [60,60, 90],
+   //                                          body:  tableSolesDenomicacionFS,
+   //                                      },
+                                
+   //                                   },
+   //                              ],
+   //                              [ 
+   //                              { text: 'DENOMINACIÓN', style: 'header',fontSize: 10,margin: [20, 0, 0, 0]},
+   //                              {     margin: [20, 0, 0, 0],
+   //                                     style: 'tableExample',
+   //                                     table: {
+   //                                          widths: [60,60, 90],
+   //                                          body:  tableSolesDenomicacionFD,
+   //                                      },
+                                
+   //                              },
+   //                              ] 
+   //                          ],
+   //                          [
+   //                              [
+   //                               { text: 'Usuario: ' + usuario, style: 'header',fontSize: 12,margin: [0, 20, 0, 0]},
+   //                              ],
+   //                              [
+   //                               { text: '', style: 'header',fontSize: 12,margin: [20, 0, 0, 0]},
+   //                              ]
+   //                          ],
+
+   //                       ],
+           
+   //          },
+   //            layout: 'noBorders',
+   //      },
+       
+   //  ],
+   //  styles: {
+
+   //      header: {
+   //          fontSize: 18,
+   //          bold: true,
+   //          alignment: 'left',
+   //      },
+   //      subheader: {
+   //          fontSize: 14
+   //      },
+   //      superMargin: {
+   //          margin: [20, 0, 40, 0],
+   //          fontSize: 15
+   //      }
+   //  }
+   //              };
+   
+   //  var win = window.open('', '_blank');
+   //  // var win = window.open('', '_blank');
+   
+   //  pdfMake.createPdf(docDefinition).print({}, win);
+   //  // }
+
+}
 function create_pdf_movimientoCaja(response) {
     var data=response.dataCaDet;
     var fec=response.feca;
@@ -3078,6 +4274,12 @@ function create_pdf_Querystock(response) {
 
                         },
                         { 
+                            text:'Cod. Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
                             text:'Artículo',
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
@@ -3183,6 +4385,11 @@ function create_pdf_Querystock(response) {
 
                         },
                         { 
+                            text:index.code_article,
+                            fontSize: 7 ,
+
+                        },
+                        { 
                             text:index.Articulo,
                             fontSize: 7 ,
 
@@ -3274,6 +4481,11 @@ function create_pdf_Querystock(response) {
                              border: [false, false, false, false],
                         },
                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
+                        { 
                             text: '',
                             fontSize: 7 ,
                             alignment: 'center' ,
@@ -3348,6 +4560,11 @@ function create_pdf_Querystock(response) {
             
              tituloDolFormQueryData=[
                         { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
+                         { 
                             text:'',
                             fontSize: 7 ,
                             border: [false, false, false, false],
@@ -3490,6 +4707,12 @@ function create_pdf_QuerystockCierre(response) {
 
                         },
                         { 
+                            text:'Cod. Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
+                        { 
                             text:'Artículo',
                             fillColor: '#eeeeee',
                             fontSize: 8 ,
@@ -3593,6 +4816,11 @@ function create_pdf_QuerystockCierre(response) {
 
                         },
                         { 
+                            text:index.code_article,
+                            fontSize: 7 ,
+
+                        },
+                        { 
                             text:index.Articulo,
                             fontSize: 7 ,
 
@@ -3677,6 +4905,11 @@ function create_pdf_QuerystockCierre(response) {
                             fontSize: 7 ,
                              border: [false, false, false, false],
                         },
+                         { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
                         { 
                             text:'',
                             fontSize: 7 ,
@@ -3756,6 +4989,11 @@ function create_pdf_QuerystockCierre(response) {
       }else{
             
              tituloDolFormQueryData=[
+                        { 
+                            text:'',
+                            fontSize: 7 ,
+                            border: [false, false, false, false],
+                        },
                         { 
                             text:'',
                             fontSize: 7 ,
@@ -4083,6 +5321,12 @@ function create_pdf_Querymovimiento(response) {
                             alignment: 'center' 
 
                         },
+                         { 
+                            text:'Cod. Artículo',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
                           { 
                             text:'Artículo',
                             fillColor: '#eeeeee',
@@ -4227,6 +5471,11 @@ function create_pdf_Querymovimiento(response) {
                             text: index.fecha_registro_s,
                             fontSize: 7 ,
                             alignment: 'center' 
+
+                        },
+                        { 
+                            text:index.code_article,
+                            fontSize: 7 ,
 
                         },
                           { 

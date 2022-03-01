@@ -138,6 +138,7 @@ class Query_movementsRepository implements Query_movementsInterface
           $mostrar2=DB::select("select * from ERP_Moneda where idMoneda='1'");
           return $mostrar2;
     }
+    
     public function get_almacen(){
           $mostrar2=DB::select("select * from ERP_Almacen");
           return $mostrar2;

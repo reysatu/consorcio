@@ -88,6 +88,9 @@
                     title: 'F. Registro',
                      sorting: false,
                 },
+                 code_article: {
+                    title: 'Cod. Artículo',
+                },
                 Articulo: {
                     title: 'Articulo'
                 },

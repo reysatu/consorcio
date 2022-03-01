@@ -110,13 +110,16 @@
             }
         });
         btn_imprimirCaja.click(function (e) {
-            var data = {
-                id: '0',
-            };
-            if (estadoMc.val() != '') {
-                $scope.loadMovimientoCajaPDF('movimientoCajas/pdf', data);
-            }
-
+                var data = {id: '0',};
+               if (estadoMc.val() != '') {
+                    if($("#estadReporte").val()==1){
+                       $scope.loadMovimientoCajaPDF('movimientoCajas/pdf', data);
+                    }else if($("#estadReporte").val()==2){
+                       $scope.loadMovimientoCuadreCajaPDF('movimientoCajas/Cuadrepdf', data);
+                     }else if($("#estadReporte").val()==3){
+                       $scope.loadMovimientoEmisionComproPDF('movimientoCajas/EmisionComprpdf', data);
+                    }
+               }
         });
         tipoMovimientoAdd.change(function (e) {
             if (tipoMovimientoAdd.val() == 'BCO') {
@@ -419,22 +422,28 @@
             $("#table_demoninacionesSoles tr").each(function () {
                 var cantidadt = Number($(this).find("td:eq(1)").children("input").val());
                 var monto = Number($(this).find("td:eq(2)").children("input").val());
-                var subtota = cantidadt * monto;
+                var montest = Number($(this).find("td:eq(2)").children("input").attr('data-montoEsta'));
+
+                var subtota = cantidadt * montest;
+                 $(this).find("td:eq(2)").children("input").val(Number(subtota).toFixed(2))
                 totalt = totalt + subtota;
                 console.log("sumando2");
             });
-            totalSoles.val(totalt.toFixed(3));
+            totalSoles.val(totalt.toFixed(2));
             $("#table_demoninacionesDolares tr").each(function () {
                 var cantidadt = Number($(this).find("td:eq(1)").children("input").val());
                 var monto = Number($(this).find("td:eq(2)").children("input").val());
-                var subtota = cantidadt * monto;
+                var montest = Number($(this).find("td:eq(2)").children("input").attr('data-montoEsta'));
+
+                var subtota = cantidadt * montest;
+                $(this).find("td:eq(2)").children("input").val(Number(subtota).toFixed(2))
                 totalD = totalD + subtota;
                 console.log("sumando2");
             });
-            totalDolares.val(totalD.toFixed(3));
+            totalDolares.val(totalD.toFixed(2));
             if (estado.val() == '') {
-                totalEfectivo.val(totalt.toFixed(3));
-                totalEfectivoDol.val(totalD.toFixed(3));
+                totalEfectivo.val(totalt.toFixed(2));
+                totalEfectivoDol.val(totalD.toFixed(2));
             }
         }
         function generarTablaApertura() {
@@ -485,15 +494,18 @@
             var td3 = $('<td></td>');
             var iddenominacion = $('<input type="hidden" name="idDenominacionS[]" class="idDenominacionS form-control input-sm"  value="' + idDenominacion + '"  />');
             var cantidad = $('<input type="text" name="cantidadS[]" class="cantidadS form-control input-sm"  value="' + cantidad + '"   tabindex="' + tabs + '" onkeypress="return soloNumeros(event)" ' + estadoCant + '/>');
-            var monto = $('<input type="text" name="montoS[]" class="montoS form-control input-sm"  value="' + monto + '"  disabled/>');
+            var monto = $('<input type="text" name="montoS[]" class="montoS form-control input-sm" data-montoEsta="'+monto+'" value="' + monto + '"  disabled/>');
+            var montest = $('<input type="hidden" class="montoSt form-control input-sm"  value="' + monto + '"  disabled/>');
             td1.append(iddenominacion);
             td2.append(cantidad);
-            td3.append(monto);
+            td3.append(monto).append(montest);
             tr.append(td1).append(td2).append(td3);
             table_demoninacionesSoles.append(tr);
-            $('.cantidadS').keyup(function (e) {
-                sumar_cantidades();
-            });
+
+            // $('.cantidadS').keyup(function (e) {
+            //     sumar_cantidades();
+            // });
+
             $('.cantidadS').keypress(function (e) {
                 var code = (e.keyCode ? e.keyCode : e.which);
                 if (code == 13) {
@@ -517,6 +529,12 @@
             // });
 
         }
+         $(document).on("keyup", ".cantidadS", function () {
+              sumar_cantidades();
+        });
+           $(document).on("keyup", ".cantidadD", function () {
+              sumar_cantidades();
+        });
         function addDenominacionDolar(idDenominacion, denominacion, cantidad, monto, estadoCant, tabs) {
             var tr = $('<tr id="tr_b_' + idDenominacion + '"></tr>');
             var td1 = $('<td>' + denominacion + '</td>');
@@ -524,15 +542,15 @@
             var td3 = $('<td></td>');
             var iddenominacion = $('<input type="hidden" name="idDenominacionD[]" class="idDenominacionD form-control input-sm"  value="' + idDenominacion + '"  />');
             var cantidad = $('<input type="text" name="cantidadD[]" class="cantidadD form-control input-sm"  value="' + cantidad + '"  tabindex="' + tabs + '" onkeypress="return soloNumeros(event)" ' + estadoCant + '/>');
-            var monto = $('<input type="text" name="montoD[]" class="montoD form-control input-sm"  value="' + monto + '"  disabled/>');
+            var monto = $('<input type="text" name="montoD[]" class="montoD form-control input-sm" data-montoEsta="'+monto+'" value="' + monto + '"  disabled/>');
             td1.append(iddenominacion);
             td2.append(cantidad);
             td3.append(monto);
             tr.append(td1).append(td2).append(td3);
             table_demoninacionesDolares.append(tr);
-            $('.cantidadD').keyup(function (e) {
-                sumar_cantidades();
-            });
+            // $('.cantidadD').keyup(function (e) {
+            //     sumar_cantidades();
+            // });
             $('.cantidadD').keypress(function (e) {
                 var code = (e.keyCode ? e.keyCode : e.which);
                 if (code == 13) {
@@ -799,7 +817,7 @@
                         'totalNoEfectivoDol': totalNoEfectivoDol.val(),
                         'estado': estado.val(),
                         'consecutivo': consecutivo.val(),
-                    };
+                    }; 
                     var id = (idCajaDiaria.val() === '') ? 0 : idCajaDiaria.val();
                     RESTService.updated('movimientoCajas/saveCajasDiarias', id, params, function (response) {
                         if (!_.isUndefined(response.status) && response.status) {
@@ -1276,7 +1294,7 @@
             paging: true,
             sorting: true,
             actions: {
-                listAction: base_url + '/solicitud/list_ventas',
+                listAction: base_url + '/movimientoCajas/list_ventas', 
             },
             // messages: {
             //     addNewRecord: 'Nueva Caja',

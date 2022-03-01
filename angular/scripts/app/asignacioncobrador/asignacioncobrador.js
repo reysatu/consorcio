@@ -36,7 +36,7 @@
                 });
                 return false;
             }
-            if (bval) {
+            if (bval) { 
                 var cobradores = [];
                 $("input[name=idSolicitud]:checkbox:checked").each(function(idx, item) {
                     cobradores[idx] =$(this).attr('data_idSolicitud');
@@ -252,29 +252,40 @@
                        width: '1%',
                     title: 'Moneda',
 
-
+ 
                 },
                 t_monto_total: {
                        width: '1%',
                     title: 'Monto',
+                     display: function (data) {
+                                                 var  saldo=data.record.t_monto_total;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  }
 
 
                 },
                 pagado: {
                        width: '1%',
                     title: 'Pagado',
+                   display: function (data) {
+                                                 var  saldo=data.record.pagado;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  }
+
 
 
                 },
                 saldo: {
                        width: '1%',
                     title: 'Saldo',
+                     display: function (data) {
+                                                 var  saldo=data.record.saldo;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  }
 
-
-                },
-                facturado: {
-                       width: '1%',
-                    title: 'Facturado',
 
 
                 },

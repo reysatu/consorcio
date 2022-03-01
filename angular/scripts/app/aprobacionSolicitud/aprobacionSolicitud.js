@@ -17,7 +17,7 @@
         var modalVerAproba=$("#modalVerAproba");   
         var btn_verAprobacio=$(".btn_verAprobacio");
 
-        var titleModalProduct=$("#titleModalProduct");
+        var titleModalProduct=$("#titleModalProduct"); 
         var estadoApro=$("#estadoApro");
         var btn_Aprobar=$(".btn_Aprobar");
         var btn_Rechazar=$(".btn_Rechazar"); 
@@ -480,112 +480,17 @@
             }
         });
          btn_Rechazar.click(function (e) {
-             var id=cliente_id_or.val();
-              RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
-                if (!_.isUndefined(response.status) && response.status) {
-                    var data_p = response.data;
-                    console.log(data_p);
-                     data_p.map(function(index) {
-                                console.log(Number(index.saldo));
-
-                                var fecha_emi= moment(index.fecha_emision).format('DD/MM/YYYY');
-                                console.log("mal");
-                                if(Number(index.saldo)>0){
-                                  addToDetaApro(index.tipoDocumento,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo),index.moneda,index.cCodConsecutivo_solicitud,index.nConsecutivo_solicitud,fecha_emi,index.condicion_pago_text,Number(index.t_monto_total),index.pagado) 
-                                }
-                         });
-                  
-
-                    // idPersona.val(data_p[0].idPersona);
-                    // cTipopersona.val(data_p[0].cTipopersona).trigger('change');
-                    // cDireccion.val(data_p[0].cDireccion);
-                    // cReferencia.val(data_p[0].cReferencia);
-                    // cDigitoVerificador.val(data_p[0].cDigitoVerificador);
-                    // cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
-                    // cNumerodocumento.val(data_p[0].cNumerodocumento);
-                    // dFechacaducidad.val(data_p.dFechacaducidad2);
-
-                    // cEmail.val(data_p[0].cEmail);
-                    // cCelular.val(data_p[0].cCelular);
-                    // dFechanacimiento.val(data_p.dFechanacimiento2);
-                    // cEstadoCivil.val(data_p[0].cEstadoCivil).trigger('change');;
-                    // cApepat.val(data_p[0].cApepat);
-                    // cApemat.val(data_p[0].cApemat);
-                    // cNombres.val(data_p[0].cNombres);
-                    // cRazonsocial.val(data_p[0].cRazonsocial);
-                    // cNombrePersona.val(data_p[0].cNombrePersona);
-                    // cSexo.val(data_p[0].cSexo);
-
-                    // getDepartamentoPersona(data_p[0].cDepartamento);
-                    // getProvinciaPersona(data_p[0].cProvincia, data_p[0].cDepartamento);
-                    // getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
+                  $("#LoadRecordsButtonAsignacioncobrador").click(); 
                     titleModalProduct.html("Rechazar");
                     estadoApro.val("2");
-
                     modalAprobar.modal('show');
-                } else {
-                    AlertFactory.textType({
-                        title: '',
-                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
-                        type: 'error'
-                    });
-                }
-            });
-        
         });
          btn_Aprobar.click(function (e) {
-             var id=cliente_id_or.val();
-             console.log("aprobar1");
-             console.log(id); 
-              RESTService.get('aprobacionSolicituds/getVentas', id, function (response) {
-                if (!_.isUndefined(response.status) && response.status) {
-                    var data_p = response.data;
-                    console.log("aprobar");
-                    console.log(data_p);
-                     data_p.map(function(index) {
-                                  console.log(Number(index.saldo));
-                                  var fecha_emi= moment(index.fecha_emision).format('DD/MM/YYYY');
-                                if(Number(index.saldo)>0){
-                                    addToDetaApro(index.tipoDocumento,index.serie_comprobante,index.numero_comprobante,index.razonsocial_cliente,Number(index.saldo),index.moneda,index.cCodConsecutivo_solicitud,index.nConsecutivo_solicitud,fecha_emi,index.condicion_pago_text,Number(index.t_monto_total),index.pagado) 
-                               
-                                }
-                                 });
-                  
-
-                    // idPersona.val(data_p[0].idPersona);
-                    // cTipopersona.val(data_p[0].cTipopersona).trigger('change');
-                    // cDireccion.val(data_p[0].cDireccion);
-                    // cReferencia.val(data_p[0].cReferencia);
-                    // cDigitoVerificador.val(data_p[0].cDigitoVerificador);
-                    // cTipodocumento.val(data_p[0].cTipodocumento).trigger('change');;
-                    // cNumerodocumento.val(data_p[0].cNumerodocumento);
-                    // dFechacaducidad.val(data_p.dFechacaducidad2);
-
-                    // cEmail.val(data_p[0].cEmail);
-                    // cCelular.val(data_p[0].cCelular);
-                    // dFechanacimiento.val(data_p.dFechanacimiento2);
-                    // cEstadoCivil.val(data_p[0].cEstadoCivil).trigger('change');;
-                    // cApepat.val(data_p[0].cApepat);
-                    // cApemat.val(data_p[0].cApemat);
-                    // cNombres.val(data_p[0].cNombres);
-                    // cRazonsocial.val(data_p[0].cRazonsocial);
-                    // cNombrePersona.val(data_p[0].cNombrePersona);
-                    // cSexo.val(data_p[0].cSexo);
-
-                    // getDepartamentoPersona(data_p[0].cDepartamento);
-                    // getProvinciaPersona(data_p[0].cProvincia, data_p[0].cDepartamento);
-                    // getDistritoPersona(data_p[0].cCodUbigeo, data_p[0].cProvincia);
+                 $("#LoadRecordsButtonAsignacioncobrador").click(); 
+                 // $('#LoadRecordsButtonAsignacioncobrador').jtable('load');
                     titleModalProduct.html("Aprobar");
                     estadoApro.val("1");
                     modalAprobar.modal('show');
-                } else {
-                    AlertFactory.textType({
-                        title: '',
-                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
-                        type: 'error'
-                    });
-                }
-            });
         
         });
                 
@@ -3491,7 +3396,165 @@
         $(document).on("keyup", "#otros_ingresos_fiador", function () {
             calcular_total_ingresos_fiador();
         });
+
+        var search_c = getFormSearchAsigApro('frm-search-Asignacioncobrador', 'search_c', 'LoadRecordsButtonAsignacioncobrador');
+
+        var table_container_Asignacioncobrador = $("#table_container_pendienteCobro");
+
+        table_container_Asignacioncobrador.jtable({
+            title: "Listado",
+            paging: true,
+            sorting: true,
+            actions: { 
+                listAction: base_url + '/aprobacionSolicituds/totalesAproba',
+            },
+            messages: {
+                addNewRecord: 'Nueva Categoría',
+                editRecord: 'Editar Categoría',
+            },
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_c
+                },
+                // {
+                //     cssClass: 'btn-danger-admin',
+                //     text: '<i class="fa fa-plus"></i>Asignar Cobrador',
+                //     click: function () {
+                //         newAsignacion();
+                //     }
+                // }
+                ]
+            },
+            fields: {
+                Cronograma: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (studentData) {
+                      
+                        var $img = $('<i class="fa fa-plus" style="font-size:20px;color:#1c84c6;cursor: pointer"></i>');
+                     
+                        $img.click(function () {
+                            $('#table_container_pendienteCobro').jtable('openChildTable',
+                                    $img.closest('tr'), //Parent row
+                                    {
+                                    title:'Cronograma',
+                                    actions: {
+                                        listAction: base_url + '/aprobacionSolicituds/listpendientesCobro?idcliente=' + studentData.record.idcliente  +'&IdMoneda='+studentData.record.idMoneda,
+                                    },
+                                    fields: {
+                                        cCodConsecutivo_solicitud: {
+                                            title: 'Cod Solicitud',
+                                        },
+                                        nConsecutivo_solicitud: {
+                                            title: 'N° Solicitud',
+                                        },
+                                        nConsecutivo_solicitud: {
+                                            title: 'N° Solicitud',
+                                        },
+                                         moneda: {
+                                            title: 'Moneda',
+                                        },
+                                         fecha_emision: {
+                                            title: 'Fecha Emisión',
+                                             display: function (data) {
+                                                return moment(data.record.fecha_emision).format('DD/MM/YYYY');
+                                            }
+                                        },
+                                         tipoDocumento: {
+                                            title: 'Tipo Documento',
+                                        },
+                                         condicion_pago_text: {
+                                            title: 'Condición Pago',
+                                        },
+                                         serie_comprobante: {
+                                            title: 'Serie',
+                                        },
+                                         numero_comprobante: {
+                                            title: 'N°',
+                                        },
+                                         razonsocial_cliente: {
+                                            title: 'Cliente',
+                                        },
+                                         t_monto_total: {
+                                            title: 'Monto Total',
+                                             display: function (data) {
+                                                 var  saldo=data.record.t_monto_total;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                                            }
+                                        },
+                                         pagado: {
+                                            title: 'Pagado',
+                                             display: function (data) {
+                                                 var  saldo=data.record.pagado;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                                            }
+                                        },
+                                        saldo: {
+                                            title: 'Saldo',
+                                            display: function (data) {
+                                                 var  saldo=data.record.saldo;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                                            }
+                                        },
+
+                                    }
+                                }, function (data) { //opened handler
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+                },
+                idcliente: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false,
+                    title: 'Código',
+                       width: '1%',
+                },
+                idMoneda: {
+                    list: false,
+                    title: 'Nro',
+                     width: '1%',
+                },
+                moneda: {
+                    title: 'Moneda',
+                       width: '1%',
+                },
+                saldoTotal: {
+                    title: 'Total',
+                      display: function (data) {
+                         var  saldo=data.record.saldoTotal;
+                         var newsal=Number(saldo).toFixed(2);
+                         return(addCommas(newsal));
+                    }
+                },
+             
+              
+            },
+            
+            
+        });
+
+        generateSearchForm('frm-search-Asignacioncobrador', 'LoadRecordsButtonAsignacioncobrador', function(){
+            table_container_Asignacioncobrador.jtable('load', {
+                search_c: $('#search_c').val(),
+                cliente_id_or: cliente_id_or.val(),
+            });
+        }, true);
+       
+
         var search = getFormSearch('frm-search-AprobacionSolicitud', 'search_b', 'LoadRecordsButtonAprobacionSolicitud');
+
 
         var table_container_AprobacionSolicitud = $("#table_container_AprobacionSolicitud");
 
@@ -3547,9 +3610,19 @@
                 },
                  Total: {
                     title: 'Total',
+                      display: function (data) {
+                                                 var  saldo=data.record.Total;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                                            }
                 },
                  Saldo: {
                     title: 'Saldo',
+                     display: function (data) {
+                                                 var  saldo=data.record.Saldo;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                                            }
                 },
                  EstadoSol: {
                     title: 'Estado Sol',

@@ -11,7 +11,10 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudInterface;
+use App\Http\Recopro\AprobacionTotal\AprobacionTotalInterface;
+use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
 use App\Http\Requests\AprobacionSolicitudRequest;
+
 use DB;
 class AprobacionSolicitudController extends Controller
 {
@@ -20,6 +23,20 @@ class AprobacionSolicitudController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
+    }
+      public function allTotales(Request $request,AprobacionTotalInterface $repo)
+    {
+        $s = $request->input('search_c', '');
+        $idCliente = $request->input('cliente_id_or', '');
+        $params = ['idcliente', 'idMoneda','moneda','saldoTotal'];
+        return parseList($repo->search($s,$idCliente), $request, 'idcliente', $params);
+    }
+     public function listpendientesCobro(Request $request,View_PendienteCobroInterface $repo)
+    {
+        $idcliente = $request->input('idcliente', '');
+        $IdMoneda = $request->input('IdMoneda', '');
+        $params = ['IdMoneda','idCliente', 't_monto_total','pagado','saldo','serie_comprobante','numero_comprobante','razonsocial_cliente','fecha_emision','cCodConsecutivo_solicitud','nConsecutivo_solicitud','condicion_pago_text','tipoDocumento','moneda'];
+        return parseList($repo->search($IdMoneda,$idcliente), $request, 'idcliente', $params);
     }
 
     public function AprobarRechazarSolicitud($id, AprobacionSolicitudInterface $repo,Request $request)
