@@ -269,6 +269,12 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+    public function get_parametro_cuota() {
+        $sql = "SELECT * FROM ERP_Parametros WHERE id=7";
+        $result = DB::select($sql);
+        return $result;
+    }
+
     public function get_producto_anticipo($idproducto) {
 
     }

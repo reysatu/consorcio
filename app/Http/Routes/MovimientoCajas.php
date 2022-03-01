@@ -40,9 +40,11 @@ Route::post('movimientoCajas/getFormPaCa', 'FormasPagoController@getAll');
 Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');
 Route::post('movimientoCajas/obtener_tipo_cambio_venta', 'MovimientoCajaController@obtener_tipo_cambio_venta');
 Route::post('movimientoCajas/guardar_comprobante', 'MovimientoCajaController@guardar_comprobante');
+Route::post('movimientoCajas/guardar_pago_cuotas_credito', 'MovimientoCajaController@guardar_pago_cuotas_credito');
 Route::post('movimientoCajas/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
 Route::get('movimientoCajas/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
-Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket');
+Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket'); 
+Route::get('movimientoCajas/imprimir_ticket_pago_cuota/{id}', 'MovimientoCajaController@imprimir_ticket_pago_cuota'); 
 Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 
 

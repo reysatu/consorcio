@@ -802,10 +802,228 @@ class MovimientoCajaController extends Controller
 
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
+
+
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
             $result["datos"][0]["idventa_ticket"] = $data_ticket["idventa"];
+            DB::commit();
+            return response()->json($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ei"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }
+
+    }
+
+    public function guardar_pago_cuotas_credito(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio) {
+
+        $data = $request->all();
+
+        // print_r($data); exit;
+        $result = array();
+    
+        try {
+            DB::beginTransaction();
+            $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
+
+            $parametro_cuota = $repo->get_parametro_cuota();
+
+            if(count($parametro_cuota) <= 0) {
+                throw new Exception("Por favor cree el parametro con el id del producto de tipo cuota!");
+            }
+
+
+            $data_venta = array();
+           
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+            $data_venta["serie_comprobante"] = $data["serie_comprobante"];
+            $data_venta["numero_comprobante"] = $data["numero_comprobante"];
+            $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
+            $data_venta["nConsecutivo_solicitud"] = $data["nConsecutivo"];
+            $data_venta["condicion_pago"] = 1;
+           
+            $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
+            $data_venta["idcliente"] = $solicitud[0]->idcliente;
+            $data_venta["tipo_comprobante"] = "0";
+            $data_venta["descuento_id"] = "";
+            $data_venta["IdTipoDocumento"] = "12";
+
+              
+            $data_venta["t_porcentaje_descuento"] = "";
+            $data_venta["t_monto_descuento"] = "";
+            $data_venta["t_monto_subtotal"] = $data["total_pagar"];
+            $data_venta["t_monto_exonerado"] = "";
+            $data_venta["t_monto_afecto"] = "";
+            $data_venta["t_monto_inafecto"] = "";
+            $data_venta["t_impuestos"] = "";
+            $data_venta["t_monto_total"] = $data["total_pagar"];
+            $data_venta["monto_descuento_detalle"] = "";
+
+
+            $data_venta["user_updated"] = "";
+            $data_venta["updated_at"] = "";
+
+            $data_venta["saldo"] = "0";
+            $data_venta["pagado"] = $data["total_pagar"];
+
+            $data_venta["idmoneda"] = $solicitud[0]->idmoneda;
+
+            $data_venta["idcajero"] = auth()->id();
+            $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+            $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+
+            $data_venta["idventa_comprobante"] = "";
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+
+            for ($i=0; $i < count($data["nrocuota"]); $i++) { 
+                $data_venta_detalle = array();
+                $data_venta_detalle["idventa"] = $data_venta["idventa"];
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                $data_venta_detalle["idarticulo"] = $parametro_cuota[0]->value;
+                $data_venta_detalle["um_id"] = "07"; //codigo unidad
+                $data_venta_detalle["cantidad"] = 1;
+                $data_venta_detalle["precio_unitario"] = $data["monto_pago_credito"][$i];
+                $data_venta_detalle["iddescuento"] = "";
+                $data_venta_detalle["porcentaje_descuento"] = "";
+                $data_venta_detalle["precio_total"] = $data["monto_pago_credito"][$i];
+                $data_venta_detalle["monto_descuento"] = "";
+                $data_venta_detalle["monto_subtotal"] = $data["monto_pago_credito"][$i];
+                $data_venta_detalle["monto_exonerado"] = "";
+                $data_venta_detalle["monto_afecto"] = "";
+                
+            
+                $data_venta_detalle["monto_inafecto"] = "";
+                $data_venta_detalle["impuestos"] = "";
+                $data_venta_detalle["monto_total"] = $data["monto_pago_credito"][$i];
+                $data_venta_detalle["cOperGrat"] = "";
+                $data_venta_detalle["nOperGratuita"] = "";
+
+                $data_venta_detalle["nrocuota"] = $data["nrocuota"][$i];
+                $data_venta_detalle["valor_cuota_pagada"] = $data["monto_pago_credito"][$i];
+                $data_venta_detalle["int_moratorio_pagado"] = "";
+
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                
+                $update_solicitud_cronograma = array();
+                $update_solicitud_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                $update_solicitud_cronograma["nConsecutivo"] = $data["nConsecutivo"];
+                $update_solicitud_cronograma["nrocuota"] = $data["nrocuota"][$i];
+                $update_solicitud_cronograma["saldo_cuota"] = $data["saldo_cuota"][$i];
+                $update_solicitud_cronograma["monto_pago"] = $data["monto_pago_credito"][$i];
+                $solicitud_repositorio->update_solicitud_cronograma($update_solicitud_cronograma);
+            }   
+
+           
+           
+            // GUARDAR FORMAS DE PAGO EN VENTA Y CAJA   
+            $data_formas_pago = $data;
+            // var_dump($data["codigo_formapago"]); exit;
+            $efectivo_soles = 0;
+            $no_efectivo_soles = 0;
+            $efectivo_dolares = 0;
+            $no_efectivo_dolares = 0;
+            // echo count($data["codigo_formapago"]); exit;
+            for ($fp=0; $fp < count($data["codigo_formapago"]); $fp++) { 
+                $data_formas_pago["idventa"][$fp] = $data_venta["idventa"];
+               
+                if($fp == 0) {
+
+                    $data_formas_pago["consecutivo"][$fp] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                   
+                } else {
+                    $data_formas_pago["consecutivo"][$fp] = $data_formas_pago["consecutivo"][$fp-1] + 1;
+                }
+              
+
+                $data_caja_detalle = array();
+                $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                $data_caja_detalle["codigoTipo"] = "VTA";
+                $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$fp];
+                $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$fp];
+                $data_caja_detalle["monto"] = $data["monto_pago"][$fp];
+                $data_caja_detalle["descripcion"] = "Ingreso por Pago Cuota";
+                $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$fp];
+                $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$fp];
+                $data_caja_detalle["naturaleza"] = "E";
+               
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+                if($data["vuelto"][$fp] > 0) {
+                    $data_caja_detalle = array();
+                    $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                    $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                    $data_caja_detalle["codigoTipo"] = "VTA";
+                    $data_caja_detalle["codigoFormaPago"] = "EFE";
+                    $data_caja_detalle["idMoneda"] = $solicitud[0]->idmoneda;
+                    $data_caja_detalle["monto"] = $data["vuelto"][$fp];
+                    $data_caja_detalle["descripcion"] = "Vuelto por Pago Cuota";
+                    $data_caja_detalle["nroTarjeta"] = "";
+                    $data_caja_detalle["nroOperacion"] = "";
+                    $data_caja_detalle["naturaleza"] = "S";
+                    
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+                    
+                    if($solicitud[0]->idmoneda == "1") {
+                        $efectivo_soles -= $data["vuelto"][$fp];
+                    }
+                    
+                    if($solicitud[0]->idmoneda == "2") {
+                        $efectivo_dolares -= $data["vuelto"][$fp];
+                    }
+                }
+                
+                
+                if($data["IdMoneda"][$fp] == "1") {
+                    if($data["codigo_formapago"][$fp] == "EFE") {
+                        $efectivo_soles += (float)$data["monto_pago"][$fp];
+                    } else {
+                        $no_efectivo_soles += (float)$data["monto_pago"][$fp];
+                    }
+                }
+                
+                if($data["IdMoneda"][$fp] == "2") {
+                    if($data["codigo_formapago"][$fp] == "EFE") {
+                        $efectivo_dolares += (float)$data["monto_pago"][$fp];
+                    } else {
+                        $no_efectivo_dolares += (float)$data["monto_pago"][$fp];
+                    }
+                }
+               
+
+
+               
+            }
+           
+           
+            //ACTUALIZAMOS MONTOS EN CAJA DIARIA
+            $update_caja_diaria = array();
+            $update_caja_diaria["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+            $update_caja_diaria["totalEfectivo"] = $efectivo_soles;
+            $update_caja_diaria["totalNoEfectivo"] = $no_efectivo_soles;
+            $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
+            $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
+         
+            
+            $caja_diaria_repositorio->update_totales($update_caja_diaria);
+            // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
+
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
+           
+
+            //ACTUALIZAR SALDOS EN SOLICITUD
+            $update_solicitud = array();
+            $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+            $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
+            $update_solicitud["monto_pagar_credito"] = $data["monto_pagar_credito"];
+            $solicitud_repositorio->update_saldos_solicitud($update_solicitud);
+
+            // echo "ola"; exit;   
+          
+            $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             DB::commit();
             return response()->json($result);
         } catch (\Exception $e) {
@@ -1060,6 +1278,49 @@ class MovimientoCajaController extends Controller
     }
 
 
+    public function imprimir_ticket_pago_cuota($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+        $idventa = $array[2];
+
+        $datos = array();
+        $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+
+        $datos["empresa"] = $repo->get_empresa(); 
+        // $datos["tienda"] = $repo->get_tienda(); 
+        $datos["venta"] = $repo->get_venta($idventa); 
+        $idventa_comprobante = (isset($datos["venta"][0]->idventa_comprobante)) ? $datos["venta"][0]->idventa_comprobante : "0";
+        $datos["venta_comprobante"] = $repo->get_venta($idventa_comprobante); 
+       
+        // $datos["cajero"] = $repo->get_cajero(); 
+        // $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
+        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        $datos["segunda_venta"] = $repo->get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo); 
+        //  echo "<pre>";
+        // print_r($datos);
+        // exit;
+        $datos["solicitud_credito"] = $solicitud_credito; 
+        $datos["solicitud"] = $solicitud; 
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+
+        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+        $datos["fiador"] = $persona_repositorio->find($idfiador);
+        $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        $pdf = PDF::loadView("solicitud.ticket_pago_cuota", $datos);
+        $pdf->setPaper('b7', 'portrait');
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("ticket.pdf"); // ver
+
+    }
+
+
     public function imprimir_comprobante($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
@@ -1125,6 +1386,8 @@ class MovimientoCajaController extends Controller
         $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
         return response()->json($ticket);
     }
- 
+    
+
+   
 
 }

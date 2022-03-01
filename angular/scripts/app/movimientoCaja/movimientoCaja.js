@@ -1785,6 +1785,93 @@
             $("#modal-formas-pago").modal("hide");
         }
 
+        function guardar_comprobante() {
+            $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val(),
+                function (data, textStatus, jqXHR) {
+
+                    if (data.status == "i") {
+
+                        // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
+                        $("#modal-emitir-comprobante").modal("hide");
+                        $("#modalSolicitud").modal("hide");
+                        $("#formulario-solicitud").trigger("reset");
+                        $("#formulario-creditos").trigger("reset");
+                        $("#formulario-emitir-comprobante").trigger("reset");
+                        $("#formulario-formas-pago").trigger("reset");
+                        $("#detalle-formas-pago").html("");
+                        $("#articulo_mov_det").html("");
+                        LoadRecordsButtonSolicitud.click();
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'El documento se facturó correctamente.',
+                            type: 'success'
+                        });
+
+                        // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
+                        var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+
+                        if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
+
+                            window.open("movimientoCajas/imprimir_cronograma/" + id);
+                        }
+
+                        window.open("movimientoCajas/imprimir_comprobante/" + id);
+
+
+                        id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa_ticket;
+                        window.open("movimientoCajas/imprimir_ticket/" + id);
+
+
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    }
+                    // console.log(data);
+                },
+                "json"
+            );
+        }
+
+        function guardar_pago_cuotas_credito() {
+            // alert("hola");
+            $.post("movimientoCajas/guardar_pago_cuotas_credito", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo_credito").val() + "&nConsecutivo=" + $("#nConsecutivo_credito").val() + "&IdTipoDocumento=12&"+$("#formulario-solicitud-credito").serialize(),
+            function (data, textStatus, jqXHR) {
+                    if (data.status == "i") {
+                        $("#modal-emitir-comprobante").modal("hide");
+                        $("#modalSolicitudCredito").modal("hide");
+                        $("#formulario-solicitud-credito").trigger("reset");
+                       
+                        $("#formulario-emitir-comprobante").trigger("reset");
+                        $("#formulario-formas-pago").trigger("reset");
+                        $("#detalle-formas-pago").html("");
+                        $("#cuotas-credito").html("");
+                  
+
+                        LoadRecordsButtonSolicitudCreditos.click();
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'El pago se realizó orrectamente.',
+                            type: 'success'
+                        });
+
+                        var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+                        window.open("movimientoCajas/imprimir_ticket_pago_cuota/" + id);
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    }
+                    // console.log(data);
+                },
+                "json"
+            );
+        }
+
         $scope.emitir = function () {
 
             var bval = true;
@@ -1803,53 +1890,16 @@
             }
 
             if (bval) {
-                $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val(),
-                    function (data, textStatus, jqXHR) {
+                if ($('#modalSolicitud').is(':visible')) {
+                    guardar_comprobante();
+                }
 
-                        if (data.status == "i") {
+                if ($('#modalSolicitudCredito').is(':visible')) {
+                    
+                    guardar_pago_cuotas_credito();
+                }
 
-                            // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
-                            $("#modal-emitir-comprobante").modal("hide");
-                            $("#modalSolicitud").modal("hide");
-                            $("#formulario-solicitud").trigger("reset");
-                            $("#formulario-creditos").trigger("reset");
-                            $("#formulario-emitir-comprobante").trigger("reset");
-                            $("#formulario-formas-pago").trigger("reset");
-                            $("#detalle-formas-pago").html("");
-                            $("#articulo_mov_det").html("");
-                            LoadRecordsButtonSolicitud.click();
-                            AlertFactory.textType({
-                                title: '',
-                                message: 'El documento se facturó correctamente.',
-                                type: 'success'
-                            });
-
-                            // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
-                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
-
-                            if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
-
-                                window.open("movimientoCajas/imprimir_cronograma/" + id);
-                            }
-
-                            window.open("movimientoCajas/imprimir_comprobante/" + id);
-
-
-                            id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa_ticket;
-                            window.open("movimientoCajas/imprimir_ticket/" + id);
-
-
-                        } else {
-                            AlertFactory.textType({
-                                title: '',
-                                message: data.msg,
-                                type: 'info'
-                            });
-                        }
-                        // console.log(data);
-                    },
-                    "json"
-                );
+               
             }
 
         }
@@ -2448,30 +2498,45 @@
                         // $("#simbolo_moneda_credito").val(data.solicitud[0].Simbolo);
                         $(".simbolo-moneda").text(data.solicitud[0].simbolo_moneda);
                         $(".simbolo-moneda-2").text(data.solicitud[0].simbolo_moneda);
+                        $("#correo_electronico").val(data.solicitud[0].correo_electronico);
+                        $("#cCodConsecutivo_credito").val(data.solicitud[0].cCodConsecutivo);
+                        $("#nConsecutivo_credito").val(data.solicitud[0].nConsecutivo);
                     }
 
                     var prox_venc = "";
                     if (data.solicitud_cronograma.length > 0) {
                         var html = "";
+                        var disabled = "";
+                        var checked = "";
                         for (var index = 0; index < data.solicitud_cronograma.length; index++) {
+                            disabled = "";
+                            checked = "";
                             //    console.log(data.solicitud_cronograma[index].saldo_cuota);
-                            if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc != "") {
+                            if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc == "") {
                                 prox_venc = data.solicitud_cronograma[index].fecha_vencimiento_credito;
-
                             }
-                            var saldo_pagar = parseFloat(data.solicitud_cronograma[index].valor_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio);
+
+                            var saldo_pagar = parseFloat(data.solicitud_cronograma[index].saldo_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio);
+
                             html += '<tr>';
-                            html += '<td>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
-                            html += '<td>'+data.solicitud_cronograma[index].valor_cuota+'</td>';
-                            html += '<td>'+data.solicitud_cronograma[index].int_moratorio+'</td>';
-                            html += '<td>'+data.solicitud_cronograma[index].valor_cuota+'</td>';
-                            html += '<td>'+data.solicitud_cronograma[index].saldo_cuota+'</td>';
-                            html += '<td>'+data.solicitud_cronograma[index].int_moratorio+'</td>';
+                            html += '<td><span class="inputs-hidden" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" ></span>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
+                            html += '<input type="hidden" class="subtotal-pagar" value="'+saldo_pagar.toFixed(2)+'" >';
+                            html += '<td class="valor-cuota">'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
+                            html += '<td class="int-moratorio">'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
+                            html += '<td>'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
+                            html += '<td class="saldo-cuota">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
+                            html += '<td>'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
+                            
+                            if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) == 0) {
+                                disabled = 'disabled="disabled"';
+                                checked = 'checked="checked"';
+                            }
+                            // console.log(parseFloat(data.solicitud_cronograma[index].saldo_cuota), disabled);
                            
-                            html += '<td><center><input saldo_pagar="'+saldo_pagar.toFixed(2)+'"  type="checkbox" class="check-cuota" /></center></td>';
+                            html += '<td><center><input '+disabled+' '+checked+' saldo_pagar="'+saldo_pagar.toFixed(2)+'"  type="checkbox" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" class="check-cuota" /></center></td>';
                             html += '<td class="monto-pagar-cuota"></td>';
                             html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
-                            html += '<td>'+saldo_pagar.toFixed(2)+'</td>';
+                            html += '<td class="saldo-pagar">'+saldo_pagar.toFixed(2)+'</td>';
                             html += '</tr>';
                         }
                         $("#cuotas-credito").html(html);
@@ -2488,15 +2553,157 @@
 
         $(document).on("click", ".check-cuota", function () {
             var saldo_pagar = parseFloat($(this).attr("saldo_pagar"));
-            if($(this).is(":checked")) {
+            var nrocuota = $(this).attr("nrocuota");
+            var html = "";
+           
 
-                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(saldo_pagar);
+            if($(this).is(":checked")) {
+                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(saldo_pagar.toFixed(2));
+                $(this).parent("center").parent("td").siblings(".saldo-pagar").text("0.00");
+                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                html += '<input type="hidden" name="saldo_cuota[]" value="0" />';
+                html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_pagar.toFixed(2)+'" />';
+               
             } else {
-                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(0);
+                $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text("0.00");
+                $(this).parent("center").parent("td").siblings(".saldo-pagar").text(saldo_pagar.toFixed(2));
             }
+            
+            $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
             var monto_pagar = sumar_montos_pago();
-            $("#monto_pagar_credito").val(monto_pagar);
+            $("#monto_pagar_credito").val(monto_pagar.toFixed(2));
         });
+
+        $(document).on("keyup", "#monto_pagar_credito", function () {
+            var monto_pagar_credito = parseFloat($("#monto_pagar_credito").val());
+            var saldo_capital_credito = parseFloat($("#saldo_capital_credito").val());
+
+            if(isNaN(monto_pagar_credito)) {
+                monto_pagar_credito = 0;
+            }
+
+            var nuevo_saldo_pagar = parseFloat(saldo_capital_credito) - monto_pagar_credito;
+            $("#nuevo_saldo_pagar_credito").val(nuevo_saldo_pagar.toFixed(2));
+
+            var saldo_pagar = parseFloat($(".valor-cuota").eq(0).text()) + parseFloat($(".int-moratorio").eq(0).text());
+
+            
+
+            //CUOTAS PAGADAS
+            var checks = $(".check-cuota");
+            var pagados = 0;
+            for (var check = 0; check < checks.length; check++) {
+                if(typeof $(checks[check]).attr("disabled") != "undefined" && $(checks[check]).is(":checked")) {
+                    pagados++;
+                }
+
+                if(typeof $(checks[check]).attr("disabled") == "undefined") {
+                    // console.log(check);
+                    $(checks[check]).prop("checked", false);   
+                    $(checks[check]).text(saldo_pagar.toFixed(2));
+                    $(".monto-pagar-cuota").eq(check).text("");
+                    if(parseFloat($(".saldo-cuota").eq(check).text()) != saldo_pagar) {
+                        $(".saldo-pagar").eq(check).text(parseFloat($(".saldo-cuota").eq(check).text()).toFixed(2));
+                    } else {
+                        $(".saldo-pagar").eq(check).text(saldo_pagar.toFixed(2));
+                    }
+                    
+                }
+            }
+
+             // SI ES NEGATIVO  O CERO YA NO CONTINUA
+             if(monto_pagar_credito <= 0) {
+                return false;
+            }
+            // alert(monto_pagar_credito);
+            //SI EXISTE ALGUN SALDO SE CUOTA PAGADA ANTERIOR
+            // console.log(parseFloat($(".saldo-cuota").eq(pagados).text()));
+            var saldo_cuota_anterior = parseFloat($(".saldo-cuota").eq(pagados).text());
+            var diff = 0;
+            if(saldo_cuota_anterior != saldo_pagar) {
+                diff = monto_pagar_credito - saldo_cuota_anterior;
+
+                if(diff < 0) {
+                    // console.log("diff: " + diff);
+                    html = "";
+                    nrocuota = $(".check-cuota").eq(pagados).attr("nrocuota");
+                    $(".check-cuota").eq(pagados).prop("checked", true); 
+                    $(".monto-pagar-cuota").eq(pagados).text(monto_pagar_credito.toFixed(2));
+                    $(".saldo-pagar").eq(pagados).text(Math.abs(diff).toFixed(2));
+    
+                    html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                    html += '<input type="hidden" name="saldo_cuota[]" value="'+Math.abs(diff).toFixed(2)+'" />';
+                    html += '<input type="hidden" name="monto_pago_credito[]" value="'+Math.abs(monto_pagar_credito).toFixed(2)+'" />';
+                    $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+                } else {
+                    // console.log("saldo_cuota_anterior: " + saldo_cuota_anterior);
+                    html = "";
+                    nrocuota = $(".check-cuota").eq(pagados).attr("nrocuota");
+                    $(".check-cuota").eq(pagados).prop("checked", true); 
+                    $(".monto-pagar-cuota").eq(pagados).text(saldo_cuota_anterior.toFixed(2));
+                    $(".saldo-pagar").eq(pagados).text("0.00");
+    
+                    html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                    html += '<input type="hidden" name="saldo_cuota[]" value="0.00" />';
+                    html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_cuota_anterior.toFixed(2)+'" />';
+                    $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+
+                   
+                   
+                }
+                monto_pagar_credito = monto_pagar_credito - saldo_cuota_anterior;
+                pagados++;
+              
+            }   
+
+            // SI ES NEGATIVO  O CERO YA NO CONTINUA
+            if(monto_pagar_credito <= 0) {
+                return false;
+            }
+            // console.log("monto_pagar_credito: "+monto_pagar_credito);
+
+
+            var resto = monto_pagar_credito % saldo_pagar;
+            var entero = Math.floor(monto_pagar_credito/saldo_pagar) + pagados;
+
+           
+            
+
+            var nuevo_saldo_pagar = saldo_pagar - resto;
+            var html = "";
+            var nrocuota = "";
+            // console.log(pagados, entero);
+            for (var i = pagados; i < entero; i++) {
+                html = "";
+                nrocuota = $(".check-cuota").eq(i).attr("nrocuota");
+                $(".check-cuota").eq(i).prop("checked", true); 
+              
+                $(".monto-pagar-cuota").eq(i).text(saldo_pagar.toFixed(2));
+                $(".saldo-pagar").eq(i).text("0.00");
+
+                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                html += '<input type="hidden" name="saldo_cuota[]" value="0" />';
+                html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_pagar.toFixed(2)+'" />';
+                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+
+            }
+            
+            if(resto > 0) {
+                html = "";
+                nrocuota = $(".check-cuota").eq(entero).attr("nrocuota");
+                $(".check-cuota").eq(entero).prop("checked", true); 
+                $(".monto-pagar-cuota").eq(entero).text(resto.toFixed(2));
+                $(".saldo-pagar").eq(entero).text(nuevo_saldo_pagar.toFixed(2));
+
+                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                html += '<input type="hidden" name="saldo_cuota[]" value="'+nuevo_saldo_pagar.toFixed(2)+'" />';
+                html += '<input type="hidden" name="monto_pago_credito[]" value="'+resto.toFixed(2)+'" />';
+                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+            
+            }
+
+         
+        })
 
         function sumar_montos_pago() {
             var montos_pago = $(".monto-pagar-cuota");
@@ -2563,8 +2770,6 @@
                 },
                 nConsecutivo: {
                     title: 'Nro',
-
-
                 },
 
                 fecha_solicitud: {
