@@ -2569,11 +2569,22 @@
 
         }
 
-        $(document).on("click", ".check-cuota", function () {
+        $(document).on("click", ".check-cuota", function (e) {
             var saldo_pagar = parseFloat($(this).attr("saldo_pagar"));
             var nrocuota = $(this).attr("nrocuota");
             var html = "";
-           
+            if((nrocuota-1) > 0 && !$(".check-cuota[nrocuota='"+(nrocuota-1)+"']").is(":checked")) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }   
+            
+            // if(!$(".check-cuota[nrocuota='"+(nrocuota-1)+"']").is(":checked") && (nrocuota-1) > 0) {
+            //     console.log("checked anterior");
+            // } else {
+            //     console.log("nooo checked anterior");
+            // }
+            // console.log($(".check-cuota[nrocuota='"+(nrocuota-1)+"']"));
 
             if($(this).is(":checked")) {
                 $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(saldo_pagar.toFixed(2));

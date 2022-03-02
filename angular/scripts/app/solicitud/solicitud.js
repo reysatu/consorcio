@@ -1698,10 +1698,12 @@
 
                         }
 
+                        var html = "";
+                        html += '<input type="hidden" name="series_id[]" value="' + series_id.join(",") + '" />';
+                        html += '<input type="hidden" name="articulos_id[]" value="' + articulos_id.join(",") + '" />';
 
-
-                        $("#tr_idArticulo" + codigoLSr).find("td").eq(0).append('<input type="hidden" name="series_id[]" value="' + series_id.join(",") + '" />');
-                        $("#tr_idArticulo" + codigoLSr).find("td").eq(0).append('<input type="hidden" name="articulos_id[]" value="' + articulos_id.join(",") + '" />');
+                        $("#tr_idArticulo" + codigoLSr).find("td").eq(0).find(".list-series").html(html);
+                        // $("#tr_idArticulo" + codigoLSr).find("td").eq(0).append('<input type="hidden" name="articulos_id[]" value="' + articulos_id.join(",") + '" />');
                     } else {
                         AlertFactory.textType({
                             title: '',
@@ -1999,7 +2001,7 @@
             var op = $('<option value="" selected>Seleccione</option>');
             var fclt = $('<input type="hidden" class="m_codigo_lote" value="' + codl + '" />');
             var fdlt = $('<input type="hidden" class="m_dato_lote" value="' + datl + '" />');
-            var identificador_serie_bd = $('<input type="hidden" class="identificador_serie_bd" value="' + codigo + '" />');
+            var identificador_serie_bd = $('<input type="hidden" class="identificador_serie_bd" value="' + codigo + '" /><span class="list-series"></span>');
             td1.append(inp).append(fclt).append(fdlt).append(identificador_serie_bd);
 
 
@@ -2046,7 +2048,7 @@
                 impuestos = pretotal * valor_igv / 100;
                 pretotal = pretotal + impuestos;
             }
-
+            // console.log(codigo+" => "+monto_subtotal);
             var html = '<td codigo="' + codigo + '" class="monto_descuento_prorrateado"><p>0</p><input type="hidden" codigo="' + codigo + '" name="monto_descuento_prorrateado[]" value="0"></td>';
             html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
 
@@ -2344,7 +2346,13 @@
             var descuento = 0;
 
             var precio_total = parseFloat($(".m_articulo_precioTotal[codigo='" + codigo + "']").val());
-            
+
+            // console.log("precio_total => "+precio_total);
+
+            if(typeof precio_total == "undefined") {
+                precio_total = 0;
+            }
+
             //PRORRATEO EN CASO DE EXISTIR DESCUENTO SOBRE EL TOTAL
             var descuento_total = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
             var monto_descuento_prorrateado = 0;
@@ -2377,8 +2385,16 @@
                 descuento = monto_descuento;
             }
 
-            // alert(descuento);
+            if(isNaN(descuento)) {
+                descuento = 0;
+            }
 
+            // console.log("descuento: "+descuento);
+            // alert(descuento);    
+            if(isNaN(porcentaje_descuento)) {
+                porcentaje_descuento = 0;
+            }
+            // console.log("porcentaje_descuento => "+porcentaje_descuento);
             $("#preMs_" + codigo).val(porcentaje_descuento);
             $("#preMs_" + codigo).siblings("p").text(porcentaje_descuento.toString());
 
@@ -2411,6 +2427,12 @@
 
             $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(2));
             $("input[name='monto_subtotal_sin_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_subtotal_sin_descuento_prorrateado.toFixed(2));
+
+            if(isNaN(monto_subtotal)) {
+                monto_subtotal = 0;
+            }
+           
+
             $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
             $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
@@ -3133,8 +3155,8 @@
                         for (var i = 0; i < data.solicitud_articulo.length; i++) {
 
                             var codigo = Math.random().toString(36).substr(2, 18);
-
-                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
+                            // console.log("um_id => "+data.solicitud_articulo[i].um_id);
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie, data.solicitud_articulo[i].um_id);
 
                         }
                     }

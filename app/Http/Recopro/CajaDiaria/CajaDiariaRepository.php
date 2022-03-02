@@ -160,6 +160,16 @@ class CajaDiariaRepository implements CajaDiariaInterface
         return $result; 
     }
 
+    public function update_saldos_venta($data) {
+        $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto_pagar_credito"]},
+        pagado = pagado + {$data["monto_pagar_credito"]}       
+        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND anticipo > 0";
+
+        $result = DB::statement($sql_update);
+        
+        return $result; 
+    }
+
     //  public function getDenominacionView($id)
     // {   
     //     $mostrar=DB::select("select * from ERP_CajaDiariaDenominaciones as cd INNER JOIN ERP_Denominaciones as de on cd.idDenominacion=de.id_denominacion where cd.idCajaDiaria='$id'");

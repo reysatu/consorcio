@@ -253,6 +253,9 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+
+    
+
     public function get_venta_formas_pago($idventa) {
         $sql = "SELECT vfp.*, m.Descripcion AS moneda
         FROM ERP_Venta AS v 

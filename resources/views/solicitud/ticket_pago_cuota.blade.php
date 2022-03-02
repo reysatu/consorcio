@@ -138,7 +138,7 @@
                 $serie = (isset($segunda_venta[0]->serie_comprobante)) ? $segunda_venta[0]->serie_comprobante : "°";
                 $numero = (isset($segunda_venta[0]->numero_comprobante)) ? $segunda_venta[0]->numero_comprobante : "°";
                 echo '<tr>';
-                echo '  <td>'.$value->producto.'</td>';
+                echo '  <td>'.$value->producto.' N° '.$value->nrocuota.'</td>';
                 echo '  <td>'.$serie.'-'.$numero.'</td>';
 
                 echo '  <td>'.number_format($value->valor_cuota_pagada - $value->int_moratorio_pagado, 2).'</td>';

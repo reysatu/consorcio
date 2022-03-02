@@ -1182,6 +1182,13 @@ class MovimientoCajaController extends Controller
             $update_solicitud["monto_pagar_credito"] = $data["monto_pagar_credito"];
             $solicitud_repositorio->update_saldos_solicitud($update_solicitud);
 
+            //ACTUALIZAR SALDOS EN LA SEGUNDA VENTA POR EL SALDO 
+            $update_venta = array();
+            $update_venta["cCodConsecutivo"] = $data["cCodConsecutivo"];
+            $update_venta["nConsecutivo"] = $data["nConsecutivo"];
+            $update_venta["monto_pagar_credito"] = $data["monto_pagar_credito"];
+            $caja_diaria_repositorio->update_saldos_venta($update_venta);
+
             // echo "ola"; exit;   
           
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);

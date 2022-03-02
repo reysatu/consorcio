@@ -136,45 +136,58 @@ class SolicitudController extends Controller
                     } else {
                         $data_articulo["id"][$i] = $data_articulo["id"][$i-1] + 1;
                     }
+
+                    $data_articulo["nCantidadEntregada"][$i] = 0;
+                    $data_articulo["nCantidadPendienteEntregar"][$i] = $data_articulo["cantidad"][$i];
+                    $data_articulo["nCantidadDevuelta"][$i] = 0;
+                    $data_articulo["nCantidadPendienteDevolver"][$i] = 0;
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_articulo));
+
+                    if(isset($data["series_id"][$i])) {
+
+                        $idSeries = explode(",", $data["series_id"][$i]);
+                        $idarticulos = explode(",", $data["articulos_id"][$i]);
+                     
+                        if(count($idSeries) >  0) {
+                            DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+                           
+                            
+                            $data_detalle = $data;
+                          
+                            for ($s=0; $s < count($idSeries); $s++) { 
+                                if($s == 0) {
+            
+                                    $data_detalle["id"][$s] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
+                                } else {
+                                    $data_detalle["id"][$s] = $data_detalle["id"][$s-1] + 1;
+                                }
+                                $data_detalle["idSerie"][$s] = $idSeries[$s];
+                                $data_detalle["idarticulo"][$s] = $idarticulos[$s];
+                                $data_detalle["id_solicitud_articulo"][$s] = $data_articulo["id"][$i];
+                            }
+                           
+                            $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                            // print_r($r);
+                           
+                        }
+                       
+                    }
+        
+                    
+
                 }
+
+            
                
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_articulo));
+               
              
               
                 
                
             }
           
-            if(isset($data["series_id"])) {
-
-                for ($s=0; $s < count($data["series_id"]); $s++) { 
-                    $idSeries = explode(",", $data["series_id"][$s]);
-                    $idarticulos = explode(",", $data["articulos_id"][$s]);
-                    
-                    if(count($idSeries) >  0) {
-                        DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
-                       
-                        
-                        $data_detalle = $data;
-                      
-                        for ($i=0; $i < count($idSeries); $i++) { 
-                            if($i == 0) {
-        
-                                $data_detalle["id"][$i] = $repo->get_consecutivo_detalle("ERP_SolicitudDetalle", "id");
-                            } else {
-                                $data_detalle["id"][$i] = $data_detalle["id"][$i-1] + 1;
-                            }
-                            $data_detalle["idSerie"] = $idSeries[$i];
-                            $data_detalle["idarticulo"] = $idarticulos[$i];
-                        }
-                        // print_r($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
-                       
-                    }
-                }
-               
-            }
-
+            
             
           
             DB::commit();
