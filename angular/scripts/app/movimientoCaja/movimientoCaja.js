@@ -1641,7 +1641,10 @@
                             // alert(checks);
                             $("#total_pagar").val(monto_pagar.toFixed(2));
                             $("#monto").val(monto_pagar.toFixed(2));
+                           
+
                             $("#modal-emitir-comprobante").modal("show");
+                          
                             
                         } else {
                             AlertFactory.textType({
@@ -1678,7 +1681,16 @@
 
             $("#monto_p").val(saldo.toFixed(2));
             $("#forma_pago").val("EFE");
-            $("#moneda").val($("#IdMoneda").val());
+          
+
+            if ($('#modalSolicitudCredito').is(':visible')) {
+                $("#moneda").val($("#idmoneda_credito").val());
+            }
+
+            if ($('#modalSolicitud').is(':visible')) {
+                $("#moneda").val($("#IdMoneda").val());
+            }
+           
             $(".clean-monto").val(0);
             $("#noperacion").val("");
             $("#tarjeta").val("");
@@ -2512,7 +2524,7 @@
                         $("#saldo_capital_credito").val(data.solicitud[0].saldo);
                         $("#fecha_pago_credito").val(data.solicitud[0].fecha_pago);
 
-                        // $("#idmoneda_credito").val(data.solicitud[0].IdMoneda);
+                        $("#idmoneda_credito").val(data.solicitud[0].IdMoneda);
                         // $("#simbolo_moneda_credito").val(data.solicitud[0].Simbolo);
                         $(".simbolo-moneda").text(data.solicitud[0].simbolo_moneda);
                         $(".simbolo-moneda-2").text(data.solicitud[0].simbolo_moneda);

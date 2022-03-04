@@ -600,6 +600,17 @@ class MovimientoCajaController extends Controller
                 
                 } else {
 
+                    //VALIDACION QUE SI POSEEN SERIE LOS ARTICULOS
+                    for ($ii=0; $ii < count($solicitud_articulo); $ii++) { 
+                        if($solicitud_articulo[$ii]->serie == 1) {
+                            $res = $solicitud_repositorio->get_solicitud_detalle_series($solicitud_articulo[$ii]->cCodConsecutivo, $solicitud_articulo[$ii]->nConsecutivo, $solicitud_articulo[$ii]->id);
+
+                            if(count($res) <= 0 ) {
+                                throw new Exception("Por Favor ingrese la serie del producto: ". $solicitud_articulo[$ii]->producto." en el detalle de la solicitud!");
+                            }
+                        }
+                    }
+
                     //SEGUNDA VENTA DEL CREDITO POR EL SALDO
                     $data_venta["tipo_comprobante"] = "0";
                     $data_venta["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
@@ -1438,7 +1449,9 @@ class MovimientoCajaController extends Controller
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         $pdf = PDF::loadView("solicitud.ticket", $datos);
-        $pdf->setPaper('b7', 'portrait');
+        $pdf->setPaper(array(0,0,249.45, 600), 'portrait');
+        // "b7" => array(0,0,249.45,354.33),
+
         // return $pdf->save("ficha_asociado.pdf"); // guardar
         // return $pdf->download("ficha_asociado.pdf"); // descargar
         return $pdf->stream("ticket.pdf"); // ver
@@ -1481,7 +1494,9 @@ class MovimientoCajaController extends Controller
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         $pdf = PDF::loadView("solicitud.ticket_pago_cuota", $datos);
-        $pdf->setPaper('b7', 'portrait');
+        $pdf->setPaper(array(0,0,249.45, 600), 'portrait');
+        // "b7" => array(0,0,249.45,354.33),
+
         // return $pdf->save("ficha_asociado.pdf"); // guardar
         // return $pdf->download("ficha_asociado.pdf"); // descargar
         return $pdf->stream("ticket.pdf"); // ver

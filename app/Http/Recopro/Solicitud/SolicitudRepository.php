@@ -298,6 +298,15 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
     }
 
+    public function get_solicitud_detalle_series($cCodConsecutivo, $nConsecutivo, $id_solicitud_articulo)
+    {
+
+        $sql = "SELECT * FROM ERP_SolicitudDetalle WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo} AND id_solicitud_articulo={$id_solicitud_articulo}";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
 
        public function get_solicitud_credito($cCodConsecutivo, $nConsecutivo)
     {
