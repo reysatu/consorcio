@@ -2935,6 +2935,21 @@
                 search: $('#search_cc3').val()
             });
         }, false);
+
+        $(document).on("change", "input[name='tipo']", function () {
+            var tipo = $(this).val();
+            // proforma
+            if(tipo == "P") {
+                
+                $(".nota").hide();
+                $(".proforma").show();
+            }
+            // nota
+            if(tipo == "N") {
+                $(".proforma").hide();
+                $(".nota").show();
+            }
+        });
     }
 
     function Config($stateProvider, $urlRouterProvider) {

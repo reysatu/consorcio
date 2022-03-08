@@ -56,17 +56,40 @@
                     <div class="modal-body">
                         <div class="form-horizontal">
                             <div class="row">
+                                <input type="radio" name="tipo" value="P"
+                                        checked class="col-sm-1">
+                                <label class="col-sm-2 control-label" for="tipo">Proforma</label>
+                            
+                                
+                            
+                                <input type="radio"  name="tipo" value="N" class="col-sm-1">
+                                <label class="col-sm-2 control-label" for="tipo">Nota</label>
+                                
+                                   
+                            </div>
+                            <br>
+                            <div class="row">
                                 <div class="col-md-12">
                                     <input type="hidden" id="idMovimiento" >
                                     <input type="hidden" id="idNaturaleza" >
+                                    
                                     <div class="form-group">
                                        <input type="hidden" class="form-control input-sm " id="idcontrol_calidad" />
-                                        <label class="col-sm-2 control-label">Proforma</label>
-                                        <div class="col-sm-8">
+
+                                        <label class="col-sm-2 control-label proforma">Proforma</label>
+                                        <div class="col-sm-8 proforma">
                                             <select  style="width: 100%;" class="form-control input-sm" id="cCodConsecutivoOS"></select>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-2 proforma">
                                             <input type="text" class="form-control input-sm"  id="nConsecutivoOS" readonly/>
+                                        </div>
+
+                                        <label class="col-sm-2 control-label nota" style="display: none;">Nota</label>
+                                        <div class="col-sm-8 nota" style="display: none;">
+                                            <select  style="width: 100%;" class="form-control input-sm" id="idventa"></select>
+                                        </div>
+                                        <div class="col-sm-2 nota" style="display: none;">
+                                            <input type="text" class="form-control input-sm"  id="" readonly/>
                                         </div>
                                     </div>
                                     <div class="form-group">

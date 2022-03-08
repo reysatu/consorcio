@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\Venta;
+<?php namespace App\Http\Recopro\Ventas;
 
 use App\Http\Recopro\User\User;
 // use App\Http\Recopro\Shop\Shop;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 4/5/2017
  * Time: 6:54 PM
  */
-class Venta extends Model
+class Ventas extends Model
 {
    
 

@@ -95,8 +95,10 @@
         'sys.app.accounts_pay',
         'sys.app.revision_cas',
         'sys.app.aprobacionSolicituds',
+        'sys.app.motivos',
         //Ventas
         'sys.app.solicitud',
+        'sys.app.ventas',
         
         'sys.app.movimientoCajas',
         // Almacen

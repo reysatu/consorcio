@@ -100,8 +100,6 @@
                 },
 
             },
-           
-
             formCreated: function (event, data) {
                 data.form.find('input[name="Categoria"]').attr('onkeypress','return soloLetras(event)');
                 $('#Edit-estado').parent().addClass('i-checks');

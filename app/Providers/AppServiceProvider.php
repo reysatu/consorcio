@@ -75,6 +75,10 @@ use App\Http\Recopro\FormasPago\FormasPago;
 use App\Http\Recopro\FormasPago\FormasPagoInterface;
 use App\Http\Recopro\FormasPago\FormasPagoRepository;
 
+use App\Http\Recopro\Motivos\Motivos;
+use App\Http\Recopro\Motivos\MotivosInterface;
+use App\Http\Recopro\Motivos\MotivosRepository;
+
 use App\Http\Recopro\CajaUsuario\CajaUsuario;
 use App\Http\Recopro\CajaUsuario\CajaUsuarioInterface;
 use App\Http\Recopro\CajaUsuario\CajaUsuarioRepository;
@@ -158,9 +162,9 @@ use App\Http\Recopro\Solicitud_Asignacion\Solicitud_Asignacion;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionRepository;
 
-use App\Http\Recopro\Venta\Venta;
-use App\Http\Recopro\Venta\VentaInterface;
-use App\Http\Recopro\Venta\VentaRepository;
+use App\Http\Recopro\Ventas\Ventas;
+use App\Http\Recopro\Ventas\VentasInterface;
+use App\Http\Recopro\Ventas\VentasRepository;
 
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantes;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
@@ -661,6 +665,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCategoriaVehicular();
         $this->registerCompania();
         $this->registerFormasPago();
+        $this->registerMotivos();
         $this->registerCajaUsuario();
         $this->registerCajaDiaria();
         $this->registerCajaDiariaDenominaciones();
@@ -679,7 +684,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerVendedores();
         $this->registerSolicitud();
         $this->registerSolicitudCredito();
-        $this->registerVenta();
+        $this->registerVentas();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
         $this->registerTypePerson();
@@ -1040,6 +1045,16 @@ class AppServiceProvider extends ServiceProvider
             return new FormasPagoRepository(new FormasPago());
         });
     }
+
+    public function registerMotivos()
+    {
+        $app = $this->app;
+
+        $app->bind(MotivosInterface::class, function ($app) {
+            return new MotivosRepository(new Motivos());
+        });
+    }
+    
     public function registerCajaUsuario()
     {
         $app = $this->app;
@@ -1196,12 +1211,12 @@ class AppServiceProvider extends ServiceProvider
     }
 
     
-    public function registerVenta()
+    public function registerVentas()
     {
         $app = $this->app;
 
-        $app->bind(VentaInterface::class, function ($app) {
-            return new VentaRepository(new Venta());
+        $app->bind(VentasInterface::class, function ($app) {
+            return new VentasRepository(new Ventas());
         });
     }
 

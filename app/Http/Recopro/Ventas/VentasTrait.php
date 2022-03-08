@@ -6,11 +6,11 @@
  * Time: 11:36 AM
  */
 
-namespace App\Http\Recopro\Venta;
+namespace App\Http\Recopro\Ventas;
 
 use Carbon\Carbon;
 
-trait VentaTrait
+trait VentasTrait
 {
     public function generateDataExcel($info)
     {

@@ -6,10 +6,10 @@
  * Time: 6:56 PM
  */
 
-namespace App\Http\Recopro\Venta;
+namespace App\Http\Recopro\Ventas;
 
 
-interface VentaInterface
+interface VentasInterface
 {
     public function search($s);
 

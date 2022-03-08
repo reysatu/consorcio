@@ -7,15 +7,15 @@
  * Time: 6:56 PM
  */
 
-namespace App\Http\Recopro\Venta;
+namespace App\Http\Recopro\Ventas;
 
 use Illuminate\Support\Facades\DB;
 
-class VentaRepository implements VentaInterface
+class VentasRepository implements VentasInterface
 {
     protected $model;
     private static $_ACTIVE = 'A';
-    public function __construct(Venta $model)
+    public function __construct(Ventas $model)
     {
         $this->model = $model;
     }
@@ -36,6 +36,18 @@ class VentaRepository implements VentaInterface
 
         return $this->model->orWhere(function ($q) use ($s) {
              $q->whereIn('estado', [2, 4])
+                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
+                ->where('numero_documento', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_emision', 'DESC');
+    }
+
+
+    public function search_documentos($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])
                 ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
                 ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
                 ->where('fecha_emision', 'LIKE', '%' . $s . '%')
@@ -82,6 +94,45 @@ class VentaRepository implements VentaInterface
         $model                      = $this->model->findOrFail($id);
         $model->update($attributes);
         $model->delete();
+    }
+
+    public function find_documento($idventa) {
+        $sql = "SELECT v.*, c.*, c.razonsocial_cliente AS cliente 
+        FROM ERP_Venta AS v
+        INNER JOIN ERP_Clientes AS c ON(c.id=v.idcliente)
+        WHERE v.idventa={$idventa}";
+
+        return DB::select($sql);
+    }
+
+    public function get_motivos() {
+        $sql = "SELECT * 
+        FROM ERP_Motivos 
+        WHERE estado='A'";
+
+        return DB::select($sql);
+    }
+
+    public function get_consecutivo($table,$id)
+    {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
+         $actu=0;
+         if(!$mostrar){
+            $actu=0;
+         }else{
+            $actu=intval($mostrar[0]->$id);
+         };
+        $new=$actu+1;
+        return $new; 
+    }
+
+
+    public function update_saldos_venta($data) {
+        $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto"]}
+        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND anticipo > 0";
+
+        $result = DB::statement($sql_update);
+        
+        return $result; 
     }
 
 }

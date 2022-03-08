@@ -175,11 +175,15 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\AprobacionSolicituds.php';
 
+    require app_path() . '\Http\Routes\Motivos.php';
+
     // Routes Ventas
 
     require app_path() . '\Http\Routes\Solicitud.php';
 
-      require app_path() . '\Http\Routes\Asignacioncobradors.php';
+    require app_path() . '\Http\Routes\Asignacioncobradors.php';
+    
+    require app_path() . '\Http\Routes\Ventas.php';
 
     //Route Purchases
 
