@@ -2490,7 +2490,8 @@
                     _.each(response.operaciones, function (item) {
                         var opera = '8' + '*' + 'D';
                         naturalezaGeneral = 'D';
-                        idTipoOperacion.append('<option value="' + opera + '" selected>DESRESERVA ST</option>');
+                        // idTipoOperacion.append('<option value="' + opera + '" selected>DESRESERVA ST</option>');
+                        idTipoOperacion.append('<option value="' + item.IdTipoOperacion + '" selected>'+item.descripcion+'</option>');
                     });
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
                     _.each(response.moneda, function (item) {
@@ -3029,11 +3030,15 @@
                 $("#documento").val("");
                 $(".nota").hide();
                 $(".proforma").show();
+                
+                $("#idTipoOperacion").val(8);
             }
             // nota
             if (tipo == "N") {
                 $("#cCodConsecutivoOS").val("");
                 $("#nConsecutivoOS").val("");
+
+                $("#idTipoOperacion").val(9);
                 
                 $(".proforma").hide();
                 $(".nota").show();
