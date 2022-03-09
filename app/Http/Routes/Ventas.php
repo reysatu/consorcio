@@ -17,3 +17,6 @@ Route::post('ventas/find_documento', ['as' => 'ventas.find_documento', 'uses' =>
 Route::get('ventas/data_form', ['as' => 'ventas.data_form', 'uses' => 'VentasController@data_form']);
 
 Route::post('ventas/guardar_venta', ['as' => 'ventas.guardar_venta', 'uses' => 'VentasController@guardar_venta']);
+Route::post('ventas/get_notas_devolucion', ['as' => 'ventas.get_notas_devolucion', 'uses' => 'VentasController@get_notas_devolucion']);
+
+Route::get('ventas/get_venta_detalle/{id}', ['as' => 'ventas.get_venta_detalle', 'uses' => 'VentasController@get_venta_detalle']);

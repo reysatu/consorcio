@@ -204,7 +204,7 @@
 
                 }
 
-                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
@@ -243,7 +243,7 @@
 
         <table style="width: 100%;">               
             <?php 
-                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0) {
+                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                     echo '<tr>';
                     echo '  <td style="width: 15%;">Condicion de Pago:</td>';
                     echo '  <td style="width: 20%;">';
@@ -257,14 +257,14 @@
                 
                     
                     echo '  </td>';
-                    if(count($venta_anticipo) > 0) {
+                    if(count($venta_anticipo) > 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                         echo '  <td style="width: 20%;">Cuota Mensual:</td>';
                         echo '  <td style="width: 15%;">'.number_format($solicitud_credito[0]->valor_cuota_final, 2).'</td>';
                     }
                     echo '  <td width: 30%;></td>';
 
                     echo '</tr>';
-                    if(count($venta_anticipo) > 0) {
+                    if(count($venta_anticipo) > 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                         $importe_financiar = ($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total);
                         echo '<tr>';
                         echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';

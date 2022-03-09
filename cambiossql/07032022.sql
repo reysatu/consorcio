@@ -53,4 +53,25 @@ EXEC sp_addextendedproperty
 0 -> no se devuelve',
 'SCHEMA', N'dbo',
 'TABLE', N'ERP_Venta',
+'COLUMN', N'devolucion_producto';
+
+
+IF ((SELECT COUNT(*) FROM ::fn_listextendedproperty('MS_Description',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'devolucion_producto')) > 0)
+  EXEC sp_updateextendedproperty
+'MS_Description', N'2 -> ya se ha devuelto
+1 -> pendiente de devolucion
+0 -> no se devuelve',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
 'COLUMN', N'devolucion_producto'
+ELSE
+  EXEC sp_addextendedproperty
+'MS_Description', N'2 -> ya se ha devuelto
+1 -> pendiente de devolucion
+0 -> no se devuelve',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'devolucion_producto';
