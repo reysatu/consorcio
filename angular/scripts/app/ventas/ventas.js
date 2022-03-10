@@ -278,6 +278,7 @@
                         $("#idmoneda").val(data.documento[0].idmoneda);
                         $("#tipo_comprobante").val(data.documento[0].tipo_comprobante);
                         $("#t_monto_total").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
+                        // $("#tipo_solicitud").val(parseFloat(data.documento[0].tipo_solicitud).toFixed(2));
 
                         $("#monto").attr("max", parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#monto").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
