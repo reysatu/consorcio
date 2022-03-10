@@ -27,3 +27,7 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'dbo',
 'TABLE', N'ERP_Solicitud',
 'COLUMN', N'nomora';
+
+
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [idventa_referencia] int NULL;

@@ -499,7 +499,7 @@ class MovimientoCajaController extends Controller
 
             $data_venta = (array)$solicitud[0];
             $data_venta["descuento_id"] = explode("*", $solicitud[0]->descuento_id)[0];
-            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
             $data_venta["numero_comprobante"] = $data["numero_comprobante"];
             $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
@@ -687,15 +687,15 @@ class MovimientoCajaController extends Controller
          
 
 
-            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_venta));
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
             $data_ticket = $data_venta;
             $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
-            $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
             $data_ticket["numero_comprobante"] = $consecutivo_ticket;
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_ticket));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
            
             for ($i=0; $i < count($solicitud_articulo); $i++) { 
                 if($solicitud_articulo[$i]->cOperGrat == "-.-") {
@@ -1011,7 +1011,7 @@ class MovimientoCajaController extends Controller
 
             $data_venta = array();
            
-            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
             $data_venta["numero_comprobante"] = $data["numero_comprobante"];
             $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
@@ -1049,7 +1049,7 @@ class MovimientoCajaController extends Controller
             $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
 
             $data_venta["idventa_comprobante"] = "";
-            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_venta));
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
             for ($i=0; $i < count($data["nrocuota"]); $i++) { 
                 $data_venta_detalle = array();
