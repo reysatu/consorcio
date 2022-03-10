@@ -21,10 +21,23 @@ use App\Http\Recopro\Brand\BrandRepository;
 use App\Http\Recopro\Bancos\Bancos;
 use App\Http\Recopro\Bancos\BancosInterface;
 use App\Http\Recopro\Bancos\BancosRepository; 
-
+ 
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre; 
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreRepository;
+
+use App\Http\Recopro\GuiaRemision\GuiaRemision; 
+use App\Http\Recopro\GuiaRemision\GuiaRemisionInterface;
+use App\Http\Recopro\GuiaRemision\GuiaRemisionRepository;
+
+use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProducto; 
+use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProductoInterface;
+use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProductoRepository;
+
+use App\Http\Recopro\GuiaRemisionDetalle\GuiaRemisionDetalle; 
+use App\Http\Recopro\GuiaRemisionDetalle\GuiaRemisionDetalleInterface;
+use App\Http\Recopro\GuiaRemisionDetalle\GuiaRemisionDetalleRepository;
+
 
 use App\Http\Recopro\View_PendienteCobro\View_PendienteCobro; 
 use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
@@ -402,6 +415,10 @@ use App\Http\Recopro\Naturaleza\Naturaleza;
 use App\Http\Recopro\Naturaleza\NaturalezaInterface;
 use App\Http\Recopro\Naturaleza\NaturalezaRepository;
 
+use App\Http\Recopro\TipoTraslado\TipoTraslado;
+use App\Http\Recopro\TipoTraslado\TipoTrasladoInterface;
+use App\Http\Recopro\TipoTraslado\TipoTrasladoRepository;
+
 use App\Http\Recopro\Stock_Serie\Stock_Serie;
 use App\Http\Recopro\Stock_Serie\Stock_SerieInterface;
 use App\Http\Recopro\Stock_Serie\Stock_SerieRepository;
@@ -652,6 +669,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerBancos();
         $this->registerFactorCredito();
         $this->registerTiposMovimiento();
+        $this->registerGuiaRemision();
+        $this->registerGuiaRemisionProducto();
+        $this->registerGuiaRemisionDetalle();
         $this->registerMovimiento_cierre();
         $this->registerView_PendienteCobro();
         $this->registerMovimiento_Articulo_cierre();
@@ -774,6 +794,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerRegister_transfer();
         $this->registerGeneration_remision();
         $this->registerNaturaleza();
+        $this->registerTipoTraslado();
         $this->registerStock_Serie();
         $this->registerArticulo_Kit();
         $this->registerTypeConsecutive();
@@ -954,6 +975,30 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(Movimiento_cierreInterface::class, function ($app) {
             return new Movimiento_cierreRepository(new Movimiento_cierre());
+        });
+    }
+     public function registerGuiaRemisionDetalle()
+    {
+        $app = $this->app;
+
+        $app->bind(GuiaRemisionDetalleInterface::class, function ($app) {
+            return new GuiaRemisionDetalleRepository(new GuiaRemisionDetalle());
+        });
+    }
+     public function registerGuiaRemisionProducto()
+    {
+        $app = $this->app;
+
+        $app->bind(GuiaRemisionProductoInterface::class, function ($app) {
+            return new GuiaRemisionProductoRepository(new GuiaRemisionProducto());
+        });
+    }
+    public function registerGuiaRemision()
+    {
+        $app = $this->app;
+
+        $app->bind(GuiaRemisionInterface::class, function ($app) {
+            return new GuiaRemisionRepository(new GuiaRemision());
         });
     }
     public function registerMovimiento_Articulo_cierre()
@@ -1941,6 +1986,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(NaturalezaInterface::class, function ($app) {
             return new NaturalezaRepository(new Naturaleza());
+        });
+    }
+    public function registerTipoTraslado()
+    {
+        $app = $this->app;
+
+        $app->bind(TipoTrasladoInterface::class, function ($app) {
+            return new TipoTrasladoRepository(new TipoTraslado());
         });
     }
     public function registerStock_Serie()

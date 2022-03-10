@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "barryvdh/laravel-dompdf": "0.8.2",
         "doctrine/dbal": "^2.5",
+        "dompdf/dompdf": "^0.8.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "~2.1.0"
@@ -51,6 +52,9 @@
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     }
 }
