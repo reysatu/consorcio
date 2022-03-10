@@ -94,6 +94,13 @@
                     list: false,
 
                 },
+                idventa_referencia: {
+                    title: 'idventa_referencia',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
                 serie_comprobante: {
                     title: 'Serie',
 
@@ -161,7 +168,7 @@
                     var idtipodocumento = $(this).attr('data-idtipodocumento');
                     var idventa_referencia = $(this).attr('data-idventa_referencia');
                     // alert(idventa_referencia);
-                    if(idventa_referencia != null || idventa_referencia != "") {
+                    if(idventa_referencia != "null" && idventa_referencia != "") {
                         AlertFactory.textType({
                             title: '',
                             message: 'Ya se emitio una nota de este documento!',
@@ -173,11 +180,11 @@
                     if(idtipodocumento == "07") {
                         return false;
                     }
+
                     $.post("movimientoCajas/get_caja_diaria", {},
                         function (data, textStatus, jqXHR) {
                             // console.log();
                             if (data.length > 0) {
-
                                 find_documento(idventa);
                             } else {
                                 AlertFactory.textType({
@@ -271,6 +278,7 @@
                         $("#idmoneda").val(data.documento[0].idmoneda);
                         $("#tipo_comprobante").val(data.documento[0].tipo_comprobante);
                         $("#t_monto_total").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
+                        $("#condicion_pago").val(parseFloat(data.documento[0].condicion_pago).toFixed(2));
 
                         $("#monto").attr("max", parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#monto").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
@@ -313,6 +321,10 @@
                         $("#modalVentas").modal("hide");
                        
                         $("#formulario-ventas").trigger("reset");
+
+                        var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+
+                        window.open("movimientoCajas/imprimir_comprobante/" + id);
                         
                         LoadRecordsButtonVentas.click();
                         AlertFactory.textType({

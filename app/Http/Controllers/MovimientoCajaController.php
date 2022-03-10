@@ -484,7 +484,7 @@ class MovimientoCajaController extends Controller
             $serie_ticket = $ticket[0]->serie;
             $consecutivo_ticket = $ticket[0]->actual;
 
-            // print_r($this->preparar_datos("dbo.ERP_VentasFormaPago", $data));
+            // print_r($this->preparar_datos("dbo.ERP_VentaFormaPago", $data));
             // exit;
             $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
             $solicitud_articulo = $solicitud_repositorio->get_solicitud_articulo($data["cCodConsecutivo"], $data["nConsecutivo"]);
@@ -499,7 +499,7 @@ class MovimientoCajaController extends Controller
 
             $data_venta = (array)$solicitud[0];
             $data_venta["descuento_id"] = explode("*", $solicitud[0]->descuento_id)[0];
-            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
             $data_venta["numero_comprobante"] = $data["numero_comprobante"];
             $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
@@ -687,15 +687,15 @@ class MovimientoCajaController extends Controller
          
 
 
-            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_venta));
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
             $data_ticket = $data_venta;
             $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
-            $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
             $data_ticket["numero_comprobante"] = $consecutivo_ticket;
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_ticket));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
            
             for ($i=0; $i < count($solicitud_articulo); $i++) { 
                 if($solicitud_articulo[$i]->cOperGrat == "-.-") {
@@ -770,10 +770,10 @@ class MovimientoCajaController extends Controller
                     }
                 }
                 
-                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentasDetalle", "consecutivo");
-                // print_r($this->preparar_datos("dbo.ERP_VentasDetalle", $data_venta_detalle));
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasDetalle", $data_venta_detalle));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
 
               
                 // print_r($res);
@@ -790,7 +790,7 @@ class MovimientoCajaController extends Controller
               
                 $data_ticket_detalle =  (array)$solicitud_articulo[$i];
                 $data_ticket_detalle["idventa"] = $data_ticket["idventa"];                
-                $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentasDetalle", "consecutivo");
+                $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
 
                 
                 if(count($solicitud_credito) > 0) {
@@ -857,7 +857,7 @@ class MovimientoCajaController extends Controller
                     }
                 }
 
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasDetalle", $data_ticket_detalle));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
                 // print_r($res);
             }
                 
@@ -875,7 +875,7 @@ class MovimientoCajaController extends Controller
                
                 if($i == 0) {
 
-                    $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentasFormaPago", "consecutivo");
+                    $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
                    
                 } else {
                     $data_formas_pago["consecutivo"][$i] = $data_formas_pago["consecutivo"][$i-1] + 1;
@@ -950,7 +950,7 @@ class MovimientoCajaController extends Controller
             $caja_diaria_repositorio->update_totales($update_caja_diaria);
             // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
 
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasFormaPago", $data_formas_pago));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
 
             //  PARA TICKET
             $data_formas_pago_ticket = $data;
@@ -959,7 +959,7 @@ class MovimientoCajaController extends Controller
                
                 if($i == 0) {
 
-                    $data_formas_pago_ticket["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentasFormaPago", "consecutivo");
+                    $data_formas_pago_ticket["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
                    
                 } else {
                     $data_formas_pago_ticket["consecutivo"][$i] = $data_formas_pago_ticket["consecutivo"][$i-1] + 1;
@@ -968,7 +968,7 @@ class MovimientoCajaController extends Controller
                 
             }
 
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasFormaPago", $data_formas_pago_ticket));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
 
 
 
@@ -1011,7 +1011,7 @@ class MovimientoCajaController extends Controller
 
             $data_venta = array();
            
-            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Ventas", "idventa");
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
             $data_venta["numero_comprobante"] = $data["numero_comprobante"];
             $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
@@ -1049,12 +1049,12 @@ class MovimientoCajaController extends Controller
             $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
 
             $data_venta["idventa_comprobante"] = "";
-            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Ventas", $data_venta));
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
             for ($i=0; $i < count($data["nrocuota"]); $i++) { 
                 $data_venta_detalle = array();
                 $data_venta_detalle["idventa"] = $data_venta["idventa"];
-                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentasDetalle", "consecutivo");
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
                 $data_venta_detalle["idarticulo"] = $parametro_cuota[0]->value;
                 $data_venta_detalle["um_id"] = "07"; //codigo unidad
                 $data_venta_detalle["cantidad"] = 1;
@@ -1078,7 +1078,7 @@ class MovimientoCajaController extends Controller
                 $data_venta_detalle["valor_cuota_pagada"] = $data["monto_pago_credito"][$i];
                 $data_venta_detalle["int_moratorio_pagado"] = "";
 
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasDetalle", $data_venta_detalle));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                 
                 $update_solicitud_cronograma = array();
                 $update_solicitud_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
@@ -1104,7 +1104,7 @@ class MovimientoCajaController extends Controller
                
                 if($fp == 0) {
 
-                    $data_formas_pago["consecutivo"][$fp] = $repo->get_consecutivo("ERP_VentasFormaPago", "consecutivo");
+                    $data_formas_pago["consecutivo"][$fp] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
                    
                 } else {
                     $data_formas_pago["consecutivo"][$fp] = $data_formas_pago["consecutivo"][$fp-1] + 1;
@@ -1183,7 +1183,7 @@ class MovimientoCajaController extends Controller
             $caja_diaria_repositorio->update_totales($update_caja_diaria);
             // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
 
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentasFormaPago", $data_formas_pago));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
            
 
             //ACTUALIZAR SALDOS EN SOLICITUD

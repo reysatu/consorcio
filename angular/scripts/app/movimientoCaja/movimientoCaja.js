@@ -2510,7 +2510,7 @@
             });
         }, true);
 
-
+        
         function find_solicitud_credito(id) {
 
             $.post("solicitud/find", { id: id },
