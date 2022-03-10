@@ -146,12 +146,15 @@ class VentasController extends Controller
                     $data_venta["devolucion_producto"] = 0;
                 }
 
-                if ($data["tipo_comprobante"] == "0" || $data["anticipo"] > 0) {
+                if ($data["tipo_comprobante"] == "0" && $data["anticipo"] > 0) {
 
                     $data_venta["devolucion_producto"] = 1;
                 }
 
-               
+                if ($data["condicion_pago"] == "1") {
+
+                    $data_venta["devolucion_producto"] = 1;
+                }
 
             }
 
