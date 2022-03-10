@@ -185,6 +185,11 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     
     require app_path() . '\Http\Routes\Ventas.php';
 
+
+    // Creditos y Cobranzas
+    require app_path() . '\Http\Routes\RenegociacionMora.php';
+
+
     //Route Purchases
 
     require app_path() . '\Http\Routes\Requirements.php';
