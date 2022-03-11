@@ -2237,13 +2237,117 @@
           }
 
         };
+        $(document).on("change", "input[name='tipo']", function () {
+            var tipo = $(this).val();
+            // proforma
+            if (tipo == "P") {
+                $("#idventa").val("");
+                $("#documento").val("");
+                $(".venta").hide();
+                $(".proforma").show();
+                
+                $("#idTipoOperacion").val("7*R");
+            }
+            // nota
+            if (tipo == "N") {
+                $("#cCodConsecutivoOS").val("");
+                $("#nConsecutivoOS").val("");
+
+                 $("#idTipoOperacion").val("7*R");
+                
+                $(".proforma").hide();
+                $(".venta").show();
+            }
+        });
+
         function newMovimiento()
         {
             titlemodalMovimieto.html('Nueva Entrega');
             modalMovimieto.modal('show');
             var verProforma='CR';
             cargar_proformas(verProforma);
+            cargar_notas()
         }
+         $(document).on("change", "#idventa", function () {
+            var idventa = $(this).val();
+            var documento =  $('#idventa').find(':selected').data('documento');
+            
+            // alert(documento);
+            if(idventa == "") {
+                return false;
+            }
+
+            $("#documento").val(documento);
+           
+
+            RESTService.get('entrega_servicesTecnicos/get_venta_detalle', idventa, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data = response.data;
+                    var cont = 0;
+                    if (idMovimiento.val() == '') {
+                        articulo_mov_det.html("");
+
+                        data.map(function (index) {
+                            var ver = 'A';
+                            var tipo = 'NA';
+                            var codl = "";
+                            var datl = "";
+                            if (index.serie == '1') {
+                                ver = 'N';
+                            }
+                            if (index.serie == '1') {
+                                tipo = 'SE';
+                            } else if (index.lote == '1') {
+                                tipo = 'LE';
+                                codl = index.idLote;
+                            }
+                            var codl = "";
+                            var datl = "";
+                            var idAlmacen = "";
+                            var idLocalizacion = "";
+                            var costo = costoAS.val();
+                            var costo_total = "";
+                            var precio = "";
+                            var precioTotal = "";
+                            // add 
+                            cont = cont + 1;
+                            // console.log("entro287");
+                            addArticuloTable(index.idProducto,
+                                index.description, Math.trunc(index.cantidad),
+                                ver, index.idDetalleRepues, tipo, codl,
+                                datl, idAlmacen,
+                                idLocalizacion,
+                                index.costo,
+                                costo_total,
+                                index.precio_unitario,
+                                precioTotal, Math.trunc(index.cantidad));
+
+                        })
+                    }
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error . Intente nuevamente.',
+                        type: 'info'
+                    });
+                }
+            });
+        });
+        function cargar_notas() {
+            $.post("entrega_servicesTecnicos/get_ventas_entrega", {},
+                function (data, textStatus, jqXHR) {
+                    $("#idventa").html('');
+                    $("#idventa").append('<option value="">Seleccionar</option>');
+                    _.each(data, function (item) {
+                        $("#idventa").append('<option data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" value="' + item.idventa + '">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.razonsocial_cliente + '</option>');
+                    });
+                    $("#idventa").select2();
+                },
+                "json"
+            );
+        }
+
          $scope.addArticulo = function()
         {   
             var bval = true;
@@ -2306,15 +2410,16 @@
              
            }
         });
-        function getDataFormMovement () {
-            RESTService.all('register_movements/data_form', '', function(response) {
+        function getDataFormMovement () { 
+            RESTService.all('entrega_servicesTecnicos/data_formRegi', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     idTipoOperacion.append('<option value="" >Seleccionar</option>');
                      _.each(response.operaciones, function(item) {
                         var opera='7'+'*'+'R';
                         naturalezaGeneral='R';
-                        idTipoOperacion.append('<option value="'+opera+'" selected>RESERVA ST</option>');
+                        idTipoOperacion.append('<option value="'+item.IdTipoOperacion+'*'+item.idNaturaleza+'" selected>'+item.descripcion+'</option>');
                     });
+                      $("#idTipoOperacion").val("7*R");
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.moneda, function(item) {
                         idMoneda.append('<option  value="'+item.Value+'">'+item.DisplayText+'</option>');
