@@ -52,8 +52,9 @@ class Entrega_servicesTecnicoController extends Controller
             $data['idTipoOperacion'] =$data['idTipoOperacion'];
             $data['naturaleza'] =$naturaleza;
             $data['observaciones'] = strtoupper($data['observaciones']);
-            $data['cCodConsecutivo'] = strtoupper($data['cCodConsecutivo']);
-            $data['nConsecutivo'] = strtoupper($data['nConsecutivo']);
+            $data['cCodConsecutivo'] = (isset($data['cCodConsecutivo'])) ? strtoupper($data['cCodConsecutivo']) : "";
+            $data['nConsecutivo'] = (isset($data['nConsecutivo'])) ? strtoupper($data['nConsecutivo']) : "";
+            
             $consecutivo_proforma=$repoM->get_consecutivo_proforma(strtoupper($data['cCodConsecutivo']),strtoupper($data['nConsecutivo']));
             if($data['observaciones']==''){
                 $data['observaciones']=null;

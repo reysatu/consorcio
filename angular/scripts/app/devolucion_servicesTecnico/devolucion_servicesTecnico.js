@@ -950,7 +950,15 @@
         }
         $scope.guardarMovimientoDetalle = function () {
             var bval = true;
-            bval = bval && cCodConsecutivoOS.required();
+            if($("#tipo").val() == "P") {
+
+                bval = bval && cCodConsecutivoOS.required();
+            }
+
+            if($("#tipo").val() == "N") {
+
+                bval = bval && $("#idventa").required();
+            }
             bval = bval && fecha_registro.required();
             var iChe = 'I';
             var cont_se = 0;//contador de check de lotes y series 
@@ -969,6 +977,9 @@
                 });
                 return false;
             }
+
+            // alert("bval 1 => "+bval);
+
             if (naturalezaGeneral == "C") {
                 acodigos.forEach(function (val, index) {
                     var cosr = $('#cosMs_' + val);
@@ -986,13 +997,16 @@
                     bval = bval && cosr.required();
                 });
             }
-
+            // alert("bval => "+bval);
             var precirIn = 'A';
             if (naturalezaGeneral == "S" || naturalezaGeneral == "A") {
                 acodigos.forEach(function (val, index) {
                     var preM = $('#preMs_' + val);
                     bval = bval && preM.required();
+                    console.log("bval => ");
+                    console.log(bval);
                 });
+
 
                 acodigos.forEach(function (val, index) {
                     var cosr = $('#preMs_' + val).val();
@@ -1002,6 +1016,7 @@
 
                 })
             };
+           
             if (precirIn == 'I') {
                 AlertFactory.showWarning({
                     title: '',
