@@ -13,6 +13,7 @@
 
     function ProformaCtrl($scope, _, RESTService, AlertFactory)
     {   
+        var proformaTotal;
         var descuentos;
         var articuloPrecio;
         var redondeo;
@@ -2020,6 +2021,7 @@
             clean_totale();
              calcular_total_repuesto();
               calcular_total_MO();
+              llenarproformasFiltro();
               sumar_key();
           
         }
@@ -2178,13 +2180,43 @@
             });
         }
         getDataForOrdenServicio();
+        function llenarproformasTotal(id){
 
+            cCodConsecutivo_orden.html("");
+            cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+             _.each(proformaTotal, function(item) {
+                var idt=item.cCodConsecutivo+'_'+item.nConsecutivo;
+                console.log(idt);
+                console.log(id);
+                 if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                }else if(item.cCodConsecutivo+'_'+item.nConsecutivo==id){
+                    console.log("entro origin");
+                    cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');  
+                } 
+            
+            });
+        }
+         function llenarproformasFiltro(){
+            cCodConsecutivo_orden.html("");
+            cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+             _.each(proformaTotal, function(item) {
+                 if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                        } 
+            });
+        }
         function getDataForProforma () {
             RESTService.all('proformas/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    cCodConsecutivo_orden.html("");
                      cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+                     proformaTotal=response.codigo_proforma;
                      _.each(response.codigo_proforma, function(item) {
-                        cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                        if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                        } 
+                       
                     });
                      igv=response.igv[0].value;
                      // repuestos_array=response.articulos_repuestos;
@@ -2268,7 +2300,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="edit-proforma" data-id="'+data.record.cCodConsecutivo
+                        return '<a href="javascript:void(0)" class="edit-proforma" data-idOt="'+data.record.cCodConsecutivoOS
+                            +'_'+data.record.nConsecutivoOS+'" data-id="'+data.record.cCodConsecutivo
                             +'_'+data.record.nConsecutivo+'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
@@ -2289,6 +2322,8 @@
             recordsLoaded: function(event, data) {
                 $('.edit-proforma').click(function(e){
                     var id = $(this).attr('data-id');
+                    var idt = $(this).attr('data-idOt');
+                    llenarproformasTotal(idt);
                     findRegister_Proforma(id);
                     e.preventDefault();
                 });
