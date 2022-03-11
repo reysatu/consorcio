@@ -11,7 +11,7 @@
         'sys.utils.libraries',
         //'sys.templates',
         'sys.utils.services',
-        
+        'sys.app.guiaRemisions',
         'sys.utils.utils',
         'angucomplete-alt',
         'sys.utils.widgets',
@@ -19,6 +19,7 @@
         'sys.api',
         'sys.app.extends',
         'sys.app.home',
+        'sys.app.tipoTraslados',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',

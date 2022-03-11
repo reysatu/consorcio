@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Register_movement;
+namespace App\Http\Recopro\GuiaRemision;
 use Illuminate\Support\Facades\DB;
 
-class Register_movementRepository implements Register_movementInterface
+class GuiaRemisionRepository implements GuiaRemisionInterface
 {
     protected $model;
     private static $_ACTIVE = 1;
-    public function __construct(Register_movement $model)
+    public function __construct(GuiaRemision $model)
     {
         $this->model = $model; 
        
@@ -34,10 +34,7 @@ class Register_movementRepository implements Register_movementInterface
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
-            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
+            $q->where('cCodConsecutivo', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
         });
 
     }
@@ -65,58 +62,39 @@ class Register_movementRepository implements Register_movementInterface
         });
 
     }
-     public function search_entrega($s)
-    {
-        return $this->model->where(function($q) use ($s){
-            $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC')->where('naturaleza','R');
-            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->where('naturaleza','R');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%')->where('naturaleza','R');
-            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->where('naturaleza','R');
-        });
-
-    }
-    public function get_ventas_entrega()
-    {
-        $sql = "select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa)  where so.estado='6' and so.t_monto_total=so.facturado";
-
-        return DB::select($sql);
-
-    }
-     public function search_devolucion($s)
-    {
-        return $this->model->where(function($q) use ($s){
-            $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC')->where('naturaleza','D');
-            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-        });
-
-    }
-    public function get_movemen_lote($id){
-         $mostrar=DB::select("select * from ERP_Movimiento_Articulo as mo inner join ERP_Lote as l on mo.idLote=l.idLote where mo.idMovimiento='$id'");
+     
+     
+    
+    public function getseriesGuia($idUsuario){
+         $mostrar=DB::select("select * from ERP_ConsecutivosComprobantes as cc inner join ERP_ConsecutivoComprobanteUsuario as ccu on (ccu.idConsecutivo=cc.id_consecutivo) where ccu.idUsuario='$idUsuario' and cc.IdTipoDocumento='09'");
          return $mostrar; 
     }
-    public function get_consecutivo_proforma($cod,$nro){
-         $mostrar=DB::select("select * from ERP_ProformaDetalle where cCodConsecutivo='$cod' and nConsecutivo='$nro'");
-         return $mostrar; 
-    }
-    public function get_movemen_Serie($id){
-        $mostrar=DB::select("select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie  inner join ERP_Movimiento_Articulo as ma on ma.consecutivo=md.consecutivo where md.idMovimiento='$id'");
-         return $mostrar; 
-    }
-    public function get_movemen_Serie_entrega($id){
-        $mostrar=DB::select("select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie  inner join ERP_Movimiento_Articulo as ma on ma.idMovimiento=md.idMovimiento where md.idMovimiento='$id' and(md.idMovimiento=ma.idMovimiento and md.Consecutivo=ma.Consecutivo)");
+    public function getTipoTraslado(){
+         $mostrar=DB::select("SELECT * FROM ERP_TipoTraslado where estado='A'");
          return $mostrar; 
     }
 
-
-    //  public function get_movemen_Serie($id){
-    //     $mostrar=DB::select("select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_Movimiento_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie  inner join ERP_Movimiento_Articulo as ma on ma.consecutivo=md.consecutivo where md.idMovimiento='$id'");
-    //      return $mostrar; 
-    // }
     public function allActive()
     {
        return $this->model->where('estado', self::$_ACTIVE)->get();
+    }
+     public function delete_detalle($conse,$nConsecutivo)
+    {
+        $mostrar=DB::delete("DELETE FROM ERP_GuiaRemisionDetalle where cCodConsecutivo='$conse'and nConsecutivo='$nConsecutivo'");
+         return $mostrar; 
+    }
+      public function destroy_guiaRemisionProduDetalle($conse,$nConsecutivo,$consecutivo)
+    {
+        $mostrar=DB::delete("DELETE FROM ERP_GuiaRemisionDetalle where cCodConsecutivo='$conse'and nConsecutivo='$nConsecutivo' and consecutivo=$consecutivo");
+
+        $mostrar2=DB::delete("DELETE FROM ERP_GuiaRemisionProducto where cCodConsecutivo='$conse'and nConsecutivo='$nConsecutivo' and consecutivo=$consecutivo");
+
+         return $mostrar; 
+    }
+    public function get_anularRemision($conse,$nConsecutivo)
+    {
+        $mostrar=DB::update("update ERP_GuiaRemision SET estado='2' where cCodConsecutivo='$conse'and nConsecutivo='$nConsecutivo'");
+         return $mostrar; 
     }
      public function create(array $attributes)
     {
@@ -135,14 +113,14 @@ class Register_movementRepository implements Register_movementInterface
         $new=$actu+1;
         return $new; 
     }
-    public function update($id, array $attributes)
+    public function update($ida,$idb ,array $attributes)
     {
         $attributes['user_updated'] = auth()->id();
-        $model = $this->model->findOrFail($id);
-        $model->update($attributes);
+           $model =  $this->model ; 
+        $model->where('cCodConsecutivo',$ida)->where('nConsecutivo',$idb)->update($attributes);
     }
-     public function get_movement_articulo($id){
-        $mostrar=DB::select("select Mo.costo as costo2,* from ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id where mo.idMovimiento='$id'");
+     public function get_guiaRemision_articulo($id,$idb){
+        $mostrar=DB::select("select pr.description,rm.cCodConsecutivo as cCodConsecutivo, rm.nConsecutivo,rm.consecutivo,rm.idarticulo,rm.cantidad from ERP_GuiaRemisionProducto AS rm  inner join ERP_Productos as pr on rm.idarticulo=pr.id where rm.cCodConsecutivo='$id' and  rm.nConsecutivo='$idb'");
         return $mostrar; 
     }
     public function getOperationFind(){
@@ -187,6 +165,22 @@ ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr
     {
         $mostrar=DB::select("SELECT ma.cantidad as cantidad, ma.consecutivo as consecutivo,pr.description as producto,al.description as almacen,lo.descripcion as localizacion,lot.Lote as lote,un.Abreviatura as unidad FROM ERP_Movimiento_Articulo as ma left JOIN ERP_Almacen  as al on al.id=ma.idAlmacen LEFT join ERP_Localizacion as lo on lo.idLocalizacion=ma.idLocalizacion inner join ERP_Productos as pr on pr.id=ma.idArticulo INNER JOIN ERP_UnidadMedida as un on pr.um_id=un.IdUnidadMedida LEFT JOIN ERP_Lote as lot  on lot.idLote=ma.idLote where ma.idMovimiento='$id'");
          return $mostrar; 
+    }
+    
+    public function get_guiaRemision($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "SELECT *, FORMAT(fechaEmision, 'yyyy-MM-dd') AS fechaEmision, FORMAT(fechaInicioTraslado, 'yyyy-MM-dd') AS fechaInicioTraslado from ERP_GuiaRemision WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+     public function get_guia_Serie($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_GuiaRemisionDetalle as md inner join ERP_Serie as s on md.idSerie=s.idserie  inner join ERP_GuiaRemisionProducto as ma on ma.consecutivo=md.consecutivo WHERE md.cCodConsecutivo='{$cCodConsecutivo}' AND md.nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+        return $result;
     }
 
 

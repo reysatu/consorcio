@@ -60,6 +60,10 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Transfers.php';
 
+     require app_path() . '\Http\Routes\GuiaRemisions.php';
+
+     require app_path() . '\Http\Routes\TipoTraslados.php'; 
+
     require app_path() . '\Http\Routes\ReceptionTransfers.php';
 
     require app_path() . '\Http\Routes\Buyers.php';

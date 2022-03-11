@@ -1,3 +1,4 @@
+ 
 <style>
    .table-wrapper {
 
@@ -27,26 +28,51 @@
   text-align: left;
   vertical-align: middle;
 }
+h5 {
+  font: sans-serif;
+  margin-top: 30px;
+  text-align: center;
+}
+h5.linea {
+  position: relative;
+  z-index: 1;
+}
+h5.linea:before {
+  border-top: 2px solid #D6DBDF;
+  content: "";
+  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 95%;
+  z-index: -1;
+}
+h5.linea span {
 
+  background: #fff;
+  padding: 0 15px;
+}
 </style>
 <div class="panel  panel-danger-admin">
     <div class="panel-heading">
-        Gestión de Entrega de Servicio
+        Gestión de Guía de Remision
     </div>
     <div class="panel-body">
         <div class="row"> 
             <div class="col-md-12">
-                <div id="table_container_Register_Movement" class="table-responsive"></div>
+                <div id="table_container_GuiaRemision" class="table-responsive"></div>
             </div>
         </div>
        
         
         <div ng-include src="'/templates/partials/crop.html'"></div>
     </div>
-</div>
-<div class="modal" id="modalMovimieto" role="dialog">
-            <div class="modal-dialog  modal-lg" role="document">
-                <div class="modal-content">
+</div> 
+<div class="modal" id="modalMovimieto" role="dialog" style="overflow-y: scroll;">
+            <div class="modal-dialog  modal-lg" style="width:90%;" role="document">
+                <div class="modal-content"> 
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -56,102 +82,168 @@
                     <div class="modal-body">
                         <div class="form-horizontal">
                             <div class="row">
-                                <input type="radio" name="tipo" value="P"
-                                        checked class="col-sm-1">
-                                <label class="col-sm-2 control-label" for="tipo">Proforma</label>
-                                <input type="radio"  name="tipo" value="N" class="col-sm-1">
-                                <label class="col-sm-2 control-label" for="tipo">Venta</label>
-                                
-                            </div>
-                            <br>
-                            <div class="row">
+                              <form id="id_formulario">
+                                 <div class="col-md-12">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Serie</label>
+                                        <div class="col-sm-3">
+                                               <select id="cCodConsecutivo" name="cCodConsecutivo" class="form-control input-sm"></select>
+                                        </div>
+                                        <label class="col-sm-2 control-label">N°</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control input-sm" name="nConsecutivo"  id="nConsecutivo" readonly>
+                                        </div>
+                                        
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                       <div class="form-group">
+                                          <label class="col-sm-4 control-label">Estado</label>
+                                          <div class="col-sm-4"> 
+                                            <select id="estado" class="form-control input-sm"  name="estado" disabled>
+                                             <option value=""></option>
+                                             <option value="0">Emitido</option>
+                                             <option value="1">Procesado</option>
+                                             <option value="2">Anulado</option>
+                                            </select>
+                                          </div>
+                                       </div> 
+                                    </div>
+                                 </div> 
+                                 <br>
 
                                 <div class="col-md-12">
                                     <input type="hidden" id="idMovimiento" >
                                     <input type="hidden" id="idNaturaleza" >
-                                    <div class="form-group">
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Punto de Partida</label>
+                                        <div class="col-sm-8">
+                                            <textarea name="puntoPartida" id="puntoPartida" rows="2" class="form-control input-sm"></textarea>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">  
+                                        <label class="col-sm-4 control-label">Fecha Emision</label>
+                                        <div class="col-sm-8">
+                                            <input type="date" class="form-control input-sm" name="fechaEmision" id="fechaEmision">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">  
+                                        <label class="col-sm-4 control-label">Fecha Traslado</label>
+                                        <div class="col-sm-8">
+                                            <input name="fechaInicioTraslado"  type="date" class="form-control input-sm" id="fechaInicioTraslado">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">  
+                                        <label class="col-sm-4 control-label">Costo mínimo</label>
+                                        <div class="col-sm-8">
+                                            <input name="costoMini" type="number" class="form-control input-sm"  id="costoMini">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Punto de Llegada</label>
+                                        <div class="col-sm-8">
+                                            <textarea id="puntoLlega" name="puntoLlega" rows="2" class="form-control input-sm"></textarea>
+                                        </div>
+                                      </div>
 
-                                       <input type="hidden" class="form-control input-sm " id="idcontrol_calidad" />
-                                        <label class="col-sm-2 control-label proforma">Proforma</label>
-                                        <div class="col-sm-8 proforma">
-                                            <select  style="width: 100%;" class="form-control input-sm" id="cCodConsecutivoOS"></select>
+                                      <div class="form-group">  
+                                        <label class="col-sm-4 control-label">Ruc Destinatario</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control input-sm" onkeypress="return soloNumeros(event)" name="rucDestinatario" id="rucDestinatario"  maxlength="11">
                                         </div>
-                                        <div class="col-sm-2 proforma">
-                                            <input type="text" class="form-control input-sm"  id="nConsecutivoOS" readonly/>
+                                      </div>
+                                      <div class="form-group">  
+                                        <label class="col-sm-4 control-label">Razon social Destinatario</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="razonSocialDestinatario" class="form-control input-sm" id="razonSocialDestinatario">
                                         </div>
-                                        <label class="col-sm-2 control-label venta" style="display: none;">Venta</label>
-                                        <div class="col-sm-8 venta" style="display: none;">
-                                            <select  style="width: 100%;" class="form-control input-sm" id="idventa"></select>
+                                       </div>
+                                       <div class="form-group">
+                                        <label class="col-sm-4 control-label">Motivo de Traslado</label>
+                                        <div class="col-sm-8">
+                                             <select id="idtraslado" name="idtraslado" class="form-control input-sm"></select>
                                         </div>
-                                        <div class="col-sm-2 venta" style="display: none;">
-                                            <input type="text" class="form-control input-sm"  id="documento" readonly/>
-                                        </div>
+                                      </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Operación</label>
-                                        <div class="col-sm-3">
-                                           <select id="idTipoOperacion" class="form-control input-sm" disabled></select>
+                                </div>
+                                <div class="col-md-12"> 
+                                    <div class="col-md-6">
+                                      <h5 class="linea"><span>UNIDAD DE TRANSPORTE Y CONDUCTOR</span></h5>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Marca</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="marca" id="marca">
                                         </div>
-                                        <label class="col-sm-1 control-label">Moneda</label>
-                                        <div class="col-sm-2">
-                                             <select id="idMoneda" class="form-control input-sm" disabled></select>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">N° Placa</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="placa" id="placa">
                                         </div>
-                                        <label class="col-sm-1 control-label">Fecha</label>
-                                        <div class="col-sm-3">
-                                            <input type="date" class="form-control input-sm" id="fecha_registro">
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">N° Constancia Inscripción</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="nroConstanciaInscripcion" id="nroConstanciaInscripcion">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Observaciones</label>
-                                        <div class="col-sm-10">
-                                            <textarea id="observaciones" rows="2"
-                                                                  class="form-control input-sm"></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">N° Licencia de Conducir</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="nroLicenciaConductor" id="nroLicenciaConductor">
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Estado</label>
-                                        <div class="col-sm-2">
-                                            <select type="text" class="form-control input-sm" id="p_state" disabled>
-                                              <option value=""></option>
-                                               <option value="0">Registrado</option>
-                                                <option value="1">Procesado</option>
-                                            </select>
+                                      </div>
+                                    </div> 
+                                    <div class="col-md-6">
+                                      <h5 class="linea"><span>EMPRESA DE TRANSPORTE</span></h5>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Ruc</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="rucEtransporte" id="rucEtransporte" onkeypress="return soloNumeros(event)" maxlength="11">
                                         </div>
-                                        <label class="col-sm-4  control-label">&nbsp;</label>
-                                        <div class="col-sm-4">
-                                             <button type="button" disabled class="btn btn-info btn-sm" id="ProcesarTransferenciaBoton">
-                                                <span class="fa fa-save"></span>
-                                                Procesar
-                                             </button>
-                                             <button type="button" class="btn btn-success btn-sm" id="btn_imprimirMovimiento">
-                                                <span class="fa fa-file-pdf-o"></span>
-                                                Imprimir
-                                             </button>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">Nombre o Razón Social</label>
+                                        <div class="col-sm-8">
+                                             <input type="text" class="form-control input-sm" name="razonSocialEtransporte" id="razonSocialEtransporte">
                                         </div>
-                                    </div>
+                                      </div>
+                                      <br>
+                                        <br>
+                                       <div class="form-group">
+                                         <div class="col-md-6">
+                                               <button type="button" class="btn btn-success btn-sm" id="btn_imprimirGuia">
+                                                    <span class="fa fa-file-pdf-o"></span>
+                                                    Imprimir
+                                           </button>
+                                         </div> 
+                                     </div>
+
+                                      
+                                      
+                                    </div>  
+                                </div>   
+                                    <div class="col-md-12"> 
                                     <br>
                                     <div class="form-group">
                                        <input type="hidden" id="ident_detalle">
-                                       <!--  <div class="col-sm-2">
+                                        <div class="col-sm-2">
                                               <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArticulo()">
                                                 <span class="fa fa-plus"></span>
                                                 Agregar Artículo
                                              </button>
-                                        </div> -->
+                                        </div>
                                     </div>
                                     <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
                                                 <thead>
                                                     <tr>
                                                         <th>Artículo</th>
-                                                        <th>Almacén</th>
-                                                        <th>Localización</th>
                                                         <th width="90px" height="20px">Cantidad</th>
-                                                        <th width="90px" height="20px">Cantidad Pendiente</th>
-                                                         <th width="90px" height="20px">Costo</th>
-                                                         <th>Costo Total</th>
-                                                         <th>Precio</th>
-                                                   <!--       <th>Precio Total</th> -->
                                                          <th width="50px"></th>
                                                         <th width="50px"></th>
                                                     </tr>
@@ -163,10 +255,15 @@
                             </div>   
                         </div>  
                     </div>
+                    </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_movimiento_detalle"  ng-click="guardarMovimientoDetalle()">
+                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_emitir_guia"  ng-click="EmitirGuiaRemision()">
                             <span class="fa fa-save"></span>
-                            Guardar
+                            Emitir
+                        </button>
+                         <button type="button" class="btn btn-warning btn-sm"  id="btn_anularGuia"  ng-click="anularGuiaResimion()">
+                            <span class="fa fa-times"></span>
+                            Anular
                         </button>
                         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
                             <span class="fa fa-times"></span> Cerrar
@@ -221,7 +318,7 @@
           <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> El registro será eliminado. ¿Está seguro?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger-admin btn-sm"    ng-click="EliminarMovimiento()">
+          <button type="button" class="btn btn-danger-admin btn-sm" ng-click="EliminarMovimiento()">
               Eliminar 
           </button>
           <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
@@ -397,30 +494,36 @@
                         </div> 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Artículo</label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-6">
                                     <input type="hidden" id="idLoteMll2" readonly class="form-control input-sm">
                                      <input type="hidden" id="idLoteMll" readonly class="form-control input-sm">
                                         <input type="hidden" id="idProductoMll" readonly class="form-control input-sm">
                                          <input type="hidden" id="costoAL" readonly class="form-control input-sm">
                                         <input type="text" id="desProductoMll" readonly class="form-control input-sm">
                                 </div>
-                           
+                            <label class="col-sm-2 control-label">Cantidad</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="cantProductoMll" onkeypress="return soloNumeros(event)"  class="form-control input-sm">
+                            </div>    
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Lote</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
                                 <input type="text" id="codigoLoteMll" class="form-control input-sm">
                                 </div>
-                            <label class="col-sm-3 control-label">Fecha Vencimiento</label>
-                            <div class="col-sm-3">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Fecha Vencimiento</label>
+                            <div class="col-sm-4">
                             <input type="text" id="fechaVl" readonly class="form-control input-sm">
-                            </div>       
+                            </div>    
                         </div>
                     </div>
                  </div>   
               </div>  
         </div>
         <div class="modal-footer">
+        <button id="btn_Lotd" disabled type="button" class="btn btn-danger-admin btn-sm"  ng-click="addLoteExi()" >Agregar</button>      
         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
         </div>
       </div>
@@ -459,11 +562,11 @@
                         </div>
                         <br>
                         <div class="form-group">
-                              <!--   <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 ">
+                                <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 ">
                                     <button id="btnAgreSer" type="button" class="btn btn-danger-admin btn-sm" ng-click="addtableSerie()" >Agregar Serie</button>  
                               
                                     <button id="btnSeleSerie" type="button" class="btn btn-danger-admin btn-sm" ng-click="addSeleccSerie()" >Seleccionar Serie </button>  
-                                </div>    --> 
+                                </div>    
                         </div>
                         <br>
                         <div class="row">

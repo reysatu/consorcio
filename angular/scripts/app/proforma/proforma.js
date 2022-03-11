@@ -13,6 +13,7 @@
 
     function ProformaCtrl($scope, _, RESTService, AlertFactory)
     {   
+        var proformaTotal;
         var descuentos;
         var articuloPrecio;
         var redondeo;
@@ -199,7 +200,8 @@
                     nConsecutivo.prop('disabled',true);
                     nConsecutivo.val(data[0].nConsecutivo);
                     var valor_orden_servicio=data[0].cCodConsecutivoOS+'*'+data[0].nConsecutivoOS+'*'+data[0].IdMoneda+'*'+data[0].idcCondicionPago+'*'+data[0].idAsesor+'*'+data[0].asesor+'*'+data[0].idCliente+'*'+data[0].documento+'*'+data[0].idTipoCliente+'*'+data[0].razonsocial_cliente+'*'+data[0].cPlacaVeh+'*'+data[0].nKilometraje+'*'+data[0].cMotor+'*'+data[0].cColor;
-                    cCodConsecutivo_orden.val(valor_orden_servicio).trigger("change");
+                    var val=data[0].cCodConsecutivoOS+'*'+data[0].nConsecutivoOS;
+                    cCodConsecutivo_orden.val(val).trigger("change");
                     idAsesor.val(data[0].idAsesorProforma).trigger("change");
                     var hor=Number(data[0].nEstimadoHoras);
                     nEstimadoHoras.val(hor.toFixed(2));
@@ -2019,6 +2021,7 @@
             clean_totale();
              calcular_total_repuesto();
               calcular_total_MO();
+              llenarproformasFiltro();
               sumar_key();
           
         }
@@ -2039,8 +2042,12 @@
             if(cCodConsecutivo_orden.val()==""){
                 cleandatos();
             }else{
-                var total=cCodConsecutivo_orden.val();
-                var total=total.split('*');
+                var totalf=cCodConsecutivo_orden.val();
+                var total =  $('#cCodConsecutivo_orden').find(':selected').data('info');
+                console.log(total);
+                console.log("ggagagag");
+                total=total.split('*');
+
                 id_cliente_tipo_or.val(total[8]);
                 idMoneda.val(total[2]);
                 idcCondicionPago.val(total[3]);
@@ -2173,13 +2180,43 @@
             });
         }
         getDataForOrdenServicio();
+        function llenarproformasTotal(id){
 
+            cCodConsecutivo_orden.html("");
+            cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+             _.each(proformaTotal, function(item) {
+                var idt=item.cCodConsecutivo+'_'+item.nConsecutivo;
+                console.log(idt);
+                console.log(id);
+                 if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                }else if(item.cCodConsecutivo+'_'+item.nConsecutivo==id){
+                    console.log("entro origin");
+                    cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');  
+                } 
+            
+            });
+        }
+         function llenarproformasFiltro(){
+            cCodConsecutivo_orden.html("");
+            cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+             _.each(proformaTotal, function(item) {
+                 if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                        } 
+            });
+        }
         function getDataForProforma () {
             RESTService.all('proformas/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    cCodConsecutivo_orden.html("");
                      cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
+                     proformaTotal=response.codigo_proforma;
                      _.each(response.codigo_proforma, function(item) {
-                        cCodConsecutivo_orden.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
+                        if(item.est=='0' || item.est=='1' || item.est=='2'){
+                            cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
+                        } 
+                       
                     });
                      igv=response.igv[0].value;
                      // repuestos_array=response.articulos_repuestos;
@@ -2252,8 +2289,8 @@
                    
                 },
                 iEstado: {
-                    title: 'Fecha Registro',
-                     options: {0: 'Registrado', 1: 'Aprobada',2:'Entregada',3:'Entrega parcial',4:'Con devolucion'},
+                    title: 'Estado',
+                     options: {0: 'Registrado', 1: 'Aprobada',2:'Entregada',3:'Entrega parcial',4:'Con devolucion',5:'Cerrada',6:'Cancelada'},
                    
                 },
                 edit: {
@@ -2263,7 +2300,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="edit-proforma" data-id="'+data.record.cCodConsecutivo
+                        return '<a href="javascript:void(0)" class="edit-proforma" data-idOt="'+data.record.cCodConsecutivoOS
+                            +'_'+data.record.nConsecutivoOS+'" data-id="'+data.record.cCodConsecutivo
                             +'_'+data.record.nConsecutivo+'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
@@ -2284,6 +2322,8 @@
             recordsLoaded: function(event, data) {
                 $('.edit-proforma').click(function(e){
                     var id = $(this).attr('data-id');
+                    var idt = $(this).attr('data-idOt');
+                    llenarproformasTotal(idt);
                     findRegister_Proforma(id);
                     e.preventDefault();
                 });

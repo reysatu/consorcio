@@ -472,7 +472,7 @@
             dFecRec.val(actu);
             dFecEntrega.val(actu);
             horaRec.val(hora_ac);
-            idcCondicionPago.val('9').trigger("change");
+            idcCondicionPago.val('1').trigger("change");
             idMoneda.val('1').trigger("change");
             if(estado.val()!=''){
                 if(estado.val()==0 || estado.val()==1){
@@ -2917,7 +2917,12 @@ function getDatosCliente(){
                       // cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+'</option>');
                        idcCondicionPago.append('<option value="">Seleccionar</option>');
                      _.each(response.condicion_pago, function(item) {
-                        idcCondicionPago.append('<option value="'+item.id+'">'+item.description+'</option>');
+                        if(item.id==1){
+                               idcCondicionPago.append('<option value="'+item.id+'" selected>'+item.description+'</option>');
+                        }else{
+                               idcCondicionPago.append('<option value="'+item.id+'">'+item.description+'</option>');
+                        }
+                     
                     });
                        _.each(response.tipo_servicio, function(item) {
                         id_tipo.append('<option value="'+item.id+'">'+item.descripcion+'</option>');

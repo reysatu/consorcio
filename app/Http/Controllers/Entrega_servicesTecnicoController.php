@@ -11,6 +11,7 @@ use App\Http\Recopro\Register_movement\Register_movementTrait;
 use App\Http\Recopro\Proforma\ProformaTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Proforma\ProformaInterface;
+use App\Http\Recopro\Currency\CurrencyInterface;
 use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\Register_movement_Articulo\Register_movement_ArticuloInterface;
 use App\Http\Recopro\Lot\LotInterface;
@@ -18,6 +19,7 @@ use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleInterfac
 use App\Http\Recopro\Register_Transfer_Articulo\Register_Transfer_ArticuloInterface;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Operation\OperationInterface;
+use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\ProformaRequest;
 use DB;
 class Entrega_servicesTecnicoController extends Controller
@@ -27,6 +29,33 @@ class Entrega_servicesTecnicoController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
+    }
+    public function get_ventas_entrega(Register_movementInterface $Repo, Request $request)
+    {
+
+        $response = $Repo->get_ventas_entrega();
+        return response()->json($response);
+
+    }
+
+    public function data_form (Register_movementInterface $moventRepo,CurrencyInterface $currencyRepo, WarehouseInterface $WareRepo,OperationInterface $operRepo)
+    {
+        $moneda = parseSelectOnly($currencyRepo->allActive(), 'IdMoneda', 'Descripcion');
+        $almacen = parseSelectOnly($WareRepo->allActive(), 'id', 'description');
+        $operacion = parseSelectOnly($operRepo->allActive(), 'idTipoOperacion', 'descripcion');
+        $usuario=auth()->id();
+        $operaciones = $operRepo->getOperation_total($usuario);
+        $operaciones_entra = $operRepo->getOperation_entra($usuario);
+        $almacen_usuario = $WareRepo->getAlmacen_usuario($usuario);
+        return response()->json([
+            'status' => true,
+            'moneda' => $moneda,
+            'almacen' => $almacen,
+            'operacion' => $operacion,
+            'operaciones'=> $operaciones,
+            'operaciones_entra'=>$operaciones_entra,
+            'almacen_usuario'=>$almacen_usuario,
+        ]);
     }
  
     public function all(Request $request, Register_movementInterface $repo)
