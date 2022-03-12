@@ -500,6 +500,7 @@
                                         <option value="ING">INGRESO</option>
                                         <option value="EGR">EGRESO</option>
                                         <option value="BCO">DEPOSITO EN BANCO</option>
+                                        <option value="SEP">SEPARACIÓN</option>
                                     </select>
                                 </div>
                                 <label class="col-sm-2 control-label">Forma de pago</label>
@@ -507,6 +508,36 @@
                                     <select class="form-control input-sm" id="formaPagoAdd" disabled>
                                         <option value="EFE">EFECTIVO</option>
                                     </select>
+                                </div>
+
+                            </div>
+                            <div class="form-group separacion" style="display: none;">
+                                <input type="hidden" name="idcliente_m" id="idcliente_m">
+                                <label class="col-sm-2 control-label"> Documento</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control input-sm" id="documento_cliente">
+                                </div>
+                                <label class="col-sm-2 control-label">Razón Social</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control input-sm" id="razonsocial_cliente_m"
+                                    readonly>
+                                </div>
+
+                            </div>
+                            <div class="form-group separacion" style="display: none;">
+                                <label class="col-sm-2 control-label"> Tipo Doc.</label>
+                                <div class="col-sm-4">
+                                    <select id="tipo_doc_venta" name="tipo_doc_venta"
+                                    class="form-control input-sm"></select>
+                                </div>
+                                <label for="" class="control-label col-md-1">Serie </label>
+                                <div class="col-md-2">
+                                 
+                                    <select id="serie_comprobante_m" name="serie_comprobante_m"class="form-control input-sm"></select>
+                                </div>
+                                <label for="" class="control-label col-md-1">Número </label>
+                                <div class="col-md-2">
+                                    <input type="text" id="numero_comprobante_m" name="numero_comprobante_m" class="form-control input-sm" readonly="readonly">
                                 </div>
 
                             </div>
@@ -1710,6 +1741,7 @@
             </div>
             <form id="formulario-formas-pago">
                 <div class="modal-body">
+                    <input type="hidden" name="idventa_separacion" id="idventa_separacion">
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="" class="control-label col-md-4">Tipo de Forma de Pago</label>
@@ -1823,3 +1855,118 @@
 </div>
 
 
+<div class="modal" id="modaClientes" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="titleModalClientes"></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="cliente_id">
+                                <label class="col-sm-2 control-label">Tipo Documento</label>
+                                <div class="col-sm-4">
+                                    <select id="tipodoc" class="form-control input-sm"></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Documento</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="documento" maxlength="11">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Tipo Cliente</label>
+                                <div class="col-sm-4">
+                                    <select id="id_tipocli" class="form-control input-sm"></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Tipo Doc. de Venta</label>
+                                <div class="col-sm-4">
+                                    <select id="id_tipoDoc_Venta" class="form-control input-sm"></select>
+                                </div>
+
+
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="tienda_id">
+                                <label class="col-sm-2 control-label">Razon Social</label>
+                                <div class="col-sm-10">
+                                    <input id="razonsocial_cliente" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="tienda_id">
+                                <label class="col-sm-2 control-label">Dirección</label>
+                                <div class="col-sm-10">
+                                    <input id="direccion" class="form-control input-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Contacto</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="contacto">
+                                </div>
+                                <label class="col-sm-2 control-label">Correo</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="correo_electronico">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" class="form-control input-sm " id="tienda_id">
+                                <label class="col-sm-2 control-label">Celular</label>
+                                <div class="col-sm-4">
+                                    <input id="celular" class="form-control input-sm" />
+                                </div>
+                                <label class="col-sm-2 control-label">Teléfono</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control input-sm " id="telefono">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Departamento</label>
+                                <div class="col-sm-4">
+                                    <select id="departamento" class="form-control input-sm"></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Provincia</label>
+                                <div class="col-sm-4">
+                                    <select id="provincia" class="form-control input-sm"></select>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Distrito</label>
+                                <div class="col-sm-4">
+                                    <select id="distrito" class="form-control input-sm"></select>
+                                </div>
+                                <label class="col-sm-2 control-label">Estado Civil</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control input-sm" id="cEstadoCivil">
+                                        <option value="">Seleccionar</option>
+                                        <option value="S">Soltero</option>
+                                        <option value="C">Casado</option>
+                                        <option value="D">Divorciado</option>
+                                        <option value="V">Viudo</option>
+                                        <option value="X">Conviviente</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-admin btn-sm" id="btn_save_cliente">Guardar</button>
+                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+
+    </div>
+</div>

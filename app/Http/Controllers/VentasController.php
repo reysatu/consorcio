@@ -237,4 +237,13 @@ class VentasController extends Controller
             ]);
         }
     }
+
+    public function get_venta_separacion(VentasInterface $repo, Request $request) {
+        $data = $request->all();    
+
+        $result = $repo->get_venta_separacion($data["idcliente"]);
+
+        return response()->json($result);
+        
+    }
 }

@@ -153,4 +153,12 @@ class VentasRepository implements VentasInterface
         return $mostrar3;
     }
 
+    public function get_venta_separacion($idcliente) {
+        $sql = "SELECT v.* FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
+        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND v.aplicado_separacion<>'S'";
+
+        return DB::select($sql);
+    }
+
 }

@@ -73,8 +73,35 @@
         var table_demoninacionesDolares = $("#table_demoninacionesDolares");
         var totalDolares = $("#totalDolares");
         $('#btn_MovimientoInicio').click(function (e) {
-            modalMovimientoCaja.modal('show');
+            $.post("movimientoCajas/get_caja_diaria", {},
+                function (data, textStatus, jqXHR) {
+                    // console.log();
+
+                    if (data.length > 0) {
+
+                        modalMovimientoCaja.modal('show');
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Primero debe apertura la caja del día',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+                },
+                "json"
+            );
+           
         });
+
+        $("#documento_cliente").keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                getCliente("movimiento_caja");
+            }
+        });
+
+
         function cleanMovimientoCajaAdd() {
             cleanRequired();
             tipoMovimientoAdd.val("");
@@ -122,6 +149,7 @@
                }
         });
         tipoMovimientoAdd.change(function (e) {
+            $(".separacion").hide();
             if (tipoMovimientoAdd.val() == 'BCO') {
                 nrOperacion.prop('disabled', false);
                 banco.prop('disabled', false);
@@ -133,6 +161,11 @@
                 banco.val("").trigger("change");
                 cuentaBancaria.prop('disabled', true);
                 cuentaBancaria.val("");
+            }
+
+            if (tipoMovimientoAdd.val() == 'SEP') {
+            
+                $(".separacion").show();
             }
         });
         $('#btn_Mcierra').click(function (e) {
@@ -633,6 +666,13 @@
                     'idBanco': banco.val(),
                     'idCuenta': toCuenta[0],
                     'numero_cuenta': toCuenta[1],
+
+                    'serie_comprobante': $("#serie_comprobante_m").val(),
+                    'numero_comprobante': $("#numero_comprobante_m").val(),
+                    'IdTipoDocumento': $("#tipo_doc_venta").val(),
+                    'idcliente': $("#idcliente_m").val(),
+
+
                 };
                 var id = idcajaMC.val();
                 RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {
@@ -1548,6 +1588,20 @@
             });
         }
 
+
+        function select_comprobante_m(data) {
+            $("#serie_comprobante_m").html("");
+            $("#serie_comprobante_m").append('<option value="">Seleccionar</option>');
+            _.each(data, function (item) {
+                if (serie_comprobante_m == item.serie) {
+                    $("#serie_comprobante_m").append('<option selected="selected" actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                } else {
+                    $("#serie_comprobante_m").append('<option actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                }
+
+            });
+        }
+
         $scope.emitir_comprobante = function () {
             // $("#idconyugue").focus();
             // alert($("#desTotal").val());
@@ -1714,12 +1768,72 @@
             );
         });
 
+        $(document).on("change", "#forma_pago", function (event) {
+            // console.log(IdTipoDocumento, serie_comprobante);
+            var forma_pago = $(this).val();
+            var idcliente = cliente_id_or.val();
+            if(forma_pago == "SEP") {
+                $.post("ventas/get_venta_separacion", { idcliente: idcliente },
+                    function (data, textStatus, jqXHR) {
+                        // console.log(data);
+                        if(data.length > 0) {
+                            var monto_venta = parseFloat(data[0].t_monto_total);
+                            $("#idventa_separacion").val(data[0].idventa);
+                            $("#monto_p").val(monto_venta.toFixed(2));
+                            $("#monto_aplicar").val(monto_venta.toFixed(2));
+
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'No hay ninguna venta por separación!',
+                                type: 'info'
+                            });
+                        }
+                    
+                    },
+                    "json"
+                );
+            } else {
+                $("#idventa_separacion").val("");
+                var total_pagar = parseFloat($("#total_pagar").val());
+                var subtotal_montos_pago = sumar_montos_formas_pago();
+                var saldo = total_pagar - subtotal_montos_pago;
+                $("#monto_aplicar").val(saldo.toFixed(2));
+            }
+        });
+
+        $(document).on("change", "#tipo_doc_venta", function (event, serie_comprobante) {
+            // console.log(IdTipoDocumento, serie_comprobante);
+            var tipo_documento = $(this).val();
+            // console.log(tipo_documento);
+            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
+                function (data, textStatus, jqXHR) {
+                    select_comprobante_m(data);
+
+                    if (typeof serie_comprobante != "undefined") {
+                        $("#serie_comprobante_m").trigger("change");
+                    }
+                },
+                "json"
+            );
+        });
+
         $(document).on("change", "#serie_comprobante", function () {
             var serie_comprobante = $(this).val();
             if (serie_comprobante != "") {
 
                 var actual = $("#serie_comprobante option[value=" + serie_comprobante + "]").attr("actual");
                 $("#numero_comprobante").val(actual);
+            }
+            // alert(numero);
+        });
+
+        $(document).on("change", "#serie_comprobante_m", function () {
+            var serie_comprobante_m = $(this).val();
+            if (serie_comprobante_m != "") {
+
+                var actual = $("#serie_comprobante_m option[value=" + serie_comprobante_m + "]").attr("actual");
+                $("#numero_comprobante_m").val(actual);
             }
             // alert(numero);
         });
@@ -1816,7 +1930,7 @@
         }
 
         function guardar_comprobante() {
-            $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val(),
+            $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val() + "&idventa_separacion=" + $("#idventa_separacion").val(),
                 function (data, textStatus, jqXHR) {
 
                     if (data.status == "i") {
@@ -2003,6 +2117,11 @@
                             }
                         }
                     });
+                    $("#tipo_doc_venta").append('<option value="">Seleccionar</option>');
+                    _.each(response.tipo_document_venta, function (item) {
+                        $("#tipo_doc_venta").append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
+                    });
+
                     cCodConsecutivo.append('<option value="">Seleccionar</option>');
                     _.each(response.codigo, function (item) {
                         cCodConsecutivo.append('<option value="' + item.cCodConsecutivo + '">' + item.cCodConsecutivo + '</option>');
@@ -2067,12 +2186,22 @@
         }
 
         obtener_data_for_solicitud();
-
-        function getCliente() {
+        var titleModalClientes = $('#titleModalClientes');
+        var modaClientes = $('#modaClientes');
+        function getCliente(movimiento_caja) {
             var bval = true;
+            if(typeof movimiento_caja != "undefined") {
+
+                documento_or = $("#documento_cliente");
+                razonsocial_cliente_or = $("#razonsocial_cliente_m");
+            }  else {
+                documento_or = $("#documento_or");
+                razonsocial_cliente_or = $("#razonsocial_cliente_or");
+            }
             bval = bval && documento_or.required();
             if (bval) {
                 var id = documento_or.val();
+                // alert(id);
                 RESTService.get('orden_servicios/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
@@ -2112,6 +2241,7 @@
                             celular_or.val(datos[0].celular);
                             telefono_or.val(datos[0].telefono);
                             cliente_id_or.val(datos[0].idCliente);
+                            $("#idcliente_m").val(datos[0].idCliente);
                             tipoCliente_or.val(datos[0].tipo_cliente_descr).trigger('change');
                             id_cliente_tipo_or.val(datos[0].id_tipocli)
                             id_tipocli.data("prev", id_cliente_tipo_or.val());
@@ -2134,6 +2264,302 @@
 
                 });
             }
+        }
+        var tipodoc = $("#tipodoc");
+
+        function getDataFormCustomer() {
+            RESTService.all('customers/data_form', '', function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var tip = response.tipoc_doc;
+                    var tipo_clie = response.tipo_clie;
+                    var tipo_persona = response.tipo_persona;
+
+                    tipodoc.append('<option value="">Seleccionar</option>');
+                    $("#cTipodocumento").append('<option value="">Seleccionar</option>');
+                    $("#tipo_documento_conyugue").append('<option value="">Seleccionar</option>');
+                    $("#tipo_documento_fiador").append('<option value="">Seleccionar</option>');
+                    $("#tipo_documento_fiadorconyugue").append('<option value="">Seleccionar</option>');
+                    tip.map(function (index) {
+                        tipodoc.append('<option value="' + index.Codigo + '">' + index.TipoDocumento + '</option>');
+
+                        $("#tipo_documento_conyugue").append('<option value="' + index.Codigo + '">' + index.TipoDocumento + '</option>');
+
+                        $("#tipo_documento_fiador").append('<option value="' + index.Codigo + '">' + index.TipoDocumento + '</option>');
+
+                        $("#tipo_documento_fiadorconyugue").append('<option value="' + index.Codigo + '">' + index.TipoDocumento + '</option>');
+
+                        $("#cTipodocumento").append('<option value="' + index.Codigo + '">' + index.TipoDocumento + '</option>');
+                    });
+
+                    id_tipocli.append('<option value="">Seleccionar</option>');
+                    tipo_clie.map(function (index) {
+                        id_tipocli.append('<option value="' + index.id + '">' + index.descripcion + '</option>');
+
+                        // id_tipocli.append('<option value="' + index.id + '">' + index.descripcion + '</option>');
+                    });
+
+                    $("#cTipopersona").append('<option value="">Seleccionar</option>');
+                    tipo_persona.map(function (index) {
+                        $("#cTipopersona").append('<option value="' + index.cCodigo + '">' + index.cDescripcion + '</option>');
+                    });
+
+                    id_cliente_tipo_or.append('<option value="">Seleccionar</option>');
+                    tipo_clie.map(function (index) {
+                        id_cliente_tipo_or.append('<option value="' + index.id + '">' + index.descripcion + '</option>');
+                    });
+                }
+            }, function () {
+                getDataFormCustomer();
+            });
+        }
+        getDataFormCustomer();
+
+        var departamento = $('#departamento');
+        var provincia = $('#provincia');
+        var distrito = $('#distrito');
+
+        function getDepartamento(bandera) {
+            var id = "0";
+            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    departamento.html('');
+                    departamento.append('<option value="" selected >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cDepartamento == bandera) {
+                            departamento.append('<option value="' + item.cDepartamento + '"  >' + item.cDepartamento + '</option>');
+                        } else {
+                            departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
+                        };
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+        departamento.change(function () {
+            var bandera = 'xxxxxx';
+            var id = departamento.val();
+            getProvincia(bandera, id);
+        });
+
+        function getProvincia(bandera, id) {
+            RESTService.get('shops/TraerProvincias', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+
+                    provincia.html('');
+                    provincia.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cProvincia == bandera) {
+                            provincia.append('<option value="' + item.cProvincia + '" selected>' + item.cProvincia + '</option>');
+                        } else {
+                            provincia.append('<option value="' + item.cProvincia + '">' + item.cProvincia + '</option>');
+                        }
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error . Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+
+        provincia.change(function () {
+            var bandera = 'xxxxxx';
+            var id = provincia.val();
+            getDistrito(bandera, id);
+
+        });
+        function getDistrito(bandera, id) {
+            RESTService.get('shops/TraerDistritos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+
+                    distrito.html('');
+                    distrito.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cCodUbigeo == bandera) {
+                            distrito.append('<option value="' + item.cCodUbigeo + '" selected>' + item.cDistrito + '</option>');
+                        } else {
+                            distrito.append('<option value="' + item.cCodUbigeo + '">' + item.cDistrito + '</option>');
+                        }
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+        
+        var btn_save_cliente = $("#btn_save_cliente");
+        var cEstadoCivil = $("#cEstadoCivil");
+        btn_save_cliente.click(function (e) {
+            saveCliente();
+        });
+
+        function saveCliente() {
+            var bval = true;
+            bval = bval && tipodoc.required();
+            bval = bval && documento.required();
+            bval = bval && id_tipocli.required();
+            bval = bval && id_tipoDoc_Venta.required();
+            bval = bval && razonsocial_cliente.required();
+            bval = bval && celular.required();
+            bval = bval && distrito.required();
+            if (tipodoc.val() == '01' && documento.val().length != 8) {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Longitud de LE/DNI INCORRECTA',
+                    type: 'info'
+                });
+                bval = false;
+            };
+            if (tipodoc.val() == '06' && documento.val().length != 11) {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Longitud de RUC INCORRECTA',
+                    type: 'info'
+                });
+                bval = false;
+            };
+            // alert(bval);
+            if (bval) {
+                var params = {
+                    'tipodoc': tipodoc.val(),
+                    'razonsocial_cliente': razonsocial_cliente.val(),
+                    'documento': documento.val(),
+                    'contacto': contacto.val(),
+                    'direccion': direccion.val(),
+                    'correo_electronico': correo_electronico.val(),
+                    'celular': celular.val(),
+                    'telefono': telefono.val(),
+                    'distrito': distrito.val(),
+                    'id_tipocli': id_tipocli.val(),
+                    'IdTipoDocumento': id_tipoDoc_Venta.val(),
+                    'cEstadoCivil': cEstadoCivil.val(),
+
+                };
+                var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
+                RESTService.updated('customers/createCliente', cli_id, params, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // console.log(response);
+                        $("#idcliente_m").val(response.data[0].idCliente);
+                        $("#documento_cliente").val(documento.val());
+                        getCliente("movimiento_caja");
+                        $("#tipo_doc_venta").val(id_tipoDoc_Venta.val());
+                        $("#tipo_doc_venta").trigger("change");
+                        modaClientes.modal('hide');
+
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Cliente. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                });
+            }
+
+        };
+
+        documento.keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                $('#show_loading').removeClass('ng-hide');
+                getDatosCliente();
+            }
+        });
+        function getDatosCliente() {
+            // RESTService.get("https://dniruc.apisperu.com/api/v1/dni/71980490?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", '', function(response) {
+            //            console.log(response);
+            //          });
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                // Si nada da error
+                if (this.readyState == 4 && this.status == 200) {
+                    // La respuesta, aunque sea JSON, viene en formato texto, por lo que tendremos que hace run parse
+                    var data = JSON.parse(this.responseText);
+                    console.log(data);
+                    if (data.nombres != null) {
+                        var razon = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno;
+                        razonsocial_cliente.val(razon);
+                    } else if (data.razonSocial != null) {
+                        var razon = data.razonSocial;
+                        var direc = data.direccion;
+                        razonsocial_cliente.val(razon);
+                        direccion.val(direc);
+                    } else {
+                        razonsocial_cliente.val('');
+                        direccion.val('');
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'No se encontró datos del cliente',
+                            type: 'info'
+                        });
+                        $('#show_loading').addClass('ng-hide');
+                    };
+                    $('#show_loading').addClass('ng-hide');
+                }
+            };
+            if (tipodoc.val() == '01') {
+                if (documento.val().length == 8) {
+                    var dni = documento.val();
+                    xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/dni/" + dni + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send();
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'dígitos del documento incompletos',
+                        type: 'info'
+                    });
+                    razonsocial_cliente.val('');
+                    direccion.val('');
+                    $('#show_loading').addClass('ng-hide');
+                }
+
+
+            } else {
+                if (documento.val().length == 11) {
+                    var ruc = documento.val();
+                    xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/ruc/" + ruc + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send();
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'dígitos del documento incompletos',
+                        type: 'info'
+                    });
+                    razonsocial_cliente.val('');
+                    direccion.val('');
+                    $('#show_loading').addClass('ng-hide');
+
+                }
+
+            }
+
         }
 
         $(document).on("change", "#IdMoneda", function () {

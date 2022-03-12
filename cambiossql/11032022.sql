@@ -43,3 +43,14 @@ ELSE
 'SCHEMA', N'dbo',
 'TABLE', N'ERP_Solicitud',
 'COLUMN', N'estado';
+
+
+ALTER TABLE [dbo].[ERP_Venta] ADD [aplicado_separacion] char(1) NULL
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'S -> SI
+N -> NO',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Venta',
+'COLUMN', N'aplicado_separacion'
