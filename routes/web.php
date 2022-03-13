@@ -193,6 +193,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     // Creditos y Cobranzas
     require app_path() . '\Http\Routes\RenegociacionMora.php';
 
+    require app_path() . '\Http\Routes\Refinanciamientos.php';
 
     //Route Purchases
 

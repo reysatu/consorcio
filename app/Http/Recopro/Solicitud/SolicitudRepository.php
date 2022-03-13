@@ -41,6 +41,17 @@ class SolicitudRepository implements SolicitudInterface
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
+    public function search_solicitudes_refinanciamiento($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->whereIn('estado', [7])
+                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_solicitud', 'DESC');
+    }
+
 
 //     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin) 
 //     {

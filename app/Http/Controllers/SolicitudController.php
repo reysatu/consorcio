@@ -50,6 +50,15 @@ class SolicitudController extends Controller
         return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
     }
 
+
+    public function list_solicitudes_refinanciamiento(Request $request, SolicitudInterface $repo)
+    {
+        $s = $request->input('search', '');
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->search_solicitudes_refinanciamiento($s), $request, 'cCodConsecutivo', $params);
+    }
+
     public function list_creditos(Request $request, SolicitudCreditoInterface $repo)
     {
         $s = $request->input('search', '');

@@ -167,4 +167,12 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
          return $mostrar; 
     }
 
+    public function get_venta_separacion($idcliente) {
+        $sql = "SELECT v.* FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
+        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND v.aplicado_separacion<>'S'";
+
+        return DB::select($sql);
+    }
+
 }

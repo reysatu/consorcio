@@ -105,6 +105,7 @@
 
         // creditos y cobranzas
         'sys.app.renegociacion_mora',
+        
         'sys.app.refinanciamientos',
         
         // Almacen

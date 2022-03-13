@@ -16,8 +16,8 @@ Route::post('refinanciamientos/find', ['as' => 'refinanciamientos.find', 'uses' 
 Route::post('refinanciamientos/find_documento', ['as' => 'refinanciamientos.find_documento', 'uses' => 'RefinanciamientosController@find_documento']);
 Route::get('refinanciamientos/data_form', ['as' => 'refinanciamientos.data_form', 'uses' => 'RefinanciamientosController@data_form']);
 
-Route::post('refinanciamientos/guardar_refinanciamientos', ['as' => 'refinanciamientos.guardar_refinanciamientos', 'uses' => 'RefinanciamientosController@guardar_refinanciamientos']);
-Route::post('refinanciamientos/get_notas_devolucion', ['as' => 'refinanciamientos.get_notas_devolucion', 'uses' => 'RefinanciamientosController@get_notas_devolucion']);
+Route::post('refinanciamientos/generar_refinanciamiento', ['as' => 'refinanciamientos.generar_refinanciamiento', 'uses' => 'RefinanciamientosController@generar_refinanciamiento']);
 
-Route::get('refinanciamientos/get_venta_detalle/{id}', ['as' => 'refinanciamientos.get_venta_detalle', 'uses' => 'RefinanciamientosController@get_venta_detalle']);
 
+
+Route::post('refinanciamientos/list_solicitudes_refinanciamiento', ['as' => 'refinanciamientos.list_solicitudes_refinanciamiento', 'uses' => 'SolicitudController@list_solicitudes_refinanciamiento']);

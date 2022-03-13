@@ -46,7 +46,7 @@ class MovimientoCajaController extends Controller
             'bancos'=>$bancos,
         ]);
     }
-    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj)
+    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC)
     {
         DB::beginTransaction();
         try {
@@ -112,6 +112,60 @@ class MovimientoCajaController extends Controller
                  $datoDet['descripcion'] =$data['bancoText'].','.$data['numero_cuenta']; 
             }
             $repo->create($datoDet);
+
+            //GUARDAR VENTA POR SEPARACION
+           
+
+            $parametro_separacion = $repo->get_parametro_separacion();
+
+            if(count($parametro_separacion) <= 0) {
+                throw new Exception("Por favor cree el parametro con el id del producto de separación!");
+            }
+
+
+            $data_venta = array();
+           
+            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+            $data_venta["serie_comprobante"] = $data["serie_comprobante"];
+            $data_venta["numero_comprobante"] = $data["numero_comprobante"];
+            $data_venta["condicion_pago"] = 1;
+            $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
+            $data_venta["idcliente"] = $data["idcliente"];
+            $data_venta["tipo_comprobante"] = "0";
+            $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
+            $data_venta["t_monto_subtotal"] = $data["montoAdd"];
+            $data_venta["t_monto_total"] = $data["montoAdd"];
+            $data_venta["saldo"] = "0";
+            $data_venta["pagado"] = $data["montoAdd"];
+            $data_venta["idmoneda"] = $data['idMonedaAdd'];
+            $data_venta["idcajero"] = auth()->id();
+            $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+            $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+
+           
+            $data_venta_detalle = array();
+            $data_venta_detalle["idventa"] = $data_venta["idventa"];
+            $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+            $data_venta_detalle["idarticulo"] = $parametro_separacion[0]->value;
+            $data_venta_detalle["um_id"] = "07"; //codigo unidad
+            $data_venta_detalle["cantidad"] = 1;
+            $data_venta_detalle["precio_unitario"] = $data["montoAdd"];
+        
+            $data_venta_detalle["precio_total"] = $data["montoAdd"];
+        
+            $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
+    
+            $data_venta_detalle["monto_total"] = $data["montoAdd"];
+        
+
+
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+              
+            
+
+            $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
 
             DB::commit();
             return response()->json([
@@ -975,6 +1029,13 @@ class MovimientoCajaController extends Controller
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
 
+            // actualizamos la venta por separacion
+            if($data["forma_pago"] == "SEP") {
+                $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
+                WHERE idventa_separacion={$data["idventa_separacion"]}";
+        
+                $result = DB::statement($sql_update);
+            }
 
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
@@ -1201,6 +1262,15 @@ class MovimientoCajaController extends Controller
             $caja_diaria_repositorio->update_saldos_venta($update_venta);
 
             // echo "ola"; exit;   
+            // actualizamos la venta por separacion
+            if($data["forma_pago"] == "SEP") {
+                $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
+                WHERE idventa_separacion={$data["idventa_separacion"]}";
+        
+                $result = DB::statement($sql_update);
+            }
+
+
           
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             DB::commit();
