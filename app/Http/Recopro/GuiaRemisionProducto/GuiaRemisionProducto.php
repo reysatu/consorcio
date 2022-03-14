@@ -21,7 +21,7 @@ class GuiaRemisionProducto extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['cCodConsecutivo','idarticulo','cantidad','nConsecutivo','consecutivo','user_created','user_updated'];
+    protected $fillable = ['cCodConsecutivo','idlote','idarticulo','cantidad','nConsecutivo','consecutivo','user_created','user_updated'];
     
      public function user_c()
     {
