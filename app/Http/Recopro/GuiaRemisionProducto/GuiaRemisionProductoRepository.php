@@ -58,6 +58,15 @@ class GuiaRemisionProductoRepository implements GuiaRemisionProductoInterface
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
+     public function update_guiP($idaa,$idbb,$con,array $attributes)
+    {
+        
+        $attributes['user_updated'] = auth()->id();
+        $model =  $this->model ; 
+        $model->where('cCodConsecutivo',$idaa)->where('nConsecutivo',$idbb)->where('consecutivo',$con)->update($attributes);
+
+
+    }
     public function destroy($id)
     {
         $attributes = [];

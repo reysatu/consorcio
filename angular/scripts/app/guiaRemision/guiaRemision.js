@@ -13,7 +13,8 @@
 
     function GuiaRemisionCtrl($scope, _, RESTService, AlertFactory, Notify,Helpers)
     {
-        var cCodConsecutivo=$("#cCodConsecutivo");
+        
+        var cCodConsecutivo=$("#cCodConsecutivo"); 
         var nConsecutivo=$("#nConsecutivo");
         var puntoPartida=$("#puntoPartida");
         var fechaEmision=$("#fechaEmision");
@@ -38,7 +39,7 @@
         var  tipoCompra; //variable que contendrá los tipos de  compras
         var aartMK=[]; //arrays de id kits 
         var aartMLE=[];//arrays lotes exis
-        var naturalezaGeneral;
+        var naturalezaGeneral='S';
         var aartMSN=[];//ARRAY DE series nueva
         var aartMSE=[];//array series  exis 
         var acantMS=[];
@@ -324,6 +325,7 @@
                     aartMSE=[];
                     cCodConsecutivo.prop('disabled',true);
                     var serE=data.solicitud_serie;
+                    var lotE=data.solicitud_lote;
                      serE.map(function(index) {
                              var grubSE={
                                        'identificador': index.identificador,
@@ -334,17 +336,46 @@
                                     }
                             aartMSE.push(grubSE);
                         });
+
+                     if(lotE.length>0){
+                         lotE.map(function(index) {
+                                var grubLE={
+                               'identificador': index.consecutivo,
+                               'idProducto':index.idArticulo,
+                               'idLote':index.idLote,
+                               'fecha_vencimiento':index.fechaVencimiento,
+                               'codig_lote': index.Lote,
+                               }
+                              aartMLE.push(grubLE);
+                         });
+                    }
                     Helpers.set_datos_formulario("id_formulario", data.solicitud[0]);
                     // fechaEmision.val(data.solicitud[0].fechaEmision);
                     // varmoment(data.solicitud[0].fechaEmision).format('DD/MM/YYYY');
                     // console.log(data.solicitud[0].fechaEmision);
+                    console.log(data.solicitud_articulo);
+                    console.log("dataarticu");
                     if (data.solicitud_articulo.length > 0) {
                         $("#articulo_mov_det").html("");
                         for (var i = 0; i < data.solicitud_articulo.length; i++) {
+                            var ver='A';
+                            var tipo='NA';
+                            var codl="";
+                            var datl="";
+                            if(data.solicitud_articulo[i].serie=='1'){
+                                ver='N';
+                            }
+                            if(data.solicitud_articulo[i].serie=='1'){
+                                tipo='SE';
+                            }else if(data.solicitud_articulo[i].lote=='1'){
+                                console.log("entra lote");
+                                tipo='LE';
+                                codl=data.idlote;
+                            }
 
                             var codigo = Math.random().toString(36).substr(2, 18);
                            
-                           addArticuloTable(data.solicitud_articulo[i].consecutivo,data.solicitud_articulo[i].consecutivo,data.solicitud_articulo[i].idarticulo,data.solicitud_articulo[i].description,Math.trunc(data.solicitud_articulo[i].cantidad),"N",data.solicitud_articulo[i].consecutivo,"SE","","","","","","","","")
+                           addArticuloTable(data.solicitud_articulo[i].consecutivo,data.solicitud_articulo[i].consecutivo,data.solicitud_articulo[i].idarticulo,data.solicitud_articulo[i].description,Math.trunc(data.solicitud_articulo[i].cantidad),ver,data.solicitud_articulo[i].consecutivo,tipo,codl,"","","","","","","")
                         }
                     }
 
@@ -497,6 +528,7 @@
             var id=codigoLoteMll.val();
             RESTService.get('guiaRemisions/validateLote', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
+                        naturalezaGeneral="S";
                       if(response.data=="N"){
                         if(naturalezaGeneral=="S"){
                             AlertFactory.textType({
@@ -963,7 +995,7 @@
             bval = bval && placa.required();
             bval = bval && nroConstanciaInscripcion.required();
             bval = bval && nroLicenciaConductor.required();
-            bval = bval && rucEtransporte.required();
+            bval = bval && rucEtransporte.required(); 
             bval = bval && razonSocialEtransporte.required();
             if (bval && articulo_mov_det.html() === '' ) {
                 AlertFactory.showWarning({
@@ -1033,6 +1065,20 @@
                 var idSerieSe=[];
                 var cont=0;
                 var ident_serie_bd_serie=[]; 
+                var idloteEnvi = [];
+                    $.each($('.m_codigo_lote'), function (idx, item) {
+                        idloteEnvi[idx] = $(item).val();
+                    });
+                    
+                idloteEnvi = idloteEnvi.join(',');
+
+                var datloteEnvi = [];
+                    $.each($('.m_dato_lote'), function (idx, item) {
+                        datloteEnvi[idx] = $(item).val();
+                    });
+                console.log(idloteEnvi);
+                    console.log(datloteEnvi);
+                 console.log("datalote");   
                 aartMSE.map(function(index) {
                          ident_serie_bd_serie[cont]=index.identificador;
                          idProductoSe[cont] = index.idProducto;
@@ -1044,9 +1090,9 @@
                   idProductoSe = idProductoSe.join(',');
                   serieSe = serieSe.join(',');
                 idSerieSe = idSerieSe.join(',');
-
+                console.log(idalcantEnv);
                   cCodConsecutivo.prop('disabled',false);
-                 $.post("guiaRemisions/guardar_guiaRemision", $("#id_formulario").serialize()+"&idartEnv="+idartEnv+"&idalcantEnv="+idalcantEnv+"&identificador_serie_bd="+identificador_serie_bd+"&ident_serie_bd_serie="+ident_serie_bd_serie+"&idProductoSe="+idProductoSe+"&serieSe="+serieSe+"&idSerieSe="+idSerieSe+"&idTable="+idTable+"&idTartConse="+idTartConse,
+                 $.post("guiaRemisions/guardar_guiaRemision", $("#id_formulario").serialize()+"&idartEnv="+idartEnv+"&idalcantEnv="+idalcantEnv+"&identificador_serie_bd="+identificador_serie_bd+"&ident_serie_bd_serie="+ident_serie_bd_serie+"&idProductoSe="+idProductoSe+"&serieSe="+serieSe+"&idSerieSe="+idSerieSe+"&idTable="+idTable+"&idTartConse="+idTartConse+"&idLote="+idloteEnvi,
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == true) {
@@ -1075,7 +1121,9 @@
                     },
                     "json"
                 );
-            } }else{
+            }
+
+             }else{
                  AlertFactory.showWarning({
                     title: '',
                     message: 'Solo se puede emitir guias en estado emitido',
@@ -1088,7 +1136,9 @@
             console.log(idLocalizacion);
             var costonew=0;
             var precionew=0;
-
+            console.log(ver);
+            console.log(tipo);
+            console.log("vergfgfg");
             if(costo !=0 || costo!=""){
                 costonew=Number(costo);
             };
@@ -1217,6 +1267,7 @@
                     addSerieTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),colorMS,chasisMS,motorMS,anio_modeloMS,anio_fabricacionMS)
                     modalSerieR.modal('show');
                 }else if(tipShow=="LE"){
+
                     modalLoteR.modal('show');
                     idProductoMll.val(idProduc);
                     desProductoMll.val(descrip);
@@ -2279,7 +2330,7 @@
              cache: false,
             actions: { 
 
-                listAction: base_url + '/guiaRemisions/getArticulosSelectSerie'
+                listAction: base_url + '/guiaRemisions/getArticulosSelect'
             },
             toolbar: {
                 items: [{

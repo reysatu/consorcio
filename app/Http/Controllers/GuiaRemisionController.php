@@ -15,7 +15,7 @@ use App\Http\Recopro\GuiaRemisionDetalle\GuiaRemisionDetalleInterface;
 use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProductoInterface;
 use App\Http\Requests\GuiaRemisionRequest;
 use App\Models\BaseModel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; 
 class GuiaRemisionController extends Controller
 {
      use GuiaRemisionTrait;
@@ -69,6 +69,8 @@ class GuiaRemisionController extends Controller
         $response["solicitud_articulo"] = $Repo->get_guiaRemision_articulo($cCodConsecutivo, $nConsecutivo);
          $response["solicitud_serie"] = $Repo->get_guia_Serie($cCodConsecutivo, $nConsecutivo);
 
+         $response["solicitud_lote"] = $Repo->get_guia_Lote($cCodConsecutivo, $nConsecutivo);
+
         return response()->json($response);
     }
     public function anular_guiaRemision (Request $request, GuiaRemisionInterface $repo)
@@ -98,7 +100,7 @@ class GuiaRemisionController extends Controller
 
     }
      public function guardar_guiaRemision (Request $request, GuiaRemisionInterface $repo,GuiaRemisionProductoInterface $grp,GuiaRemisionDetalleInterface $grd)
-    {   
+    {    
 
 
         $data = $request->all();
@@ -130,6 +132,9 @@ class GuiaRemisionController extends Controller
             $idSerieSe = $data['idSerieSe'];
             $idSerieSe = explode(',', $idSerieSe);
 
+            $idLote = $data['idLote'];
+            $idLote = explode(',', $idLote);
+
         $response = array();
         try {
             DB::beginTransaction();
@@ -145,6 +150,7 @@ class GuiaRemisionController extends Controller
             unset($data['identificador_serie_bd']);
             unset($data['idSerieSe']);
             unset($data['serieSe']);
+            unset($data['idLote']);
             $nConsecutivo='';
             $estado='';
             if ($data['nConsecutivo']!='') {
@@ -164,6 +170,10 @@ class GuiaRemisionController extends Controller
             $repo->delete_detalle($ida, $idb);
 
             for ($i=0; $i < count($idArticulo) ; $i++) { 
+                $idLB=$idLote[$i];
+                if($idLote[$i]==""){
+                     $idLB=null;
+                 };
 
                 $tablelMd='ERP_GuiaRemisionProducto';
                 $idtMd='consecutivo';
@@ -173,10 +183,18 @@ class GuiaRemisionController extends Controller
                             'cCodConsecutivo' => $data['cCodConsecutivo'],
                             'nConsecutivo' => $data['nConsecutivo'],
                             'idarticulo' => $idArticulo[$i],
+                             'idlote' =>$idLB,
                             'consecutivo'=> $grp->get_consecutivo($tablelMd,$idtMd),
                             'cantidad' =>  $cantidad[$i],
                   ]);
                    $conse=$varinfo->consecutivo;    
+                }else{
+                      $dato_guia=[];
+                      $dato_guia['cantidad']=$cantidad[$i];
+                      $idaa=$data['cCodConsecutivo'];
+                      $idbb=$data['nConsecutivo'];
+                      $con=$conse;
+                      $grp->update_guiP($idaa,$idbb,$con, $dato_guia);
                 }
                 
                

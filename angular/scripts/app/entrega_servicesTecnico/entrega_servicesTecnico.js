@@ -208,6 +208,7 @@
                                 var precioTotal="";
                                 // add 
                                 cont=cont+1;
+                                   console.log("ejeci _7");
                                 addArticuloTable(index.idProducto,
                                     index.description,Math.trunc(index.nCant),
                                     ver,index.idDetalleRepues,tipo,codl,
@@ -294,28 +295,50 @@
         }
         
          function findRegister_movement(id)
-        {
+        {   
             titlemodalMovimieto.html('Editar Entrega');
           
             RESTService.get('register_movements/find', id, function(response) {
+
                 if (!_.isUndefined(response.status) && response.status) {
+                   
                     var verProforma='ED';
                     cargar_proformas(verProforma);
                     var data_p = response.data;
-                   
-                    idMovimiento.val(data_p.idMovimiento);
+                    var data_ventaMovimiento = response.data_ventaMovimiento;
+                    var mov_ar='';
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
-                    console.log(cons);
-                    console.log(proformas_completas);
-                    cCodConsecutivoOS.val(cons).trigger("change");
-
-                    cCodConsecutivoOS.prop('disabled',true);
+                    idMovimiento.val(data_p.idMovimiento);
+                     
+                     if(data_p.idTipoOperacion=='2'){
+                           $("input[name=tipo][value='N']").prop("checked",true);
+                           $("input[name=tipo][value='N']").trigger("change");
+                           // $("#idventa option[value="+data_ventaMovimiento[0].idventa+"]").prop("selected", true);
+                            $("#idventa").val(data_ventaMovimiento[0].idventa).trigger("change");
+                            // $("#idventa").change(function(event) {
+                            //    event.preventDefault();
+                            // });
+                              mov_ar=response.data_movimiento_Articulo_entrega_venta;
+                          
+                     }else{
+                        cCodConsecutivoOS.val(cons);
+                         nConsecutivoOS.val(data_p.nConsecutivo);
+                          mov_ar=response.data_movimiento_Articulo_entrega;
+                     }
+                     
+                       $("#idventa").prop('disabled',true);
+                     cCodConsecutivoOS.prop('disabled',true);
+                     $('input[name=tipo]').attr("disabled",true);
                     titlemodalMovimieto.html('Editar Entrega '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
-                    var serE=response.data_movemen_Serie_entrega;
+                    var serE=response.data_movimiento_serie;
+                    console.log(lotE);
+                    console.log(serE);
+                    console.log("fgfg");
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
+                     
                     naturalezaGeneral=data_p.naturaleza;
                     if(lotE!=''){
                          lotE.map(function(index) {
@@ -341,6 +364,8 @@
                             aartMSE.push(grubSE);
                         });
                     }
+                    console.log(serE);
+                    console.log("serey");
                     
                     idTipoOperacion.val(data_p.idTipoOperacion+'*'+data_p.naturaleza).trigger('change');
                     idTipoOperacion.prop('disabled',true);
@@ -370,7 +395,7 @@
                             btn_movimiento_detalle.prop('disabled',false);
                             btn_movimiento_detalle.trigger('change');
                     }
-                    var mov_ar=response.data_movimiento_Articulo_entrega;
+                  
                    
                     if(p_state.val()==0){
                         procesarTransfBoton.prop('disabled',false);
@@ -383,7 +408,9 @@
                     modalMovimieto.modal("show");
                      articulo_mov_det.html("");
                     
+                    var conta=0;
                      mov_ar.map(function(index) {
+                        conta=conta+1;
                         var ver='A';
                         var tipo='NA';
                         var codl="";
@@ -405,54 +432,25 @@
                         if(index.cod_lote==null){
                             idCodLoteEnviar='';
                         }
-                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,idLoteEnviar,idCodLoteEnviar,index.idAlmacen,index.idLocalizacion,index.costo2,index.costo_total,index.precio,index.precio_total,Math.trunc(index.nCantidadPendienteEntregar));                      
+                         console.log(idCodLoteEnviar);
+                        console.log(idLoteEnviar);
+                      
+                       
+                       
+                        addArticuloTable(index.idArticulo,
+                                index.description,Math.trunc(index.cantidad),
+                                ver,index.consecutivo,tipo,idLoteEnviar,
+                                idCodLoteEnviar,
+                                index.idAlmacen,
+                                index.idLocalizacion,
+                                index.costo2,
+                                index.costo_total,
+                                index.precio,
+                                index.precio_total,
+                                Math.trunc(index.nCantidadPendienteEntregar));                      
                       })
-                    // console.log(data_p);
-                    // p_id.val(data_p.id);
-                    // var chk_state = (data_p.state === '1');
-                    // p_state.prop('checked', chk_state).iCheck('update');
-                    // $scope.chkState();
-                    // if(data_p.image !=''){
-                    //     p_image.val(data_p.image);
-                    //     uploadMorePicture();
-                    // };
-                    // // addToArticuloKitt(id,code, name_cc, cantidad)
-                    // p_code_article.val(data_p.code_article);
-                    // p_code_matrix.val(data_p.code_matrix);
-                    // p_description.val(data_p.description);
-                    // p_description_detail.val(data_p.description_detail);
-                    // var chk_serie = (data_p.serie === '1');
-                    // p_serie.prop('checked', chk_serie).iCheck('update');
-                    // var chk_lote = (data_p.lote === '1');
-                    // p_lote.prop('checked', chk_lote).iCheck('update');
-                    // var chk_venta = (data_p.disponible_venta === '1');
-                    // p_disponible_venta.prop('checked', chk_venta).iCheck('update');
-                    // var chk_impuesto = (data_p.impuesto === '1');
-                    // p_impuesto.prop('checked', chk_impuesto).iCheck('update');
-                    // motor.val(data_p.motor);
-                    // chasis.val(data_p.chasis);
-                    // anio_modelo.val(data_p.anio_modelo);
-                    // anio_fabricacion.val(data_p.anio_fabricacion);
-                    // color.val(data_p.color);
-                   
-                    // p_id_categoria.val(data_p.idCategoria).trigger('change');
-                    // p_id_marca.val(data_p.idMarca).trigger('change');
-                    // p_id_familia.val(data_p.idFamilia).trigger('change');
-                    // p_id_subfamilia.val(data_p.idSubFamilia).trigger('change');
-                    // p_id_modelo.val(data_p.idModelo).trigger('change');
-                    // p_id_tipo.val(data_p.type_id).trigger('change');
-                    // p_id_grupocontable.val(data_p.idGrupoContableCabecera).trigger('change');                  
-                    // p_retention_id.val(data_p.retention_id).trigger('change');
-
-                    // getSubfamilia(data_p.idSubFamilia,data_p.idFamilia);
-                    // getModelo(data_p.idModelo,data_p.idMarca);
-                   
-                    // if(data_p.cantidad !=""){
-                    //     idKit.val(data_p.idKit);
-                    //       _.each(data_p.GrupoKit, function (c) {
-                    //        addToArticuloKitt(c.idArticulo_kit,c.code_kit, c.idArticulo_kit_description,Math.trunc(c.cantidadkit))
-                    //     });
-                    // };
+                    
+                    
                    
                 } else {
                     AlertFactory.textType({
@@ -554,6 +552,8 @@
             p_state.val('');
             articulo_mov_det.html('');
             cCodConsecutivoOS.prop('disabled',false);
+            $("#idventa").prop('disabled',false);
+            $('input[name=tipo]').attr("disabled",false);
             btnguardarMovimiento.prop('disabled',false);
             btn_movimiento_detalle.prop('disabled',false);
             btnguardarMovimiento.trigger('change');
@@ -812,6 +812,7 @@
 
         }
         function addAlmaSelec(codigo){
+      
            var idAlmacenSele=$("#Al_"+codigo);
             idAlmacenSele.append('<option value="" selected>Seleccionar</option>');
               _.each(AlmacenesSele, function(item) {
@@ -883,8 +884,12 @@
         }
         $scope.guardarMovimientoDetalle = function(){
             var bval =true;
-            bval = bval && cCodConsecutivoOS.required();
-            bval = bval && fecha_registro.required();
+            if(idTipoOperacion.val()=='2*S'){
+                 bval = bval && $("#idventa").required();
+            }else{
+                 bval = bval && cCodConsecutivoOS.required();
+            }
+             bval = bval && fecha_registro.required();
             var iChe='I';
             var cont_se=0;//contador de check de lotes y series 
             var cont_che=0;// contador de check selecionados 
@@ -1087,11 +1092,15 @@
                          idSerieSe[cont]=index.idSerie;
                          cont=cont+1;
                       })
+
                 ident_serie_bd_serie=ident_serie_bd_serie.join(",");
                   idProductoSe = idProductoSe.join(',');
                   serieSe = serieSe.join(',');
                 idSerieSe = idSerieSe.join(',');
-
+                console.log(aartMSE);
+                console.log(ident_serie_bd_serie);
+                console.log(identificador_serie_bd);
+                console.log("sss");
 
                 
                 var serieNenv = [];
@@ -1175,7 +1184,20 @@
                 var nat=complet[1];
                 naturalezaGeneral=nat;
                 var val=cCodConsecutivoOS.val();
-                var totRep=val.split('*');
+                var conse='';
+                var ncons='';
+                if(idTipoOperacion.val()=='2*S'){
+                     var documentocons =  $('#idventa').find(':selected').data('conse');
+                      var conTO=documentocons.split('*');
+                     conse=conTO[0];
+                     ncons=conTO[1]
+
+                }else{
+                      var totRep=val.split('*');
+                      conse=totRep[0];
+                      ncons=totRep[1]; 
+                }
+                
                 var paramsCabezera = {
                     'idMovimiento': idMovimiento.val(),
                     'estado':0,
@@ -1183,8 +1205,8 @@
                     'idMoneda': idMoneda.val(),
                     'observaciones': observaciones.val(),
                     'idTipoOperacion':idTO,
-                    'nConsecutivo': totRep[1],
-                    'cCodConsecutivo':totRep[0],
+                    'nConsecutivo':ncons ,
+                    'cCodConsecutivo':conse,
                     'art_nada':aartMN,
                     'idArticulo':idartEnv,
                     'idAlmacen':idalmaEnv,
@@ -1227,6 +1249,7 @@
                             type: 'success'
                         });
                         cCodConsecutivoOS.prop('disabled',true);
+                        $("#idventa").prop('disabled',true);
                         procesarTransfBoton.prop('disabled',false);
                         procesarTransfBoton.trigger('change');
 
@@ -1240,10 +1263,12 @@
                         btn_movimiento_detalle.trigger('change');
                         LoadRecordsButtonRegister_Movement.click();
                     } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
                         AlertFactory.textType({
                             title: '',
-                            message: 'Hubo un error al guardar el artículo. Intente nuevamente.',
-                            type: 'error'
+                            message: msg_,
+                            type: 'info'
                         });
                     }
                 });
@@ -1275,7 +1300,7 @@
 
         function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,presio_total,cantidaPD){
             acodigos.push(codigo);
-        
+           
             var costonew=0;
             var precionew=0;
 
@@ -1423,7 +1448,7 @@
                     codigo_actual=codeShow;
                     codigoLoteMll.val(data_lote);
                     if($('#id_check'+codigo_actual).prop('checked') ) {
-                                console.log("che");                    
+                                                  
                     }else{
                         getlotes();
                     }
@@ -1433,16 +1458,16 @@
                     desProductoMll.val(descrip);
                     cantProductoMll.val(cantshow);
                     // idLoteMll2.val("");
-                    // // codigoLoteMll.prop("readonly",true);
+                    // codigoLoteMll.prop("readonly",true);
                     // codigoLoteMll.trigger('change');
-                    // aartMLE.map(function(index) {
-                    //     if(index.identificador==codeShow){
-                    //          codigoLoteMll.val(index.codig_lote);
-                    //          fechaVl.val(index.fecha_vencimiento);
-                    //          cantProductoMll.val($("#tr_idArticulo"+codeShow).find("td:eq(3)").children("input").val());
-                    //     }
+                    aartMLE.map(function(index) {
+                        if(index.identificador==codeShow){
+                             // codigoLoteMll.val(index.codig_lote);
+                             fechaVl.val(index.fecha_vencimiento);
+                             // cantProductoMll.val($("#tr_idArticulo"+codeShow).find("td:eq(3)").children("input").val());
+                        }
                        
-                    // })
+                    })
                     // console.log(aartMLE);
 
                 }else if(tipShow=="LN"){
@@ -1523,6 +1548,7 @@
                 var idl = $(this).val();
                 var ident=$(this).attr('data-idAraAl');
                 var idPrAl=$(this).attr('data-arts');
+                console.log("entro almacen");
 
                 getLocaStock(idl,ident,idPrAl,idLocalizacion);
                 e.preventDefault();
@@ -1672,7 +1698,7 @@
                                 var costo_total="";
                                 var precio="";
                                 var precioTotal="";
-
+                                console.log("ejeci _1");
                                 addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                                 modalSerieR.modal("hide");
                                 modalMovimietoArticulo.modal("hide");
@@ -1825,6 +1851,7 @@
                         var costo_total="";
                         var precio="";
                         var precioTotal="";
+                           console.log("ejeci _2");
                        addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                        modalSerieR.modal("hide");
                        modalMovimietoArticulo.modal("hide");
@@ -1989,6 +2016,7 @@
                 var costo_total="";
                 var precio="";
                 var precioTotal="";
+                   console.log("ejeci _3");
                 addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                 modalNada.modal('hide');
                 modalMovimietoArticulo.modal('hide');
@@ -2038,6 +2066,7 @@
                     var datl=idProductoML.val()+'*'+cantProductoML.val()+'*'+lotProductoML.val()+'*'+fIngrePrML.val()+'*'+fVenPrML.val();
                     var precio="";
                     var precioTotal="";
+                       console.log("ejeci _4");
                     addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                     modalLote.modal('hide');
                     modalLoteR.modal('hide');
@@ -2090,6 +2119,7 @@
                 var costo_total="";
                 var precio="";
                 var precioTotal="";
+                   console.log("ejeci _5");
                 addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                 modalKit.modal('hide');
                 modalMovimietoArticulo.modal('hide');
@@ -2241,23 +2271,26 @@
             var tipo = $(this).val();
             // proforma
             if (tipo == "P") {
-                $("#idventa").val("");
+                $("#idventa").val("").trigger("change");
                 $("#documento").val("");
                 $(".venta").hide();
                 $(".proforma").show();
                 
                 $("#idTipoOperacion").val("7*R");
+
             }
             // nota
             if (tipo == "N") {
-                $("#cCodConsecutivoOS").val("");
+                $("#cCodConsecutivoOS").val("").trigger("change");
                 $("#nConsecutivoOS").val("");
 
-                 $("#idTipoOperacion").val("7*R");
+                 $("#idTipoOperacion").val("2*S");
                 
                 $(".proforma").hide();
                 $(".venta").show();
             }
+            aartMLE=[];
+            aartMSE=[];
         });
 
         function newMovimiento()
@@ -2271,14 +2304,15 @@
          $(document).on("change", "#idventa", function () {
             var idventa = $(this).val();
             var documento =  $('#idventa').find(':selected').data('documento');
-            
+            var data =  $('#idventa').find(':selected').data('conse');
             // alert(documento);
             if(idventa == "") {
                 return false;
             }
-
+            var todata=data.split("*");
+            idMoneda.val(todata[2]);
             $("#documento").val(documento);
-           
+            if(idMovimiento.val()==""){
 
             RESTService.get('entrega_servicesTecnicos/get_venta_detalle', idventa, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -2286,43 +2320,93 @@
                     var cont = 0;
                     if (idMovimiento.val() == '') {
                         articulo_mov_det.html("");
+                       
+                        var lotE=response.data_movimiento_lote_entrega;
+                        var serE=response.data_movimiento_serie_entrega;
+                        console.log(lotE);
+                        console.log(serE);
+                        console.log(data);
+                        if(lotE.length>0){
+                            console.log("entroA");
+                         lotE.map(function(index) {
+                                var grubLE={
+                               'identificador': index.consecutivo,
+                               'idProducto':index.idarticulo,
+                               'idLote':index.idLote,
+                               'fecha_vencimiento':index.fechaVencimiento,
+                               'codig_lote': index.Lote,
+                               }
+                              aartMLE.push(grubLE);
+                         });
+                        }
+                        if(serE.length>0){
+                             console.log("entroB");
+                            serE.map(function(index) {
+                                 var grubSE={
+                                           'identificador': index.identificador,
+                                           'idProducto':index.idarticulo,
+                                           'serie':index.nombreSerie,
+                                           'idSerie': index.idSerie,
+                                           'cantidad':index.cantiTotal,
+                                        }
+                                aartMSE.push(grubSE);
+                            });
+                        }
+                        if(data.length==0){
+                             AlertFactory.textType({
+                                title: '',
+                                message: 'No existe artículos pendientes de esta venta',
+                                type: 'info'
+                            });
+                        }else{
 
-                        data.map(function (index) {
-                            var ver = 'A';
-                            var tipo = 'NA';
-                            var codl = "";
-                            var datl = "";
-                            if (index.serie == '1') {
-                                ver = 'N';
-                            }
-                            if (index.serie == '1') {
-                                tipo = 'SE';
-                            } else if (index.lote == '1') {
-                                tipo = 'LE';
-                                codl = index.idLote;
-                            }
-                            var codl = "";
-                            var datl = "";
-                            var idAlmacen = "";
-                            var idLocalizacion = "";
-                            var costo = costoAS.val();
-                            var costo_total = "";
-                            var precio = "";
-                            var precioTotal = "";
-                            // add 
-                            cont = cont + 1;
-                            // console.log("entro287");
-                            addArticuloTable(index.idProducto,
-                                index.description, Math.trunc(index.cantidad),
-                                ver, index.idDetalleRepues, tipo, codl,
-                                datl, idAlmacen,
-                                idLocalizacion,
-                                index.costo,
-                                costo_total,
-                                index.precio_unitario,
-                                precioTotal, Math.trunc(index.cantidad));
 
-                        })
+                        data.map(function(index) {
+                        var ver='A';
+                        var tipo='NA';
+                        var codl="";
+                        var datl="";
+
+                        if(index.serie=='1'){
+                            ver='N';
+                        }
+                        if(index.serie=='1'){
+                            tipo='SE';
+                        }else if(index.lote=='1'){
+                            tipo='LE';
+                            codl=index.idLote;
+                        }
+                        var idLoteEnviar=index.idLote;
+                        if(index.idLote==null){
+                            idLoteEnviar='';
+                        }
+                        var idCodLoteEnviar=index.cod_lote;
+                        if(index.cod_lote==null){
+                            idCodLoteEnviar='';
+                        }
+                        console.log(idLoteEnviar);
+                        console.log(idCodLoteEnviar);
+                        console.log("enviadolote");
+                        var cost=parseFloat(index.costo2);
+                        var cottota= parseFloat(index.costo_total);
+                           console.log("ejeci _6");
+                        addArticuloTable(index.idArticulo,
+                                index.description,Math.trunc(index.cantidad),
+                                ver,index.consecutivo,tipo,idLoteEnviar,
+                                idCodLoteEnviar,index.idAlmacen,
+                                index.idLocalizacion,
+                                cost,
+                                cottota,
+                                index.precio,
+                                index.precio_total,
+                            Math.trunc(index.nCantidadPendienteEntregar)); 
+                        
+                      })
+
+                    }
+                                                  
+
+                      
                     }
 
                 } else {
@@ -2333,6 +2417,7 @@
                     });
                 }
             });
+            }
         });
         function cargar_notas() {
             $.post("entrega_servicesTecnicos/get_ventas_entrega", {},
@@ -2340,7 +2425,7 @@
                     $("#idventa").html('');
                     $("#idventa").append('<option value="">Seleccionar</option>');
                     _.each(data, function (item) {
-                        $("#idventa").append('<option data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" value="' + item.idventa + '">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.razonsocial_cliente + '</option>');
+                        $("#idventa").append('<option data-conse="'+item.serie_comprobante+'*'+ item.numero_comprobante+'*'+item.IdMoneda+'" data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" value="' + item.idventa + '">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.razonsocial_cliente + '</option>');
                     });
                     $("#idventa").select2();
                 },
@@ -2527,6 +2612,7 @@
             recordsLoaded: function(event, data) {
                 $('.edit-serie').click(function(e){
                     var id = $(this).attr('data-id');
+                    cargar_notas();
                     findRegister_movement(id);
                     e.preventDefault();
                 });

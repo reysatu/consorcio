@@ -1149,6 +1149,10 @@
                 if(articulo_mov_det.html() !=''){
                     ident_det="A";
                 };
+                 console.log(aartMSE);
+                console.log(ident_serie_bd_serie);
+                console.log(identificador_serie_bd);
+                console.log("test");
                
                 var params = {
                     'art_nada':aartMN,

@@ -19,6 +19,7 @@ use App\Http\Recopro\Register_movement_Detalle\Register_movement_DetalleInterfac
 use App\Http\Recopro\Register_Transfer_Articulo\Register_Transfer_ArticuloInterface;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Operation\OperationInterface;
+use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\ProformaRequest;
 use DB;
@@ -29,6 +30,28 @@ class Entrega_servicesTecnicoController extends Controller
     public function __construct()
     {
 //        $this->middleware('json');
+    }
+    public function get_venta_detalle($id, VentasInterface $repo, Request $request)
+    {
+        try {
+
+            $val = $repo->get_venta_detalle_entrega($id);
+            $data_movimiento_lote_entrega = $repo->get_movemen_lote_entrega($id);
+            $data_movimiento_serie_entrega = $repo->get_movemen_Serie_entrega($id);
+            return response()->json([
+                'status' => true,
+                'data'   => $val,
+                'data_movimiento_lote_entrega'=>$data_movimiento_lote_entrega,
+                'data_movimiento_serie_entrega'=>$data_movimiento_serie_entrega,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
     public function get_ventas_entrega(Register_movementInterface $Repo, Request $request)
     {
