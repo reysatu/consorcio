@@ -19,4 +19,5 @@ Route::get('visita_cliente/data_form', ['as' => 'visita_cliente.data_form', 'use
 Route::post('visita_cliente/guardar_visita', ['as' => 'visita_cliente.guardar_visita', 'uses' => 'VisitaClienteController@guardar_visita']);
 Route::post('visita_cliente/obtener_solicitud', ['as' => 'visita_cliente.obtener_solicitud', 'uses' => 'VisitaClienteController@obtener_solicitud']);
 Route::post('visita_cliente/obtener_cuotas_cronograma', ['as' => 'visita_cliente.obtener_cuotas_cronograma', 'uses' => 'VisitaClienteController@obtener_cuotas_cronograma']);
+Route::post('visita_cliente/procesar_visita', ['as' => 'visita_cliente.procesar_visita', 'uses' => 'VisitaClienteController@procesar_visita']);
 
