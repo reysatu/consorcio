@@ -47,7 +47,7 @@
         var totalDolares=$("#totalDolares");
         
 
-        idUsuario.select2();
+        idUsuario.select2(); 
         idCaja.select2();
 
         btn_imprimirCaja.click(function (e) {
@@ -57,6 +57,8 @@
                        $scope.loadMovimientoCajaPDF('aperturaCajas/pdfdiar', data);
                     }else if($("#estadReporte").val()==2){
                        $scope.loadMovimientoCuadreCajaPDF('aperturaCajas/Cuadrepdfdiar', data);
+                    }else if($("#estadReporte").val()==3){
+                       $scope.loadMovimientoEmisionComproPDF('aperturaCajas/EmisionComprpdfdiar', data);
                     }
             
         });

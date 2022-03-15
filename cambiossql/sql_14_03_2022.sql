@@ -21,6 +21,10 @@ select * from ERP_Modelo
 select * from ERP_Clientes
 select * from ERP_Ubigeo
 select * from ERP_Moneda
+//////////////////// 14/03/2022 info_reporte_comprobantes///////////////////////////////////////////
+select * from ERP_Venta 
+
+
 
 //////// 14/03/2022 info_reporte_cuentasxcliente///////////////////////////////////////////////////
 select max(v.fecha_emision) as fecha_ultimo_pago,C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito from ERP_SolicitudCronograma C
@@ -63,12 +67,12 @@ LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
 LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
 
 select * from ERP_SolicitudCredito
-
+select * from ERP_Venta
 ///////////////////////////////////////// info_view reporte_venta_cliente////////////////////////////////////////////////
 
-
-select pr.idCategoria as idcategoria,ven.idtienda, cl.id as idcliente ,ved.idvendedor,ved.descripcion as vendedor,ven.fecha_emision as fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as documento_venta ,ven.serie_comprobante, ven.numero_comprobante,cl.id as idcliente,cl.documento as nro_documento_cliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion,cl.celular,mo.descripcion as modelo,ser.nombreSerie,ser.color,
-sc.cuota_inicial as inicial,sa.precio_unitario,fp.description as forma_pago,mon.descripcion as moneda
+create VIEW ERP_VW_VentaClientes AS
+select pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
 from ERP_Venta as ven
 INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
 INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
@@ -83,6 +87,23 @@ LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
 LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
 left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
 
+
+select *
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+
+
 ///
 CREATE TABLE ERP_TipoTraslado (
 		id int not null,
@@ -95,6 +116,15 @@ CREATE TABLE ERP_TipoTraslado (
 	  PRIMARY KEY (id)
 );
 
+select * from ERP_GuiaRemisionProducto
+select * from ERP_GuiaRemisionDetalle
+ALTER TABLE ERP_GuiaRemisionProducto
+ADD idlote int  NULL;
+select * from ERP_Productos
+select * from ERP_Lote
+select * from ERP_Compania
 
+select * from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='2022-02-15' and c.idUsuario='1006'
 
+select 
 

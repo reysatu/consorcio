@@ -10,7 +10,7 @@ Route::post('movimientoCajas/list', ['as' => 'movimientoCajas.list', 'uses' => '
 Route::post('movimientoCajas/create', ['as' => 'movimientoCajas.create', 'uses' => 'MovimientoCajaController@create']);
 Route::post('movimientoCajas/delete', ['as' => 'movimientoCajas.delete', 'uses' => 'MovimientoCajaController@destroy']);
 Route::post('movimientoCajas/update', ['as' => 'movimientoCajas.update', 'uses' => 'MovimientoCajaController@update']);
-Route::get('movimientoCajas/excel', ['as' => 'movimientoCajas.excel', 'uses' => 'MovimientoCajaController@excel']);
+Route::get('movimientoCajas/excel', ['as' => 'movimientoCajas.excel', 'uses' => 'MovimientoCajaController@excel']); 
 // Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
 Route::get('movimientoCajas/data_form/{id}', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
 Route::get('movimientoCajas/data_formUsu', ['as' => 'movimientoCajas.data_formUsu', 'uses' => 'DescuentoController@data_form']);
@@ -35,7 +35,7 @@ Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
 
 Route::get('movimientoCajas/Cuadrepdf', 'MovimientoCajaController@Cuadrepdf');
 
-Route::get('movimientoCajas/EmisionComprpdf', 'MovimientoCajaController@EmisionComprpdf');
+Route::get('movimientoCajas/EmisionComprpdf', 'MovimientoCajaController@EmisionComprpdf'); 
 
 Route::get('movimientoCajas/pdf_diario', 'MovimientoCajaController@pdf_diario');
 

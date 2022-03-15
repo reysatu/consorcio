@@ -122,6 +122,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Report_movements.php';
 
+    require app_path() . '\Http\Routes\ReporteVentaClientes.php';
+
     require app_path() . '\Http\Routes\Technicians.php';
 
     require app_path() . '\Http\Routes\Advisers.php';
