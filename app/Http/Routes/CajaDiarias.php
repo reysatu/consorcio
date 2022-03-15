@@ -4,7 +4,7 @@
  * User: JAIR
  * Date: 4/5/2017
  * Time: 6:59 PM
- */ 
+ */  
 
 Route::post('aperturaCajas/list', ['as' => 'aperturaCajas.list', 'uses' => 'CajaDiariaController@all']);
 Route::post('aperturaCajas/create', ['as' => 'aperturaCajas.create', 'uses' => 'CajaDiariaController@create']);
@@ -34,5 +34,6 @@ Route::get('aperturaCajas/pdfdiar', 'MovimientoCajaController@pdfdiarioApert');
 
 Route::get('aperturaCajas/Cuadrepdfdiar', 'MovimientoCajaController@pdfCuadreApert');
 
+Route::get('aperturaCajas/EmisionComprpdfdiar', 'MovimientoCajaController@EmisionComprpdfApert');
 
 // Route::get('aperturaCajas/deleteUsuario/{id}', ['as' => 'aperturaCajas.deleteUsuario', 'uses' => 'CajaDiariaController@deleteDetalle']); 

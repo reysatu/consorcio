@@ -304,6 +304,7 @@
                         }
                         if(index.serie=='1'){
                             tipo='SE';
+                            
                         }else if(index.lote=='1'){
                             tipo='LE';
                             codl=index.idLote;
@@ -1049,6 +1050,7 @@
                 identificador_serie_bd = identificador_serie_bd.join(',');    
 
                 idalcantEnv = idalcantEnv.join(',');
+
                 var idalcostEnv = [];
                     $.each($('.m_articulo_costo'), function (idx, item) {
                         idalcostEnv[idx] = $(item).val();

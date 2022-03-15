@@ -17,11 +17,29 @@ use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
 use DB;
 class AsignacioncobradorController extends Controller
 {
-     use CobradorTrait;
+     use CobradorTrait; 
 
-    public function __construct() 
+    public function __construct()  
     {
 //        $this->middleware('json');
+    }
+    public function tarjetaCobranza(Solicitud_AsignacionInterface $repo,Request $request)
+    {
+        $cCodConsecutivo =  $request->input('cCodConsecutivo');
+        $nConsecutivo =  $request->input('nConsecutivo');  
+        $data_cronograma = $repo->get_tarjeta_Cronograma($cCodConsecutivo,$nConsecutivo);
+        $data_cliente=$repo->get_tarjeta_cliente($cCodConsecutivo,$nConsecutivo);
+            $img='logo_icono.jpg';
+            $path = public_path('img/' . $img);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+        return response()->json([
+                'status' => true,
+                'data_cronograma'=>$data_cronograma,
+                'data_cliente'=>$data_cliente,
+                 'img'=>$image, 
+            ]);
     }
     public function createUpdate($id, CobradorInterface $repo, Request $request)
     { 
@@ -83,16 +101,18 @@ class AsignacioncobradorController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($cCodConsecutivo,$nConsecutivo), $request, 'cCodConsecutivo', $params);
     }
-    public function data_form(CobradorInterface $repo)
+     public function data_form(CobradorInterface $repo)
     {
         $cobrador=$repo->getCobrador();
         $tienda=$repo->getTienda();
         $cliente=$repo->getCliente();
+        $usuarios=$repo->getUsuarios();
         return response()->json([ 
             'status' => true,
             'cobrador' => $cobrador,
             'tienda' => $tienda,
             'cliente'=>$cliente,
+            'usuarios'=>$usuarios,
         ]);
     }
  

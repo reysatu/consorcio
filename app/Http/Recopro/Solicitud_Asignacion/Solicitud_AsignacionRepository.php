@@ -29,6 +29,28 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
         });
     }
+    public function get_tarjeta_cliente($cCodConsecutivo,$nConsecutivo)
+    {   $mostrar=DB::select("SELECT usv.name as vendedor,usc.name as cobrador,vent.fecha_emision as fecha_venta,cli.cReferencia,mone.Simbolo as simbolo, mo.descripcion as Modelo,ser.color as Color,ser.cPlacaVeh as Placa, ser.motor as Motor, ser.chasis as Chasis ,s.monto_venta as precio_lista,s.cuota_inicial as inicial,cli.cNumerodocumento AS documento_cliente,cli.cApePat+' '+cli.cApeMat as Apellidos_cliente,cli.cNombres as nombres_cliente,cli.cCelular as celular_cliente,cli.cDireccion as direccion_cliente, f.cNumerodocumento AS documento_fiador,f.cApePat+' '+f.cApeMat as Apellidos_fiador,f.cNombres as nombres_fiador,f.cCelular as celular_fiador,f.cDireccion as direccion_fiador, cy.cNumerodocumento AS documento_conyugue,cy.cApePat+' '+cy.cApeMat as Apellidos_conyugue,cy.cNombres as nombres_conyugue,cy.cCelular as celular_conyugue,cy.cDireccion as direccion_conyugue,fc.cNumerodocumento AS documento_fiadorconyugue,fc.cApePat+' '+fc.cApeMat as Apellidos_fiadorconyugue,fc.cNombres as nombres_fiadorconyugue,fc.cCelular as celular_fiadorconyugue,fc.cDireccion as direccion_fiadorconyugue,s.tipo_vivienda as tipo_vivienda   FROM ERP_Solicitud as so inner join ERP_SolicitudCredito  AS s on  (so.cCodConsecutivo=s.cCodConsecutivo and so.nConsecutivo=s.nConsecutivo)
+inner join ERP_SolicitudArticulo as sola on (sola.cCodConsecutivo=s.cCodConsecutivo and sola.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pro on sola.idarticulo = pro.id
+left join ERP_Modelo as mo on pro.idModelo=mo.idModelo
+left join ERP_SolicitudDetalle as sold on (sold.cCodConsecutivo=s.cCodConsecutivo and sold.nConsecutivo=s.nConsecutivo)
+inner join ERP_Moneda as mone on mone.IdMoneda=so.idmoneda
+left join erp_venta as vent on(vent.cCodConsecutivo_solicitud=s.cCodConsecutivo and vent.nConsecutivo_solicitud=s.nConsecutivo)
+left join ERP_Serie as ser on ser.idSerie=sold.idSerie
+left join ERP_Usuarios as usv on usv.id=so.idvendedor
+left join ERP_Usuarios as usc on usc.id=so.idCobrador
+        LEFT JOIN ERP_Persona AS f ON(f.idPersona=s.idfiador)
+        LEFT JOIN ERP_Persona AS cy ON(cy.idPersona=s.idconyugue)
+        LEFT JOIN ERP_Persona AS fc ON(fc.idPersona=s.idfiadorconyugue)
+              LEFT JOIN ERP_Persona AS cli ON(cli.idPersona=so.idCliente) where s.cCodConsecutivo='$cCodConsecutivo' and s.nConsecutivo='$nConsecutivo'");
+        return $mostrar;
+    }
+       public function get_tarjeta_Cronograma($cCodConsecutivo,$nConsecutivo)
+    {   
+        $mostrar=DB::select("select * from ERP_SolicitudCronograma where cCodConsecutivo='$cCodConsecutivo' and nConsecutivo='$nConsecutivo'");
+        return $mostrar;
+    }
     public function searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro) 
     {
         $solitud=[];

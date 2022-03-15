@@ -223,17 +223,23 @@ class MovimientoCajaController extends Controller
                  'usuario'=>$nameuser[0]->name,
             ]);
     }
-    public function EmisionComprpdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    public function EmisionComprpdfApert(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
     {          
-           
-            $usuario=auth()->id();
+            $usuario = $request->input('idUsuario');
+            $fechacA = $request->input('fechaCaja');
+            // $usuario=auth()->id();
             $nameuser=$repoQs->getUsuario($usuario);
             date_default_timezone_set('America/Lima');
                // date_default_timezone_set('UTC');
-            $fechacA= date("Y-m-d");
+           
+            
+            // $fechacA= date("Y-m-d");
             $fechacAc= date("d/m/Y H:i:s");
             $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
-
+            $dataTienda=$recaj->get_tienda($dataMc[0]->idcaja);
+            $dataVe=$recaj->get_ventaCajaCompro($fechacA,$usuario);
+            $dataList=$recaj->get_ventaCompro($fechacA,$usuario);
+            $dataListTipoPago=$recaj->get_ventaComproTipoPago($fechacA,$usuario);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
             $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
@@ -244,6 +250,7 @@ class MovimientoCajaController extends Controller
             $dataDenomicacion=$recaj->getDenominaciones_actual($dataMc[0]->idCajaDiaria,$dataMc[0]->estado);
             $simboloMoneda = $repoQs->getSimboloMoneda();
             $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
+            
 
             $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
             return response()->json([
@@ -262,6 +269,58 @@ class MovimientoCajaController extends Controller
                  'simboloMoneda'=>$simboloMoneda,
                  'simboloMonedaDolar'=>$simboloMonedaDolar,
                  'usuario'=>$nameuser[0]->name,
+                 'dataTienda'=>$dataTienda,
+                 'dataList'=> $dataList,
+                 'dataListTipoPago'=>$dataListTipoPago,
+
+            ]);
+    }
+    public function EmisionComprpdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    {          
+           
+            $usuario=auth()->id();
+            $nameuser=$repoQs->getUsuario($usuario);
+            date_default_timezone_set('America/Lima');
+               // date_default_timezone_set('UTC');
+            $fechacA= date("Y-m-d");
+            $fechacAc= date("d/m/Y H:i:s");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+            $dataTienda=$recaj->get_tienda($dataMc[0]->idcaja);
+            $dataVe=$recaj->get_ventaCajaCompro($fechacA,$usuario);
+            $dataList=$recaj->get_ventaCompro($fechacA,$usuario);
+            $dataListTipoPago=$recaj->get_ventaComproTipoPago($fechacA,$usuario);
+            $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
+
+            $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
+            $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
+            $dataCajaDetForDol = $recaj->getCajaDetForDol($fechacA,$usuario);
+            $dataCajaDetEfeDol = $recaj->getCajaDetEfeDol($fechacA,$usuario);
+            $dataCajaDetEfeSolAper = $recaj->getCajaDetEfeSolAper($fechacA,$usuario);
+            $dataCajaDetEfeDolAper = $recaj->getCajaDetEfeDolAper($fechacA,$usuario);
+            $dataDenomicacion=$recaj->getDenominaciones_actual($dataMc[0]->idCajaDiaria,$dataMc[0]->estado);
+            $simboloMoneda = $repoQs->getSimboloMoneda();
+            $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
+
+            $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
+            return response()->json([
+               'status' => true,
+                'dataCaDet'=>$dataCaDet,
+                'feca'=> $feca,
+                'fechacA'=>$fechacAc,
+                'dataCajaDetForSol'=>$dataCajaDetForSol,
+                'dataCajaDetEfeSol'=>$dataCajaDetEfeSol,
+                'dataCajaDetForDol'=>$dataCajaDetForDol,
+                'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
+                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
+                'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                 'dataMc'=>$dataMc,
+                 'dataDenomicacion'=>$dataDenomicacion,
+                 'simboloMoneda'=>$simboloMoneda,
+                 'simboloMonedaDolar'=>$simboloMonedaDolar,
+                 'usuario'=>$nameuser[0]->name,
+                 'dataTienda'=>$dataTienda,
+                 'dataList'=> $dataList,
+                 'dataListTipoPago'=>$dataListTipoPago,
             ]);
     }
     public function pdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)

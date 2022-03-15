@@ -57,9 +57,13 @@ class CobradorRepository implements CobradorInterface
     }
      public function create(array $attributes)
     {
-        $attributes['cIdUsuCre'] = auth()->id();
+        $attributes['cIdUsuCre'] = auth()->id(); 
         $attributes['cIdUsuMod'] = auth()->id();
         return $this->model->create($attributes);
+    }
+    public function getUsuarios(){
+          $mostrar2=DB::select("select * from ERP_Usuarios ");
+          return $mostrar2;
     }
     public function get_consecutivo($table,$id)
     {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");

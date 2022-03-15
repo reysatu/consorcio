@@ -42,7 +42,7 @@
                     cobradores[idx] =$(this).attr('data_idSolicitud');
                 });
                 cobradores = cobradores.join(',');
-
+ 
                 var params = {
                     'idCobrador':idCobrador.val(),
                     'cobradores':cobradores,
@@ -113,7 +113,7 @@
             },
             fields: {
                 select: {
-                        width: '1%',
+                        width: '1%', 
                         sorting: false,
                         edit: false,
                         create: false,
@@ -196,6 +196,17 @@
                         });
                         //Return image to show on the person row
                         return $img;
+                    }
+                },
+                 print: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center', 
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" title="Tarjeta" class="print_content" data-code="' +
+                            data.record.cCodConsecutivo +'*'+data.record.nConsecutivo+'"><i class="fa fa-file fa-1-5x fa-green"></i></a>';
                     }
                 },
                 cCodConsecutivo: {
@@ -322,6 +333,17 @@
                     }).on('ifChanged', function (event) {
                             $(event.target).click();
                     });
+                    $('.print_content').click(function (e) {
+                    var id = $(this).attr('data-code');
+                    var totalid=id.split("*");
+                    var data_pdf = {
+                            cCodConsecutivo:totalid[0],
+                            nConsecutivo:totalid[1],
+                    };
+                    $scope.loadTarjetaCobranzaPDF('asignacioncobradors/tarjetaCobranza',data_pdf);
+                 
+                    e.preventDefault();
+                });
 
                 },
             formCreated: function (event, data) {
