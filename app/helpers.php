@@ -89,7 +89,9 @@ function parseDataList($data, $request, $sort_default, $data_select)
     if (in_array($search[0], $data_select)) {
         $data = $data->orderBy($search[0], $search[1]);
     }
+    // print_r($data->toSql());
     $data = $data->get();
+
 
     foreach ($data as $d) {
         if ($d->user_created) {

@@ -184,6 +184,11 @@ use App\Http\Recopro\Ventas\Ventas;
 use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Recopro\Ventas\VentasRepository;
 
+
+use App\Http\Recopro\VisitaCliente\VisitaCliente;
+use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
+use App\Http\Recopro\VisitaCliente\VisitaClienteRepository;
+
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantes;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesRepository;
@@ -712,6 +717,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSolicitud();
         $this->registerSolicitudCredito();
         $this->registerVentas();
+        $this->registerVisitaCliente();
         $this->registerConsecutivosComprobantes();
         $this->registerEntity();
         $this->registerTypePerson();
@@ -1277,6 +1283,15 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(VentasInterface::class, function ($app) {
             return new VentasRepository(new Ventas());
+        });
+    }
+
+    public function registerVisitaCliente()
+    {
+        $app = $this->app;
+
+        $app->bind(VisitaClienteInterface::class, function ($app) {
+            return new VisitaClienteRepository(new VisitaCliente());
         });
     }
 
