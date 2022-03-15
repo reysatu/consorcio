@@ -126,6 +126,61 @@
                     );
                     e.preventDefault();
                 });
+                $('.ingresar-resultados').click(function (e) {
+                    var estado = $(this).attr('data-estado');
+                    var id = $(this).attr('data-id');
+                    // alert(estado);
+                    if(estado == "Proceso") {
+                        $.post("visita_cliente/find_visita", { id: id},
+                            function (data, textStatus, jqXHR) {
+                                // console.log(data);
+                                $(".resultados").show();
+                                $(".registro").hide();
+
+                                $("#fechareg").val(data.visita_cliente[0].fechareg);
+                                $("#idcobrador").val(data.visita_cliente[0].idcobrador);
+                                $("#idcobrador").trigger("change");
+                                $("#idvisita").val(data.visita_cliente[0].id);
+                              
+                                var cuotas = [];
+
+                                if(data.visita_cliente_cuota.length > 0) {
+                                    for (var vcc = 0; vcc < data.visita_cliente_cuota.length; vcc++) {
+                                        cuotas.push(data.visita_cliente_cuota[vcc].nrocuota);
+                                        
+                                    }
+                                }
+
+                                if(data.visita_cliente_solicitud.length > 0) {
+                                    var html_s = "";
+
+                                    for (var vcs = 0; vcs < data.visita_cliente_solicitud.length; vcs++) {
+                                        html_s = '<tr idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'">';
+                                        html_s += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
+                                        html_s += '    <input type="hidden" name="idcliente[]" value="'+data.visita_cliente_solicitud[vcs].idcliente+'" />';
+                                        html_s += '    <input type="hidden" name="idsolicitud[]" value="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" />';
+                                        html_s += '     <span></span>';
+                                        html_s += '    <td>'+data.visita_cliente_solicitud[vcs].razonsocial_cliente+'</td>';
+                                        html_s += '    <td>'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'</td>';
+                                        html_s += '    <td>'+parseFloat(data.visita_cliente_solicitud[vcs].saldo).toFixed(2)+'</td>';
+                                        html_s += '    <td>['+cuotas.join(",")+']</td>';
+                                        html_s += '    <td><input style="width: 100%;" type="text" name="cObservacion[]" class="form-control input-xs" /></td>';
+                                        html_s += '    <td><center><button type="button" title="Agregar Resultados" idcliente="'+data.visita_cliente_solicitud[vcs].idcliente+'" idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="btn btn-info btn-xs agregar-resultados" id_visita="'+data.visita_cliente_solicitud[vcs].id+'" ><i class="fa fa-plus"></i></button></center></td>';
+                                        html_s += '</tr>';
+                                      
+                                    }
+                                    // alert(html_s);
+                                    $("#detalle-visitas").html(html_s);
+                                }
+
+                            
+
+                                $("#modal-visita").modal("show");
+                            },
+                            "json"
+                        );
+                    }
+                })
                
             },
             formCreated: function (event, data) {
@@ -185,21 +240,43 @@
 
         function newVisitaCliente() {
             // alert("hola");
+            $(".resultados").hide();
+            $(".registro").show();
+
+            $("#idcliente").val("");
+            $("#idcliente").trigger("change");
+            $("#idvisita").val("");
+            $("#idsolicitud").val("");
+            $("#idsolicitud").trigger("change");
+            $("#idcobrador").val("");
+            $("#idcobrador").trigger("change");
+            $("#fechareg").val("");
+            $("#cuotas-credito").html("");
+            $("#detalle-visitas").html("");
+            
             $("#modal-visita").modal("show");
         }
 
 
-        $(document).on("change", "#idcliente", function () {
+        $(document).on("change", "#idcliente", function (event, idsolicitud) {
             var idcliente = $(this).val();
+            $("#idsolicitud").html("");
             $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     if(data.length > 0) {
                         $("#idsolicitud").append('<option value="" selected>Seleccionar</option>');
                         data.map(function (index) {
-                        $("#idsolicitud").append('<option data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            // console.log(typeof idsolicitud);
+                            if(typeof idsolicitud != "undefined" && idsolicitud == index.id) {
+                                $("#idsolicitud").append('<option selected="selected" data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            } else {
+
+                                $("#idsolicitud").append('<option data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            }
                         });
                         $("#idsolicitud").select2();
+                        $("#idsolicitud").trigger("change");
                     }  else {
                         AlertFactory.textType({
                             title: '',
@@ -213,63 +290,91 @@
             );
         });
 
-        $(document).on("change", "#idsolicitud", function () {
-            var id = $(this).val();
-            $.post("solicitud/find", { id: id },
-            function (data, textStatus, jqXHR) {
+        $(document).on("click", ".agregar-resultados", function () {
+            var idcliente = $(this).attr("idcliente");
+            var idsolicitud = $(this).attr("idsolicitud");
+            var id_visita = $(this).attr("id_visita");
+            $("#idcliente").val(idcliente).trigger("change", [idsolicitud, id_visita]);
+            
+            $("#modal-detalle").modal("show");
+           
+        });
 
+        function draw_cuotas(data) {
+            var html = "";
+               
+            for (var index = 0; index < data.length; index++) {
 
+                html += '<tr>';
+                html += '<td><span class="inputs-hidden" nrocuota="'+data[index].nrocuota+'" ></span>'+data[index].fecha_vencimiento+'</td>';
+                
+                html += '<td class="valor-cuota">'+parseFloat(data[index].valor_cuota).toFixed(2)+'</td>';
+                html += '<td class="int-moratorio">'+parseFloat(data[index].int_moratorio).toFixed(2)+'</td>';
+                html += '<td class="">'+parseFloat(data[index].saldo_cuota).toFixed(2)+'</td>';
+                html += '<td class="">'+parseFloat(data[index].monto_pago).toFixed(2)+'</td>';
+                
+                html += '<td>'+data[index].nrocuota+'</td>';
+                if(parseFloat(data[index].saldo_cuota) > 0) {
+                  
+                    html += '<input type="hidden" class="" name="nrocuota[]" value="'+data[index].nrocuota+'" >';
 
-                var prox_venc = "";
-                if (data.solicitud_cronograma.length > 0) {
-                    var html = "";
-                    var disabled = "";
-                    var checked = "";
-                    for (var index = 0; index < data.solicitud_cronograma.length; index++) {
-                        disabled = "";
-                        checked = "";
-                        //    console.log(data.solicitud_cronograma[index].saldo_cuota);
-                        if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc == "") {
-                            prox_venc = data.solicitud_cronograma[index].fecha_vencimiento_credito;
-                        }
+                    if($("#idvisita").val() == "") {
 
-                     
-
-                        html += '<tr>';
-                        html += '<td><span class="inputs-hidden" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" ></span>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
-                        
-                        html += '<td class="valor-cuota">'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
-                        html += '<td class="int-moratorio">'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
-                        html += '<td class="">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
-                        html += '<td class="">'+parseFloat(data.solicitud_cronograma[index].monto_pago).toFixed(2)+'</td>';
-                        
-                        html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
-                        if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) > 0) {
-                          
-                            html += '<input type="hidden" class="" name="nrocuota[]" value="'+data.solicitud_cronograma[index].nrocuota+'" >';
-                            html += '<td><center><input type="checkbox" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" value="'+data.solicitud_cronograma[index].nrocuota+'" class="check-cuota" /></center></td>';
-                        } else {
-                            html += '<td class=""></td>';
-                            
-                            html += '<td class=""></td>';
-                        }
-                        
-                        
-
-                      
-                        html += '</tr>';
+                        html += '<td><center><input type="checkbox" nrocuota="'+data[index].nrocuota+'" value="'+data[index].nrocuota+'" class="check-cuota" /></center></td>';
                     }
-                    // alert(html);
-                    $("#cuotas-credito").html(html);
-                    // alert(prox_venc);
-                    $("#prox_venc_credito").val(prox_venc);
-                }
+                } else {
+                    if($("#idvisita").val() == "") {
 
-                $("#modalSolicitudCredito").modal("show");
-            },
-            "json"
-        );
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                    }
+                    
+                }
+                // console.log("d =>"+$("#idvisita").val());
+
+                if($("#idvisita").val() != "" ) {
+
+                    if(data[index].nrocuota_v != null) {
+                        html += '<td class=""><input type="date" class="form-control input-sm" name="fecha_pago[]" value="'+data[index].fecha_pago+'" /></td>';
+                        html += '<td class=""><input type="number" class="form-control input-sm" name="monto_pago[]" value="'+data[index].monto_pago_v+'" /></td>';
+                        html += '<td class=""><input type="text" class="form-control input-sm" name="cObservacion_d[]" value="'+data[index].cObservacion+'" /></td>';
+                    } else {
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                    }
+                   
+                  
+                }
+                
+
+              
+                html += '</tr>';
+            }
+            // alert(html);
+
+            return html;
+        }
+
+        $(document).on("change", "#idsolicitud", function (eventa) {
+            var id = $(this).val();
+            var idvisita = $("#idvisita").val();
+           
+
+            $.post("visita_cliente/obtener_cuotas_cronograma", { id: id, idvisita: idvisita },
+                function (data, textStatus, jqXHR) {
+
+                    if (data.length > 0) {
+                        var html = draw_cuotas(data);
+                        // alert(html);
+                        $("#cuotas-credito").html(html);
+                    
+                    }
+                },
+                "json"
+            );
         })
+
       
 
         function find_documento(id) {
@@ -330,6 +435,7 @@
             var idcliente = $("#idcliente").val();
             var idsolicitud = $("#idsolicitud").val();
 
+
             var checks = $(".check-cuota");
             var cuotas = [];
             for (var check = 0; check < checks.length; check++) {
@@ -341,19 +447,27 @@
               
             }
 
-            var html = '<tr>';
-            html += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
-            html += '    <input type="hidden" name="idcliente[]" value="'+idcliente+'" />';
-            html += '    <input type="hidden" name="idsolicitud[]" value="'+idsolicitud+'" />';
-            html += '    <td>'+cliente+'</td>';
-            html += '    <td>'+idsolicitud+'</td>';
-            html += '    <td>'+saldo.toFixed(2)+'</td>';
-            html += '    <td>['+cuotas.join(",")+']</td>';
-            html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
-            html += '</tr>';
+            
+            var html = "";
 
-            $("#detalle-visitas").append(html);
-            $("#modal-detalle").modal("hide");  
+            if($("#idvisita").val() == "") {
+                html = '<tr>';
+                html += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
+                html += '    <input type="hidden" name="idcliente[]" value="'+idcliente+'" />';
+                html += '    <input type="hidden" name="idsolicitud[]" value="'+idsolicitud+'" />';
+                html += '    <td>'+cliente+'</td>';
+                html += '    <td>'+idsolicitud+'</td>';
+                html += '    <td>'+saldo.toFixed(2)+'</td>';
+                html += '    <td>['+cuotas.join(",")+']</td>';
+                html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
+                html += '</tr>';
+
+                $("#detalle-visitas").append(html);
+            } else {
+                
+            }
+            
+            // $("#modal-detalle").modal("hide");  
         }
 
         $scope.guardar_visita = function () {

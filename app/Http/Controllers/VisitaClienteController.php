@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\Cobrador\CobradorInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteTrait;
 use App\Http\Requests\VisitaClienteRequest;
@@ -205,5 +206,32 @@ class VisitaClienteController extends Controller
         $result = $repo->obtener_solicitud($data["idcliente"]);
 
         return response()->json($result);
+    }
+
+    public function find_visita(VisitaClienteInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();    
+
+        $result["visita_cliente"] = $repo->obtener_visita_cliente($data["id"]);
+        $result["visita_cliente_solicitud"] = $repo->obtener_visita_cliente_solicitud($data["id"]);
+        $result["visita_cliente_cuota"] = $repo->obtener_visita_cliente_cuota($data["id"]);
+        $result["solicitud_cronograma"] = $repo->obtener_visita_cliente_cuota($data["id"]);
+
+        return response()->json($result);
+     
+    }
+
+    public function obtener_cuotas_cronograma(VisitaClienteInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();    
+
+        $arr = explode("_", $data["id"]);
+        $cCodConsecutivo = $arr[0];
+        $nConsecutivo = $arr[1];
+        $idvisita = $data["idvisita"];
+
+
+        $response = $repo->obtener_cuotas_cronograma($cCodConsecutivo, $nConsecutivo, $idvisita);
+
+        return response()->json($response);
+
     }
 }

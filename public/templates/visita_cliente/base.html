@@ -79,7 +79,7 @@
 
 
 <div class="modal" id="modal-visita" role="dialog" style="overflow-y: scroll;">
-    <div class="modal-dialog" role="document" style="">
+    <div class="modal-dialog" role="document" style="width:70%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -89,16 +89,8 @@
 
             </div>
             <form id="formulario-visita">
-                <input type="hidden" name="valor_igv" id="valor_igv">
-                <input type="hidden" name="cCodConsecutivo" id="cCodConsecutivo">
-                <input type="hidden" name="nConsecutivo" id="nConsecutivo">
-                <input type="hidden" name="tipo_comprobante" id="tipo_comprobante">
-                <input type="hidden" name="anticipo" id="anticipo">
-                <input type="hidden" name="idventa" id="idventa">
-                <input type="hidden" name="t_monto_total" id="t_monto_total">
-                
-                <input type="hidden" name="idmoneda" id="idmoneda">
-                <input type="hidden" name="condicion_pago" id="condicion_pago">
+                <input type="hidden" name="idvisita" id="idvisita">
+               
                 <div class="modal-body">
                     <div class="tab-content">
                         <!-- <br> -->
@@ -135,7 +127,7 @@
                                             <select id="idcobrador" style="width: 100%;" name="idcobrador"class="form-control input-sm"></select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group registro">
                                         <div class="col-md-3" style="margin-top: 15px;">
                                             <button type="button" id=""
                                                 class="btn btn-danger-admin btn-sm" ng-click="agregar_solicitud()">
@@ -156,7 +148,9 @@
                                                             <th width="110px">Solicitud</th>
                                                             <th width="110px">Saldo</th>
                                                             <th width="150px">Cuotas</th>
-                                                            <th width="50px"></th>
+                                                            <th width="250px" class="resultados">Observación</th>
+                                                            <th width="40px" class="registro"></th>
+                                                            <th width="40px" class="resultados"></th>
                                                            
                                                         </tr>
                                                     </thead>
@@ -212,7 +206,7 @@
 
 
 <div class="modal" id="modal-detalle" role="dialog" style="overflow-y: scroll;">
-    <div class="modal-dialog" role="document" style="">
+    <div class="modal-dialog" role="document" style="width:70%;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -283,9 +277,12 @@
                                                             <th width="100px">Saldo Capital </th>
                                                             <th width="100px">Pagado </th>
                                             
-                                                            <th width="100px">#</th>
+                                                            <th width="30px">#</th>
                                                         
-                                                            <th width="100px">Sel</th>
+                                                            <th width="100px" class="registro">Sel</th>
+                                                            <th width="80px" class="resultados">Fecha Pago</th>
+                                                            <th width="80px" class="resultados">Monto Pago</th>
+                                                            <th width="250px" class="resultados">Observación</th>
                                                             
                                                         </tr>
                                                     </thead>
