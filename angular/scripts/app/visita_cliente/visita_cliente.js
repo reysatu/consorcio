@@ -159,7 +159,7 @@
                                         html_s += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
                                         html_s += '    <input type="hidden" name="idcliente[]" value="'+data.visita_cliente_solicitud[vcs].idcliente+'" />';
                                         html_s += '    <input type="hidden" name="idsolicitud[]" value="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" />';
-                                        html_s += '     <span></span>';
+                                        html_s += '     <div></div>';
                                         html_s += '    <td>'+data.visita_cliente_solicitud[vcs].razonsocial_cliente+'</td>';
                                         html_s += '    <td>'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'</td>';
                                         html_s += '    <td>'+parseFloat(data.visita_cliente_solicitud[vcs].saldo).toFixed(2)+'</td>';

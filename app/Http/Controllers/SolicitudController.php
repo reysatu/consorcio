@@ -151,7 +151,7 @@ class SolicitudController extends Controller
                     $data_articulo["nCantidadDevuelta"][$i] = 0;
                     $data_articulo["nCantidadPendienteDevolver"][$i] = 0;
 
-                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_articulo));
+                   
 
                     if(isset($data["series_id"][$i])) {
 
@@ -176,23 +176,23 @@ class SolicitudController extends Controller
                                 $data_detalle["id_solicitud_articulo"][$s] = $data_articulo["id"][$i];
                             }
                            
-                            $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                            
                             // print_r($r);
                            
                         }
                        
                     }
-        
-                    
-
                 }
 
-            
-               
-               
-             
-              
-                
+                if(count($data_articulo) > 0) {
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_articulo));
+                }
+
+                if(count($data_detalle) > 0) {
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
+                }
                
             }
           
