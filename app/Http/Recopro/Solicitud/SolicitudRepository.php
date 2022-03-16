@@ -283,7 +283,7 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
        
         s.nombreSerie AS serie, cv.idCatVeh,
-        s.motor, s.color, s.anio_fabricacion
+        s.motor, s.color, s.anio_fabricacion, p.description AS producto
 
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)

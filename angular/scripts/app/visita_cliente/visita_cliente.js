@@ -96,6 +96,17 @@
                     }
 
                 }
+                ,imprimir: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a data-target="#" data-estado="' + data.record.estado + '" data-id="' + data.record.id +'"   title="Imprimir" class="jtable-command-button imprimir-visita"><i class="fa fa-book fa-1-5x"><span>Imprimir Visita</span></i></a>';
+                    }
+
+                }
 
             },  
             
@@ -188,6 +199,11 @@
                         },
                         "json"
                     );
+                })
+                $(".imprimir-visita").click(function() {
+                    var id = $(this).attr('data-id');
+                    // alert(id);
+                    window.open("visita_cliente/imprimir_visita/" + id);
                 })
                
             },
@@ -471,7 +487,7 @@
                 html += '    <td>'+idsolicitud+'</td>';
                 html += '    <td>'+saldo.toFixed(2)+'</td>';
                 html += '    <td>['+cuotas.join(",")+']</td>';
-                html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
+                html += '    <td><center><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></center></td>';
                 html += '</tr>';
 
                 $("#detalle-visitas").append(html);

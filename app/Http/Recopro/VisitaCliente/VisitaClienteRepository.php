@@ -190,7 +190,10 @@ class VisitaClienteRepository implements VisitaClienteInterface
     }
 
     public function obtener_visita_cliente($id) {
-        $sql = "SELECT *, FORMAT(fechareg, 'yyyy-MM-dd') AS fechareg FROM ERP_VisitaCliente WHERE id={$id}";
+        $sql = "SELECT vc.*, FORMAT(vc.fechareg, 'yyyy-MM-dd') AS fechareg , c.descripcion AS cobrador
+        FROM ERP_VisitaCliente AS vc 
+        LEFT JOIN ERP_Cobrador AS c ON(c.id=vc.idcobrador)
+        WHERE vc.id={$id}";
 
         return DB::select($sql);
     }
@@ -199,6 +202,7 @@ class VisitaClienteRepository implements VisitaClienteInterface
         $sql = "SELECT * FROM ERP_VisitaClienteSolicitud  AS vcs
         INNER JOIN ERP_Solicitud AS s ON(vcs.cCodConsecutivo=s.cCodConsecutivo AND s.nConsecutivo=vcs.nConsecutivo)
         INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
+        LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
         WHERE vcs.id={$id}";
 
         return DB::select($sql);
@@ -230,5 +234,22 @@ class VisitaClienteRepository implements VisitaClienteInterface
         
 
         return $result;
+    }
+
+    public function obtener_cuotas_pendientes($cCodConsecutivo, $nConsecutivo) {
+        $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento,  DATEDIFF(DAY, sc.fecha_vencimiento, GETDATE())  AS dias_mora FROM ERP_SolicitudCronograma AS sc
+        WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}  AND sc.saldo_cuota<>0
+        ORDER BY sc.nrocuota ASC";
+
+        return DB::select($sql);
+    }
+
+    public function ultimo_pago_cuota($cCodConsecutivo, $nConsecutivo) {
+        $sql = "SELECT TOP 1 v.*, FORMAT(v.fecha_emision, 'dd-MM-yyyy') AS fecha_emision FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
+        WHERE v.cCodConsecutivo_solicitud='{$cCodConsecutivo}' AND v.nConsecutivo_solicitud={$nConsecutivo} AND vd.nrocuota IS NOT NULL
+        ORDER BY v.fecha_emision DESC";
+
+        return DB::select($sql);
     }
 }
