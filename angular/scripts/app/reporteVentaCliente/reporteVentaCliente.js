@@ -146,6 +146,7 @@
                 idVendedorFiltro: $('#idVendedorFiltro').val(),
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
+                idcategoria:$("#idcategoria").val(),
                 
 
             });
@@ -158,6 +159,7 @@
                             idVendedorFiltro: $('#idVendedorFiltro').val(),
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
+                             idcategoria:$("#idcategoria").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -170,6 +172,7 @@
                             idVendedorFiltro: $('#idVendedorFiltro').val(),
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
+                             idcategoria:$("#idcategoria").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -191,6 +194,7 @@
                     var clientes=response.cliente;
                        var tiendas=response.tienda;
                         var usuarios=response.usuarios;
+                        var categorias=response.categorias;
                       idCobrador.append('<option value="" selected>Seleccionar</option>');
                       cobradores.map(function (index) {
                          idCobrador.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
@@ -199,6 +203,11 @@
                       usuarios.map(function (index) {
                          $("#idVendedorFiltro").append('<option value="'+index.id+'">'+index.name+'</option>');
                       });
+                       $("#idcategoria").append('<option value="" selected>Categoría</option>');
+                      categorias.map(function (index) {
+                         $("#idcategoria").append('<option value="'+index.idCategoria+'">'+index.descripcion+'</option>');
+                      });
+                      
                       $("#idClienteFiltro").append('<option value="" selected>Clientes</option>');
                       clientes.map(function (index) {
                          $("#idClienteFiltro").append('<option value="'+index.id+'">'+index.razonsocial_cliente+'</option>');

@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\Cobrador;
+namespace App\Http\Recopro\ReporteRepuesto;
 use Illuminate\Support\Facades\DB;
 
-class CobradorRepository implements CobradorInterface
+class ReporteRepuestoRepository implements ReporteRepuestoInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(Cobrador $model)
+    public function __construct(ReporteRepuesto $model)
     {
         $this->model = $model; 
        
@@ -26,34 +26,10 @@ class CobradorRepository implements CobradorInterface
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('dFecCre DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->where('numero_comprobante', 'LIKE', '%'.$s.'%');
+          
         });
 
-    } 
-    public function asignar_cobrador($codCons,$nCod,$idCobrador)
-    {
-
-        $sql = "UPDATE ERP_Solicitud SET idCobrador = '$idCobrador' WHERE cCodConsecutivo='$codCons' and nConsecutivo='$nCod'";
-        $result = DB::update($sql);
-
-        return $result;
-    }
-    public function getCobrador(){
-          $mostrar2=DB::select("select * from ERP_Cobrador where estado='A'");
-          return $mostrar2;
-    }
-    public function getCategorias(){
-          $mostrar2=DB::select("select * from ERP_Categoria where estado='A'");
-          return $mostrar2;
-    }
-    public function getCliente(){
-          $mostrar2=DB::select("select * from ERP_Clientes");
-          return $mostrar2;
-    }
-     public function getTienda(){
-          $mostrar2=DB::select("select * from ERP_Tienda where estado='A'");
-          return $mostrar2;
     }
     public function allActive()
     {
@@ -61,13 +37,9 @@ class CobradorRepository implements CobradorInterface
     }
      public function create(array $attributes)
     {
-        $attributes['cIdUsuCre'] = auth()->id(); 
-        $attributes['cIdUsuMod'] = auth()->id();
+        $attributes['user_created'] = auth()->id();
+        $attributes['user_updated'] = auth()->id();
         return $this->model->create($attributes);
-    }
-    public function getUsuarios(){
-          $mostrar2=DB::select("select * from ERP_Usuarios ");
-          return $mostrar2;
     }
     public function get_consecutivo($table,$id)
     {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");

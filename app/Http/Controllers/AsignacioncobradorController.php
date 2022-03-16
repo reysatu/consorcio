@@ -14,6 +14,7 @@ use App\Http\Recopro\Cobrador\CobradorInterface;
 use App\Http\Requests\CobradorRequest;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
+use App\Http\Recopro\Query_movements\Query_movementsInterface;
 use DB;
 class AsignacioncobradorController extends Controller
 {
@@ -22,6 +23,25 @@ class AsignacioncobradorController extends Controller
     public function __construct()  
     {
 //        $this->middleware('json');
+    } 
+      public function pdf_cuentasxcobrar(Request $request,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
+    {       
+            $simboloMoneda = $repomo->getSimboloMoneda();
+            $data_compania=$repo->get_compania();
+            $data_cabe=$repo->get_cuentas_caber();
+            $data_cuer=$repo->get_cuentas_cuerp();
+            $data_compania=$repo->get_compania(); 
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            return response()->json([
+                'status' => true,
+                 'img'=>$image,
+                 'data_cabe'=>$data_cabe,
+                 'data_cuer'=>$data_cuer,
+               
+            ]);
     }
     public function tarjetaCobranza(Solicitud_AsignacionInterface $repo,Request $request)
     {
@@ -29,8 +49,10 @@ class AsignacioncobradorController extends Controller
         $nConsecutivo =  $request->input('nConsecutivo');  
         $data_cronograma = $repo->get_tarjeta_Cronograma($cCodConsecutivo,$nConsecutivo);
         $data_cliente=$repo->get_tarjeta_cliente($cCodConsecutivo,$nConsecutivo);
-            $img='logo_icono.jpg';
-            $path = public_path('img/' . $img);
+        $data_compania=$repo->get_compania(); 
+        $info=str_replace("/","\\",$data_compania[0]->ruta_logo);   
+            $path = public_path("\\".$info);
+            $path =str_replace("\\","/",$path);   
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
@@ -43,7 +65,7 @@ class AsignacioncobradorController extends Controller
     }
     public function createUpdate($id, CobradorInterface $repo, Request $request)
     { 
-       
+        
         try { 
             $data = $request->all();
             $idCobrador=$data['idCobrador'];
@@ -84,6 +106,7 @@ class AsignacioncobradorController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->searchAsignacionCobrador($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'cCodConsecutivo', $params);
     }
+
     public function allAproba(Request $request,Solicitud_AsignacionInterface $repo)
     {
         $s = $request->input('search_c', '');
@@ -101,18 +124,28 @@ class AsignacioncobradorController extends Controller
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($cCodConsecutivo,$nConsecutivo), $request, 'cCodConsecutivo', $params);
     }
+    public function listCronogramaCuentasxCobrar(Request $request,SolicitudCronogramaInterface $repo)
+    {
+        $cCodConsecutivo = $request->input('cCodConsecutivo', '');
+        $nConsecutivo = $request->input('nConsecutivo', '');
+        $params =  ['cCodConsecutivo', 'nConsecutivo','nrocuota','fecha_vencimiento','valor_cuota','int_moratorio','saldo_cuota','monto_pago','user_created','user_updated'];
+        // print_r($repo->search($s)); exit;
+        return parseList($repo->searchCuentasxCobrar($cCodConsecutivo,$nConsecutivo), $request, 'cCodConsecutivo', $params);
+    }
      public function data_form(CobradorInterface $repo)
     {
         $cobrador=$repo->getCobrador();
         $tienda=$repo->getTienda();
         $cliente=$repo->getCliente();
         $usuarios=$repo->getUsuarios();
+        $categorias=$repo->getCategorias();
         return response()->json([ 
             'status' => true,
             'cobrador' => $cobrador,
             'tienda' => $tienda,
             'cliente'=>$cliente,
             'usuarios'=>$usuarios,
+            'categorias'=>$categorias,
         ]);
     }
  

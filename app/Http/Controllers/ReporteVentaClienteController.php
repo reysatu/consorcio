@@ -30,9 +30,9 @@ class ReporteVentaClienteController extends Controller
         $idVendedorFiltro = $request->input('idVendedorFiltro', '');
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
-
+        $idcategoria= $request->input('idcategoria', '');
         $params =  ['idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente'];
-        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'idCategoria', $params);
+        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria), $request, 'idCategoria', $params);
     }
 
     public function create(ReporteVentaClienteInterface $repo, ReporteVentaClienteRequest $request)
@@ -91,7 +91,8 @@ class ReporteVentaClienteController extends Controller
         $idVendedorFiltro = $request->input('idVendedorFiltro', '');
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
-        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)), 'REPORTE DE VENTAS ', 'VENTAS');
+         $idcategoria = $request->input('idcategoria', '');
+        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)), 'REPORTE DE VENTAS ', 'VENTAS');
     }
     public function pdf(ReporteVentaClienteInterface $repo,Request $request)
     {   
@@ -101,8 +102,8 @@ class ReporteVentaClienteController extends Controller
         $idVendedorFiltro = $request->input('idVendedorFiltro', '');
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
-
-        $data = $this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro));
+         $idcategoria = $request->input('idcategoria', '');
+        $data = $this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
         return generateDataPDF($data, 'landscape', 'logo.jpg');
     } 
 }

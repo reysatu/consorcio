@@ -20,6 +20,7 @@
         'sys.app.extends',
         'sys.app.home',
         'sys.app.tipoTraslados',
+        'sys.app.reporteRepuestos',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -98,6 +99,7 @@
         'sys.app.revision_cas',
         'sys.app.aprobacionSolicituds',
         'sys.app.motivos',
+        'sys.app.cuentasxcobrars',
         
         //Ventas
         'sys.app.solicitud',
@@ -302,6 +304,28 @@
                         // toDataUrl(response.img, function (base64Img) {
                         // });
                         create_pdf(response);
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+         $scope.loadCCPDF = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                        create_CCpdf(response);
                     }
                     angular.element('#show_loading').addClass('ng-hide');
                 },
@@ -588,6 +612,30 @@
                         // });
                        
                         createTarjetaCobranzaPDF(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+        $scope.loadReporteRepuestoPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        createReporteRepuestoPDF(response);
                        
                     }
                     angular.element('#show_loading').addClass('ng-hide');
