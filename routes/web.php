@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\ApproversProjects.php';
 
+    require app_path() . '\Http\Routes\ReporteRepuestos.php';
+
     // Routes Masters
 
     require app_path() . '\Http\Routes\Brands.php';

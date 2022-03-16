@@ -26,6 +26,11 @@ use App\Http\Recopro\Bancos\BancosRepository;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaCliente; 
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteInterface;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteRepository;
+
+use App\Http\Recopro\ReporteRepuesto\ReporteRepuesto; 
+use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoInterface;
+use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoRepository;
+
  
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre; 
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
@@ -683,6 +688,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerGuiaRemisionProducto();
         $this->registerGuiaRemisionDetalle();
         $this->registerMovimiento_cierre();
+        $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
         $this->registerView_PendienteCobro();
         $this->registerMovimiento_Articulo_cierre();
@@ -972,6 +978,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(TiposMovimientoInterface::class, function ($app) {
             return new TiposMovimientoRepository(new TiposMovimiento());
+        });
+    }
+    public function registerReporteRepuesto()
+    {
+        $app = $this->app;
+
+        $app->bind(ReporteRepuestoInterface::class, function ($app) {
+            return new ReporteRepuestoRepository(new ReporteRepuesto());
         });
     }
     public function registerReporteVentaCliente()

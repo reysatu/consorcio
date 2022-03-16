@@ -27,6 +27,37 @@ SELECT * FROM ERP_Venta
 
 SELECT * FROM ERP_FormasPago
 SELECT * FROM ERP_CondicionPago
+
+/// vie reporte repuesto 16/03/2022/ ///////////
+select * from ERP_VW_REPORTE_REPUESTO
+alter VIEW ERP_VW_REPORTE_REPUESTO AS 
+SELECT * FROM (select  v.fecha_emision as fecha,s.origen,v.idventa as idventa_ca,v.t_monto_total as monto_total,s.estado as estado,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+inner join ERP_Clientes as cl on (s.idcliente=cl.id)		
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor) ) AS T1 FULL OUTER JOIN 
+(select v.idventa as idventa_cu,sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+              ELSE 0 
+           END) as REPUESTO, sum(CASE  
+             WHEN p.idCategoria =4 THEN sa.monto_total 
+              ELSE 0 
+           END) as ACEITE,
+					 sum(CASE  
+             WHEN p.idCategoria =6 THEN sa.monto_total 
+              ELSE 0 
+           END) as SERVICIO,
+					 sum(CASE  
+             WHEN p.idCategoria =7 THEN sa.monto_total 
+              ELSE 0 
+           END) as TERCEROS			
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) GROUP BY v.idventa ) AS T2 ON T1.idventa_ca=T2.idventa_cu 
+
+
 //////// NO SE ////////
 select SUM(vp.monto_pago) as total,cp.id as idCondicionPago,cp.description as condicionPago from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago GROUP BY v.condicion_pago ,cp.id,cp.description
 
@@ -177,7 +208,7 @@ from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitu
 			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
 inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
 inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
-inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' 
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' 
 
 GROUP BY sa.monto_total,v.t_monto_total,s.estado,p.idCategoria,v.serie_comprobante,tic.numero_comprobante,s.cCodConsecutivo , s.nConsecutivo,
 v.serie_comprobante	,v.numero_comprobante,cl.razonsocial_cliente,vend.descripcion
@@ -250,24 +281,57 @@ inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
 inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
 inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70'
 
-
-select sum(CASE  
+create VIEW ERP_VW_REPORTE_REPUESTO AS 
+SELECT * FROM (select  s.origen,v.idventa as idventa_ca,v.t_monto_total as monto_total,s.estado as estado,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+inner join ERP_Clientes as cl on (s.idcliente=cl.id)		
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor) ) AS T1 FULL OUTER JOIN 
+(select v.idventa as idventa_cu,sum(CASE  
              WHEN p.idCategoria =3 THEN sa.monto_total 
               ELSE 0 
-           END) as aceite, sum(CASE  
+           END) as REPUESTO, sum(CASE  
              WHEN p.idCategoria =4 THEN sa.monto_total 
               ELSE 0 
-           END) as rep,
+           END) as ACEITE,
 					 sum(CASE  
              WHEN p.idCategoria =6 THEN sa.monto_total 
               ELSE 0 
-           END) as rep2
-						
+           END) as SERVICIO,
+					 sum(CASE  
+             WHEN p.idCategoria =7 THEN sa.monto_total 
+              ELSE 0 
+           END) as TERCEROS			
 from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
 			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
 inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
 inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
-inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70'
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) GROUP BY v.idventa ) AS T2 ON T1.idventa_ca=T2.idventa_cu 
+
+
+
+
+
+select v.idventa,sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+              ELSE 0 
+           END) as REPUESTO, sum(CASE  
+             WHEN p.idCategoria =4 THEN sa.monto_total 
+              ELSE 0 
+           END) as ACEITE,
+					 sum(CASE  
+             WHEN p.idCategoria =6 THEN sa.monto_total 
+              ELSE 0 
+           END) as SERVICIO,
+					 sum(CASE  
+             WHEN p.idCategoria =7 THEN sa.monto_total 
+              ELSE 0 
+           END) as TERCEROS			
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' GROUP BY v.idventa
 
 
 SELECT * FROM ERP_Venta
@@ -275,6 +339,7 @@ SELECT * FROM ERP_VentaDetalle
 SELECT * FROM ERP_SolicitudArticulo
 SELECT * FROM ERP_Solicitud
 SELECT * FROM ERP_SolicitudDetalle
+select * from ERP_Categoria
 
 
 				

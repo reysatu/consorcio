@@ -5,6 +5,11 @@
 var cargando = '<div class="text-center" style="color:#fff;padding:1em"><i class="fa fa-spinner fa-spin"></i></div>';
 
 var icon_select = 'circle-o';
+function redondeodecimale(numer){
+var value = parseFloat(numer);
+value = Math.round(value*100)/100;
+return(value);
+}
 function addCommas(nStr)
 {
     nStr += '';
@@ -3095,900 +3100,147 @@ function create_pdf_movimientoCuadreCaja(response) {
     // }
 
 }
-function createTarjetaCobranzaPDF(response) {
+function createReporteRepuestoPDF(response) {
+    var img=response.img;
+    var simboloMoneda=response.simboloMoneda;
+    var data=response.data;
+    var dataBodyReportes=[];
+    console.log(simboloMoneda);
+    console.log(data);
+    var subtituloSolesEfec=[ 
+            { fontSize: 7,text:"CÓDIGO",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"FECHA",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"DOCUMENTO VENTA",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"CLIENTE",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"VENDEDOR",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"MONTO TOTAL",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"ESTADO",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"REPUESTO",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"ACEITE",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"SERVICIO",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"SERVICIO TERCERO",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"MOSTRADOR",fillColor: '#eeeeee'},
+            { fontSize: 7,text:"TALLER",fillColor: '#eeeeee'},
+    ];
 
-     var data_cronograma=response.data_cronograma;  
-     var data_cliente=response.data_cliente;
-     var data_img=response.img;  
-     var data_cabecera=[];
-     console.log(data_cronograma);
-     console.log(data_cliente);
-     var fecha_venta=moment(data_cliente[0].fecha_venta).format('DD/MM/YYYY');
-      var precio_lista_cli=Number(data_cliente[0].precio_lista);
-         precio_lista_cli=precio_lista_cli.toFixed(2);
-         precio_lista_cli=addCommas(precio_lista_cli);
-     var inicial_cli=Number(data_cliente[0].inicial);
-         inicial_cli=inicial_cli.toFixed(2);
-         inicial_cli=addCommas(inicial_cli);    
-     var fonts = {
-  Courier: {
-    normal: 'Courier',
-    bold: 'Courier-Bold',
-    italics: 'Courier-Oblique',
-    bolditalics: 'Courier-BoldOblique'
-  },
-  Helvetica: {
-    normal: 'Helvetica',
-    bold: 'Helvetica-Bold',
-    italics: 'Helvetica-Oblique',
-    bolditalics: 'Helvetica-BoldOblique'
-  },
-  Times: {
-    normal: 'Times-Roman',
-    bold: 'Times-Bold',
-    italics: 'Times-Italic',
-    bolditalics: 'Times-BoldItalic'
-  },
-  Symbol: {
-    normal: 'Symbol'
-  },
-  ZapfDingbats: {
-    normal: 'ZapfDingbats'
-  }
-};
-    var cabeceraTabla=[ 
-                                    { fontSize: 8,text:"LETRAS", bold:true},
-                                    { fontSize: 8,text:"VENCIMIENTO", bold:true},
-                                    { fontSize: 8,text:"IMPORTE", bold:true},
-                                    { fontSize: 8,text:"F.PAGO", bold:true},
-                                    { fontSize: 8,text:"A CUENTA",bold:true},
-                                    { fontSize: 8,text:"SALDO",bold:true},
-                                    { fontSize: 8,text:"N° RECIBO",bold:true},
-                                    { fontSize: 8,text:"COMPROMISO",bold:true},
-                ];
-      data_cabecera.push(cabeceraTabla);            
-    for (var i = 0; i < response.data_cronograma.length; i++) {
-         var fecha=data_cronograma[i].fecha_vencimiento;
-         fecha=moment(fecha).format('DD/MM/YYYY');
-         var valor=Number(data_cronograma[i].valor_cuota);
-         valor=valor.toFixed(2);
-         valor=addCommas(valor);
-         var cabeceraTabla=[ 
-                                    { fontSize: 8,text:data_cronograma[i].nrocuota, margin: [0,3,0,3],},
-                                    { fontSize: 8,text:fecha, margin: [0,3,0,3],},
-                                    { fontSize: 8,text:data_cliente[0].simbolo+" "+valor, margin: [0,3,0,3],},
-                                    { fontSize: 8,text:"", margin: [0,3,0,3],},
-                                    { fontSize: 8,text:"", margin: [0,3,0,3],},
-                                    { fontSize: 8,text:"", margin: [0,3,0,3],},
-                                    { fontSize: 8,text:"", margin: [0,3,0,3],},
-                                    { fontSize: 8,text:"", margin: [0,3,0,3],},
-                ];
- data_cabecera.push(cabeceraTabla);
-    }           
-              
-     var docDefinition = {
-        pageMargins: [30, 15,30, 15],
+  dataBodyReportes.push(subtituloSolesEfec);
+  data.map(function(index) {
+    var estado='Registrado';
+    if(index.estado=='2'){
+        estado='Vigente';
+    }else if(index.estado=='3'){
+         estado='Por Aprobar';
+    }else if(index.estado=='4'){
+         estado='Aprobado';
+    }else if(index.estado=='5'){
+         estado='Rechazado';
+    }else if(index.estado=='6'){
+         estado='Facturado';
+    }else if(index.estado=='7'){
+         estado='Despachado';
+    }
+    var mostrador=0;
+    var taller=0;
+            if(index.origen=='V'){
+                $mostrador=Number(index.REPUESTO)+Number(index.ACEITE);
+            }else{
+                $taller=Number(index.REPUESTO)+Number(index.ACEITE); 
+            };
+  
+     var subtituloSolesEfec=[ 
+            { fontSize: 8,text:index.cCodConsecutivo+'-'+index.nConsecutivo},
+            { fontSize: 8,text:moment(index.fecha).format('DD/MM/YYYY'),},
+            { fontSize: 8,text:index.documento_ven},
+            { fontSize: 8,text:index.razonsocial_cliente},
+            { fontSize: 8,text:index.vendedor},
+            { fontSize: 8,text:index.monto_total,},
+            { fontSize: 8,text:estado,},
+            { fontSize: 8,text:redondeodecimale(index.REPUESTO).toFixed(2),},
+            { fontSize: 8,text:redondeodecimale(index.ACEITE).toFixed(2),},
+            { fontSize: 8,text:redondeodecimale(index.SERVICIO).toFixed(2)},
+            { fontSize: 8,text:redondeodecimale(index.TERCEROS).toFixed(2),},
+            { fontSize: 8,text:redondeodecimale(mostrador).toFixed(2)},
+            { fontSize: 8,text:redondeodecimale(taller).toFixed(2)},
+    ];
+    dataBodyReportes.push(subtituloSolesEfec);
+        
+  });
+    var docDefinition = {
+
+        // a string or { width: number, height: number }
+        pageSize: "A4",
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: 'landscape',
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        // pageMargins: [15, 15, 15, 15],
         content: [
-            // {
-            //     columns: [
-            //         {
-            //             width: 'auto',
-            //             // stack: [
-            //             //     {
-            //             //         image: response.img,
-            //             //         fit: [120, 120]
-            //             //     }
-            //             // ]
-            //         },
-            //         // {text: response.title, style: 'header'}
-            //     ]
-            // },
-            // {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
-           
-              
-                     {  
-                        style: 'tableExample',
-                        table: {
-                            widths: [200,50,250],
-                            body: [ 
-                                    [  
-                                        [       {     style: 'tableExample',
-                                                   
-                                                      table: {
-                                                         body: [ 
-                                                            [ {  
-                                                                margin: [95,20,95,20],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },],
-                                                          ]
-                                                      }
-                                                },
-                                        ],
-                                        [      {
-                                                    
-                                                  
-                                                },
-
-                                        ],
-                                        [       {   image: data_img,
-                                                    width:250,
-                                                    height:60,
-                                                    alignment: 'center' 
-                                                },
-                                                 {  fontSize: 11,
-                                                    
-                                                   text:"TAREJETA DE COBRANZA",
-                                                   normal: 'Times-Roman',
-                                                    bold: 'Times-Bold',
-                                                    bolditalics: 'Times-BoldItalic',
-                                                    alignment: 'center' 
-                                                },
-                                        ],
-                                       
-                                       
-
-                                    ],
-                                ]                    
-
-                        },
-                        layout: 'noBorders',
-                    },
-                    {  
-                        style: 'tableExample',
-                        table: {
-                            widths: [255,255],
-                            body: [ 
-                                    [  
-                                        [     
-                                               {    fontSize: 9,
-                                                    text:"DATOS DEL CLIENTE/CONYUGUE",
-                                                     bold:true,  
-                                                },
-
-                                        ],
-                                        [       {   
-                                                     
-                                                    fontSize: 9,
-                                                    text:"DATOS DEL FIADOR/ FIADORCONYUGUE",
-                                                     bold:true,
-                                                },
-                                                
-                                        ],
-                                       
-                                       
-
-                                    ],
-                                    [  
-                                        [     
-                                            {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DOCUMENTO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].documento_cliente,
-                                                    },
-                                                ]
-
-                                            }
-
-                                        ],
-                                        [       
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DOCUMENTO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].documento_fiador,
-                                                    },
-                                                ]
-
-                                                }
-                                                
-                                        ],
-
-                                    ],
-                                    [  
-                                        [      
-
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"APELLIDOS: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Apellidos_cliente,
-                                                    },
-                                                ]
-
-                                                }
-                                        ],
-                                        [       
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"APELLIDOS: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Apellidos_fiador,
-                                                    },
-                                                ]
-
-                                                }
-                                        ],
-
-                                    ],
-                                    [  
-                                        [     
-                                               
-
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"NOMBRE(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].nombres_cliente,
-                                                    },
-                                                ]
-
-                                                },
-
-                                        ],
-                                        [       
-
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"NOMBRE(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].nombres_fiador,
-                                                    },
-                                                ]
-
-                                                },
-
-                                        ],
-
-                                    ],
-                                    [  
-                                        [      
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"TELEFONO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].celular_cliente,
-                                                    },
-                                                ]
-
-                                                },
-
-                                              
-
-                                        ],
-                                        [       
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"TELEFONO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].celular_fiador,
-                                                    },
-                                                ]
-
-                                                },
-                                        ],
-
-                                    ],
-                                    [  
-                                        [       
-
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DOCUMENTO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].documento_conyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                               
-
-                                        ],
-                                        [        {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DOCUMENTO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].documento_fiadorconyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                        ],
-
-                                    ],
-                                    [  
-                                        [       
-
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"APELLIDOS: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Apellidos_conyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                        ],
-                                        [       {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"APELLIDOS: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Apellidos_fiadorconyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                        ],
-
-                                    ],
-                                    [  
-                                        [       
-
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"NOMBRE(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].nombres_conyugue,
-                                                    },
-                                                ]
-
-                                                },
-
-                                        ],
-                                        [       {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"NOMBRE(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].nombres_fiadorconyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                        ],
-
-                                    ],
-                                    [  
-                                        [    
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"TELEFONO(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].celular_conyugue,
-                                                    },
-                                                ]
-
-                                                },
-
-                                        ],
-                                        [      {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"TELEFONO(S): ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].celular_fiadorconyugue,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                        ],
-
-                                    ],
-                                    [  
-                                        [       
-                                                 {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DIRECCION  DE COBRANZA: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].direccion_cliente,
-                                                    },
-                                                ]
-
-                                                },
-                                              
-
-                                        ],
-                                        [       
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"DIRECCION  DE COBRANZA: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].tipo_vivienda,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                        ],
-
-                                    ],
-
-                                ]                    
-
-                        },
-                         layout: 'noBorders',
-                    },
+            {
+                columns: [
                     {
-                       fontSize: 10,
-                       
-                       text:"DESCRIPCION DEL VEHÍCULO",
-                       normal: 'Times-Roman',
-                       bolditalics: 'Times-BoldItalic',
-                       alignment: 'center',
-                       bold: 'Times-Bold',
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [150, 150]
+                            }
+                        ]
                     },
-                    {  
+                    {text:"REPORTE DE REPUESTOS", style: 'header'}
+                ]
+            },
+            {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
+            {   margin: [0,0,0,0],
                         style: 'tableExample',
                         table: {
-                            widths: [180,160,170],
-                            body: [ 
-                                    [  
-                                             
-                                              
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"MODELO: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Modelo,
-                                                    },
-                                                ]
-
-                                                },
-
-                                        
-                                               {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"COLOR: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Color,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                       
-                                              {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"PLACA: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Placa,
-                                                    },
-                                                ]
-
-                                                },
-                                    ],
-                                    [  
-                                            
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"MOTOR: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Motor,
-                                                    },
-                                                ]
-
-                                                },
-                                               
-                                                 {
-                                                      colSpan: 2,
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"N° DE CHASIS: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].Chasis,
-                                                    },
-                                                ]},
-
-                                                 {},
-                                    ],
-
-                                ]                    
-
+                            widths: [40,40,80,80,80,40,40,40,40,40,40,40,40],
+                            body:
+                            dataBodyReportes, 
                         },
-                         layout: 'noBorders',
-                    },
-                    {
-                       fontSize: 10,
-                       
-                       text:"DATOS DE LA VENTA",
-                       normal: 'Times-Roman',
-                       bolditalics: 'Times-BoldItalic',
-                       alignment: 'center',
-                       bold: 'Times-Bold',
-                    },
-                    {  
-                        style: 'tableExample',
-                           layout: 'noBorders',
-                        table: {
-                            widths: [255,255],
-                            body: [ 
-                                    [  
-                                             
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"PRECIO DE LA LISTA S/: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:precio_lista_cli,
-                                                    },
-                                                ]
-
-                                                },
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"INICIAL: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:inicial_cli,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                                
-                                    ],
-                                    [  
-                                            
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"FECHA DE VENTA: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:fecha_venta,
-                                                    },
-                                                ]
-
-                                                },
-                                               
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"VENDEDOR: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].vendedor,
-                                                    },
-                                                ]
-
-                                                },
-                                    ],
-                                     [  
-                                            
-                                               
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"COBRADOR: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].cobrador,
-                                                    },
-                                                ]
-
-                                                },
-                                               
-                                                {   
-                                                    fontSize: 9,
-                                                    text:"",
-                                                    
-                                                },
-                                    ],
-
-                                ]                    
-
-                        },
-                    },
-                    {
-                       fontSize: 10,
-                       
-                       text:"CRONOGRAMA DE PAGO",
-                       normal: 'Times-Roman',
-                       bolditalics: 'Times-BoldItalic',
-                       alignment: 'center',
-                       bold: 'Times-Bold',
-                    },
-                    {  
-                        style: 'tableExample',
-                        margin: [0,5,0,0],
-                        table: {
-                            heights: 300,
-                            widths: [30,60,40,40,40,40,40,169],
-                            body:data_cabecera,                   
-
-                        },
-                    },
-
-                    {  
-                        style: 'tableExample',
-                           layout: 'noBorders',
-                        margin: [0,5,0,5],
-                        table: {
-                            widths: [255,255],
-                            body: [ 
-                                    [  
-                                             
-                                              [ 
-
-                                                {     style: 'tableExample',
-                                                    
-                                                      table: {
-                                                         body: [ 
-                                                            [ {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },],
-                                                            [
-                                                              {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            ],
-                                                              [ {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },],
-                                                             [
-                                                              {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                             {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            ],
-                                                            [ {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },
-                                                            {  
-                                                                margin: [3,3,3,3],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                                 border: [false, false, false, false], 
-                                                            },
-                                                            {  
-                                                                margin: [15,10,15,10],
-                                                                fontSize: 8,
-                                                                 text:"",
-                                                            },],
-                                                             
-                                                          ]
-                                                      }
-                                                },
-                                                ],
-                                                [
-                                                [       
-                                                {
-                                                 text: [
-                                                    {    fontSize: 9,
-                                                         text:"REFERENCIA: ",
-                                                         bold:true,
-                                                    },
-                                                    {    fontSize: 9,
-                                                         text:data_cliente[0].cReferencia,
-                                                    },
-                                                ]
-
-                                                },
-                                                
-                                                 ],
-                                                ]
-                                                
-                                    ],
-                                ]                    
-
-                        },
-                    },
-
-             
-           
+                      
+            },
         ],
-        // styles: {
-        //     footer: {
-        //         fontSize: 9,
-        //         margin: [0, 10, 40, 0],
-        //         alignment: 'right'
-        //     }
-        // },
-        // footer: function (currentPage, pageCount) {
-        //     return {
-        //         columns: [{
-        //             text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
-        //             style: 'footer'
-        //         }]
-        //     }
-        // }
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [-90, 0, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 0, 0,0],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
     };
 
-     var win = window.open('', '_blank');
-    pdfMake.createPdf(docDefinition).print({}, win);
-
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+      pdfMake.createPdf(docDefinition).print({}, win);
 }
 function create_pdf_emisionComproCaja(response) {
     var dataDenomicacion=response.dataDenomicacion;

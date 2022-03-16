@@ -30,7 +30,7 @@ class AsignacioncobradorController extends Controller
             $data_compania=$repo->get_compania();
             $data_cabe=$repo->get_cuentas_caber();
             $data_cuer=$repo->get_cuentas_cuerp();
-
+            $data_compania=$repo->get_compania(); 
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
