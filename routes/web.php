@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\ApproversProjects.php';
 
+    require app_path() . '\Http\Routes\ReporteRepuestos.php';
+
     // Routes Masters
 
     require app_path() . '\Http\Routes\Brands.php';
@@ -59,6 +61,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Receptions.php';
 
     require app_path() . '\Http\Routes\Transfers.php';
+
+    require app_path() . '\Http\Routes\Cuentasxcobrars.php';
 
      require app_path() . '\Http\Routes\GuiaRemisions.php';
 
@@ -289,8 +293,7 @@ Route::get('generate_type_gt', function () {
             $l->save();
         } elseif (($l->parent && $l->parent->type_gt == 2) || $l->code == 13) {
             $l->type_gt = 2;
-            $l->save();
-        }
+            $l->save();}
     }
 
     return 'OK';
