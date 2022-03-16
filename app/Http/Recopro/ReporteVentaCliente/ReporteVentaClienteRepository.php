@@ -23,7 +23,7 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
     {
         return $this->model->get(); 
     }
-    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)
     {
         $dato=$this->model;
        if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
@@ -39,11 +39,14 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
             if($idClienteFiltro !='' ){
             $dato=$dato->where('idCliente',$idClienteFiltro);
         }
+         if(!empty($idcategoria)){
+             $dato=$dato->Where('idCategoria',$idcategoria);
+        }
         return $dato->get();
     }
-     public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+     public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)
     {
-        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro){
+        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria){
             if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
                  $q->whereDate('Fecha','>=',$FechaInicioFiltro);
                  $q->whereDate('Fecha','<=',$FechaFinFiltro);
@@ -57,6 +60,9 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
             if($idClienteFiltro !='' ){
                   $q->where('idCliente',$idClienteFiltro);
             }
+             if(!empty($idcategoria)){
+             $q->Where('idCategoria',$idcategoria);
+        }
         });
 
     }

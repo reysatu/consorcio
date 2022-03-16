@@ -21,6 +21,18 @@ select * from ERP_Modelo
 select * from ERP_Clientes
 select * from ERP_Ubigeo
 select * from ERP_Moneda
+
+
+SELECT * FROM ERP_Venta
+
+SELECT * FROM ERP_FormasPago
+SELECT * FROM ERP_CondicionPago
+//////// NO SE ////////
+select SUM(vp.monto_pago) as total,cp.id as idCondicionPago,cp.description as condicionPago from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago GROUP BY v.condicion_pago ,cp.id,cp.description
+
+select cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,v.serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa) where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' ORDER BY codigo_formapago
+select * from ERP_Venta
+
 //////////////////// 14/03/2022 info_reporte_comprobantes///////////////////////////////////////////
 select * from ERP_Venta 
 
@@ -64,10 +76,14 @@ LEFT JOIN ERP_Persona AS fc ON(fc.idPersona=sc.idfiadorconyugue)
 LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
 LEFT JOIN ERP_Cobrador AS cob ON (cob.id=s.idCobrador)
 LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
-LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)  where s.cCodConsecutivo='SOL' and s.nConsecutivo='65'
 
-select * from ERP_SolicitudCredito
+select * from ERP_Solicitud as s where s.cCodConsecutivo='SOL' and s.nConsecutivo='65'
+select * from ERP_Clientes where id='5'
+select * from ERP_Persona 
+
 select * from ERP_Venta
+select * from er
 ///////////////////////////////////////// info_view reporte_venta_cliente////////////////////////////////////////////////
 
 create VIEW ERP_VW_VentaClientes AS
@@ -126,5 +142,139 @@ select * from ERP_Compania
 
 select * from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='2022-02-15' and c.idUsuario='1006'
 
-select 
+SELECT * FROM ERP_Solicitud as so inner join ERP_SolicitudCredito  AS s on  (so.cCodConsecutivo=s.cCodConsecutivo and so.nConsecutivo=s.nConsecutivo)
+inner join ERP_SolicitudArticulo as sola on (sola.cCodConsecutivo=s.cCodConsecutivo and sola.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pro on sola.idarticulo = pro.id
+left join ERP_Modelo as mo on pro.idModelo=mo.idModelo
+left join ERP_SolicitudDetalle as sold on (sold.cCodConsecutivo=s.cCodConsecutivo and sold.nConsecutivo=s.nConsecutivo)
+inner join ERP_Moneda as mone on mone.IdMoneda=so.idmoneda
+left join erp_venta as vent on(vent.cCodConsecutivo_solicitud=s.cCodConsecutivo and vent.nConsecutivo_solicitud=s.nConsecutivo)
+left join ERP_Serie as ser on ser.idSerie=sold.idSerie
+left join ERP_Vendedores as usv on usv.idvendedor=so.idvendedor
+left join ERP_Cobrador as usc on usc.id=so.idCobrador
+        LEFT JOIN ERP_Persona AS f ON(f.idPersona=s.idfiador)
+        LEFT JOIN ERP_Persona AS cy ON(cy.idPersona=s.idconyugue)
+        LEFT JOIN ERP_Persona AS fc ON(fc.idPersona=s.idfiadorconyugue)
+        LEFT JOIN ERP_Clientes AS clp ON(clp.id=so.idCliente)
+        LEFT JOIN ERP_Persona AS cli ON(cli.idPersona=clp.idPersona)
+        where s.cCodConsecutivo='SOL' and s.nConsecutivo='65'
+				
+				select * from erp_soli
+				
+	select * from		ERP_view_solicitud_Asignacion
+				select * from ERP_Venta 
+				select * from ERP_Solicitud
+				
+				
+				select  sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+           END) 
+					 
+				
+					 
+						,v.t_monto_total as monto_total,s.estado as estado,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' 
 
+GROUP BY sa.monto_total,v.t_monto_total,s.estado,p.idCategoria,v.serie_comprobante,tic.numero_comprobante,s.cCodConsecutivo , s.nConsecutivo,
+v.serie_comprobante	,v.numero_comprobante,cl.razonsocial_cliente,vend.descripcion
+
+select sa.monto_total as monto_total_articul ,v.t_monto_total as monto_total,s.estado as estado,p.idCategoria AS Categoria,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70'
+
+
+select sum(vd.monto_total) from ERP_VentaDetalle as vd  inner join ERP_Productos as pr on (pr.id=vd.idarticulo) inner join ERP_Categoria as c on c.idCategoria=pr.idCategoria where idventa='70' GROUP BY c.idCategoria,monto_total
+
+				select * from ERP_VentaDetalle
+				
+
+				select sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+              ELSE 0 
+           END) as aceite, sum(CASE  
+             WHEN p.idCategoria =4 THEN sa.monto_total 
+              ELSE 0 
+           END) as rep
+						
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' 
+
+
+GROUP BY p.idCategoria,sa.monto_total
+
+
+select * from		ERP_view_solicitud_Asignacion
+				select * from ERP_Venta 
+				select * from ERP_Solicitud
+				
+				
+				select  sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+              ELSE 0 
+           END) as aceite, sum(CASE  
+             WHEN p.idCategoria =4 THEN sa.monto_total 
+              ELSE 0 
+           END) as rep,
+					  sum(CASE  
+             WHEN p.idCategoria =6 THEN sa.monto_total 
+              ELSE 0 
+           END) as rep2
+					 
+				
+					 
+						,v.t_monto_total as monto_total,s.estado as estado,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70' 
+
+
+GROUP BY sa.monto_total,v.t_monto_total,s.estado,p.idCategoria,v.serie_comprobante,tic.numero_comprobante,s.cCodConsecutivo , s.nConsecutivo,
+v.serie_comprobante	,v.numero_comprobante,cl.razonsocial_cliente,vend.descripcion
+
+select sa.monto_total as monto_total_articul ,v.t_monto_total as monto_total,s.estado as estado,p.idCategoria AS Categoria,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tic.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,s.cCodConsecutivo as cCodConsecutivo, s.nConsecutivo as nConsecutivo,v.serie_comprobante as serie_comprobante,v.numero_comprobante as numero_comprobante,cl.razonsocial_cliente,vend.descripcion as vendedor
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70'
+
+
+select sum(CASE  
+             WHEN p.idCategoria =3 THEN sa.monto_total 
+              ELSE 0 
+           END) as aceite, sum(CASE  
+             WHEN p.idCategoria =4 THEN sa.monto_total 
+              ELSE 0 
+           END) as rep,
+					 sum(CASE  
+             WHEN p.idCategoria =6 THEN sa.monto_total 
+              ELSE 0 
+           END) as rep2
+						
+from ERP_Solicitud as s inner join erp_venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo)
+			inner join ERP_VentaDetalle as sa on (sa.idventa=v.idventa) inner join ERP_Clientes as cl on (s.idcliente=cl.id)
+inner join ERP_Venta as tic on (tic.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor)
+inner join ERP_Productos as p on (p.id=sa.idArticulo) where  p.idCategoria IN (3,4,6,7) and v.idventa='70'
+
+
+SELECT * FROM ERP_Venta
+SELECT * FROM ERP_VentaDetalle
+SELECT * FROM ERP_SolicitudArticulo
+SELECT * FROM ERP_Solicitud
+SELECT * FROM ERP_SolicitudDetalle
+
+
+				

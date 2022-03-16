@@ -76,7 +76,10 @@ function getFormSearchReporteVenta(form_id, input_id, btn_id) {
                 '</div>'+
             '</div>'+
             '<div class="form-group">'+
-                '<div class="col-md-1 col-md-offset-7">' +
+                '<div class="col-md-3">'+
+                    '<select id="idcategoria"  style="margin-right:5px;width: 100%" name="idcategoria" class="form-control input-sm "></select>'+
+                '</div>'+ 
+                '<div class="col-md-1 col-md-offset-4">' +
                     '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
                         '<i class="fa fa-search"></i>' +
                     '</button>' +
@@ -486,6 +489,53 @@ function getFormSearchAsignacion(form_id, input_id, btn_id) {
             '</div>'+
          '</form>';
 }
+function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {
+   return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+            '<div class="form-group">'+
+                '<div class="col-md-2">'+
+                    '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+                '</div>'+
+                '<label class="col-sm-3 control-label">Rango de días vencidos</label>'+
+                '<div class="col-md-2">'+
+                    '<input type="number" class="form-control input-sm"  id="idInicio">'+
+                '</div>'+
+                '<div class="col-md-2">'+
+                    '<input type="number" class="form-control input-sm"  id="idFin">'+
+                '</div>'+
+                '<div class="col-md-1">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</div>'+
+                '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_exportar_CC" class="btn-success  btn-sm">' +
+                        '<i class="fa fa-file-pdf-o">Exportar a Pdf</i>'+
+                    '</button>' +
+                '</div>'+  
+            '</div>'+
+             '<div class="form-group">'+
+                '<label class="col-sm-2 control-label">Fecha Inicio</label>'+
+                '<div class="col-md-3">'+
+                     '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
+                '</div>'+
+                '<label class="col-sm-2 control-label">Fecha Fin</label>'+
+                '<div class="col-md-3">'+
+                    '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
+                '</div>'+
+                
+            '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="idCobradorFiltro"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+            '</div>'+
+         '</form>';
+}
 function getFormSearchCierre(form_id, input_id, btn_id,val_busquedad,estado,idMovimiento) {
     var estado='b';
     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
@@ -827,6 +877,89 @@ function create_pdf(response) {
                 fontSize: 12,
                 bold: true,
                 margin: [0, 5, 0, 5],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
+    };
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+      pdfMake.createPdf(docDefinition).print({}, win);
+}
+function create_CCpdf(response) {
+     var cabe=response.data_cabe;
+     var cuer=response.data_cuer;
+
+    var docDefinition = {
+
+        // a string or { width: number, height: number }
+        pageSize: "A4",
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: 'landscape',
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        // pageMargins: [15, 15, 15, 15],
+        content: [
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [150, 150]
+                            }
+                        ]
+                    },
+                    {text:"CUENTAS POR COBRAR POR CLIENTE", style: 'header'}
+                ]
+            },
+            {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
+            // {
+            //     columns: [
+            //         {
+            //             width: 'auto',
+            //             table: {
+            //                 headerRows: 1,
+            //                 // body: response.info
+            //             }
+            //         }
+            //     ]
+            // }
+        ],
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [-90, 0, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 0, 0,0],
                 alignment: 'center'
             },
             footer: {
@@ -3073,19 +3206,14 @@ function createTarjetaCobranzaPDF(response) {
                                                 },
                                         ],
                                         [      {
-                                                    image: data_img,
-                                                    width:60,
-                                                    height:40,
+                                                    
                                                   
                                                 },
 
                                         ],
-                                        [       {  fontSize: 14,
-                                                   text:"CONSORCIO Y ASOCIADOS S.A.C.",
-                                                   normal: 'Times-Roman',
-                                                    bold: 'Times-Bold',
-                                                    bolditalics: 'Times-BoldItalic',
-                                                  
+                                        [       {   image: data_img,
+                                                    width:250,
+                                                    height:60,
                                                     alignment: 'center' 
                                                 },
                                                  {  fontSize: 11,

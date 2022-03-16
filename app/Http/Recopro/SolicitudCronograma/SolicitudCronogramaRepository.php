@@ -30,6 +30,13 @@ class SolicitudCronogramaRepository implements SolicitudCronogramaInterface
         });
 
     }
+     public function searchCuentasxCobrar($cCodConsecutivo,$nConsecutivo)
+    {
+        return $this->model->where(function($q) use ($cCodConsecutivo,$nConsecutivo){
+            $q->where('cCodConsecutivo',$cCodConsecutivo)->where('nConsecutivo',$nConsecutivo)->where('saldo_cuota','>',0);
+        });
+
+    }
     public function allActive()
     {
        return $this->model->where('estado', self::$_ACTIVE)->get();

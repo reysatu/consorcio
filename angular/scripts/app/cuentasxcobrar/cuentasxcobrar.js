@@ -4,14 +4,14 @@
   
 (function () {
     'use strict';
-    angular.module('sys.app.asignacioncobradors')
+    angular.module('sys.app.cuentasxcobrars')
         .config(Config)
-        .controller('AsignacioncobradorCtrl', AsignacioncobradorCtrl);
+        .controller('CuentasxcobrarCtrl', CuentasxcobrarCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    AsignacioncobradorCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
+    CuentasxcobrarCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
-    function AsignacioncobradorCtrl($scope, _, RESTService, AlertFactory, Helpers)
+    function CuentasxcobrarCtrl($scope, _, RESTService, AlertFactory, Helpers)
     {
         var modalCobradores=$("#modalCobradores");
         var idCobrador=$("#idCobrador"); 
@@ -49,7 +49,7 @@
                 };
                 var w_id=0;
                
-                RESTService.updated('asignacioncobradors/saveCobrador', w_id, params, function (response) {
+                RESTService.updated('cuentasxcobrars/saveCobrador', w_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         AlertFactory.textType({
                             title: '',
@@ -57,7 +57,7 @@
                             type: 'success'
                         });
                          modalCobradores.modal('hide');
-                        $("#LoadRecordsButtonAsignacioncobrador").click();
+                        $("#LoadRecordsButtonCuentasxcobrar").click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo guardar. Intente nuevamente.' : response.message;
@@ -82,16 +82,16 @@
         }
          idCobrador.select2();
         
-        var search = getFormSearchAsignacion('frm-search-Asignacioncobrador', 'search_b', 'LoadRecordsButtonAsignacioncobrador');
+        var search = getFormSearchCuentasxcobrar('frm-search-Cuentasxcobrar', 'search_b', 'LoadRecordsButtonCuentasxcobrar');
 
-        var table_container_Asignacioncobrador = $("#table_container_Asignacioncobrador");
+        var table_container_Cuentasxcobrar = $("#table_container_Cuentasxcobrar");
 
-        table_container_Asignacioncobrador.jtable({
+        table_container_Cuentasxcobrar.jtable({
             title: "Lista de Solicitudes",
             paging: true,
             sorting: true,
             actions: { 
-                listAction: base_url + '/asignacioncobradors/list',
+                listAction: base_url + '/cuentasxcobrars/list',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',
@@ -133,12 +133,12 @@
                         var $img = $('<i class="fa fa-plus" style="font-size:20px;color:#1c84c6;cursor: pointer"></i>');
                      
                         $img.click(function () {
-                            $('#table_container_Asignacioncobrador').jtable('openChildTable',
+                            $('#table_container_Cuentasxcobrar').jtable('openChildTable',
                                     $img.closest('tr'), //Parent row
                                     {
                                     title:'Cronograma',
                                     actions: {
-                                        listAction: base_url + '/asignacioncobradors/listCronograma?cCodConsecutivo=' + studentData.record.cCodConsecutivo +'&nConsecutivo='+studentData.record.nConsecutivo,
+                                        listAction: base_url + '/cuentasxcobrars/listCronogramaCuentasxCobrar?cCodConsecutivo=' + studentData.record.cCodConsecutivo +'&nConsecutivo='+studentData.record.nConsecutivo,
                                     },
                                     fields: {
                                         nrocuota: {
@@ -198,17 +198,17 @@
                         return $img;
                     }
                 },
-                 print: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center', 
-                    display: function (data) {
-                        return '<a href="javascript:void(0)" title="Tarjeta" class="print_content" data-code="' +
-                            data.record.cCodConsecutivo +'*'+data.record.nConsecutivo+'"><i class="fa fa-file fa-1-5x fa-green"></i></a>';
-                    }
-                },
+                //  print: {
+                //     width: '1%',
+                //     sorting: false,
+                //     edit: false,
+                //     create: false,
+                //     listClass: 'text-center', 
+                //     display: function (data) {
+                //         return '<a href="javascript:void(0)" title="Tarjeta" class="print_content" data-code="' +
+                //             data.record.cCodConsecutivo +'*'+data.record.nConsecutivo+'"><i class="fa fa-file fa-1-5x fa-green"></i></a>';
+                //     }
+                // },
                 cCodConsecutivo: {
                     key: true,
                     create: false,
@@ -340,7 +340,7 @@
                             cCodConsecutivo:totalid[0],
                             nConsecutivo:totalid[1],
                     };
-                    $scope.loadTarjetaCobranzaPDF('asignacioncobradors/tarjetaCobranza',data_pdf);
+                    $scope.loadTarjetaCobranzaPDF('cuentasxcobrars/tarjetaCobranza',data_pdf);
                  
                     e.preventDefault();
                 });
@@ -372,8 +372,8 @@
 
         });
 
-        generateSearchForm('frm-search-Asignacioncobrador', 'LoadRecordsButtonAsignacioncobrador', function(){
-            table_container_Asignacioncobrador.jtable('load', {
+        generateSearchForm('frm-search-Cuentasxcobrar', 'LoadRecordsButtonCuentasxcobrar', function(){
+            table_container_Cuentasxcobrar.jtable('load', {
                 search: $('#search_b').val(),
                 filtro_tienda: $('#filtro_tienda').val(),
                 idInicio: $('#idInicio').val(),
@@ -386,6 +386,14 @@
 
             });
         }, true);
+        $("#btn_exportar_CC").click(function(e){
+            var data_excel = {
+                            search: '',
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+
+            $scope.loadCCPDF('cuentasxcobrars/cuentasporcobrar',data_excel);
+        });
 
         $(".jtable-title-text").removeClass('col-md-4');
         $(".jtable-title-text").addClass('col-md-2');
@@ -398,7 +406,7 @@
             newAsignacion();
         });
         function getDataForm () {
-            RESTService.all('asignacioncobradors/data_form', '', function(response) {
+            RESTService.all('cuentasxcobrars/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var cobradores=response.cobrador;
                     var cobradores=response.cobrador;
@@ -434,10 +442,10 @@
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider
 
-            .state('asignacioncobradors', {
-                url: '/asignacioncobradors',
-                templateUrl: base_url + '/templates/asignacioncobradors/base.html',
-                controller: 'AsignacioncobradorCtrl'
+            .state('cuentasxcobrars', {
+                url: '/cuentasxcobrars',
+                templateUrl: base_url + '/templates/cuentasxcobrars/base.html',
+                controller: 'CuentasxcobrarCtrl'
             });
 
         $urlRouterProvider.otherwise('/');

@@ -18,3 +18,5 @@ Route::get('asignacioncobradors/data_form', ['as' => 'asignacioncobradors.data_f
 Route::put('asignacioncobradors/saveCobrador/{id}', ['as' => 'asignacioncobradors.saveCobrador', 'uses' => 'AsignacioncobradorController@createUpdate']);
 
 Route::get('asignacioncobradors/tarjetaCobranza', ['as' => 'asignacioncobradors.tarjetaCobranza', 'uses' => 'AsignacioncobradorController@tarjetaCobranza']);
+
+Route::get('asignacioncobradors/cuentasporcobrar', ['as' => 'asignacioncobradors.cuentasporcobrar', 'uses' => 'AsignacioncobradorController@pdf_cuentasxcobrar']); 
