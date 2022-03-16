@@ -12,10 +12,12 @@ Route::post('visita_cliente/delete', ['as' => 'visita_cliente.delete', 'uses' =>
 Route::post('visita_cliente/update', ['as' => 'visita_cliente.update', 'uses' => 'VisitaClienteController@update']);
 Route::get('visita_cliente/excel', ['as' => 'visita_cliente.excel', 'uses' => 'VisitaClienteController@excel']);
 
-Route::post('visita_cliente/find', ['as' => 'visita_cliente.find', 'uses' => 'VisitaClienteController@find']);
+Route::post('visita_cliente/find_visita', ['as' => 'visita_cliente.find_visita', 'uses' => 'VisitaClienteController@find_visita']);
 Route::post('visita_cliente/find_documento', ['as' => 'visita_cliente.find_documento', 'uses' => 'VisitaClienteController@find_documento']);
 Route::get('visita_cliente/data_form', ['as' => 'visita_cliente.data_form', 'uses' => 'VisitaClienteController@data_form']);
 
 Route::post('visita_cliente/guardar_visita', ['as' => 'visita_cliente.guardar_visita', 'uses' => 'VisitaClienteController@guardar_visita']);
 Route::post('visita_cliente/obtener_solicitud', ['as' => 'visita_cliente.obtener_solicitud', 'uses' => 'VisitaClienteController@obtener_solicitud']);
+Route::post('visita_cliente/obtener_cuotas_cronograma', ['as' => 'visita_cliente.obtener_cuotas_cronograma', 'uses' => 'VisitaClienteController@obtener_cuotas_cronograma']);
+Route::post('visita_cliente/procesar_visita', ['as' => 'visita_cliente.procesar_visita', 'uses' => 'VisitaClienteController@procesar_visita']);
 

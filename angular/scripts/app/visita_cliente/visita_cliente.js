@@ -85,47 +85,110 @@
                         return '<a href="javascript:void(0)" class="ingresar-resultados" data-estado="' + data.record.estado + '"   data-id="' + data.record.id +'"  title="Ingresar Resultados"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
+                },procesar: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a data-target="#" data-estado="' + data.record.estado + '" data-id="' + data.record.id +'"   title="Procesar Visita" class="jtable-command-button procesar-visita"><i class="fa fa-cogs fa-1-5x fa-red"><span>Procesar Visita</span></i></a>';
+                    }
+
                 }
 
             },  
             
             recordsLoaded: function (event, data) {
-                $('.emitir-nota').click(function (e) {
-                    var idventa = $(this).attr('data-idventa');
-                    var idtipodocumento = $(this).attr('data-idtipodocumento');
-                    var idventa_referencia = $(this).attr('data-idventa_referencia');
-                    // alert(idventa_referencia);
-                    if(idventa_referencia != "null" && idventa_referencia != "") {
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'Ya se emitio una nota de este documento!',
-                            type: 'info'
-                        });
+               
+                $('.ingresar-resultados').click(function (e) {
+                    var estado = $(this).attr('data-estado');
+                    var id = $(this).attr('data-id');
+                    // alert(estado);
+                    if(estado == "Proceso") {
+                        $.post("visita_cliente/find_visita", { id: id},
+                            function (data, textStatus, jqXHR) {
+                                // console.log(data);
+                                $(".resultados").show();
+                                $(".registro").hide();
+                                $(".input-registro").attr("readonly", "readonly");
+                                $(".input-registro").prop("disabled", true);
+
+                                $("#fechareg").val(data.visita_cliente[0].fechareg);
+                                $("#idcobrador").val(data.visita_cliente[0].idcobrador);
+                                $("#idcobrador").trigger("change");
+                                $("#idvisita").val(data.visita_cliente[0].id);
+                              
+                                var cuotas = [];
+
+                                if(data.visita_cliente_cuota.length > 0) {
+                                    for (var vcc = 0; vcc < data.visita_cliente_cuota.length; vcc++) {
+                                        cuotas.push(data.visita_cliente_cuota[vcc].nrocuota);
+                                        
+                                    }
+                                }
+
+                                if(data.visita_cliente_solicitud.length > 0) {
+                                    var html_s = "";
+
+                                    for (var vcs = 0; vcs < data.visita_cliente_solicitud.length; vcs++) {
+                                        html_s = '<tr idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'">';
+                                        html_s += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
+                                        html_s += '    <input type="hidden" name="idcliente[]" value="'+data.visita_cliente_solicitud[vcs].idcliente+'" />';
+                                        html_s += '    <input type="hidden" name="idsolicitud[]" value="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" />';
+                                     
+                                        html_s += '    <td>'+data.visita_cliente_solicitud[vcs].razonsocial_cliente+'</td>';
+                                        html_s += '    <td>'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'</td>';
+                                        html_s += '    <td>'+parseFloat(data.visita_cliente_solicitud[vcs].saldo).toFixed(2)+'</td>';
+                                        html_s += '    <td>['+cuotas.join(",")+']</td>';
+                                        html_s += '    <td><input style="width: 100%;" type="text" name="cObservacion[]" value="'+data.visita_cliente_solicitud[vcs].cObservacion+'" class="form-control input-xs" /></td>';
+                                        html_s += '    <td><center><button type="button" title="Agregar Resultados" idcliente="'+data.visita_cliente_solicitud[vcs].idcliente+'" idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="btn btn-info btn-xs agregar-resultados" id_visita="'+data.visita_cliente_solicitud[vcs].id+'" ><i class="fa fa-plus"></i></button></center><span idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="datos-resultados"></span></td>';
+                                        html_s += '</tr>';
+                                      
+                                    }
+                                    // alert(html_s);
+                                    $("#detalle-visitas").html(html_s);
+                                }
+
+                            
+
+                                $("#modal-visita").modal("show");
+                            },
+                            "json"
+                        );
+                    }
+                })
+
+                $(".procesar-visita").click(function() {
+                    var id = $(this).attr('data-id');
+                    // alert(id);
+                    var estado = $(this).attr('data-estado');
+                 
+                    if(estado != "Registrado") {
                         return false;
                     }
-
-                    if(idtipodocumento == "07") {
-                        return false;
-                    }
-
-                    $.post("movimientoCajas/get_caja_diaria", {},
+                    $.post("visita_cliente/procesar_visita", { id : id },
                         function (data, textStatus, jqXHR) {
-                            // console.log();
-                            if (data.length > 0) {
-                                find_documento(idventa);
+                            if (data.status == "m") {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: "La visita se proceso Correctamente!",
+                                    type: 'success'
+                                });
+                                LoadRecordsButtonvisita_cliente.click();
+        
                             } else {
                                 AlertFactory.textType({
                                     title: '',
-                                    message: 'Primero debe apertura la caja del día',
+                                    message: data.msg,
                                     type: 'info'
                                 });
-                                return false;
                             }
+                            console.log(data);
                         },
                         "json"
                     );
-                    e.preventDefault();
-                });
+                })
                
             },
             formCreated: function (event, data) {
@@ -185,21 +248,45 @@
 
         function newVisitaCliente() {
             // alert("hola");
+            $(".resultados").hide();
+            $(".registro").show();
+            $(".input-registro").removeAttr("readonly");
+            $(".input-registro").prop("disabled", false);
+
+            $("#idcliente").val("");
+            $("#idcliente").trigger("change");
+            $("#idvisita").val("");
+            $("#idsolicitud").val("");
+            $("#idsolicitud").trigger("change");
+            $("#idcobrador").val("");
+            $("#idcobrador").trigger("change");
+            $("#fechareg").val("");
+            $("#cuotas-credito").html("");
+            $("#detalle-visitas").html("");
+            
             $("#modal-visita").modal("show");
         }
 
 
-        $(document).on("change", "#idcliente", function () {
+        $(document).on("change", "#idcliente", function (event, idsolicitud) {
             var idcliente = $(this).val();
+            $("#idsolicitud").html("");
             $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     if(data.length > 0) {
                         $("#idsolicitud").append('<option value="" selected>Seleccionar</option>');
                         data.map(function (index) {
-                        $("#idsolicitud").append('<option data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            // console.log(typeof idsolicitud);
+                            if(typeof idsolicitud != "undefined" && idsolicitud == index.id) {
+                                $("#idsolicitud").append('<option selected="selected" data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            } else {
+
+                                $("#idsolicitud").append('<option data-saldo="'+index.saldo+'" value="'+index.id+'">'+index.descripcion+'</option>');
+                            }
                         });
                         $("#idsolicitud").select2();
+                        $("#idsolicitud").trigger("change");
                     }  else {
                         AlertFactory.textType({
                             title: '',
@@ -213,63 +300,91 @@
             );
         });
 
-        $(document).on("change", "#idsolicitud", function () {
-            var id = $(this).val();
-            $.post("solicitud/find", { id: id },
-            function (data, textStatus, jqXHR) {
+        $(document).on("click", ".agregar-resultados", function () {
+            var idcliente = $(this).attr("idcliente");
+            var idsolicitud = $(this).attr("idsolicitud");
+            var id_visita = $(this).attr("id_visita");
+            $("#idcliente").val(idcliente).trigger("change", [idsolicitud, id_visita]);
+            
+            $("#modal-detalle").modal("show");
+           
+        });
 
+        function draw_cuotas(data) {
+            var html = "";
+               
+            for (var index = 0; index < data.length; index++) {
 
+                html += '<tr>';
+                html += '<td><span class="inputs-hidden" nrocuota="'+data[index].nrocuota+'" ></span>'+data[index].fecha_vencimiento+'</td>';
+                
+                html += '<td class="valor-cuota">'+parseFloat(data[index].valor_cuota).toFixed(2)+'</td>';
+                html += '<td class="int-moratorio">'+parseFloat(data[index].int_moratorio).toFixed(2)+'</td>';
+                html += '<td class="">'+parseFloat(data[index].saldo_cuota).toFixed(2)+'</td>';
+                html += '<td class="">'+parseFloat(data[index].monto_pago).toFixed(2)+'</td>';
+                
+                html += '<td>'+data[index].nrocuota+'</td>';
+                if(parseFloat(data[index].saldo_cuota) > 0) {
+                  
+                    html += '<input type="hidden" class="" name="nrocuota[]" value="'+data[index].nrocuota+'" >';
 
-                var prox_venc = "";
-                if (data.solicitud_cronograma.length > 0) {
-                    var html = "";
-                    var disabled = "";
-                    var checked = "";
-                    for (var index = 0; index < data.solicitud_cronograma.length; index++) {
-                        disabled = "";
-                        checked = "";
-                        //    console.log(data.solicitud_cronograma[index].saldo_cuota);
-                        if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc == "") {
-                            prox_venc = data.solicitud_cronograma[index].fecha_vencimiento_credito;
-                        }
+                    if($("#idvisita").val() == "") {
 
-                     
-
-                        html += '<tr>';
-                        html += '<td><span class="inputs-hidden" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" ></span>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
-                        
-                        html += '<td class="valor-cuota">'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
-                        html += '<td class="int-moratorio">'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
-                        html += '<td class="">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
-                        html += '<td class="">'+parseFloat(data.solicitud_cronograma[index].monto_pago).toFixed(2)+'</td>';
-                        
-                        html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
-                        if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) > 0) {
-                          
-                            html += '<input type="hidden" class="" name="nrocuota[]" value="'+data.solicitud_cronograma[index].nrocuota+'" >';
-                            html += '<td><center><input type="checkbox" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" value="'+data.solicitud_cronograma[index].nrocuota+'" class="check-cuota" /></center></td>';
-                        } else {
-                            html += '<td class=""></td>';
-                            
-                            html += '<td class=""></td>';
-                        }
-                        
-                        
-
-                      
-                        html += '</tr>';
+                        html += '<td><center><input type="checkbox" nrocuota="'+data[index].nrocuota+'" value="'+data[index].nrocuota+'" class="check-cuota" /></center></td>';
                     }
-                    // alert(html);
-                    $("#cuotas-credito").html(html);
-                    // alert(prox_venc);
-                    $("#prox_venc_credito").val(prox_venc);
-                }
+                } else {
+                    if($("#idvisita").val() == "") {
 
-                $("#modalSolicitudCredito").modal("show");
-            },
-            "json"
-        );
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                    }
+                    
+                }
+                // console.log("d =>"+$("#idvisita").val());
+
+                if($("#idvisita").val() != "" ) {
+
+                    if(data[index].nrocuota_v != null) {
+                        html += '<td class=""><input type="date" class="form-control input-sm fecha_pago"  value="'+data[index].fecha_pago+'" /></td>';
+                        html += '<td class=""><input type="number" class="form-control input-sm monto_pago" value="'+parseFloat(data[index].monto_pago_v).toFixed(2)+'" /></td>';
+                        html += '<td class=""><input type="text" class="form-control input-sm cObservacion" value="'+data[index].cObservacion+'" /></td>';
+                    } else {
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                    }
+                   
+                  
+                }
+                
+
+              
+                html += '</tr>';
+            }
+            // alert(html);
+
+            return html;
+        }
+
+        $(document).on("change", "#idsolicitud", function (eventa) {
+            var id = $(this).val();
+            var idvisita = $("#idvisita").val();
+           
+
+            $.post("visita_cliente/obtener_cuotas_cronograma", { id: id, idvisita: idvisita },
+                function (data, textStatus, jqXHR) {
+
+                    if (data.length > 0) {
+                        var html = draw_cuotas(data);
+                        // alert(html);
+                        $("#cuotas-credito").html(html);
+                    
+                    }
+                },
+                "json"
+            );
         })
+
       
 
         function find_documento(id) {
@@ -323,12 +438,15 @@
             $("#modal-detalle").modal("show");
         }
 
+       
+
         $scope.agregar_solicitud_detalle = function () {
             // alert("hola");
             var cliente = $('#idcliente').find(':selected').data('cliente');
             var saldo = parseFloat($('#idsolicitud').find(':selected').data('saldo'));
             var idcliente = $("#idcliente").val();
             var idsolicitud = $("#idsolicitud").val();
+
 
             var checks = $(".check-cuota");
             var cuotas = [];
@@ -341,19 +459,47 @@
               
             }
 
-            var html = '<tr>';
-            html += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
-            html += '    <input type="hidden" name="idcliente[]" value="'+idcliente+'" />';
-            html += '    <input type="hidden" name="idsolicitud[]" value="'+idsolicitud+'" />';
-            html += '    <td>'+cliente+'</td>';
-            html += '    <td>'+idsolicitud+'</td>';
-            html += '    <td>'+saldo.toFixed(2)+'</td>';
-            html += '    <td>['+cuotas.join(",")+']</td>';
-            html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
-            html += '</tr>';
+            
+            var html = "";
 
-            $("#detalle-visitas").append(html);
-            $("#modal-detalle").modal("hide");  
+            if($("#idvisita").val() == "") {
+                html = '<tr>';
+                html += '    <input type="hidden" name="cuotas[]" value="'+cuotas.join(",")+'" />';
+                html += '    <input type="hidden" name="idcliente[]" value="'+idcliente+'" />';
+                html += '    <input type="hidden" name="idsolicitud[]" value="'+idsolicitud+'" />';
+                html += '    <td>'+cliente+'</td>';
+                html += '    <td>'+idsolicitud+'</td>';
+                html += '    <td>'+saldo.toFixed(2)+'</td>';
+                html += '    <td>['+cuotas.join(",")+']</td>';
+                html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
+                html += '</tr>';
+
+                $("#detalle-visitas").append(html);
+            } else {
+
+                var fecha_pago = $(".fecha_pago");
+                var fechas_pago = [];
+                var montos_pago = [];
+                var observaciones = [];
+                for (var i = 0; i < fecha_pago.length; i++) {
+                    
+                    fechas_pago.push($(fecha_pago[i]).val());
+                    montos_pago.push($(".monto_pago").eq(i).val());
+                    observaciones.push($(".cObservacion").eq(i).val());
+                }
+                html += '<input type="hidden" name="fecha_pago[]" value="'+fechas_pago.join("|")+'" />';
+                html += '<input type="hidden" name="monto_pago[]" value="'+montos_pago.join("|")+'" />';
+                html += '<input type="hidden" name="cObservacion_v[]" value="'+observaciones.join("|")+'" />';
+                // console.log(html);
+                $(".datos-resultados[idsolicitud='"+idsolicitud+"']").html(html);
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Los datos del resultado se agregaron correctamente.',
+                    type: 'success'
+                });
+            }
+            
+            // $("#modal-detalle").modal("hide");  
         }
 
         $scope.guardar_visita = function () {
@@ -372,40 +518,40 @@
 
             if(bval) {
                 $.post("visita_cliente/guardar_visita", $("#formulario-visita").serialize(),
-                function (data, textStatus, jqXHR) {
+                    function (data, textStatus, jqXHR) {
 
-                    if (data.status == "i") {
+                        if (data.status == "i") {
 
-                   
-                        $("#modal-visita").modal("hide");
-                       
-                        $("#formulario-visita").trigger("reset");
-
-                        // var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
-
-                        // window.open("movimientoCajas/imprimir_comprobante/" + id);
+                    
+                            $("#modal-visita").modal("hide");
                         
-                        LoadRecordsButtonvisita_cliente.click();
-                        // AlertFactory.textType({
-                        //     title: '',
-                        //     message: 'El documento se facturó correctamente.',
-                        //     type: 'success'
-                        // });
+                            $("#formulario-visita").trigger("reset");
 
-                      
+                            // var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+
+                            // window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            
+                            LoadRecordsButtonvisita_cliente.click();
+                            // AlertFactory.textType({
+                            //     title: '',
+                            //     message: 'El documento se facturó correctamente.',
+                            //     type: 'success'
+                            // });
+
+                        
 
 
-                    } else {
-                        AlertFactory.textType({
-                            title: '',
-                            message: data.msg,
-                            type: 'info'
-                        });
-                    }
-                    // console.log(data);
-                },
-                "json"
-            );
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
+                        }
+                        // console.log(data);
+                    },
+                    "json"
+                );
             }
         }
     }

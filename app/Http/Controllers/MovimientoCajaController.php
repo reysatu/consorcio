@@ -985,7 +985,14 @@ class MovimientoCajaController extends Controller
 
             for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
                 $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
-               
+                // actualizamos la venta por separacion
+                if($data["codigo_formapago"][$i] == "SEP") {
+                    $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
+                    WHERE idventa_separacion={$data["idventa_separacion"]}";
+            
+                    $result = DB::statement($sql_update);
+                }
+
                 if($i == 0) {
 
                     $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
@@ -1088,14 +1095,7 @@ class MovimientoCajaController extends Controller
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
 
-            // actualizamos la venta por separacion
-            if($data["forma_pago"] == "SEP") {
-                $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
-                WHERE idventa_separacion={$data["idventa_separacion"]}";
-        
-                $result = DB::statement($sql_update);
-            }
-
+           
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
@@ -1221,7 +1221,15 @@ class MovimientoCajaController extends Controller
             // echo count($data["codigo_formapago"]); exit;
             for ($fp=0; $fp < count($data["codigo_formapago"]); $fp++) { 
                 $data_formas_pago["idventa"][$fp] = $data_venta["idventa"];
-               
+
+                 // actualizamos la venta por separacion
+                if($data["codigo_formapago"][$fp] == "SEP") {
+                    $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
+                    WHERE idventa_separacion={$data["idventa_separacion"]}";
+            
+                    $result = DB::statement($sql_update);
+                }
+                
                 if($fp == 0) {
 
                     $data_formas_pago["consecutivo"][$fp] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
@@ -1321,13 +1329,7 @@ class MovimientoCajaController extends Controller
             $caja_diaria_repositorio->update_saldos_venta($update_venta);
 
             // echo "ola"; exit;   
-            // actualizamos la venta por separacion
-            if($data["forma_pago"] == "SEP") {
-                $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
-                WHERE idventa_separacion={$data["idventa_separacion"]}";
-        
-                $result = DB::statement($sql_update);
-            }
+           
 
 
           

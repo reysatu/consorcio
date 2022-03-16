@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\Cobrador\CobradorInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteTrait;
 use App\Http\Requests\VisitaClienteRequest;
@@ -119,37 +120,73 @@ class VisitaClienteController extends Controller
     {
 
         $data = $request->all();
-     
+        // print_r($data); exit;
         $result = array();
 
         try {
             DB::beginTransaction();
             // $venta = $caja_diaria_detalle_repo->get_venta();
-            $data_visita  = $data;
-            $data_visita["id"]  = $Repo->get_consecutivo("ERP_VisitaCliente", "id");
-            $data_visita["estado"]  = "1";
-           
-            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaCliente", $data_visita));
+            if($data["idvisita"] == "") {
+                $data_visita  = $data;
+                $data_visita["id"]  = $Repo->get_consecutivo("ERP_VisitaCliente", "id");
+                $data_visita["estado"]  = "1";
+               
+                $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaCliente", $data_visita));
+    
+                for ($i=0; $i < count($data["cuotas"]); $i++) { 
+                    $solicitud = explode("_", $data["idsolicitud"][$i]);
+                    $data_visita_solicitud = array();
+                    $data_visita_solicitud["id"] = $data_visita["id"];
+                    $data_visita_solicitud["cCodConsecutivo"] = $solicitud[0];
+                    $data_visita_solicitud["nConsecutivo"] = $solicitud[1];
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaClienteSolicitud", $data_visita_solicitud));
+    
+                    $cuotas = explode(",", $data["cuotas"][$i]);
+    
+                    for ($c=0; $c < count($cuotas); $c++) { 
+                        $data_visita_cuota = array();
+                        $data_visita_cuota["id"] = $data_visita["id"];
+                        $data_visita_cuota["cCodConsecutivo"] = $solicitud[0];
+                        $data_visita_cuota["nConsecutivo"] = $solicitud[1];
+                        $data_visita_cuota["nrocuota"] = $cuotas[$c];
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaClienteCuota", $data_visita_cuota));
+                    }
+                }
+            } else {
+                $data_visita  = $data;
+                $data_visita["id"]  = $data["idvisita"];
+                $data_visita["estado"]  = "3";
+               
+                $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_VisitaCliente", $data_visita));
 
-            for ($i=0; $i < count($data["cuotas"]); $i++) { 
-                $solicitud = explode("_", $data["idsolicitud"][$i]);
-                $data_visita_solicitud = array();
-                $data_visita_solicitud["id"] = $data_visita["id"];
-                $data_visita_solicitud["cCodConsecutivo"] = $solicitud[0];
-                $data_visita_solicitud["nConsecutivo"] = $solicitud[1];
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaClienteSolicitud", $data_visita_solicitud));
-
-                $cuotas = explode(",", $data["cuotas"][$i]);
-
-                for ($c=0; $c < count($cuotas); $c++) { 
-                    $data_visita_cuota = array();
-                    $data_visita_cuota["id"] = $data_visita["id"];
-                    $data_visita_cuota["cCodConsecutivo"] = $solicitud[0];
-                    $data_visita_cuota["nConsecutivo"] = $solicitud[1];
-                    $data_visita_cuota["nrocuota"] = $cuotas[$c];
-                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_VisitaClienteCuota", $data_visita_cuota));
+                for ($i=0; $i < count($data["cuotas"]); $i++) { 
+                    $solicitud = explode("_", $data["idsolicitud"][$i]);
+                    $data_visita_solicitud = array();
+                    $data_visita_solicitud["id"] = $data["idvisita"];
+                    $data_visita_solicitud["cCodConsecutivo"] = $solicitud[0];
+                    $data_visita_solicitud["nConsecutivo"] = $solicitud[1];
+                    $data_visita_solicitud["cObservacion"] = $data["cObservacion"];
+                    $this->base_model->modificar($this->preparar_datos("dbo.ERP_VisitaClienteSolicitud", $data_visita_solicitud));
+    
+                    $cuotas = explode(",", $data["cuotas"][$i]);
+                    $fechas_pago = explode("|", $data["fecha_pago"][$i]);
+                    $montos_pago = explode("|", $data["monto_pago"][$i]);
+                    $observaciones = explode("|", $data["cObservacion_v"][$i]);
+    
+                    for ($c=0; $c < count($cuotas); $c++) { 
+                        $data_visita_cuota = array();
+                        $data_visita_cuota["id"] = $data["idvisita"];
+                        $data_visita_cuota["cCodConsecutivo"] = $solicitud[0];
+                        $data_visita_cuota["nConsecutivo"] = $solicitud[1];
+                        $data_visita_cuota["nrocuota"] = $cuotas[$c];
+                        $data_visita_cuota["fecha_pago"] = $fechas_pago[$c];
+                        $data_visita_cuota["monto_pago"] = $montos_pago[$c];
+                        $data_visita_cuota["cObservacion"] = $observaciones[$c];
+                        $this->base_model->modificar($this->preparar_datos("dbo.ERP_VisitaClienteCuota", $data_visita_cuota));
+                    }
                 }
             }
+           
 
             DB::commit();
             return response()->json($result);
@@ -161,43 +198,27 @@ class VisitaClienteController extends Controller
         }
     }
 
-    public function get_notas_devolucion(VisitaClienteInterface $Repo, Request $request)
+    public function procesar_visita(VisitaClienteInterface $Repo, Request $request, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC)
     {
 
-        $response = $Repo->get_notas_devolucion();
-        return response()->json($response);
+        $data = $request->all();
+        // print_r($data); exit;
+        $result = array();
 
-    }
-
-    public function get_venta_detalle($id, VisitaClienteInterface $repo, Request $request)
-    {
         try {
-
-            $val = $repo->get_venta_detalle($id);
-
-            return response()->json([
-                'status' => true,
-                'data'   => $val,
-            ]);
-
+            DB::beginTransaction();
+            $data["estado"] = 2;
+            $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_VisitaCliente", $data));
+            DB::commit();
+            return response()->json($result);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'status'  => false,
-                'message' => $e->getMessage(),
-            ]);
+            $response["status"] = "ei";
+            $response["msg"]    = $e->getMessage();
+            return response()->json($response);
         }
+
     }
-
-    public function get_venta_separacion(VisitaClienteInterface $repo, Request $request) {
-        $data = $request->all();    
-
-        $result = $repo->get_venta_separacion($data["idcliente"]);
-
-        return response()->json($result);
-        
-    }
-
 
     public function obtener_solicitud(VisitaClienteInterface $repo, Request $request) {
         $data = $request->all();    
@@ -205,5 +226,32 @@ class VisitaClienteController extends Controller
         $result = $repo->obtener_solicitud($data["idcliente"]);
 
         return response()->json($result);
+    }
+
+    public function find_visita(VisitaClienteInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();    
+
+        $result["visita_cliente"] = $repo->obtener_visita_cliente($data["id"]);
+        $result["visita_cliente_solicitud"] = $repo->obtener_visita_cliente_solicitud($data["id"]);
+        $result["visita_cliente_cuota"] = $repo->obtener_visita_cliente_cuota($data["id"]);
+        $result["solicitud_cronograma"] = $repo->obtener_visita_cliente_cuota($data["id"]);
+
+        return response()->json($result);
+     
+    }
+
+    public function obtener_cuotas_cronograma(VisitaClienteInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();    
+
+        $arr = explode("_", $data["id"]);
+        $cCodConsecutivo = $arr[0];
+        $nConsecutivo = $arr[1];
+        $idvisita = $data["idvisita"];
+
+
+        $response = $repo->obtener_cuotas_cronograma($cCodConsecutivo, $nConsecutivo, $idvisita);
+
+        return response()->json($response);
+
     }
 }

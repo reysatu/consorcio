@@ -189,4 +189,46 @@ class VisitaClienteRepository implements VisitaClienteInterface
         return DB::select($sql);
     }
 
+    public function obtener_visita_cliente($id) {
+        $sql = "SELECT *, FORMAT(fechareg, 'yyyy-MM-dd') AS fechareg FROM ERP_VisitaCliente WHERE id={$id}";
+
+        return DB::select($sql);
+    }
+
+    public function obtener_visita_cliente_solicitud($id) {
+        $sql = "SELECT * FROM ERP_VisitaClienteSolicitud  AS vcs
+        INNER JOIN ERP_Solicitud AS s ON(vcs.cCodConsecutivo=s.cCodConsecutivo AND s.nConsecutivo=vcs.nConsecutivo)
+        INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
+        WHERE vcs.id={$id}";
+
+        return DB::select($sql);
+    }
+
+    public function obtener_visita_cliente_cuota($id) {
+        $sql = "SELECT * FROM ERP_VisitaClienteCuota WHERE id={$id}";
+
+        return DB::select($sql);
+    }
+
+
+    public function obtener_cuotas_cronograma($cCodConsecutivo, $nConsecutivo, $idvisita = "") {
+
+        if($idvisita == "") {
+            $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento,
+            CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado, FORMAT(sc.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento_credito
+            FROM ERP_SolicitudCronograma AS sc
+            WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
+            $result = DB::select($sql);
+        } else {
+            $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento,
+            CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado, FORMAT(sc.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento_credito, FORMAT(vcc.fecha_pago, 'yyyy-MM-dd') AS fecha_pago, vcc.monto_pago AS monto_pago_v, ISNULL(vcc.cObservacion, '') AS cObservacion, vcc.nrocuota AS nrocuota_v
+            FROM ERP_SolicitudCronograma AS sc
+            LEFT JOIN ERP_VisitaClienteCuota AS vcc ON(vcc.cCodConsecutivo=sc.cCodConsecutivo AND vcc.nConsecutivo=sc.nConsecutivo AND vcc.nrocuota=sc.nrocuota AND vcc.id={$idvisita})
+            WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
+            $result = DB::select($sql);
+        }
+        
+
+        return $result;
+    }
 }
