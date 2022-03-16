@@ -256,7 +256,7 @@ class VisitaClienteController extends Controller
 
     }
 
-    public function imprimir_visita($id, VisitaClienteInterface $repo, Request $request, CajaDiariaDetalleInterface $repo_caja, SolicitudInterface $solicitud_repositorio) {
+    public function imprimir_cartas_cobranza($id, VisitaClienteInterface $repo, Request $request, CajaDiariaDetalleInterface $repo_caja, SolicitudInterface $solicitud_repositorio) {
 
       
         $datos = array();
@@ -325,4 +325,76 @@ class VisitaClienteController extends Controller
         return $pdf->stream("carta_cobranza.pdf"); // ver
         // return $pdf->stream("credito_directo.pdf"); // ver
     }
+
+    public function imprimir_visita($id, VisitaClienteInterface $repo, Request $request, CajaDiariaDetalleInterface $repo_caja, SolicitudInterface $solicitud_repositorio) {
+
+        $datos = array();
+
+        // $solicitudes = $repo->get_visita_solicitudes($id);
+        $datos["empresa"] = $repo_caja->get_empresa(); 
+        $datos["visita_cliente"] = $repo->obtener_visita_cliente($id); 
+        $datos["solicitudes"] = $repo->obtener_visita_cliente_solicitud($id); 
+
+        foreach ($datos["solicitudes"] as $key => $value) {
+            $cuotas_pendientes = $repo->obtener_cuotas_pendientes($value->cCodConsecutivo, $value->nConsecutivo); 
+            $datos["solicitudes"][$key]->primera_cuota_vencida = $cuotas_pendientes[0];
+            $cuotas_vencidas = [];
+            $intereses = 0;
+            $deuda = 0;
+            foreach ($cuotas_pendientes as $kcp => $vcp) {
+                if(date("Y-m-d") > $vcp->fecha_vencimiento) {
+                  
+                    array_push($cuotas_vencidas, $vcp->nrocuota);
+                }
+
+                $deuda += (float)$vcp->saldo_cuota;
+                $intereses += (float)$vcp->int_moratorio;
+            }
+            $datos["solicitudes"][$key]->cuotas_vencidas = $cuotas_vencidas;
+            $datos["solicitudes"][$key]->deuda = $deuda;
+            $datos["solicitudes"][$key]->intereses = $intereses; 
+            $datos["solicitudes"][$key]->vehiculo = $solicitud_repositorio->get_solicitud_articulo_vehiculo($value->cCodConsecutivo, $value->nConsecutivo); 
+
+            $ultimo_pago_cuota = $repo->ultimo_pago_cuota($value->cCodConsecutivo, $value->nConsecutivo);
+            $ultimo_pago_x_cuota = $repo->ultimo_pago_x_cuota($value->cCodConsecutivo, $value->nConsecutivo, $cuotas_pendientes[0]->nrocuota);
+
+            $datos["solicitudes"][$key]->ultimo_pago_cuota = $ultimo_pago_cuota;
+            $datos["solicitudes"][$key]->ultimo_pago_x_cuota = $ultimo_pago_x_cuota;
+
+            $segunda_venta = $repo_caja->get_segunda_venta_credito($value->cCodConsecutivo, $value->nConsecutivo);
+            $datos["solicitudes"][$key]->segunda_venta = $segunda_venta;
+            
+        }
+
+        $sql_1 = "SELECT * FROM ERP_Parametros WHERE id=9";
+        $par_1 = DB::select($sql_1);
+
+        $sql_2 = "SELECT * FROM ERP_Parametros WHERE id=10";
+        $par_2 = DB::select($sql_2);
+
+        $sql_3 = "SELECT * FROM ERP_Parametros WHERE id=11";
+        $par_3 = DB::select($sql_3);
+
+        $sql_cobranza = "SELECT * FROM ERP_Parametros WHERE id=12";
+        $parametro_jefe_cobranza = DB::select($sql_cobranza);
+
+        $sql_firma = "SELECT * FROM ERP_Parametros WHERE id=13";
+        $parametro_firma = DB::select($sql_firma);
+
+        $datos["parametro_1"] = $par_1[0]->value;
+        $datos["parametro_2"] = $par_2[0]->value;
+        $datos["parametro_3"] = $par_3[0]->value;
+        $datos["parametro_jefe_cobranza"] = $parametro_jefe_cobranza[0]->value;
+        $datos["parametro_firma"] = $parametro_firma[0]->value;
+      
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+
+        
+        $pdf = PDF::loadView("visita_cliente.visita", $datos)->setPaper('A4', "landscape");;
+        return $pdf->stream("visita.pdf"); // ver
+        // return $pdf->stream("credito_directo.pdf"); // ver
+    }
+    
 }
