@@ -22,7 +22,7 @@ class ReporteVentaClienteController extends Controller
     }
 
     public function all(Request $request, ReporteVentaClienteInterface $repo)
-    {
+    { 
         $s = $request->input('search', '');
         $filtro_tienda = $request->input('filtro_tienda', '');
 

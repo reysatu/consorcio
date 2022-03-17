@@ -23,11 +23,42 @@ class ReporteRepuestoRepository implements ReporteRepuestoInterface
     {
         return $this->model->get();
     }
-     public function search($s)
+    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
     {
-        return $this->model->where(function($q) use ($s){
-            $q->where('numero_comprobante', 'LIKE', '%'.$s.'%');
-          
+        $dato=$this->model;
+       if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
+             $dato=$dato->whereDate('fecha','>=',$FechaInicioFiltro);
+             $dato=$dato->whereDate('fecha','<=',$FechaFinFiltro);
+        }  
+            if(!empty($filtro_tienda)){
+             $dato=$dato->Where('idtienda',$filtro_tienda);
+        }
+             if($idVendedorFiltro !='' ){
+            $dato=$dato->where('idvendedor',$idVendedorFiltro);
+        }
+            if($idClienteFiltro !='' ){
+            $dato=$dato->where('idcliente',$idClienteFiltro);
+        }
+        
+        return $dato->get();
+    }
+    public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+    {
+        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro){
+            if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
+                 $q->whereDate('fecha','>=',$FechaInicioFiltro);
+                 $q->whereDate('fecha','<=',$FechaFinFiltro);
+            }  
+            if(!empty($filtro_tienda)){
+              $q->Where('idtienda',$filtro_tienda);
+            }
+             if($idVendedorFiltro !='' ){
+                  $q->where('idvendedor',$idVendedorFiltro);
+            }
+            if($idClienteFiltro !='' ){
+                  $q->where('idcliente',$idClienteFiltro);
+            }
+             
         });
 
     }

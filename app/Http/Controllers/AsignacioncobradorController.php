@@ -26,10 +26,27 @@ class AsignacioncobradorController extends Controller
     } 
       public function pdf_cuentasxcobrar(Request $request,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
     {       
+            
+
+             $s = $request->input('search', '');
+             $filtro_tienda = $request->input('filtro_tienda', '');
+             $idInicio = $request->input('idInicio', '');
+             $idFin = $request->input('idFin', '');
+             $idClienteFiltro = $request->input('idClienteFiltro', '');
+             $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+
+             $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+             $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+             $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
+            $solitud=array(); 
+            foreach ($datafilcab as $row) {
+               array_push($solitud, $row->nConsecutivo);
+            }   
+            $solitud = implode(",",$solitud); 
             $simboloMoneda = $repomo->getSimboloMoneda();
             $data_compania=$repo->get_compania();
-            $data_cabe=$repo->get_cuentas_caber();
-            $data_cuer=$repo->get_cuentas_cuerp();
+            $data_cabe=$repo->get_cuentas_caber($solitud);
+            $data_cuer=$repo->get_cuentas_cuerp($solitud);
             $data_compania=$repo->get_compania(); 
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
@@ -123,7 +140,7 @@ class AsignacioncobradorController extends Controller
         $params =  ['cCodConsecutivo', 'nConsecutivo','nrocuota','fecha_vencimiento','valor_cuota','int_moratorio','saldo_cuota','monto_pago','user_created','user_updated'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($cCodConsecutivo,$nConsecutivo), $request, 'cCodConsecutivo', $params);
-    }
+    } 
     public function listCronogramaCuentasxCobrar(Request $request,SolicitudCronogramaInterface $repo)
     {
         $cCodConsecutivo = $request->input('cCodConsecutivo', '');
@@ -137,14 +154,15 @@ class AsignacioncobradorController extends Controller
         $cobrador=$repo->getCobrador();
         $tienda=$repo->getTienda();
         $cliente=$repo->getCliente();
-        $usuarios=$repo->getUsuarios();
-        $categorias=$repo->getCategorias();
+        $vendedores=$repo->getVendedor();
+        $categorias=$repo->getCategorias(); 
         return response()->json([ 
             'status' => true,
             'cobrador' => $cobrador,
             'tienda' => $tienda,
             'cliente'=>$cliente,
-            'usuarios'=>$usuarios,
+            'usuarios'=>$vendedores,///elmodulo  usa la variable usuarios como vendedores
+            'vendedores'=>$vendedores,
             'categorias'=>$categorias,
         ]);
     }

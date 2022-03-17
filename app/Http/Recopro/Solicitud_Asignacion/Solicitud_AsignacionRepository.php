@@ -6,7 +6,7 @@
  * Date: 4/5/2017
  * Time: 6:56 PM
  */
-
+ 
 namespace App\Http\Recopro\Solicitud_Asignacion;
 
 use Illuminate\Support\Facades\DB;
@@ -34,20 +34,22 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
         $mostrar=DB::select("select * from ERP_Compania where Estado='1'");
         return $mostrar;
     }
-    public function get_cuentas_caber()
+    public function get_cuentas_caber($solitud)
     {   
         $mostrar=DB::select("select max(v.fecha_emision) as fecha_ultimo_pago,C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito from ERP_SolicitudCronograma C
 inner join ERP_Venta V on v.cCodConsecutivo_solicitud = c.cCodConsecutivo and v.nConsecutivo_solicitud = c.nConsecutivo
+INNER JOIN ERP_Venta AS tiket on(tiket.idventa_comprobante=V.idventa)
+inner join ERP_Solicitud as so on (so.cCodConsecutivo=c.cCodConsecutivo and so.nConsecutivo=c.nConsecutivo)
 inner join ERP_Clientes as cl on cl.id=v.idCliente
 left join ERP_Ubigeo as ub on ub.cCodUbigeo=cl.ubigeo
-inner join ERP_VentaDetalle VD on VD.idventa = v.idventa and c.nrocuota = vd.nrocuota GROUP BY C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito");
+inner join ERP_VentaDetalle VD on VD.idventa = v.idventa where so.saldo>0 and so.estado > 5  and  so.nConsecutivo IN ($solitud)    GROUP BY C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito");
         return $mostrar;
     }
-    public function get_cuentas_cuerp()
+    public function get_cuentas_cuerp($solitud)
     {   
         $mostrar=DB::select("select mo.Descripcion as moneda ,concat(ve.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(ve.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(sc.nrocuota) AS VARCHAR), 5) ) as documento_ven, * from ERP_SolicitudCronograma as sc INNER JOIN ERP_Venta as ve on (sc.cCodConsecutivo=ve.cCodConsecutivo_solicitud and sc.nConsecutivo=ve.nConsecutivo_solicitud)
             inner join ERP_Moneda as mo on (mo.IdMoneda=ve.IdMoneda)
-            inner join ERP_Venta as tiket on(tiket.idventa_comprobante=ve.idventa) where sc.saldo_cuota>0 order BY ve.idmoneda");
+            inner join ERP_Venta as tiket on(tiket.idventa_comprobante=ve.idventa) where sc.saldo_cuota>0 and  sc.nConsecutivo IN ($solitud)c order BY ve.idmoneda");
         return $mostrar;
     }
 
@@ -140,6 +142,43 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
     public function all()
     {
         return $this->model->all();
+    }
+     public function allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+    {
+        $dato=$this->model;
+        $solitud=[];
+        $filtroFechaSol=[];
+        if($idInicio!='' && $idFin!=''){
+            $mostrar3 = DB::select("select *,  DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) as fe from ERP_SolicitudCronograma  where saldo_cuota>0  and DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) BETWEEN '$idInicio' AND '$idFin'");
+            foreach ($mostrar3 as $row) {
+               array_push($solitud, $row->nConsecutivo);
+            } 
+        }
+        if($FechaInicioFiltro!='' && $FechaFinFiltro!=''){
+              $mostrar3 = DB::select("select * from ERP_SolicitudCronograma  where convert(date,fecha_vencimiento) >= '$FechaInicioFiltro'  and convert(date,fecha_vencimiento) <='$FechaFinFiltro' and saldo_cuota>0 ");
+                foreach ($mostrar3 as $row) {
+                   array_push($filtroFechaSol, $row->nConsecutivo);
+                } 
+        }
+         if($FechaInicioFiltro!='' && $FechaFinFiltro!=''){
+               $dato=$dato->whereIn('nConsecutivo',$filtroFechaSol);
+            }    
+            if(!empty($filtro_tienda)){
+               $dato=$dato->Where('nCodTienda',$filtro_tienda);
+            }
+            if($idInicio!='' && $idFin!=''){
+                $dato=$dato->whereIn('nConsecutivo',$solitud);
+            }
+             if($idCobradorFiltro !='' ){
+                $dato=$dato->where('idCobrador',$idCobradorFiltro);
+            }
+            if($idClienteFiltro !='' ){
+                $dato=$dato->where('idCliente',$idClienteFiltro);
+            }  
+
+       
+        
+        return $dato->get();
     }
 
     public function create(array $attributes)
