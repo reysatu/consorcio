@@ -36,13 +36,15 @@
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
-                    cssClass: 'btn-primary',
-                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
-                    click: function () {
-                        $scope.openDoc('visita_cliente/excel', {});
-                    }
-                }, {
+                },
+                // {
+                //     cssClass: 'btn-primary',
+                //     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
+                //     click: function () {
+                //         $scope.openDoc('visita_cliente/excel', {});
+                //     }
+                // }, 
+                {
                     cssClass: 'btn-danger-admin',
                     text: '<i class="fa fa-plus"></i> Nueva Visita',
                     click: function () {
@@ -93,6 +95,28 @@
                     listClass: 'text-center',
                     display: function (data) {
                         return '<a data-target="#" data-estado="' + data.record.estado + '" data-id="' + data.record.id +'"   title="Procesar Visita" class="jtable-command-button procesar-visita"><i class="fa fa-cogs fa-1-5x fa-red"><span>Procesar Visita</span></i></a>';
+                    }
+
+                }
+                ,imprimir: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a data-target="#" data-estado="' + data.record.estado + '" data-id="' + data.record.id +'"   title="Imprimir Cartas Cobranza" class="jtable-command-button imprimir-cartas-cobranza"><i class="fa fa-book fa-1-5x"><span>Imprimir Cartas Cobranza</span></i></a>';
+                    }
+
+                }
+                ,imprimir_visita: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a data-target="#" data-estado="' + data.record.estado + '" data-id="' + data.record.id +'"   title="Imprimir Visita" class="jtable-command-button imprimir-visita"><i class="fa fa-file-pdf-o fa-1-5x fa-red"><span>Imprimir Visita</span></i></a>';
                     }
 
                 }
@@ -188,6 +212,16 @@
                         },
                         "json"
                     );
+                })
+                $(".imprimir-cartas-cobranza").click(function() {
+                    var id = $(this).attr('data-id');
+                    // alert(id);
+                    window.open("visita_cliente/imprimir_cartas_cobranza/" + id);
+                })
+                $(".imprimir-visita").click(function() {
+                    var id = $(this).attr('data-id');
+                    // alert(id);
+                    window.open("visita_cliente/imprimir_visita/" + id);
                 })
                
             },
@@ -471,7 +505,7 @@
                 html += '    <td>'+idsolicitud+'</td>';
                 html += '    <td>'+saldo.toFixed(2)+'</td>';
                 html += '    <td>['+cuotas.join(",")+']</td>';
-                html += '    <td><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></td>';
+                html += '    <td><center><button type="button" class="btn btn-danger btn-xs eliminar-detalle-solicitud"><i class="fa fa-trash"></i></button></center></td>';
                 html += '</tr>';
 
                 $("#detalle-visitas").append(html);

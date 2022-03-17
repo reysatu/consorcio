@@ -293,8 +293,7 @@ Route::get('generate_type_gt', function () {
             $l->save();
         } elseif (($l->parent && $l->parent->type_gt == 2) || $l->code == 13) {
             $l->type_gt = 2;
-            $l->save();
-        }
+            $l->save();}
     }
 
     return 'OK';

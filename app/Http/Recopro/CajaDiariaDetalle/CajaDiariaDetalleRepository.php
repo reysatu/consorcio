@@ -209,7 +209,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
 
     public function get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo) {
-        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision_user
         FROM ERP_Venta AS v 
         INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
         INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)

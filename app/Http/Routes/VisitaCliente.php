@@ -21,3 +21,7 @@ Route::post('visita_cliente/obtener_solicitud', ['as' => 'visita_cliente.obtener
 Route::post('visita_cliente/obtener_cuotas_cronograma', ['as' => 'visita_cliente.obtener_cuotas_cronograma', 'uses' => 'VisitaClienteController@obtener_cuotas_cronograma']);
 Route::post('visita_cliente/procesar_visita', ['as' => 'visita_cliente.procesar_visita', 'uses' => 'VisitaClienteController@procesar_visita']);
 
+
+Route::get('visita_cliente/imprimir_cartas_cobranza/{id}', 'VisitaClienteController@imprimir_cartas_cobranza');
+Route::get('visita_cliente/imprimir_visita/{id}', 'VisitaClienteController@imprimir_visita');
+
