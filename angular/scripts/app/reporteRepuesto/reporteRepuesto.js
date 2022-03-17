@@ -9,9 +9,9 @@
         .controller('ReporteRepuestoCtrl', ReporteRepuestoCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    ReporteRepuestoCtrl.$inject = ['$scope'];
+    ReporteRepuestoCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
-    function ReporteRepuestoCtrl($scope)
+    function ReporteRepuestoCtrl($scope, _, RESTService, AlertFactory, Helpers)
     {
         
          $scope.chkState = function () {
@@ -19,7 +19,7 @@
             state_state.html(txt_state2);
         };
         
-        var search = getFormSearch('frm-search-ReporteRepuesto', 'search_b', 'LoadRecordsButtonReporteRepuesto');
+        var search = getFormSearchReporteRepuestos('frm-search-ReporteRepuesto', 'search_b', 'LoadRecordsButtonReporteRepuesto');
 
         var table_container_ReporteRepuesto = $("#table_container_ReporteRepuesto");
 
@@ -41,22 +41,25 @@
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
-                    cssClass: 'btn-primary',
-                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
-                    click: function () {
-                        $scope.openDoc('reporteRepuestos/excel', {});
-                    }
-                },{
-                    cssClass: 'btn-success',
-                    text: '<i class="fa fa-file-pdf-o"></i> Reporte pdf',
-                    click: function () {
-                            var data_pdf = {
-                               nConsecutivo:"",
-                            };
-                            $scope.loadReporteRepuestoPDF('reporteRepuestos/pdf',data_pdf);
-                    }
-                }]
+                },
+                // {
+                //     cssClass: 'btn-primary',
+                //     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
+                //     click: function () {
+                //         $scope.openDoc('reporteRepuestos/excel', {});
+                //     }
+                // },
+                // {
+                //     cssClass: 'btn-success',
+                //     text: '<i class="fa fa-file-pdf-o"></i> Reporte pdf',
+                //     click: function () {
+                //             var data_pdf = {
+                //                nConsecutivo:"",
+                //             };
+                //             $scope.loadReporteRepuestoPDF('reporteRepuestos/pdf',data_pdf);
+                //     }
+                // }
+                ]
             },
             fields: {
                 idventa_ca: {
@@ -83,12 +86,18 @@
                 },
                 fecha: {
                     title: 'Fecha venta',
-                     
+                    display: function (data) {
+                        return moment(data.record.fecha).format('DD/MM/YYYY');
+                    }
 
                 },
                 monto_total: {
                     title: 'Monto Total',
-                     
+                     display: function (data) {
+                                                 var  saldo=data.record.monto_total;
+                                                 var newsal=Number(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  } 
 
                 },
                 razonsocial_cliente: {
@@ -144,9 +153,88 @@
         // });
         generateSearchForm('frm-search-ReporteRepuesto', 'LoadRecordsButtonReporteRepuesto', function(){
             table_container_ReporteRepuesto.jtable('load', {
-                search: $('#search_b').val()
+                 search: $('#search_b').val(),
+                filtro_tienda: $('#filtro_tienda').val(),
+                idClienteFiltro: $('#idClienteFiltro').val(),
+                idVendedorFiltro: $('#idVendedorFiltro').val(),
+                FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                FechaFinFiltro: $('#FechaFinFiltro').val(),
+              
             });
         }, true);
+
+        $("#btn_expExcel").click(function(e){
+            var data_excel = {
+                            filtro_tienda: $('#filtro_tienda').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            idVendedorFiltro: $('#idVendedorFiltro').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
+                            search: '',
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.openDoc('reporteRepuestos/excel',data_excel);
+        });
+        $("#btn_expPDF").click(function(e){
+            var data_excel = {
+                              filtro_tienda: $('#filtro_tienda').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            idVendedorFiltro: $('#idVendedorFiltro').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
+                             idcategoria:$("#idcategoria").val(),
+                            search: '',
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.loadReporteRepuestoPDF('reporteRepuestos/pdf',data_excel);
+        });
+
+
+        $(".jtable-title-text").removeClass('col-md-4');
+        $(".jtable-title-text").addClass('col-md-2');
+        $(".buscador").removeClass('jtable-toolbar-item');
+
+        $(".jtable-toolbar").removeClass('col-md-8');
+        $(".jtable-toolbar").addClass('col-md-10');
+         function getDataForm () {
+            RESTService.all('reporteRepuestos/data_form', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var cobradores=response.cobrador;
+                    var cobradores=response.cobrador;
+                    var clientes=response.cliente;
+                       var tiendas=response.tienda;
+                        var vendedores=response.vendedores;
+                        var categorias=response.categorias;
+                      // idCobrador.append('<option value="" selected>Seleccionar</option>');
+                      // cobradores.map(function (index) {
+                      //    idCobrador.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                      // });
+                      $("#idVendedorFiltro").append('<option value="" selected>Vendedor</option>');
+                      vendedores.map(function (index) {
+                         $("#idVendedorFiltro").append('<option value="'+index.idvendedor+'">'+index.descripcion+'</option>');
+                      });
+                       $("#idcategoria").append('<option value="" selected>Categoría</option>');
+                      categorias.map(function (index) {
+                         $("#idcategoria").append('<option value="'+index.idCategoria+'">'+index.descripcion+'</option>');
+                      });
+                      
+                      $("#idClienteFiltro").append('<option value="" selected>Clientes</option>');
+                      clientes.map(function (index) {
+                         $("#idClienteFiltro").append('<option value="'+index.id+'">'+index.razonsocial_cliente+'</option>');
+                      });
+                       $("#filtro_tienda").append('<option value="" selected>Tiendas</option>');
+                       tiendas.map(function (index) {
+                         $("#filtro_tienda").append('<option value="'+index.idTienda+'">'+index.descripcion+'</option>');
+                      });
+
+                }
+            }, function() {
+                getDataForm();
+            });
+        }
+        getDataForm();
+        $("#idVendedorFiltro").select2();
+        $("#idClienteFiltro").select2();
     }
 
     function Config($stateProvider, $urlRouterProvider) {

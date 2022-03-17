@@ -69,6 +69,10 @@ class CobradorRepository implements CobradorInterface
           $mostrar2=DB::select("select * from ERP_Usuarios ");
           return $mostrar2;
     }
+     public function getVendedor(){
+          $mostrar2=DB::select("select * from ERP_Vendedores where estado='A'");
+          return $mostrar2;
+    }
     public function get_consecutivo($table,$id)
     {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");
          $actu=0;

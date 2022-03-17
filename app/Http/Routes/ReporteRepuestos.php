@@ -12,3 +12,4 @@ Route::post('reporteRepuestos/delete', ['as' => 'reporteRepuestos.delete', 'uses
 Route::post('reporteRepuestos/update', ['as' => 'reporteRepuestos.update', 'uses' => 'ReporteRepuestoController@update']);
 Route::get('reporteRepuestos/excel', ['as' => 'reporteRepuestos.excel', 'uses' => 'ReporteRepuestoController@excel']);
 Route::get('reporteRepuestos/pdf', ['as' => 'reporteRepuestos.pdf', 'uses' => 'ReporteRepuestoController@pdf']);
+Route::get('reporteRepuestos/data_form', ['as' => 'reporteRepuestos.data_form', 'uses' => 'AsignacioncobradorController@data_form']);

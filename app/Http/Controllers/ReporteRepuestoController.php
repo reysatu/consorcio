@@ -24,10 +24,17 @@ class ReporteRepuestoController extends Controller
     }
 
     public function all(Request $request, ReporteRepuestoInterface $repo)
-    {
+    {   
         $s = $request->input('search', '');
+        $filtro_tienda = $request->input('filtro_tienda', '');
+
+        $idClienteFiltro = $request->input('idClienteFiltro', '');
+        $idVendedorFiltro = $request->input('idVendedorFiltro', '');
+        $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+        $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+      
         $params =['origen', 'idventa_ca','monto_total','estado','documento_ven','cCodConsecutivo','nConsecutivo','serie_comprobante','numero_comprobante','razonsocial_cliente','vendedor','REPUESTO','ACEITE','SERVICIO','TERCEROS','fecha'];
-        return parseList($repo->search($s), $request, 'idCategoria', $params);
+        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'idtienda', $params);
     }
 
     public function create(ReporteRepuestoInterface $repo, ReporteRepuestoRequest $request)
@@ -77,16 +84,29 @@ class ReporteRepuestoController extends Controller
     // //     return parseSelect($repo->all(), 'id', 'description');
     // // }
 
-    public function excel(ReporteRepuestoInterface $repo)
+    public function excel(ReporteRepuestoInterface $repo,Request $request)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE REPORTE DE REPUESTOS', 'Repuestos');
+         $s = $request->input('search', '');
+        $filtro_tienda = $request->input('filtro_tienda', '');
+        $idClienteFiltro = $request->input('idClienteFiltro', '');
+        $idVendedorFiltro = $request->input('idVendedorFiltro', '');
+        $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+        $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)), 'LISTA DE REPORTE DE REPUESTOS', 'Repuestos');
     }
     public function pdf(ReporteRepuestoInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom)
     {
-            // $s = $request->input('search', '');
-            // $filtro_art =  $request->input('filtro_art');
-            // $filtro_idAlm =  $request->input('filtro_idAlm');
-            $data=$repo->all();
+            $s = $request->input('search', '');
+            $filtro_tienda = $request->input('filtro_tienda', '');
+            $idClienteFiltro = $request->input('idClienteFiltro', '');
+            $idVendedorFiltro = $request->input('idVendedorFiltro', '');
+            $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+            $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+          
+            $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
+
             $data_compania=$repcom->get_compania(); 
             $simboloMoneda = $repom->getSimboloMoneda();
             $path = public_path('/'.$data_compania[0]->ruta_logo);

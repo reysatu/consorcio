@@ -148,7 +148,7 @@
                                             title: 'Fecha Vencimiento',
                                                display: function (data) {
                                                     return moment(data.record.fecha_vencimiento).format('DD/MM/YYYY');
-                                                }   
+                                                 }   
                                         },
                                         valor_cuota: {
                                             title: 'Valor Cuota',
@@ -385,10 +385,17 @@
                 
 
             });
-        }, true);
+        }, true); 
         $("#btn_exportar_CC").click(function(e){
             var data_excel = {
                             search: '',
+                            filtro_tienda: $('#filtro_tienda').val(),
+                            idInicio: $('#idInicio').val(),
+                            idFin: $('#idFin').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            idCobradorFiltro: $('#idCobradorFiltro').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
              };
             //             $scope.openDoc('projects/excel', data_excel);
 
