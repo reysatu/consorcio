@@ -4516,6 +4516,245 @@ function createReporteRepuestoPDF(response) {
     // }
       pdfMake.createPdf(docDefinition).print({}, win);
 }
+function createReporteCreditosAprobadosPDF(response) {
+    var img=response.img;
+    var simboloMoneda=response.simboloMoneda;
+    var data=response.data;
+    var dataBodyReportes=[];
+    var dataBodyReportesDol=[];
+    var dataBodyReportestotales=[];
+    console.log(simboloMoneda);
+    console.log(img);
+    console.log(data);
+    var conpls=0;
+    var conpld=0;
+    var conins=0;
+    var conind=0;
+    var coninis=0;
+    var coninid=0;
+    var tfins=0;
+    var tfind=0;
+    var creds=0;
+    var credd=0;
+    var finas=0;
+    var finad=0;
+    var contc=0;
+    var subtituloSolesEfec=[ 
+            { fontSize: 8,text:"CÓDIGO",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"FEC SOL",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"COD VEN",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"COD CLI",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"CLIENTE",fillColor: '#eeeeee'},
+            // { fontSize: 8,text:"TIPCLI",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"FEC DOC",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"SERIE",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"N°",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"MON",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"PRECIO LISTA",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"INTERÉS",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"CT",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"INICIAL",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"CUOTA",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"T.FINAN",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"CRÉDITO",fillColor: '#eeeeee'},
+            { fontSize: 8,text:"FINAN",fillColor: '#eeeeee'},
+    ];
+    dataBodyReportes.push(subtituloSolesEfec);
+     data.map(function(index) {
+         contc=contc+1;
+         if(index.IdMoneda==1){
+            conpls=conpls+Number(index.precio_lista);
+            conins=conins+Number(index.intereses);
+            coninis=coninis+Number(index.inicial);
+            tfins=tfins+Number(index.total_financiado);
+            creds=creds+Number(index.Credito);
+            finas=finas+Number(index.financiado);
+         }else{
+            conpld=conpld+Number(index.precio_lista);
+            conind=conind+Number(index.intereses);
+            coninid=coninid+Number(index.inicial);
+            tfind=tfind+Number(index.total_financiado);
+            credd=credd+Number(index.Credito);
+            finad=finad+Number(index.financiado);
+         }
+         var subtituloSolesEfec=[ 
+            { fontSize: 8,text:index.cCodConsecutivo+'-'+index.nConsecutivo},
+            { fontSize: 8,text:moment(index.fecha_solicitud).format('DD/MM/YYYY'),},
+            { fontSize: 8,text:index.idvendedor},
+            { fontSize: 8,text:index.idcliente},
+            { fontSize: 8,text:index.razonsocial_cliente},
+            // { fontSize: 8,text:index.tipocliente,},
+            { fontSize: 8,text:moment(index.fecdoc).format('DD/MM/YYYY'),},
+            { fontSize: 8,text:index.serie_comprobante},
+            { fontSize: 8,text:'5000'},
+            { fontSize: 8,text:index.Simbolo},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.precio_lista).toFixed(2),},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.intereses).toFixed(2)},
+            { fontSize: 8,text:index.nro_cuotas},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.inicial).toFixed(2),},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.cuota).toFixed(2)},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.total_financiado).toFixed(2),},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.Credito).toFixed(2)},
+            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.financiado).toFixed(2)},
+        ];
+    dataBodyReportes.push(subtituloSolesEfec);
+     });
+     var totalsole=[ 
+            { fontSize: 8,text:"TOTAL FINAL:",fillColor: '#eeeeee',colSpan: 2,border: [true, true, false, false]},
+            { },
+            { fontSize: 8,text:"CRÉDITOS: "+contc,fillColor: '#eeeeee',colSpan: 3,border: [false, true, false, false]},
+            { },
+             { },
+            { fontSize: 8,text:"CLIENTES: "+contc,fillColor: '#eeeeee',colSpan: 3,border: [false, true, false, false]},
+            // { fontSize: 8,text:"TIPCLI",fillColor: '#eeeeee'},
+            { },
+            { },
+            { fontSize: 8,text:simboloMoneda[0].Simbolo,fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(conpls).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(conins).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:"",fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(coninis).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:"",fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(tfins).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(creds).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(finas).toFixed(2),fillColor: '#eeeeee'},
+    ];
+    dataBodyReportes.push(totalsole);
+     var totaldolar=[ 
+            { fontSize: 8,text:"",fillColor: '#eeeeee',colSpan: 8},
+            { },
+            { },
+            { },
+            { },
+            // { fontSize: 8,text:"TIPCLI",fillColor: '#eeeeee'},
+            { },
+            { },
+            { },
+            { fontSize: 8,text:simboloMoneda[1].Simbolo,fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(conpld).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(conind).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:"",fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(coninid).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:"",fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(tfind).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(credd).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 8,text:redondeodecimale(finad).toFixed(2),fillColor: '#eeeeee'},
+    ];
+    dataBodyReportes.push(totaldolar);
+    
+    var totatotal=[ 
+            { fontSize: 10,text:"",border: [false, false, false, false]},
+            { fontSize: 10,text:"",border: [false, false, false, false]},
+            { fontSize: 10,text:"SOLES", bold: true,border: [false, false, false, false]},
+            { fontSize: 10,text:"DOLARES", bold: true,border: [false, false, false, false]},
+    ];
+    dataBodyReportestotales.push(totatotal);
+     var totatotal2=[ 
+            { fontSize: 10,text:"CLIENTES NUEVOS"},
+            { fontSize: 10,text:contc},
+            { fontSize: 10,text:redondeodecimale(creds).toFixed(2), bold: true,},
+            { fontSize: 10,text:redondeodecimale(credd).toFixed(2), bold: true,},
+    ];
+    dataBodyReportestotales.push(totatotal2);
+  
+    var docDefinition = {
+
+        // a string or { width: number, height: number }
+        pageSize: "A4",
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: 'landscape',
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        // pageMargins: [15, 15, 15, 15],
+        content: [
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [150, 150]
+                            }
+                        ]
+                    },
+                    {text:"REPORTE DE REPUESTOS", style: 'header'}
+                ]
+            },
+            {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
+            // {text: 'SOLES'},
+            {   margin: [0,0,0,0],
+                        style: 'tableExample',
+                        table: {
+                            widths: [40,40,30,30,70,40,20,20,20,40,40,20,40,40,40,40,40],
+                            body:
+                            dataBodyReportes, 
+                        },
+                      
+            },
+            {text: '', style: 'subheader',margin: [20, 20, 20, 20]},
+             {   margin: [0,0,0,0],
+                        style: 'tableExample',
+                        table: {
+                            widths: [100,40,60,60],
+                            body:
+                            dataBodyReportestotales, 
+                        },
+                      
+            },
+            // {text: 'DÓLARES'},
+            // {   margin: [0,0,0,0],
+            //             style: 'tableExample',
+            //             table: {
+            //                 widths: [40,40,80,80,80,40,40,40,40,40,40,40,40],
+            //                 body:
+            //                 datd, 
+            //             },
+                      
+            // },
+        ],
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [-90, 0, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 0, 0,0],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
+    };
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+      pdfMake.createPdf(docDefinition).print({}, win);
+}
 function create_pdf_emisionComproCaja(response) {
     var dataDenomicacion=response.dataDenomicacion;
     var simboloMoneda=response.simboloMoneda;

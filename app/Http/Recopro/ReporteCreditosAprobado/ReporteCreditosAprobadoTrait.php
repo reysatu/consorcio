@@ -14,50 +14,34 @@ trait ReporteCreditosAprobadoTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['CÓDIGO','FECHA','DOCUMENTO DE VENTA','CLIENTE','VENDEDOR','MONTO TOTAL', 'ESTADO', 'REPUESTO','ACEITE','SERVICIO','SERVICIO TERCERO','MOSTRADOR','TALLER'];
+        $columns[] = ['SOLICITUD','FECHA SOL','COD VEN','COD CLI','CLIENTE','TIPO CLIENTE', 'FECHA DOC', 'SERIE','NUMERO','MONEDA','PRECIO LISTA','INTERES','N° CUOTAS','INICIAL','CUOTA','TOTAL FINANCIADO','CRÉDITO','FINANCIADO'];
         foreach ($info as $i) {
-            $estado="Registrado";
-            if($i->estado=='2'){
-                $estado='Vigente';
-            }elseif ($i->estado=='3') {
-                $estado='Por Aprobar';
-            }elseif ($i->estado=='4') {
-                $estado='Aprobado';
-            }elseif ($i->estado=='5') {
-                $estado='Rechazado';
-            }elseif ($i->estado=='6') {
-                $estado='Facturado';
-            }elseif ($i->estado=='7') {
-                $estado='Facturado';
-            };
-            $mostrador=0;
-            $taller=0;
-            if($i->origen=='V'){
-                $mostrador=floatval($i->REPUESTO)+floatval($i->ACEITE);
-            }else{
-                $taller=floatval($i->REPUESTO)+floatval($i->ACEITE); 
-            };
             $columns[] = [
                 ['left', $i->cCodConsecutivo.'-'.$i->nConsecutivo],
-                ['center', (Carbon::parse($i->fecha)->format('d-m-Y'))],
-                ['left', $i->documento_ven],
+                ['center', (Carbon::parse($i->fecha_solicitud)->format('d-m-Y'))],
+                ['left', $i->idvendedor],
+                ['left', $i->idcliente],
                 ['left', $i->razonsocial_cliente],
-                ['left', $i->vendedor],
-                ['left', $i->monto_total],
-                ['left', $estado],
-                ['left', $i->REPUESTO],
-                ['left', $i->ACEITE],
-                ['left', $i->SERVICIO],
-                ['left', $i->TERCEROS],
-                ['left', $mostrador],
-                ['left', $taller],
+                ['left', $i->tipocliente],
+                ['center', (Carbon::parse($i->fecdoc)->format('d-m-Y'))],
+                ['left', $i->serie_comprobante],
+                ['left', $i->numero_comprobante],
+                ['left', $i->moneda],
+                ['left', $i->precio_lista],
+                ['left', $i->intereses],
+                ['left', $i->nro_cuotas],
+                ['left', $i->inicial],
+                ['left', $i->cuota],
+                ['left', $i->total_financiado],
+                ['left', $i->Credito],
+                ['left', $i->financiado],
                
             ];
         }
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE VENTA DE REPUESTO'
+            'title' => 'LISTA DE CRÉDITOS DE APROBADOS'
         ];
 
         return $data;

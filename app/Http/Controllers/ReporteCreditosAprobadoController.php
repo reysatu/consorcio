@@ -33,7 +33,7 @@ class ReporteCreditosAprobadoController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
       
-        $params =['origen', 'idventa_ca','monto_total','estado','documento_ven','cCodConsecutivo','nConsecutivo','serie_comprobante','numero_comprobante','razonsocial_cliente','vendedor','REPUESTO','ACEITE','SERVICIO','TERCEROS','fecha'];
+        $params =['idtienda','documento_ven','vendedor','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','tipocliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado'];
         return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'idtienda', $params);
     }
 
@@ -93,7 +93,7 @@ class ReporteCreditosAprobadoController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
 
-        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)), 'LISTA DE REPORTE DE REPUESTOS', 'Repuestos');
+        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)), 'LISTA DE CRÉDITOS APROBADOS', 'Créditos');
     }
     public function pdf(ReporteCreditosAprobadoInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom)
     {
@@ -108,7 +108,7 @@ class ReporteCreditosAprobadoController extends Controller
             $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
 
             $data_compania=$repcom->get_compania(); 
-            $simboloMoneda = $repom->getSimboloMoneda();
+            $simboloMoneda = $repom->getSimboloMonedaTotal();
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);

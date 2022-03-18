@@ -32,6 +32,21 @@ SELECT * FROM ERP_CondicionPago
 select * from ERP_Solicitud
 select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
+
+///view creditos aprobados///
+alter VIEW [dbo].[ERP_view_reporte_creditos_aprobados] AS 
+select s.estado,vend.descripcion as vendedor,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tike.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,v.idtienda,sc.total_financiado+sc.intereses as financiado,sc.intereses+sc.monto_venta as Credito,total_financiado as total_financiado,sc.valor_cuota as cuota,sc.cuota_inicial as inicial,sc.monto_venta as precio_lista,sc.intereses,sc.nro_cuotas,mon.IdMoneda, mon.Descripcion as moneda,mon.Simbolo, s.cCodConsecutivo, s.nConsecutivo,s.fecha_solicitud,s.idvendedor,s.idcliente,cli.razonsocial_cliente,cli.id_tipocli as idTipoCliente,tcl.descripcion as tipocliente,v.fecha_emision as fecdoc,v.serie_comprobante,v.numero_comprobante from ERP_Solicitud as s 
+inner join ERP_SolicitudCredito as sc on (sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+INNER JOIN  ERP_Clientes as cli on (cli.id=s.idcliente) 
+inner join  ERP_Venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo  and v.IdTipoDocumento in ('03','01'))
+inner join ERP_Moneda as mon on (mon.IdMoneda=v.idmoneda)
+inner join 	ERP_Venta as tike on(tike.idventa_comprobante=v.idventa)
+inner join ERP_Vendedores as vend on(vend.idvendedor=s.idvendedor) 
+left join ERP_TipoCliente as tcl on (tcl.id=cli.id_tipocli)
+where s.estado='4'
+
+SELECT * FROM ERP_TipoCliente
+select * from ERP_Vendedores
 //VIEW ASIGNACION COBRADOR ///
 ALTER VIEW [dbo].[ERP_view_solicitud_Asignacion] AS 
 SELECT v.idventa,v.IdTipoDocumento,v.serie_comprobante,v.numero_comprobante,co.id as idCobrador ,c.id as idCliente ,c.razonsocial_cliente as cliente , tdoc.Descripcion as tipoComprobanteText,co.descripcion as Cobrador, con.nCodTienda, v.tipo_comprobante,s.cCodConsecutivo, s.nConsecutivo, s.fecha_solicitud, s.tipo_solicitud, s.estado, s.idconvenio, s.descuento_id, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, s.t_monto_total,
@@ -188,9 +203,23 @@ CREATE TABLE ERP_TipoTraslado (
 );
 select * from ERP_Clientes
 select * from ERP_Solicitud
-select s.cCodConsecutivo, s.nConsecutivo,s.fecha_solicitud,s.idvendedor,s.idcliente,cli.razonsocial_cliente,cli.id_tipocli as idTipoCliente,tcl.descripcion as tipocliente from ERP_Solicitud as s 
+select v.idtienda,sc.total_financiado+sc.intereses as financiado,sc.intereses+sc.monto_venta as Credito,total_financiado as total_financiado,sc.valor_cuota as cuota,sc.cuota_inicial as inicial,sc.monto_venta as precio_lista,sc.intereses,sc.nro_cuotas,mon.IdMoneda, mon.Descripcion as moneda,mon.Simbolo, s.cCodConsecutivo, s.nConsecutivo,s.fecha_solicitud,s.idvendedor,s.idcliente,cli.razonsocial_cliente,cli.id_tipocli as idTipoCliente,tcl.descripcion as tipocliente,v.fecha_emision as fecdoc,v.serie_comprobante,v.numero_comprobante from ERP_Solicitud as s 
+inner join ERP_SolicitudCredito as sc on (sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
 INNER JOIN  ERP_Clientes as cli on (cli.id=s.idcliente) 
-inner join  ERP_Venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.cCodConsecutivo)left join ERP_TipoCliente as tcl on (tcl.id=cli.id_tipocli)
-where s.estado='4' 
+inner join  ERP_Venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo  and v.IdTipoDocumento in ('03','01'))
+inner join ERP_Moneda as mon on (mon.IdMoneda=v.idmoneda)
+inner join 	ERP_Venta as tike on(tike.idventa_comprobante=v.idventa)left join ERP_TipoCliente as tcl on (tcl.id=cli.id_tipocli)
+where s.estado='4'
 
-select * from ERP_TipoCliente
+select * from ERP_SolicitudCredito
+select * from erp_venta
+select * from ERP_Moneda
+s
+
+select * from ERP_Solicitud as s 
+inner join ERP_SolicitudCredito as sc on (sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+INNER JOIN  ERP_Clientes as cli on (cli.id=s.idcliente) 
+inner join  ERP_Venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo  and v.IdTipoDocumento in ('03','01'))
+inner join 	ERP_Venta as tike on(tike.idventa_comprobante=v.idventa)
+left join ERP_TipoCliente as tcl on (tcl.id=cli.id_tipocli)
+where s.estado='4'

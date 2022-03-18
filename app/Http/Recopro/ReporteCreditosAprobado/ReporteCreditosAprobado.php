@@ -11,17 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ReporteCreditosAprobado extends Model
 {
   
-    protected $table = 'ERP_VW_REPORTE_REPUESTO';
+    protected $table = 'ERP_view_reporte_creditos_aprobados';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'idventa_ca';
+    protected $primaryKey = 'idtienda';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['origen','fecha', 'idventa_ca','monto_total','estado','documento_ven','cCodConsecutivo','nConsecutivo','serie_comprobante','numero_comprobante','razonsocial_cliente','vendedor','REPUESTO','ACEITE','SERVICIO','TERCEROS'];
+    protected $fillable = ['idtienda','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','vendedor','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','documento_ven','idTipoCliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado'];
     
      public function user_c()
     {

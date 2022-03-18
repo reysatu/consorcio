@@ -62,16 +62,8 @@
                 ]
             },
             fields: {
-                idventa_ca: {
-                    key: true,
-                    create: false,
-                    edit: false,
-                    list: false
-                },
                 cCodConsecutivo: {
                     title: 'Codigo',
-                     
-
                 },
 
                 nConsecutivo: {
@@ -79,30 +71,40 @@
                      
 
                 },
-                documento_ven: {
-                    title: 'Documento venta',
-                     
-
-                },
-                fecha: {
+                fecha_solicitud: {
                     title: 'Fecha venta',
                     display: function (data) {
-                        return moment(data.record.fecha).format('DD/MM/YYYY');
+                        return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
-
-                },
-                monto_total: {
-                    title: 'Monto Total',
-                     display: function (data) {
-                                                 var  saldo=data.record.monto_total;
-                                                 var newsal=Number(saldo).toFixed(2);
-                                                 return(addCommas(newsal));
-                  } 
 
                 },
                 razonsocial_cliente: {
                     title: 'Cliente',
                      
+
+                },
+                fecdoc: {
+                    title: 'Fecha venta',
+                    display: function (data) {
+                        return moment(data.record.fecdoc).format('DD/MM/YYYY');
+                    }
+
+                },
+                serie_comprobante: {
+                    title: 'Serie',
+                     
+
+                },
+                numero_comprobante: {
+                    title: 'N° Comprobante',
+                },
+                Credito: {
+                    title: 'Crédito',
+                     display: function (data) {
+                                                 var  saldo=data.record.Credito;
+                                                 var newsal=redondeodecimale(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  } 
 
                 },
                 vendedor: {

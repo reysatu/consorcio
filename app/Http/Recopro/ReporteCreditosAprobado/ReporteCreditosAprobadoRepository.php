@@ -27,8 +27,8 @@ class ReporteCreditosAprobadoRepository implements ReporteCreditosAprobadoInterf
     {
         $dato=$this->model;
        if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
-             $dato=$dato->whereDate('fecha','>=',$FechaInicioFiltro);
-             $dato=$dato->whereDate('fecha','<=',$FechaFinFiltro);
+             $dato=$dato->whereDate('fecha_solicitud','>=',$FechaInicioFiltro);
+             $dato=$dato->whereDate('fecha_solicitud','<=',$FechaFinFiltro);
         }  
             if(!empty($filtro_tienda)){
              $dato=$dato->Where('idtienda',$filtro_tienda);
@@ -46,11 +46,11 @@ class ReporteCreditosAprobadoRepository implements ReporteCreditosAprobadoInterf
     {
         return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro){
             if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
-                 $q->whereDate('fecha','>=',$FechaInicioFiltro);
-                 $q->whereDate('fecha','<=',$FechaFinFiltro);
+                 $q->whereDate('fecha_solicitud','>=',$FechaInicioFiltro);
+                 $q->whereDate('fecha_solicitud','<=',$FechaFinFiltro);
             }  
             if(!empty($filtro_tienda)){
-              $q->Where('idtienda',$filtro_tienda);
+              $q->Where('idtienda',$filtro_tienda); 
             }
              if($idVendedorFiltro !='' ){
                   $q->where('idvendedor',$idVendedorFiltro);
