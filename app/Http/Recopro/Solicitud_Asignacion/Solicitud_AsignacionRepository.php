@@ -36,13 +36,23 @@ class Solicitud_AsignacionRepository implements Solicitud_AsignacionInterface
     }
     public function get_cuentas_caber($solitud)
     {   
-        $mostrar=DB::select("select max(v.fecha_emision) as fecha_ultimo_pago,C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito from ERP_SolicitudCronograma C
-inner join ERP_Venta V on v.cCodConsecutivo_solicitud = c.cCodConsecutivo and v.nConsecutivo_solicitud = c.nConsecutivo
-INNER JOIN ERP_Venta AS tiket on(tiket.idventa_comprobante=V.idventa)
-inner join ERP_Solicitud as so on (so.cCodConsecutivo=c.cCodConsecutivo and so.nConsecutivo=c.nConsecutivo)
-inner join ERP_Clientes as cl on cl.id=v.idCliente
-left join ERP_Ubigeo as ub on ub.cCodUbigeo=cl.ubigeo
-inner join ERP_VentaDetalle VD on VD.idventa = v.idventa where so.saldo>0 and so.estado > 5  and  so.nConsecutivo IN ($solitud)    GROUP BY C.cCodConsecutivo,C.nConsecutivo,cl.razonsocial_cliente,ub.cDepartamento,ub.cProvincia,ub.cDistrito");
+        $mostrar=DB::select("select cob.descripcion as cobrador,cli.direccion,v.idventa as idventa, ub.cDepartamento,ub.cProvincia,ub.cDistrito,cli.documento as documento_cliente,cli.razonsocial_cliente as cliente ,vend.descripcion as vendedor,C.valor_cuota as monto_total,C.saldo_cuota as monto_pendiente ,m.Descripcion as moneda,m.Simbolo,v.idmoneda,v.serie_comprobante,v.numero_comprobante,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(c.nrocuota) AS VARCHAR), 5) ) as documento_ven,v.fecha_emision,c.cCodConsecutivo,c.nConsecutivo,c.nrocuota,c.fecha_vencimiento,
+        (select max(VTA.fecha_emision) Fecha
+        from ERP_Venta VTA
+        inner join ERP_VentaDetalle VTAD on VTAD.idventa = VTA.idventa and VTAD.nrocuota is not null
+        where VTA.tipo_comprobante = 0 and VTA.IdTipoDocumento in ('12') 
+        and cCodConsecutivo_solicitud = c.cCodConsecutivo and  nConsecutivo_solicitud = c.nConsecutivo and  VTAD.nrocuota = c.nrocuota
+        ) fecultpago
+from ERP_SolicitudCronograma C
+INNER JOIN ERP_Venta AS v on(v.cCodConsecutivo_solicitud=c.cCodConsecutivo and v.nConsecutivo_solicitud=c.nConsecutivo and v.tipo_comprobante = 0 and v.IdTipoDocumento in ('03','01'))
+
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+left join ERP_Solicitud as so on(so.cCodConsecutivo=c.cCodConsecutivo and so.nConsecutivo=c.nConsecutivo)
+left join ERP_Cobrador as cob on (cob.id=so.idCobrador)
+INNER JOIN ERP_Clientes AS cli ON(so.idcliente=cli.id)
+left join ERP_Ubigeo as ub on (cli.ubigeo=ub.cCodUbigeo)
+left join ERP_Vendedores as vend on(vend.idvendedor=so.idvendedor)
+where C.saldo_cuota>0 and  v.idventa IN ($solitud)");
         return $mostrar;
     }
     public function get_cuentas_cuerp($solitud)

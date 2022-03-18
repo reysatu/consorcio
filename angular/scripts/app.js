@@ -21,6 +21,7 @@
         'sys.app.home',
         'sys.app.tipoTraslados',
         'sys.app.reporteRepuestos',
+        'sys.app.reporteCreditosAprobados',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -314,7 +315,7 @@
                         message: 'Intente nuevamente'
                     });
                 }
-            });
+            }); 
         };
          $scope.loadCCPDF = function (url, params) {
             angular.element('#show_loading').removeClass('ng-hide');

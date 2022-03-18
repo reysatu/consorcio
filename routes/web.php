@@ -96,6 +96,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Families.php';
 
+    require app_path() . '\Http\Routes\ReporteCreditosAprobados.php';
+
     require app_path() . '\Http\Routes\SubFamilies.php';
 
     require app_path() . '\Http\Routes\Lots.php';
