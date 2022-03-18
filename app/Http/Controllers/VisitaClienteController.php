@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\Cobrador\CobradorInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteTrait;
@@ -93,13 +94,14 @@ class VisitaClienteController extends Controller
         return response()->json($response);
     }
 
-    public function data_form(VisitaClienteInterface $Repo, CobradorInterface $cobrador)
+    public function data_form(VisitaClienteInterface $Repo, CobradorInterface $cobrador, ShopInterface $shop_repo)
     {
 
         $motivos = $Repo->get_motivos(); 
       
         $cobrador = $cobrador->getCobrador();
         $clientes = $Repo->getClientes();
+        $tiendas = $shop_repo->getTiendas();
         // $solicitudes = $Repo->getSolicitudes();
 
         // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
@@ -110,6 +112,7 @@ class VisitaClienteController extends Controller
             'motivos' => $motivos,
             'cobrador' => $cobrador,
             'clientes' => $clientes,
+            'tiendas' => $tiendas,
             // 'solicitudes' => $solicitudes,
 
         ]);
@@ -392,7 +395,7 @@ class VisitaClienteController extends Controller
         // exit;
 
         
-        $pdf = PDF::loadView("visita_cliente.visita", $datos)->setPaper('A4', "landscape");;
+        $pdf = PDF::loadView("visita_cliente.visita", $datos)->setPaper('A4', "landscape");
         return $pdf->stream("visita.pdf"); // ver
         // return $pdf->stream("credito_directo.pdf"); // ver
     }

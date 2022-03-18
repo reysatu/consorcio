@@ -16,6 +16,7 @@ use App\Http\Recopro\Ventas\VentasTrait;
 use App\Http\Requests\VentasRequest;
 use App\Models\BaseModel;
 use DB;
+use PDF;
 use Illuminate\Http\Request;
 
 class VentasController extends Controller
@@ -246,4 +247,62 @@ class VentasController extends Controller
         return response()->json($result);
         
     }
+
+
+    public function imprimir_lista_cobraza_cuotas(Request $request, CajaDiariaDetalleInterface $repo_caja) {
+        $data = $request->all();    
+        
+        $datos = array();
+
+        // $solicitudes = $repo->get_visita_solicitudes($id);
+        $datos["empresa"] = $repo_caja->get_empresa(); 
+
+        $where = "1=1";
+
+        if(!empty($data["idcobrador"])) {
+            $where = " AND s.idCobrador={$data["idcobrador"]}";
+        }
+
+        if(!empty($data["idtienda"])) {
+            $where = " AND v.idtienda={$data["idtienda"]}";
+        }
+
+        $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
+        FROM ERP_Venta AS v
+        INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
+        INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
+      
+        WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where}
+        GROUP BY s.idCobrador, c.descripcion";
+
+        $cobradores = DB::select($sql_cobradores);
+
+        foreach ($cobradores as $key => $value) {
+            $sql = "SELECT c.id AS idcobrador, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision, cl.razonsocial_cliente, v.serie_comprobante, v.numero_comprobante, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento, m.Descripcion AS moneda, v.t_monto_total,DATEDIFF(DAY, sc.fecha_vencimiento, GETDATE())  AS dias_mora, CASE WHEN sc.saldo_cuota=0 THEN 'Cobrado' ELSE 'Pendiente' END AS estado, vd.int_moratorio_pagado, ISNULL(vd.nrocuota, 0) AS nrocuota
+            FROM ERP_Venta AS v
+            INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
+            INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
+            INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
+            INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
+            INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo)
+            INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador={$value->idCobrador}";
+           
+            $pagos = DB::select($sql);
+
+            $cobradores[$key]->pagos = $pagos;
+        }
+
+        $datos["cobradores"] = $cobradores;
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+
+        
+        $pdf = PDF::loadView("reportes.lista_cobranza_cuotas", $datos)->setPaper('A4', "landscape");
+        return $pdf->stream("lista_cobranza_cuotas.pdf"); // ver
+        // return $pdf->stream("credito_directo.pdf"); // ver
+        // print_r($data);
+    }
+  
 }

@@ -83,4 +83,9 @@ class ShopRepository implements ShopInterface
         return $mostra;
     }
 
+    public function getTiendas(){
+        $mostrar2=DB::select("select * from ERP_Tienda where estado='A'");
+        return $mostrar2;
+    }
+
 }
