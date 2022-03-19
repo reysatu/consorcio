@@ -32,7 +32,7 @@ SELECT * FROM ERP_CondicionPago
 select * from ERP_Solicitud
 select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
-
+select * from ERP_Moneda
 ///view creditos aprobados///
 alter VIEW [dbo].[ERP_view_reporte_creditos_aprobados] AS 
 select s.estado,vend.descripcion as vendedor,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tike.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,v.idtienda,sc.total_financiado+sc.intereses as financiado,sc.intereses+sc.monto_venta as Credito,total_financiado as total_financiado,sc.valor_cuota as cuota,sc.cuota_inicial as inicial,sc.monto_venta as precio_lista,sc.intereses,sc.nro_cuotas,mon.IdMoneda, mon.Descripcion as moneda,mon.Simbolo, s.cCodConsecutivo, s.nConsecutivo,s.fecha_solicitud,s.idvendedor,s.idcliente,cli.razonsocial_cliente,cli.id_tipocli as idTipoCliente,tcl.descripcion as tipocliente,v.fecha_emision as fecdoc,v.serie_comprobante,v.numero_comprobante from ERP_Solicitud as s 

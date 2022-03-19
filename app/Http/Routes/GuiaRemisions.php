@@ -53,7 +53,7 @@ Route::get('guiaRemisions/find/{id}', ['as' => 'guiaRemisions.find', 'uses' => '
 
 // Route::post('guiaRemisions/delete', ['as' => 'guiaRemisions.delete', 'uses' => 'Register_movementController@destroy']);
 
-Route::get('guiaRemisions/pdf', 'Register_movementController@pdf');
+Route::get('guiaRemisions/pdf',  'GuiaRemisionController@pdf');
 
 Route::post('guiaRemisions/xml', 'Register_movementController@xmlcargar');
 

@@ -149,7 +149,7 @@
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
         }).on('ifChanged', function (event) {
-            $(event.target).click();
+            $(event.target).click(); 
             $scope.chkState();
         });
          btn_imprimirMovimiento.click(function(e){
@@ -257,7 +257,15 @@
        
     }
    
-}
+} 
+ $("#btn_imprimirGuia").click(function(e){
+            var data_excel = {
+                    cCodConsecutivo: $('#cCodConsecutivo').val(),
+                    nConsecutivo: $('#nConsecutivo').val(),
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.loadReporteGuiaRemisionPDF('guiaRemisions/pdf',data_excel);
+});
  
         modalMovimietoArticulo.on('hidden.bs.modal', function (e) {
             cleanMovimientoArticulo();

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\GuiaRemision\GuiaRemisionInterface;
 use App\Http\Recopro\GuiaRemisionDetalle\GuiaRemisionDetalleInterface;
 use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProductoInterface;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Requests\GuiaRemisionRequest;
 use App\Models\BaseModel;
 use Illuminate\Support\Facades\DB; 
@@ -247,6 +248,37 @@ class GuiaRemisionController extends Controller
             'Result' => 'OK',
             'Record' => []
         ]);
+    } 
+    // public function pdf(GuiaRemisionInterface $repo,Request $request)
+    // {   
+      
+    //     $cCodConsecutivo = $request->input('cCodConsecutivo', '');
+    //     $nConsecutivo = $request->input('nConsecutivo', '');
+     
+    //     $data = $this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
+    //     return generateDataPDF($data, 'landscape', 'logo.jpg');
+    // } 
+     public function pdf(GuiaRemisionInterface $repo,Solicitud_AsignacionInterface $repcom,Request $request)
+    {
+           $cCodConsecutivo = $request->input('cCodConsecutivo', '');
+           $nConsecutivo = $request->input('nConsecutivo', '');
+
+            $data_compania=$repcom->get_compania(); 
+            // $simboloMoneda = $repom->getSimboloMoneda();
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            return response()->json([
+                'status' => true,
+                 'img'=>$image,
+                 // 'simboloMoneda'=>$simboloMoneda,
+                 'data_compania'=>$data_compania,
+                 // 'data'=>$data,
+               
+            ]);
+
+
     }
 
     public function update(GuiaRemisionInterface $repo, Request $request)

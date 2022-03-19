@@ -4516,6 +4516,141 @@ function createReporteRepuestoPDF(response) {
     // }
       pdfMake.createPdf(docDefinition).print({}, win);
 }
+function createReporteGuiaRemisionPDF(response) {
+    var img=response.img;
+    var data_compania=response.data_compania;
+    // var simboloMoneda=response.simboloMoneda;
+    // var data=response.data;
+
+    var docDefinition = {
+
+        // a string or { width: number, height: number }
+        pageSize: "A4",
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: 'portrait',
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        pageMargins: [15, 20, 15, 20],
+        content: [
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [200, 200]
+                            }
+                        ]
+                    },
+                    {text:data_compania[0].RazonSocial, style: 'headerTra'},
+                ],
+
+            },
+            {
+                columns: [
+                    
+                    {text:data_compania[0].direcciones_oficinas, style: 'oficinas',width: '70%',},
+                    {   margin: [0,0,0,0],
+                        style: 'tableExample',
+                        table: {
+                            body:[
+                             [ 'First', 'Second', 'Third', 'The last one' ],
+                             [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
+                             [ { text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4' ]
+                           ]
+                        },
+                      
+                    },
+                ],
+                
+            },
+            {text: ''},
+            // // {text: 'SOLES'},
+            // {   margin: [0,0,0,0],
+            //             style: 'tableExample',
+            //             table: {
+            //                 widths: [40,40,30,30,70,40,20,20,20,40,40,20,40,40,40,40,40],
+            //                 body:
+            //                 dataBodyReportes, 
+            //             },
+                      
+            // },
+            // {text: '', style: 'subheader',margin: [20, 20, 20, 20]},
+            //  {   margin: [0,0,0,0],
+            //             style: 'tableExample',
+            //             table: {
+            //                 widths: [100,40,60,60],
+            //                 body:
+            //                 dataBodyReportestotales, 
+            //             },
+                      
+            // },
+            // {text: 'DÓLARES'},
+            // {   margin: [0,0,0,0],
+            //             style: 'tableExample',
+            //             table: {
+            //                 widths: [40,40,80,80,80,40,40,40,40,40,40,40,40],
+            //                 body:
+            //                 datd, 
+            //             },
+                      
+            // },
+        ],
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [-90, 0, 0, 0],
+                alignment: 'center'
+            },
+            oficinas: {
+                fontSize: 9,
+                bold: false,
+                margin: [20, 0, 0, 0],
+                alignment: 'center'
+            },
+             headerTra: {
+                fontSize: 19,
+                bold: true,
+                margin: [20, 20, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 0, 0,0],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
+    };
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+      pdfMake.createPdf(docDefinition).print({}, win);
+}
 function createReporteCreditosAprobadosPDF(response) {
     var img=response.img;
     var simboloMoneda=response.simboloMoneda;
@@ -4680,7 +4815,7 @@ function createReporteCreditosAprobadosPDF(response) {
                             }
                         ]
                     },
-                    {text:"REPORTE DE REPUESTOS", style: 'header'}
+                    {text:"REPORTE DE CRÉDITOS APROBADOS", style: 'header'}
                 ]
             },
             {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
