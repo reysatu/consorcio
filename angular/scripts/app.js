@@ -21,6 +21,7 @@
         'sys.app.home',
         'sys.app.tipoTraslados',
         'sys.app.reporteRepuestos',
+        'sys.app.reporteCreditosAprobados',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -316,7 +317,7 @@
                         message: 'Intente nuevamente'
                     });
                 }
-            });
+            }); 
         };
          $scope.loadCCPDF = function (url, params) {
             angular.element('#show_loading').removeClass('ng-hide');
@@ -638,6 +639,30 @@
                         // });
                        
                         createReporteRepuestoPDF(response);
+                       
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            });
+        };
+        $scope.loadReporteCreditosAprobadoPDF = function (url, id) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: id,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                       
+                        createReporteCreditosAprobadosPDF(response);
                        
                     }
                     angular.element('#show_loading').addClass('ng-hide');

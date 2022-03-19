@@ -36,6 +36,10 @@ use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreRepository;
 
+use App\Http\Recopro\ReporteCreditosAprobado\ReporteCreditosAprobado; 
+use App\Http\Recopro\ReporteCreditosAprobado\ReporteCreditosAprobadoInterface;
+use App\Http\Recopro\ReporteCreditosAprobado\ReporteCreditosAprobadoRepository;
+
 use App\Http\Recopro\GuiaRemision\GuiaRemision; 
 use App\Http\Recopro\GuiaRemision\GuiaRemisionInterface;
 use App\Http\Recopro\GuiaRemision\GuiaRemisionRepository;
@@ -688,6 +692,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerGuiaRemisionProducto();
         $this->registerGuiaRemisionDetalle();
         $this->registerMovimiento_cierre();
+        $this->registerReporteCreditosAprobado();
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
         $this->registerView_PendienteCobro();
@@ -1002,6 +1007,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(View_PendienteCobroInterface::class, function ($app) {
             return new View_PendienteCobroRepository(new View_PendienteCobro());
+        });
+    }
+    public function registerReporteCreditosAprobado()
+    {
+        $app = $this->app;
+
+        $app->bind(ReporteCreditosAprobadoInterface::class, function ($app) {
+            return new ReporteCreditosAprobadoRepository(new ReporteCreditosAprobado());
         });
     }
     public function registerMovimiento_cierre()

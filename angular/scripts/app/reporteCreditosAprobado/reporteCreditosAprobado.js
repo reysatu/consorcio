@@ -4,14 +4,14 @@
   
 (function () {
     'use strict';
-    angular.module('sys.app.reporteRepuestos')
+    angular.module('sys.app.reporteCreditosAprobados')
         .config(Config)
-        .controller('ReporteRepuestoCtrl', ReporteRepuestoCtrl);
+        .controller('ReporteCreditosAprobadoCtrl', ReporteCreditosAprobadoCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    ReporteRepuestoCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
+    ReporteCreditosAprobadoCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
-    function ReporteRepuestoCtrl($scope, _, RESTService, AlertFactory, Helpers)
+    function ReporteCreditosAprobadoCtrl($scope, _, RESTService, AlertFactory, Helpers)
     {
         
          $scope.chkState = function () {
@@ -19,19 +19,19 @@
             state_state.html(txt_state2);
         };
         
-        var search = getFormSearchReporteRepuestos('frm-search-ReporteRepuesto', 'search_b', 'LoadRecordsButtonReporteRepuesto');
+        var search = getFormSearchReporteRepuestos ('frm-search-ReporteCreditosAprobado', 'search_b', 'LoadRecordsButtonReporteCreditosAprobado');
 
-        var table_container_ReporteRepuesto = $("#table_container_ReporteRepuesto");
+        var table_container_ReporteCreditosAprobado = $("#table_container_ReporteCreditosAprobado");
 
-        table_container_ReporteRepuesto.jtable({
-            title: "Lista de Solicitudes Aprobadas",
+        table_container_ReporteCreditosAprobado.jtable({
+            title: "Lista de Ventas",
             paging: true,
             sorting: true,
             actions: { 
-                listAction: base_url + '/reporteRepuestos/list',
-                // createAction: base_url + '/reporteRepuestos/create',
-                // updateAction: base_url + '/reporteRepuestos/update',
-                // deleteAction: base_url + '/reporteRepuestos/delete',
+                listAction: base_url + '/reporteCreditosAprobados/list',
+                // createAction: base_url + '/reporteCreditosAprobados/create',
+                // updateAction: base_url + '/reporteCreditosAprobados/update',
+                // deleteAction: base_url + '/reporteCreditosAprobados/delete',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',
@@ -46,7 +46,7 @@
                 //     cssClass: 'btn-primary',
                 //     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
                 //     click: function () {
-                //         $scope.openDoc('reporteRepuestos/excel', {});
+                //         $scope.openDoc('reporteCreditosAprobados/excel', {});
                 //     }
                 // },
                 // {
@@ -56,22 +56,14 @@
                 //             var data_pdf = {
                 //                nConsecutivo:"",
                 //             };
-                //             $scope.loadReporteRepuestoPDF('reporteRepuestos/pdf',data_pdf);
+                //             $scope.loadReporteCreditosAprobadoPDF('reporteCreditosAprobados/pdf',data_pdf);
                 //     }
                 // }
                 ]
             },
             fields: {
-                idventa_ca: {
-                    key: true,
-                    create: false,
-                    edit: false,
-                    list: false
-                },
                 cCodConsecutivo: {
                     title: 'Codigo',
-                     
-
                 },
 
                 nConsecutivo: {
@@ -79,30 +71,40 @@
                      
 
                 },
-                documento_ven: {
-                    title: 'Documento venta',
-                     
-
-                },
-                fecha: {
+                fecha_solicitud: {
                     title: 'Fecha venta',
                     display: function (data) {
-                        return moment(data.record.fecha).format('DD/MM/YYYY');
+                        return moment(data.record.fecha_solicitud).format('DD/MM/YYYY');
                     }
-
-                },
-                monto_total: {
-                    title: 'Monto Total',
-                     display: function (data) {
-                                                 var  saldo=data.record.monto_total;
-                                                 var newsal=Number(saldo).toFixed(2);
-                                                 return(addCommas(newsal));
-                  } 
 
                 },
                 razonsocial_cliente: {
                     title: 'Cliente',
                      
+
+                },
+                fecdoc: {
+                    title: 'Fecha venta',
+                    display: function (data) {
+                        return moment(data.record.fecdoc).format('DD/MM/YYYY');
+                    }
+
+                },
+                serie_comprobante: {
+                    title: 'Serie',
+                     
+
+                },
+                numero_comprobante: {
+                    title: 'N° Comprobante',
+                },
+                Credito: {
+                    title: 'Crédito',
+                     display: function (data) {
+                                                 var  saldo=data.record.Credito;
+                                                 var newsal=redondeodecimale(saldo).toFixed(2);
+                                                 return(addCommas(newsal));
+                  } 
 
                 },
                 vendedor: {
@@ -142,17 +144,17 @@
                 return bval;
             }
         });
-        // $('.reporteRepuestos').click(function (e) {
+        // $('.reporteCreditosAprobados').click(function (e) {
                  
         //             var data_pdf = {
         //                     nConsecutivo:"",
         //             };
-        //             $scope.loadTarjetaCobranzaPDF('reporteRepuestos/tarjetaCobranza',data_pdf);
+        //             $scope.loadTarjetaCobranzaPDF('reporteCreditosAprobados/tarjetaCobranza',data_pdf);
                  
         //             e.preventDefault();
         // });
-        generateSearchForm('frm-search-ReporteRepuesto', 'LoadRecordsButtonReporteRepuesto', function(){
-            table_container_ReporteRepuesto.jtable('load', {
+        generateSearchForm('frm-search-ReporteCreditosAprobado', 'LoadRecordsButtonReporteCreditosAprobado', function(){
+            table_container_ReporteCreditosAprobado.jtable('load', {
                  search: $('#search_b').val(),
                 filtro_tienda: $('#filtro_tienda').val(),
                 idClienteFiltro: $('#idClienteFiltro').val(),
@@ -173,7 +175,7 @@
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
-            $scope.openDoc('reporteRepuestos/excel',data_excel);
+            $scope.openDoc('reporteCreditosAprobados/excel',data_excel);
         });
         $("#btn_expPDF").click(function(e){
             var data_excel = {
@@ -186,7 +188,7 @@
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
-            $scope.loadReporteRepuestoPDF('reporteRepuestos/pdf',data_excel);
+            $scope.loadReporteCreditosAprobadoPDF('reporteCreditosAprobados/pdf',data_excel);
         });
 
 
@@ -197,7 +199,7 @@
         $(".jtable-toolbar").removeClass('col-md-8');
         $(".jtable-toolbar").addClass('col-md-10');
          function getDataForm () {
-            RESTService.all('reporteRepuestos/data_form', '', function(response) {
+            RESTService.all('reporteCreditosAprobados/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var cobradores=response.cobrador;
                     var cobradores=response.cobrador;
@@ -240,10 +242,10 @@
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider
 
-            .state('reporteRepuestos', {
-                url: '/reporteRepuestos',
-                templateUrl: base_url + '/templates/reporteRepuestos/base.html',
-                controller: 'ReporteRepuestoCtrl'
+            .state('reporteCreditosAprobados', {
+                url: '/reporteCreditosAprobados',
+                templateUrl: base_url + '/templates/reporteCreditosAprobados/base.html',
+                controller: 'ReporteCreditosAprobadoCtrl'
             });
 
         $urlRouterProvider.otherwise('/');

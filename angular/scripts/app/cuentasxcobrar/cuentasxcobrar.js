@@ -112,16 +112,6 @@
                 ]
             },
             fields: {
-                select: {
-                        width: '1%', 
-                        sorting: false,
-                        edit: false,
-                        create: false,
-                        listClass: 'text-center',
-                        display: function (data) {
-                           return '<label class="checkbox-inline i-checks"> <input name="idSolicitud" class="check valcheck" type="checkbox" id="p_state" data_idSolicitud="'+data.record.cCodConsecutivo+'*'+data.record.nConsecutivo+'" ></label>';
-                       }
-                },
                 Cronograma: {
                     title: '',
                     width: '1%',

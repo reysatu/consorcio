@@ -15,6 +15,7 @@ use App\Http\Requests\CobradorRequest;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\SolicitudCronograma\SolicitudCronogramaInterface;
 use App\Http\Recopro\Query_movements\Query_movementsInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use DB;
 class AsignacioncobradorController extends Controller
 {
@@ -24,7 +25,7 @@ class AsignacioncobradorController extends Controller
     {
 //        $this->middleware('json');
     } 
-      public function pdf_cuentasxcobrar(Request $request,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
+      public function pdf_cuentasxcobrar(Request $request,Orden_servicioInterface $repOs,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
     {       
             
 
@@ -40,13 +41,16 @@ class AsignacioncobradorController extends Controller
              $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
             $solitud=array(); 
             foreach ($datafilcab as $row) {
-               array_push($solitud, $row->nConsecutivo);
-            }   
+               array_push($solitud, $row->idventa);
+            }
+
+            $fecha_actual=date("Y-m-d");
+            $cambio=$repOs->cambio_tipo(2,$fecha_actual);
+
             $solitud = implode(",",$solitud); 
-            $simboloMoneda = $repomo->getSimboloMoneda();
+            $simboloMoneda = $repomo->getSimboloMonedaTotal();
             $data_compania=$repo->get_compania();
             $data_cabe=$repo->get_cuentas_caber($solitud);
-            $data_cuer=$repo->get_cuentas_cuerp($solitud);
             $data_compania=$repo->get_compania(); 
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
@@ -56,8 +60,8 @@ class AsignacioncobradorController extends Controller
                 'status' => true,
                  'img'=>$image,
                  'data_cabe'=>$data_cabe,
-                 'data_cuer'=>$data_cuer,
-               
+                 'simboloMoneda'=>$simboloMoneda,
+                 'cambio'=>$cambio,
             ]);
     }
     public function tarjetaCobranza(Solicitud_AsignacionInterface $repo,Request $request)
