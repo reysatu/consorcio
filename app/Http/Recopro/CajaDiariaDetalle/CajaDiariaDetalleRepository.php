@@ -284,9 +284,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
-    public function get_producto_anticipo($idproducto) {
-
-    }
+  
     
 
 }

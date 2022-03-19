@@ -121,7 +121,22 @@ class VentasController extends Controller
             $data_venta["devolucion_producto"] = 0;
             //si son iguales
             if ($data["t_monto_total"] == $data["monto"]) {
+                // solo si es anticipo se devuleve el dinero
                 if ($data["tipo_comprobante"] == "1") {
+
+                    $data_caja_detalle = array();
+                    $data_caja_detalle["idCajaDiaria"] = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idCajaDiaria; 
+                    $data_caja_detalle["consecutivo"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                    $data_caja_detalle["codigoTipo"] = "VTA";
+                    $data_caja_detalle["codigoFormaPago"] = "EFE";
+                    $data_caja_detalle["idMoneda"] = $data["idmoneda"];
+                    $data_caja_detalle["monto"] = $data["monto"];
+                    $data_caja_detalle["descripcion"] = "Devolución de dinero por aplicación de nota de Crédtio";
+                    $data_caja_detalle["nroTarjeta"] = "";
+                    $data_caja_detalle["nroOperacion"] = "";
+                    $data_caja_detalle["naturaleza"] = "S";
+                    
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
 
                     //ACTUALIZAMOS MONTOS EN CAJA DIARIA
                     $update_caja_diaria                 = array();
@@ -132,13 +147,13 @@ class VentasController extends Controller
                     $update_caja_diaria["totalNoEfectivoDol"] = 0;
 
                     if ($data["idmoneda"] == "1") {
-                        $update_caja_diaria["totalEfectivo"] = $data["monto"];
+                        $update_caja_diaria["totalEfectivo"] = $data["monto"] * (-1);
                     } else {
                         $update_caja_diaria["totalEfectivo"] = 0;
                     }
 
                     if ($data["idmoneda"] == "") {
-                        $update_caja_diaria["totalEfectivoDol"] = $data["monto"];
+                        $update_caja_diaria["totalEfectivoDol"] = $data["monto"] * (-1);
 
                     } else {
                         $update_caja_diaria["totalEfectivoDol"] = 0;
@@ -199,6 +214,13 @@ class VentasController extends Controller
             $update_venta["monto"]           = $data["monto"];
             $Repo->update_saldos_venta($update_venta);
 
+            // ANULAMOS LA SOLICITUD
+            $update_solicitud = array();
+            $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+            $update_solicitud["nConsecutivo"]    = $data["nConsecutivo"];
+            $update_solicitud["estado"] = 10;
+            $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
 
             DB::commit();
@@ -243,6 +265,15 @@ class VentasController extends Controller
         $data = $request->all();    
 
         $result = $repo->get_venta_separacion($data["idcliente"]);
+
+        return response()->json($result);
+        
+    }
+
+    public function get_venta_nota(VentasInterface $repo, Request $request) {
+        $data = $request->all();    
+
+        $result = $repo->get_venta_nota($data["idcliente"]);
 
         return response()->json($result);
         
@@ -303,6 +334,12 @@ class VentasController extends Controller
         return $pdf->stream("lista_cobranza_cuotas.pdf"); // ver
         // return $pdf->stream("credito_directo.pdf"); // ver
         // print_r($data);
+    }
+
+    public function validar_venta_anticipo(CajaDiariaDetalleInterface $repo, Request $request) {
+        $data = $request->all();
+        $result = $repo->get_segunda_venta_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        return response()->json($result);
     }
   
 }

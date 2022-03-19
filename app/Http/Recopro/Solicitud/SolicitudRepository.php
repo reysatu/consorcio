@@ -237,7 +237,12 @@ class SolicitudRepository implements SolicitudInterface
         WHEN s.estado = 5 THEN 'Rechazado'
         WHEN s.estado = 6 THEN 'Facturado'
 
-        WHEN s.estado = 7 THEN 'Despachado' END AS estado_user, 
+        WHEN s.estado = 7 THEN 'Despachado'
+        WHEN s.estado = 8 THEN 'Despachado Parcial'
+        WHEN s.estado = 9 THEN 'Refinanciado'
+        WHEN s.estado = 10 THEN 'Anulado'
+        ELSE '-.-'
+         END AS estado_user, 
         conv.descripcionconvenio AS convenio, FORMAT(GETDATE(), 'yyyy-MM-dd') AS fecha_pago
 
         FROM ERP_Solicitud AS s

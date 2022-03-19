@@ -26,7 +26,7 @@ Route::get('validate', 'HomeController@validateURL')->name('admin.validate');
 
 Route::group(['middleware' => ['auth', 'permission']], function () {
 
-    // Routes Security 
+    // Routes Security
 
     require app_path() . '\Http\Routes\Profiles.php';
 
@@ -66,7 +66,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
      require app_path() . '\Http\Routes\GuiaRemisions.php';
 
-     require app_path() . '\Http\Routes\TipoTraslados.php'; 
+     require app_path() . '\Http\Routes\TipoTraslados.php';
 
     require app_path() . '\Http\Routes\ReceptionTransfers.php';
 
@@ -194,7 +194,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Solicitud.php';
 
     require app_path() . '\Http\Routes\Asignacioncobradors.php';
-    
+
     require app_path() . '\Http\Routes\Ventas.php';
 
 

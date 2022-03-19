@@ -581,7 +581,7 @@ class MovimientoCajaController extends Controller
             if(count($parametro_igv) <= 0) {
                 throw new Exception("Por favor cree el parametro IGV!");
             }
-
+             // OBTENER PRODUCTO ANTICIPO
             $parametro_anticipo = $repo->get_parametro_anticipo();
 
             if(count($parametro_anticipo) <= 0) {
@@ -624,6 +624,8 @@ class MovimientoCajaController extends Controller
             $data_venta["idcajero"] = auth()->id();
             $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
             $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+            $data_venta["idventa_separacion"] = $data["idventa_separacion"];
+            $data_venta["idventa_nota"] = $data["idventa_nota"];
 
             $condicion_pago = array();
 
@@ -659,7 +661,7 @@ class MovimientoCajaController extends Controller
 
                 if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
 
-                    // OBTENER PRODUCTO ANTICIPO
+                   
 
                     $data_venta["tipo_comprobante"] = "1"; // 1 anticipo, 0 normal
                     $data_venta["saldo"] = "0";
@@ -987,11 +989,21 @@ class MovimientoCajaController extends Controller
                 $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
                 // actualizamos la venta por separacion
                 if($data["codigo_formapago"][$i] == "SEP") {
-                    $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
-                    WHERE idventa_separacion={$data["idventa_separacion"]}";
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_separacion = 'S'       
+                    WHERE idventa={$data["idventa_separacion"]}";
             
-                    $result = DB::statement($sql_update);
+                    DB::statement($sql_update);
                 }
+
+                 // actualizamos la venta por nota
+                 if($data["codigo_formapago"][$i] == "NCR") {
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_nota= 'S'       
+                    WHERE idventa={$data["idventa_nota"]}";
+            
+                    DB::statement($sql_update);
+                }
+
+                
 
                 if($i == 0) {
 
@@ -1169,6 +1181,8 @@ class MovimientoCajaController extends Controller
             $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
 
             $data_venta["idventa_comprobante"] = "";
+            $data_venta["idventa_separacion"] = $data["idventa_separacion"];
+            $data_venta["idventa_nota"] = $data["idventa_nota"];
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
             for ($i=0; $i < count($data["nrocuota"]); $i++) { 
@@ -1224,10 +1238,18 @@ class MovimientoCajaController extends Controller
 
                  // actualizamos la venta por separacion
                 if($data["codigo_formapago"][$fp] == "SEP") {
-                    $sql_update = "UPDATE ERP_Venta SET idventa_separacion = 'S'       
-                    WHERE idventa_separacion={$data["idventa_separacion"]}";
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_separacion = 'S'       
+                    WHERE idventa={$data["idventa_separacion"]}";
             
-                    $result = DB::statement($sql_update);
+                    DB::statement($sql_update);
+                }
+
+                 // actualizamos la venta por nota
+                 if($data["codigo_formapago"][$fp] == "NCR") {
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_nota= 'S'       
+                    WHERE idventa={$data["idventa_nota"]}";
+            
+                    DB::statement($sql_update);
                 }
                 
                 if($fp == 0) {
