@@ -82,4 +82,9 @@ class WarehouseRepository implements WarehouseInterface
         $mostrar=DB::select("select al.id as idAlmacen, al.description as descripcion from ERP_Almacen as al inner join ERP_AlmacenUsuario as alu on al.id=alu.warehouse_id where alu.user_id=$usuario");
         return $mostrar;
     }
+
+    public function getAlmacen_todos(){
+        $mostrar=DB::select("select al.id as idAlmacen, al.description as descripcion from ERP_Almacen as al");
+        return $mostrar;
+    }
 }

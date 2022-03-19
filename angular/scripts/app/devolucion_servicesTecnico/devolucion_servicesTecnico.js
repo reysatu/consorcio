@@ -43,6 +43,7 @@
         var idTransferenciaProcesar = $("#idTransferenciaProcesar");
         var LocalizacionesSele;//variable para guardar localizaciones del almacen
         var AlmacenesSele;//variable para guardar almacenes
+        var AlmacenesTodos;//variable para guardar todos los almacenes
         var btnguardarMovimiento = $("#btn-guardarMovimiento");//btn pata guardar cabecera del movimiento
         var titlemodalMovimieto = $("#titlemodalMovimieto");
         var modalMovimieto = $("#modalMovimieto");
@@ -861,9 +862,19 @@
 
         }
         function addAlmaSelec(codigo) {
+            // alert("con usuario");
             var idAlmacenSele = $("#Al_" + codigo);
             idAlmacenSele.append('<option value="" selected>Seleccionar</option>');
             _.each(AlmacenesSele, function (item) {
+                idAlmacenSele.append('<option value="' + item.idAlmacen + '" >' + item.descripcion + '</option>');
+            });
+        }
+
+        function addAlmaTodos(codigo) {
+            var idAlmacenSele = $("#Al_" + codigo);
+            // alert("todos");
+            idAlmacenSele.append('<option value="" selected>Seleccionar</option>');
+            _.each(AlmacenesTodos, function (item) {
                 idAlmacenSele.append('<option value="' + item.idAlmacen + '" >' + item.descripcion + '</option>');
             });
         }
@@ -1458,7 +1469,16 @@
             td8.append(btn3);
             tr.append(td1).append(td2).append(tdy).append(td3).append(tdCantPen).append(td4).append(td5).append(tdpr).append(tdCheck).append(td6);
             articulo_mov_det.append(tr);
-            addAlmaSelec(codigo);
+
+            // console.log($("#cCodConsecutivoOS").val()+"<=>"+$("#idventa").val());
+            if($("#cCodConsecutivoOS").val() != "") {
+                addAlmaSelec(codigo);
+            }
+           
+            if($("#idventa").val() != "") {
+                addAlmaTodos(codigo);
+            }
+           
             addlocSele(codigo);
 
             $('.i-checks').iCheck({
@@ -2506,13 +2526,18 @@
                         var opera = '8' + '*' + 'D';
                         naturalezaGeneral = 'D';
                         // idTipoOperacion.append('<option value="' + opera + '" selected>DESRESERVA ST</option>');
-                        idTipoOperacion.append('<option value="' + item.IdTipoOperacion + '" selected>'+item.descripcion+'</option>');
+                        if(item.IdTipoOperacion == 8) {
+                            idTipoOperacion.append('<option selected="selected" value="' + item.IdTipoOperacion + '">'+item.descripcion+'</option>');
+                        } else {
+                            idTipoOperacion.append('<option value="' + item.IdTipoOperacion + '">'+item.descripcion+'</option>');
+                        }
                     });
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
                     _.each(response.moneda, function (item) {
                         idMoneda.append('<option  value="' + item.Value + '">' + item.DisplayText + '</option>');
                     });
                     AlmacenesSele = response.almacen_usuario;
+                    AlmacenesTodos = response.almacen_todos;
                     // idAlmacen.append('<option value="" selected>Seleccionar</option>');
                     //  _.each(response.almacen, function(item) {
                     //     idAlmacen.append('<option value="'+item.Value+'">'+item.DisplayText+'</option>');
@@ -3039,9 +3064,11 @@
 
         $(document).on("change", "input[name='tipo']", function () {
             var tipo = $(this).val();
+           
             // proforma
             if (tipo == "P") {
                 $("#idventa").val("");
+                $("#idventa").trigger("change");
                 $("#documento").val("");
                 $(".nota").hide();
                 $(".proforma").show();
@@ -3051,6 +3078,7 @@
             // nota
             if (tipo == "N") {
                 $("#cCodConsecutivoOS").val("");
+                $("#cCodConsecutivoOS").trigger("change");
                 $("#nConsecutivoOS").val("");
 
                 $("#idTipoOperacion").val(9);
