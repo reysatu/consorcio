@@ -264,6 +264,9 @@ class GuiaRemisionController extends Controller
            $nConsecutivo = $request->input('nConsecutivo', '');
 
             $data_compania=$repcom->get_compania(); 
+            $data=$repo->get_guiaRemision($cCodConsecutivo,$nConsecutivo); 
+            $data_articulo_noser=$repo->get_guiaArticuloNoser($cCodConsecutivo,$nConsecutivo); 
+            $data_articulo_ser=$repo->get_guiaArticuloser($cCodConsecutivo,$nConsecutivo);
             // $simboloMoneda = $repom->getSimboloMoneda();
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
@@ -274,7 +277,9 @@ class GuiaRemisionController extends Controller
                  'img'=>$image,
                  // 'simboloMoneda'=>$simboloMoneda,
                  'data_compania'=>$data_compania,
-                 // 'data'=>$data,
+                 'data'=>$data,
+                 'data_articulo_noser'=>$data_articulo_noser,
+                   'data_articulo_ser'=>$data_articulo_ser,
                
             ]);
 

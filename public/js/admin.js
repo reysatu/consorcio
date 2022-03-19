@@ -4518,9 +4518,60 @@ function createReporteRepuestoPDF(response) {
 }
 function createReporteGuiaRemisionPDF(response) {
     var img=response.img;
+    var data=response.data;
+    var data_articulo_noser=response.data_articulo_noser;
+    var data_articulo_ser=response.data_articulo_ser;
     var data_compania=response.data_compania;
+    var total_di=data_compania[0].direcciones_oficinas;
+    var tot = total_di.split('|');
+    var dataBodyArticulos=[];
+    var unto='';
+    var cont=0;
+    console.log(data);
+    for (var i = 0; i < tot.length; i++) {
+        unto=unto+tot[i]+'\n';
+    }
     // var simboloMoneda=response.simboloMoneda;
     // var data=response.data;
+    var subtituloSolesEfec=[ 
+            { fontSize: 9,text:"CODIGO", fillColor: '#eeeeee',},
+            { fontSize: 9,text:"DESCRIPCIÓN", fillColor: '#eeeeee',},
+            { fontSize: 9,text:"CANTIDAD", fillColor: '#eeeeee',},
+            { fontSize: 9,text:"UNID. DE MEDIDA", fillColor: '#eeeeee', },
+            { fontSize: 9,text:"PESO TOTAL", fillColor: '#eeeeee', },
+    ];
+    dataBodyArticulos.push(subtituloSolesEfec);
+
+    data_articulo_noser.map(function(index) {
+        cont=cont+Number(index.cantidad);
+            var subtituloSolesEfec=[ 
+                { fontSize: 9,text: index.code_article, },
+                { fontSize: 9,text: index.producto, },
+                { fontSize: 9,text: Number(index.cantidad), },
+                { fontSize: 9,text: index.unidadMedida,  },
+                { fontSize: 9,text:""  },
+        ];
+        dataBodyArticulos.push(subtituloSolesEfec);
+    });
+     data_articulo_ser.map(function(index) {
+          cont=cont+1;
+            var subtituloSolesEfec=[ 
+                { fontSize: 9,text: index.code_article, },
+                { fontSize: 9,text: index.producto, },
+                { fontSize: 9,text: Number(1), },
+                { fontSize: 9,text: index.unidadMedida,  },
+                { fontSize: 9,text:""  },
+        ];
+        dataBodyArticulos.push(subtituloSolesEfec);
+    });
+      var totalfin=[ 
+            { fontSize: 9,text:"", fillColor: '#eeeeee', border: [true, true, false, true]},
+            { fontSize: 9,text:"Total:", fillColor: '#eeeeee', border: [false, true, false, true],},
+            { fontSize: 9,text:cont, fillColor: '#eeeeee', border: [false, true, false, true],},
+            { fontSize: 9,text:"", fillColor: '#eeeeee',  border: [false, true, false, true],},
+            { fontSize: 9,text:"", fillColor: '#eeeeee',  border: [false, true, true, true],},
+    ];
+    dataBodyArticulos.push(totalfin);
 
     var docDefinition = {
 
@@ -4551,15 +4602,34 @@ function createReporteGuiaRemisionPDF(response) {
             },
             {
                 columns: [
-                    
-                    {text:data_compania[0].direcciones_oficinas, style: 'oficinas',width: '70%',},
-                    {   margin: [0,0,0,0],
+                    {text:[
+                        {    
+                            fontSize: 8,
+                             text:unto+'\n',
+                             style: 'oficinas',
+                        },
+                        {    margin: [0, 30, 0, 0],
+                             fontSize: 9,
+                             text:data_compania[0].lema1+'\n',
+                             bold:true,
+                             alignment: 'center'
+                        },
+                        {    margin: [0, 30, 0, 0],
+                             fontSize: 10,
+                             text:data_compania[0].lema2,
+                             bold:true,
+                             alignment: 'center'
+                        },
+                    ]}, 
+                    {   
                         style: 'tableExample',
+                        width: '40%',
                         table: {
+                             widths: [180],
                             body:[
-                             [ 'First', 'Second', 'Third', 'The last one' ],
-                             [ 'Value 1', 'Value 2', 'Value 3', 'Value 4' ],
-                             [ { text: 'Bold value', bold: true }, 'Val 2', 'Val 3', 'Val 4' ]
+                             [ { text: 'RUC:'+data_compania[0].Ruc, bold: true ,  fontSize: 10, alignment: 'center'}],
+                             [ { text: 'GUIA RESMISION REMITENTE', bold: true ,  fontSize: 10, alignment: 'center'}],
+                             [ { text: data[0].cCodConsecutivo+'-'+data[0].nConsecutivo, bold: true,  fontSize: 10, alignment: 'center'}]
                            ]
                         },
                       
@@ -4567,17 +4637,333 @@ function createReporteGuiaRemisionPDF(response) {
                 ],
                 
             },
-            {text: ''},
-            // // {text: 'SOLES'},
-            // {   margin: [0,0,0,0],
-            //             style: 'tableExample',
-            //             table: {
-            //                 widths: [40,40,30,30,70,40,20,20,20,40,40,20,40,40,40,40,40],
-            //                 body:
-            //                 dataBodyReportes, 
-            //             },
+            {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {text:[
+                        {    margin: [0, 30, 0, 0],
+                             fontSize: 9,
+                             text:'MOTIVO DEL TRASLADO: ',
+                             bold:true,
+                        },
+                        {    margin: [0, 30, 0, 0],
+                             fontSize: 9,
+                             text:data[0].traslado,
+                        },
+                    ]
+            }, 
+            {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {
+                columns: [
+                     {   
+                        style: 'tableExample',
+                        table: {
+                             widths: [250],
+                            body:[
+                             [{ border: [true, true, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Punto de Partida: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].puntoPartida,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Fecha de Emision: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:moment(data[0].fechaEmision).format('DD/MM/YYYY'),
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Fecha de Inicio del Traslado: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:moment(data[0].fechaInicioTraslado).format('DD/MM/YYYY'),
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                border: [true, false, true, true],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Costo Minimo: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:redondeodecimale(data[0].costoMini).toFixed(2),
+                                      },
+                                    ]
+                                },
+                             ],
+                           
+                           ]
+                        },
                       
-            // },
+                    },
+                    { width: '5%', fontSize: 8,
+                     text:'',
+                     },
+                    {   
+                        style: 'tableExample',
+                        table: {
+                             widths: [250],
+                            body:[
+                             [{  border: [true, true, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Punto de LLegada: ",
+                                         bold:true,
+                                        
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].puntoLlega,
+                                            
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Nombre o Razon Social del Destinatario: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].razonSocialDestinatario,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"R.U.C: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].rucDestinatario,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{ border: [true, false, true, true],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:" ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:" ",
+                                      },
+                                    ]
+                                },
+                             ],
+                           
+                           ]
+                        },
+                      
+                    },
+                ],
+
+            },
+             {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+             {
+                columns: [
+                     {   
+                        style: 'tableExample',
+                        table: {
+                             widths: [250],
+                            body:[
+                              [{  border: [true, true, true, true],
+                                  fillColor: '#eeeeee',
+                                text: [
+                                      {  fontSize: 9,
+                                           text:"UNIDAD TRANSPORTE Y CONDUCTOR  ",
+
+                                         bold:true,
+                                        
+                                      },
+                                    ]
+                                },
+                             ],
+                             [{ border: [true, true, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"Marca y Número de Placa: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].marca+' , '+data[0].placa,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"N° de Constancia de Inscripción: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].nroConstanciaInscripcion,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"N°(s) de licencia(s) de Conducir : ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].nroLicenciaConductor,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                border: [true, false, true, true],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:"",
+                                      },
+                                    ]
+                                },
+                             ],
+                           
+                           ]
+                        },
+                      
+                    },
+                    { width: '5%', fontSize: 8,
+                     text:'',
+                     },
+                    {   
+                        style: 'tableExample',
+                        table: {
+                             widths: [250],
+                            body:[
+                             [{  border: [true, true, true, true],
+                                 fillColor: '#eeeeee',
+                                text: [
+                                      {  fontSize: 9,
+                                           text:"EMPRESA DE TRANSPORTE ",
+                                         bold:true,
+                                        
+                                        
+                                      },
+                                    ]
+                                },
+                             ],
+                             [{  border: [true, true, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                           text:"Nombre o Razon Social: ",
+                                         bold:true,
+                                        
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].razonSocialEtransporte,
+                                            
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"R.U.C: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:data[0].rucEtransporte,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                 border: [true, false, true, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:"",
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{ border: [true, false, true, true],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:" ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:" ",
+                                      },
+                                    ]
+                                },
+                             ],
+                           
+                           ]
+                        },
+                      
+                    },
+                ],
+
+            },
+            {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {      
+                style: 'tableExample',
+                table: {
+                    widths: [80,201,50,90,90],
+                    body:
+                    dataBodyArticulos, 
+                },
+                      
+            },
             // {text: '', style: 'subheader',margin: [20, 20, 20, 20]},
             //  {   margin: [0,0,0,0],
             //             style: 'tableExample',
@@ -4607,8 +4993,7 @@ function createReporteGuiaRemisionPDF(response) {
                 alignment: 'center'
             },
             oficinas: {
-                fontSize: 9,
-                bold: false,
+                fontSize: 8,
                 margin: [20, 0, 0, 0],
                 alignment: 'center'
             },
@@ -4626,7 +5011,7 @@ function createReporteGuiaRemisionPDF(response) {
             },
             footer: {
                 fontSize: 10,
-                margin: [0, 10, 40, 0],
+                margin: [0, 0, 40, 0],
                 alignment: 'right'
             }
         },

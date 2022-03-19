@@ -223,3 +223,19 @@ inner join  ERP_Venta as v on (v.cCodConsecutivo_solicitud=s.cCodConsecutivo and
 inner join 	ERP_Venta as tike on(tike.idventa_comprobante=v.idventa)
 left join ERP_TipoCliente as tcl on (tcl.id=cli.id_tipocli)
 where s.estado='4'
+
+
+select * from ERP_GuiaRemision
+select * from ERP_Compania
+select * from ERP_GuiaRemisionDetalle
+select * from ERP_Marcas
+select * from ERP_Productos 
+select * from ERP_Marcas
+select * from ERP_Modelo
+select pr.code_article,concat(pr.description,', Marca: ',mar.description,', Modelo: ',mod.descripcion, ', Color: ',se.color,', Chasis: ',se.chasis,',Motor: ',se.motor) as producto,gp.cantidad,un.descripcion as unidadMedida from ERP_GuiaRemisionProducto as gp inner join ERP_Productos as pr on (pr.id =gp.idarticulo) inner join ERP_GuiaRemisionDetalle as gd on (gp.cCodConsecutivo=gd.cCodConsecutivo and gp.nConsecutivo=gd.nConsecutivo and gd.consecutivo=gp.consecutivo) inner join ERP_UnidadMedida as un on(un.IdUnidadMedida=pr.um_id) left join ERP_Modelo as mod on(mod.idModelo=pr.idModelo) left join ERP_Marcas as mar on(mar.id=pr.idMarca) inner join ERP_Serie as se on (se.idSerie=gd.idSerie)  WHERE gp.cCodConsecutivo='G001' and gp.nConsecutivo='2' and pr.serie=1
+
+select * from ERP_Serie
+select * from ERP_UnidadMedida
+select * from ERP_GuiaRemisionProducto as p left join ERP_GuiaRemisionDetalle as gd on (p.cCodConsecutivo=gd.cCodConsecutivo and p.nConsecutivo=gd.nConsecutivo and gd.consecutivo=p.consecutivo) inner join ERP_Serie as se on (se.idSerie=gd.idSerie) WHERE p.cCodConsecutivo='G001' and p.nConsecutivo='2' 
+
+select * from ERP_Serie
