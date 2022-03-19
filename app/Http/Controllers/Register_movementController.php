@@ -539,6 +539,7 @@ class Register_movementController extends Controller
         $operaciones = $operRepo->getOperation($usuario);
         $operaciones_entra = $operRepo->getOperation_entra($usuario);
         $almacen_usuario = $WareRepo->getAlmacen_usuario($usuario);
+        $almacen_todos = $WareRepo->getAlmacen_todos($usuario);
         return response()->json([
             'status' => true,
             'moneda' => $moneda,
@@ -547,6 +548,7 @@ class Register_movementController extends Controller
             'operaciones'=> $operaciones,
             'operaciones_entra'=>$operaciones_entra,
             'almacen_usuario'=>$almacen_usuario,
+            'almacen_todos'=>$almacen_todos,
         ]);
     }
      public function getKit($id, Register_movementInterface $repo,ProductInterface $repoPro)

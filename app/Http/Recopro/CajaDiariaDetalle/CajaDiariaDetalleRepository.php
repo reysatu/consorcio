@@ -194,7 +194,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
     
     public function get_venta($idventa) {
-        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos, mo.descripcion AS motivo
         FROM ERP_Venta AS v 
         INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
         INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
@@ -202,6 +202,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         LEFT JOIN ERP_Usuarios AS u ON(v.idcajero=u.id)
         LEFT JOIN ERP_Tienda AS t ON(v.idtienda=t.idTienda)
         LEFT JOIN ERP_Cajas AS cc ON(cc.idcaja=v.idcaja)
+        LEFT JOIN ERP_Motivos AS mo ON(mo.codigo=v.idmotivo)
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;

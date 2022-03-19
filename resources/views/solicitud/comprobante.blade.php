@@ -167,8 +167,18 @@
                 <td style="width: 5%;">Fecha</td>
                 <td style="width: 20%;"><?php echo date("d / ").$mes[date("n")-1].date(" / Y"); ?></td>
             </tr>
-           
-          
+            <?php if($venta[0]->IdTipoDocumento == "07") { ?>
+                <tr>
+                    <td style="width: 20%;">Doc. Que Modifica: </td>
+                    <td style="width: 55%;">{{ $venta_referencia[0]->tipo_documento }} {{ $venta_referencia[0]->serie_comprobante }}-{{ $venta_referencia[0]->numero_comprobante }}</td>
+                   
+                </tr>
+                <tr>
+                    <td style="width: 20%;">Motivo: </td>
+                    <td style="width: 55%;">{{ $venta[0]->motivo }}</td>
+                   
+                </tr>
+            <?php } ?>
         </table>
         
 
@@ -283,7 +293,7 @@
                         echo '</tr>';
                     }
                     
-                } else {
+                } elseif($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
                     echo '<tr>';
                     echo '  <td style="width: 15%;">Condicion de Pago:</td>';
                     echo '  <td style="width: 20%;">';
@@ -307,7 +317,7 @@
         <br>
         <br>
         <br>
-        
+        <?php if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") { ?>
         <table style="width: 100%;">
             <tr>
                 <td style="width: 20%;">Vendedor:</td>
@@ -315,7 +325,7 @@
                
             </tr>
         </table>
-
+        <?php } ?>
 
        
        

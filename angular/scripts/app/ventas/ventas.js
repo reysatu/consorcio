@@ -170,6 +170,12 @@
                     var cCodConsecutivo = $(this).attr('data-cCodConsecutivo');
                     var nConsecutivo = $(this).attr('data-nConsecutivo');
                     // alert(idventa_referencia);
+                    if(idtipodocumento == "07") {
+                        return false;
+                    }
+
+                    
+
                     if(idventa_referencia != "null" && idventa_referencia != "") {
                         AlertFactory.textType({
                             title: '',
@@ -179,9 +185,7 @@
                         return false;
                     }
 
-                    if(idtipodocumento == "07") {
-                        return false;
-                    }
+                   
 
                     $.post("movimientoCajas/get_caja_diaria", {},
                         function (data, textStatus, jqXHR) {
@@ -283,7 +287,7 @@
         }
 
         function find_documento(id) {
-            
+            $("#formulario-ventas").trigger("reset");
             $.post("ventas/find_documento", { idventa: id },
                 function (data, textStatus, jqXHR) {
 

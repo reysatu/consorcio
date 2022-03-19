@@ -20,6 +20,7 @@ use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Requests\MovimientoCajaRequest;
 use App\Http\Recopro\Query_stock\Query_stockInterface;
+use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
 use App\Models\BaseModel;
 use DateTime;
 use DateTimeZone;
@@ -1531,7 +1532,7 @@ class MovimientoCajaController extends Controller
 
     
 
-    public function imprimir_cronograma($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+    public function imprimir_cronograma($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio, VisitaClienteInterface $visita_repo) {
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
         $nConsecutivo = $array[1];
@@ -1559,6 +1560,14 @@ class MovimientoCajaController extends Controller
         $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
         $datos["fiador"] = $persona_repositorio->find($idfiador);
         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+
+        foreach ($datos["solicitud_cronograma"] as $key => $value) {
+            $ultimo_pago_x_cuota = $visita_repo->ultimo_pago_x_cuota($cCodConsecutivo, $nConsecutivo, $value->nrocuota);
+            $datos["solicitud_cronograma"][$key]->ultimo_pago_x_cuota = $ultimo_pago_x_cuota;
+        }
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         //   echo "<pre>";
         // print_r($datos); exit;
@@ -1670,6 +1679,12 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+       
+        if($datos["venta"][0]->idventa_referencia != "") {
+            $datos["venta_referencia"] = $repo->get_venta($datos["venta"][0]->idventa_referencia); 
+        }
+        // echo "<pre>";
+        // print_r($datos); exit;
         $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);

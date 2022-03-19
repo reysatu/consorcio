@@ -316,6 +316,8 @@
                     $subtotal = (float)($value->int_moratorio + $value->valor_cuota);
                     $total_amortizacion += (float)$value->monto_pago;
                     $total_saldo += (float)$value->saldo_cuota;
+                    $fecha_ultimo_pago = (isset($value->ultimo_pago_x_cuota[0])) ? $value->ultimo_pago_x_cuota[0]->fecha_emision : "-.-";
+                    $monto_ultimo_pago = (isset($value->ultimo_pago_x_cuota[0])) ? $value->ultimo_pago_x_cuota[0]->monto_total : 0;
                     echo '<tr>';
                     echo '  <td>'.$value->fecha_vencimiento.'</td>';
                     echo '  <td>'.$value->nrocuota.'</td>';
@@ -326,8 +328,8 @@
                     echo '  <td>'.number_format($value->monto_pago, 2).'</td>';
                     echo '  <td>'.number_format($value->saldo_cuota, 2).'</td>';
                     echo '  <td>'.$value->estado.'</td>';
-                    echo '  <td>-.-</td>';
-                    echo '  <td>'.number_format($subtotal, 2).'</td>';
+                    echo '  <td>'.$fecha_ultimo_pago.'</td>';
+                    echo '  <td>'.number_format($monto_ultimo_pago, 2).'</td>';
 
                     echo '</tr>';
 
@@ -348,12 +350,58 @@
             ?>
         </table>
         <br>
-        <table style="width: 100%;">
+        <table style="width: 98%;">
             <tr>
-                <td colspan="2" style="font-size: 15px;"><strong>IMPORTANTE</strong></td>
+                <td colspan="6" style="font-size: 15px;"><strong>IMPORTANTE</strong></td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: justify;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos. Los retrasos seran grabados con intereses. <strong>Señor cliente agradecemos realizar los pagos en caja ubicada en la oficina de la empresa, o a su gestor de cobranza de ninguna manera al vendedor y/o terceras personas, la empresa no se responsabiliza en caso omiso a esta aclaración.</strong><br>La tarjeta de propiedad no es una cortesía que otorgamos a nuestros clientes el mismo que se encuentra sujeta a los criterios autónomos de cada registrador público, por lo tanto nuestra empresa no se hace responsable por las demoras ocacionadas en el criterio del proceso registral, así como tampoco a demoras atribuidos a certificaciones, inscripciones de garantias y pagos atrasados.</td>
+                <td colspan="6" style="text-align: justify;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
+                <!-- Los retrasos seran grabados con intereses. <strong>Señor cliente agradecemos realizar los pagos en caja ubicada en la oficina de la empresa, o a su gestor de cobranza de ninguna manera al vendedor y/o terceras personas, la empresa no se responsabiliza en caso omiso a esta aclaración.</strong><br>La tarjeta de propiedad no es una cortesía que otorgamos a nuestros clientes el mismo que se encuentra sujeta a los criterios autónomos de cada registrador público, por lo tanto nuestra empresa no se hace responsable por las demoras ocacionadas en el criterio del proceso registral, así como tampoco a demoras atribuidos a certificaciones, inscripciones de garantias y pagos atrasados. -->
+                <strong>Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración.<br>También puede realizar sus pagos en las siguientes cuentas:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 5px;"></td>
+            </tr>
+            <tr style="">
+                <td >BBVA CONTINENTAL SOLES</td>
+                <td style="width: 2px">:</td>
+                <td style="border-right: 1px solid black;">0011-0310-0100054219</td>
+                <td>BANCO DE LA NACION SOLES</td>
+                <td style="width: 2px">:</td>
+                <td>00-541-056637</td>
+            </tr>
+            <tr>
+                <td>BCP CUENTA RECAUDADORA</td>
+                <td style="width: 2px">:</td>
+                <td style="border-right: 1px solid black;">550-1683963-0-80 AGENTE 15286</td>
+                <td>CUENTA RECAUDADORA BBVA SOLES</td>
+                <td style="width: 2px">:</td>
+                <td>2664 BANCO FUERA DE TARAPOTO</td>
+            </tr>
+            <tr>
+                <td>CAJA PIURA</td>
+                <td style="width: 2px">:</td>
+                <td style="border-right: 1px solid black;">110-01-2613976</td>
+                <td>BBVA CONTINENTAL DOLARES</td>
+                <td style="width: 2px">:</td>
+                <td>001-0310-0100054464</td>
+            </tr>
+            <tr>
+                <td>SCOTIABANK SOLES</td>
+                <td style="width: 2px">:</td>
+                <td style="border-right: 1px solid black;">000-5719283</td>
+                <td>CUENTA RECAUDADORA BBVA DOLARES</td>
+                <td style="width: 2px">:</td>
+                <td>2665</td>
+            </tr>
+            <tr>
+                <td colspan="6" style="height: 5px;"></td>
+            </tr>
+            <tr>
+                <td colspan="6" style="text-align: justify;">
+                <strong>Comunicar el deposito al Nro de celular 942 489 028</strong>
+                </td>
             </tr>
 
         
