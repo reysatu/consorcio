@@ -155,7 +155,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '" data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '" data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
                     }
 
                 }
@@ -167,6 +167,8 @@
                     var idventa = $(this).attr('data-idventa');
                     var idtipodocumento = $(this).attr('data-idtipodocumento');
                     var idventa_referencia = $(this).attr('data-idventa_referencia');
+                    var cCodConsecutivo = $(this).attr('data-cCodConsecutivo');
+                    var nConsecutivo = $(this).attr('data-nConsecutivo');
                     // alert(idventa_referencia);
                     if(idventa_referencia != "null" && idventa_referencia != "") {
                         AlertFactory.textType({
@@ -185,7 +187,26 @@
                         function (data, textStatus, jqXHR) {
                             // console.log();
                             if (data.length > 0) {
-                                find_documento(idventa);
+
+                                $.post("ventas/validar_venta_anticipo", { cCodConsecutivo: cCodConsecutivo, nConsecutivo: nConsecutivo },
+                                    function (data, textStatus, jqXHR) {
+
+                                        if(data.length == 0) {
+
+                                            find_documento(idventa);
+                                        } else {
+                                            AlertFactory.textType({
+                                                title: '',
+                                                message: 'Este documento por anticipo ya tiene una venta por el saldo',
+                                                type: 'info'
+                                            });
+                                            return false;
+                                        }
+                                    },  
+                                    "json"
+                                );
+
+                                
                             } else {
                                 AlertFactory.textType({
                                     title: '',
@@ -327,9 +348,16 @@
                         window.open("movimientoCajas/imprimir_comprobante/" + id);
                         
                         LoadRecordsButtonVentas.click();
+
+                        // nota de credito por un anticipo
+                        var msg = "";
+                        if(data.datos[0].tipo_comprobante == "0") {
+                            msg = "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
+                        }
+
                         AlertFactory.textType({
                             title: '',
-                            message: 'El documento se facturó correctamente.',
+                            message: 'El documento se facturó correctamente. '+msg,
                             type: 'success'
                         });
 

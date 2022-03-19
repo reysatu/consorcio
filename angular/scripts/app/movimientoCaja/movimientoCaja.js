@@ -1779,6 +1779,8 @@
                         if(data.length > 0) {
                             var monto_venta = parseFloat(data[0].t_monto_total);
                             $("#idventa_separacion").val(data[0].idventa);
+                            $("#devolucion_producto").val(data[0].devolucion_producto);
+                            $("#idventa_nota").val("");
                             $("#monto_p").val(monto_venta.toFixed(2));
                             $("#monto_aplicar").val(monto_venta.toFixed(2));
 
@@ -1794,11 +1796,40 @@
                     "json"
                 );
             } else {
-                $("#idventa_separacion").val("");
-                var total_pagar = parseFloat($("#total_pagar").val());
-                var subtotal_montos_pago = sumar_montos_formas_pago();
-                var saldo = total_pagar - subtotal_montos_pago;
-                $("#monto_aplicar").val(saldo.toFixed(2));
+                
+                if(forma_pago == "NCR") {
+                    $.post("ventas/get_venta_nota", { idcliente: idcliente },
+                        function (data, textStatus, jqXHR) {
+                            // console.log(data);
+                            if(data.length > 0) {
+                                var monto_venta = parseFloat(data[0].t_monto_total);
+                                $("#idventa_nota").val(data[0].idventa);
+                                $("#devolucion_producto").val(data[0].devolucion_producto);
+                                $("#idventa_separacion").val("");
+                                $("#monto_p").val(monto_venta.toFixed(2));
+                                $("#monto_aplicar").val(monto_venta.toFixed(2));
+    
+                            } else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'No hay ninguna nota de credito!',
+                                    type: 'info'
+                                });
+                            }
+                        
+                        },
+                        "json"
+                    );
+                } else {
+                    $("#idventa_separacion").val("");
+                    $("#idventa_nota").val("");
+                    $("#devolucion_producto").val("");
+                    var total_pagar = parseFloat($("#total_pagar").val());
+                    var subtotal_montos_pago = sumar_montos_formas_pago();
+                    var saldo = total_pagar - subtotal_montos_pago;
+                    $("#monto_aplicar").val(saldo.toFixed(2));
+                }
+              
             }
         });
 
@@ -1930,12 +1961,17 @@
         }
 
         function guardar_comprobante() {
-            $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val() + "&idventa_separacion=" + $("#idventa_separacion").val(),
+            $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
                 function (data, textStatus, jqXHR) {
 
                     if (data.status == "i") {
 
                         // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
+                        var msg = "";
+                        if($("#devolucion_producto").val() == 1) {
+                            msg = "¡Importante! Se debe ingresar a almacén los articulos devueltos de la Nota de Crédito aplicada.";
+                        } 
+
                         $("#modal-emitir-comprobante").modal("hide");
                         $("#modalSolicitud").modal("hide");
                         $("#formulario-solicitud").trigger("reset");
@@ -1947,7 +1983,7 @@
                         LoadRecordsButtonSolicitud.click();
                         AlertFactory.textType({
                             title: '',
-                            message: 'El documento se facturó correctamente.',
+                            message: 'El documento se facturó correctamente. ' + msg,
                             type: 'success'
                         });
 

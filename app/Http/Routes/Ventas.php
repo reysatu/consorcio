@@ -22,5 +22,7 @@ Route::post('ventas/get_notas_devolucion', ['as' => 'ventas.get_notas_devolucion
 Route::get('ventas/get_venta_detalle/{id}', ['as' => 'ventas.get_venta_detalle', 'uses' => 'VentasController@get_venta_detalle']);
 
 Route::post('ventas/get_venta_separacion', ['as' => 'ventas.get_venta_separacion', 'uses' => 'VentasController@get_venta_separacion']);
+Route::post('ventas/get_venta_nota', ['as' => 'ventas.get_venta_nota', 'uses' => 'VentasController@get_venta_nota']);
+Route::post('ventas/validar_venta_anticipo', ['as' => 'ventas.validar_venta_anticipo', 'uses' => 'VentasController@validar_venta_anticipo']);
 
 

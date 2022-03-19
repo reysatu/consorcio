@@ -170,8 +170,16 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
     public function get_venta_separacion($idcliente) {
         $sql = "SELECT v.* FROM ERP_Venta AS v
         INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
-        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND v.aplicado_separacion<>'S'";
+        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND ISNULL(v.aplicado_separacion, 'N')<>'S'";
 
+        return DB::select($sql);
+    }
+
+    public function get_venta_nota($idcliente) {
+        $sql = "SELECT v.* FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
+        WHERE v.idcliente={$idcliente} AND v.IdTipoDocumento='07' AND vd.idarticulo<>1859 AND ISNULL(v.aplicado_nota, 'N')<>'S'"; // QUE NO SEA DE UNA VENTA ANTICIPO LA NOTA DE CREDITO
+    // die($sql);
         return DB::select($sql);
     }
 
