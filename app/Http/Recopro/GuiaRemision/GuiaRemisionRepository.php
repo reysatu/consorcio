@@ -175,10 +175,25 @@ ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr
     public function get_guiaRemision($cCodConsecutivo, $nConsecutivo)
     {
 
-        $sql = "SELECT *, FORMAT(fechaEmision, 'yyyy-MM-dd') AS fechaEmision, FORMAT(fechaInicioTraslado, 'yyyy-MM-dd') AS fechaInicioTraslado from ERP_GuiaRemision WHERE cCodConsecutivo='{$cCodConsecutivo}' AND nConsecutivo={$nConsecutivo}";
+        $sql = "SELECT *,tt.descripcion as traslado , FORMAT(g.fechaEmision, 'yyyy-MM-dd') AS fechaEmision, FORMAT(g.fechaInicioTraslado, 'yyyy-MM-dd') AS fechaInicioTraslado from ERP_GuiaRemision as g inner join ERP_TipoTraslado as tt on (tt.id=g.idtraslado) WHERE g.cCodConsecutivo='{$cCodConsecutivo}' AND g.nConsecutivo={$nConsecutivo}";
         $result = DB::select($sql);
         return $result;
     }
+    public function get_guiaArticuloNoser($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "select pr.code_article,pr.description as producto,gp.cantidad,un.descripcion as unidadMedida from ERP_GuiaRemisionProducto as gp inner join ERP_Productos as pr on (pr.id =gp.idarticulo) inner join ERP_UnidadMedida as un on(un.IdUnidadMedida=pr.um_id) WHERE gp.cCodConsecutivo='$cCodConsecutivo' and gp.nConsecutivo='$nConsecutivo' and pr.serie=0";
+        $result = DB::select($sql);
+        return $result;
+    }
+     public function get_guiaArticuloser($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "select pr.code_article,concat(pr.description,', Marca: ',mar.description,', Modelo: ',mod.descripcion, ', Color: ',se.color,', Chasis: ',se.chasis,',Motor: ',se.motor) as producto,gp.cantidad,un.descripcion as unidadMedida from ERP_GuiaRemisionProducto as gp inner join ERP_Productos as pr on (pr.id =gp.idarticulo) inner join ERP_GuiaRemisionDetalle as gd on (gp.cCodConsecutivo=gd.cCodConsecutivo and gp.nConsecutivo=gd.nConsecutivo and gd.consecutivo=gp.consecutivo) inner join ERP_UnidadMedida as un on(un.IdUnidadMedida=pr.um_id) left join ERP_Modelo as mod on(mod.idModelo=pr.idModelo) left join ERP_Marcas as mar on(mar.id=pr.idMarca) inner join ERP_Serie as se on (se.idSerie=gd.idSerie)  WHERE gp.cCodConsecutivo='$cCodConsecutivo' and gp.nConsecutivo='$nConsecutivo' and pr.serie=1";
+        $result = DB::select($sql);
+        return $result;
+    }
+     
     public function get_guia_Lote($cCodConsecutivo, $nConsecutivo){
          $mostrar=DB::select("select * from ERP_GuiaRemisionProducto as mo inner join ERP_Lote as l on mo.idLote=l.idLote WHERE mo.cCodConsecutivo='{$cCodConsecutivo}' AND mo.nConsecutivo={$nConsecutivo} ");
          return $mostrar; 
