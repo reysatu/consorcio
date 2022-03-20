@@ -238,4 +238,8 @@ select * from ERP_Serie
 select * from ERP_UnidadMedida
 select * from ERP_GuiaRemisionProducto as p left join ERP_GuiaRemisionDetalle as gd on (p.cCodConsecutivo=gd.cCodConsecutivo and p.nConsecutivo=gd.nConsecutivo and gd.consecutivo=p.consecutivo) inner join ERP_Serie as se on (se.idSerie=gd.idSerie) WHERE p.cCodConsecutivo='G001' and p.nConsecutivo='2' 
 
-select * from ERP_Serie
+select pr.code_article,pr.description as producto,gp.cantidad,un.descripcion as unidadMedida from ERP_GuiaRemisionProducto as gp inner join ERP_Productos as pr on (pr.id =gp.idarticulo) inner join ERP_UnidadMedida as un on(un.IdUnidadMedida=pr.um_id) WHERE gp.cCodConsecutivo='G001' and gp.nConsecutivo='3' and pr.serie=0
+
+SELECT *,tt.descripcion as traslado , FORMAT(g.fechaEmision, 'yyyy-MM-dd') AS fechaEmision, FORMAT(g.fechaInicioTraslado, 'yyyy-MM-dd') AS fechaInicioTraslado from ERP_GuiaRemision as g inner join ERP_TipoTraslado as tt on (tt.id=g.idtraslado) WHERE g.cCodConsecutivo='{$cCodConsecutivo}' AND g.nConsecutivo={$nConsecutivo}
+
+select * from ERP_TipoTraslado
