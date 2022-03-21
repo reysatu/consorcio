@@ -63,7 +63,7 @@
                 fechareg: {
                     title: 'Fecha',
                     display: function (data) {
-                        return moment(data.record.fecha_emision).format('DD/MM/YYYY');
+                        return moment(data.record.fechareg).format('DD/MM/YYYY');
                     }
 
                 },
@@ -129,7 +129,8 @@
                     var estado = $(this).attr('data-estado');
                     var id = $(this).attr('data-id');
                     // alert(estado);
-                    if(estado == "Proceso") {
+
+                    // if(estado == "Proceso") {
                         $.post("visita_cliente/find_visita", { id: id},
                             function (data, textStatus, jqXHR) {
                                 // console.log(data);
@@ -142,7 +143,9 @@
                                 $("#idcobrador").val(data.visita_cliente[0].idcobrador);
                                 $("#idcobrador").trigger("change");
                                 $("#idvisita").val(data.visita_cliente[0].id);
-                              
+                                
+                               
+
                                 var cuotas = [];
 
                                 if(data.visita_cliente_cuota.length > 0) {
@@ -154,6 +157,7 @@
 
                                 if(data.visita_cliente_solicitud.length > 0) {
                                     var html_s = "";
+                                   
 
                                     for (var vcs = 0; vcs < data.visita_cliente_solicitud.length; vcs++) {
                                         html_s = '<tr idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'">';
@@ -166,7 +170,7 @@
                                         html_s += '    <td>'+parseFloat(data.visita_cliente_solicitud[vcs].saldo).toFixed(2)+'</td>';
                                         html_s += '    <td>['+cuotas.join(",")+']</td>';
                                         html_s += '    <td><input style="width: 100%;" type="text" name="cObservacion[]" value="'+data.visita_cliente_solicitud[vcs].cObservacion+'" class="form-control input-xs" /></td>';
-                                        html_s += '    <td><center><button type="button" title="Agregar Resultados" idcliente="'+data.visita_cliente_solicitud[vcs].idcliente+'" idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="btn btn-info btn-xs agregar-resultados" id_visita="'+data.visita_cliente_solicitud[vcs].id+'" ><i class="fa fa-plus"></i></button></center><span idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="datos-resultados"></span></td>';
+                                        html_s += '    <td><center><button type="button" title="Agregar Resultados" idcliente="'+data.visita_cliente_solicitud[vcs].idcliente+'" estado="'+data.visita_cliente[0].estado+'" idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="btn btn-info btn-xs agregar-resultados" id_visita="'+data.visita_cliente_solicitud[vcs].id+'" ><i class="fa fa-plus"></i></button></center><span  idsolicitud="'+data.visita_cliente_solicitud[vcs].cCodConsecutivo+'_'+data.visita_cliente_solicitud[vcs].nConsecutivo+'" class="datos-resultados"></span></td>';
                                         html_s += '</tr>';
                                       
                                     }
@@ -175,12 +179,16 @@
                                 }
 
                             
-
+                                if(data.visita_cliente[0].estado == "3") {
+                                    $("input").attr("readonly", "readonly");
+                                } else {
+                                    $("input").removeAttr("readonly");
+                                }
                                 $("#modal-visita").modal("show");
                             },
                             "json"
                         );
-                    }
+                    // }
                 })
 
                 $(".procesar-visita").click(function() {
@@ -302,7 +310,7 @@
         }
 
 
-        $(document).on("change", "#idcliente", function (event, idsolicitud) {
+        $(document).on("change", "#idcliente", function (event, idsolicitud, id_visita, estado) {
             var idcliente = $(this).val();
             $("#idsolicitud").html("");
             $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
@@ -320,7 +328,7 @@
                             }
                         });
                         $("#idsolicitud").select2();
-                        $("#idsolicitud").trigger("change");
+                        $("#idsolicitud").trigger("change", [estado]);
                     }  else {
                         AlertFactory.textType({
                             title: '',
@@ -338,7 +346,8 @@
             var idcliente = $(this).attr("idcliente");
             var idsolicitud = $(this).attr("idsolicitud");
             var id_visita = $(this).attr("id_visita");
-            $("#idcliente").val(idcliente).trigger("change", [idsolicitud, id_visita]);
+            var estado = $(this).attr("estado");
+            $("#idcliente").val(idcliente).trigger("change", [idsolicitud, id_visita, estado]);
             
             $("#modal-detalle").modal("show");
            
@@ -400,7 +409,7 @@
             return html;
         }
 
-        $(document).on("change", "#idsolicitud", function (eventa) {
+        $(document).on("change", "#idsolicitud", function (event, estado) {
             var id = $(this).val();
             var idvisita = $("#idvisita").val();
            
@@ -412,6 +421,12 @@
                         var html = draw_cuotas(data);
                         // alert(html);
                         $("#cuotas-credito").html(html);
+                        
+                        if(estado == "3") {
+                            $("input").attr("readonly", "readonly");
+                        } else {
+                            $("input").removeAttr("readonly");
+                        }   
                     
                     }
                 },

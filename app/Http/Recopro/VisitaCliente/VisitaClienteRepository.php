@@ -199,7 +199,7 @@ class VisitaClienteRepository implements VisitaClienteInterface
     }
 
     public function obtener_visita_cliente_solicitud($id) {
-        $sql = "SELECT vcs.*, c.*, m.*, m.Descripcion AS moneda FROM ERP_VisitaClienteSolicitud  AS vcs
+        $sql = "SELECT vcs.*, c.*, m.*, m.Descripcion AS moneda, s.*, ISNULL(vcs.cObservacion, '') AS cObservacion FROM ERP_VisitaClienteSolicitud  AS vcs
         INNER JOIN ERP_Solicitud AS s ON(vcs.cCodConsecutivo=s.cCodConsecutivo AND s.nConsecutivo=vcs.nConsecutivo)
         INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
         LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)

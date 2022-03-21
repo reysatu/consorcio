@@ -18,7 +18,7 @@ use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Models\BaseModel;
 use DB;
 use Illuminate\Http\Request;
-
+use Exception;
 class RenegociacionMoraController extends Controller
 {
     // use RenegociacionMoraTrait;
@@ -47,12 +47,13 @@ class RenegociacionMoraController extends Controller
             
             // echo  $solicitud_repositorio->get_consecutivo("ERP_SolicitudNegociaMora", "idsolicitudmora");
             for ($i=0; $i < count($data["monto"]); $i++) { 
-                if($data["monto"][$i] == "" || $data["monto"][$i] == 0) {
+                if($data["monto"][$i] == "") {
+                    // throw new Exception("El monto de la cuota: ".$data["nrocuota"][$i]." esta vacio!");
                     continue;
                 }
                 $detalle_mora = array();
                
-                $detalle_mora["idsolicitudmora"] = $solicitud_repositorio->get_consecutivo("ERP_SolicitudNegociaMora", "idsolicitudmora");
+                $detalle_mora["idsolicitudmora"] = $solicitud_repositorio->get_consecutivo_detalle("ERP_SolicitudNegociaMora", "idsolicitudmora");
                 
                 $detalle_mora["cCodConsecutivo"] = $data["cCodConsecutivo_credito"];
                 $detalle_mora["nConsecutivo"] = $data["nConsecutivo_credito"];
@@ -63,6 +64,7 @@ class RenegociacionMoraController extends Controller
               
                 // print_r($this->preparar_datos("dbo.ERP_SolicitudNegociaMora", $detalle_mora));
                 $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudNegociaMora", $detalle_mora));
+                // print_r($result);
 
                  //ACTUALIZAR MONTOS EN solicitud cronograma
                 $update_montos_mora = array();

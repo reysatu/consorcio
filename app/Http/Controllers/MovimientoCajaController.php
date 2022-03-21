@@ -115,62 +115,67 @@ class MovimientoCajaController extends Controller
             $repo->create($datoDet);
 
             //GUARDAR VENTA POR SEPARACION
-           
-
-            $parametro_separacion = $repo->get_parametro_separacion();
-
-            if(count($parametro_separacion) <= 0) {
-                throw new Exception("Por favor cree el parametro con el id del producto de separación!");
-            }
-
-
             $data_venta = array();
-           
-            $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
-            $data_venta["serie_comprobante"] = $data["serie_comprobante"];
-            $data_venta["numero_comprobante"] = $data["numero_comprobante"];
-            $data_venta["condicion_pago"] = 1;
-            $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
-            $data_venta["idcliente"] = $data["idcliente"];
-            $data_venta["tipo_comprobante"] = "0";
-            $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
-            $data_venta["t_monto_subtotal"] = $data["montoAdd"];
-            $data_venta["t_monto_total"] = $data["montoAdd"];
-            $data_venta["saldo"] = "0";
-            $data_venta["pagado"] = $data["montoAdd"];
-            $data_venta["idmoneda"] = $data['idMonedaAdd'];
-            $data_venta["idcajero"] = auth()->id();
-            $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
-            $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+            $data_venta["idventa"] = "";
+            if($data["tipoMovimientoAdd"] == "SEP") {
+                $parametro_separacion = $repo->get_parametro_separacion();
 
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
-
-           
-            $data_venta_detalle = array();
-            $data_venta_detalle["idventa"] = $data_venta["idventa"];
-            $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
-            $data_venta_detalle["idarticulo"] = $parametro_separacion[0]->value;
-            $data_venta_detalle["um_id"] = "07"; //codigo unidad
-            $data_venta_detalle["cantidad"] = 1;
-            $data_venta_detalle["precio_unitario"] = $data["montoAdd"];
-        
-            $data_venta_detalle["precio_total"] = $data["montoAdd"];
-        
-            $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
+                if(count($parametro_separacion) <= 0) {
+                    throw new Exception("Por favor cree el parametro con el id del producto de separación!");
+                }
     
-            $data_venta_detalle["monto_total"] = $data["montoAdd"];
-        
-
-
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
-              
+                
+                $data_venta = array();
+               
+                $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_venta["serie_comprobante"] = $data["serie_comprobante"];
+                $data_venta["numero_comprobante"] = $data["numero_comprobante"];
+                $data_venta["condicion_pago"] = 1;
+                $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
+                $data_venta["idcliente"] = $data["idcliente"];
+                $data_venta["tipo_comprobante"] = "0";
+                $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
+                $data_venta["t_monto_subtotal"] = $data["montoAdd"];
+                $data_venta["t_monto_total"] = $data["montoAdd"];
+                $data_venta["saldo"] = "0";
+                $data_venta["pagado"] = $data["montoAdd"];
+                $data_venta["idmoneda"] = $data['idMonedaAdd'];
+                $data_venta["idcajero"] = auth()->id();
+                $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+                $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+    
+               
+                $data_venta_detalle = array();
+                $data_venta_detalle["idventa"] = $data_venta["idventa"];
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                $data_venta_detalle["idarticulo"] = $parametro_separacion[0]->value;
+                $data_venta_detalle["um_id"] = "07"; //codigo unidad
+                $data_venta_detalle["cantidad"] = 1;
+                $data_venta_detalle["precio_unitario"] = $data["montoAdd"];
             
-
-            $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+                $data_venta_detalle["precio_total"] = $data["montoAdd"];
+            
+                $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
+        
+                $data_venta_detalle["monto_total"] = $data["montoAdd"];
+            
+    
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                  
+                
+    
+                $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+            }
+           
 
             DB::commit();
             return response()->json([
                 'status' => true,
+                "idventa" => $data_venta["idventa"]
+               
             ]);
 
 
@@ -1108,7 +1113,8 @@ class MovimientoCajaController extends Controller
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
 
-           
+            // update stock
+            $repo->update_stock($data_venta["idventa"]);
             
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
@@ -1673,37 +1679,55 @@ class MovimientoCajaController extends Controller
         $idventa = $array[2];
 
         $datos = array();
-        $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
-        $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+        $datos["venta_anticipo"] = array();
+        $datos["solicitud"] = array();
+
+        if($cCodConsecutivo != "null" && $cCodConsecutivo != 0 && $nConsecutivo != "null" && $nConsecutivo != 0) {
+            $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+            $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+            $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
+            $datos["solicitud_credito"] = $solicitud_credito; 
+            $datos["solicitud"] = $solicitud; 
+            $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+            $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+            $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+    
+            $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+            $datos["fiador"] = $persona_repositorio->find($idfiador);
+            $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        }
+
+     
+      
 
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
        
         if($datos["venta"][0]->idventa_referencia != "") {
             $datos["venta_referencia"] = $repo->get_venta($datos["venta"][0]->idventa_referencia); 
+            
+
         }
         // echo "<pre>";
         // print_r($datos); exit;
-        $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
-        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        
+       
         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         // $datos["cajero"] = $repo->get_cajero(); 
         $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
         $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
-        $datos["solicitud_credito"] = $solicitud_credito; 
-        $datos["solicitud"] = $solicitud; 
+        // if($datos["venta_detalle"][0]->idarticulo != 1862) {
+          
+        // }
+      
         $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
-        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
-        $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
-        $datos["conyugue"] = $persona_repositorio->find($idconyugue);
-
-        $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
-        $datos["fiador"] = $persona_repositorio->find($idfiador);
-        $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
-        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
-
+        $datos["cliente"] = $cliente_repositorio->find($datos["venta"][0]->idcliente);
+       
+   
+       
         // echo "<pre>";
         // print_r($datos);
         // exit;

@@ -350,7 +350,7 @@
 
                             $("#formulario-solicitud-credito").trigger("reset");
 
-                            LoadRecordsButtonVentas.click();
+                            LoadRecordsButtonSolicitudCreditos.click();
                             AlertFactory.textType({
                                 title: '',
                                 message: 'La Renegociación de la mora se guardó correctamente.',
