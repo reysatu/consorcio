@@ -18,7 +18,7 @@
         var codigo_actual; //variable para identificar en que fila voy a gregar lotes o series 
         var cCodConsecutivoOS=$("#cCodConsecutivoOS");
         var nConsecutivoOS=$("#nConsecutivoOS");
-        var  aartML= []; //arrays para guardas los datos de lotes
+        var  aartML= []; //arrays para guardas lo s datos de lotes
         var  acodigos=[];//arrays de codigos;
         var  alotML=[];
         var  afinML=[];
@@ -244,11 +244,16 @@
             //  $scope.loadTransferPDF('referral_guides/referralGuidePDF', data);
             var id= idMovimiento.val();
             if(id!=''){
+                var str2=idTipoOperacion.val();
+                var complet2=str2.split("*");
+                var nat2=complet2[1];
+                var idtipoOpe=complet2[0];
                  var data = {
                                 id: id,
+                                idtipoOpe:idtipoOpe,
                                 
                 };
-              $scope.loadMovimientoPDF('register_movements/pdf', data);
+              $scope.loadMovimientoEntregaPDF('register_movements/pdf', data);
             }
         });
 

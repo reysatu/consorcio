@@ -7300,9 +7300,7 @@ function create_pdf_Querymovimiento(response) {
         fecha_fin='TODOS'
      }; 
      var data=response.data;
-    // var operacion=response.operacion;
-    // var mov_ar=response.movimiento_Ar;
-    // var mov_det=response.data_movimiento_serie;
+ 
     var dataFiltros=[];
     var datafs=[
                          { 
@@ -7557,28 +7555,7 @@ function create_pdf_Querymovimiento(response) {
                         },
                     ];               
    
-//    idTransaccion
-// id
-// fecha_registro
-// fecha_proceso_s
-// fecha_registro_s
-// idArticulo
-// Articulo
-// Unidad
-// Categoria
-// Tipo_Operacion
-// Naturaleza
-// Origen
-// idOrigen
-// Almacen
-// Localizacion
-// Cantidad
-// Costo_Unitario
-// Precio_Unitario
-// Costo_Total
-// Precio_Total
-// Lote
-// Serie
+
       dataDolMovimienQuery.push(tituloDolFormQuery) ;
       var totalCosto=0;
        data.map(function(index) {
@@ -7696,226 +7673,7 @@ function create_pdf_Querymovimiento(response) {
              dataDolMovimienQuery.push(tituloDolFormQueryData) ;     
              
        });
-    console.log(data);
- // for (var i = 0; i < 5; i++) {
- //    var tituloDolFormQueryData=[];
- //      if(i==4){
- //        tituloDolFormQueryData=[
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' 
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center' 
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' 
-
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center' 
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' 
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center',
- //                            bold:true,
-
- //                        },
- //                         { 
- //                            text:'TOTAL COSTO',
- //                            fontSize: 7 ,
- //                            bold:true,
- //                        },
- //                         { 
- //                            text:totalCosto.toFixed(2),
- //                            fontSize: 7 ,
- //                            alignment: 'center',
- //                            bold:true,
-
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center',
- //                            bold:true,
-
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
-
- //                        },
- //                    ];
- //      }else{
-            
- //             tituloDolFormQueryData=[
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center',
- //                             border: [false, false, false, false],
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
-
-
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center',
- //                             border: [false, false, false, false], 
-
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
-
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                            border: [false, false, false, false],
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                             border: [false, false, false, false],
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                             border: [false, false, false, false],
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                             border: [false, false, false, false],
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text: '',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                             border: [false, false, false, false],
- //                        },
- //                          { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                        { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                            alignment: 'center' ,
- //                             border: [false, false, false, false],
- //                        },
- //                         { 
- //                            text:'',
- //                            fontSize: 7 ,
- //                             border: [false, false, false, false],
- //                        },
- //                    ];
-            
- //      }
- //       dataDolMovimienQuery.push(tituloDolFormQueryData) ;  
- //    }
      
-
    var docDefinition = {
             pageOrientation: 'landscape',
             content: [ 
@@ -7971,6 +7729,282 @@ function create_pdf_Querymovimiento(response) {
    
 
 }
+function create_pdf_movimientoEntrega(response) {
+    var data_compania=response.data_compania;
+    var data_p = response.data;
+    var operacion=response.data_movimientoEntrega;
+    var codVen=" ";
+    var codSol=" ";
+    if(operacion[0].serie_comprobante!=null){
+        codVen=operacion[0].serie_comprobante+'-'+operacion[0].numero_comprobante;
+        codSol=operacion[0].cCodConsecutivo+'-'+operacion[0].nConsecutivo;
+    }
+    var mov_ar=response.data_movimientoEntregaArti;
+    var mov_det=response.data_movimiento_serie;
+    var total_di=data_compania[0].direcciones_oficinas;
+    var tot = total_di.split('|');
+    var dataBodyArticulos=[];
+    var unto='';
+    var cont=0;
+    console.log(data);
+    for (var i = 0; i < tot.length; i++) {
+        unto=unto+tot[i]+'\n';
+    };
+    console.log(data_p);
+    var data = [];
+    var array_head = [];
+    var array_dataBody = [];
+    var array_dataHead = [];
+    var ident='I';
+    var column1  = [];
+    var column2  = [];
+    var column3  = []; 
+    var column4  = [];
+    var column5  = [];
+    var column6= [];
+    var header=[];
+    column1.push({text:'MOVIMIENTO DE '+operacion[0].tipoOperacion ,alignment: 'center', bold: true,colSpan: 47,height:70}, {}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{},{}, {},{},{}); 
+    column2.push({text:' N° Movimiento:',bold: true,alignment: 'center',fontSize: 9,border: [true, true, false, true], colSpan: 15}, {}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {text:data_p.idMovimiento,border: [false, false, true, true],fontSize: 9,colSpan: 3}, {},{}, {text:' Fecha Transacción: ',bold: true,fontSize: 9,border: [false, false, false, true],alignment: 'center',colSpan: 10}, {},{}, {},{}, {},{}, {}, {},{},{text:data_p.fecha_proceso,fontSize: 9,border: [false, false, true, true], colSpan: 5}, {}, {},{},{}, {text:' Fecha Impresión:',bold: true,fontSize: 9,border: [false, false, false, true],alignment: 'center', colSpan: 9,height:80}, {},{}, {},{},{}, {},{}, {},{text:data_p.fecha_impresion,fontSize: 9,border: [false, false, true, true], colSpan: 5},{}, {},{},{}); 
+    column5.push({text:'Item',bold: true, colSpan: 2, fontSize: 9,height:100}, {}, {text:'Artículo',alignment: 'center',bold: true, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:'Almacén',bold: true, colSpan: 7, fontSize: 9,height:100}, {},{}, {}, {},{}, {}, {text:'Localización',bold: true, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:'Lote',bold: true, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:'Unidad',bold: true,colSpan: 2, fontSize: 9,height:100},{},{text:'Cantidad', bold: true,fontSize: 9,height:100},{text:'Cantidad Requeridad', bold: true,fontSize: 9,height:100},{text:'Cantidad Pendiente', bold: true,fontSize: 9,height:100}); 
+    header.push(column1);
+    header.push(column2);
+    header.push(column5);
+    var cont=0;
+    mov_ar.map(function(index) {
+        var cantidad=Math.trunc(index.cantidad);
+        var cantidad_requerida=Number(index.cantidadRequeridad);
+        var cantidad_pendiente=Number(index.nCantidadPendienteEntregar);
+        var colunmx=[]
+         cont=cont+1;   
+         colunmx.push({text:cont, colSpan: 2, fontSize: 9,height:100}, {}, {text:index.producto, colSpan: 16, fontSize: 9,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:index.almacen, colSpan: 7, fontSize: 9,height:100}, {},{}, {}, {},{}, {}, {text:index.localizacion, colSpan: 8, fontSize: 9,height:100},{}, {}, {},{}, {},{}, {},{text:index.lote, colSpan: 9, fontSize: 9,height:100},{}, {},{}, {},{},{},{},{}, {text:index.unidad,colSpan: 2, fontSize: 9,height:100},{},{text:cantidad,fontSize: 9,height:100},{text:cantidad_requerida, fontSize: 9,height:100},{text:cantidad_pendiente,fontSize: 9,height:100});
+         header.push(colunmx);
+         var idenDet='I';
+         mov_det.map(function(index2) {
+            console.log("entro");
+            console.log(index.consecutivo);
+            if(index.consecutivo==index2.identificador){
+                var columnz=[];
+                if(idenDet=='I'){
+                    var columny=[];
+                    columny.push({text:'', colSpan: 2, fontSize: 9,height:100},{}, {text:'Serie', colSpan: 6, fontSize: 9,height:100,bold: true},{}, {}, {},{},{}, {text:'Motor', colSpan: 5, fontSize: 9,height:100,bold: true},{}, {},{}, {}, {text:'Color',bold: true, colSpan: 5, fontSize: 9,height:100}, {},{}, {}, {}, {text:'Año de Fabricación', bold: true,colSpan: 7, fontSize: 9,height:100}, {},{}, {}, {},{}, {}, {text:'Año Modelo',bold: true, colSpan: 8, fontSize: 9,height:100},{}, {}, {},{}, {},{}, {},{text:'', colSpan: 13, fontSize: 9,height:100,border: [false, false, false, false]},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 9,height:100,border: [false, false, true, true]}); 
+                    header.push(columny);
+                    idenDet='A';
+                };
+                columnz.push({text:'', colSpan: 2, fontSize: 9,height:100},{}, {text:index2.nombreSerie, colSpan: 6, fontSize: 9,height:100},{}, {}, {},{},{}, {text:index2.motor, colSpan: 5, fontSize: 9,height:100},{}, {},{}, {}, {text:index2.color, colSpan: 5, fontSize: 9,height:100}, {},{}, {}, {}, {text:index2.anio_fabricacion, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:index2.anio_modelo, colSpan: 8, fontSize: 9,height:100},{}, {}, {},{}, {},{}, {},{text:'', colSpan: 13, fontSize: 9,height:100,border: [false, true, false, true]},{}, {},{}, {},{},{},{},{}, {},{},{},{},{text:'', fontSize: 9,height:100,border: [false, false, true, true]}); 
+                header.push(columnz);
+
+            }
+
+        });
+
+
+    });
+    for (var i = 0; i < 8; i++) {
+        var colum_espacio_blanco=[];
+        colum_espacio_blanco.push({text:' ', border: [false, false, false, false], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+        header.push(colum_espacio_blanco);
+    }
+    var columnfooter=[];
+     columnfooter.push({text:'',  border: [false, false, false, false], colSpan: 2, fontSize: 9,height:100},{}, {text:'ALMACÉN', border: [false, true, false, false], alignment: 'center',colSpan: 6, fontSize: 9,height:100,bold: true},{}, {}, {},{},{}, {text:'', alignment: 'center',colSpan: 30,border: [false, false, false, false], fontSize: 9,height:100,bold: true},{}, {},{}, {}, {}, {},{}, {}, {}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{text:'RECIBÍ CONFORME', border: [false, true, false, false], colSpan: 6, fontSize: 9,height:100},{},{},{}, {},{},{text:'', border: [false, false, false, false], colSpan: 3,fontSize: 9,height:100,bold: true},{},{}); 
+     header.push(columnfooter);
+     
+ 
+   var docDefinition = {
+            pageOrientation: 'landscape',
+            pageSize: "A4",
+            pageMargins: [20, 20, 15, 20],
+            content: [ 
+                        {
+                            columns: [
+                                {  
+                                    width: '50%',
+                                  
+                                    // normally you could put image directly here, but since you're
+                                    // setting width to auto, we need an artificial wrapping-node
+                                    // so that column-width does not interfere with image width
+                                    stack: [
+                                        {
+                                            image: response.img,
+                                            fit: [200, 200]
+                                        }
+                                    ],
+                                     alignment: 'center',
+                                },
+                                { width: '60%',text:data_compania[0].RazonSocial, style: 'headerTra'},
+                            ],
+                        },
+                        {
+                            columns: [
+                                {   width: '70%',
+                                    text:[
+                                    {    
+                                        fontSize: 8,
+                                         text:unto+'\n',
+                                         style: 'oficinas',
+                                    },
+                                    {    margin: [0, 30, 0, 0],
+                                         fontSize: 9,
+                                         text:data_compania[0].lema1+'\n',
+                                         bold:true,
+                                         alignment: 'center'
+                                    },
+                                    {    margin: [0, 30, 0, 0],
+                                         fontSize: 10,
+                                         text:data_compania[0].lema2,
+                                         bold:true,
+                                         alignment: 'center'
+                                    },
+                                ]}, 
+                                {   
+                                    width: '40%',
+                                    table: {
+                                         widths: [180],
+                                                heights: 40,
+                                        body:[
+                                         [ { text: 'RUC:'+data_compania[0].Ruc, bold: true ,  fontSize: 10, alignment: 'center'}],
+                                         [ { text: codVen, bold: true ,  fontSize: 10, alignment: 'center'}],
+                                         [ { text: codSol, bold: true,  fontSize: 10, alignment: 'center'}]
+                                       ]
+                                    },
+                                  
+                                },
+                            ],
+                            
+                        },
+                        {   
+                        margin: [20, 5, 20, 5],
+                        table: {
+                            widths: [250,250,220],
+                            body:[
+                             [{ border: [false, true, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"CLIENTE: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:operacion[0].razonsocial_cliente,
+                                      },
+                                    ]
+                                },
+                                { border: [false, true, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"N° DOCUMENTO: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:operacion[0].documento_cliente,
+                                      },
+                                    ]
+                                },
+                                { border: [false, true, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"VENDEDOR: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:operacion[0].vendedor,
+                                      },
+                                    ]
+                                },
+                             ],
+                              [{
+                                border: [false, false, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"DIRECCIÓN: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                            text:operacion[0].direccion_cliente,
+                                      },
+                                    ]
+                                },
+                                {
+                                border: [false, false, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:"TELF: ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                              text:operacion[0].celular_cliente,
+                                      },
+                                    ]
+                                },
+                                {
+                                border: [false, false, false, false],
+                                text: [
+                                      {  fontSize: 9,
+                                         text:" ",
+                                         bold:true,
+                                      },
+                                      {    fontSize: 9,
+                                           text:"",
+                                      },
+                                    ]
+                                }
+                             ],
+                           
+                           ]
+                        },
+                      
+                    },
+                    {
+                        margin: [20, 0, 20, 5],
+                        table: {
+                          widths: [7,7,7,7,7,7,25,7,7,25,7,7,25,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,20,50,50,50,50],
+                           body: header
+                            }
+                        }
+            
+                    ],
+                     styles: {
+                        header: {
+                            fontSize: 18,
+                            bold: true,
+                            margin: [-90, 0, 0, 0],
+                            alignment: 'center'
+                        },
+                        oficinas: {
+                            fontSize: 8,
+                            margin: [20, 0, 0, 0],
+                            alignment: 'center'
+                        },
+                         headerTra: {
+                            fontSize: 19,
+                            bold: true,
+                            margin: [20, 20, 0, 0],
+                            alignment: 'center'
+                        },
+                        subheader: {
+                            fontSize: 12,
+                            bold: true,
+                            margin: [0, 0, 0,0],
+                            alignment: 'center'
+                        },
+                        footer: {
+                            fontSize: 10,
+                            margin: [0, 0, 40, 0],
+                            alignment: 'right'
+                        }
+                    },
+
+                };
+
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+
+}
 function create_pdf_movimiento(response) {
     var data_p = response.data;
     var operacion=response.operacion;
@@ -8004,7 +8038,7 @@ function create_pdf_movimiento(response) {
         var cantidad=Math.trunc(index.cantidad);
         var colunmx=[]
          cont=cont+1;   
-         colunmx.push({text:cont, colSpan: 2, fontSize: 10,height:100}, {}, {text:index.producto, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:index.almacen, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:index.localizacion, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:index.lote, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:index.unidad,colSpan: 2, fontSize: 10,height:100},{},{text:cantidad, colSpan: 3,fontSize: 10,height:100},{},{});
+         colunmx.push({text:cont, colSpan: 2, fontSize: 10,height:100}, {}, {text:index.producto, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:index.almacen, colSpan: 7, fontSize: 9,height:100}, {},{}, {}, {},{}, {}, {text:index.localizacion, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:index.lote, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:index.unidad,colSpan: 2, fontSize: 10,height:100},{},{text:cantidad, colSpan: 3,fontSize: 9,height:100},{},{});
          header.push(colunmx);
          var idenDet='I';
          mov_det.map(function(index2) {

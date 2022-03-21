@@ -16,7 +16,7 @@ use App\Http\Recopro\GuiaRemisionProducto\GuiaRemisionProductoInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Requests\GuiaRemisionRequest;
 use App\Models\BaseModel;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;  
 class GuiaRemisionController extends Controller
 {
      use GuiaRemisionTrait;

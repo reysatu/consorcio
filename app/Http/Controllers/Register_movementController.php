@@ -19,6 +19,7 @@ use App\Http\Recopro\Lot\LotInterface;
 use App\Http\Recopro\Localizacion\LocalizacionInterface;
 use App\Http\Requests\Register_movementRequest;
 use App\Http\Recopro\Serie\SerieInterface;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use Carbon\Carbon;
 use DB;
 
@@ -408,10 +409,22 @@ class Register_movementController extends Controller
     //         ]);
     //     }
     // }
-     public function pdf(Request $request, Register_movementInterface $repo)
+     public function pdf(Request $request, Register_movementInterface $repo,Solicitud_AsignacionInterface $repcom)
     {
             $id = $request->input('id');
+            $idtipoOpe = $request->input('idtipoOpe', '');
+            $data_movimientoEntrega=""; 
+            $data_movimientoEntregaArti=""; 
+            if($idtipoOpe==7){
+                 $data_movimientoEntrega=$repo->get_movimientoEntregaProf($id);
+                 $data_movimientoEntregaArti=$repo->get_movement_articulo_printProforma($id); 
+            }else{
+               $data_movimientoEntrega=$repo->get_movimientoEntrega($id); 
+               $data_movimientoEntregaArti=$repo->get_movement_articulo_printVenta($id);
+            }
             $operacion = $repo->get_movimiento($id);
+            $data_compania=$repcom->get_compania(); 
+            
             $data = $repo->find($id); 
             $data_movimiento_Articulo=$repo->get_movement_articulo_print($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
@@ -422,13 +435,13 @@ class Register_movementController extends Controller
                $data['fecha_proceso']=''; 
             };
             $data['fecha_impresion']=date("d/m/Y");
-            $img='logo.jpg';
-            $path = public_path('img/' . $img);
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
             return response()->json([
                 'status' => true,
+                'data_compania'=>$data_compania,
                 'data' => $data,
                 'operacion'=>$operacion,
                 'movimiento_Ar'=>$data_movimiento_Articulo,
@@ -436,6 +449,8 @@ class Register_movementController extends Controller
                 'data_movimiento_serie'=>$data_movimiento_serie,
                 'estado'=>$id,
                 'img'=>$image,
+                'data_movimientoEntrega'=>$data_movimientoEntrega,
+                'data_movimientoEntregaArti'=>$data_movimientoEntregaArti,
             ]);
     }
 
