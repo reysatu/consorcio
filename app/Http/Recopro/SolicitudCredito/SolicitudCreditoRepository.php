@@ -23,13 +23,24 @@ class SolicitudCreditoRepository implements SolicitudCreditoInterface
     public function search($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
-            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+            $q->whereIn('estado', [6]) // facturados
+                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
                 ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
+    public function search_refinanciamientos($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->whereIn('estado', [7])->whereIn('tipo_solicitud', [2, 3]) // solo creditos y despachados
+                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
+                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
+                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_solicitud', 'DESC');
+    }
  
 
     public function all()

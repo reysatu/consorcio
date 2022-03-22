@@ -910,14 +910,30 @@
                                 stock = Math.trunc(item.remitido);
                             }
                         });
+                        
+                        console.log(naturalezaGeneral+" <=> "+stock);
+
                         if (naturalezaGeneral == "S" || naturalezaGeneral == "D") {
-                            if (stock > 0) {
+                            if($("#cCodConsecutivoOS").val() != "") {
+                                if (stock > 0) {
+                                    if (itemdos.idLocalizacion == idLocalizacion) {
+                                        idLocali.append('<option selected value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
+                                    } else {
+                                        idLocali.append('<option value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
+                                    }
+                                }
+                            }
+                           
+                            if($("#idventa").val() != "") {
+                               
                                 if (itemdos.idLocalizacion == idLocalizacion) {
                                     idLocali.append('<option selected value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
                                 } else {
                                     idLocali.append('<option value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
                                 }
+                                
                             }
+                           
                         } else {
                             if (itemdos.idLocalizacion == idLocalizacion) {
 

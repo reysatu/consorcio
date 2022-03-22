@@ -285,6 +285,24 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+
+    public function update_stock($idventa)
+    {
+        $sql = "
+        DECLARE	@return_value int
+
+        EXEC	@return_value = [dbo].[VTA_Registra_Movimiento_Vta_OS]
+                @nIdVenta = ".$idventa."
+
+        SELECT	'Return Value' = @return_value";
+
+        // echo $sql; exit;
+        $res = DB::select($sql);
+
+        // print_r($res);
+        return $res;
+    }
+
   
     
 

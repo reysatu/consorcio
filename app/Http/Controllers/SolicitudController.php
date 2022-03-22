@@ -51,12 +51,12 @@ class SolicitudController extends Controller
     }
 
 
-    public function list_solicitudes_refinanciamiento(Request $request, SolicitudInterface $repo)
+    public function list_solicitudes_refinanciamiento(Request $request, SolicitudCreditoInterface $repo_credito)
     {
         $s = $request->input('search', '');
         $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
-        return parseList($repo->search_solicitudes_refinanciamiento($s), $request, 'cCodConsecutivo', $params);
+        return parseList($repo_credito->search_refinanciamientos($s), $request, 'cCodConsecutivo', $params);
     }
 
     public function list_creditos(Request $request, SolicitudCreditoInterface $repo)
@@ -99,11 +99,11 @@ class SolicitudController extends Controller
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
 
-            
+            $data["saldo"] = $data["t_monto_total"];
         
             if($data["nConsecutivo"] == "") {
                 //SALDOS
-                $data["saldo"] = $data["t_monto_total"];
+               
                 $data["facturado"] = 0;
                 $data["pagado"] = 0;
                 $data["nConsecutivo"] = $repo->get_consecutivo($data["cCodConsecutivo"]);

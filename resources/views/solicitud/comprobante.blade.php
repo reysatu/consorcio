@@ -317,7 +317,7 @@
         <br>
         <br>
         <br>
-        <?php if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") { ?>
+        <?php if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03" && count($solicitud) > 0) { ?>
         <table style="width: 100%;">
             <tr>
                 <td style="width: 20%;">Vendedor:</td>

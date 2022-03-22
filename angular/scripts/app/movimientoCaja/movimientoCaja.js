@@ -78,7 +78,7 @@
                     // console.log();
 
                     if (data.length > 0) {
-
+                        $(".separacion").hide();
                         modalMovimientoCaja.modal('show');
                     } else {
                         AlertFactory.textType({
@@ -685,6 +685,15 @@
                         });
                         getDataFormMovementCaja();
                         $('#table_container_movimientoCaja').jtable('reload');
+                        LoadRecordsButtonComprobantes.click();
+
+                        if(response.idventa != "") {
+                            var id = "0|0|" + response.idventa;
+
+                
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+                        }
+                       
 
                         // estadoMc.val(cajaGuar[0].estado);
                         // caja_text.val(cajaGuar[0].nombre_caja);
