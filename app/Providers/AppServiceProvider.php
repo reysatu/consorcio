@@ -102,6 +102,11 @@ use App\Http\Recopro\FormasPago\FormasPago;
 use App\Http\Recopro\FormasPago\FormasPagoInterface;
 use App\Http\Recopro\FormasPago\FormasPagoRepository;
 
+use App\Http\Recopro\ResumenMensualActividad\ResumenMensualActividad;
+use App\Http\Recopro\ResumenMensualActividad\ResumenMensualActividadInterface;
+use App\Http\Recopro\ResumenMensualActividad\ResumenMensualActividadRepository;
+
+
 use App\Http\Recopro\Motivos\Motivos;
 use App\Http\Recopro\Motivos\MotivosInterface;
 use App\Http\Recopro\Motivos\MotivosRepository;
@@ -708,6 +713,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCategoriaVehicular();
         $this->registerCompania();
         $this->registerFormasPago();
+        $this->registerResumenMensualActividad();
         $this->registerMotivos();
         $this->registerCajaUsuario();
         $this->registerCajaDiaria();
@@ -1129,7 +1135,14 @@ class AppServiceProvider extends ServiceProvider
             return new CompaniaRepository(new Compania());
         });
     }
+      public function registerResumenMensualActividad()
+    {
+        $app = $this->app;
 
+        $app->bind(ResumenMensualActividadInterface::class, function ($app) {
+            return new ResumenMensualActividadRepository(new ResumenMensualActividad());
+        });
+    }
     public function registerFormasPago()
     {
         $app = $this->app;
