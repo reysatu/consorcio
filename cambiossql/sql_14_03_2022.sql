@@ -243,3 +243,19 @@ select pr.code_article,pr.description as producto,gp.cantidad,un.descripcion as 
 SELECT *,tt.descripcion as traslado , FORMAT(g.fechaEmision, 'yyyy-MM-dd') AS fechaEmision, FORMAT(g.fechaInicioTraslado, 'yyyy-MM-dd') AS fechaInicioTraslado from ERP_GuiaRemision as g inner join ERP_TipoTraslado as tt on (tt.id=g.idtraslado) WHERE g.cCodConsecutivo='{$cCodConsecutivo}' AND g.nConsecutivo={$nConsecutivo}
 
 select * from ERP_TipoTraslado
+
+
+
+
+select oser.id_tipoveh,prog.IdMoneda,tOr.MontoSerOrden+tOr.MontoSerOrden as totalservicio ,oser.id_tipomant,tdra.REPUESTO,TDRA.ACEITE,prog.cCodConsecutivo,prog.nConsecutivo,tOr.MontoSerOrden,tSpr.MontoSerPro from ERP_Proforma as prog left join (select sum(od.nTotal) as MontoSerOrden,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where os.iEstado=3  GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant) as tOr on (prog.cCodConsecutivoOS=tOr.cCodConsecutivo and prog.nConsecutivoOS=tOr.nConsecutivo) left join (select sum( prMo.nTotal) as MontoSerPro,pro.cCodConsecutivo,pro.nConsecutivo from ERP_Proforma as pro inner join ERP_ProformaMO as prMo on (pro.cCodConsecutivo=prMo.cCodConsecutivo and pro.nConsecutivo=prMo.nConsecutivo) where pro.iEstado=5 GROUP BY prMo.nCant, pro.cCodConsecutivo,pro.nConsecutivo) as tSpr on (tspr.cCodConsecutivo=prog.cCodConsecutivo and tspr.nConsecutivo=prog.nConsecutivo) left join (select prf.cCodConsecutivo, prf.nConsecutivo,sum(CASE  
+             WHEN p.idCategoria =3 THEN prf.nTotal 
+              ELSE 0 
+           END) as REPUESTO, sum(CASE  
+             WHEN p.idCategoria =4 THEN prf.nTotal 
+              ELSE 0 
+           END) as ACEITE
+from ERP_ProformaDetalle as prf inner join ERP_Productos as p on (p.id=prf.idProducto) 
+where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as tdra on (tdra.cCodConsecutivo=prog.cCodConsecutivo and tdra.nConsecutivo=prog.nConsecutivo) INNER JOIN ERP_OrdenServicio AS oser on(oser.cCodConsecutivo=prog.cCodConsecutivoOS and oser.nConsecutivo=prog.nConsecutivoOS) where prog.iEstado=5 AND MONTH(oser.dFecRec) = $mes AND YEAR(oser.dFecRec) = $Anio
+
+
+
