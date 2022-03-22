@@ -4516,6 +4516,742 @@ function createReporteRepuestoPDF(response) {
     // }
       pdfMake.createPdf(docDefinition).print({}, win);
 }
+function createReporteMensualPDF(response) {
+    var img=response.img;
+    var simboloMoneda=response.simboloMoneda;
+    var data=response.data;
+    var data_orden=response.data_orden;
+    var data_compania=response.data_compania;
+    var usuario=response.usuario;
+    var cambio=response.cambio;
+    var dataBodyReportes=[];
+    var dataBodyReportesDol=[];
+    var mes=response.mes;
+    console.log(simboloMoneda);
+    var m1=0;
+    var m2=0;
+    var mp=0;
+    var mm=0;
+    var mc=0;
+    var mr=0;
+    var mg=0;
+    var mi=0;
+    var ma=0;
+    var sra=0;
+    var rpa=0;
+    var lua=0;
+
+    var m1b=0;
+    var m2b=0;
+    var mpb=0;
+    var mmb=0;
+    var mcb=0;
+    var mrb=0;
+    var mgb=0;
+    var mib=0;
+    var mab=0;
+    var srb=0;
+    var rpb=0;
+    var lua=0;
+    var tota=0;
+    var totb=0;
+    var montoRep=0;
+    var montoAcie=0;
+    var montoServi=0;
+    var m1r=0;
+    var m2r=0;
+    var mpr=0;
+    var mmr=0;
+    var mcr=0;
+    var mrr=0;
+    var mgr=0;
+    var mir=0;
+    var mar=0;
+
+    var m1s=0;
+    var m2s=0;
+    var mps=0;
+    var mms=0;
+    var mcs=0;
+    var mrs=0;
+    var mgs=0;
+    var mis=0;
+    var mas=0;
+
+    var m1l=0;
+    var m2l=0;
+    var mpl=0;
+    var mml=0;
+    var mcl=0;
+    var mrl=0;
+    var mgl=0;
+    var mil=0;
+    var mal=0;
+
+
+    var m1br=0;
+    var m2br=0;
+    var mpbr=0;
+    var mmbr=0;
+    var mcbr=0;
+    var mrbr=0;
+    var mgbr=0;
+    var mibr=0;
+    var mabr=0;
+
+    var m1bs=0;
+    var m2bs=0;
+    var mpbs=0;
+    var mmbs=0;
+    var mcbs=0;
+    var mrbs=0;
+    var mgbs=0;
+    var mibs=0;
+    var mabs=0;
+
+    var m1bl=0;
+    var m2bl=0;
+    var mpbl=0;
+    var mmbl=0;
+    var mcbl=0;
+    var mrbl=0;
+    var mgbl=0;
+    var mibl=0;
+    var mabl=0;
+
+    var totaMoa=0;
+    var totaRea=0;
+    var totaACa=0;
+
+    var totaMob=0;
+    var totaReb=0;
+    var totaACb=0;
+     var tofinR=0;
+     var tofinL=0;
+
+     data.map(function(index) {
+       // if(index.IdMoneda==1){
+       //      montoRep=Number(index.REPUESTO)/Number(cambio[0].Mensaje);
+       //      montoAcie=Number(index.ACEITE)/Number(cambio[0].Mensaje);
+       //      montoServi=Number(index.totalservicio)/Number(cambio[0].Mensaje);
+       // }
+       // else{
+            montoRep=Number(index.REPUESTO);
+            montoAcie=Number(index.ACEITE);
+            montoServi=Number(index.MontoSerPro);
+       // }
+       if(index.id_tipoveh==1){
+            if(index.id_tipomant==1){
+             
+                m1r=Number(m1r)+Number(montoRep);
+                m1s=Number(m1s)+Number(montoServi);
+                m1l=Number(m1l)+Number(montoAcie); 
+            }else if(index.id_tipomant==2){
+              
+                m2r=Number(m2r)+Number(montoRep);
+                m2s=Number(m2s)+Number(montoServi);
+                m2l=Number(m2l)+Number(montoAcie); 
+            }else if(index.id_tipomant==3){
+            
+                mpr=Number(mpr)+Number(montoRep);
+                mps=Number(mps)+Number(montoServi);
+                mpl=Number(mpl)+Number(montoAcie); 
+            }else if(index.id_tipomant==4){
+              
+                mmr=Number(mmr)+Number(montoRep); 
+                mms=Number(mms)+Number(montoServi);
+                mml=Number(mml)+Number(montoAcie); 
+            }else if(index.id_tipomant==5){
+              
+                mcr=Number(mcr)+Number(montoRep);
+                 mcs=Number(mcs)+Number(montoServi);
+                 mcl=Number(mcl)+Number(montoAcie); 
+            }else if(index.id_tipomant==6){
+              
+                mrr=Number(mrr)+Number(montoRep); 
+                 mrs=Number(mrs)+Number(montoServi);
+                mrl=Number(mrl)+Number(montoAcie);  
+            }else if(index.id_tipomant==7){
+               
+                mgr=Number(mgr)+Number(montoRep);
+                mgs=Number(mgs)+Number(montoServi);
+               mgl=Number(mgl)+Number(montoAcie);  
+            }else if(index.id_tipomant==8){
+               
+                mir=Number(mir)+Number(montoRep); 
+                mis=Number(mis)+Number(montoServi);
+               mil=Number(mil)+Number(montoAcie);   
+            }else if(index.id_tipomant==8){
+              
+                mar=Number(mar)+Number(montoRep);
+                mas=Number(mas)+Number(montoServi);
+                mal=Number(mal)+Number(montoAcie); 
+            }
+            totaRea=Number(totaRea)+montoRep;
+            console.log("entro bl");
+            console.log(totaMoa);
+            totaMoa=Number(montoServi)+totaMoa;
+            totaACa=Number(montoAcie)+ totaACa;
+       }else{
+        console.log("entro acá");
+            if(index.id_tipomant==1){
+               
+                m1br=Number(m1br)+Number(montoRep);
+                m1bs=Number(m1bs)+Number(montoServi);
+                 m1bl=Number(m1bl)+Number(montoAcie);
+
+            }else if(index.id_tipomant==2){
+              
+                 m2br=Number(m2br)+Number(montoRep);
+                 m2bs=Number(m2bs)+Number(montoServi);
+                  m2bl=Number(m2bl)+Number(montoAcie);
+            }else if(index.id_tipomant==3){
+               
+                 mpbr=Number(mpbr)+Number(montoRep);
+                 mpbs=Number(mpbs)+Number(montoServi);
+                  mpbl=Number(mpbl)+Number(montoAcie);
+            }else if(index.id_tipomant==4){
+               
+                 mmbr=Number(mmbr)+Number(montoRep);
+                 mmbs=Number(mmbs)+Number(montoServi);
+                  mmbl=Number(mmbl)+Number(montoAcie);
+            }else if(index.id_tipomant==5){
+              
+                 mcbr=Number(mcbr)+Number(montoRep);
+                 mcbs=Number(mcbs)+Number(montoServi);
+                 mcbl=Number(mcbl)+Number(montoAcie); 
+
+            }else if(index.id_tipomant==6){
+               
+                 mrbr=Number(mrbr)+Number(montoRep);
+                 mrbs=Number(mrbs)+Number(montoServi);
+                 mrbl=Number(mrbl)+Number(montoAcie); 
+
+            }else if(index.id_tipomant==7){
+              
+                 mgbr=Number(mgbr)+Number(montoRep);
+                 mgbs=Number(mgbs)+Number(montoServi);
+                 mgbl=Number(mgbl)+Number(montoAcie); 
+            }else if(index.id_tipomant==8){
+                
+                 mibr=Number(mibr)+Number(montoRep);
+                 mibs=Number(mibs)+Number(montoServi);
+                 mibl=Number(mibl)+Number(montoAcie); 
+            }else if(index.id_tipomant==8){
+                
+                 mabr=Number(mabr)+Number(montoRep);
+                 mabs=Number(mabs)+Number(montoServi);
+                 mabl=Number(mabl)+Number(montoAcie); 
+            }
+            totaReb=Number(montoRep)+totaReb;
+            totaMob=Number(montoServi)+totaMob;
+            totaACb=Number(montoAcie)+ totaACb;
+            
+       }
+    });
+    data_orden.map(function(index) {
+       // if(index.IdMoneda==1){
+       //      montoRep=Number(index.REPUESTO)/Number(cambio[0].Mensaje);
+       //      montoAcie=Number(index.ACEITE)/Number(cambio[0].Mensaje);
+       //      montoServi=Number(index.totalservicio)/Number(cambio[0].Mensaje);
+       // }
+       // else{
+         
+       
+            montoServi=Number(index.MontoSerOrden);
+       // }
+       if(index.id_tipoveh==1){
+            if(index.id_tipomant==1){
+                m1=m1+1;
+                m1s=Number(m1s)+Number(montoServi);
+            }else if(index.id_tipomant==2){
+                m2=m2+1;
+                m2s=Number(m2s)+Number(montoServi);
+            }else if(index.id_tipomant==3){
+                mp=mp+1;
+               
+                mps=Number(mps)+Number(montoServi);
+               
+            }else if(index.id_tipomant==4){
+                mm=mm+1;
+               
+                mms=Number(mms)+Number(montoServi);
+             
+            }else if(index.id_tipomant==5){
+                mc=mc+1;
+              
+                 mcs=Number(mcs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==6){
+                mr=mr+1;
+                 mrs=Number(mrs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==7){
+                mg=mg+1;
+             
+                mgs=Number(mgs)+Number(montoServi);
+            
+            }else if(index.id_tipomant==8){
+                mi=mi+1;
+              
+                mis=Number(mis)+Number(montoServi);
+           
+            }else if(index.id_tipomant==8){
+                ma=ma+1;
+               
+                mas=Number(mas)+Number(montoServi);
+               
+            }
+     
+            totaMoa=Number(montoServi)+totaMoa;
+       
+            tota=tota+1;
+       }else{
+        console.log("entro acá");
+            if(index.id_tipomant==1){
+                m1b=m1b+1;
+              
+                m1bs=Number(m1bs)+Number(montoServi);
+             
+
+            }else if(index.id_tipomant==2){
+                m2b=m2b+1;
+             
+                 m2bs=Number(m2bs)+Number(montoServi);
+               
+            }else if(index.id_tipomant==3){
+                mpb=mpb+1;
+              
+                 mpbs=Number(mpbs)+Number(montoServi);
+               
+            }else if(index.id_tipomant==4){
+                mmb=mmb+1;
+               
+                 mmbs=Number(mmbs)+Number(montoServi);
+                
+            }else if(index.id_tipomant==5){
+                mcb=mcb+1;
+               
+                 mcbs=Number(mcbs)+Number(montoServi);
+             
+
+            }else if(index.id_tipomant==6){
+                mrb=mrb+1;
+                
+                 mrbs=Number(mrbs)+Number(montoServi);
+              
+
+            }else if(index.id_tipomant==7){
+                mgb=mgb+1;
+               
+                 mgbs=Number(mgbs)+Number(montoServi);
+                 
+            }else if(index.id_tipomant==8){
+                mib=mib+1;
+                
+                 mibs=Number(mibs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==8){
+                mab=mab+1;
+              
+                 mabs=Number(mabs)+Number(montoServi);
+                
+            }
+       
+            totaMob=Number(montoServi)+totaMob;
+            totb=totb+1;
+       }
+    });
+tofinR=Number(totaReb)+Number(totaRea);
+tofinL=Number(totaACb)+Number(totaACa);
+    
+console.log(totaMoa);
+console.log("ddd");
+    if(mes==1){
+        mes='Enero';
+    }else if(mes==2){
+        mes='Febrero';
+    }else if(mes==3){
+        mes='Marzo';
+    }
+    else if(mes==4){
+        mes='Abril';
+    }
+    else if(mes==5){
+        mes='Mayo';
+    }
+    else if(mes==6){
+        mes='Junio';
+    }
+    else if(mes==7){
+        mes='Julio';
+    }
+    else if(mes==8){
+        mes='Agosto';
+    }
+    else if(mes==9){
+        mes='Septiembre';
+    }else if(mes==10){
+        mes='Octubre';
+    }
+    else if(mes==11){
+        mes='Noviembre';
+    }
+    else if(mes==12){
+        mes='Diciembre';
+    }
+    var Anio=response.Anio;
+    console.log(data);
+    console.log(mes);
+    console.log(Anio);
+    console.log(usuario);
+    console.log(cambio);
+    // moment().format('DD [de] MMMM [de] YYYY, h:mm A')
+    var docDefinition = {
+
+        // a string or { width: number, height: number }
+        pageSize: "A4",
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: 'portrait',
+        pageMargins: [15, 20, 15, 20],
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        // pageMargins: [15, 15, 15, 15],
+        content: [
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [120, 120]
+                            }
+                        ]
+                    },
+                    {text:"RESUMEN MENSUAL DE ACTIVIDADES", style: 'header'}
+                ],
+                
+            },
+            {text:[
+                        {    
+                             fontSize: 10,
+                             text:"Conseccionario/STA: ",
+                              bold:true,
+                              alignment: 'center',
+                        },
+                        {   
+                             fontSize: 10,
+                             text:data_compania[0].RazonSocial,
+                             alignment: 'center',
+                        },
+                    ]}, 
+            {
+                columns: [
+                     {     margin: [90, 0, 0, 0],
+                        text:[
+                        {    
+                             fontSize: 10,
+                             text:"Fecha Reporte: ",
+                              bold:true,
+                           
+                        },
+                        {   
+                             fontSize: 10,
+                             text:moment().format('DD [de] MMMM [de] YYYY'),
+                        },
+                    ]},
+                    {text:[
+                        {    
+                             fontSize: 10,
+                             text:"Responsable: ",
+                              bold:true,
+                              margin: [0, 0, 0, 0],
+                        },
+                        {   
+                             fontSize: 10,
+                             text:usuario[0].name,
+                        },
+                    ]}, 
+                    
+                ],
+                
+            },
+            {
+                columns: [
+                     {     margin: [90, 0, 0, 0],
+                        text:[
+                        {    
+                             fontSize: 10,
+                             text:"Año : ",
+                              bold:true,
+                           
+                        },
+                        {   
+                             fontSize: 10,
+                             text:Anio,
+                        },
+                    ]},  
+                    {    margin: [10, 0, 0, 0],
+                        text:[
+                        {    
+                             fontSize: 10,
+                             text:"Mes: ",
+                              bold:true,
+                           
+                        },
+                        {   
+                             fontSize: 10,
+                             text:mes,
+                        },
+                    ]},
+                    {   text:[
+
+                        {    
+                             fontSize: 10,
+                             text:"Tipo de cambio: ",
+                              bold:true,
+                              margin: [0, 0, 0, 0],
+                        },
+                        {   
+                             fontSize: 10,
+                             text:cambio[0].Mensaje,
+                        },
+                    ]}, 
+                    
+                ],
+                
+            },
+            {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {   
+                        style: 'tableExample',
+                        width: '100%',
+                        table: {
+                             widths: [550],
+                            body:[
+                             [ { text: 'Reporte de Sercicio Técnico', fillColor: '#eeeeee', fontSize: 10, alignment: 'center'}],
+                             [ { text: 'Ingresos por Sercicio 2W Taller',fillColor: '#eeeeee', fontSize: 10, alignment: 'center'}],
+                           ]
+                        },
+                      
+            },
+             {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {
+                columns: [
+                    {   
+                        style: 'tableExample',
+                        width: '50%',
+                        table: {
+                             widths: [120,140],
+                            body:[
+                             [ { border: [false, false, false,false],text: 'Tipo de Mantenimiento',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false], text: 'Cantidad de Servicios (Taller)',bold:true,  fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: "\n",fontSize: 10, alignment: 'center',},{border: [false, false, false,false], text: '', fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento 1:',fontSize: 10, },{ text: m1, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento 2',fontSize: 10, },{ text: m2, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento Periódico:',fontSize: 10, },{ text: mp, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reparación (Mecánica):',fontSize: 10, },{ text: mm, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reparación (Colisión):',fontSize: 10, },{ text: mc, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Servicio Rápido:',fontSize: 10, },{ text: mr, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reclamo de Garantía:',fontSize: 10, },{ text: mg, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Orden de Servicio Interna:',fontSize: 10, },{ text: mi, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Accesorios:',fontSize: 10,},{ text: ma, fontSize: 10, alignment: 'center'}],
+                              [ { border: [false, false, false,false],text: 'Total:',fontSize: 10,bold:true},{ text: tota, fontSize: 10, alignment: 'center',bold:true}],
+                           ]
+                        },
+                      
+                    },
+                    {    
+                         fontSize: 8,
+                         text:' ',
+                    },
+                    {   
+                        style: 'tableExample',
+                        width: '50%',
+                        table: {
+                             widths: [83,83,83],
+                            body:[
+                               [ { text: 'Facturación ('+simboloMoneda[0].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
+                              [ { border: [false, false, false,false] , text: 'Mano de Obra',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Repuestos',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Lubricantes',bold:true,  fontSize: 10, alignment: 'center'}],
+                             [ { text: addCommas(redondeodecimale(m1s).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1r).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1l).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                              [ { text: addCommas(redondeodecimale(m2s).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2r).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2l).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                               [ { text: addCommas(redondeodecimale(mps).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mpr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mpl).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                [ { text: addCommas(redondeodecimale(mms).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mmr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mml).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                 [ { text: addCommas(redondeodecimale(mcs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mcr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mcl).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                  [ { text: addCommas(redondeodecimale(mrs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mrr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mrl).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                   [ { text: addCommas(redondeodecimale(mgs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mgr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mgl).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                    [ { text: addCommas(redondeodecimale(mis).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mir).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mil).toFixed(2)),  fontSize: 10, alignment: 'center'}],
+                                   [ { text: addCommas(redondeodecimale(mas).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mar).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mal).toFixed(2)),  fontSize: 10, alignment: 'center'}],  
+                                     [ { text: addCommas(redondeodecimale(totaMoa).toFixed(2)),fontSize: 10, alignment: 'center',bold:true},{ bold:true,text:addCommas(redondeodecimale(totaRea).toFixed(2)) , fontSize: 10, alignment: 'center'},{bold:true, text: addCommas(redondeodecimale(totaACa).toFixed(2)),  fontSize: 10, alignment: 'center'}],  
+                           ]
+                        },
+                      
+                    },
+                ],
+                
+            },
+            {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {   
+                        style: 'tableExample',
+                        width: '100%',
+                        table: {
+                             widths: [550],
+                            body:[
+                             [ { text: 'Ingresos por Sercicio 3W Taller',fillColor: '#eeeeee', fontSize: 10, alignment: 'center'}],
+                           ]
+                        },
+                      
+            },
+             {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {
+                columns: [
+                    {   
+                        style: 'tableExample',
+                        width: '50%',
+                        table: {
+                             widths: [120,140],
+                            body:[
+                             [ { border: [false, false, false,false],text: 'Tipo de Mantenimiento',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false], text: 'Cantidad de Servicios (Taller)',bold:true,  fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: "\n",fontSize: 10, alignment: 'center',},{border: [false, false, false,false], text: '', fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento 1:',fontSize: 10, },{ text: m1b, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento 2',fontSize: 10, },{ text: m2b, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Mantenimiento Periódico:',fontSize: 10, },{ text: mpb, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reparación (Mecánica):',fontSize: 10, },{ text: mmb, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reparación (Colisión):',fontSize: 10, },{ text: mcb, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Servicio Rápido:',fontSize: 10, },{ text: mrb, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Reclamo de Garantía:',fontSize: 10, },{ text: mgb, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Orden de Servicio Interna:',fontSize: 10, },{ text: mib, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Accesorios:',fontSize: 10,},{ text: mab, fontSize: 10, alignment: 'center'}],
+                             [ { border: [false, false, false,false],text: 'Total:',fontSize: 10,bold:true},{ text: totb, fontSize: 10, alignment: 'center',bold:true}],
+                           ]
+                        },
+                      
+                    },
+                    {    
+                         fontSize: 8,
+                         text:' ',
+                    },
+                    {   
+                        style: 'tableExample',
+                        width: '50%',
+                        table: {
+                             widths: [83,83,83],
+                            body:[
+                               [ { text: 'Facturación ('+simboloMoneda[0].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
+                              [ { border: [false, false, false,false] , text: 'Mano de Obra',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Repuestos',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Lubricantes',bold:true,  fontSize: 10, alignment: 'center'}],
+                             [ { text: addCommas(redondeodecimale(m1bs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1br).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1bl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                              [ { text: addCommas(redondeodecimale(m2bs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2br).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2bl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                               [ { text: addCommas(redondeodecimale(mpbs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mpbr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mpbl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                [ { text: addCommas(redondeodecimale(mmbs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mmbr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mmbl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                 [ { text: addCommas(redondeodecimale(mcbs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mcbr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mcbl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                  [ { text: addCommas(redondeodecimale(mrbs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mrbr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mrbl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                   [ { text: addCommas(redondeodecimale(mgbs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mgbr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mgbl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                    [ { text: addCommas(redondeodecimale(mibs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mibr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mibl).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                                   [ { text: addCommas(redondeodecimale(mabs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mabr).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(mabl).toFixed(2)), fontSize: 10, alignment: 'center'}],  
+                                   [ { text: addCommas(redondeodecimale(totaMob).toFixed(2)),fontSize: 10, alignment: 'center',bold:true},{ bold:true,text:  addCommas(redondeodecimale(totaReb).toFixed(2)) , fontSize: 10, alignment: 'center'},{bold:true, text: addCommas(redondeodecimale(totaACb).toFixed(2)),  fontSize: 10, alignment: 'center'}],  
+                           ]
+                        },
+                      
+                    },
+                ],
+                
+            },
+             {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {   
+                        style: 'tableExample',
+                        width: '100%',
+                        table: {
+                             widths: [550],
+                            body:[
+                             [ { text: 'Ingresos por Venta de Repuestos y Lubricantes ',fillColor: '#eeeeee', fontSize: 10, alignment: 'center'}],
+                           ]
+                        },
+                      
+            },
+             {    
+                 fontSize: 8,
+                 text:'\n',
+                 style: 'oficinas',
+            },
+            {   
+                        style: 'tableExample',
+                        width: '50%',
+                        table: {
+                             widths: [100,100,100],
+                            body:[
+                           
+                              [ { border: [false, false, false,false] , text: ' ',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Venta de Repuestos',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Venta de Lubricantes',bold:true,  fontSize: 10, alignment: 'center'}],
+                             [ { text: 'Total',fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(tofinR).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(tofinL).toFixed(2)), fontSize: 10, alignment: 'center'}],
+                             
+                           ]
+                        },
+                      
+            },
+            
+           
+           
+        ],
+        styles: {
+            header: {
+                fontSize: 16,
+                bold: true,
+                margin: [-90, 0, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 0, 0,0],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
+    };
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // }
+      pdfMake.createPdf(docDefinition).print({}, win);
+}
 function createReporteGuiaRemisionPDF(response) {
     var img=response.img;
     var data=response.data;

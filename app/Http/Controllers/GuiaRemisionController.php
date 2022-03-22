@@ -268,7 +268,8 @@ class GuiaRemisionController extends Controller
             $data_articulo_noser=$repo->get_guiaArticuloNoser($cCodConsecutivo,$nConsecutivo); 
             $data_articulo_ser=$repo->get_guiaArticuloser($cCodConsecutivo,$nConsecutivo);
             // $simboloMoneda = $repom->getSimboloMoneda();
-            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            $path = public_path('/'.$data_compania[0]->ruta_logo); 
+            
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
