@@ -54,7 +54,7 @@
                 if (!_.isUndefined(response.status) && response.status) {
                     
 
-                    $("#idcobrador").append('<option value="" selected>Seleccionar</option>');
+                    $("#idcobrador").append('<option value="" selected>Todos</option>');
                     response.cobrador.map(function (index) {
                        $("#idcobrador").append('<option value="'+index.id+'">'+index.descripcion+'</option>');
                     });
