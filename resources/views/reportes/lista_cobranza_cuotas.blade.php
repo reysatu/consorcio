@@ -15,18 +15,21 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 4.5cm;
-            margin-left: 0.5cm;
-            margin-right: 0.5cm;
+           
+            margin-top: 5.5cm;
+            margin-left: 0.25cm;
+            margin-right: 0.25cm;
+            /* border: 1px solid red; */
             /* margin-bottom: 2cm; */
         }
             
         header {
             position: fixed;
-            top: 0.9cm;
-            left: 0.5cm;
-            right: 0.5cm;
-            height: 4.5cm;
+            top: 0.2cm;
+            left: 0.25cm;
+            right: 0.25cm;
+            height: 5.3cm;
+            /* border: 1px solid blue; */
             /* text-align: center; */
             /* line-height: 0.8cm; */
              font-family: 'Roboto', sans-serif;
@@ -81,7 +84,7 @@
         #tabla-header {
             border-collapse: collapse;
         }
-        #tabla-header, #tabla-heade th, #tabla-header td {
+        #tabla-header, #tabla-header th, #tabla-header td {
             border: 1px solid;
         }
     </style>
@@ -89,7 +92,7 @@
 </head>
 <body>
 
-<header style="">
+    <header style="">
         <div class="row">
             <div class="col" style="width: 25%; /*border: 1px solid black;*/ text-align: center;">
                 <img style="width: 100%; height: 100px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
@@ -112,30 +115,30 @@
             </div>
         </div>
         <br>
-       <table id="tabla-header"  style="width: 1000px; font-size: 11px !important;">
+       <table id="tabla-header"  style="width: 100%; font-size: 11px !important;">
            
             <tr>
                 <td style="font-weight  : bold; width: 80px;" align="center" rowspan="2">Fec. Ult. Pago</td>
                 <td style="font-weight  : bold; width: 200px;" align="center" rowspan="2">Cliente</td>
-                <td style="font-weight  : bold; width: 20px;" align="center" rowspan="2"># Cta</td>
+                <td style="font-weight  : bold; width: 30px;" align="center" rowspan="2"># Cta</td>
                 <td style="font-weight  : bold; width: 40px;" align="center" rowspan="2">Nro Recibo</td>
-                <td style="font-weight  : bold; width: 80px;" align="center" rowspan="2">Fecha Vencimiento</td>
-                <td style="font-weight  : bold; width: 70px;" align="center" rowspan="2">Moneda Doc.</td>
+                <td style="font-weight  : bold; width: 70px;" align="center" rowspan="2">Fecha Vencimiento</td>
+                <td style="font-weight  : bold; width: 50px;" align="center" rowspan="2">Moneda Doc.</td>
                 <td style="font-weight  : bold; width: 50px;" align="center" rowspan="2">Total Cta Soles</td>
-                <td style="font-weight  : bold; width: 130px;" align="center" colspan="3">Montos Cobrados Soles</td>
+                <td style="font-weight  : bold; width: 130px;" align="center" colspan="2">Montos Cobrados Soles</td>
                 <td style="font-weight  : bold; width: 30px;" align="center" rowspan="2">Total Cta Dolares</td>
-                <td style="font-weight  : bold; width: 90px;" align="center" colspan="3">Montos Cobrados Dolares</td>
+                <td style="font-weight  : bold; width: 140px;" align="center" colspan="2">Montos Cobrados Dolares</td>
                 <td style="font-weight  : bold; width: 50px;" align="center" rowspan="2">Atraso</td>
                 <td style="font-weight  : bold; width: 80px;" align="center" rowspan="2">Estado</td>
                 <td style="font-weight  : bold; width: 80px;" align="center" rowspan="2">Nro Cobranza</td>
             </tr>
             <tr>
-                <td style="font-weight  : bold; width: 50px;" align="center" >Monto Cta.</td>
-                <td style="font-weight  : bold; width: 30px;" align="center" >Pto Pago</td>
-                <td style="font-weight  : bold; width: 50px;" align="center" >Mora</td>
-                <td style="font-weight  : bold; width: 30px;" align="center" >Monto Cta.</td>
-                <td style="font-weight  : bold; width: 30px;" align="center" >Pto Pago</td>
-                <td style="font-weight  : bold; width: 30px;" align="center" >Mora</td>
+                <td style="font-weight  : bold; width: 65px;" align="center" >Monto Cta.</td>
+                <!-- <td style="font-weight  : bold; width: 30px;" align="center" >Pto Pago</td> -->
+                <td style="font-weight  : bold; width: 65px;" align="center" >Mora</td>
+                <td style="font-weight  : bold; width: 70px;" align="center" >Monto Cta.</td>
+                <!-- <td style="font-weight  : bold; width: 30px;" align="center" >Pto Pago</td> -->
+                <td style="font-weight  : bold; width: 70px;" align="center" >Mora</td>
                 
             </tr>
           
@@ -147,7 +150,7 @@
     </header>
         
     <main>  
-        <br><br><br><br><br>
+       
         
         <?php 
 
@@ -156,28 +159,29 @@
             foreach ($cobradores as $key => $value) {
                 echo $value->idCobrador." ".$value->cobrador;
                 echo '<hr>';
-                echo '<table style="width: 1000px; font-size: 11px !important; ">';
+                echo '<table style="width: 100%; font-size: 11px !important; ">';
                    
                     foreach ($value->pagos as $kp => $vp) {
-                        $total += (float) $vp->t_monto_total;
+                        $total += (float) $vp->valor_cuota_pagada + (float) $vp->int_moratorio_pagado;
+                        $total_cte_soles =  (float) $vp->valor_cuota_pagada + (float) $vp->int_moratorio_pagado;
                         $mora += (float) $vp->int_moratorio_pagado;
                         echo '<tr>';   
                         echo '  <td style="width: 80px !important;">'.$vp->fecha_emision.'</td>';
-                        echo '  <td style="width: 200px !important;">'.$vp->razonsocial_cliente.'</td>';
-                        echo '  <td style="width: 20px !important;">'.$vp->nrocuota.'</td>';
+                        echo '  <td style="width: 205px !important;">'.$vp->razonsocial_cliente.'</td>';
+                        echo '  <td style="width: 30px !important;">'.$vp->nrocuota.'-'.$vp->nrocuotas.'</td>';
                         echo '  <td style="width: 40px !important;">-.-</td>';
-                        echo '  <td style="width: 80px !important;">'.$vp->fecha_vencimiento.'</td>';
-                        echo '  <td style="width: 70px !important;">'.$vp->moneda.'</td>';
-                        echo '  <td style="width: 50px !important;">'.number_format($vp->t_monto_total, 2).'</td>';
-                        echo '  <td style="width: 50px !important;">'.number_format($vp->t_monto_total, 2).'</td>';
+                        echo '  <td style="width: 71px !important;">'.$vp->fecha_vencimiento.'</td>';
+                        echo '  <td style="width: 51px !important;">'.$vp->moneda.'</td>';
+                        echo '  <td style="width: 51px !important;">'.number_format($total_cte_soles, 2).'</td>';
+                        echo '  <td style="width: 66px !important;">'.number_format($vp->valor_cuota_pagada, 2).'</td>';
+                        // echo '  <td style="width: 41px !important;">0.00</td>';
+                        echo '  <td style="width: 66px !important;">'.number_format($vp->int_moratorio_pagado, 2).'</td>';
                         echo '  <td style="width: 41px !important;">0.00</td>';
-                        echo '  <td style="width: 50px !important;">'.number_format($vp->int_moratorio_pagado, 2).'</td>';
-                        echo '  <td style="width: 41px !important;">0.00</td>';
-                        echo '  <td style="width: 34px !important;">0.00</td>';
-                        echo '  <td style="width: 30px !important;">0.00</td>';
-                        echo '  <td style="width: 30px !important;">0.00</td>';
-                        echo '  <td style="width: 50px !important;">'.$vp->dias_mora.'</td>';
-                        echo '  <td style="width: 80px !important;">'.$vp->estado.'</td>';
+                        echo '  <td style="width: 71px !important;">0.00</td>';
+                        // echo '  <td style="width: 30px !important;">0.00</td>';
+                        echo '  <td style="width: 70px !important;">0.00</td>';
+                        echo '  <td style="width: 52px !important;">'.$vp->dias_mora.'</td>';
+                        echo '  <td style="width: 81px !important;">'.$vp->estado.'</td>';
                         echo '  <td style="width: 80px !important;">'.$vp->serie_comprobante.'-'.$vp->numero_comprobante.'</td>';
                         echo '</tr>';   
                     }

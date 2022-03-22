@@ -636,7 +636,7 @@
 
 
 
-                   
+
 
                             // llenarServicios();
 
@@ -1065,7 +1065,47 @@
             var code = (e.keyCode ? e.keyCode : e.which);
             if (code == 13) {
                 $('#show_loading').removeClass('ng-hide');
-                getDatosCliente();
+                var documentoEnvio = documento.val();
+                RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var dataPersona = response.data;
+                        if (dataPersona.length == 0) {
+                            console.log("no hay en persona");
+                            getDatosCliente();
+                        } else {
+                            console.log(dataPersona);
+                            console.log("si hay ");
+                            tipodoc.val(dataPersona[0].cTipodocumento).trigger('change');
+                            var nclie = dataPersona[0].cRazonsocial;
+                            if (nclie.length == 0) {
+                                razonsocial_cliente.val(dataPersona[0].cNombrePersona);
+                            } else {
+                                razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                            }
+
+                            documento.val(dataPersona[0].cNumerodocumento);
+                            // contacto.val(dataPersona[0].contacto);
+                            direccion.val(dataPersona[0].cDireccion);
+                            correo_electronico.val(dataPersona[0].cEmail);
+                            celular.val(dataPersona[0].cCelular);
+
+                            cEstadoCivil.val(dataPersona[0].cEstadoCivil);
+
+                            getDepartamento(dataPersona[0].cDepartamento);
+                            getProvincia(dataPersona[0].cProvincia, dataPersona[0].cDepartamento);
+                            getDistrito(dataPersona[0].cCodUbigeo, dataPersona[0].cProvincia);
+                        }
+
+
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error . Intente nuevamente.',
+                            type: 'info'
+                        });
+                    }
+                });
+
             }
         });
         function getDatosCliente() {
@@ -1367,13 +1407,13 @@
                 $(".btn_guardarOrden").removeAttr("disabled");
             }
 
-            if($("#estado").val() == "1" || $("#estado").val() == "4" || $("#estado").val() == "") {
+            if ($("#estado").val() == "1" || $("#estado").val() == "4" || $("#estado").val() == "") {
                 $(".btn_guardarOrden").removeAttr("disabled");
             } else {
-              
+
                 $(".btn_guardarOrden").attr("disabled", "disabled");
             }
- 
+
         });
 
         function seleccionarModal(codigo, descripcionArt, idTipoArt, serie, lote, costo, impuesto, um_id) {
@@ -1890,11 +1930,11 @@
 
 
         function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id) {
-           
 
-            if($("#articulo_mov_det").html() != "") {
-                if(parseFloat($("#t_impuestos").val()) > 0) {
-                    if(impuesto_articulo != 1) {
+
+            if ($("#articulo_mov_det").html() != "") {
+                if (parseFloat($("#t_impuestos").val()) > 0) {
+                    if (impuesto_articulo != 1) {
                         AlertFactory.textType({
                             title: '',
                             message: 'Todos los productos del detalle deben tener activo la opcion de  calcular impuestos',
@@ -1903,7 +1943,7 @@
                         return false;
                     }
                 } else {
-                    if(impuesto_articulo != 0) {
+                    if (impuesto_articulo != 0) {
                         AlertFactory.textType({
                             title: '',
                             message: 'Todos los productos del detalle no deben tener activo la opcion de  calcular impuestos',
@@ -1943,15 +1983,15 @@
             // }else{
             // precionew = "";
             var tdpr = $('<td><p>0</p></td>');
-           
-            var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  /><input type="hidden"  name="um_id[]" id="um_id_' + codigo + '"  value="'+um_id+'" class="form-control input-sm"  />');
+
+            var inpr = $('<input type="hidden"  name="porcentaje_descuento[]" id="preMs_' + codigo + '" min="1" class="m_articulo_precio form-control input-sm"  /><input type="hidden"  name="um_id[]" id="um_id_' + codigo + '"  value="' + um_id + '" class="form-control input-sm"  />');
             // }
 
             // if(naturalezaGeneral=="E" || naturalezaGeneral=="C"){
             //     var td4 = $('<td></td>');
             //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
             // }else{
-                // alert("precio new " + precionew);      
+            // alert("precio new " + precionew);      
             var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' + precionew + '" impuesto_articulo="' + impuesto_articulo + '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text" codigo="' + codigo + '"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
             var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" />');
             // }
@@ -2025,11 +2065,11 @@
             }
 
             var desactivar_del = "";
-            if($("#estado").val() == "4") {
+            if ($("#estado").val() == "4") {
                 desactivar_del = 'disabled="disabled"';
             }
 
-            var btn3 = $('<center><button '+desactivar_del+' class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
+            var btn3 = $('<center><button ' + desactivar_del + ' class="btn btn-danger btn-xs delMovPro" data-tipo="' + tipo + '" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>' + button_series + '</center>');
             // td6.append(btn1);
 
             var monto_exonerado = 0;
@@ -2065,10 +2105,10 @@
             }
 
             var disabled_check = "";
-            if($("#estado").val() == "4") {
+            if ($("#estado").val() == "4") {
                 disabled_check = 'disabled="disabled"';
             }
-            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass"  '+disabled_check+' type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
+            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass"  ' + disabled_check + ' type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
 
 
             td8.append(btn3);
@@ -2349,14 +2389,14 @@
 
             // console.log("precio_total => "+precio_total);
 
-            if(typeof precio_total == "undefined") {
+            if (typeof precio_total == "undefined") {
                 precio_total = 0;
             }
 
             //PRORRATEO EN CASO DE EXISTIR DESCUENTO SOBRE EL TOTAL
             var descuento_total = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
             var monto_descuento_prorrateado = 0;
-        
+
             var sum_precios = 0;
             $.each($("input[name='precio_unitario[]']"), function (indexInArray, precio_unitario) {
                 // alert(typeof nOperGratuita.value);
@@ -2368,15 +2408,15 @@
             // alert(monto_descuento_prorrateado);
             $("input[name='monto_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_descuento_prorrateado.toFixed(2));
             $(".monto_descuento_prorrateado[codigo=" + codigo + "]").find("p").text(monto_descuento_prorrateado.toFixed(2));
-            
-            var dom_descuento = $("#descuento_"+codigo);
+
+            var dom_descuento = $("#descuento_" + codigo);
 
             if (dom_descuento.val() != "") {
                 porcentaje_descuento = parseFloat(dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("nPorcDescuento"));
                 monto_descuento = parseFloat(dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("nMonto"));
                 idtipo = dom_descuento.find("option[value=" + dom_descuento.val() + "]").attr("idtipo");
             }
-            
+
             // alert(precio_total);
             if (idtipo == "P") {
 
@@ -2385,13 +2425,13 @@
                 descuento = monto_descuento;
             }
 
-            if(isNaN(descuento)) {
+            if (isNaN(descuento)) {
                 descuento = 0;
             }
 
             // console.log("descuento: "+descuento);
             // alert(descuento);    
-            if(isNaN(porcentaje_descuento)) {
+            if (isNaN(porcentaje_descuento)) {
                 porcentaje_descuento = 0;
             }
             // console.log("porcentaje_descuento => "+porcentaje_descuento);
@@ -2402,7 +2442,7 @@
             $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(descuento.toFixed(2));
 
             var nuevo_total = precio_total - descuento - monto_descuento_prorrateado;
-           
+
             // alert(nuevo_total);
 
             var monto_exonerado = 0;
@@ -2428,10 +2468,10 @@
             $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(2));
             $("input[name='monto_subtotal_sin_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_subtotal_sin_descuento_prorrateado.toFixed(2));
 
-            if(isNaN(monto_subtotal)) {
+            if (isNaN(monto_subtotal)) {
                 monto_subtotal = 0;
             }
-           
+
 
             $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
@@ -2447,7 +2487,7 @@
         }
 
         $(document).on("change", ".select_descuento", function () {
-        
+
             totalDescuento.trigger("change");
 
         });
@@ -2480,7 +2520,7 @@
             var total_sin_descuento_prorrateado = 0;
 
             $.each($("input[name='monto_subtotal_sin_descuento_prorrateado[]']"), function (indexInArray, monto_subtotal_sin_descuento_prorrateado) {
-               
+
                 total_sin_descuento_prorrateado += parseFloat(monto_subtotal_sin_descuento_prorrateado.value);
 
             });
@@ -2544,7 +2584,7 @@
             var t_total = 0;
             var t_nOperGratuita = 0;
 
-        
+
             $.each($("input[name='precio_unitario[]']"), function (indexInArray, precio_unitario) {
                 // alert(typeof nOperGratuita.value);
                 var codigo = precio_unitario.getAttribute("codigo");
@@ -2598,7 +2638,7 @@
 
             var descuento_total = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
 
-          
+
 
             // if(descuento_total > 0) {
             //     // alert(descuento_total);
@@ -2773,8 +2813,8 @@
                         }
                     });
                 } else {
-                    
-                    if($("#tipo_solicitud").val() == "1") {
+
+                    if ($("#tipo_solicitud").val() == "1") {
                         if (naturalezaGeneral != 'C') {
 
                             AlertFactory.textType({
@@ -2784,7 +2824,7 @@
                             });
                         }
                     }
-                    
+
                 }
 
             });
@@ -2849,18 +2889,18 @@
                     // console.log(intereses);
                     $("#valor_cuota").val(Math.ceil(valor_cuota));
                     var nuevo_total = parseFloat($("#desTotal").val());
-                    
+
                     // CALCULAR NUEVO IGV PARA VALOR CUOTA FINAL IGV
                     var t_impuestos = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
-                 
+
                     var valor_igv = parseFloat($("#valor_igv").val());
                     var valor_cuota_final = Math.ceil(valor_cuota);
 
-                
-                    if(t_impuestos > 0) {
+
+                    if (t_impuestos > 0) {
                         valor_cuota_final = valor_cuota_final + (valor_cuota_final * valor_igv / 100);
                     }
-                   
+
 
                     $("#intereses").val(intereses.toFixed(2));
                     $("#valor_cuota_final").val(valor_cuota_final.toFixed(2));
@@ -2878,7 +2918,7 @@
 
             var bval = true;
             bval = bval && cCodConsecutivo.required();
-           
+
             bval = bval && idMoneda.required();
             bval = bval && $("#tipo_solicitud").required();
             bval = bval && idvendedor.required();
@@ -2969,7 +3009,7 @@
                     return false;
                 }
 
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize()+"&cCodConsecutivo="+cCodConsecutivo.val()+"&tipo_solicitud="+$("#tipo_solicitud").val()+"&idmoneda="+$("#IdMoneda").val()+"&id_tipoDoc_Venta_or="+$("#id_tipoDoc_Venta_or").val()+"&idvendedor="+$("#idvendedor").val()+"&descuento_id="+$("#totalDescuento").val(),
+                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val(),
                     function (data, textStatus, jqXHR) {
 
                         if (data.status == "i") {
@@ -3042,24 +3082,24 @@
         }
 
         $scope.imprimir_solicitud = function () {
-           
+
             var cCodConsecutivo = $("#cCodConsecutivo").val();
             var nConsecutivo = $("#nConsecutivo").val();
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
-   
-            window.open("solicitud/imprimir_solicitud/"+id);
+
+            window.open("solicitud/imprimir_solicitud/" + id);
 
         }
 
         $scope.imprimir_cronograma = function () {
-           
+
             var cCodConsecutivo = $("#cCodConsecutivo").val();
             var nConsecutivo = $("#nConsecutivo").val();
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
-   
-            window.open("movimientoCajas/imprimir_cronograma/"+id);
+
+            window.open("movimientoCajas/imprimir_cronograma/" + id);
 
         }
 
@@ -3148,7 +3188,7 @@
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
-                    
+
 
                     if (data.solicitud_articulo.length > 0) {
                         $("#articulo_mov_det").html("");
@@ -3174,33 +3214,33 @@
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
                         $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
 
-                        if(data.solicitud_credito[0].documento_fiador != null) {
+                        if (data.solicitud_credito[0].documento_fiador != null) {
                             getPersona("fiador");
                         }
 
-                        if(data.solicitud_credito[0].documento_conyugue != null) {
+                        if (data.solicitud_credito[0].documento_conyugue != null) {
                             getPersona("conyugue");
                         }
-                        
-                        if(data.solicitud_credito[0].documento_fiadorconyugue != null) {
+
+                        if (data.solicitud_credito[0].documento_fiadorconyugue != null) {
                             getPersona("fiadorconyugue");
                         }
-                       
+
                     }
-                    
-                    if(data.solicitud[0].estado == "1") {
+
+                    if (data.solicitud[0].estado == "1") {
                         habilitar_inputs();
                         $("#enviar_solicitud").show();
                     } else {
-                        
+
                         deshabilitar_inputs();
                     }
 
-                    if(data.solicitud[0].estado == "6" && data.solicitud[0].tipo_solicitud == "2") {
+                    if (data.solicitud[0].estado == "6" && data.solicitud[0].tipo_solicitud == "2") {
                         $("#imprimir-cronograma").show();
                     }
 
-                 
+
                     $("#aprobaciones").show();
                     $("#imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
@@ -3213,12 +3253,12 @@
 
             $("#agregar-articulo").show();
             $("#btn_editar_cliente").show();
-           
+
             $("#btn_editar_conyugue").show();
             $("#btn_editar_fiador").show();
             $("#btn_editar_fiadorconyugue").show();
-           
-            
+
+
             $("#cCodConsecutivo").removeAttr("disabled");
             $("#IdMoneda").removeAttr("disabled");
             $("#id_tipoDoc_Venta_or").removeAttr("disabled");
@@ -3242,7 +3282,7 @@
         }
 
         function deshabilitar_inputs() {
-    
+
             $("#formulario-solicitud").find("input").attr("readonly", "readonly");
             $("#formulario-solicitud").find("select").attr("disabled", "disabled");
             $("#formulario-solicitud").find("textarea").attr("readonly", "readonly");
@@ -3254,10 +3294,10 @@
             $("#enviar_solicitud").hide();
             $("#btn_editar_conyugue").hide();
             $("#btn_editar_fiador").hide();
-       
+
             $("#btn_editar_fiadorconyugue").hide();
-    
-            if($("#estado").val() == "4") {
+
+            if ($("#estado").val() == "4") {
                 $(".m_articulo_idAlm").removeAttr("disabled");
                 $(".m_articulo_idLoc").removeAttr("disabled");
                 // $(".select_lote").removeAttr("disabled");
@@ -3266,12 +3306,12 @@
         }
 
         function calcular_total_ingresos_comprador() {
-            
+
             var ingreso_neto_mensual = 0;
             var ingreso_neto_conyugue = 0;
             var otros_ingresos = 0;
             var total_ingresos = 0;
-    
+
             if (!isNaN($("#ingreso_neto_mensual").val())) {
                 ingreso_neto_mensual = parseFloat($("#ingreso_neto_mensual").val());
             }
@@ -3285,10 +3325,10 @@
             }
 
             total_ingresos = ingreso_neto_mensual + ingreso_neto_conyugue + otros_ingresos;
-            
-    
 
-            $("#total_ingresos").val(total_ingresos); 
+
+
+            $("#total_ingresos").val(total_ingresos);
         }
 
         function calcular_total_ingresos_fiador() {
@@ -3296,7 +3336,7 @@
             var ingreso_neto_conyugue_fiador = 0;
             var otros_ingresos_fiador = 0;
             var total_ingresos_fiador = 0;
-    
+
             if (!isNaN($("#ingreso_neto_mensual_fiador").val())) {
                 ingreso_neto_mensual_fiador = parseFloat($("#ingreso_neto_mensual_fiador").val());
             }
@@ -3308,9 +3348,9 @@
             if (!isNaN($("#otros_ingresos_fiador").val())) {
                 otros_ingresos_fiador = parseFloat($("#otros_ingresos_fiador").val());
             }
-            
+
             total_ingresos_fiador = ingreso_neto_mensual_fiador + ingreso_neto_conyugue_fiador + otros_ingresos_fiador;
-            $("#total_ingresos_fiador").val(total_ingresos_fiador);   
+            $("#total_ingresos_fiador").val(total_ingresos_fiador);
         }
 
         $(document).on("keyup", "#ingreso_neto_mensual", function () {
@@ -3475,7 +3515,7 @@
                     //     return false;
                     // }
 
-                   
+
                     find_solicitud(id);
                     e.preventDefault();
                 });
@@ -3484,7 +3524,7 @@
                     var estado = $(this).data('estado');
                     var ccodconsecutivo = $(this).data('ccodconsecutivo');
                     var nconsecutivo = $(this).data('nconsecutivo');
-                  
+
                     if (estado != "1") {
                         AlertFactory.textType({
                             title: '',
@@ -3493,18 +3533,18 @@
                         });
                         return false;
                     }
-                    $.post("solicitud/eliminar_solicitud", { cCodConsecutivo : ccodconsecutivo, nConsecutivo: nconsecutivo},
+                    $.post("solicitud/eliminar_solicitud", { cCodConsecutivo: ccodconsecutivo, nConsecutivo: nconsecutivo },
                         function (data, textStatus, jqXHR) {
                             console.log(data);
                             if (data.status == "e") {
                                 LoadRecordsButtonSolicitud.click();
-                             
+
                                 AlertFactory.textType({
                                     title: '',
                                     message: 'La solicitud se eliminó correctamente.',
                                     type: 'success'
                                 });
-                              
+
                             } else {
                                 AlertFactory.textType({
                                     title: '',
@@ -3515,7 +3555,7 @@
                         },
                         "json"
                     );
-                  
+
                     e.preventDefault();
                 });
             },

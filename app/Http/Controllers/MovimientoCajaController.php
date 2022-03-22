@@ -1695,6 +1695,7 @@ class MovimientoCajaController extends Controller
             $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
             $datos["fiador"] = $persona_repositorio->find($idfiador);
             $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+            
         }
 
      
