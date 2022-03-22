@@ -4520,6 +4520,7 @@ function createReporteMensualPDF(response) {
     var img=response.img;
     var simboloMoneda=response.simboloMoneda;
     var data=response.data;
+    var data_orden=response.data_orden;
     var data_compania=response.data_compania;
     var usuario=response.usuario;
     var cambio=response.cambio;
@@ -4629,58 +4630,59 @@ function createReporteMensualPDF(response) {
      var tofinL=0;
 
      data.map(function(index) {
-       if(index.IdMoneda==1){
-            montoRep=Number(index.REPUESTO)/Number(cambio[0].Mensaje);
-            montoAcie=Number(index.ACEITE)/Number(cambio[0].Mensaje);
-            montoServi=Number(index.totalservicio)/Number(cambio[0].Mensaje);
-       }else{
+       // if(index.IdMoneda==1){
+       //      montoRep=Number(index.REPUESTO)/Number(cambio[0].Mensaje);
+       //      montoAcie=Number(index.ACEITE)/Number(cambio[0].Mensaje);
+       //      montoServi=Number(index.totalservicio)/Number(cambio[0].Mensaje);
+       // }
+       // else{
             montoRep=Number(index.REPUESTO);
             montoAcie=Number(index.ACEITE);
-            montoServi=Number(index.totalservicio);
-       }
+            montoServi=Number(index.MontoSerPro);
+       // }
        if(index.id_tipoveh==1){
             if(index.id_tipomant==1){
-                m1=m1+1;
+             
                 m1r=Number(m1r)+Number(montoRep);
                 m1s=Number(m1s)+Number(montoServi);
                 m1l=Number(m1l)+Number(montoAcie); 
             }else if(index.id_tipomant==2){
-                m2=m2+1;
+              
                 m2r=Number(m2r)+Number(montoRep);
                 m2s=Number(m2s)+Number(montoServi);
                 m2l=Number(m2l)+Number(montoAcie); 
             }else if(index.id_tipomant==3){
-                mp=mp+1;
+            
                 mpr=Number(mpr)+Number(montoRep);
                 mps=Number(mps)+Number(montoServi);
                 mpl=Number(mpl)+Number(montoAcie); 
             }else if(index.id_tipomant==4){
-                mm=mm+1;
+              
                 mmr=Number(mmr)+Number(montoRep); 
                 mms=Number(mms)+Number(montoServi);
                 mml=Number(mml)+Number(montoAcie); 
             }else if(index.id_tipomant==5){
-                mc=mc+1;
+              
                 mcr=Number(mcr)+Number(montoRep);
                  mcs=Number(mcs)+Number(montoServi);
                  mcl=Number(mcl)+Number(montoAcie); 
             }else if(index.id_tipomant==6){
-                mr=mr+1;
+              
                 mrr=Number(mrr)+Number(montoRep); 
                  mrs=Number(mrs)+Number(montoServi);
                 mrl=Number(mrl)+Number(montoAcie);  
             }else if(index.id_tipomant==7){
-                mg=mg+1;
+               
                 mgr=Number(mgr)+Number(montoRep);
                 mgs=Number(mgs)+Number(montoServi);
                mgl=Number(mgl)+Number(montoAcie);  
             }else if(index.id_tipomant==8){
-                mi=mi+1;
+               
                 mir=Number(mir)+Number(montoRep); 
                 mis=Number(mis)+Number(montoServi);
                mil=Number(mil)+Number(montoAcie);   
             }else if(index.id_tipomant==8){
-                ma=ma+1;
+              
                 mar=Number(mar)+Number(montoRep);
                 mas=Number(mas)+Number(montoServi);
                 mal=Number(mal)+Number(montoAcie); 
@@ -4690,54 +4692,53 @@ function createReporteMensualPDF(response) {
             console.log(totaMoa);
             totaMoa=Number(montoServi)+totaMoa;
             totaACa=Number(montoAcie)+ totaACa;
-            tota=tota+1;
        }else{
         console.log("entro acá");
             if(index.id_tipomant==1){
-                m1b=m1b+1;
+               
                 m1br=Number(m1br)+Number(montoRep);
                 m1bs=Number(m1bs)+Number(montoServi);
                  m1bl=Number(m1bl)+Number(montoAcie);
 
             }else if(index.id_tipomant==2){
-                m2b=m2b+1;
+              
                  m2br=Number(m2br)+Number(montoRep);
                  m2bs=Number(m2bs)+Number(montoServi);
                   m2bl=Number(m2bl)+Number(montoAcie);
             }else if(index.id_tipomant==3){
-                mpb=mpb+1;
+               
                  mpbr=Number(mpbr)+Number(montoRep);
                  mpbs=Number(mpbs)+Number(montoServi);
                   mpbl=Number(mpbl)+Number(montoAcie);
             }else if(index.id_tipomant==4){
-                mmb=mmb+1;
+               
                  mmbr=Number(mmbr)+Number(montoRep);
                  mmbs=Number(mmbs)+Number(montoServi);
                   mmbl=Number(mmbl)+Number(montoAcie);
             }else if(index.id_tipomant==5){
-                mcb=mcb+1;
+              
                  mcbr=Number(mcbr)+Number(montoRep);
                  mcbs=Number(mcbs)+Number(montoServi);
                  mcbl=Number(mcbl)+Number(montoAcie); 
 
             }else if(index.id_tipomant==6){
-                mrb=mrb+1;
+               
                  mrbr=Number(mrbr)+Number(montoRep);
                  mrbs=Number(mrbs)+Number(montoServi);
                  mrbl=Number(mrbl)+Number(montoAcie); 
 
             }else if(index.id_tipomant==7){
-                mgb=mgb+1;
+              
                  mgbr=Number(mgbr)+Number(montoRep);
                  mgbs=Number(mgbs)+Number(montoServi);
                  mgbl=Number(mgbl)+Number(montoAcie); 
             }else if(index.id_tipomant==8){
-                mib=mib+1;
+                
                  mibr=Number(mibr)+Number(montoRep);
                  mibs=Number(mibs)+Number(montoServi);
                  mibl=Number(mibl)+Number(montoAcie); 
             }else if(index.id_tipomant==8){
-                mab=mab+1;
+                
                  mabr=Number(mabr)+Number(montoRep);
                  mabs=Number(mabs)+Number(montoServi);
                  mabl=Number(mabl)+Number(montoAcie); 
@@ -4745,6 +4746,119 @@ function createReporteMensualPDF(response) {
             totaReb=Number(montoRep)+totaReb;
             totaMob=Number(montoServi)+totaMob;
             totaACb=Number(montoAcie)+ totaACb;
+            
+       }
+    });
+    data_orden.map(function(index) {
+       // if(index.IdMoneda==1){
+       //      montoRep=Number(index.REPUESTO)/Number(cambio[0].Mensaje);
+       //      montoAcie=Number(index.ACEITE)/Number(cambio[0].Mensaje);
+       //      montoServi=Number(index.totalservicio)/Number(cambio[0].Mensaje);
+       // }
+       // else{
+         
+       
+            montoServi=Number(index.MontoSerOrden);
+       // }
+       if(index.id_tipoveh==1){
+            if(index.id_tipomant==1){
+                m1=m1+1;
+                m1s=Number(m1s)+Number(montoServi);
+            }else if(index.id_tipomant==2){
+                m2=m2+1;
+                m2s=Number(m2s)+Number(montoServi);
+            }else if(index.id_tipomant==3){
+                mp=mp+1;
+               
+                mps=Number(mps)+Number(montoServi);
+               
+            }else if(index.id_tipomant==4){
+                mm=mm+1;
+               
+                mms=Number(mms)+Number(montoServi);
+             
+            }else if(index.id_tipomant==5){
+                mc=mc+1;
+              
+                 mcs=Number(mcs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==6){
+                mr=mr+1;
+                 mrs=Number(mrs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==7){
+                mg=mg+1;
+             
+                mgs=Number(mgs)+Number(montoServi);
+            
+            }else if(index.id_tipomant==8){
+                mi=mi+1;
+              
+                mis=Number(mis)+Number(montoServi);
+           
+            }else if(index.id_tipomant==8){
+                ma=ma+1;
+               
+                mas=Number(mas)+Number(montoServi);
+               
+            }
+     
+            totaMoa=Number(montoServi)+totaMoa;
+       
+            tota=tota+1;
+       }else{
+        console.log("entro acá");
+            if(index.id_tipomant==1){
+                m1b=m1b+1;
+              
+                m1bs=Number(m1bs)+Number(montoServi);
+             
+
+            }else if(index.id_tipomant==2){
+                m2b=m2b+1;
+             
+                 m2bs=Number(m2bs)+Number(montoServi);
+               
+            }else if(index.id_tipomant==3){
+                mpb=mpb+1;
+              
+                 mpbs=Number(mpbs)+Number(montoServi);
+               
+            }else if(index.id_tipomant==4){
+                mmb=mmb+1;
+               
+                 mmbs=Number(mmbs)+Number(montoServi);
+                
+            }else if(index.id_tipomant==5){
+                mcb=mcb+1;
+               
+                 mcbs=Number(mcbs)+Number(montoServi);
+             
+
+            }else if(index.id_tipomant==6){
+                mrb=mrb+1;
+                
+                 mrbs=Number(mrbs)+Number(montoServi);
+              
+
+            }else if(index.id_tipomant==7){
+                mgb=mgb+1;
+               
+                 mgbs=Number(mgbs)+Number(montoServi);
+                 
+            }else if(index.id_tipomant==8){
+                mib=mib+1;
+                
+                 mibs=Number(mibs)+Number(montoServi);
+              
+            }else if(index.id_tipomant==8){
+                mab=mab+1;
+              
+                 mabs=Number(mabs)+Number(montoServi);
+                
+            }
+       
+            totaMob=Number(montoServi)+totaMob;
             totb=totb+1;
        }
     });
@@ -4966,7 +5080,7 @@ console.log("ddd");
                         table: {
                              widths: [83,83,83],
                             body:[
-                               [ { text: 'Facturación ('+simboloMoneda[1].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
+                               [ { text: 'Facturación ('+simboloMoneda[0].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
                               [ { border: [false, false, false,false] , text: 'Mano de Obra',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Repuestos',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Lubricantes',bold:true,  fontSize: 10, alignment: 'center'}],
                              [ { text: addCommas(redondeodecimale(m1s).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1r).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1l).toFixed(2)),  fontSize: 10, alignment: 'center'}],
                               [ { text: addCommas(redondeodecimale(m2s).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2r).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2l).toFixed(2)),  fontSize: 10, alignment: 'center'}],
@@ -5040,7 +5154,7 @@ console.log("ddd");
                         table: {
                              widths: [83,83,83],
                             body:[
-                               [ { text: 'Facturación ('+simboloMoneda[1].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
+                               [ { text: 'Facturación ('+simboloMoneda[0].Simbolo+')',border: [false, false, false,false],bold:true,fontSize: 10, alignment: 'center',colSpan: 3},{},{}],
                               [ { border: [false, false, false,false] , text: 'Mano de Obra',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Repuestos',bold:true,  fontSize: 10, alignment: 'center'},{ border: [false, false, false,false],text: 'Lubricantes',bold:true,  fontSize: 10, alignment: 'center'}],
                              [ { text: addCommas(redondeodecimale(m1bs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1br).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m1bl).toFixed(2)), fontSize: 10, alignment: 'center'}],
                               [ { text: addCommas(redondeodecimale(m2bs).toFixed(2)),fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2br).toFixed(2)), fontSize: 10, alignment: 'center'},{ text: addCommas(redondeodecimale(m2bl).toFixed(2)), fontSize: 10, alignment: 'center'}],
