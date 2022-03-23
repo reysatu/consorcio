@@ -133,7 +133,8 @@ class SolicitudController extends Controller
             
 
    
-
+            $data_articulo = array();
+            $data_detalle = array();
             if(count($data["idarticulo"]) > 0) {
 
                 DB::table("ERP_SolicitudArticulo")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
