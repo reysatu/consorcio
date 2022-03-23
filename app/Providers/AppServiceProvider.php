@@ -31,6 +31,10 @@ use App\Http\Recopro\ReporteRepuesto\ReporteRepuesto;
 use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoInterface;
 use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoRepository;
 
+use App\Http\Recopro\ReporteMeta\ReporteMeta; 
+use App\Http\Recopro\ReporteMeta\ReporteMetaInterface;
+use App\Http\Recopro\ReporteMeta\ReporteMetaRepository;
+
  
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierre; 
 use App\Http\Recopro\Movimiento_cierre\Movimiento_cierreInterface;
@@ -698,6 +702,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerGuiaRemisionDetalle();
         $this->registerMovimiento_cierre();
         $this->registerReporteCreditosAprobado();
+        $this->registerReporteMeta();
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
         $this->registerView_PendienteCobro();
@@ -997,6 +1002,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ReporteRepuestoInterface::class, function ($app) {
             return new ReporteRepuestoRepository(new ReporteRepuesto());
+        });
+    }
+     public function registerReporteMeta()
+    {
+        $app = $this->app;
+
+        $app->bind(ReporteMetaInterface::class, function ($app) {
+            return new ReporteMetaRepository(new ReporteMeta());
         });
     }
     public function registerReporteVentaCliente()

@@ -72,6 +72,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\ReceptionTransfers.php';
 
+    require app_path() . '\Http\Routes\ReporteMetas.php'; 
+
     require app_path() . '\Http\Routes\Buyers.php';
 
     require app_path() . '\Http\Routes\Fronts.php';
