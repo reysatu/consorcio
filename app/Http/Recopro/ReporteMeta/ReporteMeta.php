@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\ResumenMensualActividad;
+<?php namespace App\Http\Recopro\ReporteMeta;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class ResumenMensualActividad extends Model
+class ReporteMeta extends Model
 {
   
     protected $table = 'ERP_Categoria';

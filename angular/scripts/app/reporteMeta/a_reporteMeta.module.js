@@ -3,7 +3,7 @@
  */
 (function () {
     'use strict';
-    angular.module('sys.app.resumenMensualActividads', [
+    angular.module('sys.app.reporteMetas', [
 
     ]);
 

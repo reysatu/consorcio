@@ -10,5 +10,9 @@ Route::post('reporteMetas/list', ['as' => 'reporteMetas.list', 'uses' => 'Report
 Route::post('reporteMetas/create', ['as' => 'reporteMetas.create', 'uses' => 'ReporteMetaController@create']);
 Route::post('reporteMetas/delete', ['as' => 'reporteMetas.delete', 'uses' => 'ReporteMetaController@destroy']);
 Route::post('reporteMetas/update', ['as' => 'reporteMetas.update', 'uses' => 'ReporteMetaController@update']);
-Route::get('reporteMetas/excel', ['as' => 'reporteMetas.excel', 'uses' => 'ReporteMetaController@excel']);
+
+Route::get('reporteMetas/excelMes', ['as' => 'reporteMetas.excelMes', 'uses' => 'ReporteMetaController@excelMes']);
+
 Route::get('reporteMetas/pdf', ['as' => 'reporteMetas.pdf', 'uses' => 'ReporteMetaController@pdf']);
+
+Route::get('reporteMetas/data_form', ['as' => 'reporteMetas.data_form', 'uses' => 'ReporteMetaController@data_form']);

@@ -6,10 +6,10 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\ResumenMensualActividad;
+namespace App\Http\Recopro\ReporteMeta;
 
 
-interface ResumenMensualActividadInterface
+interface ReporteMetaInterface
 {
     public function all();
     public function create(array $attributes);

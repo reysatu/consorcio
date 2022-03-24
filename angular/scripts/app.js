@@ -30,6 +30,7 @@
         'sys.app.configs',
         'sys.app.params',
         'sys.app.approvers_projects',
+        'sys.app.reporteMetas',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',
@@ -287,6 +288,42 @@
                     a.click();
                     a.remove();
                     angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: "Hubo un error",
+                        message: ajaxContext.responseText
+                    });
+                }
+            });
+        };
+        $scope.openDocExeclMes = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                cache: false,
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    if(response!='N'){
+
+                                      
+                    // createExcel(response.file, response.name);
+                    var a = document.createElement("a");
+                    a.href = response.file;
+                    a.download = response.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    angular.element('#show_loading').addClass('ng-hide');
+                 }else{
+                     angular.element('#show_loading').addClass('ng-hide');
+                      AlertFactory.textType({
+                        title: '',
+                      message: 'No existe datos en este año',
+                        type: 'info'
+                    });
+                 }
                 },
                 error: function (ajaxContext) {
                     angular.element('#show_loading').addClass('ng-hide');

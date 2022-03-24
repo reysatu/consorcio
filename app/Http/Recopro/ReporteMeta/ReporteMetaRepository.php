@@ -6,14 +6,14 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\ResumenMensualActividad;
+namespace App\Http\Recopro\ReporteMeta;
 use Illuminate\Support\Facades\DB; 
 
-class ResumenMensualActividadRepository implements ResumenMensualActividadInterface
+class ReporteMetaRepository implements ReporteMetaInterface
 {
     protected $model;
  private static $_ACTIVE = 'A';
-    public function __construct(ResumenMensualActividad $model)
+    public function __construct(ReporteMeta $model)
     {
         $this->model = $model; 
        
@@ -65,9 +65,34 @@ from ERP_ProformaDetalle as prf inner join ERP_Productos as p on (p.id=prf.idPro
 where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as tdra on (tdra.cCodConsecutivo=prog.cCodConsecutivo and tdra.nConsecutivo=prog.nConsecutivo) INNER JOIN ERP_OrdenServicio AS oser on(oser.cCodConsecutivo=prog.cCodConsecutivoOS and oser.nConsecutivo=prog.nConsecutivoOS) where prog.iEstado=5 AND MONTH(oser.dFecRec) = $mes AND YEAR(oser.dFecRec) = $Anio");
         return $mostra;
     }
-    public function allReporteMensualOrden($Anio,$mes)
+    public function getDataAnio($Anio)
     {
-        $mostra=DB::select("select sum(od.nTotal) as MontoSerOrden,os.id_tipoveh,os.id_tipomant,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where  os.iEstado=3 AND MONTH(os.dFecRec) = $mes AND YEAR(os.dFecRec) = $Anio GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant,os.id_tipomant,os.id_tipoveh");
+        $mostra=DB::select("select  Day(oser.dFecRec) AS dia,month(oser.dFecRec) AS mes,* from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) =$Anio ORDER BY   month(oser.dFecRec)");
+        return $mostra;
+    }
+    public function getTecnico()
+    {
+        $mostra=DB::select("select * from ERP_Tecnico where estado='A'");
+        return $mostra;
+    }
+    public function getTiposMantenimiento()
+    {
+        $mostra=DB::select("select * from ERP_TipoMantenimiento where estado='A'");
+        return $mostra;
+    }
+    public function getTecnico_metas($Anio)
+    {
+        $mostra=DB::select("select obd.nCant,obd.nMonto,obd.nPeriodo as Mes,obd.id_Persona as id_Persona from ERP_Tecnico as tec left join ERP_ObjetivosDetalle as obd on (obd.id_Persona=tec.id and obd.id_TipoPers=2) inner join ERP_Objetivos as ob on (ob.id=obd.id_obj) where ob.iEstado='1' and IdMoneda=1  and nAno=$Anio");
+        return $mostra;
+    }
+    public function getDataAnioMeses($Anio)
+    {
+        $mostra=DB::select("select DISTINCT (month(oser.dFecRec)) AS mes from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) = $Anio ORDER BY  month(oser.dFecRec)");
+        return $mostra;
+    }
+    public function getTiposObjetivos()
+    {
+        $mostra=DB::select("select * from ERP_TipoObjetivos where estado='A'");
         return $mostra;
     }
     public function getUsuario($idusurio){
