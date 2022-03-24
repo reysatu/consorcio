@@ -291,7 +291,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         $sql = "
         DECLARE	@return_value int
 
-        EXEC	@return_value = [dbo].[VTA_Registra_Movimiento_Vta_OS]
+        SET NOCOUNT ON; EXEC	@return_value = [dbo].[VTA_Registra_Movimiento_Vta_OS]
                 @nIdVenta = ".$idventa."
 
         SELECT	'Return Value' = @return_value";
