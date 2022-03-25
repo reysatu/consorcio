@@ -220,6 +220,61 @@ function generateExcel($data, $file_name, $sheet_name)
 
     return response()->json($response);
 }
+function generateExcelMensualCompleto($data, $file_name, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas)
+{
+    
+    $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas) {
+         $name="XXX";
+        foreach ($sheet_name as $valor) {
+              if($valor==1){
+                $name="ENERO";
+              }else if ($valor==2){
+                 $name="FEBRERO";
+              }else if ($valor==3){
+                 $name="MARZO";
+              }else if ($valor==4){
+                 $name="ABRIL";
+              }else if ($valor==5){
+                 $name="MAYO";
+              }else if ($valor==6){
+                 $name="JUNIO";
+              }else if ($valor==7){
+                 $name="JULIO";
+              }else if ($valor==8){
+                 $name="AGOSTO";
+              }else if ($valor==9){
+                 $name="SEPTIEMBRE";
+              }else if ($valor==10){
+                 $name="OCTUBRE";
+              }else if ($valor==11){
+                 $name="NOVIEMBRE";
+              }else if ($valor==12){
+                 $name="DICIEMBRE";
+              }
+              
+        }
+        $namea='RESUMEN';
+        $nameb='DETALLADO';
+        $excel->sheet($namea, function ($sheet) use ($data,$data_info,$anio,$name,$data_tecnico,$data_metas,$sheet_name) {
+                 $sheet->loadView('excel.viewReporteMensualCompleto')->with('data', $data)->with('mesName',$name)->with('data_info',$data_info)->with('anio',$anio)->with('data_tecnico',$data_tecnico)->with('data_metas',$data_metas)->with('meses_array',$sheet_name);
+        });
+        if(count($data_info)>0){
+           $excel->sheet($nameb, function ($sheet) use ($data,$data_info,$anio,$name,$data_tecnico,$data_metas,$sheet_name) {
+                 $sheet->loadView('excel.viewReportePaginaDetallada')->with('data', $data)->with('mesName',$name)->with('data_info',$data_info)->with('anio',$anio)->with('data_tecnico',$data_tecnico)->with('data_metas',$data_metas)->with('meses_array',$sheet_name);
+          });     
+        }
+          
+    });
+
+    $file = $file->string('xlsx');
+
+    $response = [
+        'name' => $file_name,
+        'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
+    ];
+
+    return response()->json($response);
+}
 
 function generateExcelMensual($data, $file_name, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos)
 {

@@ -111,10 +111,27 @@ class ReporteMetaController extends Controller
           array_push($mes,$row->mes);    
         }
         if(count($data_info)>0){
-            return generateExcelMensual($this->generateDataExcelMes($repo->all()), 'REPORTE DE METAS MENSUAL', $mes,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos);
+            return generateExcelMensual($this->generateDataExcelMes($repo->all()), 'REPORTE DE METAS DIARIAS', $mes,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos);
         }else{
             return 'N';
         }
+       
+    }
+     public function excelMesComple(ReporteMetaInterface $repo,Request $request)
+    { 
+        $anio = $request->input('Anio','');
+        $data_info=$repo->getDataAnio($anio);
+        $data_tecnico=$repo->getTecnico($anio);
+        $data_metas=$repo->getTecnico_metas($anio);
+        $data_meses=$repo->getDataAnioMeses($anio);
+        // $mantenimientos=$repo->getTiposMantenimiento();
+        $mes=[];
+        foreach ($data_meses as $row){
+          array_push($mes,$row->mes);    
+        }
+       
+            return generateExcelMensualCompleto($this->generateDataExcelMes($repo->all()), 'REPORTE DE OBJETIVOS', $mes,$data_info,$anio,$data_tecnico,$data_metas);
+        
        
     }
 

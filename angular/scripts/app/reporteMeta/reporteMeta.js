@@ -21,7 +21,7 @@
         var btn_imprimirMovimiento=$("#btn_imprimirMovimiento");
         var tipoObjetivos=$("#tipoObjetivos");
         var btn_imprimirDiario=$("#btn_imprimirDiario");
-
+        var btn_imprimirMes=$("#btn_imprimirMes");
         $("#btn_imprimirDiario").click(function(e){
             var data_excel = {
                             Anio: $('#Anio').val(),
@@ -33,38 +33,20 @@
                  $scope.openDocExeclMes('reporteMetas/excelMes',data_excel);
               } 
             }
-             
-            //             $scope.openDoc('projects/excel', data_excel);
-         
         });
-        // $("#btn_exportar_QM").click(function(e){
-        //     var data_excel = {
-        //                     filtro_idAlm:$('#filtro_idAlm').val(),
-        //                     filtro_idLoc:$('#filtro_idLoc').val(),
-        //                     filtro_nat:$('#filtro_nat').val(),
-        //                     filtro_oper:$('#filtro_oper').val(),
-        //                     filtro_cate:$('#filtro_cate').val(),
-        //                     filtro_art:$('#filtro_art').val(),
-        //                     n_movimiento:$('#n_movimiento').val(),
-        //                     cod_lote:$('#cod_lote').val(),
-        //                     cod_serie:$('#cod_serie').val(),
-        //                     fecha_inicio:$('#fecha_inicio').val(),
-        //                     fecha_fin:$('#fecha_fin').val(),
-        //                     search: '',
-        //      };
-        //     //             $scope.openDoc('projects/excel', data_excel);
-        //     $scope.openDoc('query_movements/excel',data_excel);
-        // });
-
-
-        // $("#btn_imprimirMovimiento").click(function(e){
-        //     var data_excel = {
-        //                     Anio: $('#Anio').val(),
-        //                     mes: $('#mes').val(),
-        //      };
-        //     //             $scope.openDoc('projects/excel', data_excel);
-        //     $scope.loadReporResumenMensualPDF('reporteMetas/pdf',data_excel);
-        // });
+        $("#btn_imprimirMes").click(function(e){
+            var data_excel = {
+                            Anio: $('#Anio').val(),
+             };
+            var bval = true;
+            bval = bval && tipoObjetivos.required();
+            if(bval){
+             if(tipoObjetivos.val()==1){
+                 $scope.openDocExeclDiario('reporteMetas/excelMesComple',data_excel);
+              } 
+            }
+        });
+        
 
         function getDataFormMovement () {
             RESTService.all('reporteMetas/data_form', '', function(response) {

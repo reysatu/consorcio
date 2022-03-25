@@ -13,6 +13,8 @@ Route::post('reporteMetas/update', ['as' => 'reporteMetas.update', 'uses' => 'Re
 
 Route::get('reporteMetas/excelMes', ['as' => 'reporteMetas.excelMes', 'uses' => 'ReporteMetaController@excelMes']);
 
+Route::get('reporteMetas/excelMesComple', ['as' => 'reporteMetas.excelMesComple', 'uses' => 'ReporteMetaController@excelMesComple']);
+
 Route::get('reporteMetas/pdf', ['as' => 'reporteMetas.pdf', 'uses' => 'ReporteMetaController@pdf']);
 
 Route::get('reporteMetas/data_form', ['as' => 'reporteMetas.data_form', 'uses' => 'ReporteMetaController@data_form']);
