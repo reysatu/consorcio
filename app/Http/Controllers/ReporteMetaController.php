@@ -8,30 +8,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Recopro\ResumenMensualActividad\ResumenMensualActividadTrait;
+use App\Http\Recopro\ReporteMeta\ReporteMetaTrait;
 use Illuminate\Http\Request;
-use App\Http\Recopro\ResumenMensualActividad\ResumenMensualActividadInterface;
+use App\Http\Recopro\ReporteMeta\ReporteMetaInterface;
 use App\Http\Recopro\Query_movements\Query_movementsInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
-use App\Http\Requests\ResumenMensualActividadRequest;
-class ResumenMensualActividadController extends Controller
+use App\Http\Requests\ReporteMetaRequest;
+class ReporteMetaController extends Controller
 {
-     use ResumenMensualActividadTrait;
+     use ReporteMetaTrait;
 
     public function __construct()
     {
 //        $this->middleware('json');
     }
+    public function data_form (Request $request, ReporteMetaInterface $repo)
+    {   $usuario=auth()->id();
+        $tiposObjetivos = $repo->getTiposObjetivos();
+        return response()->json([
+            'status' => true,
+            'tiposObjetivos' => $tiposObjetivos,
+        ]);
+    }
 
-    public function all(Request $request, ResumenMensualActividadInterface $repo)
+    public function all(Request $request, ReporteMetaInterface $repo)
     {
         $s = $request->input('search', '');
         $params = ['idCategoria', 'descripcion as Categoria','estado'];
         return parseList($repo->search($s), $request, 'idCategoria', $params);
     }
 
-    public function create(ResumenMensualActividadInterface $repo, Request $request)
+    public function create(ReporteMetaInterface $repo, Request $request)
     {
         $data = $request->all();
         $table="ERP_Categoria";
@@ -51,7 +59,7 @@ class ResumenMensualActividadController extends Controller
         ]);
     }
 
-    public function update(ResumenMensualActividadInterface $repo, ResumenMensualActividadRequest $request)
+    public function update(ReporteMetaInterface $repo, ReporteMetaRequest $request)
     {
         $data = $request->all();
         $id = $data['idCategoria'];
@@ -66,7 +74,7 @@ class ResumenMensualActividadController extends Controller
         return response()->json(['Result' => 'OK']);
     }
 
-    public function destroy(ResumenMensualActividadInterface $repo, Request $request)
+    public function destroy(ReporteMetaInterface $repo, Request $request)
     {
         $id = $request->input('idCategoria');
         $repo->destroy($id);
@@ -78,11 +86,56 @@ class ResumenMensualActividadController extends Controller
     // //     return parseSelect($repo->all(), 'id', 'description');
     // // }
 
-    public function excel(ResumenMensualActividadInterface $repo)
-    {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CATEGORÍAS', 'Categoría');
+    // public function excelMes(ReporteMetaInterface $repo,Request $request)
+    // {   
+    //     $anio = $request->input('Anio','');
+    //     $data=$repo->getDataAnio($anio);
+    //     $data_meses=$repo->getDataAnioMeses($anio);
+    //     $mes=[];
+    //     foreach ($data_meses as $row){
+    //       array_push($mes,$row->mes);    
+    //     }
+    //     return generateExcelMensual($data, 'REPORTE DE METAS MENSUAL', $mes);
+    // }
+
+     public function excelMes(ReporteMetaInterface $repo,Request $request)
+    { 
+        $anio = $request->input('Anio','');
+        $data_info=$repo->getDataAnio($anio);
+        $data_tecnico=$repo->getTecnico($anio);
+        $data_metas=$repo->getTecnico_metas($anio);
+        $data_meses=$repo->getDataAnioMeses($anio);
+        $mantenimientos=$repo->getTiposMantenimiento();
+        $mes=[];
+        foreach ($data_meses as $row){
+          array_push($mes,$row->mes);    
+        }
+        if(count($data_info)>0){
+            return generateExcelMensual($this->generateDataExcelMes($repo->all()), 'REPORTE DE METAS DIARIAS', $mes,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos);
+        }else{
+            return 'N';
+        }
+       
     }
-     public function pdf(ResumenMensualActividadInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom,Orden_servicioInterface $repOs)
+     public function excelMesComple(ReporteMetaInterface $repo,Request $request)
+    { 
+        $anio = $request->input('Anio','');
+        $data_info=$repo->getDataAnio($anio);
+        $data_tecnico=$repo->getTecnico($anio);
+        $data_metas=$repo->getTecnico_metas($anio);
+        $data_meses=$repo->getDataAnioMeses($anio);
+        // $mantenimientos=$repo->getTiposMantenimiento();
+        $mes=[];
+        foreach ($data_meses as $row){
+          array_push($mes,$row->mes);    
+        }
+       
+            return generateExcelMensualCompleto($this->generateDataExcelMes($repo->all()), 'REPORTE DE OBJETIVOS', $mes,$data_info,$anio,$data_tecnico,$data_metas);
+        
+       
+    }
+
+     public function pdf(ReporteMetaInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom,Orden_servicioInterface $repOs)
     {
             $idusu=auth()->id();
             $usuario=$repo->getUsuario($idusu);

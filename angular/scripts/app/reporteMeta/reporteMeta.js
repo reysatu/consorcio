@@ -4,14 +4,14 @@
   
 (function () {
     'use strict';
-    angular.module('sys.app.resumenMensualActividads')
+    angular.module('sys.app.reporteMetas')
         .config(Config)
-        .controller('ResumenMensualActividadCtrl', ResumenMensualActividadCtrl);
+        .controller('ReporteMetaCtrl', ReporteMetaCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    ResumenMensualActividadCtrl.$inject = ['$scope'];
+    ReporteMetaCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify','Helpers'];
 
-    function ResumenMensualActividadCtrl($scope)
+    function ReporteMetaCtrl($scope, _, RESTService, AlertFactory, Notify,Helpers)
     {
         
          $scope.chkState = function () {
@@ -19,30 +19,65 @@
             state_state.html(txt_state2);
         };
         var btn_imprimirMovimiento=$("#btn_imprimirMovimiento");
-
-
-        $("#btn_imprimirMovimiento").click(function(e){
+        var tipoObjetivos=$("#tipoObjetivos");
+        var btn_imprimirDiario=$("#btn_imprimirDiario");
+        var btn_imprimirMes=$("#btn_imprimirMes");
+        $("#btn_imprimirDiario").click(function(e){
             var data_excel = {
                             Anio: $('#Anio').val(),
-                            mes: $('#mes').val(),
              };
-            //             $scope.openDoc('projects/excel', data_excel);
-            $scope.loadReporResumenMensualPDF('resumenMensualActividads/pdf',data_excel);
+            var bval = true;
+            bval = bval && tipoObjetivos.required();
+            if(bval){
+             if(tipoObjetivos.val()==1){
+                 $scope.openDocExeclMes('reporteMetas/excelMes',data_excel);
+              } 
+            }
         });
+        $("#btn_imprimirMes").click(function(e){
+            var data_excel = {
+                            Anio: $('#Anio').val(),
+             };
+            var bval = true;
+            bval = bval && tipoObjetivos.required();
+            if(bval){
+             if(tipoObjetivos.val()==1){
+                 $scope.openDocExeclDiario('reporteMetas/excelMesComple',data_excel);
+              } 
+            }
+        });
+        
 
-        var search = getFormSearch('frm-search-ResumenMensualActividad', 'search_b', 'LoadRecordsButtonResumenMensualActividad');
+        function getDataFormMovement () {
+            RESTService.all('reporteMetas/data_form', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                  
+                    tipoObjetivos.html("");
+                    tipoObjetivos.append('<option value="" selected>Seleccionar</option>');
+                     _.each(response.tiposObjetivos, function(item) {
+                        tipoObjetivos.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                    });
+                }
+            }, function() {
+                getDataFormMovement();
+            });
+        }
+        getDataFormMovement();
 
-        var table_container_ResumenMensualActividad = $("#table_container_ResumenMensualActividad");
+ 
+        var search = getFormSearch('frm-search-ReporteMeta', 'search_b', 'LoadRecordsButtonReporteMeta');
 
-        table_container_ResumenMensualActividad.jtable({
+        var table_container_ReporteMeta = $("#table_container_ReporteMeta");
+
+        table_container_ReporteMeta.jtable({
             title: "Lista de Categorías",
             paging: true,
             sorting: true,
             actions: { 
-                listAction: base_url + '/resumenMensualActividads/list',
-                createAction: base_url + '/resumenMensualActividads/create',
-                updateAction: base_url + '/resumenMensualActividads/update',
-                deleteAction: base_url + '/resumenMensualActividads/delete',
+                listAction: base_url + '/reporteMetas/list',
+                createAction: base_url + '/reporteMetas/create',
+                updateAction: base_url + '/reporteMetas/update',
+                deleteAction: base_url + '/reporteMetas/delete',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',
@@ -56,7 +91,7 @@
                     cssClass: 'btn-primary',
                     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
                     click: function () {
-                        $scope.openDoc('resumenMensualActividads/excel', {});
+                        $scope.openDoc('reporteMetas/excel', {});
                     }
                 }]
             },
@@ -108,8 +143,8 @@
             }
         });
 
-        generateSearchForm('frm-search-ResumenMensualActividad', 'LoadRecordsButtonResumenMensualActividad', function(){
-            table_container_ResumenMensualActividad.jtable('load', {
+        generateSearchForm('frm-search-ReporteMeta', 'LoadRecordsButtonReporteMeta', function(){
+            table_container_ReporteMeta.jtable('load', {
                 search: $('#search_b').val()
             });
         }, true);
@@ -118,10 +153,10 @@
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider
 
-            .state('resumenMensualActividads', {
-                url: '/resumenMensualActividads',
-                templateUrl: base_url + '/templates/resumenMensualActividads/base.html',
-                controller: 'ResumenMensualActividadCtrl'
+            .state('reporteMetas', {
+                url: '/reporteMetas',
+                templateUrl: base_url + '/templates/reporteMetas/base.html',
+                controller: 'ReporteMetaCtrl'
             });
 
         $urlRouterProvider.otherwise('/');

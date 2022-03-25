@@ -1,16 +1,16 @@
 <div class="panel panel-danger-admin">
     <div class="panel-heading">
-        Gestión de Reporte Mensual de Actividades
+        Gestión de Reporte de Metas
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12"> 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Año</label>
-                    <div class="col-sm-3">
+                    <label class="col-sm-1 control-label">Año</label>
+                    <div class="col-sm-2">
                        <input type="number" id="Anio" class="form-control input-sm" placeholder="AÑO"  required minlength="6" min="2010" value="2022" />
                     </div>
-                    <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                       <select id="mes" class="form-control input-sm">
                         <option value="1">ENERO</option>
                         <option value="2">FEBRERO</option>
@@ -25,12 +25,25 @@
                         <option value="11">NOVIEMBRE</option>
                         <option value="12">DICIEMBRE</option>
                       </select>
+                    </div> -->
+                    <label class="col-sm-2 control-label">Tipo de Objetivo</label>
+                    <div class="col-sm-3">
+                      <select id="tipoObjetivos" class="form-control input-sm">
+                      </select>
                     </div>
                     <div class="col-sm-2">
                         <div class="btn-group">
-                             <button type="button" class="btn btn-success btn-sm" id="btn_imprimirMovimiento">
-                                    <span class="fa fa-file-pdf-o"></span>
-                                                Imprimir Resumen
+                             <button type="button" class="btn btn-primary btn-sm" id="btn_imprimirDiario">
+                                    <span class="fa fa-file-excel-o"></span>
+                                                 Resumen por Día
+                             </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="btn-group">
+                             <button type="button" class="btn btn-primary btn-sm" id="btn_imprimirMes">
+                                    <span class="fa fa-file-excel-o"></span>
+                                                 Resumen por Mes
                              </button>
                         </div>
                     </div>

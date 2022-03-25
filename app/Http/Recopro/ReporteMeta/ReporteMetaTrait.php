@@ -6,18 +6,44 @@
  * Time: 11:36 AM
  */
 
-namespace App\Http\Recopro\ResumenMensualActividad;
+namespace App\Http\Recopro\ReporteMeta;
 
 use Carbon\Carbon;
 
-trait ResumenMensualActividadTrait
+trait ReporteMetaTrait
 {
     public function generateDataExcel($info)
     {
         $columns[] = ['CATEGORÍA','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
-            $estado="ACTIVO";
+            $estado="ACTIVO"; 
+            if($i->estado=='I'){
+                $estado='INACTIVO';
+            };
+            $columns[] = [
+                ['left', $i->descripcion],
+                ['left', $estado],
+                ['left', $i->user_c->name],
+                ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
+                ['left', $i->user_u->name],
+                ['center', (Carbon::parse($i->updated_at)->format('d-m-Y'))]
+            ];
+        }
+
+        $data = [
+            'data' => $columns,
+            'title' => 'LISTA DE CATEGORÍAS'
+        ];
+
+        return $data;
+    }
+    public function generateDataExcelMes($info)
+    {
+        $columns[] = ['CATEGgORÍA','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+
+        foreach ($info as $i) {
+            $estado="ACTIVO"; 
             if($i->estado=='I'){
                 $estado='INACTIVO';
             };
