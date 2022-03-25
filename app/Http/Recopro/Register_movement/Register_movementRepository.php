@@ -72,7 +72,7 @@ class Register_movementRepository implements Register_movementInterface
             $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->where('naturaleza','R')->orWhere('idTipoOperacion','2');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%')->where('naturaleza','R')->orWhere('idTipoOperacion','2');
             $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->where('naturaleza','R')->orWhere('idTipoOperacion','2');
-        });
+        })->orderBy('idMovimiento', 'DESC');
 
     }
     public function get_ventas_entrega()
@@ -85,11 +85,16 @@ class Register_movementRepository implements Register_movementInterface
      public function search_devolucion($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC')->where('naturaleza','D');
-            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
-        });
+            // $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
+            // $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
+            // $q->orWhere('estado', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
+            // $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%')->where('naturaleza','D');
+
+            $q->where('idMovimiento', 'LIKE', '%'.$s.'%');
+            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
+        })->orderBy('idMovimiento', 'DESC');
 
     }
     public function get_movemen_lote($id){

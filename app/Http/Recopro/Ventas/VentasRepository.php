@@ -149,7 +149,7 @@ class VentasRepository implements VentasInterface
         $mostrar3=DB::select("select pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, vd.consecutivo as idDetalleRepues,* 
         from ERP_VentaDetalle as vd 
         inner join ERP_Productos as pr on pr.id=vd.idarticulo  
-        where vd.idventa={$idventa}");
+        where vd.idventa={$idventa} AND pr.type_id=1");
         return $mostrar3;
     }
      public function get_venta_detalle_entrega($idventa){

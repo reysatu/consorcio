@@ -127,7 +127,7 @@
     <main>  
         <?php 
             foreach ($solicitudes as $ks => $vs) { 
-                if($vs->primera_cuota_vencida->dias_mora <= $parametro_1) { //15 Días de mora máximo (hasta) para emitir carta cobranza 1
+                if($vs->primera_cuota_vencida->dias_mora > 0 && $vs->primera_cuota_vencida->dias_mora <= $parametro_1) { //15 Días de mora máximo (hasta) para emitir carta cobranza 1
               
                 
                 

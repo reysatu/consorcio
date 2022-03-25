@@ -99,18 +99,30 @@ class Entrega_servicesTecnicoController extends Controller
             $data = $request->all();
              $table="ERP_Movimiento";
              $idt='idMovimiento';
+            //  echo "oha"; exit;
             $getNaturaleza=$opRepo->find($data['idTipoOperacion']);
             $naturaleza=$getNaturaleza->idNaturaleza;
             $data['idTipoOperacion'] =$data['idTipoOperacion'];
             $data['naturaleza'] =$naturaleza;
             $data['observaciones'] = strtoupper($data['observaciones']);
+
+            
+           
             $data['cCodConsecutivo'] = (isset($data['cCodConsecutivo'])) ? strtoupper($data['cCodConsecutivo']) : "";
             $data['nConsecutivo'] = (isset($data['nConsecutivo'])) ? strtoupper($data['nConsecutivo']) : "";
-            
+
+            if(empty($data['cCodConsecutivo']) && empty($data['nConsecutivo'])) {
+                $arr = explode("-", $data['documento']);
+                // print_r($arr);
+                $data['cCodConsecutivo']  = (isset($arr[0])) ? $arr[0] : "";
+                $data['nConsecutivo']  = (isset($arr[1])) ? $arr[1] : "";
+            }
+        //    print_r($data);
             $consecutivo_proforma=$repoM->get_consecutivo_proforma(strtoupper($data['cCodConsecutivo']),strtoupper($data['nConsecutivo']));
             if($data['observaciones']==''){
                 $data['observaciones']=null;
             }
+           
             $data['idUsuario']=auth()->id();
             if ($id != 0) {
                 $repoM->update($id, $data);
@@ -200,7 +212,7 @@ class Entrega_servicesTecnicoController extends Controller
 
             $colorNs = $data['colorNs'];
             $colorNs = explode(',', $colorNs);
-
+            
             $valida="ha";
             for ($i=0; $i < count($idArticulo) ; $i++) { 
                 if($data['naturaleza']!="C"){
@@ -260,6 +272,7 @@ class Entrega_servicesTecnicoController extends Controller
                 }
                 
             }
+           
 
             if ($idArticulo != '') {
                 $repo->delete_detalle($idMovimiento);

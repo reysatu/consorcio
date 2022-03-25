@@ -100,11 +100,11 @@ class MovimientoCajaController extends Controller
             $datoDet['descripcion'] =strtoupper($data['conceptoAdd']); 
             $datoDet['idCajaDiaria'] =$id;
             $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
-            if($data['tipoMovimientoAdd']=='ING'){
-                  $datoDet['naturaleza'] ='E';
-            }else{
-                 $datoDet['naturaleza'] ='S';
-            }   
+            if($data['tipoMovimientoAdd']=='ING' || $data["tipoMovimientoAdd"] == "SEP"){
+                $datoDet['naturaleza'] ='E';
+            } else {
+                $datoDet['naturaleza'] ='S';
+            }
 
             if($data['tipoMovimientoAdd']=='BCO'){
                  $datoDet['nroOperacion'] =$data['nrOperacion'];
@@ -829,6 +829,9 @@ class MovimientoCajaController extends Controller
                 if(count($solicitud_credito) > 0) {
 
                     if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                        if($i > 0) {
+                            continue;
+                        }
                         //CUOTA INICIAL
                         $data_venta_detalle["idarticulo"] = $parametro_anticipo[0]->value;
                         $data_venta_detalle["um_id"] = "07"; //codigo unidad
@@ -917,6 +920,9 @@ class MovimientoCajaController extends Controller
                 if(count($solicitud_credito) > 0) {
 
                     if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                        if($i > 0) {
+                            continue;
+                        }
                         //CUOTA INICIAL
                         $data_ticket_detalle["idarticulo"] = $parametro_anticipo[0]->value;
                         $data_ticket_detalle["um_id"] = "07"; //codigo unidad
@@ -1681,8 +1687,10 @@ class MovimientoCajaController extends Controller
         $datos = array();
         $datos["venta_anticipo"] = array();
         $datos["solicitud"] = array();
-
-        if($cCodConsecutivo != "null" && $cCodConsecutivo != 0 && $nConsecutivo != "null" && $nConsecutivo != 0) {
+        // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
+        // var_dump($bool);
+        if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
+     
             $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
             $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 

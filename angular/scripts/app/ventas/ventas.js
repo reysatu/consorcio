@@ -101,6 +101,13 @@
                     list: false,
 
                 },
+                tipo_comprobante: {
+                    title: 'tipo_comprobante',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
                 serie_comprobante: {
                     title: 'Serie',
 
@@ -147,7 +154,6 @@
 
 
                 },
-
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -155,7 +161,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '" data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
                     }
 
                 }
@@ -169,6 +175,7 @@
                     var idventa_referencia = $(this).attr('data-idventa_referencia');
                     var cCodConsecutivo = $(this).attr('data-cCodConsecutivo');
                     var nConsecutivo = $(this).attr('data-nConsecutivo');
+                    var tipo_comprobante = $(this).attr('data-tipo_comprobante');
                     // alert(idventa_referencia);
                     if(idtipodocumento == "07") {
                         return false;
@@ -185,30 +192,32 @@
                         return false;
                     }
 
-                   
-
                     $.post("movimientoCajas/get_caja_diaria", {},
                         function (data, textStatus, jqXHR) {
                             // console.log();
                             if (data.length > 0) {
+                                if(tipo_comprobante == 1) { // solo para anticipos la validacion
+                                    $.post("ventas/validar_venta_anticipo", { cCodConsecutivo: cCodConsecutivo, nConsecutivo: nConsecutivo },
+                                        function (data, textStatus, jqXHR) {
 
-                                $.post("ventas/validar_venta_anticipo", { cCodConsecutivo: cCodConsecutivo, nConsecutivo: nConsecutivo },
-                                    function (data, textStatus, jqXHR) {
+                                            if(data.length == 0) {
 
-                                        if(data.length == 0) {
-
-                                            find_documento(idventa);
-                                        } else {
-                                            AlertFactory.textType({
-                                                title: '',
-                                                message: 'Este documento por anticipo ya tiene una venta por el saldo',
-                                                type: 'info'
-                                            });
-                                            return false;
-                                        }
-                                    },  
-                                    "json"
-                                );
+                                                find_documento(idventa);
+                                            } else {
+                                                AlertFactory.textType({
+                                                    title: '',
+                                                    message: 'Este documento por anticipo ya tiene una venta por el saldo',
+                                                    type: 'info'
+                                                });
+                                                return false;
+                                            }
+                                        },  
+                                        "json"
+                                    );
+                                } else {
+                                    find_documento(idventa);
+                                }
+                               
 
                                 
                             } else {
@@ -356,7 +365,11 @@
                         // nota de credito por un anticipo
                         var msg = "";
                         if(data.datos[0].tipo_comprobante == "0") {
-                            msg = "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
+                            msg += "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
+                        }
+
+                        if(data.datos[0].devolucion_producto == "1") {
+                            msg += " ¡Importante! Se debe ingresar a almacén los articulos devueltos de la Nota de Crédito emitida.";
                         }
 
                         AlertFactory.textType({
@@ -365,19 +378,10 @@
                             type: 'success'
                         });
 
-                        // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
-                        // var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
-
-                        // if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
-
-                        //     window.open("movimientoCajas/imprimir_cronograma/" + id);
-                        // }
-
-                        // window.open("movimientoCajas/imprimir_comprobante/" + id);
+                        
 
 
-                        // id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa_ticket;
-                        // window.open("movimientoCajas/imprimir_ticket/" + id);
+                        
 
 
                     } else {

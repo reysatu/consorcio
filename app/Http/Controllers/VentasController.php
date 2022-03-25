@@ -34,7 +34,7 @@ class VentasController extends Controller
     {
 
         $s      = $request->input('search', '');
-        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia'];
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia', 'tipo_comprobante'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_documentos($s), $request, 'idventa', $params);
     }
@@ -117,12 +117,16 @@ class VentasController extends Controller
         try {
             DB::beginTransaction();
             // $venta = $caja_diaria_detalle_repo->get_venta();
+            $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
+            
             $data_venta                        = $data;
+            $data_venta["por_aplicar"] = "N";
             $data_venta["idventa_referencia"]  = $data["idventa"];
             $data_venta["devolucion_producto"] = 0;
             //si son iguales
-            if ($data["t_monto_total"] == $data["monto"]) {
-                // solo si es anticipo se devuleve el dinero
+            if ($data["t_monto_total"] == $data["monto"]) { // el saldo de la venta original igual al monto de la nota de credito
+                
+                // solo si es anticipo se devuelve el dinero
                 if ($data["tipo_comprobante"] == "1") {
 
                     $data_caja_detalle = array();
@@ -166,6 +170,12 @@ class VentasController extends Controller
                 if ($data["tipo_comprobante"] == "0" && $data["anticipo"] > 0) {
 
                     $data_venta["devolucion_producto"] = 1;
+                }
+
+                if($data["tipo_comprobante"] == "0") {
+                    if(count($venta_ref) > 0 && $venta_ref[0]->saldo == 0) {
+                        $data_venta["por_aplicar"] = "S";
+                    }
                 }
 
                 if ($data["condicion_pago"] == "1") {
@@ -308,7 +318,7 @@ class VentasController extends Controller
         GROUP BY s.idCobrador, c.descripcion";
 
         $cobradores = DB::select($sql_cobradores);
-
+        $vacios = 0;
         foreach ($cobradores as $key => $value) {
             $sql = "SELECT c.id AS idcobrador, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision, cl.razonsocial_cliente, v.serie_comprobante, v.numero_comprobante, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento, m.Descripcion AS moneda, v.t_monto_total,DATEDIFF(DAY, sc.fecha_vencimiento, GETDATE())  AS dias_mora, CASE WHEN sc.saldo_cuota=0 THEN 'Cobrado' ELSE 'Pendiente' END AS estado, vd.int_moratorio_pagado, ISNULL(vd.nrocuota, 0) AS nrocuota, vd.valor_cuota_pagada, s.cCodConsecutivo, s.nConsecutivo
             FROM ERP_Venta AS v
@@ -316,12 +326,15 @@ class VentasController extends Controller
             INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
             INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
             INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
-            INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo)
+            INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
             INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
             WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador={$value->idCobrador}";
            
             $pagos = DB::select($sql);
-           
+            
+            if(count($pagos) <= 0) {
+                $vacios ++;
+            }
 
             foreach ($pagos as $kp => $vp) {
                 $cuotas = $solicitud_repositorio->get_solicitud_cronograma($vp->cCodConsecutivo, $vp->nConsecutivo);
@@ -335,6 +348,11 @@ class VentasController extends Controller
         // echo "<pre>";
         // print_r($datos);
         // exit;
+
+        if($vacios > 0) {
+            echo '<script>alert("No hay Datos"); window.close(); </script>';
+            exit;
+        }
 
         
         $pdf = PDF::loadView("reportes.lista_cobranza_cuotas", $datos)->setPaper('A4', "landscape");

@@ -1990,6 +1990,8 @@
                         $("#detalle-formas-pago").html("");
                         $("#articulo_mov_det").html("");
                         LoadRecordsButtonSolicitud.click();
+                        LoadRecordsButtonComprobantes.click();
+                        LoadRecordsButtonSolicitudCreditos.click();
                         AlertFactory.textType({
                             title: '',
                             message: 'El documento se facturó correctamente. ' + msg,
