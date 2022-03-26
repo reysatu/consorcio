@@ -5,7 +5,7 @@
  * Date: 4/5/2017
  * Time: 6:59 PM
  */
-
+ 
 namespace App\Http\Controllers;
 use App\Http\Recopro\Register_movement\Register_movementTrait;
 use App\Http\Recopro\Proforma\ProformaTrait;
@@ -85,7 +85,7 @@ class Entrega_servicesTecnicoController extends Controller
     {
         $s = $request->input('search', '');
         $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
-        return parseList($repo->search_entrega($s), $request, 'idMovimiento', $params);
+        return parseList($repo->search_entrega($s), $request, '', $params);
     }
 
    public function excel(Register_movementInterface $repo)
