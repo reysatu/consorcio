@@ -395,6 +395,61 @@
             );
         }
 
+        $(document).on("keyup", "#nrocuotas_refinanciamiento", function () {
+            var nro_cuotas = parseFloat($(this).val());
+            var total_financiado = parseFloat($("#monto_refinanciamiento").val());
+            if (isNaN(nro_cuotas)) {
+                nro_cuotas = 0;
+            }
+
+            $.post("solicitud/factor_credito", { nro_cuotas: nro_cuotas },
+                function (data, textStatus, jqXHR) {
+              
+                    var porcentaje = 0;
+                    var intereses = 0;
+                    var valor_cuota = 0;
+
+                    if (data.length > 0) {
+                        porcentaje = parseFloat(data[0].porcentaje);
+                    }
+
+                    if (porcentaje > 0) {
+
+                        valor_cuota = total_financiado * porcentaje;
+                    } else {
+                        valor_cuota = total_financiado / nro_cuotas;
+                    }
+                    // console.log(valor_cuota);
+                    if (porcentaje > 0) {
+
+                        intereses = (Math.ceil(valor_cuota) * nro_cuotas) - total_financiado;
+                    }
+                    // console.log(intereses);
+                    $("#valor_cuota_refinanciamiento").val(Math.ceil(valor_cuota).toFixed(2));
+                    // var nuevo_total = parseFloat($("#desTotal").val());
+
+                    // CALCULAR NUEVO IGV PARA VALOR CUOTA FINAL IGV
+                    // var t_impuestos = (!isNaN(parseFloat($("#t_impuestos").val()))) ? parseFloat($("#t_impuestos").val()) : 0;
+
+                    // var valor_igv = parseFloat($("#valor_igv").val());
+                    var valor_cuota_final = Math.ceil(valor_cuota);
+
+
+                    // if (t_impuestos > 0) {
+                    //     valor_cuota_final = valor_cuota_final + (valor_cuota_final * valor_igv / 100);
+                    // }
+
+
+                    $("#intereses_refinanciamiento").val(intereses.toFixed(2));
+                    $("#valor_cuota_final_refinanciamiento").val(valor_cuota_final.toFixed(2));
+                  
+                   
+            
+                },
+                "json"
+            );
+
+        });
 
 
         var search_solicitud = getFormSearch('frm-search-solicitud', 'search_b_solicitud', 'LoadRecordsButtonSolicitud');

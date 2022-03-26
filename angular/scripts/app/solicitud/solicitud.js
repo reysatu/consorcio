@@ -2891,7 +2891,7 @@
                     var nuevo_total = parseFloat($("#desTotal").val());
 
                     // CALCULAR NUEVO IGV PARA VALOR CUOTA FINAL IGV
-                    var t_impuestos = (!isNaN(parseFloat($("#t_monto_descuento").val()))) ? parseFloat($("#t_monto_descuento").val()) : 0;
+                    var t_impuestos = (!isNaN(parseFloat($("#t_impuestos").val()))) ? parseFloat($("#t_impuestos").val()) : 0;
 
                     var valor_igv = parseFloat($("#valor_igv").val());
                     var valor_cuota_final = Math.ceil(valor_cuota);

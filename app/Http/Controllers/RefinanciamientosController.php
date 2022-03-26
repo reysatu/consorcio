@@ -44,9 +44,28 @@ class RefinanciamientosController extends Controller
 
         try {
             DB::beginTransaction();
+            $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
+            if(count($parametro_igv) <= 0) {
+                throw new Exception("Por favor cree el parametro IGV!");
+            }
 
             $sql_solicitud = "SELECT * FROM ERP_Solicitud WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
             $solicitud = DB::select($sql_solicitud);
+            $t_monto_total = (float) $data["monto_refinanciamiento"] + (float)$data["intereses_refinanciamiento"];
+            $t_monto_exonerado = 0;
+            $t_monto_afecto = 0;
+            $t_impuestos = 0;
+            if($solicitud[0]->t_impuestos > 0) {
+                $porcentaje = 100 + $parametro_igv[0]->valor;
+                $t_monto_subtotal = $t_monto_total * 100 / $porcentaje;
+                $t_impuestos = $t_monto_total - $t_monto_subtotal;
+                $t_monto_afecto = $t_monto_subtotal;
+            } else {
+                $t_monto_subtotal = $t_monto_total;
+                $t_monto_exonerado = $t_monto_total;
+            }
+
+          
 
             $sql_solicitud_articulo = "SELECT * FROM ERP_SolicitudArticulo WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
             $solicitud_articulo = DB::select($sql_solicitud_articulo);
@@ -64,6 +83,13 @@ class RefinanciamientosController extends Controller
                     $data_solicitud["cCodConsecutivoO"] = $data["cCodConsecutivo"]; 
                     $data_solicitud["nConsecutivoO"] = $data["nConsecutivo"]; 
                     $data_solicitud["fecha_solicitud"] = $data["fecha_refinanciamiento"]." ".date("H:i:s");
+                    $data_solicitud["t_monto_subtotal"] = $t_monto_subtotal; 
+                    $data_solicitud["t_monto_exonerado"] = $t_monto_exonerado; 
+                    $data_solicitud["t_monto_afecto"] = $t_monto_afecto; 
+                    $data_solicitud["t_impuestos"] = $t_impuestos; 
+                    $data_solicitud["t_monto_total"] = $t_monto_total; 
+                    $data_solicitud["facturado"] = ""; 
+                    $data_solicitud["pagado"] = ""; 
                     // print_r($data_solicitud);
                     $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
                     $solicitud_repositorio->actualizar_correlativo($data_solicitud["cCodConsecutivo"], $data_solicitud["nConsecutivo"]);
@@ -110,6 +136,12 @@ class RefinanciamientosController extends Controller
                     $data_solicitud_credito["cCodConsecutivo"] = $data_solicitud["cCodConsecutivo"];
                     $data_solicitud_credito["nConsecutivo"] = $data_solicitud["nConsecutivo"];
                     $data_solicitud_credito["cuota_inicial"] = 0;
+                    $data_solicitud_credito["nro_cuotas"] = $data["nrocuotas_refinanciamiento"];
+                    $data_solicitud_credito["monto_venta"] = $data["monto_refinanciamiento"];
+                    $data_solicitud_credito["total_financiado"] = $data["monto_refinanciamiento"];
+                    $data_solicitud_credito["valor_cuota"] = $data["valor_cuota_refinanciamiento"];
+                    $data_solicitud_credito["intereses"] = $data["intereses_refinanciamiento"];
+                    $data_solicitud_credito["valor_cuota_final"] = $data["valor_cuota_final_refinanciamiento"];
     
                     $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data_solicitud_credito));
                 }
@@ -143,6 +175,7 @@ class RefinanciamientosController extends Controller
             //CAMBIAMOS LA solicitud origen a estado refinanciado
             $sql_update = "UPDATE ERP_Solicitud SET estado = 9       
             WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
+            // echo $sql_update;
             DB::statement($sql_update);
            
 
