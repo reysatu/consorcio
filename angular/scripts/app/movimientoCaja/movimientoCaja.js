@@ -1792,6 +1792,7 @@
                             $("#idventa_nota").val("");
                             $("#monto_p").val(monto_venta.toFixed(2));
                             $("#monto_aplicar").val(monto_venta.toFixed(2));
+                           
 
                         } else {
                             AlertFactory.textType({
@@ -1815,6 +1816,7 @@
                                 $("#idventa_nota").val(data[0].idventa);
                                 $("#devolucion_producto").val(data[0].devolucion_producto);
                                 $("#idventa_separacion").val("");
+                                
                                 $("#monto_p").val(monto_venta.toFixed(2));
                                 $("#monto_aplicar").val(monto_venta.toFixed(2));
     
@@ -1833,6 +1835,7 @@
                     $("#idventa_separacion").val("");
                     $("#idventa_nota").val("");
                     $("#devolucion_producto").val("");
+                   
                     var total_pagar = parseFloat($("#total_pagar").val());
                     var subtotal_montos_pago = sumar_montos_formas_pago();
                     var saldo = total_pagar - subtotal_montos_pago;

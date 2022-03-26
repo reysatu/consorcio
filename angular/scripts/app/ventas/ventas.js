@@ -313,6 +313,11 @@
                         $("#tipo_comprobante").val(data.documento[0].tipo_comprobante);
                         $("#t_monto_total").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#condicion_pago").val(parseFloat(data.documento[0].condicion_pago).toFixed(2));
+                        if(data.documento[0].tipo_comprobante == "1") {
+                            $("#monto").attr("readonly", "readonly");
+                        } else {
+                            $("#monto").removeAttr("readonly");
+                        }
 
                         $("#monto").attr("max", parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#monto").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
@@ -337,6 +342,11 @@
     
            
         }
+
+        // $(document).on("keyup", "#monto", function () {
+        //     var max_monto = parseFloat($(this).attr("monto"));
+            
+        // });
 
         $scope.guardar_venta = function () {
             var bval = true;

@@ -133,7 +133,7 @@ class MovimientoCajaController extends Controller
                 $data_venta["condicion_pago"] = 1;
                 $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
                 $data_venta["idcliente"] = $data["idcliente"];
-                $data_venta["tipo_comprobante"] = "0";
+                $data_venta["tipo_comprobante"] = "1"; // anticipo
                 $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
                 $data_venta["t_monto_subtotal"] = $data["montoAdd"];
                 $data_venta["t_monto_total"] = $data["montoAdd"];
@@ -1195,6 +1195,7 @@ class MovimientoCajaController extends Controller
 
             $data_venta["idventa_comprobante"] = "";
             $data_venta["idventa_separacion"] = $data["idventa_separacion"];
+           
             $data_venta["idventa_nota"] = $data["idventa_nota"];
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
@@ -1712,6 +1713,11 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
         $datos["venta"] = $repo->get_venta($idventa); 
+        $datos["venta_anticipo_separacion"] = array();
+        if(!empty($datos["venta"][0]->idventa_separacion)) {
+            $datos["venta_anticipo_separacion"] = $repo->get_venta_anticipo_separacion($datos["venta"][0]->idventa_separacion); 
+        }
+
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
        
         if($datos["venta"][0]->idventa_referencia != "") {

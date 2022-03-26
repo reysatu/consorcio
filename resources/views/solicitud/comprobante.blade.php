@@ -243,6 +243,18 @@
                     echo '  <td></td>';
                     echo '</tr>';
                 }
+
+                if(count($venta_anticipo_separacion) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
+                  
+                    echo '<tr>';
+                    echo '  <td>1.00</td>';
+                    echo '  <td>UND</td>';
+                    echo '  <td>(-) ANTICIPO SEPARACIÓN '.$venta_anticipo_separacion[0]->serie_comprobante.'-'.$venta_anticipo_separacion[0]->numero_comprobante.'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</td>';
+                    echo '  <td>-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</td>';
+                    echo '</tr>';
+                   
+                }
                 
             ?>
         </table>
