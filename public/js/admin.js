@@ -3840,7 +3840,8 @@ function create_pdf_movimientoCuadreCaja(response) {
                     { 
                         text: simboloMoneda[0].Simbolo+" "+Number(dtb).toFixed(2),
                         fontSize: 8 ,
-                         alignment: 'right' 
+                         alignment: 'right' ,
+                         bold:true,
 
                     },
 
@@ -3865,7 +3866,8 @@ function create_pdf_movimientoCuadreCaja(response) {
                     { 
                         text:  simboloMoneda[0].Simbolo+" "+Number(dta).toFixed(2),
                         fontSize: 8 ,
-                         alignment: 'right' 
+                         alignment: 'right', 
+                          bold:true,
 
                     },
 
@@ -3911,7 +3913,8 @@ function create_pdf_movimientoCuadreCaja(response) {
                     { 
                         text:  simboloMonedaDolar[0].Simbolo+" "+Number(dtd).toFixed(2),
                         fontSize: 8 ,
-                         alignment: 'right' 
+                         alignment: 'right',
+                          bold:true, 
 
                     },
 
@@ -3933,7 +3936,8 @@ function create_pdf_movimientoCuadreCaja(response) {
                     { 
                         text:  simboloMoneda[0].Simbolo+" "+Number(tdsoles).toFixed(2),
                         fontSize: 8 ,
-                         alignment: 'right' 
+                         alignment: 'right',
+                          bold:true,
 
                     },
 

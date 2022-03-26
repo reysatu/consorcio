@@ -220,6 +220,23 @@ function generateExcel($data, $file_name, $sheet_name)
 
     return response()->json($response);
 }
+function generateExcelMovimientoCierre($data, $file_name, $sheet_name,$fechacA,$simboloMoneda,$periodo,$estado)
+{
+    $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name,$fechacA,$simboloMoneda,$periodo,$estado) {
+        $excel->sheet($sheet_name, function ($sheet) use ($data,$fechacA,$simboloMoneda,$periodo,$estado) {
+            $sheet->loadView('excel.viewReporteCierre')->with('data', $data)->with('fechacA',$fechacA)->with('simboloMoneda',$simboloMoneda)->with('periodo',$periodo)->with('estado',$estado);
+        });
+    });
+
+    $file = $file->string('xlsx');
+
+    $response = [
+        'name' => $file_name,
+        'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
+    ];
+
+    return response()->json($response);
+}
 function generateExcelMensualCompleto($data, $file_name, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas)
 {
     

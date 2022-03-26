@@ -13,6 +13,8 @@ Route::post('movimiento_cierres/delete', ['as' => 'movimiento_cierres.delete', '
 Route::post('movimiento_cierres/update', ['as' => 'movimiento_cierres.update', 'uses' => 'Movimiento_cierreController@update']);
 Route::get('movimiento_cierres/excel', ['as' => 'movimiento_cierres.excel', 'uses' => 'Movimiento_cierreController@excel']);
 
+Route::get('movimiento_cierres/excelPerido', ['as' => 'movimiento_cierres.excelPerido', 'uses' => 'VW_CierreInventarioPeriodoController@excelPerido']);
+
 Route::post('movimiento_cierres/getAllOperationMovCier', 'OperationController@getAll');  
 
 Route::post('movimiento_cierres/getAllUserRegMov', 'UserController@getAll');
