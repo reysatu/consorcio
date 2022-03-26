@@ -268,10 +268,14 @@ class VisitaClienteController extends Controller
         $datos["empresa"] = $repo_caja->get_empresa(); 
         $datos["visita_cliente"] = $repo->obtener_visita_cliente($id); 
         $datos["solicitudes"] = $repo->obtener_visita_cliente_solicitud($id); 
-
+        $dias_mora = 0;
         foreach ($datos["solicitudes"] as $key => $value) {
             $cuotas_pendientes = $repo->obtener_cuotas_pendientes($value->cCodConsecutivo, $value->nConsecutivo); 
             $datos["solicitudes"][$key]->primera_cuota_vencida = $cuotas_pendientes[0];
+            if(count($cuotas_pendientes) > 0 && $cuotas_pendientes[0]->dias_mora > 0) {
+                $dias_mora ++;
+            }
+
             $cuotas_vencidas = [];
             $intereses = 0;
             $deuda = 0;
@@ -322,7 +326,10 @@ class VisitaClienteController extends Controller
         // echo "<pre>";
         // print_r($datos);
         // exit;
-
+        if($dias_mora <= 0) {
+            echo '<script>alert("No cuotas con dias de mora"); window.close(); </script>';
+            exit;
+        }
         
         $pdf = PDF::loadView("visita_cliente.carta_cobranza", $datos);
         return $pdf->stream("carta_cobranza.pdf"); // ver

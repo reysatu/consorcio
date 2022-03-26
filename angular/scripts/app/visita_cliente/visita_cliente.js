@@ -57,8 +57,8 @@
                     key: true,
                     create: false,
                     edit: false,
-                    list: false,
-                    title: 'id',
+                    list: true,
+                    title: 'N° Visita',
                 },
                 fechareg: {
                     title: 'Fecha',
@@ -357,52 +357,54 @@
             var html = "";
                
             for (var index = 0; index < data.length; index++) {
-
-                html += '<tr>';
-                html += '<td><span class="inputs-hidden" nrocuota="'+data[index].nrocuota+'" ></span>'+data[index].fecha_vencimiento+'</td>';
-                
-                html += '<td class="valor-cuota">'+parseFloat(data[index].valor_cuota).toFixed(2)+'</td>';
-                html += '<td class="int-moratorio">'+parseFloat(data[index].int_moratorio).toFixed(2)+'</td>';
-                html += '<td class="">'+parseFloat(data[index].saldo_cuota).toFixed(2)+'</td>';
-                html += '<td class="">'+parseFloat(data[index].monto_pago).toFixed(2)+'</td>';
-                
-                html += '<td>'+data[index].nrocuota+'</td>';
-                if(parseFloat(data[index].saldo_cuota) > 0) {
-                  
-                    html += '<input type="hidden" class="" name="nrocuota[]" value="'+data[index].nrocuota+'" >';
-
-                    if($("#idvisita").val() == "") {
-
-                        html += '<td><center><input type="checkbox" nrocuota="'+data[index].nrocuota+'" value="'+data[index].nrocuota+'" class="check-cuota" /></center></td>';
-                    }
-                } else {
-                    if($("#idvisita").val() == "") {
-
-                        html += '<td class=""></td>';
-                        html += '<td class=""></td>';
-                    }
+                if($("#idvisita").val() == "") {
+                    html += '<tr>';
+                    html += '<td><span class="inputs-hidden" nrocuota="'+data[index].nrocuota+'" ></span>'+data[index].fecha_vencimiento+'</td>';
                     
-                }
-                // console.log("d =>"+$("#idvisita").val());
-
-                if($("#idvisita").val() != "" ) {
-
+                    html += '<td class="valor-cuota">'+parseFloat(data[index].valor_cuota).toFixed(2)+'</td>';
+                    html += '<td class="int-moratorio">'+parseFloat(data[index].int_moratorio).toFixed(2)+'</td>';
+                    html += '<td class="">'+parseFloat(data[index].saldo_cuota).toFixed(2)+'</td>';
+                    html += '<td class="">'+parseFloat(data[index].monto_pago).toFixed(2)+'</td>';
+                    
+                    html += '<td>'+data[index].nrocuota+'</td>';
+                    if(parseFloat(data[index].saldo_cuota) > 0) {
+                      
+                        html += '<input type="hidden" class="" name="nrocuota[]" value="'+data[index].nrocuota+'" >';
+    
+                        html += '<td><center><input type="checkbox" nrocuota="'+data[index].nrocuota+'" value="'+data[index].nrocuota+'" class="check-cuota" /></center></td>';
+                        
+                    } else {
+                       
+                        html += '<td class=""></td>';
+                        html += '<td class=""></td>';
+                        
+                        
+                    }
+                
+                    html += '</tr>';
+                } else {
                     if(data[index].nrocuota_v != null) {
+                        html += '<tr>';
+                        html += '<td><span class="inputs-hidden" nrocuota="'+data[index].nrocuota+'" ></span>'+data[index].fecha_vencimiento+'</td>';
+                        
+                        html += '<td class="valor-cuota">'+parseFloat(data[index].valor_cuota).toFixed(2)+'</td>';
+                        html += '<td class="int-moratorio">'+parseFloat(data[index].int_moratorio).toFixed(2)+'</td>';
+                        html += '<td class="">'+parseFloat(data[index].saldo_cuota).toFixed(2)+'</td>';
+                        html += '<td class="">'+parseFloat(data[index].monto_pago).toFixed(2)+'</td>';
+                        
+                        html += '<td>'+data[index].nrocuota+'</td>';
+                    
+                        // console.log("d =>"+$("#idvisita").val());
+    
                         html += '<td class=""><input type="date" class="form-control input-sm fecha_pago"  value="'+data[index].fecha_pago+'" /></td>';
                         html += '<td class=""><input type="number" class="form-control input-sm monto_pago" value="'+parseFloat(data[index].monto_pago_v).toFixed(2)+'" /></td>';
-                        html += '<td class=""><input type="text" class="form-control input-sm cObservacion" value="'+data[index].cObservacion+'" /></td>';
-                    } else {
-                        html += '<td class=""></td>';
-                        html += '<td class=""></td>';
-                        html += '<td class=""></td>';
-                    }
-                   
+                        html += '<td class=""><input type="text" class="form-control input-sm cObservacion" value="'+data[index].cObservacion+'" /></td>';    
+    
                   
+                        html += '</tr>';
+                    }
                 }
-                
-
-              
-                html += '</tr>';
+               
             }
             // alert(html);
 

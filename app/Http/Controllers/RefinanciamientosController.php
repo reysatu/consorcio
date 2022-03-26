@@ -109,6 +109,7 @@ class RefinanciamientosController extends Controller
                     $data_solicitud_credito = (array) $vsc;
                     $data_solicitud_credito["cCodConsecutivo"] = $data_solicitud["cCodConsecutivo"];
                     $data_solicitud_credito["nConsecutivo"] = $data_solicitud["nConsecutivo"];
+                    $data_solicitud_credito["cuota_inicial"] = 0;
     
                     $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data_solicitud_credito));
                 }

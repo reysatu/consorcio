@@ -253,6 +253,7 @@
 
         <table style="width: 100%;">               
             <?php 
+                
                 if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                     echo '<tr>';
                     echo '  <td style="width: 15%;">Condicion de Pago:</td>';

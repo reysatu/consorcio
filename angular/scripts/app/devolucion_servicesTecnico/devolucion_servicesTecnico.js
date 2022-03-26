@@ -1329,6 +1329,7 @@
                     'ident_serie_bd_serie2': ident_serie_bd_serie2,
                     'ident_serie_bd_serie': ident_serie_bd_serie,
                     'naturaleza': naturalezaGeneral,
+                    'documento': $("#documento").val(),
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
 
@@ -2587,7 +2588,7 @@
         table_container_Register_Movement.jtable({
             title: "Lista de devolución a servicios técnicos",
             paging: true,
-            sorting: true,
+            sorting: false,
             actions: {
                 listAction: base_url + '/devolucion_servicesTecnicos/list',
             },
@@ -2613,6 +2614,7 @@
                 idMovimiento: {
                     title: '#',
                     key: true,
+                    list: true,
                     create: false,
                 },
                 idTipoOperacion: {
@@ -2639,7 +2641,6 @@
                         return '<a href="javascript:void(0)" class="edit-serie" data-id="' + data.record.idMovimiento
                             + '" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
-
                 }, Eliminar: {
                     width: '1%',
                     sorting: false,

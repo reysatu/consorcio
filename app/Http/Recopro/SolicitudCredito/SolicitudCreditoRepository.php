@@ -23,7 +23,8 @@ class SolicitudCreditoRepository implements SolicitudCreditoInterface
     public function search($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('estado', [6]) // facturados
+            // $q->whereIn('estado', [6]) // facturados
+            $q->whereIn('estado', [7, 8]) // despachados y despachados parcial
                 ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
