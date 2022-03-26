@@ -25,6 +25,23 @@
         var btnCierreInventario=$("#btnCierreInventario");
         var idMovimiento=$("#idMovimiento");
         var btnImprimir=$("#btnImprimir");
+        var btnExcel=$("#btnExcel"); 
+
+        $("#btnExcel").click(function(e){
+            if(periodo.val()!=''){
+                if(estado.val()!=''){
+                     var data_excel = {
+                                periodo: periodo.val(),
+                                estado:$("#estado option:selected").text(),
+                     }
+                    $scope.openDoc('movimiento_cierres/excelPerido',data_excel);
+             };
+            }
+
+
+        });
+
+
         periodo.select2();
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
@@ -46,7 +63,8 @@
             }
            
             // $scope.openDoc('query_movements/pdf',data_pdf);
-        });  
+        });
+
          function cleanMoCi(){
             periodo.val("").trigger("change");
             estado.val("");
@@ -274,7 +292,7 @@
             });
         }
 
-        getDataFormMovimientoCierre();
+        getDataFormMovimientoCierre(); 
         function newCierreMovimiento()
         {
             titlemodalMovimietoCierre.html('Nuevo Cierre');
@@ -398,7 +416,7 @@
             sorting: true,
             actions: { 
                 listAction: base_url + '/movimiento_cierres/list_movimientosCerrados',
-            },
+            }, 
             messages: {
                 addNewRecord: 'Nuevo Cierre',
                 editRecord: 'Editar Cierre',

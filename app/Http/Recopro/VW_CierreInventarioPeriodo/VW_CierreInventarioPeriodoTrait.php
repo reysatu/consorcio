@@ -14,26 +14,51 @@ trait VW_CierreInventarioPeriodoTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['CATEGORÍA','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
-
+        $columns[] = ['ID','COD. ARTÍCULO','ARTÍCULO','CATEGORÍA','UNID','ALM','LOC','LOTE','SERIE','DISPONIBLE','REMITIDO','TRÁNSITO','S.TOTAL','COSTO','COSTO TOTAL'];
+        $cont=0;
         foreach ($info as $i) {
-            $estado="ACTIVO";
-            if($i->estado=='I'){
-                $estado='INACTIVO';
-            };
+            $cont=$cont+ $i->Costo_Total;
             $columns[] = [
-                ['left', $i->descripcion],
-                ['left', $estado],
-                ['left', $i->user_c->name],
-                ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
-                ['left', $i->user_u->name],
-                ['center', (Carbon::parse($i->updated_at)->format('d-m-Y'))]
+                ['left', $i->id,''],
+                ['left', $i->code_article,''],
+                ['left', $i->Articulo,''],
+                ['left', $i->Categoria,''],
+                ['left', $i->Unidad,''],
+                ['left', $i->Almacen,''],
+                ['left', $i->Localizacion,''],
+                ['left', $i->Lote,''],
+                ['left', $i->Serie,''],
+                ['left', $i->Disponible,''],
+                ['left', $i->Remitido,''],
+                ['left', $i->Transito,''],
+                ['left', $i->Total,''],
+                ['left', $i->Costo_Promedio_Unitario,''],
+                ['left', $i->Costo_Total,''],
+               
             ];
         }
+        $columns[] = [
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','',''],
+                ['left','Total costo inventario ','bold'],
+                ['left', $cont,'bold'],
+               
+            ];
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE CATEGORÍAS'
+            'title' => $info[0]->Perido,
         ];
 
         return $data;

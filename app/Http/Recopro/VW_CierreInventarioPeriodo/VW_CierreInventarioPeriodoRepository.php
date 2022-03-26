@@ -22,12 +22,20 @@ class VW_CierreInventarioPeriodoRepository implements VW_CierreInventarioPeriodo
     public function all()
     {
         return $this->model->get();
-    }
+    } 
     public function search_periodo($perido_busquedad)
     {
          return $this->model->where('Periodo',$perido_busquedad)->get();
 
     }
+     public function allFiltro($filtroPerido)
+    {       $dato=$this->model;
+            if(!empty($filtroPerido)){ 
+            $dato=$dato->Where('Periodo',$filtroPerido); 
+            } 
+           return $dato->get();
+    }
+  
     
      public function search($s,$perido_busquedad)
     {
