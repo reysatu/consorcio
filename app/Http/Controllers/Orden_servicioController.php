@@ -6,7 +6,7 @@
  * Time: 6:59 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\Http\Recopro\Orden_servicio\Orden_servicioTrait;
 use Illuminate\Http\Request;
@@ -303,7 +303,7 @@ class Orden_servicioController extends Controller
              };
              for ($i=0; $i < count($id_revision_array) ; $i++) {
                 $totald=floatval($cantidDeta[$i])*floatval($precio_array[$i]);
-                if($staOperacion[$i]=='C'){
+                if($staOperacion[$i]=='S'){
                     $totalO=floatval($cantidDeta[$i])*floatval($precio_array[$i])+floatval($impuesto_servicio[$i]);
                 }else{
                     $totalO=0;

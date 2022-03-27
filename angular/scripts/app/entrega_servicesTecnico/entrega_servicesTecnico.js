@@ -314,22 +314,26 @@
                     var mov_ar='';
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     idMovimiento.val(data_p.idMovimiento);
-                     
+                     console.log("primer");
                      if(data_p.idTipoOperacion=='2'){
+                        console.log("primersss");
                            $("input[name=tipo][value='N']").prop("checked",true);
                            $("input[name=tipo][value='N']").trigger("change");
+                           console.log("primersss");
                            // $("#idventa option[value="+data_ventaMovimiento[0].idventa+"]").prop("selected", true);
                             $("#idventa").val(data_ventaMovimiento[0].idventa).trigger("change");
                             // $("#idventa").change(function(event) {
                             //    event.preventDefault();
                             // });
                               mov_ar=response.data_movimiento_Articulo_entrega_venta;
-                          
+                            
                      }else{
+                         console.log("primersaaaa");
                         cCodConsecutivoOS.val(cons);
                          nConsecutivoOS.val(data_p.nConsecutivo);
                           mov_ar=response.data_movimiento_Articulo_entrega;
                      }
+                        console.log("segundo");
                      
                        $("#idventa").prop('disabled',true);
                      cCodConsecutivoOS.prop('disabled',true);
@@ -1399,7 +1403,7 @@
             var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
             td6.append(btn1);
             td8.append(btn3);
-            tr.append(td1).append(td2).append(tdy).append(td3).append(tdCantPen).append(td4).append(td5).append(tdpr).append(tdCheck).append(td6);
+            tr.append(td1).append(td2).append(tdy).append(td3).append(tdCantPen).append(td4).append(td5).append(tdpr).append(tdCheck).append(td6).append(td8);
             articulo_mov_det.append(tr);
             addAlmaSelec(codigo);
             addlocSele(codigo);
@@ -2427,6 +2431,9 @@
         function cargar_notas() {
             $.post("entrega_servicesTecnicos/get_ventas_entrega", {},
                 function (data, textStatus, jqXHR) {
+
+                    console.log("carga ventas");
+                      console.log(data);
                     $("#idventa").html('');
                     $("#idventa").append('<option value="">Seleccionar</option>');
                     _.each(data, function (item) {

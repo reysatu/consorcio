@@ -2463,10 +2463,15 @@ function create_pdf_ordenServicio(response) {
          mcondicionPago=500;
     };
     var tipoSer='';
-    if(data[0].id_tipo=='1'){
+
+    var valorSer=data[0].servicioMante;
+    var tipoSer=''; 
+    if(data[0].id_tipo=='2'){
+        valorSer='X';
         tipoSer=166;
-    }else if(data[0].id_tipo=='2'){
+    }else if(data[0].id_tipo=='4'){
         tipoSer=236;
+        valorSer='X';
     }else{
         tipoSer=200;
     }
@@ -2635,7 +2640,7 @@ function create_pdf_ordenServicio(response) {
             fontSize: 10,
         },
         {
-            text: 'X',
+            text: valorSer,
             absolutePosition: { x:285 , y: tipoSer },
             bold: true,
             fontSize: 14,

@@ -30,8 +30,8 @@ trait Query_stockTrait
                 ['right', $i->Remitido],
                 ['right', $i->Total],
                 ['right', $i->Transito],
-                ['right', $i->Costo_Promedio_Unitario],
-                ['right', $i->Costo_Total]
+                ['right', number_format($i->Costo_Promedio_Unitario,2)],
+                ['right', number_format($i->Costo_Promedio_Unitario,2)]
             ];
         }
 

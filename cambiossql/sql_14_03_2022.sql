@@ -22,6 +22,8 @@ select * from ERP_Clientes
 select * from ERP_Ubigeo
 select * from ERP_Moneda
 
+select * from ERP_Tecnico where estado='A'
+
 select * from ERP_Solicitud where nConsecutivo='73'
 
 SELECT * FROM ERP_Venta
@@ -245,9 +247,11 @@ SELECT *,tt.descripcion as traslado , FORMAT(g.fechaEmision, 'yyyy-MM-dd') AS fe
 select * from ERP_TipoTraslado
 
 
+select sum(od.nTotal) as MontoSerOrden,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where os.iEstado=3  AND MONTH(os.dFecRec) = 2 AND YEAR(OS.dFecRec) = 2022 GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant 
 
 
-select oser.id_tipoveh,prog.IdMoneda,tOr.MontoSerOrden+tOr.MontoSerOrden as totalservicio ,oser.id_tipomant,tdra.REPUESTO,TDRA.ACEITE,prog.cCodConsecutivo,prog.nConsecutivo,tOr.MontoSerOrden,tSpr.MontoSerPro from ERP_Proforma as prog left join (select sum(od.nTotal) as MontoSerOrden,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where os.iEstado=3  GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant) as tOr on (prog.cCodConsecutivoOS=tOr.cCodConsecutivo and prog.nConsecutivoOS=tOr.nConsecutivo) left join (select sum( prMo.nTotal) as MontoSerPro,pro.cCodConsecutivo,pro.nConsecutivo from ERP_Proforma as pro inner join ERP_ProformaMO as prMo on (pro.cCodConsecutivo=prMo.cCodConsecutivo and pro.nConsecutivo=prMo.nConsecutivo) where pro.iEstado=5 GROUP BY prMo.nCant, pro.cCodConsecutivo,pro.nConsecutivo) as tSpr on (tspr.cCodConsecutivo=prog.cCodConsecutivo and tspr.nConsecutivo=prog.nConsecutivo) left join (select prf.cCodConsecutivo, prf.nConsecutivo,sum(CASE  
+
+select oser.id_tipoveh,prog.IdMoneda,tOr.MontoSerOrden+tSpr.MontoSerPro as totalservicio ,oser.id_tipomant,tdra.REPUESTO,TDRA.ACEITE,prog.cCodConsecutivo,prog.nConsecutivo,tOr.MontoSerOrden,tSpr.MontoSerPro from ERP_Proforma as prog left join (select sum(od.nTotal) as MontoSerOrden,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where os.iEstado=3  GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant) as tOr on (prog.cCodConsecutivoOS=tOr.cCodConsecutivo and prog.nConsecutivoOS=tOr.nConsecutivo) left join (select sum( prMo.nTotal) as MontoSerPro,pro.cCodConsecutivo,pro.nConsecutivo from ERP_Proforma as pro inner join ERP_ProformaMO as prMo on (pro.cCodConsecutivo=prMo.cCodConsecutivo and pro.nConsecutivo=prMo.nConsecutivo) where pro.iEstado=5 GROUP BY prMo.nCant, pro.cCodConsecutivo,pro.nConsecutivo) as tSpr on (tspr.cCodConsecutivo=prog.cCodConsecutivo and tspr.nConsecutivo=prog.nConsecutivo) left join (select prf.cCodConsecutivo, prf.nConsecutivo,sum(CASE  
              WHEN p.idCategoria =3 THEN prf.nTotal 
               ELSE 0 
            END) as REPUESTO, sum(CASE  
@@ -255,7 +259,98 @@ select oser.id_tipoveh,prog.IdMoneda,tOr.MontoSerOrden+tOr.MontoSerOrden as tota
               ELSE 0 
            END) as ACEITE
 from ERP_ProformaDetalle as prf inner join ERP_Productos as p on (p.id=prf.idProducto) 
-where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as tdra on (tdra.cCodConsecutivo=prog.cCodConsecutivo and tdra.nConsecutivo=prog.nConsecutivo) INNER JOIN ERP_OrdenServicio AS oser on(oser.cCodConsecutivo=prog.cCodConsecutivoOS and oser.nConsecutivo=prog.nConsecutivoOS) where prog.iEstado=5 AND MONTH(oser.dFecRec) = $mes AND YEAR(oser.dFecRec) = $Anio
+where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as tdra on (tdra.cCodConsecutivo=prog.cCodConsecutivo and tdra.nConsecutivo=prog.nConsecutivo) INNER JOIN ERP_OrdenServicio AS oser on(oser.cCodConsecutivo=prog.cCodConsecutivoOS and oser.nConsecutivo=prog.nConsecutivoOS) where prog.iEstado=5 AND MONTH(oser.dFecRec) = 2 AND YEAR(oser.dFecRec) = 2022
+
+select oser.id_tipoveh,prog.IdMoneda,oser.id_tipomant,tdra.REPUESTO,TDRA.ACEITE,prog.cCodConsecutivo,prog.nConsecutivo,tSpr.MontoSerPro from ERP_Proforma as prog  left join (select sum( prMo.nTotal) as MontoSerPro,pro.cCodConsecutivo,pro.nConsecutivo from ERP_Proforma as pro inner join ERP_ProformaMO as prMo on (pro.cCodConsecutivo=prMo.cCodConsecutivo and pro.nConsecutivo=prMo.nConsecutivo) where pro.iEstado=5 GROUP BY prMo.nCant, pro.cCodConsecutivo,pro.nConsecutivo) as tSpr on (tspr.cCodConsecutivo=prog.cCodConsecutivo and tspr.nConsecutivo=prog.nConsecutivo) left join (select prf.cCodConsecutivo, prf.nConsecutivo,sum(CASE  
+             WHEN p.idCategoria =3 THEN prf.nTotal 
+              ELSE 0 
+           END) as REPUESTO, sum(CASE  
+             WHEN p.idCategoria =4 THEN prf.nTotal 
+              ELSE 0 
+           END) as ACEITE
+from ERP_ProformaDetalle as prf inner join ERP_Productos as p on (p.id=prf.idProducto) 
+where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as tdra on (tdra.cCodConsecutivo=prog.cCodConsecutivo and tdra.nConsecutivo=prog.nConsecutivo) INNER JOIN ERP_OrdenServicio AS oser on(oser.cCodConsecutivo=prog.cCodConsecutivoOS and oser.nConsecutivo=prog.nConsecutivoOS) where prog.iEstado=5 
+
+select * from ERP_OrdenServicio
+
+select sum(od.nTotal) as MontoSerOrden,os.id_tipoveh,os.id_tipomant,os.cCodConsecutivo,os.nConsecutivo from ERP_OrdenServicio as os inner join ERP_OrdenServicioDetalle as od on (od.cCodConsecutivo=os.cCodConsecutivo and od.nConsecutivo=os.nConsecutivo) where  os.iEstado=3 AND MONTH(os.dFecRec) = 2 AND YEAR(os.dFecRec) = 2022 GROUP BY os.cCodConsecutivo,os.nConsecutivo,od.nCant,os.id_tipomant,os.id_tipoveh
+
+SELECT datename (month,activitydate) AS nombre, MIN(activitydate) AS activitydate
+
+FROM tabla 
+
+GROUP BY datename (month,activitydate)
+
+)
+select * from ERP_TipoObjetivos where estado='A'
+
+select  datename(month,oser.dFecRec) AS mes from ERP_OrdenServicio as oser
+
+where iEstado='3' and  YEAR(oser.dFecRec) = 2022 ORDER BY   month(oser.dFecRec)
+
+select DISTINCT (month(oser.dFecRec)) AS mes from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) = 2022 ORDER BY   month(oser.dFecRec)
+
+DATENAME(datepart, date)
+
+select obd.nCant,obd.nMonto,obd.nPeriodo as Mes,obd.id_Persona as id_Persona from ERP_Tecnico as tec left join ERP_ObjetivosDetalle as obd on (obd.id_Persona=tec.id and obd.id_TipoPers=2) inner join ERP_Objetivos as ob on (ob.id=obd.id_obj) where ob.iEstado='1' and IdMoneda=1  and nAno='2022'
+
+select * from ERP_Objetivos
+select * from ERP_ObjetivosDetalle
+select  Day(oser.dFecRec) AS dia,month(oser.dFecRec) AS mes,* from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) =2022 ORDER BY   month(oser.dFecRec)
+select * from ERP_Tecnico
+
+
+select  Day(oser.dFecRec) AS dia,month(oser.dFecRec) AS mes,* from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) =$Anio ORDER BY   month(oser.dFecRec)
+
+select * from ERP_Tecnico
+select * from ERP_Mantenimientos
+select * from ERP_TipoMantenimiento where estado='A' 
+
+select DISTINCT (month(oser.dFecRec)) AS mes from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) =2022 ORDER BY  month(oser.dFecRec)
+
+
+select  Day(oser.dFecRec) AS dia,month(oser.dFecRec) AS mes,* from ERP_OrdenServicio as oser where iEstado='3' and  YEAR(oser.dFecRec) =2022 ORDER BY   month(oser.dFecRec)
+
+
+select obd.nCant,obd.nMonto,obd.nPeriodo as Mes,obd.id_Persona as id_Persona from ERP_Tecnico as tec left join ERP_ObjetivosDetalle as obd on (obd.id_Persona=tec.id and obd.id_TipoPers=2) inner join ERP_Objetivos as ob on (ob.id=obd.id_obj) where ob.iEstado='1' and IdMoneda=1  and nAno=2022
+
+select obd.nCant,obd.nMonto,obd.nPeriodo as Mes,obd.id_Persona as id_Persona from ERP_Tecnico as tec left join ERP_ObjetivosDetalle as obd on (obd.id_Persona=tec.id and obd.id_TipoPers=2) inner join ERP_Objetivos as ob on (ob.id=obd.id_obj) where ob.iEstado='1' and IdMoneda=1
 
 
 
+select * from ERP_VW_CierreInventarioPeriodo
+
+
+update ERP_SolicitudConformidad set iEstado = 0 where nConsecutivo = 47
+
+update ERP_Solicitud set estado = 3 where nConsecutivo = 47
+
+
+select * from ERP_Movimiento
+
+
+select * from ERP_Proforma
+select * from ERP_ProformaDetalle
+SELECT * FROM ERP_ProformaMO
+
+SELECT * FROM ERP_OrdenServicio
+SELECT * FROM ERP_OrdenServicioDetalle
+
+
+select des.nPorcDescuento as porDes , des.nMonto as montoDes, ore.IdTipoDocumento as idDocumentoVenta, cdp.description as condicionPago, ase.descripcion as asesor,tcn.descripcion as tecnico , tv.descripcion as tipoVehiculo,mn.Descripcion as moneda ,tm.descripcion as TipoMantenimiento,tsm.descripcion as servicioMante, * from ERP_OrdenServicio as ore inner join ERP_TipoServicioMant as tsm on ore.id_tipo=tsm.id inner join ERP_TipoMantenimiento as tm on ore.id_tipomant=tm.id inner join ERP_Moneda as mn on mn.IdMoneda=ore.IdMoneda inner join ERP_TipoVehiculo as tv on tv.id=ore.id_tipoveh inner join ERP_Clientes as cli on cli.id=ore.idCliente LEFT JOIN ERP_Tecnico as tcn on ore.idTecnico=tcn.id left join ERP_Asesores as ase on ase.id=ore.idAsesor inner join ERP_CondicionPago as cdp on cdp.id=ore.idcCondicionPago  left join ERP_Descuentos as des on des.id=ore.nIdDscto
+
+
+
+select * from ERP_Movimiento where idMovimiento='142'
+select * from ERP_Movimiento_Articulo where idMovimiento='143'
+select * from ERP_Movimiento_Detalle where idMovimiento='143'
+select * from ERP_Movimiento where idMovimiento='143'
+
+
+select  pr.type_id as type_id,pr.serie as serie,pr.lote as lote,pr.kit as kit,pd.nCantidadPendienteDevolver as nCantidadPendienteDevolver, pd.nCantidadPendienteEntregar as nCantidadPendienteEntregar ,mov.cCodConsecutivo as cCodConsecutivo, mov.nConsecutivo as nConsecutivo ,lot.Lote  as cod_lote,Mo.costo as costo2,Mo.idArticulo as idArticulo,Mo.idAlmacen as idAlmacen,Mo.idLocalizacion as idLocalizacion,Mo.idLote as idLote,Mo.cantidad as cantidad, Mo.costo as costo, Mo.costo_total as costo_total,Mo.consecutivo  as consecutivo,Mo.precio  as precio,Mo.precio_total  as precio_total,pr.description as description  from 
+ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id LEFT JOIN ERP_Lote as lot on lot.idLote=Mo.idLote inner join ERP_Movimiento as mov on mov.idMovimiento=Mo.idMovimiento LEFT JOIN  ERP_ProformaDetalle as pd on pd.nConsecutivo=Mo.consecutivo where Mo.idMovimiento='142'
+
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa)  where so.estado>'6'  and so.t_monto_total=so.facturado
+
+select * from ERP_Venta
+select * from ERP_Solicitud

@@ -113,7 +113,7 @@ class Quality_controlController extends Controller
     public function all(Request $request, Quality_controlInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'cCodConsecutivoOS','nConsecutivoOS','dFechaRegistro','iEstado','cOtros'];
+        $params = ['id', 'cCodConsecutivoOS','nConsecutivoOS','dFechaRegistro','iEstado','cOtros']; 
         return parseList($repo->search($s), $request, 'id', $params);
     }
     public function data_form (Quality_controlInterface $Repo)

@@ -29,10 +29,10 @@ class CajaDiariaRepository implements CajaDiariaInterface
     }
      public function search($s)
     {
-        return $this->model->where(function($q) use ($s){
+        return $this->model->where(function($q) use ($s){ 
             $q->where('idCajaDiaria', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('idCajaDiaria', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy('fechaCaja','desc');
 
     }
     public function allActive()

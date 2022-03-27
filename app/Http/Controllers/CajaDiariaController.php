@@ -25,7 +25,7 @@ class CajaDiariaController extends Controller
     }
 
     public function all(Request $request, CajaDiariaInterface $repo)
-    {
+    { 
         $s = $request->input('search', '');
         $params = ['idCajaDiaria', 'idCaja','fechaCaja','idUsuario','estado','totalEfectivo','totalEfectivoDol'];
         return parseList($repo->search($s), $request, 'idCategoria', $params);

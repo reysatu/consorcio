@@ -239,7 +239,7 @@ class ProformaController extends Controller
             if($id_repuesto_array[0]!=''){
                 for ($i=0; $i < count($id_repuesto_array) ; $i++) {
                 $total=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i]);
-                 if($staOperacionRepu[$i]=='C'){
+                 if($staOperacionRepu[$i]=='S'){
                     $totalO=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i])+floatval($id_repuesto_impuesto[$i]);
                 }else{
                     $totalO=0;
@@ -253,7 +253,7 @@ class ProformaController extends Controller
            if($id_revision_array[0]!=''){
                 for ($i=0; $i < count($id_revision_array) ; $i++) {
                   $totald=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i]);
-                   if($staOperacion[$i]=='C'){
+                   if($staOperacion[$i]=='S'){
                     $totalO=floatval($cantidDeta[$i])*floatval($precio_array_servicio[$i])+floatval($impuesto_servicio[$i]);
                 }else{
                     $totalO=0;
@@ -306,6 +306,7 @@ class ProformaController extends Controller
         $getTotal_Orden_total=$Repo->getTotal_Orden_total();
         $get_proformas_entrega=$Repo->get_proformas_entrega();
         $get_proformas_devolucion=$Repo->get_proformas_devolucion();
+        $getTotal_Orden_total_calidad=$Repo->getTotal_Orden_total_calidad();
          $igv=$Repo->get_igv();
         return response()->json([
             'status' => true,
@@ -314,6 +315,7 @@ class ProformaController extends Controller
             'total_orden'=>$getTotal_Orden_total,
             'proformas_entrega'=>$get_proformas_entrega,
             'proformas_devolucion'=>$get_proformas_devolucion,
+            'getTotal_Orden_total_calidad'=>$getTotal_Orden_total_calidad,
             'igv'=>$igv,
         ]);
     }

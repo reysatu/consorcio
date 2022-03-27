@@ -109,7 +109,7 @@
         var subtotal_mob=$("#subtotal_mob");
         var total=$("#total");
 
-        var idDocumentoCli=$("#idDocumentoCli");
+        var idDocumentoCli=$("#idDocumentoCli"); 
         var documento_or=$("#documento_or");
         var razonsocial_cliente_or=$("#razonsocial_cliente_or");
         var contacto_or=$("#contacto_or");
@@ -256,6 +256,16 @@
              var params = {
                     'estado':2,
                  };
+            var bval = true;
+            bval = bval && idTecnico.required();
+            if(idTecnico.val()==''){
+             AlertFactory.textType({
+                            title: '',
+                            message: "Seleccione un técnico",
+                            type: 'info'
+                        });
+            }
+            if(bval){
               RESTService.updated('orden_servicios/cambiar_estado', id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var data=response.data;
@@ -285,6 +295,7 @@
                     }
                         
                 });
+          }
         }
         function terminada_orden_servicio(){
              var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
@@ -2166,6 +2177,7 @@
             bval = bval && id_tipoDoc_Venta_or.required();
             bval = bval && nKilometraje.required();
             bval = bval && placa.required();
+            bval=  bval && $("#marca").required();
             if(idDocumentoCli.val()=="01"){
                 if(id_tipoDoc_Venta_or.val()=="01"){
                     AlertFactory.showWarning({
@@ -2180,9 +2192,15 @@
                     title: '',
                     message: 'Debe agregar un mínimo de 1 en mantenimientos'
                 });
-                activeTab('trbajoES');
                 return false;  
-            }
+            } 
+             if($("#table_servicios").html()==''){
+               AlertFactory.showWarning({
+                    title: '',
+                    message: 'Debe agregar un mínimo de 1 en servicios'
+                });
+                return false;  
+            } 
             acodigos.forEach(function(val,index) {
              
                 var canr=$('#tr_cant'+val);
@@ -2297,7 +2315,7 @@
 
                 var staOperacion =[];
                 $.each($('.checkClass'), function (idx, item) {
-                    var checkOpera= ($(this).prop('checked')) ? 'C' : 'S';
+                    var checkOpera= ($(this).prop('checked')) ? 'S' : 'N';
                     staOperacion[idx] = checkOpera;
                 });
                 staOperacion = staOperacion.join(',');
