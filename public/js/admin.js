@@ -6104,6 +6104,13 @@ function create_pdf_emisionComproCaja(response) {
     var simboloMoneda=response.simboloMoneda;
     var dataTienda=response.dataTienda;
     var dataList=response.dataList;
+     var dataListCancelaCuotas=response.dataListCancelaCuotas;
+     var dataListCancelaMora=response.dataListCancelaMora;
+     var dataListAnticipo=response.dataListAnticipo;
+      var dataListSeparacion=response.dataListSeparacion;
+      var dataListDevolucion=response.dataListDevolucion;
+     console.log(dataListCancelaCuotas);
+     console.log("cuotaslist");
      var dataListTipoPago=response.dataListTipoPago;
     var simboloMonedaDolar=response.simboloMonedaDolar;
     var usuario=response.usuario;
@@ -6239,6 +6246,49 @@ function create_pdf_emisionComproCaja(response) {
             var Totalfcuer=[{ text: dataListTipoPago[i].condicionPago,fontSize: 8 },{ text:Number(dataListTipoPago[i].total).toFixed(2),  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
             dataTotalFF.push(Totalfcuer);
         }
+        var valcuota='0.00';
+        if(dataListCancelaCuotas.length>0){
+            valcuota=Number(dataListCancelaCuotas[0].total).toFixed(2);
+            totalsFF=Number(dataListCancelaCuotas[0].total)+totalsFF;
+        }
+        var Totalcuota=[{ text: "CANCELACIÓN DE CUOTAS",fontSize: 8 },{ text:valcuota,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
+        dataTotalFF.push(Totalcuota);
+
+        var valmora='0.00';
+        if(dataListCancelaMora.length>0){
+            valmora=Number(dataListCancelaMora[0].total).toFixed(2);
+            totalsFF=Number(dataListCancelaMora[0].total)+totalsFF;
+        }
+        var Totalmora=[{ text: "MORA",fontSize: 8 },{ text:valmora,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
+        dataTotalFF.push(Totalmora);
+
+        var valanticipo='0.00';
+        if(dataListAnticipo.length>0){
+            valanticipo=Number(dataListAnticipo[0].total).toFixed(2);
+            totalsFF=Number(dataListAnticipo[0].total)+totalsFF;
+        }
+        var Totalanticipo=[{ text: "ANTICIPO",fontSize: 8 },{ text:valanticipo,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
+        dataTotalFF.push(Totalanticipo);
+
+        var valaSepr='0.00';
+        if(dataListSeparacion.length>0){
+            valaSepr=Number(dataListSeparacion[0].total).toFixed(2);
+            totalsFF=Number(dataListSeparacion[0].total)+totalsFF;
+        }
+        var TotalSepara=[{ text: "SEPARACIÓN",fontSize: 8 },{ text:valaSepr,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
+        dataTotalFF.push(TotalSepara);
+
+         var valaDevolu='0.00';
+        if(dataListDevolucion.length>0){
+            valaDevolu=Number(dataListDevolucion[0].total).toFixed(2);
+            totalsFF=Number(dataListDevolucion[0].total)+totalsFF;
+        }
+        var TotalDevo=[{ text: "DEVOLUCIÓN",fontSize: 8 },{ text:valaDevolu,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
+        dataTotalFF.push(TotalDevo);
+
+
+
+
         totalsFF = Number(totalsFF).toFixed(2);
         totalsFF = addCommas(totalsFF);
         var Totalfc=[{ text: 'TOTAL ',  fontSize: 8,bold:true },{ text: totalsFF, fontSize: 8,bold:true  },{ text: '0.00',  fontSize: 8 ,bold:true }];

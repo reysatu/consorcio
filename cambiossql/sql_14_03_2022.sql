@@ -472,4 +472,38 @@ left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
  
  select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante),v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='2022-02-15' and v.idcajero='1006' ORDER BY codigo_formapago
  
-select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante),v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='2022-02-15' and v.idcajero='1006' ORDER BY codigo_formapago
+select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante),v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='2022-02-15' and v.idcajero='1006' and v.idmoneda='1' ORDER BY codigo_formapago
+
+
+
+select * from ERP_VentaDetalle where idArticulo='1859'
+select * from ERP_FormasPago
+select * from ERP_TipoDocumento
+
+select * from ERP_Productos where id='1862'
+
+select * from ERP_Venta
+
+select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante) as serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario'  and ORDER BY codigo_formapago
+
+
+select SUM(vp.monto_pago) as total,cp.id as idCondicionPago,cp.description as condicionPago,v.idmoneda from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='2022-02-15' and v.idcajero='1006' and  v.idTipoDocumento in (03,01) and v.condicion_pago='1' GROUP BY v.idmoneda,v.condicion_pago ,cp.id,cp.description
+
+
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa) where    v.idcajero='1006'  and v.idTipoDocumento in (03,01) and vd.idarticulo='1859' GROUP BY v.idmoneda
+
+select * from ERP_Venta
+select * from ERP_VentaDetalle
+
+select SUM(vp.monto_pago) as total,sum(),cp.id as idCondicionPago,cp.description as condicionPago,v.idmoneda from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' and  v.idTipoDocumento in (03,01) and v.condicion_pago='1' GROUP BY v.idmoneda,v.condicion_pago ,cp.id,cp.description
+
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date'    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda
+
+
+select * from ERP_Parametros where id='7'
+
+
+
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='' GROUP BY v.idmoneda
+
+

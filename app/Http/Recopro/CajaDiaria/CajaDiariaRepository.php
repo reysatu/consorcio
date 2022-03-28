@@ -119,11 +119,51 @@ class CajaDiariaRepository implements CajaDiariaInterface
         return $mostrar; 
     }
     public function get_ventaComproTipoPago($date,$usuario){
-        $mostrar=DB::select("select SUM(vp.monto_pago) as total,cp.id as idCondicionPago,cp.description as condicionPago from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' GROUP BY v.condicion_pago ,cp.id,cp.description");
+        $mostrar=DB::select("select SUM(vp.monto_pago) as total,cp.id as idCondicionPago,cp.description as condicionPago,v.idmoneda from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' and  v.idTipoDocumento in (03,01) and v.condicion_pago='1' GROUP BY v.idmoneda,v.condicion_pago ,cp.id,cp.description");
         return $mostrar; 
     }
+    public function get_ventaCancelaCuota($date,$usuario,$idarticulo){
+        $mostrar=DB::select("select SUM(valor_cuota_pagada) as total, v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa) where  convert(date,v.fecha_emision)='$date' and  v.idcajero='$usuario'  and v.idTipoDocumento in (12) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda");
+        return $mostrar; 
+    }
+     public function get_ventaCancelaMora($date,$usuario,$idarticulo){
+        $mostrar=DB::select("select SUM(int_moratorio_pagado) as total, v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa) where  convert(date,v.fecha_emision)='$date' and  v.idcajero='$usuario'  and v.idTipoDocumento in (12) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda");
+        return $mostrar; 
+    }
+    public function get_ventaAnticipo($date,$usuario,$idarticulo){
+        $mostrar=DB::select("
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda");
+        return $mostrar; 
+    }
+    public function get_ventaDevolucion($date,$usuario){
+        $mostrar=DB::select("
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (07)  and v.idmotivo in (06,07)  GROUP BY v.idmoneda");
+        return $mostrar; 
+    }
+
+
+    public function get_ventaSeparacion($date,$usuario,$idarticulo){
+        $mostrar=DB::select("
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda");
+        return $mostrar; 
+    }
+
+    public function get_idArtiCuota(){
+        $mostrar=DB::select("select * from ERP_Parametros where id='7'");
+        return $mostrar; 
+    }
+    public function get_idArtiAnticipo(){
+        $mostrar=DB::select("select * from ERP_Parametros where id='5'");
+        return $mostrar; 
+    }
+
+    public function get_idArtiSeparacin(){
+        $mostrar=DB::select("select * from ERP_Parametros where id='8'");
+        return $mostrar; 
+    }
+
     public function get_ventaCompro($date,$usuario){
-        $mostrar=DB::select(" select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante) as serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' ORDER BY codigo_formapago");
+        $mostrar=DB::select(" select v.idmoneda ,tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante) as serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' ORDER BY codigo_formapago");
         return $mostrar; 
     }
     public function get_ventaCajaCompro($date,$usuario){
