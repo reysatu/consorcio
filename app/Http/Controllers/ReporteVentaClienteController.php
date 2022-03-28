@@ -104,6 +104,6 @@ class ReporteVentaClienteController extends Controller
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
          $idcategoria = $request->input('idcategoria', '');
         $data = $this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
-        return generateDataPDF($data, 'landscape', 'logo.jpg');
+        return generateDataPDFVC($data, 'landscape', 'logo.jpg');
     } 
 }

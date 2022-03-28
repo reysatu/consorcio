@@ -319,7 +319,7 @@ where IdTipoDocumento in ('01','03')");
             $pdo=DB::connection()->getPdo();
             $sql = "DECLARE	@return_value int,
 		@nTCCompra money,
-		@nTCVenta money
+		@nTCVenta money 
 
             SET NOCOUNT ON; EXEC	@return_value = [dbo].[CO_Obtiene_TC]
                         @nSunat = 0,

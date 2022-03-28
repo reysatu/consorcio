@@ -1860,6 +1860,85 @@ function create_pdf(response) {
     // } 
       pdfMake.createPdf(docDefinition).print({}, win);
 }
+function create_pdfVC(response) {
+    var docDefinition = {
+        // a string or { width: number, height: number }
+        pageSize: response.pageSize,
+        // by default we use portrait, you can change it to landscape if you wish
+        pageOrientation: response.pageOrientation,
+        // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+        pageMargins: [8, 20, 15, 8],
+        content: [
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        // normally you could put image directly here, but since you're
+                        // setting width to auto, we need an artificial wrapping-node
+                        // so that column-width does not interfere with image width
+                        stack: [
+                            {
+                                image: response.img,
+                                fit: [120, 120]
+                            }
+                        ]
+                    },
+                    {text: response.title, style: 'header'}
+                ]
+            },
+            {text: 'Fecha: ' + moment().format('DD [de] MMMM [de] YYYY, h:mm A'), style: 'subheader'},
+            {
+                columns: [
+                    {
+                        width: 'auto',
+                        table: {
+                            headerRows: 1,
+                            body: response.info
+                        }
+                    }
+                ]
+            }
+        ],
+        styles: {
+            header: {
+                fontSize: 18,
+                bold: true,
+                margin: [-120, 0, 0, 0],
+                alignment: 'center'
+            },
+            subheader: {
+                fontSize: 12,
+                bold: true,
+                margin: [0, 5, 0, 5],
+                alignment: 'center'
+            },
+            footer: {
+                fontSize: 10,
+                margin: [0, 10, 40, 0],
+                alignment: 'right'
+            }
+        },
+        footer: function (currentPage, pageCount) {
+            return {
+                columns: [{
+                    text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                    style: 'footer'
+                }]
+            }
+            // return currentPage.toString() + ' de ' + pageCount;
+        }
+    };
+
+    var win = window.open('', '_blank');
+    // if (response.type === 1) {
+    //     pdfMake.createPdf(docDefinition).download();
+    // } else if (response.type === 2) {
+    //     pdfMake.createPdf(docDefinition).open({}, win);
+    // } else {
+    //     pdfMake.createPdf(docDefinition).print({}, win);
+    // } 
+      pdfMake.createPdf(docDefinition).print({}, win);
+}
 function crearTablaCCsoles(data,dataBodyReportes,dataMoneda,cambio){
     var subtituloSolesEfec=[ 
             { fontSize: 8,text:"DOCUMENTO",fillColor: '#eeeeee'},
@@ -6084,7 +6163,7 @@ function create_pdf_emisionComproCaja(response) {
                                     { fontSize: 8,text:dataFechaEmisi,},
                                     { fontSize: 8,text:dataList[i].razonsocial_cliente,},
                                     { fontSize: 8,text:monto_pago,},
-                                    { fontSize: 8,text:dataList[i].numero_comprobante,},
+                                    { fontSize: 8,text:dataList[i].nro_recibo,},
             ];
          }
          else{
@@ -6144,7 +6223,7 @@ function create_pdf_emisionComproCaja(response) {
                 tot=0; 
           }
       
-       }
+       } 
        console.log("dddddddddddd");
        console.log(totalfinsum);
         totalfinsum=Number(totalfinsum).toFixed(2);
@@ -6268,7 +6347,7 @@ function create_pdf_emisionComproCaja(response) {
                                     table: {
                                             widths: [20, 100,100,190, 50,50],
                                             body: [ 
-                                                   [{text:"TIPO",fontSize: 8,fillColor: '#eeeeee'},{text:"CONCEPTO",fontSize: 8,fillColor: '#eeeeee'},{text:"FACTURA/BOLETA",fontSize: 8,fillColor: '#eeeeee'},{text:"CLIENTE",fontSize: 8,fillColor: '#eeeeee'},{text:"IMPORTE",fontSize: 8,fillColor: '#eeeeee'},{text:"CORRELATIVO",fontSize: 8,fillColor: '#eeeeee'}]
+                                                   [{text:"TIPO",fontSize: 8,fillColor: '#eeeeee'},{text:"CONCEPTO",fontSize: 8,fillColor: '#eeeeee'},{text:"FACTURA/BOLETA",fontSize: 8,fillColor: '#eeeeee'},{text:"CLIENTE",fontSize: 8,fillColor: '#eeeeee'},{text:"IMPORTE",fontSize: 8,fillColor: '#eeeeee'},{text:"N° RECIBO",fontSize: 8,fillColor: '#eeeeee'}]
                                              // {  fontSize: 8, text:"CAJERO(A)"},
                                              // {  fontSize: 8, text:"CAJERO(A)"},
 
