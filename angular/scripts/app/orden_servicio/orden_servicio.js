@@ -255,6 +255,7 @@
              var id=cCodConsecutivo.val()+"_"+nConsecutivo.val();
              var params = {
                     'estado':2,
+                    'idTecnico':idTecnico.val(),
                  };
             var bval = true;
             bval = bval && idTecnico.required();
@@ -359,7 +360,11 @@
                     horaEnt.val(data[0].horaEnt);
                     horaRec.val(data[0].horaRec);
                     dFecEntrega.val(data.dFecEntrega2);
-                    idTecnico.val(data[0].idTecnico).trigger('change');
+                    var tecni=data[0].idTecnico;
+                    if(data[0].idTecnico==0){
+                        tecni='';
+                    }
+                    idTecnico.val(tecni).trigger('change');
                     idAsesor.val(data[0].idAsesor).trigger("change");
                     id_tipo.val(data[0].id_tipo).trigger("change");
                     id_tipomant.val(data[0].id_tipomant).trigger("change");
@@ -812,7 +817,7 @@
                     var modo_ser=0;
                     var iddet=0;
                     var cant=1;
-                    var opera='S';
+                    var opera='N';
                     var idDescuento="";
                    console.log(articuloPrecio);
                    console.log("articuloPrecio");
@@ -1300,7 +1305,7 @@
             
             var check="";
             var disab="";
-            if(opera=="C"){
+            if(opera=="S"){
                 check="checked";
                 disab="disabled";
             }
@@ -1368,7 +1373,7 @@
              var data_prec='data-precio';
              var tr_pre='tr_subtotalSer';
              if(idOrden!=""){
-                if(opera=="C"){
+                if(opera=="S"){
                 precio_actT=0;
                  }else{
                      console.log(cantidad,precio,impuesto_can,porcentajeid,montoid)
@@ -2318,6 +2323,8 @@
                     var checkOpera= ($(this).prop('checked')) ? 'S' : 'N';
                     staOperacion[idx] = checkOpera;
                 });
+                console.log(staOperacion);
+                console.log("operaciongrat");
                 staOperacion = staOperacion.join(',');
 
                  var idDetalleGrup =[];

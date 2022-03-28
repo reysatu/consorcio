@@ -869,7 +869,7 @@
                     var precio=totRep[1];
                     var prodDescrip=totRep[2];
                     var impuesto=totRep[3];
-                    var opera='S';
+                    var opera='N';
                     var idDescuento="";
                     var totaldata=articuloPrecioRepuesto.split('*');
                     var nImpue=0;
@@ -886,7 +886,7 @@
                     var modo_ser=0;
                     var iddet=0;
                     var cant=1;
-                    var opera='S';
+                    var opera='N';
                     var idDescuento="";
                     console.log(articuloPrecio);
                     console.log("articuloprecios");
@@ -1201,7 +1201,7 @@
             var precio_cam=precio;
             var check="";
             var disab="";
-            if(opera=="C"){
+            if(opera=="S"){
                 check="checked";
                 disab="disabled";
             }
@@ -1514,7 +1514,7 @@
             
             var check="";
             var disab="";
-            if(opera=="C"){
+            if(opera=="S"){
                 check="checked";
                 disab="disabled";
             }
@@ -1590,7 +1590,7 @@
              var data_prec='data-precio';
              var tr_pre='tr_subtotalSer';
              if(idProforma!=""){
-                if(opera=="C"){
+                if(opera=="S"){
                 precio_actT=0;
                  }else{
                      
