@@ -6253,7 +6253,7 @@ function create_pdf_emisionComproCaja(response) {
         }
         var Totalcuota=[{ text: "CANCELACIÓN DE CUOTAS",fontSize: 8 },{ text:valcuota,  fontSize: 8 },{ text: '0.00', fontSize: 8  }];
         dataTotalFF.push(Totalcuota);
-
+ 
         var valmora='0.00';
         if(dataListCancelaMora.length>0){
             valmora=Number(dataListCancelaMora[0].total).toFixed(2);
