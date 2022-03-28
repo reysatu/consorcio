@@ -384,6 +384,19 @@ function fieldReport($data, $bold, $config)
     }
     return $info;
 }
+function fieldReportVC($data, $bold, $config)
+{
+    $info = [];
+    foreach ($data as $item => $d) {
+        $info[] = [
+            'text' => (string)$d,
+            'fontSize' => 7,
+            'bold' => $bold,
+            'alignment' => $config[$item]
+        ];
+    }
+    return $info;
+}
 
 function generateDataPDF($data, $orientation, $img, $type_pdf = 1)
 {
@@ -425,7 +438,50 @@ function generateDataPDF($data, $orientation, $img, $type_pdf = 1)
         'pageOrientation' => $orientation,
         'img' => $image,
         'title' => $title,
-        'info' => $info
+        'info' => $info 
+    ]);
+}
+function generateDataPDFVC($data, $orientation, $img, $type_pdf = 1)
+{
+    $title = $data['title'];
+    $data = $data['data'];
+    $info = [];
+
+    $header1[] = 'ITEM';
+    $header2[] = 'center';
+    foreach ($data[0] as $d) {
+        $header1[] = $d;
+        $header2[] = 'center';
+    }
+    unset($data[0]);
+
+    $info[] = fieldReportVC($header1, true, $header2);
+
+    foreach ($data as $item => $d) {
+        $body1 = [];
+        $body2 = [];
+        $body1[] = $item;
+        $body2[] = 'center';
+        foreach ($d as $i) {
+            $body1[] = $i[1];
+            $body2[] = $i[0];
+        }
+        $info[] = fieldReportVC($body1, false, $body2);
+    }
+
+    $path = public_path('img/' . $img);
+    $type_image = pathinfo($path, PATHINFO_EXTENSION);
+    $image = file_get_contents($path);
+    $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+
+    return response()->json([
+        'status' => true,
+        'type' => $type_pdf,
+        'pageSize' => 'A4',
+        'pageOrientation' => $orientation,
+        'img' => $image,
+        'title' => $title,
+        'info' => $info 
     ]);
 }
 

@@ -521,7 +521,7 @@
         table_container_AperturaCaja.jtable({
             title: "Lista de Aperturas de caja",
             paging: true,
-            sorting: true,
+            sorting: true, 
             actions: { 
                 listAction: base_url + '/aperturaCajas/list',
                 // deleteAction: base_url + '/aperturaCajas/delete',

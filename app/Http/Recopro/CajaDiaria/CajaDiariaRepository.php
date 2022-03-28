@@ -29,10 +29,10 @@ class CajaDiariaRepository implements CajaDiariaInterface
     }
      public function search($s)
     {
-        return $this->model->where(function($q) use ($s){
+        return $this->model->where(function($q) use ($s){ 
             $q->where('idCajaDiaria', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('idCajaDiaria', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy('fechaCaja','desc');
 
     }
     public function allActive()
@@ -123,7 +123,7 @@ class CajaDiariaRepository implements CajaDiariaInterface
         return $mostrar; 
     }
     public function get_ventaCompro($date,$usuario){
-        $mostrar=DB::select("select cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,v.serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' ORDER BY codigo_formapago");
+        $mostrar=DB::select(" select tiket.numero_comprobante as nro_recibo,cp.id as idCondicionPago,cp.description as condicionPago , v.fecha_emision,vp.codigo_formapago,fp.descripcion_subtipo,vp.monto_pago,v.idventa,concat(v.serie_comprobante,'-',v.numero_comprobante) as serie_comprobante,v.numero_comprobante,v.idcliente,cl.razonsocial_cliente from ERP_VentaFormaPago as vp inner join erp_venta as v on vp.idventa=v.idventa inner join ERP_Clientes as cl on v.idcliente=cl.id inner join ERP_FormasPago as fp on fp.codigo_formapago=vp.codigo_formapago inner join ERP_CondicionPago as cp on cp.id=v.condicion_pago  inner join erp_venta as tiket on (tiket.idventa_comprobante=v.idventa)  where convert(date,v.fecha_emision)='$date' and v.idcajero='$usuario' ORDER BY codigo_formapago");
         return $mostrar; 
     }
     public function get_ventaCajaCompro($date,$usuario){
@@ -132,15 +132,33 @@ class CajaDiariaRepository implements CajaDiariaInterface
     }
    
     public function getCajaDetForSol($date,$usuario){
-        $mostrar=DB::select("select cd.codigoFormaPago as codigoFormaPago,sum(cd.monto) as monto,fp.descripcion_subtipo as descripcion_subtipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='1' and cd.codigoTipo='VTA' GROUP BY cd.codigoFormaPago,fp.descripcion_subtipo");
+        $mostrar=DB::select("select cd.codigoFormaPago as codigoFormaPago,sum(CASE  
+             WHEN cd.naturaleza='E' THEN cd.monto 
+              ELSE 0 
+           END)-sum(CASE  
+             WHEN cd.naturaleza='S' THEN cd.monto 
+              ELSE 0 
+           END) as monto,fp.descripcion_subtipo as descripcion_subtipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='1' and cd.codigoTipo='VTA' GROUP BY cd.codigoFormaPago,fp.descripcion_subtipo");
         return $mostrar; 
     }
     public function getCajaDetEfeSol($date,$usuario){
-        $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(cd.monto) as monto ,tm.descripcion_tipo as descripcion_tipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='1' and cd.codigoFormaPago='EFE' GROUP BY cd.codigoTipo,tm.descripcion_tipo");
+        $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(CASE  
+             WHEN cd.naturaleza='E' THEN cd.monto 
+              ELSE 0 
+           END)-sum(CASE  
+             WHEN cd.naturaleza='S' THEN cd.monto 
+              ELSE 0 
+           END) as monto ,tm.descripcion_tipo as descripcion_tipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='1' and cd.codigoFormaPago='EFE'  GROUP BY cd.codigoTipo,tm.descripcion_tipo");
         return $mostrar; 
     }
     public function getCajaDetForDol($date,$usuario){
-        $mostrar=DB::select("select cd.codigoFormaPago as codigoFormaPago,sum(cd.monto) as monto,fp.descripcion_subtipo as descripcion_subtipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoTipo='VTA' GROUP BY cd.codigoFormaPago,fp.descripcion_subtipo");
+        $mostrar=DB::select("select cd.codigoFormaPago as codigoFormaPago,sum(CASE  
+             WHEN cd.naturaleza='E' THEN cd.monto 
+              ELSE 0 
+           END)-sum(CASE  
+             WHEN cd.naturaleza='S' THEN cd.monto 
+              ELSE 0 
+           END) as monto,fp.descripcion_subtipo as descripcion_subtipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoTipo='VTA' GROUP BY cd.codigoFormaPago,fp.descripcion_subtipo");
         return $mostrar; 
     }
     public function getCajaDetEfeSolAper($date,$usuario){
@@ -152,7 +170,13 @@ class CajaDiariaRepository implements CajaDiariaInterface
         return $mostrar; 
     }
     public function getCajaDetEfeDol($date,$usuario){
-        $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(cd.monto) as monto ,tm.descripcion_tipo as descripcion_tipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoFormaPago='EFE' GROUP BY cd.codigoTipo,tm.descripcion_tipo");
+        $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(CASE  
+             WHEN cd.naturaleza='E' THEN cd.monto 
+              ELSE 0 
+           END)-sum(CASE  
+             WHEN cd.naturaleza='S' THEN cd.monto 
+              ELSE 0 
+           END) as monto,tm.descripcion_tipo as descripcion_tipo from ERP_CajaDiariaDetalle as cd inner join ERP_TiposMovimiento as tm on cd.codigoTipo=tm.codigo_tipo INNER JOIN ERP_FormasPago as fp on cd.codigoFormaPago=fp.codigo_formapago inner join ERP_CajaDiaria as c on cd.idCajaDiaria=c.idCajaDiaria where c.fechaCaja='$date' and c.idUsuario='$usuario' and cd.idMoneda='2' and cd.codigoFormaPago='EFE' GROUP BY cd.codigoTipo,tm.descripcion_tipo");
         return $mostrar; 
     }
     public function getDataTipo(){

@@ -390,6 +390,28 @@
                 }
             }); 
         };
+        $scope.loadPDFVC = function (url, params) {
+            angular.element('#show_loading').removeClass('ng-hide');
+            $.ajax({
+                url: base_url + '/' + url,
+                data: params,
+                success: function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        // toDataUrl(response.img, function (base64Img) {
+                        // });
+                        create_pdfVC(response);
+                    }
+                    angular.element('#show_loading').addClass('ng-hide');
+                },
+                error: function (ajaxContext) {
+                    angular.element('#show_loading').addClass('ng-hide');
+                    AlertFactory.showErrors({
+                        title: 'Hubo un error',
+                        message: 'Intente nuevamente'
+                    });
+                }
+            }); 
+        };
          $scope.loadCCPDF = function (url, params) {
             angular.element('#show_loading').removeClass('ng-hide');
             $.ajax({

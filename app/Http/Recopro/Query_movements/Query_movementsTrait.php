@@ -32,8 +32,8 @@ trait Query_movementsTrait
                 ['right', $i->Cantidad],
                 ['right', $i->Costo_Unitario],
                 ['right', $i->Precio_Unitario],
-                ['right', $i->Costo_Total],
-                ['right', $i->Precio_Total],
+                ['right',number_format($i->Costo_Total,2)],
+                ['right',number_format($i->Precio_Total,2)],
                 ['left', $i->Lote],
                 ['left', $i->Serie]
             ];

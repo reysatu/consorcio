@@ -209,6 +209,7 @@
                     if(data[0].iEstado!='0'){
                           btn_guardarProforma.prop('disabled',true); 
                     }
+
                     dFecEntrega.val(data.dFechaRegistro2);
                     _.each(response.data_repuesto, function (b) {
                         var modo_m=1;
@@ -253,7 +254,9 @@
                         destotal =data[0].nIdDsctoPr+"*"+porcen+'*'+monto;
                      }
                       totalDescuento.val(destotal).trigger("change");
-                     btn_aprobarProforma.prop('disabled',false); 
+                       if(data[0].iEstado=='0'){
+                          btn_aprobarProforma.prop('disabled',false); 
+                    }
                     modalProforma.modal("show");
                 } else {
                     AlertFactory.textType({
@@ -420,14 +423,14 @@
 
                 var staOperacionRepu =[];
                 $.each($('.checkClassOpe'), function (idx, item) {
-                    var checkOpera= ($(this).prop('checked')) ? 'C' : 'S';
+                    var checkOpera= ($(this).prop('checked')) ? 'S' : 'N';
                     staOperacionRepu[idx] = checkOpera;
                 });
                 staOperacionRepu = staOperacionRepu.join(',');
 
                 var staOperacion =[];
                 $.each($('.checkClass'), function (idx, item) {
-                    var checkOpera= ($(this).prop('checked')) ? 'C' : 'S';
+                    var checkOpera= ($(this).prop('checked')) ? 'S' : 'N';
                     staOperacion[idx] = checkOpera;
                 });
                 staOperacion = staOperacion.join(',');

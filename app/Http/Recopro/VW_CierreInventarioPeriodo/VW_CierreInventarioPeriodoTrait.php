@@ -32,8 +32,8 @@ trait VW_CierreInventarioPeriodoTrait
                 ['left', $i->Remitido,''],
                 ['left', $i->Transito,''],
                 ['left', $i->Total,''],
-                ['left', $i->Costo_Promedio_Unitario,''],
-                ['left', $i->Costo_Total,''],
+                ['left', number_format($i->Costo_Promedio_Unitario,2) ,''],
+                ['left', number_format($i->Costo_Total,2) ,''],
                
             ];
         }
@@ -52,7 +52,7 @@ trait VW_CierreInventarioPeriodoTrait
                 ['left','',''],
                 ['left','',''],
                 ['left','Total costo inventario ','bold'],
-                ['left', $cont,'bold'],
+                ['left',number_format($cont,2),'bold'],
                
             ];
 

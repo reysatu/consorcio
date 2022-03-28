@@ -176,7 +176,7 @@
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
-            $scope.loadPDF('reporteVentaClientes/pdf',data_excel);
+            $scope.loadPDFVC('reporteVentaClientes/pdf',data_excel);
         });
 
 
