@@ -32,7 +32,7 @@ trait ReporteRepuestoTrait
             };
             $mostrador=0;
             $taller=0;
-            if($i->origen=='V'){
+            if($i->origen=='V'){ 
                 $mostrador=floatval($i->REPUESTO)+floatval($i->ACEITE);
             }else{
                 $taller=floatval($i->REPUESTO)+floatval($i->ACEITE); 
@@ -43,14 +43,14 @@ trait ReporteRepuestoTrait
                 ['left', $i->documento_ven],
                 ['left', $i->razonsocial_cliente],
                 ['left', $i->vendedor],
-                ['left', $i->monto_total],
+                ['left',  number_format($i->monto_total,2)],
                 ['left', $estado],
-                ['left', $i->REPUESTO],
-                ['left', $i->ACEITE],
-                ['left', $i->SERVICIO],
-                ['left', $i->TERCEROS],
-                ['left', $mostrador],
-                ['left', $taller],
+                ['left', number_format($i->REPUESTO,2) ],
+                ['left', number_format($i->ACEITE,2)],
+                ['left', number_format($i->SERVICIO,2)],
+                ['left', number_format($i->TERCEROS,2) ],
+                ['left', number_format($mostrador,2) ],
+                ['left', number_format($taller,2)],
                
             ];
         }

@@ -33,7 +33,7 @@ class ReporteCreditosAprobadoController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
       
-        $params =['idtienda','documento_ven','vendedor','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','tipocliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado'];
+        $params =['idtienda','documento_ven','vendedor','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado'];
         return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'idtienda', $params);
     }
 

@@ -461,7 +461,7 @@ function createTarjetaCobranzaPDF(response) {
                                                 {
                                                  text: [
                                                     {    fontSize: 9,
-                                                         text:"DIRECCION  DE COBRANZA: ",
+                                                         text:"TIPO DE VIVIENDA: ",
                                                          bold:true,
                                                     },
                                                     {    fontSize: 9,

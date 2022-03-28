@@ -59,7 +59,7 @@ class MovimientoCajaController extends Controller
             $totalOtrosI=0;
             $dataCajadia=[];
             if($data['idMonedaAdd']=='1'){
-                if($data['tipoMovimientoAdd']=='ING'){
+                if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' ){
                     $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresos);
                     $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
@@ -73,7 +73,7 @@ class MovimientoCajaController extends Controller
                 $dataCajadia['totalEfectivo'] =  $total;
                 $dataCajadia['totalEgresos'] =  $totalEgre;
             }else{
-                 if($data['tipoMovimientoAdd']=='ING'){
+                 if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' ){
                     $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresosDol);
                     $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);

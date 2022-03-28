@@ -13,7 +13,7 @@
 
     function GuiaRemisionCtrl($scope, _, RESTService, AlertFactory, Notify,Helpers)
     {
-        
+         
         var cCodConsecutivo=$("#cCodConsecutivo"); 
         var nConsecutivo=$("#nConsecutivo");
         var puntoPartida=$("#puntoPartida");
@@ -994,17 +994,17 @@
             bval = bval && puntoPartida.required();
             bval = bval && fechaEmision.required();
             bval = bval && fechaInicioTraslado.required();
-            bval = bval && costoMini.required();
+            // bval = bval && costoMini.required();
             bval = bval && puntoLlega.required();
             bval = bval && rucDestinatario.required();
             bval = bval && razonSocialDestinatario.required();
             bval = bval && idtraslado.required();
-            bval = bval && marca.required();
-            bval = bval && placa.required();
-            bval = bval && nroConstanciaInscripcion.required();
-            bval = bval && nroLicenciaConductor.required();
-            bval = bval && rucEtransporte.required(); 
-            bval = bval && razonSocialEtransporte.required();
+            // bval = bval && marca.required();
+            // bval = bval && placa.required();
+            // bval = bval && nroConstanciaInscripcion.required();
+            // bval = bval && nroLicenciaConductor.required();
+            // bval = bval && rucEtransporte.required(); 
+            // bval = bval && razonSocialEtransporte.required();
             if (bval && articulo_mov_det.html() === '' ) {
                 AlertFactory.showWarning({
                     title: '',

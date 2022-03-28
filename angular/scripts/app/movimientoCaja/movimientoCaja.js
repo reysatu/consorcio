@@ -1096,6 +1096,8 @@
                         var montoApe = Number(dataCajaDetEfeSolAper[0].monto);
                         var tiposumApe = 'SE';
                         addTableEfecSol(cotipoApe, tipoTexApe, montoApe, tiposumApe);
+                        console.log(dataCajaDetEfeSol);
+                        console.log("totaldetalle");
                         dataCajaDetEfeSol.map(function (index) {
                             var codigoTipo = index.codigoTipo;
                             var tipotext = index.descripcion_tipo;
