@@ -2033,7 +2033,9 @@
 
         function guardar_pago_cuotas_credito() {
             // alert("hola");
-            $.post("movimientoCajas/guardar_pago_cuotas_credito", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo_credito").val() + "&nConsecutivo=" + $("#nConsecutivo_credito").val() + "&IdTipoDocumento=12&"+$("#formulario-solicitud-credito").serialize(),
+
+
+            $.post("movimientoCajas/guardar_pago_cuotas_credito", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo_credito").val() + "&nConsecutivo=" + $("#nConsecutivo_credito").val() + "&IdTipoDocumento=12&"+$("#formulario-solicitud-credito").serialize() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
             function (data, textStatus, jqXHR) {
                     if (data.status == "i") {
                         $("#modal-emitir-comprobante").modal("hide");
