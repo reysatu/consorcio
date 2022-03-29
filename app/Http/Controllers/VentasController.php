@@ -270,11 +270,13 @@ class VentasController extends Controller
 
     }
 
-    public function get_venta_detalle($id, VentasInterface $repo, Request $request)
+    public function get_venta_detalle_devolucion($id, VentasInterface $repo, Request $request)
     {
         try {
-
-            $val = $repo->get_venta_detalle($id);
+            $arr = explode("*", $id);
+            $serie_comprobante = $arr[0];
+            $numero_comprobante = $arr[1];
+            $val = $repo->get_venta_detalle_devolucion($serie_comprobante, $numero_comprobante);
 
             return response()->json([
                 'status' => true,

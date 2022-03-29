@@ -152,6 +152,17 @@ class VentasRepository implements VentasInterface
         where vd.idventa={$idventa} AND pr.type_id=1");
         return $mostrar3;
     }
+
+    public function get_venta_detalle_devolucion($serie_comprobante, $numero_comprobante){
+   
+        $mostrar3=DB::select("select pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, vd.consecutivo as idDetalleRepues,* 
+        from ERP_VentaDetalle as vd 
+        INNER JOIN ERP_Venta AS v ON(v.idventa=vd.idventa)
+        inner join ERP_Productos as pr on pr.id=vd.idarticulo  
+        where v.serie_comprobante='{$serie_comprobante}' AND v.numero_comprobante={$numero_comprobante}  AND pr.type_id=1");
+        return $mostrar3;
+    }
+
      public function get_venta_detalle_entrega($idventa){
    
         $mostrar3=DB::select("

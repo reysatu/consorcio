@@ -150,8 +150,8 @@ class RefinanciamientosController extends Controller
             
             
             $fecha = $data["fecha_refinanciamiento"];
-            $valor_cuota = (float) $data["monto_refinanciamiento"] / (int) $data["nrocuotas_refinanciamiento"];
-            $valor_cuota = round($valor_cuota, 2);
+            // $valor_cuota = (float) $data["monto_refinanciamiento"] / (int) $data["nrocuotas_refinanciamiento"];
+            // $valor_cuota = round($valor_cuota, 2);
             for ($c=1; $c <= $data["nrocuotas_refinanciamiento"]; $c++) { 
 
                 $fecha = $this->sumar_restar_dias($fecha, "+", 30);
@@ -160,9 +160,9 @@ class RefinanciamientosController extends Controller
                 $data_cronograma["nConsecutivo"] = $data_solicitud["nConsecutivo"];
                 $data_cronograma["nrocuota"] = $c;
                 $data_cronograma["fecha_vencimiento"] = $fecha;
-                $data_cronograma["valor_cuota"] =  $valor_cuota;
+                $data_cronograma["valor_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
                 $data_cronograma["int_moratorio"] = "0";
-                $data_cronograma["saldo_cuota"] =  $valor_cuota;
+                $data_cronograma["saldo_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
                 $data_cronograma["monto_pago"] = "0";
                 // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
                 $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));

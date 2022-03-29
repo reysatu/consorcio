@@ -154,7 +154,9 @@
         $(document).on("change", "#idventa", function () {
             var idventa = $(this).val();
             var documento =  $('#idventa').find(':selected').data('documento');
-            
+            var idmoneda =  $('#idventa').find(':selected').data('idmoneda');
+            // alert(idmoneda);
+            idMoneda.val(idmoneda);
             // alert(documento);
             if(idventa == "") {
                 return false;
@@ -163,7 +165,7 @@
             $("#documento").val(documento);
            
 
-            RESTService.get('ventas/get_venta_detalle', idventa, function (response) {
+            RESTService.get('ventas/get_venta_detalle_devolucion', idventa, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data = response.data;
                     var cont = 0;
@@ -221,6 +223,10 @@
         cCodConsecutivoOS.change(function () {
            
             var val = cCodConsecutivoOS.val();
+            // alert(typeof val);   
+            if(val == null) {
+                return false;
+            }
             var totRep = val.split('*');
             nConsecutivoOS.val(totRep[1]);
             idMoneda.val(totRep[2]);
@@ -342,26 +348,74 @@
             $("#msg_cont_ProcesarTransferencia p").html("");
 
         }
+
+        function activar_inputs() {
+            $("input[name='tipo']").removeAttr("disabled");
+            $("#fecha_registro").removeAttr("disabled");
+            $("#observaciones").removeAttr("disabled");
+            $(".m_articulo_idAlm").removeAttr("disabled");
+            $(".m_articulo_idLoc").removeAttr("disabled");
+            $(".m_articulo_costo ").removeAttr("disabled");
+            $("#ProcesarTransferenciaBoton").removeAttr("disabled");
+            $(".verUpdate").removeAttr("disabled");
+            $("#btn_movimiento_detalle").removeAttr("disabled");
+        }
+
+        function desactivar_inputs() {
+            $("input[name='tipo']").attr("disabled", "disabled");
+            $("#fecha_registro").attr("disabled", "disabled");
+            $("#observaciones").attr("disabled", "disabled");
+            $(".m_articulo_idAlm").attr("disabled", "disabled");
+            $(".m_articulo_idLoc").attr("disabled", "disabled");
+            $(".m_articulo_costo ").attr("disabled", "disabled");
+            $("#ProcesarTransferenciaBoton").attr("disabled", "disabled");
+            $(".verUpdate").attr("disabled", "disabled");
+            $("#btn_movimiento_detalle").attr("disabled", "disabled");
+           
+            
+        }
         function findRegister_movement(id) {
             titlemodalMovimieto.html('Editar Devolución');
 
             RESTService.get('register_movements/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
-                    var verProforma = 'ED';
-                    cargar_proformas(verProforma);
+                   
                     idMovimiento.val(data_p.idMovimiento);
                     var cons = data_p.cCodConsecutivo + '*' + data_p.nConsecutivo + '*' + data_p.idMoneda;
-                    cCodConsecutivoOS.val(cons).trigger("change");
-                    cCodConsecutivoOS.prop('disabled', true);
+                    
+                    
+
+                    // alert(data_p.idTipoOperacion);
+                    if(data_p.idTipoOperacion == 9) {
+                        $("input[name='tipo'][value='N']").prop("checked", true).trigger("change");
+                        cargar_notas(cons);
+                       
+                        $("#idventa").prop('disabled', true);
+                    } 
+
+                    if(data_p.idTipoOperacion == 8) {
+                        $("input[name='tipo'][value='P']").prop("checked", true).trigger("change");
+                     
+                        var verProforma = 'ED';
+                        cargar_proformas(verProforma);
+                        cCodConsecutivoOS.val(cons).trigger("change");
+                        cCodConsecutivoOS.prop('disabled', true);
+                    } 
+                   
                     titlemodalMovimieto.html('Editar Devolución ' + '[' + data_p.idMovimiento + ']');
                     var lotE = response.data_movimiento_lote;
-                    var serE = response.data_movemen_Serie_entrega;
+                    var serE = response.data_movimiento_serie_entrega;
                     btn_movimiento_detalle.prop('disabled', false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
                     naturalezaGeneral = data_p.naturaleza;
-                    if (lotE != '') {
+
+                    // console.log(lotE);
+                    // console.log(serE);
+                    // return false;
+
+                    if (lotE != '' && lotE.length > 0 && typeof lotE != "undefined") {
                         lotE.map(function (index) {
                             var grubLE = {
                                 'identificador': index.consecutivo,
@@ -373,7 +427,7 @@
                             aartMLE.push(grubLE);
                         });
                     }
-                    if (serE != '') {
+                    if (serE != '' && serE.length > 0 && typeof serE != "undefined") {
                         serE.map(function (index) {
                             var grubSE = {
                                 'identificador': index.identificador,
@@ -502,7 +556,7 @@
                     //        addToArticuloKitt(c.idArticulo_kit,c.code_kit, c.idArticulo_kit_description,Math.trunc(c.cantidadkit))
                     //     });
                     // };
-
+                    desactivar_inputs();
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -785,6 +839,7 @@
                 desProductoMss.val(descripcionArt);
                 idProductoMss.val(codigo);
                 var str2 = idTipoOperacion.val();
+                // alert(str2);
                 var complet2 = str2.split("*");
                 var nat2 = complet2[1];
                 costoAS.val(costo);
@@ -1284,11 +1339,13 @@
                 };
 
                 var str = idTipoOperacion.val();
+                // alert(str);
                 var complet = str.split("*");
                 var idTO = complet[0];
                 var nat = complet[1];
                 naturalezaGeneral = nat;
                 var val = cCodConsecutivoOS.val();
+                // alert(": "+val);
                 var totRep = val.split('*');
                 var paramsCabezera = {
                     'idMovimiento': idMovimiento.val(),
@@ -1346,6 +1403,8 @@
                         procesarTransfBoton.trigger('change');
 
                         var natudata = idTipoOperacion.val();
+                        // alert(natudata);
+
                         var co = natudata.split('*');
                         var na = co[1];
                         idNaturaleza.val(na);
@@ -2391,7 +2450,7 @@
         }
         function saveMovimientoCab() {
             var bval = true;
-
+            // alert("sss");
             bval = bval && idTipoOperacion.required();
             bval = bval && fecha_registro.required();
             if (!idMoneda.prop("disabled")) {
@@ -2400,6 +2459,7 @@
 
             if (bval) {
                 var str = idTipoOperacion.val();
+                // alert(str);
                 var complet = str.split("*");
                 var idTO = complet[0];
                 var nat = complet[1];
@@ -2423,6 +2483,7 @@
                             type: 'success'
                         });
                         var natudata = idTipoOperacion.val();
+                        // alert(natudata);
                         var co = natudata.split('*');
                         var na = co[1];
                         idNaturaleza.val(na);
@@ -2449,13 +2510,18 @@
 
         };
 
-        function cargar_notas() {
+        function cargar_notas(id) {
             $.post("ventas/get_notas_devolucion", {},
                 function (data, textStatus, jqXHR) {
                     $("#idventa").html('');
                     $("#idventa").append('<option value="">Seleccionar</option>');
                     _.each(data, function (item) {
-                        $("#idventa").append('<option data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" value="' + item.idventa + '">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.cliente + '</option>');
+                        if(typeof id != "undefined" && id == item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda) {
+                            $("#idventa").append('<option selected="selected" data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" data-idmoneda="'+item.idmoneda+'" value="' + item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda+'">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.cliente + '</option>');
+                        } else {
+                            $("#idventa").append('<option data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" data-idmoneda="'+item.idmoneda+'" value="' + item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda+'">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.cliente + '</option>');
+                        }
+                       
                     });
                     $("#idventa").select2();
                 },
@@ -2464,12 +2530,14 @@
         }
 
         function newMovimiento() {
+            activar_inputs();
             titlemodalMovimieto.html('Nueva Devolución');
             modalMovimieto.modal('show');
             var verProforma = 'CR';
             cargar_proformas(verProforma);
 
             cargar_notas();
+
         }
 
 
@@ -2487,6 +2555,7 @@
                 }
                 titlemodalMovimietoArticulo.html('Nuevo Articulo');
                 var str = idTipoOperacion.val();
+                // alert(str);
                 var complet = str.split("*");
                 var idTO = complet[0];
                 var nat = complet[1];
@@ -2521,6 +2590,8 @@
         }
         idTipoOperacion.change(function () {
             var natudata = idTipoOperacion.val();
+            
+            // alert(natudata);
             var co = natudata.split('*');
             var na = co[1];
 
@@ -2544,9 +2615,9 @@
                         naturalezaGeneral = 'D';
                         // idTipoOperacion.append('<option value="' + opera + '" selected>DESRESERVA ST</option>');
                         if(item.IdTipoOperacion == 8) {
-                            idTipoOperacion.append('<option selected="selected" value="' + item.IdTipoOperacion + '">'+item.descripcion+'</option>');
+                            idTipoOperacion.append('<option selected="selected" value="' + item.IdTipoOperacion + '*'+item.idNaturaleza+'">'+item.descripcion+'</option>');
                         } else {
-                            idTipoOperacion.append('<option value="' + item.IdTipoOperacion + '">'+item.descripcion+'</option>');
+                            idTipoOperacion.append('<option value="' + item.IdTipoOperacion + '*'+item.idNaturaleza+'">'+item.descripcion+'</option>');
                         }
                     });
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
@@ -3090,7 +3161,7 @@
                 $(".nota").hide();
                 $(".proforma").show();
                 
-                $("#idTipoOperacion").val(8);
+                $("#idTipoOperacion").val("8*D");
             }
             // nota
             if (tipo == "N") {
@@ -3098,7 +3169,7 @@
                 $("#cCodConsecutivoOS").trigger("change");
                 $("#nConsecutivoOS").val("");
 
-                $("#idTipoOperacion").val(9);
+                $("#idTipoOperacion").val("9*E");
                 
                 $(".proforma").hide();
                 $(".nota").show();

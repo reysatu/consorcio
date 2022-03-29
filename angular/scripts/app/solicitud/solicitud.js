@@ -190,6 +190,7 @@
             $("#formulario-solicitud").trigger("reset");
             $("#formulario-creditos").trigger("reset");
             $("#formulario-persona").trigger("reset");
+            $("#tipo_sol").val("N");
         }
 
         function obtener_data_for_solicitud() {
@@ -2029,13 +2030,12 @@
 
             // }
 
-
             var td5 = $('<td><p>' + pretotal.toFixed(2) + '</p></td>');
             var tdpreT = $('<td><p></p></td>');
 
             var inp = $('<input type="hidden" class="m_articulo_id" name="idarticulo[]" posee-serie="' + posee_serie + '" value="' + idProducto + '"  cantidad="' + cantProducto + '" producto="' + desProducto + '" />');
 
-            var inp5 = $('<input type="hidden" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(2) + '" />');
+            var inp5 = $('<input type="hidden" cOperGrat="'+cOperGrat+'" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(2) + '" />');
             var inpPreTo = $('<input type="hidden" class="m_articulo_montoDescuento" codigo="' + codigo + '"  name="monto_descuento[]" />');
 
             var op = $('<option value="" selected>Seleccione</option>');
@@ -2165,7 +2165,11 @@
                         aartMSE = arrTSE;
                     }
                     $('#tr_idArticulo' + code).remove();
-                    calcular_totales();
+
+                    if($("#tipo_sol").val() == "N") {
+                        calcular_totales();
+                    }
+
                 });
                 e.preventDefault();
             });
@@ -2246,7 +2250,9 @@
                 // $("#tr_idArticulo" + codigo).find("td:eq(5)").children("input").val(cos);
             };
 
-            calcular_totales();
+            if($("#tipo_sol").val() == "N") {
+                calcular_totales();
+            }
 
             if ($("#tipo_solicitud").val() == "2" || $("#tipo_solicitud").val() == "3") {
                 $("#tipo_solicitud").trigger("change");
@@ -2310,7 +2316,10 @@
 
                 }
 
-                calcular_totales();
+                if($("#tipo_sol").val() == "N") {
+                    calcular_totales();
+                }
+
             });
 
 
@@ -2386,7 +2395,8 @@
             var descuento = 0;
 
             var precio_total = parseFloat($(".m_articulo_precioTotal[codigo='" + codigo + "']").val());
-
+            var copergrat = $(".m_articulo_precioTotal[codigo='" + codigo + "']").attr("copergrat");
+            // console.log("ccopergrat: ",copergrat);
             // console.log("precio_total => "+precio_total);
 
             if (typeof precio_total == "undefined") {
@@ -2441,7 +2451,7 @@
             $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(descuento.toFixed(2));
             $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(descuento.toFixed(2));
 
-            var nuevo_total = precio_total - descuento - monto_descuento_prorrateado;
+            var nuevo_total = 0;
 
             // alert(nuevo_total);
 
@@ -2450,17 +2460,22 @@
             // var monto_inafecto = 0;
             var impuestos = 0;
             var valor_igv = parseFloat($("#valor_igv").val());
-            var monto_subtotal = nuevo_total;
-
-            if (impuesto_articulo == "0") {
-                monto_exonerado = nuevo_total;
-            } else {
-                monto_afecto = nuevo_total;
-                impuestos = nuevo_total * valor_igv / 100;
-                nuevo_total = nuevo_total + impuestos;
+            var monto_subtotal = 0;
+            var monto_subtotal_sin_descuento_prorrateado = 0;
+            if(copergrat != "S") {
+                nuevo_total = precio_total - descuento - monto_descuento_prorrateado;
+                monto_subtotal = nuevo_total;
+                if (impuesto_articulo == "0") {
+                    monto_exonerado = nuevo_total;
+                } else {
+                    monto_afecto = nuevo_total;
+                    impuestos = nuevo_total * valor_igv / 100;
+                    nuevo_total = nuevo_total + impuestos;
+                }
+    
+                monto_subtotal_sin_descuento_prorrateado = precio_total - descuento;
             }
-
-            var monto_subtotal_sin_descuento_prorrateado = precio_total - descuento;
+            
 
             $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(monto_exonerado.toFixed(2));
             $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(monto_exonerado.toFixed(2));
@@ -2473,7 +2488,7 @@
             }
 
 
-            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
+            $(".de[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
             $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
             $(".monto_afecto[codigo=" + codigo + "]").find("p").text(monto_afecto.toFixed(2));
@@ -2545,7 +2560,9 @@
             // totalDes = totalDes - porTotal;
 
             // desTotal.val(totalDes.toFixed(2));
-            calcular_totales();
+            if($("#tipo_sol").val() == "N") {
+                calcular_totales();
+            }
             // $("#tipo_solicitud").trigger("change");
             // $("#cuota_inicial").trigger("keyup");
             // $("#nro_cuotas").trigger("keyup");
@@ -2677,7 +2694,7 @@
 
             t_monto_subtotal = intereses + t_monto_subtotal;
             $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2)); // antes
-
+            console.log(t_monto_subtotal);
             // alert("d" + t_monto_subtotal);
             // $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2));
 
@@ -2866,7 +2883,11 @@
 
             $.post("solicitud/factor_credito", { nro_cuotas: nro_cuotas },
                 function (data, textStatus, jqXHR) {
-                    calcular_totales();
+
+                    if($("#tipo_sol").val() == "N") {
+                        calcular_totales();
+                    }
+
                     var porcentaje = 0;
                     var intereses = 0;
                     var valor_cuota = 0;
@@ -3169,7 +3190,11 @@
             }
 
             if (tipo_solicitud == "2" || tipo_solicitud == "3") {
-                calcular_totales();
+
+                if($("#tipo_sol").val() == "N") {
+                    calcular_totales();
+                }
+
             }
         });
 
@@ -3240,7 +3265,7 @@
                         $("#imprimir-cronograma").show();
                     }
 
-
+                    $("#tipo_sol").val(data.solicitud[0].tipo);
                     $("#aprobaciones").show();
                     $("#imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
