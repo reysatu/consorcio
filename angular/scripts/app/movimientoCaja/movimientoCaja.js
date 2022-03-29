@@ -393,13 +393,20 @@
             RESTService.all('movimientoCajas/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     console.log(response.cajas);
+                    var cajasusu=response.cajas;
                     idCaja.append('<option value="">Seleccionar</option>');
                     _.each(response.cajas, function (item) {
                         idCaja.append('<option value="' + item.idcaja + '">' + item.nombre_caja + '</option>');
                     });
                     idUsuario.val(response.usuario).trigger("change");
                     usuarioActual = response.usuario;
-
+                    if(cajasusu.length==0){
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'El usuario actual no tiene asignado ninguna caja',
+                            type: 'info'
+                        });
+                    }
                     cuentaBancaria
                 }
             }, function () {
@@ -3294,7 +3301,7 @@
             paging: true,
             sorting: true,
             actions: {
-                listAction: base_url + '/solicitud/list_creditos',
+                listAction: base_url + '/movimientoCajas/list_creditos',
             },
             // messages: {
             //     addNewRecord: 'Nueva Caja',

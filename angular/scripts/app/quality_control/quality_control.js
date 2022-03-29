@@ -199,11 +199,11 @@
                 var totRep=val.split('*');
                 nConsecutivoOS.val(totRep[1]);
         });
-        function getDataForProforma () {
-            RESTService.all('proformas/data_form', '', function(response) {
+        function getDataForProforma () { 
+            RESTService.all('quality_controls/data_formProf', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                      cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
-                     _.each(response.total_orden, function(item) {
+                     _.each(response.getTotal_Orden_total_calidad, function(item) {
                         cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');
                     });
                 } 

@@ -18,3 +18,5 @@ Route::put('quality_controls/createControl/{id}', ['as' => 'quality_controls.cre
 Route::get('quality_controls/find/{id}', ['as' => 'quality_controls.find', 'uses' => 'Quality_controlController@find']);
 
 Route::get('quality_controls/pdf', 'Quality_controlController@pdf');
+
+Route::get('quality_controls/data_formProf', ['as' => 'proformas.data_formProf', 'uses' => 'ProformaController@data_form']);
