@@ -98,10 +98,15 @@ class Orden_servicioController extends Controller
     {
 
         DB::beginTransaction();
-        try {
+        try { 
             $data = $request->all();
             $valtodo=explode("_", $id);
             $usuario=auth()->id();
+            if($data['estado']==2){
+                $idTecnico = $request->input('idTecnico');
+                 $repo->updateTecnico($valtodo[0],$valtodo[1],$idTecnico);
+            }
+           
             $val=$repo->cambiar_estado($valtodo[0],$valtodo[1],$data['estado'],$usuario);
             DB::commit();
             return response()->json([

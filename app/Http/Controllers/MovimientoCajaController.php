@@ -246,6 +246,17 @@ class MovimientoCajaController extends Controller
             $dataVe=$recaj->get_ventaCajaCompro($fechacA,$usuario);
             $dataList=$recaj->get_ventaCompro($fechacA,$usuario);
             $dataListTipoPago=$recaj->get_ventaComproTipoPago($fechacA,$usuario);
+
+            $dataListDevolucion=$recaj->get_ventaDevolucion($fechacA,$usuario);
+
+
+            $idArtiCuota=$recaj->get_idArtiCuota();
+            $idArtiAnticipo=$recaj->get_idArtiAnticipo();
+            $idArtiSeparacin=$recaj->get_idArtiSeparacin();
+            $dataListCancelaCuotas=$recaj->get_ventaCancelaCuota($fechacA,$usuario,$idArtiCuota[0]->value);
+            $dataListCancelaMora=$recaj->get_ventaCancelaMora($fechacA,$usuario,$idArtiCuota[0]->value);
+            $dataListAnticipo=$recaj->get_ventaAnticipo($fechacA,$usuario,$idArtiAnticipo[0]->value);
+            $dataListSeparacion=$recaj->get_ventaSeparacion($fechacA,$usuario,$idArtiSeparacin[0]->value);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
             $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
@@ -258,10 +269,11 @@ class MovimientoCajaController extends Controller
             $simboloMonedaDolar = $repoQs->getSimboloMonedaDolar();
             
 
+
             $feca=date("d/m/Y", strtotime($dataCaDet[0]->fechaCaja));
             return response()->json([
                 'status' => true,
-                'dataCaDet'=>$dataCaDet,
+                'dataCaDet'=>$dataCaDet, 
                 'feca'=> $feca,
                 'fechacA'=>$fechacAc,
                 'dataCajaDetForSol'=>$dataCajaDetForSol,
@@ -278,6 +290,12 @@ class MovimientoCajaController extends Controller
                  'dataTienda'=>$dataTienda,
                  'dataList'=> $dataList,
                  'dataListTipoPago'=>$dataListTipoPago,
+                 'dataListCancelaCuotas'=>$dataListCancelaCuotas,
+                 'dataListCancelaMora'=>$dataListCancelaMora,
+                 'dataListAnticipo'=>$dataListAnticipo,
+                 'dataListSeparacion'=>$dataListSeparacion,
+                 'dataListDevolucion'=>$dataListDevolucion,
+                
 
             ]);
     }
@@ -293,8 +311,25 @@ class MovimientoCajaController extends Controller
             $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
             $dataTienda=$recaj->get_tienda($dataMc[0]->idcaja);
             $dataVe=$recaj->get_ventaCajaCompro($fechacA,$usuario);
-            $dataList=$recaj->get_ventaCompro($fechacA,$usuario);
+                 $dataList=$recaj->get_ventaCompro($fechacA,$usuario);
+
             $dataListTipoPago=$recaj->get_ventaComproTipoPago($fechacA,$usuario);
+
+            $dataListDevolucion=$recaj->get_ventaDevolucion($fechacA,$usuario);
+
+
+            $idArtiCuota=$recaj->get_idArtiCuota();
+            $idArtiAnticipo=$recaj->get_idArtiAnticipo();
+            $idArtiSeparacin=$recaj->get_idArtiSeparacin();
+            $dataListCancelaCuotas=$recaj->get_ventaCancelaCuota($fechacA,$usuario,$idArtiCuota[0]->value);
+            $dataListCancelaMora=$recaj->get_ventaCancelaMora($fechacA,$usuario,$idArtiCuota[0]->value);
+            $dataListAnticipo=$recaj->get_ventaAnticipo($fechacA,$usuario,$idArtiAnticipo[0]->value);
+            $dataListSeparacion=$recaj->get_ventaSeparacion($fechacA,$usuario,$idArtiSeparacin[0]->value);
+
+                   
+
+
+
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
 
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
@@ -327,6 +362,11 @@ class MovimientoCajaController extends Controller
                  'dataTienda'=>$dataTienda,
                  'dataList'=> $dataList,
                  'dataListTipoPago'=>$dataListTipoPago,
+                 'dataListCancelaCuotas'=>$dataListCancelaCuotas,
+                 'dataListCancelaMora'=>$dataListCancelaMora,
+                 'dataListAnticipo'=>$dataListAnticipo,
+                 'dataListSeparacion'=>$dataListSeparacion,
+                 'dataListDevolucion'=>$dataListDevolucion,
             ]);
     }
     public function pdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
