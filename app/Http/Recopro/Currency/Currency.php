@@ -21,7 +21,7 @@ class Currency extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['IdMoneda', 'Descripcion', 'Simbolo', 'EquivalenciaSunat', 'Estado', 'Abreviatura','user_created','user_updated','user_deleted','deleted_at'];
+    protected $fillable = [ 'Descripcion', 'Simbolo', 'EquivalenciaSunat', 'Estado', 'Abreviatura','user_created','user_updated','user_deleted','deleted_at'];
     
      public function user_c()
     {
