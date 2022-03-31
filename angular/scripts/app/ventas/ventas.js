@@ -182,7 +182,6 @@
                         return false;
                     }
 
-                    
 
                     if(idventa_referencia != "null" && idventa_referencia != "" && condicion_pago != 1 && saldo <= 0) {
                         AlertFactory.textType({

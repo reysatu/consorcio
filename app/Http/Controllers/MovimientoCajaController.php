@@ -845,23 +845,24 @@ class MovimientoCajaController extends Controller
                     $update_solicitud["estado"] = "6"; // ESTADO FACTURADO DE LA SOLICITUD
 
                     //GENERAMOS EL CRONOGRAMA DE PAGOS
-                    $fecha = $solicitud[0]->fecha_solicitud;
-                    for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
+                    // 31/03/2022 AHORA EL CRONOGRAMA SE GENERA EN EL MODULO DE APROBAR SOLICITUDES
+                    // $fecha = $solicitud[0]->fecha_solicitud;
+                    // for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
 
-                        $fecha = $this->sumar_restar_dias($fecha, "+", 30);
-                        $data_cronograma = array();
-                        $data_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
-                        $data_cronograma["nConsecutivo"] = $data["nConsecutivo"];
-                        $data_cronograma["nrocuota"] = $c;
-                        $data_cronograma["fecha_vencimiento"] = $fecha;
-                        $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota;
-                        $data_cronograma["int_moratorio"] = "0";
-                        $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota;
-                        $data_cronograma["monto_pago"] = "0";
-                        // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
-                        $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
-                        // print_r($res);   
-                    }
+                    //     $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                    //     $data_cronograma = array();
+                    //     $data_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
+                    //     $data_cronograma["nConsecutivo"] = $data["nConsecutivo"];
+                    //     $data_cronograma["nrocuota"] = $c;
+                    //     $data_cronograma["fecha_vencimiento"] = $fecha;
+                    //     $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota;
+                    //     $data_cronograma["int_moratorio"] = "0";
+                    //     $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota;
+                    //     $data_cronograma["monto_pago"] = "0";
+                    //     // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                    //     $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                    //     // print_r($res);   
+                    // }
                     
 
                 }

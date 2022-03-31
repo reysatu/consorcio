@@ -113,4 +113,10 @@ class AprobacionSolicitudRepository implements AprobacionSolicitudInterface
      
     }
 
+    public function obtener_conformidad($id) {
+        $mostrar=DB::select("SELECT * FROM ERP_SolicitudConformidad WHERE nIdConformidad={$id}");
+
+        return $mostrar;
+    }
+
 }

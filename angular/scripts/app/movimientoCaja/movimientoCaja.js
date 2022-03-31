@@ -2215,10 +2215,10 @@ table_container_bancos.jtable('load');
                         // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
                         var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
 
-                        if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
+                        // if (data.datos[0].tipo_solicitud != "1" && data.datos[0].estado == "6") {
 
-                            window.open("movimientoCajas/imprimir_cronograma/" + id);
-                        }
+                        //     window.open("movimientoCajas/imprimir_cronograma/" + id);
+                        // }
 
                         window.open("movimientoCajas/imprimir_comprobante/" + id);
 
@@ -3220,9 +3220,9 @@ table_container_bancos.jtable('load');
                         window.open("movimientoCajas/imprimir_ticket/" + id);
                     } else {
                         window.open("movimientoCajas/imprimir_comprobante/" + id);
-                        if (tipo_solicitud != "1" && estado == "6") {
-                            window.open("movimientoCajas/imprimir_cronograma/" + id);
-                        }
+                        // if (tipo_solicitud != "1" && estado == "6") {
+                        //     window.open("movimientoCajas/imprimir_cronograma/" + id);
+                        // }
 
                     }
 
