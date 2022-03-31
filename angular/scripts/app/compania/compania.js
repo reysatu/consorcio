@@ -146,7 +146,8 @@
             bval = bval && rutaData.required();
             bval = bval && rutaLog.required();
             bval = bval && fechaUltBackup.required();
-          
+          console.log(razonSocial.val());
+          console.log("razon social");
             if(ruc.val().length!=11){
                 AlertFactory.textType({
                             title: '',

@@ -3233,7 +3233,8 @@
                         for (var i = 0; i < data.solicitud_articulo.length; i++) {
 
                             var codigo = Math.random().toString(36).substr(2, 18);
-
+                            console.log(data.solicitud_articulo[i].precio_total);
+                            console.log("precio_one");
                             addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
 
                         }
