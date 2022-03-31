@@ -78,7 +78,8 @@ class Register_movementRepository implements Register_movementInterface
     public function get_ventas_entrega()
     {
         $sql = "
-select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa)  where so.estado>=6 and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC";
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa) inner join ERP_SolicitudArticulo as soa on (soa.cCodConsecutivo=so.cCodConsecutivo and soa.nConsecutivo=so.nConsecutivo) where soa.nCantidadPendienteEntregar>0 and so.estado in (6,8) and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC
+";
 
         return DB::select($sql);
 
@@ -95,7 +96,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
             $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
             $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
-        })->orderBy('idMovimiento', 'DESC');
+        })->whereIn('idTipoOperacion', ['8', '9'])->orderBy('idMovimiento', 'DESC');
 
     }
     public function get_movemen_lote($id){
@@ -125,7 +126,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
     }
     public function get_movimientoVenta($id){
         $mostrar=DB::select( 
-                        "select * from ERP_Movimiento as m inner join erp_venta as v on m.cCodConsecutivo=v.serie_comprobante and m.nConsecutivo=v.numero_comprobante where m.idMovimiento='$id'");
+                        "select m.nConsecutivo as nconse_ve,m.cCodConsecutivo as cCon_ve,* from ERP_Movimiento as m inner join erp_venta as v on m.cCodConsecutivo=v.serie_comprobante and m.nConsecutivo=v.numero_comprobante inner join ERP_Solicitud as soli on (v.cCodConsecutivo_solicitud=soli.cCodConsecutivo and v.nConsecutivo_solicitud=soli.nConsecutivo) inner join ERP_Clientes as cli on (cli.id = soli.idcliente ) where m.idMovimiento='$id'");
          return $mostrar; 
     }
 

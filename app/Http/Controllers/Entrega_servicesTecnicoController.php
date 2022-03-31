@@ -45,7 +45,7 @@ class Entrega_servicesTecnicoController extends Controller
                 'data_movimiento_serie_entrega'=>$data_movimiento_serie_entrega,
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { 
             DB::rollBack();
             return response()->json([
                 'status'  => false,
