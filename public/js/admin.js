@@ -1377,6 +1377,12 @@ function getFormSearch(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+function getFormSearchcomproMov(form_id, input_id, btn_id) {
+     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+        '<input type="hidden" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+         '<input type="hidden" id="' + btn_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+        '</form>';
+}
 // function getFormSearchAsigApro(form_id, input_id, btn_id) {
 //     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
 //         '<div class="input-group input-group-sm">' +

@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\Currency;
+<?php namespace App\Http\Recopro\View_comprobantes_caja_detalle;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -8,20 +8,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class Currency extends Model
+class View_comprobantes_caja_detalle extends Model
 {
   
-    protected $table = 'ERP_Moneda';
+    protected $table = 'ERP_view_comprobantes_caja_detalle';
 
     public $timestamps = true;
-
-    protected $primaryKey = 'IdMoneda';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = [ 'Descripcion', 'Simbolo', 'EquivalenciaSunat', 'Estado', 'Abreviatura','user_created','user_updated','user_deleted','deleted_at'];
+    protected $fillable = ['documento','razonsocial_cliente','serie_comprobante','numero_comprobante','monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
     
      public function user_c()
     {

@@ -4,15 +4,27 @@
  * User: JAIR
  * Date: 4/5/2017 
  * Time: 6:59 PM
- */
+ */ 
 
 Route::post('movimientoCajas/list', ['as' => 'movimientoCajas.list', 'uses' => 'MovimientoCajaController@all']);
+
+Route::post('movimientoCajas/listComMovi', ['as' => 'movimientoCajas.listComMovi', 'uses' => 'MovimientoCajaController@allSearComMov']);
+
+Route::post('movimientoCajas/listComMoviDol', ['as' => 'movimientoCajas.listComMoviDol', 'uses' => 'MovimientoCajaController@allSearComMovDol']);
+
+
+Route::post('movimientoCajas/listComDetalle', ['as' => 'movimientoCajas.listComDetalle', 'uses' => 'MovimientoCajaController@allSearComMovDeta']);
+
+Route::post('movimientoCajas/listComDetalleDol', ['as' => 'movimientoCajas.listComDetalleDol', 'uses' => 'MovimientoCajaController@allSearComMovDetaDol']);
+
+
 Route::post('movimientoCajas/create', ['as' => 'movimientoCajas.create', 'uses' => 'MovimientoCajaController@create']);
 Route::post('movimientoCajas/delete', ['as' => 'movimientoCajas.delete', 'uses' => 'MovimientoCajaController@destroy']);
 Route::post('movimientoCajas/update', ['as' => 'movimientoCajas.update', 'uses' => 'MovimientoCajaController@update']);
 Route::get('movimientoCajas/excel', ['as' => 'movimientoCajas.excel', 'uses' => 'MovimientoCajaController@excel']); 
 // Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
 Route::get('movimientoCajas/data_form/{id}', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
+
 Route::get('movimientoCajas/data_formUsu', ['as' => 'movimientoCajas.data_formUsu', 'uses' => 'DescuentoController@data_form']);
 
 
