@@ -101,7 +101,191 @@
             }
         });
 
+        var search = getFormSearchcomproMov('frm-search-comprMovimiento', 'search_b', 'LoadRecordsButtoncomprMovimiento');
 
+        var table_container_bancos = $("#table_container_comprMovimiento");
+
+        table_container_bancos.jtable({
+            title: 'SOLES',
+            paging: false,
+            sorting: false,
+            actions: {
+                listAction: base_url + '/movimientoCajas/listComMovi',
+            },
+            messages: {
+                addNewRecord: 'Nuevo Banco',
+                editRecord: 'Editar Banco'
+            },
+            toolbar: {
+                items: [{
+                    text: search
+                },]
+            },
+            fields: {
+                Cronograma: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (studentData) {
+                      
+                        var $img = $('<i class="fa fa-plus" style="font-size:20px;color:#1c84c6;cursor: pointer"></i>');
+                     
+                        $img.click(function () {
+                            $('#table_container_comprMovimiento').jtable('openChildTable',
+                                    $img.closest('tr'), //Parent row
+                                    {
+                                    title:'VENTAS',    
+                                    actions: {
+                                        listAction: base_url + '/movimientoCajas/listComDetalle?IdTipoDocumento=' + studentData.record.IdTipoDocumento,
+                                    },
+                                    fields: {
+                                        documento: {
+                                            title: 'Documento',
+                                        },
+                                        razonsocial_cliente: {
+                                            title: 'Cliente',
+                                        },
+                                        serie_comprobante: {
+                                            title: 'Serie',
+                                        },
+                                        numero_comprobante: {
+                                            title: 'N°',
+                                        },
+                                         monto: {
+                                            title: 'Monto',
+                                            display: function (data) {
+                                                 return(addCommas(redondeodecimale(data.record.monto).toFixed(2)));
+                                          }
+                                        },
+                                    }
+                                }, function (data) { 
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        return $img;
+                    }
+                },
+                comprobante: {
+                    title: 'COMPROBANTES'
+                },
+                 monto: {
+                    title: 'TOTAL',
+                     display: function (data) {
+                         return(addCommas(redondeodecimale(data.record.monto).toFixed(2)));
+                  }
+                },
+            },
+            formCreated: function (event, data) {
+                // data.form.find('input[name="banco"]').attr('onkeypress','return soloLetras(event)');
+            },
+            formSubmitting: function (event, data) {
+                var bval = true;
+                bval = bval && data.form.find('input[name="banco"]').required();
+                return bval;
+            }
+        });
+
+        generateSearchForm('frm-search-comprMovimiento', 'LoadRecordsButtoncomprMovimiento', function(){
+            table_container_bancos.jtable('load');
+        }, true);
+
+        
+
+        ///
+        var search = getFormSearchcomproMov('frm-search-comprMovimiento', 'search_b', 'LoadRecordsButtoncomprMovimiento');
+
+        var table_container_bancos_2 = $("#table_container_comprMovimientoDol");
+
+        table_container_bancos_2.jtable({
+            title: 'DÓLARES',
+            paging: false,
+            sorting: false,
+            actions: {
+                listAction: base_url + '/movimientoCajas/listComMoviDol',
+            },
+            messages: {
+                addNewRecord: 'Nuevo Banco',
+                editRecord: 'Editar Banco'
+            },
+            toolbar: {
+                items: [{
+                    text: search
+                },]
+            },
+            fields: {
+                Cronograma: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (studentData) {
+                      
+                        var $img = $('<i class="fa fa-plus" style="font-size:20px;color:#1c84c6;cursor: pointer"></i>');
+                     
+                        $img.click(function () {
+                            $('#table_container_comprMovimientoDol').jtable('openChildTable',
+                                    $img.closest('tr'), //Parent row
+                                    {
+                                    title:'VENTAS',    
+                                    actions: {
+                                        listAction: base_url + '/movimientoCajas/listComDetalleDol?IdTipoDocumento=' + studentData.record.IdTipoDocumento,
+                                    },
+                                    fields: {
+                                        documento: {
+                                            title: 'Documento',
+                                        },
+                                        razonsocial_cliente: {
+                                            title: 'Cliente',
+                                        },
+                                        serie_comprobante: {
+                                            title: 'Serie',
+                                        },
+                                        numero_comprobante: {
+                                            title: 'N°',
+                                        },
+                                         monto: {
+                                            title: 'Monto',
+                                            display: function (data) {
+                                                 return(addCommas(redondeodecimale(data.record.monto).toFixed(2)));
+                                          }
+
+                                        },
+                                    }
+                                }, function (data) { 
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        return $img;
+                    }
+                },
+                comprobante: {
+                    title: 'COMPROBANTES'
+                },
+                 monto: {
+                    title: 'TOTAL',
+                     display: function (data) {
+                         return(addCommas(redondeodecimale(data.record.monto).toFixed(2)));
+                  }
+                },
+            },
+            formCreated: function (event, data) {
+                // data.form.find('input[name="banco"]').attr('onkeypress','return soloLetras(event)');
+            },
+            formSubmitting: function (event, data) {
+                var bval = true;
+                bval = bval && data.form.find('input[name="banco"]').required();
+                return bval;
+            }
+        });
+        // 
+        generateSearchForm('frm-search-comprMovimiento', 'LoadRecordsButtoncomprMovimiento', function(){
+            table_container_bancos_2.jtable('load');
+        }, true);
+
+table_container_bancos.jtable('load');
         function cleanMovimientoCajaAdd() {
             cleanRequired();
             tipoMovimientoAdd.val("");
@@ -393,6 +577,7 @@
             RESTService.all('movimientoCajas/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     console.log(response.cajas);
+
                     var cajasusu=response.cajas;
                     idCaja.append('<option value="">Seleccionar</option>');
                     _.each(response.cajas, function (item) {
@@ -1060,10 +1245,27 @@
             var id = Fecha_actual();
             RESTService.get('movimientoCajas/data_form', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    var total_compro=response.data_comproTotal;
+                    var totsolCom=0;
+                    var totDolCom=0;
+                    console.log(total_compro);
+                    total_compro.map(function (index) {
+                        if(index.idmoneda=='1'){
+                           totsolCom=totsolCom+Number(index.monto);
+                        }else{
+                            totDolCom=totsolCom+Number(index.monto);   
+                        }
+                    });
+                    var totsumsol=addCommas(redondeodecimale(totsolCom).toFixed(2));
+                    var totsumdol=addCommas(redondeodecimale(totDolCom).toFixed(2));
+                    $("#total_comprobante_solA").html("");
+                    $("#total_comprobante_solA").append("<tr><th width='10px'></th><th style='text-align: left' width='25px'>TOTAL COMPROBANTES</th><th style='text-align: left' width='61px'>"+totsumsol+"</th></tr>");
+                     $("#total_comprobante_dolA").html("");
+                    $("#total_comprobante_dolA").append("<tr><th width='10px'></th><th style='text-align: left'  width='25px'>TOTAL COMPROBANTES</th><th style='text-align: left' width='61px'>"+totsumdol+"</th></tr>");
                     var fecha_caja = response.fechacA;
                     var dataCajaDetForSol = response.dataCajaDetForSol;
                     var dataCajaDetEfeSol = response.dataCajaDetEfeSol;
-                    var dataCajaDetForDol = response.dataCajaDetForDol;
+                     var dataCajaDetForDol = response.dataCajaDetForDol;
                     var dataCajaDetEfeDol = response.dataCajaDetEfeDol;
 
                     var dataCajaDetEfeSolAper = response.dataCajaDetEfeSolAper;

@@ -99,14 +99,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="col-sm-9">
-                                        <p>
-                                        <h5>SOLES</h5>
-                                        </p>
                                     </div>
 
                                 </div>
+                                <br>
+                                 <br>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover"
+                                    <!-- <table class="table table-bordered table-striped table-hover"
                                         id="tabla_articulo_movi">
                                         <thead>
                                             <tr>
@@ -117,6 +116,21 @@
                                         </thead>
                                         <tbody id="table_comprobantesMc"></tbody>
 
+                                    </table> -->
+                                    <div id="table_container_comprMovimiento">
+                                        
+                                    </div>
+                                    <table class="table table-bordered table-striped table-hover"
+                                        id="tabla_articulo_movi">
+                                        <thead id="total_comprobante_solA">
+                                           <!--  <tr>
+                                                <th width="8px"></th>
+                                                <th width="19px"></th>
+                                                <th width="71px"></th>
+                                            </tr> -->
+                                        </thead>
+                                        <tbody id="total_comprobante_sol"></tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -134,10 +148,10 @@
                                         id="tabla_articulo_movi">
                                         <thead>
                                             <tr>
-                                                <th width="20px"></th>
-                                                <th width="100px" style="text-align:left; vertical-align:middle">
+                                                <th width="20px" height="30px" style="background-color: white"></th>
+                                                <th width="100px" style="font-size:11px;text-align:left; vertical-align:middle;background-color: white">
                                                     MOVIMIENTOS DE EFECTIVO</th>
-                                                <th width="30px">TOTAL</th>
+                                                <th width="30px" style="font-size:11px;background-color: white">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table_movimientoEfecti"></tbody>
@@ -148,24 +162,19 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="col-sm-9">
-                                        <p>
-                                        <h5>DOLARES</h5>
-                                        </p>
-                                    </div>
 
                                 </div>
+                                <br>
+                                <br>
                                 <div class="table-responsive">
+                                    <div id="table_container_comprMovimientoDol">
+                                        
+                                    </div>
                                     <table class="table table-bordered table-striped table-hover"
-                                        id="tabla_articulo_movi">
-                                        <thead>
-                                            <tr>
-                                                <th width="10px"></th>
-                                                <th width="100px">COMPROBANTES</th>
-                                                <th width="30px">TOTAL</th>
-                                            </tr>
+                                        id="">
+                                        <thead id="total_comprobante_dolA">
+                                            
                                         </thead>
-                                        <tbody id="table_comprobantesDMc"></tbody>
 
                                     </table>
                                 </div>
@@ -184,10 +193,10 @@
                                         id="tabla_articulo_movi">
                                         <thead>
                                             <tr>
-                                                <th width="10px"></th>
-                                                <th width="100px" style="text-align:left; vertical-align:middle">
+                                                <th width="10px" height="30px" style="background-color: white"></th>
+                                                <th width="100px" style="font-size:11px;text-align:left; vertical-align:middle;background-color: white">
                                                     MOVIMIENTOS DE EFECTIVO</th>
-                                                <th width="30px">TOTAL</th>
+                                                <th width="30px" style="background-color: white">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody id="table_movimientoDEfecti"></tbody>

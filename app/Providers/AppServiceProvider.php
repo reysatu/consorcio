@@ -27,6 +27,16 @@ use App\Http\Recopro\ReporteVentaCliente\ReporteVentaCliente;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteInterface;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteRepository;
 
+
+use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimiento; 
+use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimientoInterface;
+use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimientoRepository;
+
+use App\Http\Recopro\View_comprobantes_caja_detalle\View_comprobantes_caja_detalle; 
+use App\Http\Recopro\View_comprobantes_caja_detalle\View_comprobantes_caja_detalleInterface;
+use App\Http\Recopro\View_comprobantes_caja_detalle\View_comprobantes_caja_detalleRepository;
+
+
 use App\Http\Recopro\ReporteRepuesto\ReporteRepuesto; 
 use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoInterface;
 use App\Http\Recopro\ReporteRepuesto\ReporteRepuestoRepository;
@@ -705,6 +715,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerReporteMeta();
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
+        $this->registerView_comprobante_movimiento();
+        $this->registerView_comprobantes_caja_detalle();
         $this->registerView_PendienteCobro();
         $this->registerMovimiento_Articulo_cierre();
         $this->registerMovimiento_Detalle_cierre();
@@ -1018,6 +1030,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ReporteVentaClienteInterface::class, function ($app) {
             return new ReporteVentaClienteRepository(new ReporteVentaCliente());
+        });
+    }
+    public function registerView_comprobante_movimiento()
+    {
+        $app = $this->app;
+
+        $app->bind(View_comprobante_movimientoInterface::class, function ($app) {
+            return new View_comprobante_movimientoRepository(new View_comprobante_movimiento());
+        });
+    }
+    public function registerView_comprobantes_caja_detalle()
+    {
+        $app = $this->app;
+
+        $app->bind(View_comprobantes_caja_detalleInterface::class, function ($app) {
+            return new View_comprobantes_caja_detalleRepository(new View_comprobantes_caja_detalle());
         });
     }
      public function registerView_PendienteCobro()

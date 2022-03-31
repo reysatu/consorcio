@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: JAIR
- * Date: 4/5/2017
+ * Date: 4/5/2017 
  * Time: 6:59 PM
  */
 
@@ -21,6 +21,8 @@ use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Requests\MovimientoCajaRequest;
 use App\Http\Recopro\Query_stock\Query_stockInterface;
 use App\Http\Recopro\VisitaCliente\VisitaClienteInterface;
+use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimientoInterface;
+use App\Http\Recopro\View_comprobantes_caja_detalle\View_comprobantes_caja_detalleInterface;
 use App\Models\BaseModel;
 use DateTime;
 use DateTimeZone;
@@ -188,7 +190,7 @@ class MovimientoCajaController extends Controller
             ]);
         }
     }
-    public function Cuadrepdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs)
+    public function Cuadrepdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs,View_comprobante_movimientoInterface $repoComMovi)
     {          
            
             $usuario=auth()->id();
@@ -198,7 +200,7 @@ class MovimientoCajaController extends Controller
             $fechacA= date("Y-m-d");
             $fechacAc= date("d/m/Y H:i:s");
             $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
-
+            // $dataComprobanteMovimiento = $repoComMovi->get_ComprobanteMovimiento($fechacA,$usuario);
             $dataCaDet = $recaj->getCajaDetalle($fechacA,$usuario);
             $dataCajaDetForSol = $recaj->getCajaDetForSol($fechacA,$usuario);
             $dataCajaDetEfeSol = $recaj->getCajaDetEfeSol($fechacA,$usuario);
@@ -513,6 +515,36 @@ class MovimientoCajaController extends Controller
             ]);
     }
 
+    public function allSearComMov(Request $request, View_comprobante_movimientoInterface $repo)
+    {
+        $usuario=auth()->id();
+        $fechacA= date("Y-m-d");
+        $params = ['monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
+        return parseList($repo->searchComproMoviSol($usuario,$fechacA), $request, 'idcajero', $params);
+    }
+    public function allSearComMovDeta(Request $request, View_comprobantes_caja_detalleInterface $repo)
+    {
+        $usuario=auth()->id();
+        $fechacA= date("Y-m-d"); 
+        $IdTipoDocumento = $request->input('IdTipoDocumento', '');
+        $params = ['documento','razonsocial_cliente','serie_comprobante','numero_comprobante','monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
+        return parseList($repo->searchComproMoviDetaSol($usuario,$fechacA,$IdTipoDocumento), $request, 'idcajero', $params);
+    }
+    public function searchComproMoviDetaDol(Request $request, View_comprobantes_caja_detalleInterface $repo)
+    {
+        $usuario=auth()->id();
+        $fechacA= date("Y-m-d"); 
+        $IdTipoDocumento = $request->input('IdTipoDocumento', '');
+        $params = ['documento','razonsocial_cliente','serie_comprobante','numero_comprobante','monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
+        return parseList($repo->searchComproMoviDetaDol($usuario,$fechacA,$IdTipoDocumento), $request, 'idcajero', $params);
+    }
+    public function allSearComMovDol(Request $request, View_comprobante_movimientoInterface $repo)
+    {
+        $usuario=auth()->id();
+        $fechacA= date("Y-m-d");
+        $params = ['monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
+        return parseList($repo->searchComproMoviDol($usuario,$fechacA), $request, 'idcajero', $params);
+    }
  
     public function all(Request $request, CajaDiariaDetalleInterface $repo)
     {
@@ -542,10 +574,12 @@ class MovimientoCajaController extends Controller
             'Record' => []
         ]);
     }
-     public function data_form ($id,CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
+     public function data_form ($id,View_comprobante_movimientoInterface $repocom,CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
     {   
-        $date=$id;
+        $date=$id; 
         $usuario=auth()->id();
+        $fechaActual= date("Y-m-d");
+        $data_comproTotal=$repocom->all_filtro($fechaActual,$usuario);
         date_default_timezone_set('America/Lima');
         $dataMc = $recaj->get_cajaActual($date,$usuario);
         $dataCA = $recaj->getCajaAbierta($date,$usuario);
@@ -576,6 +610,7 @@ class MovimientoCajaController extends Controller
                 'dataCajaDetEfeDol'=>$dataCajaDetEfeDol,
                 'dataCajaDetEfeSolAper'=>$dataCajaDetEfeSolAper,
                 'dataCajaDetEfeDolAper'=>$dataCajaDetEfeDolAper,
+                'data_comproTotal'=>$data_comproTotal,
         ]);
     }
 
