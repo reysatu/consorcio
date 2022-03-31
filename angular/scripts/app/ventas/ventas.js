@@ -161,7 +161,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-saldo="'+data.record.saldo+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
                     }
 
                 }
@@ -176,14 +176,14 @@
                     var cCodConsecutivo = $(this).attr('data-cCodConsecutivo');
                     var nConsecutivo = $(this).attr('data-nConsecutivo');
                     var tipo_comprobante = $(this).attr('data-tipo_comprobante');
+                    var saldo = parseFloat($(this).attr('data-saldo'));
                     // alert(idventa_referencia);
                     if(idtipodocumento == "07") {
                         return false;
                     }
 
-                    
 
-                    if(idventa_referencia != "null" && idventa_referencia != "") {
+                    if(idventa_referencia != "null" && idventa_referencia != "" && condicion_pago != 1 && saldo <= 0) {
                         AlertFactory.textType({
                             title: '',
                             message: 'Ya se emitio una nota de este documento!',
@@ -313,6 +313,7 @@
                         $("#tipo_comprobante").val(data.documento[0].tipo_comprobante);
                         $("#t_monto_total").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#condicion_pago").val(parseFloat(data.documento[0].condicion_pago).toFixed(2));
+                        $("#saldo").val(parseFloat(data.documento[0].saldo).toFixed(2));
                         if(data.documento[0].tipo_comprobante == "1") {
                             $("#monto").attr("readonly", "readonly");
                         } else {
@@ -374,7 +375,7 @@
 
                         // nota de credito por un anticipo
                         var msg = "";
-                        if(data.datos[0].tipo_comprobante == "0") {
+                        if(data.datos[0].devolucion_dinero == "1") {
                             msg += "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
                         }
 

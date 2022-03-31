@@ -171,6 +171,7 @@ class VentasController extends Controller
             $data_venta["por_aplicar"] = "N";
             $data_venta["idventa_referencia"]  = $data["idventa"];
             $data_venta["devolucion_producto"] = 0;
+            $data_venta["devolucion_dinero"] = 0;
             //si son iguales
             if ($condicion) { 
                 
@@ -179,6 +180,7 @@ class VentasController extends Controller
                     $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
                     
                     $data_venta["devolucion_producto"] = 0;
+                    $data_venta["devolucion_dinero"] = 1;
                 }
 
                 if ($data["tipo_comprobante"] == "0" && $data["anticipo"] > 0) { // esta codicion aplica a la segunda boleta por el saldo
@@ -200,6 +202,7 @@ class VentasController extends Controller
             } elseif($saldo > $data["monto"]) {
                 if ($data["condicion_pago"] == "1") { // venta al contado contado
                     $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
+                    $data_venta["devolucion_dinero"] = 1;
                 }
             }
 

@@ -88,6 +88,7 @@ class RefinanciamientosController extends Controller
                     $data_solicitud["t_monto_afecto"] = $t_monto_afecto; 
                     $data_solicitud["t_impuestos"] = $t_impuestos; 
                     $data_solicitud["t_monto_total"] = $t_monto_total; 
+                    $data_solicitud["saldo"] = $t_monto_total; 
                     $data_solicitud["facturado"] = ""; 
                     $data_solicitud["pagado"] = ""; 
                     // print_r($data_solicitud);

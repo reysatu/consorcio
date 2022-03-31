@@ -12,9 +12,10 @@ use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudInterface;
 use App\Http\Recopro\AprobacionTotal\AprobacionTotalInterface;
+use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
 use App\Http\Requests\AprobacionSolicitudRequest;
-
+use App\Models\BaseModel;
 use DB;
 class AprobacionSolicitudController extends Controller
 {
@@ -22,6 +23,7 @@ class AprobacionSolicitudController extends Controller
 
     public function __construct()
     {
+        $this->base_model = new BaseModel();
 //        $this->middleware('json');
     }
       public function allTotales(Request $request,AprobacionTotalInterface $repo)
@@ -39,7 +41,7 @@ class AprobacionSolicitudController extends Controller
         return parseList($repo->search($IdMoneda,$idcliente), $request, 'idcliente', $params);
     }
 
-    public function AprobarRechazarSolicitud($id, AprobacionSolicitudInterface $repo,Request $request)
+    public function AprobarRechazarSolicitud($id, AprobacionSolicitudInterface $repo,Request $request, SolicitudInterface $solicitud_repositorio)
     {
        
         try {
@@ -54,10 +56,36 @@ class AprobacionSolicitudController extends Controller
             $data_update['iEstado'] = $data['iEstado'];
             $res = $repo->aprobarRechazar($data_update);
             $val=$res[0]->msg;
+
+            $conformidad = array();
+            if(trim($val) == "Aprobada") {
+                $conformidad = $repo->obtener_conformidad($data["nCodConformidad"]);
+                $solicitud = $solicitud_repositorio->get_solicitud($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
+                $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
+                $fecha = $solicitud[0]->fecha_solicitud;
+                for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
+
+                    $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                    $data_cronograma = array();
+                    $data_cronograma["cCodConsecutivo"] = $conformidad[0]->cCodConsecutivo;
+                    $data_cronograma["nConsecutivo"] = $conformidad[0]->nConsecutivo;
+                    $data_cronograma["nrocuota"] = $c;
+                    $data_cronograma["fecha_vencimiento"] = $fecha;
+                    $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota_final;
+                    $data_cronograma["int_moratorio"] = "0";
+                    $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota_final;
+                    $data_cronograma["monto_pago"] = "0";
+                    // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                    $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                    // print_r($res);   
+                }
+            }
+
             DB::commit();
             return response()->json([
                 'status' => true,
                 'msg'=>$val,
+                'conformidad'=>$conformidad,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

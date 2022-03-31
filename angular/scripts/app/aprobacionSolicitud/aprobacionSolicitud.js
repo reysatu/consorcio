@@ -1002,6 +1002,14 @@
                     if (!_.isUndefined(response.status) && response.status) {
                         var ms=response.msg;
                         console.log(ms);
+
+                        if(response.conformidad.length > 0) {
+                            var id = response.conformidad[0].cCodConsecutivo + "|" + response.conformidad[0].nConsecutivo;
+
+                            window.open("movimientoCajas/imprimir_cronograma/" + id);
+                      
+                        }   
+
                         if(ms!='OK'){
                             AlertFactory.textType({
                             title: '',
@@ -1016,8 +1024,9 @@
                         });
                           modalAprobar.modal("hide"); 
                         }
-                         btn_Aprobar.prop('disabled',true);
-                         btn_Rechazar.prop('disabled',true);
+
+                        btn_Aprobar.prop('disabled',true);
+                        btn_Rechazar.prop('disabled',true);
                         LoadRecordsButtonAprobacionSolicitud.click(); 
                         // modalPersona.modal('hide');
                        

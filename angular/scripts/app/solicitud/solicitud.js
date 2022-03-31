@@ -146,6 +146,7 @@
 
 
         function newSolicitud() {
+            $("#imprimir-cronograma").hide();
             // var hoy = new Date();
             // var hAnio=hoy.getFullYear();
             // var hmes=hoy.getMonth()+1;
@@ -2077,18 +2078,27 @@
             var monto_inafecto = 0;
             var impuestos = 0;
             var valor_igv = parseFloat($("#valor_igv").val());
-            var monto_subtotal = pretotal;
+            var monto_subtotal = 0;
             // alert(impuesto_articulo);
 
-            if (impuesto_articulo == "0") {
-                monto_exonerado = pretotal;
+            if (cOperGrat == "N") {
+                monto_subtotal = pretotal;
+                if (impuesto_articulo == "0") {
+                    monto_exonerado = pretotal;
+                } else {
+                    // alert(valor_igv);
+                    monto_afecto = pretotal;
+                    impuestos = pretotal * valor_igv / 100;
+                    pretotal = pretotal + impuestos;
+                }
             } else {
-                // alert(valor_igv);
-                monto_afecto = pretotal;
-                impuestos = pretotal * valor_igv / 100;
-                pretotal = pretotal + impuestos;
+                pretotal = 0;
             }
+
+            
+
             // console.log(codigo+" => "+monto_subtotal);
+
             var html = '<td codigo="' + codigo + '" class="monto_descuento_prorrateado"><p>0</p><input type="hidden" codigo="' + codigo + '" name="monto_descuento_prorrateado[]" value="0"></td>';
             html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
 
@@ -3261,8 +3271,10 @@
                         deshabilitar_inputs();
                     }
 
-                    if (data.solicitud[0].estado == "6" && data.solicitud[0].tipo_solicitud == "2") {
+                    if (data.solicitud[0].estado >= 6) {
                         $("#imprimir-cronograma").show();
+                    } else {
+                        $("#imprimir-cronograma").hide();
                     }
 
                     $("#tipo_sol").val(data.solicitud[0].tipo);

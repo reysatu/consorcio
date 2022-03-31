@@ -165,7 +165,14 @@
                 <td style="width: 20%;">DNI/RUC</td>
                 <td style="width: 55%;">{{ $cliente[0]->documento }}</td>
                 <td style="width: 5%;">Fecha</td>
-                <td style="width: 20%;"><?php echo date("d / ").$mes[date("n")-1].date(" / Y"); ?></td>
+                <td style="width: 20%;">
+                <?php 
+                    $arrd = explode("/", $venta[0]->fecha_emision_user);
+              
+                    echo $arrd[0]." / ".$mes[$arrd[1]-1]." / ".$arrd[2]; 
+                   
+                ?>
+                </td>
             </tr>
             <?php if($venta[0]->IdTipoDocumento == "07") { ?>
                 <tr>
@@ -244,8 +251,8 @@
                     echo '</tr>';
                 }
 
-                if(count($venta_anticipo_separacion) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
-                  
+                if(count($venta_anticipo_separacion) > 0 && $venta[0]->tipo_comprobante == 1 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
+                    $venta[0]->t_monto_subtotal = $venta[0]->t_monto_subtotal - $venta_anticipo_separacion[0]->t_monto_total;
                     echo '<tr>';
                     echo '  <td>1.00</td>';
                     echo '  <td>UND</td>';
