@@ -95,10 +95,14 @@ class ConsecutivosComprobantesRepository implements ConsecutivosComprobantesInte
         DB::table('ERP_ConsecutivoComprobanteUsuario')->where('idConsecutivo',$id)->where('idUsuario',$usua)->delete();
     }
 
-    public function obtener_consecutivo_comprobante($tipo_documento, $idtienda) {
-        
+    public function obtener_consecutivo_comprobante($tipo_documento, $idtienda, $like = "") {
 
-        $sql = "SELECT cc.*, (cc.actual + 1) AS actual FROM ERP_ConsecutivosComprobantes AS cc WHERE cc.IdTipoDocumento={$tipo_documento} AND idtienda={$idtienda} ORDER BY id_consecutivo ASC";
+
+        if(!(empty($like))) {
+            $like = " AND cc.serie LIKE '".$like."%' ";
+        }
+
+        $sql = "SELECT cc.*, (cc.actual + 1) AS actual FROM ERP_ConsecutivosComprobantes AS cc WHERE cc.IdTipoDocumento={$tipo_documento} AND idtienda={$idtienda} {$like} ORDER BY id_consecutivo ASC";
         // die($sql);
         $result = DB::select($sql);
 

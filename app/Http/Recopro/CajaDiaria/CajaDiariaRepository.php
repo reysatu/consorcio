@@ -244,7 +244,7 @@ select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNE
     public function update_saldos_venta($data) {
         $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto_pagar_credito"]},
         pagado = pagado + {$data["monto_pagar_credito"]}       
-        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND anticipo > 0";
+        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S'";
 
         $result = DB::statement($sql_update);
         

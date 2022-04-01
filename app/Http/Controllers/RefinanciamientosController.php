@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Ventas\VentasInterface;
 // use App\Http\Recopro\Refinanciamientos\RefinanciamientosInterface;
 // use App\Http\Recopro\Refinanciamientos\RefinanciamientosTrait;
 // use App\Http\Requests\RefinanciamientosRequest;
@@ -33,7 +34,7 @@ class RefinanciamientosController extends Controller
 
 
 
-    public function generar_refinanciamiento(Request $request, SolicitudInterface $solicitud_repositorio)
+    public function generar_refinanciamiento(Request $request, SolicitudInterface $solicitud_repositorio, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, VentasInterface $ventas_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC)
     {
 
         $data = $request->all();
@@ -45,12 +46,19 @@ class RefinanciamientosController extends Controller
         try {
             DB::beginTransaction();
             $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
+            
             if(count($parametro_igv) <= 0) {
                 throw new Exception("Por favor cree el parametro IGV!");
             }
 
+            $comprobante_saldo = $caja_diaria_detalle_repo->get_segunda_venta_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
+
+
             $sql_solicitud = "SELECT * FROM ERP_Solicitud WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
             $solicitud = DB::select($sql_solicitud);
+
+
+            
             $t_monto_total = (float) $data["monto_refinanciamiento"] + (float)$data["intereses_refinanciamiento"];
             $t_monto_exonerado = 0;
             $t_monto_afecto = 0;
@@ -63,6 +71,53 @@ class RefinanciamientosController extends Controller
             } else {
                 $t_monto_subtotal = $t_monto_total;
                 $t_monto_exonerado = $t_monto_total;
+            }
+
+
+            
+            if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
+
+                //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
+                $datos_nota = $ventas_repo->find_documento($comprobante_saldo[0]->idventa);
+
+                $caja_diaria = $caja_diaria_repositorio->get_caja_diaria();
+
+                if($comprobante_saldo[0]->IdTipoDocumento == "01") {
+                    $like = "FN";
+                }
+                if($comprobante_saldo[0]->IdTipoDocumento == "03") {
+                    $like = "BN";
+                }
+
+            
+                $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
+
+                $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
+                $datos_nota["serie_comprobante"] = $consecutivo_comprobante[0]->serie;
+                $datos_nota["numero_comprobante"] = $consecutivo_comprobante[0]->actual;
+                $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
+                $datos_nota["idmotivo"] = "01";
+                $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
+                $datos_nota["nConsecutivo"]    = $comprobante_saldo[0]->nConsecutivo_solicitud;
+
+                $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC);
+
+                // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
+                $data_venta = (array)$comprobante_saldo[0];
+                $data_venta["anticipo"] = 0;
+                $data_venta["t_monto_total"] = $t_monto_total;
+                $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
+                $data_venta["t_monto_afecto"] = $t_monto_afecto;
+                $data_venta["t_impuestos"] = $t_impuestos;
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+
+                $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
+
+                foreach ($venta_detalle as $kvd => $vvd) {
+                    $data_venta_detalle = (array) $vvd;
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                }
+                
             }
 
           
