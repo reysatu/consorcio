@@ -2053,6 +2053,9 @@
             //  if(naturalezaGeneral=="C"){
             //     impor=0;
             //  }
+           if (cOperGrat == "S") {
+              pretotal=0;
+           } 
             var tr = $('<tr id="tr_idArticulo' + codigo + '"></tr>');
             var td1 = $('<td>' + desProducto + '</td>');
 
@@ -2167,7 +2170,13 @@
                 impuestos = pretotal * valor_igv / 100;
                 pretotal = pretotal + impuestos;
             }
-
+             if (cOperGrat == "S") {
+                     monto_exonerado = 0;
+                     monto_afecto = 0;
+                     monto_inafecto = 0;
+                     impuestos = 0;
+                     monto_subtotal=0;
+            }
             var html = '<td codigo="' + codigo + '" class="monto_descuento_prorrateado"><p>0</p><input type="hidden" codigo="' + codigo + '" name="monto_descuento_prorrateado[]" value="0"></td>';
             html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
 
@@ -3242,7 +3251,8 @@
                         for (var i = 0; i < data.solicitud_articulo.length; i++) {
 
                             var codigo = Math.random().toString(36).substr(2, 18);
-
+                            console.log(data.solicitud_articulo[i].precio_total);
+                            console.log("precio_one");
                             addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie);
 
                         }

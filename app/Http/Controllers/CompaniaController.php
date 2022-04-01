@@ -43,10 +43,15 @@ class CompaniaController extends Controller
                 $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
                 $datos["ruta_logo"] = "logos/".$response["NombreFile"];
             }
-          
            
             $table="ERP_Compania";
             $idt='IdCompania';
+            $datos['RazonSocial'] = $data['RazonSocial'];
+            $datos['direcciones_oficinas'] = $data['direcciones_oficinas'];
+            $datos['Base'] = $data['Base'];
+            $datos['FechaUltBackup'] = $data['FechaUltBackup'];
+            $datos['RutaData'] = $data['RutaData'];
+            $datos['RutaLog'] = $data['RutaLog'];
             $datos['Ruc'] = $data['Ruc'];
             $datos['NombreComercial'] = $data['NombreComercial'];
             $datos['Direccion'] = $data['Direccion'];

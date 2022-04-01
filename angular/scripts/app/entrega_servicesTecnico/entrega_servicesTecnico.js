@@ -311,11 +311,15 @@
                     cargar_proformas(verProforma);
                     var data_p = response.data;
                     var data_ventaMovimiento = response.data_ventaMovimiento;
+                    console.log(data_ventaMovimiento);
+                    console.log("data_movimiento_info");
                     var mov_ar='';
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     idMovimiento.val(data_p.idMovimiento);
                      console.log("primer");
+                    
                      if(data_p.idTipoOperacion=='2'){
+                          $("#idventa").append('<option data-conse="'+data_ventaMovimiento[0].cCon_ve+'*'+ data_ventaMovimiento[0].nconse_ve+'*'+data_ventaMovimiento[0].idmoneda+'" data-documento="'+data_ventaMovimiento[0].cCon_ve + '-' + data_ventaMovimiento[0].nconse_ve+'" value="' + data_ventaMovimiento[0].idventa + '">' + data_ventaMovimiento[0].cCon_ve + ' ' + data_ventaMovimiento[0].nconse_ve + ' ' + data_ventaMovimiento[0].razonsocial_cliente + '</option>');
                         console.log("primersss");
                            $("input[name=tipo][value='N']").prop("checked",true);
                            $("input[name=tipo][value='N']").trigger("change");
