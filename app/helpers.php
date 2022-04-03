@@ -220,6 +220,23 @@ function generateExcel($data, $file_name, $sheet_name)
 
     return response()->json($response);
 }
+function generateExcelOrdenSer($data, $file_name,$Marca,$tipoveh,$FechaInicioFiltro,$FechaFinFiltro,$idMarca,$idtipoveh,$fechacAc, $sheet_name)
+{
+    $file = Excel::create($file_name, function ($excel) use ($data,$idMarca,$idtipoveh,$FechaInicioFiltro,$FechaFinFiltro,$Marca,$tipoveh,$fechacAc,$sheet_name) {
+        $excel->sheet($sheet_name, function ($sheet) use ($data,$idMarca,$idtipoveh,$FechaInicioFiltro,$FechaFinFiltro,$Marca,$tipoveh,$fechacAc) {
+            $sheet->loadView('excel.view_orden_diario')->with('data', $data)->with('idMarca', $idMarca)->with('idtipoveh', $idtipoveh)->with('FechaInicioFiltro', $FechaInicioFiltro)->with('FechaFinFiltro', $FechaFinFiltro)->with('Marca', $Marca)->with('tipoveh', $tipoveh)->with('fechacAc', $fechacAc);
+        });
+    });
+
+    $file = $file->string('xlsx');
+
+    $response = [
+        'name' => $file_name,
+        'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
+    ];
+
+    return response()->json($response);
+}
 function generateExcelMovimientoCierre($data, $file_name, $sheet_name,$fechacA,$simboloMoneda,$periodo,$estado)
 {
     $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name,$fechacA,$simboloMoneda,$periodo,$estado) {

@@ -2291,9 +2291,10 @@
                         montod=0;
                     }
                     montoDeta[idx] =montod;
-                });
+                }); 
                 montoDeta = montoDeta.join(',');
-
+                console.log(montoDeta);
+                console.log("monto deta");
                 var porDeta =[];
                 $.each($('.porcent'), function (idx, item) {
                    

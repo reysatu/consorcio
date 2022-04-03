@@ -504,6 +504,91 @@ select * from ERP_Parametros where id='7'
 
 
 
-select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='' GROUP BY v.idmoneda
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where  convert(date,v.fecha_emision)='$date' and    v.idcajero='$usuario'  and v.idTipoDocumento in (03,01) and vd.idarticulo='$idarticulo' GROUP BY v.idmoneda
 
 
+
+
+select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNER JOIN erp_venta as v on (v.idventa=vd.idventa)  where     v.idcajero='1006'  and v.idTipoDocumento in (07)  and v.idmotivo in (06,07)  GROUP BY v.idmoneda
+
+ SELECT os.iEstado as est ,os.idCliente as idCliente,os.cPlacaVeh as cPlacaVeh, os.cMotor as cMotor,os.nKilometraje as nKilometraje, os.cColor as cColor,  cl.id_tipocli as idTipoCliente,cl.documento as documento,cl.razonsocial_cliente as razonsocial_cliente, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,mo.Descripcion as moneda,os.idcCondicionPago as idcCondicionPago,cp.description as condicionPago,os.idAsesor as idAsesor,ase.descripcion as asesor FROM ERP_OrdenServicio as os inner join ERP_Moneda as mo on os.IdMoneda=mo.IdMoneda inner join ERP_CondicionPago as cp on cp.id=os.idcCondicionPago INNER JOIN ERP_Clientes as cl on cl.id=os.idCliente INNER JOIN ERP_TipoCliente as tc on tc.id=cl.id_tipocli left join ERP_Asesores as ase on ase.id=os.idAsesor where os.iEstado='2'
+select * from ERP_OrdenServicio
+
+
+select * from ERP_CajaDiariaDetalle
+
+
+select * from ERP_FormasPago
+
+select * from ERP_CajaDiariaDetalle
+
+select * from ERP_TipoCompraVenta
+
+select * from erp_venta where cCodConsecutivo_solicitud='SOL' and nConsecutivo_solicitud='82'
+
+
+select * from ERP_SolicitudCredito
+
+select * from ERP_Solicitud
+
+select * from ERP_TipoDocumento
+
+select * from ERP_Venta
+
+select * from ERP_CondicionPago
+
+CREATE VIEW ERP_view_comprobantes_caja AS
+select sum(v.pagado) as monto,CONVERT(DATE,v.fecha_emision) as fecha,v.idcajero,v.idmoneda,td.Descripcion as comprobante,v.IdTipoDocumento from ERP_Venta as v inner join ERP_Venta  as t on (v.idventa=t.idventa_comprobante) inner join ERP_TipoDocumento as td on(td.IdTipoDocumento=v.IdTipoDocumento) GROUP BY v.IdTipoDocumento,td.Descripcion,v.idcajero,CONVERT(DATE,v.fecha_emision),v.idmoneda
+
+
+
+
+create VIEW ERP_view_comprobantes_caja_detalle AS
+select cli.documento,cli.razonsocial_cliente,v.serie_comprobante,v.numero_comprobante,v.pagado as monto,CONVERT(DATE,v.fecha_emision) as fecha,v.idcajero,v.idmoneda,td.Descripcion as comprobante,v.IdTipoDocumento from ERP_Venta as v inner join ERP_Venta  as t on (v.idventa=t.idventa_comprobante) inner join ERP_TipoDocumento as td on(td.IdTipoDocumento=v.IdTipoDocumento) inner join ERP_Solicitud as so on (so.cCodConsecutivo=v.cCodConsecutivo_solicitud and so.nConsecutivo=v.nConsecutivo_solicitud) inner join ERP_Clientes as cli on (cli.id=so.idCliente)
+
+
+select * from ERP_view_comprobantes_caja_detalle
+select * from ERP_Venta
+
+
+select * from ERP_OrdenServicio
+select * from ERP_OrdenServicioDetalle
+
+select * from ERP_SolicitudArticulo
+
+select * from ERP_Solicitud
+
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa) inner join ERP_SolicitudArticulo as soa on (soa.cCodConsecutivo=so.cCodConsecutivo and soa.nConsecutivo=so.nConsecutivo) where soa.nCantidadPendienteEntregar>0 and so.estado in (6,8) and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC
+
+select cli.razonsocial_cliente,sd.id_solicitud_articulo  as identificador,sa.cantidad as cantiTotal ,* from erp_venta as v inner join ERP_SolicitudArticulo as sa on (v.cCodConsecutivo_solicitud=sa.cCodConsecutivo and v.nConsecutivo_solicitud=sa.nConsecutivo) inner join ERP_Productos as pr on(pr.id=sa.idArticulo) inner JOIN ERP_SolicitudDetalle as sd on(sa.id=sd.id_solicitud_articulo) inner join ERP_Serie as s on sd.idSerie=s.idserie inner join ERP_Solicitud as soli on (v.cCodConsecutivo_solicitud=soli.cCodConsecutivo and v.nConsecutivo_solicitud=soli.nConsecutivo) inner join ERP_Clientes as cli on (cli.id = soli.idcliente )
+
+select ,* from ERP_Movimiento as m inner join erp_venta as v on m.cCodConsecutivo=v.serie_comprobante and m.nConsecutivo=v.numero_comprobante inner join ERP_Solicitud as soli on (v.cCodConsecutivo_solicitud=soli.cCodConsecutivo and v.nConsecutivo_solicitud=soli.nConsecutivo) inner join ERP_Clientes as cli on (cli.id = soli.idcliente )
+
+se
+select * from ERP_OrdenServicioMantenimiento
+select * from ERP_OrdenServicioDetalle
+select * from ERP_TipoVehiculo
+
+select 
+  STUFF(
+    (SELECT ', '  + CAST(pr.description AS varchar(255))
+    FROM ERP_OrdenServicio as odo
+    inner join ERP_OrdenServicioDetalle as odmo on (odmo.cCodConsecutivo=odo.cCodConsecutivo AND    odmo.nConsecutivo=odo.nConsecutivo and od.cCodConsecutivo=odo.cCodConsecutivo AND    od.nConsecutivo=odo.nConsecutivo  ) inner join ERP_Productos as pr on (pr.id=odmo.idProducto)
+    FOR XML PATH('')),
+    1, 2, '') As servicios
+,
+FORMAT(od.dFecRec, 'yyyy-MM-dd') AS dFecRec,od.cCodConsecutivo,od.nConsecutivo,concat(od.cCodConsecutivo,'-',od.nConsecutivo) as codigo_consecutivo,od.nKilometraje,prof.nTotalMo as proMO,od.total as odMo,profo.pro_totaSer,profo.pro_totalRepu from  ERP_OrdenServicio as od  left JOIN (select sum(pro.nTotalMO) as pro_totaSer,sum(pro.nTotalDetalle) as pro_totalRepu, pro.cCodConsecutivoOS , pro.nConsecutivoOS  from ERP_Proforma as pro GROUP BY pro.cCodConsecutivoOS , pro.nConsecutivoOS) as profo on(od.cCodConsecutivo=profo.cCodConsecutivoOS AND od.nConsecutivo=profo.nConsecutivoOS)
+
+select * from ERP_Proforma inner join ERP_ProformaDetalle 
+select * from ERP_OrdenServicioDetalle
+
+select * from ERP_ProformaDetalle where nConsecutivo='19'
+select sum(nTotalMO) as pro_totaSer,sum(nTotalDetalle) as pro_totalRepu from ERP_Proforma 
+inner join ERP_OrdenServicioMantenimiento as odm on (odm.cCodConsecutivo=od.cCodConsecutivo AND odm.nConsecutivo=od.nConsecutivo)
+
+
+select * from ERP_ProformaDetalle
+select * from ERP_ProformaMO
+select * from ERP_Proforma
+select * from ERP_Solicitud
+select * from ERP_SolicitudArticulo
