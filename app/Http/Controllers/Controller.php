@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    public function __construct()
+    {
+        $this->base_model = new BaseModel();
+
+    }
 
     public function listar_campos($tabla) {
 
@@ -226,6 +232,111 @@ class Controller extends BaseController
 
         }
         return $response;
+    }
+
+    public function emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC) {
+        
+        $result = array();
+        $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
+            
+        $condicion = $data["t_monto_total"] == $data["monto"]; // VENTA AL CONTADO
+        $saldo = 0;
+        if(count($venta_ref) > 0) {
+            $saldo = $venta_ref[0]->saldo;
+
+            if($venta_ref[0]->condicion_pago != 1) {
+                $condicion = $venta_ref[0]->saldo == $data["monto"]; // VENTA CREDITO
+            }
+        }
+
+        $data_venta                        = $data;
+        $data_venta["por_aplicar"] = "N";
+        $data_venta["idventa_referencia"]  = $data["idventa"];
+        $data_venta["devolucion_producto"] = 0;
+        $data_venta["devolucion_dinero"] = 0;
+        //si son iguales
+        if ($condicion) { 
+            
+            // solo si es anticipo se devuelve el dinero
+            if ($data["tipo_comprobante"] == "1") {
+                $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
+                
+                $data_venta["devolucion_producto"] = 0;
+                $data_venta["devolucion_dinero"] = 1;
+            }
+
+            if ($data["tipo_comprobante"] == "0" && $data["anticipo"] > 0) { // esta codicion aplica a la segunda boleta por el saldo
+                $data_venta["por_aplicar"] = "S";
+                $data_venta["devolucion_producto"] = 1;
+            }
+
+            if($data["tipo_comprobante"] == "0") {
+                if(count($venta_ref) > 0 && $venta_ref[0]->saldo == 0) {
+                    $data_venta["por_aplicar"] = "S";
+                }
+            }
+
+            if ($data["condicion_pago"] == "1") {
+
+                $data_venta["devolucion_producto"] = 1;
+            }
+
+        } elseif($saldo > $data["monto"]) {
+            if ($data["condicion_pago"] == "1") { // venta al contado contado
+                $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
+                $data_venta["devolucion_dinero"] = 1;
+            }
+        }
+
+        $data_venta["idventa"]                   = $Repo->get_consecutivo("ERP_Venta", "idventa");
+        $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
+        $data_venta["nConsecutivo_solicitud"]    = $data["nConsecutivo"];
+        $data_venta["condicion_pago"]            = 1;
+        $data_venta["fecha_emision"]             = date("Y-m-d H:i:s");
+
+        $data_venta["tipo_comprobante"] = "0";
+
+        $data_venta["IdTipoDocumento"] = "07";
+
+        $data_venta["t_monto_subtotal"] = $data["monto"];
+
+        $data_venta["t_monto_total"] = $data["monto"];
+
+        $data_venta["saldo"]  = "0";
+        $data_venta["pagado"] = $data["monto"];
+        $data["anticipo"]     = 0;
+
+        $data_venta["idcajero"] = auth()->id();
+        $data_venta["idtienda"] = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda;
+        $data_venta["idcaja"]   = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idcaja;
+
+        $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+
+        $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($data["idventa"]);
+
+        foreach ($venta_detalle as $key => $value) {
+            $data_detalle_venta            = (array) $value;
+            $data_detalle_venta["idventa"] = $data_venta["idventa"];
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_detalle_venta));
+
+        }
+
+        //ACTUALIZAR SALDOS EN LA SEGUNDA VENTA POR EL SALDO
+        $update_venta                    = array();
+        $update_venta["cCodConsecutivo"] = $data["cCodConsecutivo"];
+        $update_venta["nConsecutivo"]    = $data["nConsecutivo"];
+        $update_venta["monto"]           = $data["monto"];
+        $Repo->update_saldos_venta($update_venta);
+
+        // ANULAMOS LA SOLICITUD
+        $update_solicitud = array();
+        $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+        $update_solicitud["nConsecutivo"]    = $data["nConsecutivo"];
+        $update_solicitud["estado"] = 10;
+        $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+
+        $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+        return $result;
     }
 
 

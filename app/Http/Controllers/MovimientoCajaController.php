@@ -812,6 +812,7 @@ class MovimientoCajaController extends Controller
                     $data_venta["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
                     $data_venta["pagado"] = "0";
                     $data_venta["anticipo"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["comprobante_x_saldo"] = "S"; // indica que es el comprobante por el saldo
 
                     //CAMBIAMOS DATOS DE LA SEGUNDA VENTA DEL CREDITO
                     $data_venta["descuento_id"] = "";
