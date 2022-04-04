@@ -577,8 +577,53 @@ select
     FOR XML PATH('')),
     1, 2, '') As servicios
 ,
-FORMAT(od.dFecRec, 'yyyy-MM-dd') AS dFecRec,od.cCodConsecutivo,od.nConsecutivo,concat(od.cCodConsecutivo,'-',od.nConsecutivo) as codigo_consecutivo,od.nKilometraje,prof.nTotalMo as proMO,od.total as odMo,profo.pro_totaSer,profo.pro_totalRepu from  ERP_OrdenServicio as od  left JOIN (select sum(pro.nTotalMO) as pro_totaSer,sum(pro.nTotalDetalle) as pro_totalRepu, pro.cCodConsecutivoOS , pro.nConsecutivoOS  from ERP_Proforma as pro GROUP BY pro.cCodConsecutivoOS , pro.nConsecutivoOS) as profo on(od.cCodConsecutivo=profo.cCodConsecutivoOS AND od.nConsecutivo=profo.nConsecutivoOS)
 
+FORMAT(od.dFecRec, 'yyyy-MM-dd') AS dFecRec,od.cCodConsecutivo,od.nConsecutivo,concat(od.cCodConsecutivo,'-',od.nConsecutivo) as codigo_consecutivo,od.nKilometraje,od.total as odMo,profo.pro_totaSer,profo.pro_totalRepu,mo.descripcion as modelo_serie,mar.description as marca_serie,mar.id as idMarca_serie ,modt.descripcion as modelo_vet,mart.id as idMarca_vet,mart.description as marca_vet,od.id_tipoveh,tiv.descripcion,od.cChasis,od.iAnioFab,od.cPlacaVeh,cli.razonsocial_cliente,cli.celular,cli.telefono,cli.correo_electronico,cli.direccion
+
+from  ERP_OrdenServicio as od left JOIN (select sum(pro.nTotalMO) as pro_totaSer,sum(pro.nTotalDetalle) as pro_totalRepu, pro.cCodConsecutivoOS , pro.nConsecutivoOS  from ERP_Proforma as pro GROUP BY pro.cCodConsecutivoOS , pro.nConsecutivoOS) as profo on(od.cCodConsecutivo=profo.cCodConsecutivoOS AND od.nConsecutivo=profo.nConsecutivoOS) left join ERP_Serie as seri on (seri.cPlacaVeh = od.cPlacaVeh) left join ERP_Productos as pr on (pr.id=seri.idArticulo) left join ERP_Modelo as mo on (pr.idModelo=mo.idModelo) left join ERP_Marcas as mar on (mar.id=pr.idMarca) left join ERP_VehTerceros as vet on (vet.placa=od.cPlacaVeh) left join ERP_Modelo as modt on (vet.idModelo=modt.idModelo) left join ERP_Marcas as mart on (vet.idMarca=mart.id) inner join ERP_TipoVehiculo as tiv on (od.id_tipoveh=tiv.id) inner join ERP_Clientes as cli on (cli.id=od.idCliente)
+
+
+
+alter VIEW [ERP_view_reporte_ordenes_diarios] AS
+select moned.IdMoneda,moned.Descripcion as moneda ,moned.Simbolo, 
+  STUFF(
+    (SELECT ', '  + CAST(pr.description AS varchar(255))
+    FROM ERP_OrdenServicio as odo
+    inner join ERP_OrdenServicioDetalle as odmo on (odmo.cCodConsecutivo=odo.cCodConsecutivo AND    odmo.nConsecutivo=odo.nConsecutivo and od.cCodConsecutivo=odo.cCodConsecutivo AND    od.nConsecutivo=odo.nConsecutivo  ) inner join ERP_Productos as pr on (pr.id=odmo.idProducto)
+    FOR XML PATH('')),
+    1, 2, '') As servicios
+,
+
+FORMAT(od.dFecRec, 'yyyy-MM-dd') AS dFecRec,od.cCodConsecutivo,od.nConsecutivo,concat(od.cCodConsecutivo,'-',od.nConsecutivo) as codigo_consecutivo,od.nKilometraje,od.total as odMo,profo.pro_totaSer,profo.pro_totalRepu,mo.descripcion as modelo_serie,mar.description as marca_serie,mar.id as idMarca_serie ,modt.descripcion as modelo_vet,mart.id as idMarca_vet,mart.description as marca_vet,od.id_tipoveh,tiv.descripcion,od.cChasis,od.iAnioFab,od.cPlacaVeh,cli.razonsocial_cliente,cli.celular,cli.telefono,cli.correo_electronico,cli.direccion
+
+from  ERP_OrdenServicio as od left JOIN (select sum(pro.nTotalMO) as pro_totaSer,sum(pro.nTotalDetalle) as pro_totalRepu, pro.cCodConsecutivoOS , pro.nConsecutivoOS  from ERP_Proforma as pro GROUP BY pro.cCodConsecutivoOS , pro.nConsecutivoOS) as profo on(od.cCodConsecutivo=profo.cCodConsecutivoOS AND od.nConsecutivo=profo.nConsecutivoOS) left join ERP_Serie as seri on (seri.cPlacaVeh = od.cPlacaVeh) left join ERP_Productos as pr on (pr.id=seri.idArticulo) left join ERP_Modelo as mo on (pr.idModelo=mo.idModelo) left join ERP_Marcas as mar on (mar.id=pr.idMarca) left join ERP_VehTerceros as vet on (vet.placa=od.cPlacaVeh) left join ERP_Modelo as modt on (vet.idModelo=modt.idModelo) left join ERP_Marcas as mart on (vet.idMarca=mart.id) inner join ERP_TipoVehiculo as tiv on (od.id_tipoveh=tiv.id) inner join ERP_Clientes as cli on (cli.id=od.idCliente) inner join ERP_Moneda as moned on(moned.IdMoneda=od.IdMoneda) where od.iEstado=3
+
+
+select * from ERP_view_reporte_ordenes_diarios
+
+select * from ERP_Moneda
+
+
+select * from ERP_TipoVehiculo where estado='A'
+select * from ERP_Marcas
+select * from ERP_VehTerceros
+select * from ERP_Clientes
+
+select * from ERP_view_reporte_ordenes_diarios
+sel
+
+
+(IF EXISTS (SELECT * FROM ERP_Serie WHERE cPlacaVeh =od.cPlacaVeh) 
+BEGIN
+  SELECT mo.descripcion as modelo FROM ERP_Serie as s inner join ERP_Productos as pr on (pr.id=s.idArticulo) inner join ERP_Modelo as mo on (pr.idModelo=mo.idModelo)  WHERE cPlacaVeh =od.cPlacaVeh
+END
+ELSE
+BEGIN
+    SELECT mo.descripcion as modelo FROM ERP_VehTerceros as s  inner join ERP_Modelo as mo on (s.idModelo=mo.idModelo)  WHERE placa=od.cPlacaVeh
+END),select * from ERP_Modelo
+select * from ERP_Serie
+select * from ERP_VehTerceros
+select * from ERP_Productos
 select * from ERP_Proforma inner join ERP_ProformaDetalle 
 select * from ERP_OrdenServicioDetalle
 
@@ -592,3 +637,5 @@ select * from ERP_ProformaMO
 select * from ERP_Proforma
 select * from ERP_Solicitud
 select * from ERP_SolicitudArticulo
+
+select * from ERP_OrdenServicio

@@ -144,6 +144,14 @@ class VentasRepository implements VentasInterface
         return DB::select($sql);
     }
 
+     public function anular_venta($id) {
+        $sql = "UPDATE ERP_Venta
+                SET anulado = 'S'
+                WHERE idventa='$id'";
+
+        return DB::update($sql);
+    }
+
     public function get_venta_detalle($idventa){
    
         $mostrar3=DB::select("select pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, vd.consecutivo as idDetalleRepues,* 

@@ -20,6 +20,9 @@ Route::post('ventas/guardar_venta', ['as' => 'ventas.guardar_venta', 'uses' => '
 Route::post('ventas/get_notas_devolucion', ['as' => 'ventas.get_notas_devolucion', 'uses' => 'VentasController@get_notas_devolucion']);
 
 Route::get('ventas/get_venta_detalle/{id}', ['as' => 'ventas.get_venta_detalle', 'uses' => 'VentasController@get_venta_detalle']);
+
+Route::get('ventas/anularventa/{id}', ['as' => 'ventas.anularventa', 'uses' => 'VentasController@anularventa']);
+
 Route::get('ventas/get_venta_detalle_devolucion/{id}', ['as' => 'ventas.get_venta_detalle_devolucion', 'uses' => 'VentasController@get_venta_detalle_devolucion']);
 
 Route::post('ventas/get_venta_separacion', ['as' => 'ventas.get_venta_separacion', 'uses' => 'VentasController@get_venta_separacion']);

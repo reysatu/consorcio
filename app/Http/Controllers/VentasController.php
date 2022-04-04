@@ -199,6 +199,24 @@ class VentasController extends Controller
         }
     }
 
+    public function anularventa($id, VentasInterface $repo, Request $request)
+    {
+        try {
+           $response = $repo->anular_venta($id);
+            return response()->json([
+                'status' => true,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
     public function get_venta_separacion(VentasInterface $repo, Request $request) {
         $data = $request->all();    
 
