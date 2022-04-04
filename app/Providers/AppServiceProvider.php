@@ -27,6 +27,10 @@ use App\Http\Recopro\ReporteVentaCliente\ReporteVentaCliente;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteInterface;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteRepository;
 
+use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiario; 
+use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiarioInterface;
+use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiarioRepository;
+
 
 use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimiento; 
 use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimientoInterface;
@@ -715,6 +719,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerReporteMeta();
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
+        $this->registerReporteOrdenDiario();
         $this->registerView_comprobante_movimiento();
         $this->registerView_comprobantes_caja_detalle();
         $this->registerView_PendienteCobro();
@@ -1022,6 +1027,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ReporteMetaInterface::class, function ($app) {
             return new ReporteMetaRepository(new ReporteMeta());
+        });
+    }
+    public function registerReporteOrdenDiario()
+    {
+        $app = $this->app;
+
+        $app->bind(ReporteOrdenDiarioInterface::class, function ($app) {
+            return new ReporteOrdenDiarioRepository(new ReporteOrdenDiario());
         });
     }
     public function registerReporteVentaCliente()

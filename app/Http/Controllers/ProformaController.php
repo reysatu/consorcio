@@ -39,7 +39,7 @@ class ProformaController extends Controller
                 'data_servicio'=>$data_servicio,
                 'data_cliente'=>$data_cliente,
             ]);
-    }
+    } 
     public function all(Request $request, ProformaInterface $repo)
     {
         $s = $request->input('search', '');
@@ -108,6 +108,9 @@ class ProformaController extends Controller
             $nEstimado=strtoupper($data['nEstimado']);
             $modo_array_repuesto=$data['modo_array_repuesto'];
             $modo_array_repuesto=explode(',', $modo_array_repuesto);
+            
+            $totalDetalle_to=$data['totalDetalle'];
+            $totalMO_to=$data['totalMO'];
 
             $id_revision_array=$data['id_revision_array'];
             $id_revision_array=explode(',', $id_revision_array);
@@ -191,8 +194,8 @@ class ProformaController extends Controller
                 $cPlacaVeh,
                 $dFecRec,
                 $nEstimado,
-                $totalmo,
-                $totaldetalle,
+                $totalMO_to,
+                $totalDetalle_to,
                 $subtotal,
                 $impuesto,
                 $total,
@@ -236,7 +239,7 @@ class ProformaController extends Controller
          $staOperacion=explode(',', $staOperacion);
 
         if(intval($res[0]->Mensaje)){
-            if($id_repuesto_array[0]!=''){
+            if($id_repuesto_array[0]!=''){ 
                 for ($i=0; $i < count($id_repuesto_array) ; $i++) {
                 $total=floatval($id_repuesto_cantidad[$i])*floatval($id_repuesto_precio[$i]);
                  if($staOperacionRepu[$i]=='S'){
@@ -245,7 +248,7 @@ class ProformaController extends Controller
                     $totalO=0;
                 };
                 $repo->actualizar_Proforma_detalle($cCod,$res[0]->Mensaje,$idDetalleRepuestoGrup[$i],$id_repuesto_array[$i],
-                    $id_repuesto_cantidad[$i],$id_repuesto_precio[$i],$total,$id_repuesto_impuesto[$i],$id_repuesto_tipoTotal[$i],
+                    $id_repuesto_cantidad[$i],$id_repuesto_precio[$i],$operacionGraRep[$i],$id_repuesto_impuesto[$i],$id_repuesto_tipoTotal[$i],
                     $montoRepu[$i],$porRepu[$i],$idDescuenRepues[$i],$staOperacionRepu[$i],$totalO,$modo_array_repuesto[$i],$usuario);
                 };
             }

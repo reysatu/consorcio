@@ -43,6 +43,7 @@
         'sys.app.warehouses',
         'sys.app.fronts',
         'sys.app.buyers',
+        'sys.app.reporteOrdenDiarios',
         'sys.app.payment_condition',
         'sys.app.categories',
         'sys.app.operations',

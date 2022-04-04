@@ -164,11 +164,52 @@
                         return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-saldo="'+data.record.saldo+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
                     }
 
+                },
+                anulado: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="anular-nota" data-idventa="' + data.record.idventa + '"    title="Anular"><i class="fa fa-times fa-1-5x fa-red"></i></a>';
+                    }
+
                 }
 
             },  
             
             recordsLoaded: function (event, data) {
+
+
+                $('.anular-nota').click(function (e) {
+                var code = $(this).attr('data-idventa');
+                AlertFactory.confirm({
+                    title: '',
+                    message: '¿Está seguro que desea anular venta?',
+                    confirm: 'Si',
+                    cancel: 'No'
+                }, function () {
+                    RESTService.get('ventas/anularventa', code, function(response) {
+                        if (!_.isUndefined(response.status) && response.status) {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'El documento se anuló correctamente',
+                                type: 'success'
+                           });
+                    }else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo eliminar. Intente nuevamente.' : response.message;
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: msg_,
+                                    type: 'error'
+                            });
+                        }
+                    });
+                });
+                e.preventDefault();
+            });
                 $('.emitir-nota').click(function (e) {
                     var idventa = $(this).attr('data-idventa');
                     var idtipodocumento = $(this).attr('data-idtipodocumento');

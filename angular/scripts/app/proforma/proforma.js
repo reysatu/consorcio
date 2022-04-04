@@ -578,6 +578,8 @@
                 if(montoTotals==""){
                     montoTotals=0;
                 }
+                console.log(staOperacionRepu);
+                console.log("esta operacion repu");
                 var params = {
                     'cCod': cCodConsecutivo.val(),
                     'nCons': con,
@@ -603,6 +605,8 @@
                     'impuesto_servicio':impuesto_servicio,
                     'modo_array_servicio':modo_array_servicio,
                     'nDescuentoP':montoTotals,
+                    'totalDetalle':totalDetalle.val(),
+                    'totalMO':totalMO.val(),
                     'nIdDsctoP':coded,
                     'nPorcDescuentoP':porcenTotal,
                     'nOperGratuitaP':total.val(),

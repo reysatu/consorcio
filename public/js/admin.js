@@ -993,7 +993,53 @@ function getFormSearchReporteRepuestos(form_id, input_id, btn_id) {
                 '</div>'+           
             '</div>'+
          '</form>';
-} 
+}
+function getFormSearchReporteOrdenesDiario(form_id, input_id, btn_id) {
+   return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+            // '<div class="form-group">'+
+            //     '<div class="col-md-2">'+
+            //         '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+            //     '</div>'+
+                
+            //     '<div class="col-md-2">' +
+            //         '<button  type="button"  id="btn_exportar_dd" class="btn-danger-admin  btn-sm">' +
+            //                 '<i class="fa fa-plus">Asignar Cobrador</i>' +
+            //         '</button>' +
+            //     '</div>'+           
+            // '</div>'+
+             '<div class="form-group">'+
+                '<label class="col-sm-2 col-md-offset-2  control-label">Fecha Inicio</label>'+
+                '<div class="col-md-3">'+
+                     '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
+                '</div>'+
+                '<label class="col-sm-2 control-label">Fecha Fin</label>'+
+                '<div class="col-md-3">'+
+                    '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
+                '</div>'+
+                
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-4 col-md-offset-4">'+
+                    '<select id="idMarca"  style="margin-right:5px;width: 100%" name="idMarca" class="form-control input-sm "></select>'+
+                '</div>'+
+                '<div class="col-md-4">'+
+                    '<select id="idtipoveh"  style="margin-right:5px;width: 100%" name="idtipoveh" class="form-control input-sm "></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-1 col-md-offset-9">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</div>'+
+                 '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
+                            '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
+                    '</button>' +
+                '</div>'+ 
+            '</div>'+
+         '</form>';
+}  
 function getFormSearchReporteVenta(form_id, input_id, btn_id) {
    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
             // '<div class="form-group">'+
