@@ -63,9 +63,33 @@ class AprobacionSolicitudController extends Controller
                 $solicitud = $solicitud_repositorio->get_solicitud($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
                 $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
                 $fecha = $solicitud[0]->fecha_solicitud;
+
+                if(!empty($solicitud_credito[0]->dia_vencimiento_cuota) && $solicitud_credito[0]->dia_vencimiento_cuota > 0) {
+                    $arr_date = explode("-", $fecha);
+                    $dia = $solicitud_credito[0]->dia_vencimiento_cuota;
+                    $mes = $arr_date[1];
+                    if($dia > $arr_date[2]) {
+                        $mes = $arr_date[1] + 1;
+                    }
+                    $anio = $arr_date[0];
+                    
+                } 
+
                 for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
 
-                    $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                    if(!empty($solicitud_credito[0]->dia_vencimiento_cuota) && $solicitud_credito[0]->dia_vencimiento_cuota > 0) {
+                        if($mes > 13) {
+                            $mes = 1;
+                            $anio = $anio + 1;
+                        }
+
+                        $fecha = $anio."-".$mes."-".$dia;
+                        $mes = $mes + 1;
+                        
+                    } else {
+                        $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                    }
+                   
                     $data_cronograma = array();
                     $data_cronograma["cCodConsecutivo"] = $conformidad[0]->cCodConsecutivo;
                     $data_cronograma["nConsecutivo"] = $conformidad[0]->nConsecutivo;

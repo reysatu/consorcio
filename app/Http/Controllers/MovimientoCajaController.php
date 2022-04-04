@@ -170,13 +170,71 @@ class MovimientoCajaController extends Controller
                 
     
                 $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+            } else {
+                // PARA LOS TICKET DE MOVIMIENTOS DE CAJA
+                $parametro_articulo_movimiento_caja = $repo->get_parametro_articulo_movimiento_caja();
+
+                if(count($parametro_articulo_movimiento_caja) <= 0) {
+                    throw new Exception("Por favor cree el parametro con el id del producto para los movimientos de caja!");
+                }
+    
+
+                $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
+                if(count($ticket) <= 0) {
+                    throw new Exception("Cree una serie y consecutivo de ticket");
+                }
+                $serie_ticket = $ticket[0]->serie;
+                $consecutivo_ticket = $ticket[0]->actual;
+
+
+                $data_venta = array();
+               
+                $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_venta["serie_comprobante"] = $serie_ticket;
+                $data_venta["numero_comprobante"] = $consecutivo_ticket;
+                $data_venta["condicion_pago"] = 1;
+                $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
+                $data_venta["idcliente"] = $data["idcliente"];
+                $data_venta["tipo_comprobante"] = "1"; // anticipo
+                $data_venta["IdTipoDocumento"] = 12;
+                $data_venta["t_monto_subtotal"] = $data["montoAdd"];
+                $data_venta["t_monto_total"] = $data["montoAdd"];
+                $data_venta["saldo"] = "0";
+                $data_venta["pagado"] = $data["montoAdd"];
+                $data_venta["idmoneda"] = $data['idMonedaAdd'];
+                $data_venta["idcajero"] = auth()->id();
+                $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+                $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+                $data_venta["descripcion"] = $data['tipoMovimientoAdd']."-".strtoupper($data['conceptoAdd']);
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+    
+               
+                $data_venta_detalle = array();
+                $data_venta_detalle["idventa"] = $data_venta["idventa"];
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                $data_venta_detalle["idarticulo"] = $parametro_articulo_movimiento_caja[0]->value;
+                $data_venta_detalle["um_id"] = "07"; //codigo unidad
+                $data_venta_detalle["cantidad"] = 1;
+                $data_venta_detalle["precio_unitario"] = $data["montoAdd"];
+            
+                $data_venta_detalle["precio_total"] = $data["montoAdd"];
+            
+                $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
+        
+                $data_venta_detalle["monto_total"] = $data["montoAdd"];
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                  
+                $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
             }
            
 
             DB::commit();
             return response()->json([
                 'status' => true,
-                "idventa" => $data_venta["idventa"]
+                "idventa" => $data_venta["idventa"],
+                "tipoMovimientoAdd" => $data["tipoMovimientoAdd"],
                
             ]);
 
@@ -1707,6 +1765,33 @@ class MovimientoCajaController extends Controller
         // return $pdf->save("ficha_asociado.pdf"); // guardar
         // return $pdf->download("ficha_asociado.pdf"); // descargar
         return $pdf->stream("ticket.pdf"); // ver
+
+    }
+
+    public function imprimir_ticket_movimiento_caja($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+    
+        $idventa = $array[2];
+
+        $datos = array();
+    
+        $datos["empresa"] = $repo->get_empresa(); 
+   
+        $datos["venta"] = $repo->get_venta($idventa); 
+       
+        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
+ 
+      
+        $pdf = PDF::loadView("solicitud.ticket_movimiento_caja", $datos);
+        $pdf->setPaper(array(0,0,249.45, 600), 'portrait');
+        // "b7" => array(0,0,249.45,354.33),
+
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("ticket_movimiento_caja.pdf"); // ver
 
     }
 
