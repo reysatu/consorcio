@@ -78,12 +78,16 @@ class AprobacionSolicitudController extends Controller
                 for ($c=1; $c <= $solicitud_credito[0]->nro_cuotas; $c++) { 
 
                     if(!empty($solicitud_credito[0]->dia_vencimiento_cuota) && $solicitud_credito[0]->dia_vencimiento_cuota > 0) {
-                        if($mes > 13) {
+                        if($mes > 12) {
                             $mes = 1;
                             $anio = $anio + 1;
                         }
 
                         $fecha = $anio."-".$mes."-".$dia;
+                        $dias_del_mes = date( 't', strtotime( $anio."-".$mes."-1" ) );
+                        if($dias_del_mes < $dia) {
+                            $fecha = $anio."-".$mes."-".$dias_del_mes;
+                        }
                         $mes = $mes + 1;
                         
                     } else {

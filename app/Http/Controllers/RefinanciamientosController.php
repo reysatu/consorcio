@@ -36,6 +36,7 @@ class RefinanciamientosController extends Controller
 
     public function generar_refinanciamiento(Request $request, SolicitudInterface $solicitud_repositorio, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, VentasInterface $ventas_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC)
     {
+        
 
         $data = $request->all();
 
@@ -225,12 +226,18 @@ class RefinanciamientosController extends Controller
             // $valor_cuota = round($valor_cuota, 2);
             for ($c=1; $c <= $data["nrocuotas_refinanciamiento"]; $c++) { 
                 if(!empty($dia_vencimiento_cuota) && $dia_vencimiento_cuota > 0) {
-                    if($mes > 13) {
+                    if($mes > 12) {
                         $mes = 1;
                         $anio = $anio + 1;
                     }
                     
                     $fecha = $anio."-".$mes."-".$dia;
+                    $dias_del_mes = date( 't', strtotime( $anio."-".$mes."-1" ) );
+                 
+                    if($dias_del_mes < $dia) {
+                        $fecha = $anio."-".$mes."-".$dias_del_mes;
+                    }
+                    
                     $mes = $mes + 1;
                     
                 } else {
