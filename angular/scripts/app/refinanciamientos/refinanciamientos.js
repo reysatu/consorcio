@@ -635,21 +635,39 @@
         
 
         function select_comprobante() {
-            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+            $.post("movimientoCajas/get_caja_diaria", {},
                 function (data, textStatus, jqXHR) {
-                    $("#serie_comprobante").html("");
-                    $("#serie_comprobante").append('<option value="">Seleccionar</option>');
-                    _.each(data, function (item) {
-                        if (serie_comprobante == item.serie) {
-                            $("#serie_comprobante").append('<option selected="selected" actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
-                        } else {
-                            $("#serie_comprobante").append('<option actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
-                        }
-        
-                    });
+                    // console.log();
+
+                    if (data.length > 0) {
+
+                        $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+                            function (data, textStatus, jqXHR) {
+                                $("#serie_comprobante").html("");
+                                $("#serie_comprobante").append('<option value="">Seleccionar</option>');
+                                _.each(data, function (item) {
+                                    if (serie_comprobante == item.serie) {
+                                        $("#serie_comprobante").append('<option selected="selected" actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                                    } else {
+                                        $("#serie_comprobante").append('<option actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                                    }
+                    
+                                });
+                            },
+                            "json"
+                        );
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Primero debe apertura la caja del día',
+                            type: 'info'
+                        });
+                        return false;
+                    }
                 },
                 "json"
             );
+           
            
         }
 
@@ -706,6 +724,8 @@
 
         $scope.generar_refinanciamiento = function () {
             var bval = true;
+            bval = bval && $("#serie_documento").required();
+            bval = bval && $("#numero_documento").required();
             bval = bval && $("#fecha_refinanciamiento").required();
             bval = bval && $("#monto_refinanciamiento").required();
             bval = bval && $("#nrocuotas_refinanciamiento").required();

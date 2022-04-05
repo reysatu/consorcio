@@ -79,8 +79,8 @@ class RefinanciamientosController extends Controller
             if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
 
                 //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
-                $datos_nota = $ventas_repo->find_documento($comprobante_saldo[0]->idventa);
-
+                $datos_nota = (array)$ventas_repo->find_documento($comprobante_saldo[0]->idventa)[0];
+                
                 // $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
 
                 // if($comprobante_saldo[0]->IdTipoDocumento == "01") {
@@ -98,6 +98,7 @@ class RefinanciamientosController extends Controller
                 // }
 
                 $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
+                
                 $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
                 $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
                 $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
