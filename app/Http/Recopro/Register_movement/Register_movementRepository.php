@@ -38,7 +38,7 @@ class Register_movementRepository implements Register_movementInterface
             $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
             $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy("created_at", "DESC");
 
     }
     public function searchMovCierre($s,$perido_busquedad)

@@ -1155,7 +1155,7 @@
                 console.log(ident_serie_bd_serie);
                 console.log(identificador_serie_bd);
                 console.log("test");
-               
+               console.log(aartMSN);
                 var params = {
                     'art_nada':aartMN,
                     'idArticulo':idartEnv,
