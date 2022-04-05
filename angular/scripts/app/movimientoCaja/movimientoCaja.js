@@ -2328,6 +2328,11 @@ table_container_bancos.jtable('load');
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
             // alert("change " + tipo_solicitud);   
+            $(".condicion_pago").hide();
+            if(tipo_solicitud == "4") {
+                
+                $(".condicion_pago").show();
+            }
             if (tipo_solicitud == "1" || tipo_solicitud == "3") {
                 $(".credito").hide();
 

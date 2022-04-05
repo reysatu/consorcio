@@ -80,7 +80,7 @@ class RefinanciamientosController extends Controller
                 //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
                 $datos_nota = $ventas_repo->find_documento($comprobante_saldo[0]->idventa);
 
-                $caja_diaria = $caja_diaria_repositorio->get_caja_diaria();
+                $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
 
                 if($comprobante_saldo[0]->IdTipoDocumento == "01") {
                     $like = "FN";

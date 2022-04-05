@@ -233,9 +233,9 @@
                         cCodConsecutivo.append('<option value="' + item.cCodConsecutivo + '">' + item.cCodConsecutivo + '</option>');
                     });
                     // cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+'</option>');
-                    idcCondicionPago.append('<option value="">Seleccionar</option>');
+                    $("#condicion_pago").append('<option value="">Seleccionar</option>');
                     _.each(response.condicion_pago, function (item) {
-                        idcCondicionPago.append('<option value="' + item.id + '">' + item.description + '</option>');
+                        $("#condicion_pago").append('<option days="'+item.days+'" value="' + item.id + '">' + item.description + '</option>');
                     });
                     // _.each(response.tipo_servicio, function (item) {
                     //     id_tipo.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
@@ -3170,9 +3170,31 @@
 
         }
 
+        $(document).on("change", "#condicion_pago", function () {
+            var fecha_actual_user = Helpers.ObtenerFechaActual("user");
+            var days = $("#condicion_pago option:selected").attr("days");
+            var nueva_fecha = Helpers.sumarDias(days, fecha_actual_user);
+            $("#fecha_vencimiento").val(Helpers.formato_fecha(nueva_fecha, "server"));
+            // alert(nueva_fecha);
+        })
+
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
+            var fecha_actual = Helpers.ObtenerFechaActual("server");
+           
+            $(".condicion_pago").hide();
+            // alert(fecha_actual);
             // alert("change " + tipo_solicitud);   
+            $("#fecha_vencimiento").val("");
+            if(tipo_solicitud == "1") {
+                $("#fecha_vencimiento").val(fecha_actual);
+            }
+
+            if(tipo_solicitud == "4") {
+                $("#fecha_vencimiento").val(fecha_actual);
+                $(".condicion_pago").show();
+            }
+
             if (tipo_solicitud == "1" || tipo_solicitud == "3") {
                 $(".credito").hide();
 
