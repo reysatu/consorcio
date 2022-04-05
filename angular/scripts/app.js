@@ -114,7 +114,6 @@
         'sys.app.renegociacion_mora',
         'sys.app.refinanciamientos',
         'sys.app.visita_cliente',
-        
         'sys.app.lista_cobranza_cuotas',
         
         // Almacen

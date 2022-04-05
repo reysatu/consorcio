@@ -16,12 +16,31 @@
         var helpers = {
             saludo: saludo,
             formato_fecha: formato_fecha,
-            set_datos_formulario: set_datos_formulario
+            set_datos_formulario: set_datos_formulario,
+            ObtenerFechaActual: ObtenerFechaActual,
+            sumarDias: sumarDias,
         };
         return helpers;
 
         function saludo() {
             alert("hola");
+        }
+
+        function sumarDias(dias, fecha) {
+            var Fecha = new Date();
+            var sFecha = fecha || (Fecha.getDate() + "/" + (Fecha.getMonth() + 1) + "/" + Fecha.getFullYear());
+            var sep = sFecha.indexOf('/') != -1 ? '/' : '-';
+            var aFecha = sFecha.split(sep);
+            var fecha = aFecha[2] + '/' + aFecha[1] + '/' + aFecha[0];
+            fecha = new Date(fecha);
+            fecha.setDate(fecha.getDate() + parseInt(dias));
+            var anno = fecha.getFullYear();
+            var mes = fecha.getMonth() + 1;
+            var dia = fecha.getDate();
+            mes = (mes < 10) ? ("0" + mes) : mes;
+            dia = (dia < 10) ? ("0" + dia) : dia;
+            var fechaFinal = dia + sep + mes + sep + anno;
+            return (fechaFinal);
         }
         
         function formato_fecha(fecha, formato) {
@@ -45,6 +64,26 @@
                 }
             }
             return fecha;
+        }
+
+        function ObtenerFechaActual(type) {
+            var hoy = new Date();
+            var dd = hoy.getDate();
+            var mm = hoy.getMonth() + 1; //hoy es 0!
+            var yyyy = hoy.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            if (type == "user") {
+                hoy = dd + '/' + mm + '/' + yyyy;
+            }
+            if (type == "server") {
+                hoy = yyyy + '-' + mm + '-' + dd;
+            }
+            return hoy;
         }
 
         function set_datos_formulario(id_form, datos) {

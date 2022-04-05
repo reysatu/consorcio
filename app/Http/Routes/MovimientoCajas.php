@@ -60,6 +60,7 @@ Route::post('movimientoCajas/guardar_pago_cuotas_credito', 'MovimientoCajaContro
 Route::post('movimientoCajas/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
 Route::get('movimientoCajas/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
 Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket'); 
+Route::get('movimientoCajas/imprimir_ticket_movimiento_caja/{id}', 'MovimientoCajaController@imprimir_ticket_movimiento_caja'); 
 Route::get('movimientoCajas/imprimir_ticket_pago_cuota/{id}', 'MovimientoCajaController@imprimir_ticket_pago_cuota'); 
 Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 

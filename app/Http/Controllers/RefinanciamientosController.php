@@ -36,6 +36,7 @@ class RefinanciamientosController extends Controller
 
     public function generar_refinanciamiento(Request $request, SolicitudInterface $solicitud_repositorio, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, VentasInterface $ventas_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC)
     {
+        
 
         $data = $request->all();
 
@@ -80,21 +81,25 @@ class RefinanciamientosController extends Controller
                 //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
                 $datos_nota = $ventas_repo->find_documento($comprobante_saldo[0]->idventa);
 
-                $caja_diaria = $caja_diaria_repositorio->get_caja_diaria();
+                // $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
 
-                if($comprobante_saldo[0]->IdTipoDocumento == "01") {
-                    $like = "FN";
-                }
-                if($comprobante_saldo[0]->IdTipoDocumento == "03") {
-                    $like = "BN";
-                }
+                // if($comprobante_saldo[0]->IdTipoDocumento == "01") {
+                //     $like = "FN";
+                // }
+                // if($comprobante_saldo[0]->IdTipoDocumento == "03") {
+                //     $like = "BN";
+                // }
 
             
-                $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
+                // $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
+
+                // if(count($consecutivo_comprobante) <= 0) {
+                //     throw new Exception("Por favor cree una serie de nota de credito para la tienda: ".$caja_diaria[0]->idtienda."!");
+                // }
 
                 $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
-                $datos_nota["serie_comprobante"] = $consecutivo_comprobante[0]->serie;
-                $datos_nota["numero_comprobante"] = $consecutivo_comprobante[0]->actual;
+                $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
+                $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
                 $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
                 $datos_nota["idmotivo"] = "01";
                 $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
@@ -206,11 +211,39 @@ class RefinanciamientosController extends Controller
             
             
             $fecha = $data["fecha_refinanciamiento"];
+            $dia_vencimiento_cuota = $data["dia_vencimiento_cuota_refinanciamiento"];
+            if(!empty($dia_vencimiento_cuota) && $dia_vencimiento_cuota > 0) {
+                $arr_date = explode("-", $fecha);
+                $dia = $dia_vencimiento_cuota;
+                $mes = $arr_date[1];
+                if($dia > $arr_date[2]) {
+                    $mes = $arr_date[1] + 1;
+                }
+                $anio = $arr_date[0];
+                
+            } 
             // $valor_cuota = (float) $data["monto_refinanciamiento"] / (int) $data["nrocuotas_refinanciamiento"];
             // $valor_cuota = round($valor_cuota, 2);
             for ($c=1; $c <= $data["nrocuotas_refinanciamiento"]; $c++) { 
+                if(!empty($dia_vencimiento_cuota) && $dia_vencimiento_cuota > 0) {
+                    if($mes > 12) {
+                        $mes = 1;
+                        $anio = $anio + 1;
+                    }
+                    
+                    $fecha = $anio."-".$mes."-".$dia;
+                    $dias_del_mes = date( 't', strtotime( $anio."-".$mes."-1" ) );
+                 
+                    if($dias_del_mes < $dia) {
+                        $fecha = $anio."-".$mes."-".$dias_del_mes;
+                    }
+                    
+                    $mes = $mes + 1;
+                    
+                } else {
 
-                $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                    $fecha = $this->sumar_restar_dias($fecha, "+", 30);
+                }
                 $data_cronograma = array();
                 $data_cronograma["cCodConsecutivo"] = $data_solicitud["cCodConsecutivo"];
                 $data_cronograma["nConsecutivo"] = $data_solicitud["nConsecutivo"];

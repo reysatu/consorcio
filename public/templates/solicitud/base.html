@@ -154,6 +154,7 @@
                                                 <option value="1">CONTADO</option>
                                                 <option value="2">CRÉDITO DIRECTO</option>
                                                 <option value="3">CRÉDITO FINANCIERO</option>
+                                                <option value="4">CRÉDITO</option>
                                             </select>
 
                                         </div>
@@ -250,6 +251,14 @@
                                                 <option value="6">Facturado</option>
                                                 <option value="7">Despachado</option>
                                             </select>
+                                        </div>
+
+                                        <div class="condicion_pago" style="display: none;">
+                                            <label class="col-sm-2 control-label">Condición Pago</label>
+                                            <div class="col-sm-2">
+                                                <select id="condicion_pago" name="condicion_pago"
+                                                    class="form-control input-sm"></select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -551,6 +560,14 @@
                                                 <div class="col-sm-6">
                                                     <input type="number" readonly="readonly"
                                                         class="form-control input-sm montos-credito" id="valor_cuota_final" name="valor_cuota_final">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-sm-6 control-label">Día Vencimiento Cuota</label>
+                                                <div class="col-sm-6">
+                                                    <input type="number"
+                                                        class="form-control input-sm montos-credito inputs-credito" id="dia_vencimiento_cuota" name="dia_vencimiento_cuota">
                                                 </div>
                                             </div>
 

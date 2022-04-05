@@ -974,7 +974,18 @@
             <form id="formulario-refinanciamiento">
                 <div class="modal-body">
                     <div class="form-horizontal">
+
                         <div class="form-group">
+                            <div class="col-md-6">
+                                <label for="" class="control-label">Serie </label>
+                                <!-- <input type="text" id="serie_comprobante" name="serie_comprobante" class="form-control input-sm"> -->
+                                <select id="serie_comprobante" name="serie_comprobante"class="form-control input-sm"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="" class="">Número </label>
+                                <input type="text" id="numero_comprobante" name="numero_comprobante" class="form-control input-sm" readonly="readonly">
+                            </div>
+                            
                             <label for="" class="control-label col-md-12">Fecha </label>
                             <div class="col-md-12">
                                 <!-- <input type="text" id="serie_comprobante" name="serie_comprobante" class="form-control input-sm"> -->
@@ -1011,6 +1022,12 @@
                                     class="form-control input-sm" id="valor_cuota_final_refinanciamiento" name="valor_cuota_final_refinanciamiento">
                             </div>
                            
+                            <label class="col-sm-12 control-label">Día Vencimiento Cuota</label>
+                            <div class="col-sm-12">
+                                <input type="number"
+                                    class="form-control input-sm montos-credito inputs-credito" id="dia_vencimiento_cuota_refinanciamiento" name="dia_vencimiento_cuota_refinanciamiento">
+                            </div>
+                         
                         </div>
                       
                       
