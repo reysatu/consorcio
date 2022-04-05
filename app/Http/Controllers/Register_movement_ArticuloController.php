@@ -122,8 +122,10 @@ class Register_movement_ArticuloController extends Controller
             $colorNs = explode(',', $colorNs);
 
             $valida="ha";
-            for ($i=0; $i < count($idArticulo) ; $i++) { 
+            for ($i=0; $i < count($idArticulo) ; $i++) {
+              
                 if($data['naturaleza']!="C"){
+                  
                     $tipo=$vali->traerKit($idArticulo[$i]);
                 $tipoSe=$vali->traerTipo($idArticulo[$i]);
                 $tipoLo=$vali->traerTipoLo($idArticulo[$i]);
@@ -133,15 +135,23 @@ class Register_movement_ArticuloController extends Controller
                 $idLoca=$idLocalizacion[$i];
                 $idAr=$idArticulo[$i];
                 $cant=$cantidad[$i];
+              
                 if($tipo[0]->type_id=="3"){
+                         
                 $valida=$vali->validarStockKit($idAl,$idLoca,$idAr,$cant);
                 }else{
+                  
                     if($tipoSe[0]->serie=='1'){
+                       
                         for ($se=0; $se < count($idSerieSe) ; $se++) {
+                             
+                               
                             $contaCant=0;
                               for ($sa=0; $sa < count($idSerieSe) ; $sa++) {
+                                  
                                     if($idSerieSe[$se]==$idSerieSe[$sa]){
                                          $contaCant=$contaCant+1;
+                                         
                                     }
                             };
                             $valoSrie=$idSerieSe[$se];
@@ -169,8 +179,11 @@ class Register_movement_ArticuloController extends Controller
                         
                     }
                 }
-                $valida2=$valida[0]->Mensaje;
+                
+                      
+
                 if($data['naturaleza']=="S"){
+                 $valida2=$valida[0]->Mensaje;
                    if($valida2!="OK"){
                      $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
                      $descripcion=$descripcionArticuloGet[0]->description;
@@ -178,9 +191,9 @@ class Register_movement_ArticuloController extends Controller
                      } 
                   }
                 }
-                
+                 
             }
-
+             
             if ($idArticulo != '') {
                 $repo->delete_detalle($id);
                 $repo->delete_articulo_detalle($id);
@@ -259,6 +272,7 @@ class Register_movement_ArticuloController extends Controller
                                 }
                                 $tablese="ERP_Serie";
                                 $idtse='idSerie';
+
                                 for ($k=0; $k < count($serieNenv) ; $k++) { 
                                         if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
                                                 $contserie = $seri->create([

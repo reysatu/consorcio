@@ -30,7 +30,7 @@ class Orden_servicioRepository implements Orden_servicioInterface
             $q->orWhere('nConsecutivo', 'LIKE', '%'.$s.'%');
             $q->orWhere('cPlacaVeh', 'LIKE', '%'.$s.'%');
            
-        });
+        })->orderBy("dFecCre","DESC");
 
     }
      public function delete_ord_man($cCodConsecutivo,$ncon)

@@ -29,7 +29,7 @@ class Register_transferRepository implements Register_transferInterface
             $q->where('idTransferencia', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('tipoTransferencia', 'LIKE', '%'.$s.'%');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy("created_at", "DESC");
 
     }
     public function get_movemen_lote($id){

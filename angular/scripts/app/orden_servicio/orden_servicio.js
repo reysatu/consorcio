@@ -1961,6 +1961,7 @@
               cleanVehi();
         });
            modalOrdenServivio.on('hidden.bs.modal', function (e) {
+            LoadRecordsButtonOrden_Servicio.click();
               cleanOrdenServi();
         });
        
@@ -2057,7 +2058,7 @@
             EliminarServiciosDetalle();
           })
 
-
+ 
          function EliminarServiciosDetalle (){
             
             if(nConsecutivo.val()!=""){

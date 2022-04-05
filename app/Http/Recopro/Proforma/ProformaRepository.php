@@ -31,7 +31,7 @@ class ProformaRepository implements ProformaInterface
              $q->orWhere('cCodConsecutivoOS', 'LIKE', '%'.$s.'%');
               $q->orWhere('nConsecutivoOS', 'LIKE', '%'.$s.'%');
                $q->orWhere('iEstado', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy("dFecCre", "DESC");
 
     }
      public function search_Entrega($s)
