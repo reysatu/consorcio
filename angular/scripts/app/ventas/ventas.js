@@ -154,6 +154,11 @@
 
 
                 },
+                anulado: {
+                    title: 'Anulado',
+                    values: { 'S': 'SI', 'N': 'NO','null':'NO' },
+                      type: 'checkbox',
+                },
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -165,7 +170,7 @@
                     }
 
                 },
-                anulado: {
+                anular: {
                     width: '1%',
                     sorting: false,
                     edit: false,

@@ -17,7 +17,7 @@ use App\Http\Recopro\Customer\CustomerInterface;
 use DB;
 class Orden_servicioController extends Controller
 {
-     use Orden_servicioTrait;
+     use Orden_servicioTrait; 
 
     public function __construct()
     {

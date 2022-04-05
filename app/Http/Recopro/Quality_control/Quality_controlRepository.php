@@ -31,7 +31,7 @@ class Quality_controlRepository implements Quality_controlInterface
             $q->orWhere('nConsecutivoOS', 'LIKE', '%'.$s.'%');
             $q->orWhere('dFechaRegistro', 'LIKE', '%'.$s.'%');
             $q->orWhere('iEstado', 'LIKE', '%'.$s.'%');
-        });
+        })->orderBy("dFecCre", "DESC");
 
     }
     public function allActive()
