@@ -632,8 +632,38 @@
 
       
 
+        
 
-      
+        function select_comprobante() {
+            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+                function (data, textStatus, jqXHR) {
+                    $("#serie_comprobante").html("");
+                    $("#serie_comprobante").append('<option value="">Seleccionar</option>');
+                    _.each(data, function (item) {
+                        if (serie_comprobante == item.serie) {
+                            $("#serie_comprobante").append('<option selected="selected" actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                        } else {
+                            $("#serie_comprobante").append('<option actual="' + item.actual + '" value="' + item.serie + '">' + item.serie + '</option>');
+                        }
+        
+                    });
+                },
+                "json"
+            );
+           
+        }
+
+        select_comprobante();
+
+        $(document).on("change", "#serie_comprobante", function () {
+            var serie_comprobante = $(this).val();
+            if (serie_comprobante != "") {
+
+                var actual = $("#serie_comprobante option[value=" + serie_comprobante + "]").attr("actual");
+                $("#numero_comprobante").val(actual);
+            }
+            // alert(numero);
+        });
 
         function obtener_data_for_venta() {
             RESTService.all('ventas/data_form', '', function (response) {

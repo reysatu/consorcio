@@ -2409,9 +2409,9 @@ table_container_bancos.jtable('load');
                     });
 
 
-                    idcCondicionPago.append('<option value="">Seleccionar</option>');
+                    $("#condicion_pago").append('<option value="">Seleccionar</option>');
                     _.each(response.condicion_pago, function (item) {
-                        idcCondicionPago.append('<option value="' + item.id + '">' + item.description + '</option>');
+                        $("#condicion_pago").append('<option value="' + item.id + '">' + item.description + '</option>');
                     });
 
                     idDocumentoCli.append('<option value="">Seleccionar</option>');

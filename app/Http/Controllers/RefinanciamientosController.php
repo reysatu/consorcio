@@ -80,21 +80,25 @@ class RefinanciamientosController extends Controller
                 //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
                 $datos_nota = $ventas_repo->find_documento($comprobante_saldo[0]->idventa);
 
-                $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
+                // $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
 
-                if($comprobante_saldo[0]->IdTipoDocumento == "01") {
-                    $like = "FN";
-                }
-                if($comprobante_saldo[0]->IdTipoDocumento == "03") {
-                    $like = "BN";
-                }
+                // if($comprobante_saldo[0]->IdTipoDocumento == "01") {
+                //     $like = "FN";
+                // }
+                // if($comprobante_saldo[0]->IdTipoDocumento == "03") {
+                //     $like = "BN";
+                // }
 
             
-                $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
+                // $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
+
+                // if(count($consecutivo_comprobante) <= 0) {
+                //     throw new Exception("Por favor cree una serie de nota de credito para la tienda: ".$caja_diaria[0]->idtienda."!");
+                // }
 
                 $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
-                $datos_nota["serie_comprobante"] = $consecutivo_comprobante[0]->serie;
-                $datos_nota["numero_comprobante"] = $consecutivo_comprobante[0]->actual;
+                $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
+                $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
                 $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
                 $datos_nota["idmotivo"] = "01";
                 $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
