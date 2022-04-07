@@ -930,15 +930,19 @@ class MovimientoCajaController extends Controller
             //ACTUALIZAMOS LOS SALDOS EN SOLICITUD
             $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
 
-
-            $condicion_pago = $repo->get_condicion_pago($dias);
+            if(count($solicitud) > 0 && $solicitud[0]->tipo_solicitud != 4) {
+                $condicion_pago = $repo->get_condicion_pago($dias);
             
-            if(count($condicion_pago) <= 0) {
-               
-                throw new Exception("No hay una condicion de pago para ".$dias." dias");
-            }
+                if(count($condicion_pago) <= 0) {
+                
+                    throw new Exception("No hay una condicion de pago para ".$dias." dias");
+                }
 
-            $data_venta["condicion_pago"] = $condicion_pago[0]->id;
+                $data_venta["condicion_pago"] = $condicion_pago[0]->id;
+            } else {
+                $data_venta["condicion_pago"] = $solicitud[0]->condicion_pago;
+            }
+            
 
          
 
