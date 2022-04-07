@@ -57,15 +57,18 @@ Route::post('movimientoCajas/getTipoMoCa', 'TiposMovimientoController@getAll');
 Route::post('movimientoCajas/obtener_tipo_cambio_venta', 'MovimientoCajaController@obtener_tipo_cambio_venta');
 Route::post('movimientoCajas/guardar_comprobante', 'MovimientoCajaController@guardar_comprobante');
 Route::post('movimientoCajas/guardar_pago_cuotas_credito', 'MovimientoCajaController@guardar_pago_cuotas_credito');
+Route::post('movimientoCajas/guardar_pago_documentos_pendientes', 'MovimientoCajaController@guardar_pago_documentos_pendientes');
 Route::post('movimientoCajas/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
 Route::get('movimientoCajas/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
 Route::get('movimientoCajas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket'); 
 Route::get('movimientoCajas/imprimir_ticket_movimiento_caja/{id}', 'MovimientoCajaController@imprimir_ticket_movimiento_caja'); 
 Route::get('movimientoCajas/imprimir_ticket_pago_cuota/{id}', 'MovimientoCajaController@imprimir_ticket_pago_cuota'); 
+Route::get('movimientoCajas/imprimir_ticket_pago_documento_pendiente/{id}', 'MovimientoCajaController@imprimir_ticket_pago_documento_pendiente'); 
 Route::get('movimientoCajas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 
 
 Route::post('movimientoCajas/list_comprobantes', ['as' => 'movimientoCajas.list_comprobantes', 'uses' => 'MovimientoCajaController@list_comprobantes']);
+Route::post('movimientoCajas/list_comprobantes_pendientes', ['as' => 'movimientoCajas.list_comprobantes_pendientes', 'uses' => 'MovimientoCajaController@list_comprobantes_pendientes']);
 Route::post('movimientoCajas/list_creditos', ['as' => 'movimientoCajas.list_creditos', 'uses' => 'SolicitudController@list_creditos']);
 Route::post('movimientoCajas/obtener_consecutivo_comprobante', ['as' => 'movimientoCajas.obtener_consecutivo_comprobante', 'uses' => 'MovimientoCajaController@obtener_consecutivo_comprobante']);
 

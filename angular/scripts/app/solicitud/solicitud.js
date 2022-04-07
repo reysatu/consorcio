@@ -2080,8 +2080,8 @@
             var valor_igv = parseFloat($("#valor_igv").val());
             var monto_subtotal = 0;
             // alert(impuesto_articulo);
-
-            if (cOperGrat == "N") {
+            // console.log("cOperGrat: "+cOperGrat);
+            if (cOperGrat != "S") {
                 monto_subtotal = pretotal;
                 if (impuesto_articulo == "0") {
                     monto_exonerado = pretotal;
@@ -2109,16 +2109,17 @@
             html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(2) + '"></td>';
 
             var check = "";
-
+            var valor_cOperGrat = "N";
             if (cOperGrat == "S") {
                 check = "checked";
+                valor_cOperGrat = "S";
             }
 
             var disabled_check = "";
             if ($("#estado").val() == "4") {
                 disabled_check = 'disabled="disabled"';
             }
-            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass"  ' + disabled_check + ' type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
+            var chek = $('<td><div class="col-sm-1"><label class="checkbox-inline i-checks"><input data-idCheck="' + codigo + '"  class="checkClass"  ' + disabled_check + ' type="checkbox" id="pOper' + codigo + '" ' + check + '  > <input type="hidden" name="cOperGrat[]" codigo="' + codigo + '" id="cOperGrat_' + codigo + '" value="'+valor_cOperGrat+'" /> <input type="hidden" name="nOperGratuita[]" codigo="' + codigo + '" id="nOperGratuita_' + codigo + '" /> </label></div></td>');
 
 
             td8.append(btn3);
@@ -2472,6 +2473,7 @@
             var valor_igv = parseFloat($("#valor_igv").val());
             var monto_subtotal = 0;
             var monto_subtotal_sin_descuento_prorrateado = 0;
+            // console.log(copergrat);
             if(copergrat != "S") {
                 nuevo_total = precio_total - descuento - monto_descuento_prorrateado;
                 monto_subtotal = nuevo_total;
@@ -3492,7 +3494,7 @@
                 },
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
-                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero', '4': "Crédito" },
 
                 },
                 tipo_documento: {

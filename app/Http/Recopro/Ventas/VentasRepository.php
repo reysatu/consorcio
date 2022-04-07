@@ -44,6 +44,7 @@ class VentasRepository implements VentasInterface
     }
 
 
+
     public function search_documentos($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
@@ -54,7 +55,18 @@ class VentasRepository implements VentasInterface
                 ->where('numero_documento', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_emision', 'DESC');
     }
- 
+    
+    public function search_comprobantes_pendientes($s)
+    {
+        return $this->model->orWhere(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
+                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
+                ->where('numero_documento', 'LIKE', '%' . $s . '%')
+                ->where('saldo', '>', '0');
+        })->orderBy('fecha_emision', 'DESC');
+    }
+    
 
     public function all()
     {
@@ -97,9 +109,10 @@ class VentasRepository implements VentasInterface
     }
 
     public function find_documento($idventa) {
-        $sql = "SELECT v.*, c.*, c.razonsocial_cliente AS cliente 
+        $sql = "SELECT v.*, c.*, c.razonsocial_cliente AS cliente, m.Simbolo AS simbolo_moneda
         FROM ERP_Venta AS v
         INNER JOIN ERP_Clientes AS c ON(c.id=v.idcliente)
+        LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
         WHERE v.idventa={$idventa}";
 
         return DB::select($sql);
@@ -127,8 +140,19 @@ class VentasRepository implements VentasInterface
 
 
     public function update_saldos_venta($data) {
-        $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto"]}
+        $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto"]},
+        pagado = pagado + {$data["monto"]}       
         WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S'";
+
+        $result = DB::statement($sql_update);
+        
+        return $result; 
+    }
+
+    public function update_saldos_venta_pendiente($data) {
+        $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto"]},
+        pagado = pagado + {$data["monto"]}       
+        WHERE idventa={$data["idventa"]}";
 
         $result = DB::statement($sql_update);
         

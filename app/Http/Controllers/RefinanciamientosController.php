@@ -73,8 +73,6 @@ class RefinanciamientosController extends Controller
                 $t_monto_subtotal = $t_monto_total;
                 $t_monto_exonerado = $t_monto_total;
             }
-
-
             
             if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
 
