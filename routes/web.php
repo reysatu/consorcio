@@ -40,12 +40,17 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Params.php';
 
+     require app_path() . '\Http\Routes\Proveedors.php';
+
     require app_path() . '\Http\Routes\ApproversProjects.php';
 
     require app_path() . '\Http\Routes\ReporteRepuestos.php';
 
     require app_path() . '\Http\Routes\ResumenMensualActividads.php';
 
+    require app_path() . '\Http\Routes\Empresas.php';
+
+    require app_path() . '\Http\Routes\TipoProveedors.php';
     // Routes Masters
 
     require app_path() . '\Http\Routes\ReporteOrdenDiarios.php';

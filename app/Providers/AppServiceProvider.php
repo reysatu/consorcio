@@ -23,9 +23,28 @@ use App\Http\Recopro\Bancos\BancosInterface;
 use App\Http\Recopro\Bancos\BancosRepository; 
 
 
+use App\Http\Recopro\Empresa\Empresa; 
+use App\Http\Recopro\Empresa\EmpresaInterface;
+use App\Http\Recopro\Empresa\EmpresaRepository;
+
+use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBanco; 
+use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoInterface;
+use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoRepository;
+
+
+use App\Http\Recopro\Proveedor\Proveedor; 
+use App\Http\Recopro\Proveedor\ProveedorInterface;
+use App\Http\Recopro\Proveedor\ProveedorRepository;
+
+
+use App\Http\Recopro\TipoProveedor\TipoProveedor; 
+use App\Http\Recopro\TipoProveedor\TipoProveedorInterface;
+use App\Http\Recopro\TipoProveedor\TipoProveedorRepository;
+
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaCliente; 
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteInterface;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteRepository;
+
 
 use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiario; 
 use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiarioInterface;
@@ -719,6 +738,10 @@ class AppServiceProvider extends ServiceProvider
         $this->registerReporteMeta();
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
+        $this->registerTipoProveedor();
+        $this->registerProveedor();
+        $this->registerEmpresa();
+        $this->registerProveedorCuentaBanco();
         $this->registerReporteOrdenDiario();
         $this->registerView_comprobante_movimiento();
         $this->registerView_comprobantes_caja_detalle();
@@ -1035,6 +1058,38 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ReporteOrdenDiarioInterface::class, function ($app) {
             return new ReporteOrdenDiarioRepository(new ReporteOrdenDiario());
+        });
+    }
+    public function registerTipoProveedor()
+    {
+        $app = $this->app;
+
+        $app->bind(TipoProveedorInterface::class, function ($app) {
+            return new TipoProveedorRepository(new TipoProveedor());
+        });
+    }
+    public function registerProveedor()
+    {
+        $app = $this->app;
+
+        $app->bind(ProveedorInterface::class, function ($app) {
+            return new ProveedorRepository(new Proveedor());
+        });
+    }
+    public function registerProveedorCuentaBanco()
+    {
+        $app = $this->app;
+
+        $app->bind(ProveedorCuentaBancoInterface::class, function ($app) {
+            return new ProveedorCuentaBancoRepository(new ProveedorCuentaBanco());
+        });
+    }
+    public function registerEmpresa()
+    {
+        $app = $this->app;
+
+        $app->bind(EmpresaInterface::class, function ($app) {
+            return new EmpresaRepository(new Empresa());
         });
     }
     public function registerReporteVentaCliente()

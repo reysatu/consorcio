@@ -7386,6 +7386,12 @@ function create_pdf_Querystock(response) {
                             fontSize: 8 ,
 
                         },
+                         { 
+                            text:'Tip.CompraVenta',
+                            fillColor: '#eeeeee',
+                            fontSize: 8 ,
+
+                        },
                         { 
                             text: 'Disponible',
                             fillColor: '#eeeeee',
@@ -7490,6 +7496,11 @@ function create_pdf_Querystock(response) {
 
                         },
                         { 
+                            text:index.tipoCompraVenta,
+                            fontSize: 7 ,
+
+                        },
+                        { 
                             text:Number(index.Disponible),
                             fontSize: 7 ,
                             alignment: 'center' 
@@ -7583,6 +7594,11 @@ function create_pdf_Querystock(response) {
                             fontSize: 7 ,
                              border: [false, false, false, false],
                         },
+                          { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+                        },
                         { 
                             text:'',
                             fontSize: 7 ,
@@ -7644,6 +7660,13 @@ function create_pdf_Querystock(response) {
 
                         },
                           { 
+                            text:'',
+                            fontSize: 7 ,
+                             border: [false, false, false, false],
+
+
+                        },
+                         { 
                             text:'',
                             fontSize: 7 ,
                              border: [false, false, false, false],
@@ -7714,6 +7737,7 @@ function create_pdf_Querystock(response) {
     }
    var docDefinition = {
             pageOrientation: 'landscape',
+            pageMargins: [10, 15, 10, 15],
             content: [ 
                          {
                             image: img,
@@ -7722,6 +7746,18 @@ function create_pdf_Querystock(response) {
                             absolutePosition: { x: 50, y: 15 }
                         },
                         { text: 'REPORTE DE STOCK A LA FECHA : '+fechacA, style: 'subheader' ,alignment: 'center',margin: [0, 0, 0, 10]},
+                         {    
+                 fontSize: 8,
+                 text:'\n',
+                        },
+                         {    
+                 fontSize: 8,
+                 text:'\n',
+                        },
+                         {    
+                 fontSize: 8,
+                 text:'\n',
+                        },
                         {  
                             style: 'tableExample',
                             table: {
@@ -7733,11 +7769,11 @@ function create_pdf_Querystock(response) {
                         },
                         {  
                             style: 'tableExample',
-                            widths: [60, 60,60, 60,60, 60,40, 60,60, 60,60, 60,60, 60,60, 60,60, 60],
+                            widths: [60, 60,60, 60,60, 60,40, 60,60,40, 60,60, 60,60, 60,60, 60,40, 40],
                             table: {
                                 body: dataDolMovimienQuery,
                             },
-                            margin: [10, 0, 0, 10],
+                         
 
                         },
 

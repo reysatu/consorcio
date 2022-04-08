@@ -22,6 +22,8 @@
         'sys.app.tipoTraslados',
         'sys.app.reporteRepuestos',
         'sys.app.reporteCreditosAprobados',
+        'sys.app.tipoProveedors',
+        'sys.app.proveedors',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -31,6 +33,7 @@
         'sys.app.params',
         'sys.app.approvers_projects',
         'sys.app.reporteMetas',
+        'sys.app.empresas',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',

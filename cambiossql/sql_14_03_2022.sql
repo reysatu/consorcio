@@ -21,6 +21,9 @@ select * from ERP_Modelo
 select * from ERP_Clientes
 select * from ERP_Ubigeo
 select * from ERP_Moneda
+select top 10 [id], [descripcion], [estado] from [ERP_Empresa] where ([descripcion] LIKE %% or [estado] LIKE %%) order by [created_at DESC] asc, [id] asc
+
+select * from 
 
 select * from ERP_Tecnico where estado='A'
 
@@ -35,6 +38,195 @@ select * from ERP_Solicitud
 select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
 select * from ERP_Moneda
+
+
+ALTER VIEW [dbo].[ERP_VWStockDetalle]
+as
+SELECT tcv.descripcion as tipoCompraVenta,P.code_article,SLD.idArticulo id, P.description Articulo,C.descripcion Categoria,UM.Abreviatura Unidad, A.description Almacen,L.descripcion Localizacion,
+isnull(LO.Lote,'') Lote,isnull(S.nombreSerie,'') Serie,
+SLD.disponible Disponible,SLD.remitido Remitido,SLD.total Total,SLD.en_transito Transito,
+convert(decimal(10,2),ROUND(p.costo,2)) Costo_Promedio_Unitario,convert(decimal(10,2),round((SLD.total * p.costo),2)) Costo_Total
+FROM ERP_almacen_stock_localizacion_detalle  SLD
+INNER JOIN ERP_Productos P ON P.id = SLD.idArticulo
+INNER JOIN ERP_Categoria C ON C.idCategoria = P.idCategoria
+INNER JOIN ERP_UnidadMedida UM ON UM.IdUnidadMedida = P.um_id
+INNER JOIN ERP_Almacen A ON A.id = SLD.idAlmacen
+INNER JOIN ERP_Localizacion L ON L.idAlmacen = SLD.idAlmacen AND L.idLocalizacion = SLD.idLocalizacion
+LEFT JOIN ERP_Lote LO ON LO.idLote = SLD.idDetalle AND LO.idArticulo = SLD.idArticulo and SLD.TipoId = 'L'
+LEFT JOIN ERP_Serie S ON S.idSerie = SLD.idDetalle AND S.idArticulo = SLD.idArticulo and SLD.TipoId = 'S' 
+Left join ERP_TipoCompraVenta as tcv on(tcv.idTipoCompraVenta=S.idTipoCompraVenta);
+
+select pc.Id as idProveedorCuentaBanco,pc.Descripcion as prb_descripcion,b.descripcion as bancos_descripcion,mo.Descripcion as moneda_descripcion,* from ERP_ProveedorCuentaBanco as pc inner join ERP_Bancos as b on (b.IdBanco=pc.idbanco) inner join ERP_Moneda as mo on (mo.IdMoneda=pc.IdMoneda) where pc.idProveedor='11'
+
+select * from ERP_ProveedorCuentaBanco
+select * from ERP_Bancos
+select * from ERP_Moneda
+select * from ERP_Persona
+
+select * from ERP_Proveedor
+select * from ERP_Persona
+select * from ERP_Clientes
+
+ALTER TABLE ERP_Clientes ALTER COLUMN razonsocial_cliente varchar(500) 
+ALTER TABLE ERP_Proveedor ALTER COLUMN razonsocial varchar(500) 
+ALTER TABLE ERP_Persona ALTER COLUMN cRazonSocial varchar(500) 
+
+//////////////
+CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
+	[nIdAprob] [int] NOT NULL,
+	[nIdUsuario] [int] NOT NULL,
+	[nOrden] [int] NOT NULL,
+	[cIdUsuCre] [varchar](30) NOT NULL,
+	[dFecCre] [datetime] NOT NULL,
+	[cIdUsuMod] [varchar](30) NOT NULL,
+	[dFecMod] [datetime] NOT NULL,
+	 PRIMARY KEY (nIdAprob,nIdUsuario)
+	)
+	
+//////////////////////////////
+CREATE TABLE [dbo].[ERP_AprobacionCompra](
+	[nIdAprob] [int] NOT NULL,
+	[nIdTienda] [int] NOT NULL,
+	[nIdMoneda] [int] NOT NULL,
+	[nIdAlmacen] [int] NOT NULL,
+	[montoInicio] [money] NOT NULL,
+	[montoFin] [money] NOT NULL,
+	[dFecIni] [datetime] NOT NULL,
+	[dFecFin] [datetime] NOT NULL,
+	[cIdUsuCre] [varchar](30) NOT NULL,
+	[dFecCre] [datetime] NOT NULL,
+	[cIdUsuMod] [varchar](30) NOT NULL,
+	[dFecMod] [datetime] NOT NULL
+	 PRIMARY KEY (nIdAprob)
+	)
+///
+CREATE TABLE ERP_Empresa (
+		id int not null,
+    descripcion varchar(255)  null,
+		estado varchar(1)  null,
+		user_created varchar(10) null,
+		created_at datetime null,
+		user_updated varchar(10) null,
+		updated_at datetime null,
+	  PRIMARY KEY (id)
+);
+CREATE TABLE [dbo].[ERP_SolicitudCompra](
+	[cCodConsecutivo] [varchar](10) NOT NULL,
+	[nConsecutivo] [int] NOT NULL,
+	[fecha_registro] [datetime] NULL,
+	[prioridad] [varchar](1) NULL,
+	[fecha_requerida] [datetime] NULL,
+	[idAlmacen] [int] NULL,
+	[estado] [varchar](2) NULL,
+	[user_created] [int] NULL,
+	[user_updated] [int] NULL,
+	[user_deleted] [int] NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+	[deleted_at] [datetime] NULL,
+	PRIMARY KEY (cCodConsecutivo,nConsecutivo)
+	
+	)
+	
+DROP TABLE ERP_CompraArticulo
+CREATE TABLE [dbo].[ERP_CompraArticulo](
+	[id] [int] NOT NULL,
+	[cCodConsecutivo] [varchar](10) NOT NULL,
+	[nConsecutivo] [int] NOT NULL,
+	[idarticulo] [int] NOT NULL,
+	[cantidad] [money] NULL,
+	[fechaRequerida] [datetime] NULL,
+	[estado] [varchar](2) NULL,
+	[user_created] [int] NULL,
+	[user_updated] [int] NULL,
+	[user_deleted] [int] NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+	[deleted_at] [datetime] NULL,
+)
+	
+	
+DROP TABLE ERP_CompraArticulo	
+CREATE TABLE [dbo].[ERP_ProveedorCuentaBanco](
+	[Id][int] NOT NULL,
+	[idProveedor] [int] NOT NULL,
+	[IdBanco] [varchar](5) NULL,
+	[IdMoneda] [varchar](5) NULL,
+	[Descripcion] [varchar](100) NULL,
+	[Nrocuenta] [varchar](25) NULL,
+	[user_created] [int] NULL,
+	[user_updated] [int] NULL,
+	[user_deleted] [int] NULL,
+	[created_at] [datetime] NULL,
+	[updated_at] [datetime] NULL,
+	[deleted_at] [datetime] NULL,
+	PRIMARY KEY (Id)
+)
+
+
+insert into [ERP_ProveedorCuentaBanco] ([idProveedor], [IdBanco], [IdMoneda], [Descripcion], [Nrocuenta], [user_created], [user_updated], [updated_at], [created_at]) values (20, 1, 3, 123213, 3213213, 1006, 1006, 2022-04-07 23:49:15.000, 2022-04-07 23:49:15.000))
+
+select * from ERP_ProveedorCuentaBanco
+select * from ERP_TipoProveedor
+select * from ERP_Moneda
+drop table ERP_Proveedor
+
+select * from ERP_Proveedor 
+CREATE TABLE [dbo].[ERP_Proveedor](
+	[id] [int] NOT NULL,
+	[id_tipoProveedor] [int] NOT NULL,
+	[tipodoc] [varchar](5) NULL,
+	[documento] [varchar](50) NULL,
+	[razonsocial] [varchar](255) NULL,
+	[contacto] [varchar](255) NULL,
+	[direccion] [varchar](255) NULL,
+	[correo_electronico] [varchar](255) NULL,
+	[celular] [varchar](100) NULL,
+	[cIdUsuCre] [varchar](30) NOT NULL,
+	[dFecCre] [datetime] NOT NULL,
+	[cIdUsuMod] [varchar](30) NOT NULL,
+	[dFecMod] [datetime] NOT NULL,
+	[telefono] [varchar](100) NULL,
+	[ubigeo] [varchar](10) NULL,
+	[IdTipoDocumento] [varchar](5) NULL,
+	[idPersona] [int] NULL,
+	[cEstadoCivil] [varchar](1) NULL,
+	[impuesto] [varchar](1) NULL,
+	[activo] [varchar](1) NULL,
+  [congelado] [varchar](1) NULL,
+	[idcCondicionPago] [INT]NULL,
+	PRIMARY KEY (id)
+)
+
+select * from ERP_Serie
+select * from ERP_TipoCompraVenta
+
+SELECT * FROM ERP_Persona
+drop TABLE ERP_TipoProveedor
+
+
+SELECT ti.*, p.*, FORMAT(p.dFechanacimiento, 'dd/MM/yyyy') AS dFechanacimiento , ub.* FROM ERP_Proveedor as ti 
+        left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo 
+        LEFT JOIN ERP_Persona AS p ON(p.idPersona=ti.idPersona)
+        where ti.id='1'
+				
+				
+CREATE TABLE [dbo].[ERP_TipoProveedor](
+	[id] [int] NOT NULL,
+	[descripcion] [varchar](100) NULL,
+	[cuentaPagar] [varchar](100) NULL,
+	[cuentaCierreDevito] [varchar](100) NULL,
+	[cuentaCierreCredito] [varchar](100) NULL,
+	[estado] [varchar](1) NOT NULL,
+	[cIdUsuCre] [varchar](30) NOT NULL,
+	[dFecCre] [datetime] NOT NULL,
+	[cIdUsuMod] [varchar](30) NOT NULL,
+	[dFecMod] [datetime] NOT NULL,
+	PRIMARY KEY (id)
+	)
+
+
+
 ///view creditos aprobados///
 alter VIEW [dbo].[ERP_view_reporte_creditos_aprobados] AS 
 select s.estado,vend.descripcion as vendedor,concat(v.serie_comprobante,'-',RIGHT('00000' + CAST(FLOOR(v.numero_comprobante) AS VARCHAR), 5),'-',RIGHT('00000' + CAST(FLOOR(tike.numero_comprobante) AS VARCHAR), 5) ) as documento_ven,v.idtienda,sc.total_financiado+sc.intereses as financiado,sc.intereses+sc.monto_venta as Credito,total_financiado as total_financiado,sc.valor_cuota as cuota,sc.cuota_inicial as inicial,sc.monto_venta as precio_lista,sc.intereses,sc.nro_cuotas,mon.IdMoneda, mon.Descripcion as moneda,mon.Simbolo, s.cCodConsecutivo, s.nConsecutivo,s.fecha_solicitud,s.idvendedor,s.idcliente,cli.razonsocial_cliente,cli.id_tipocli as idTipoCliente,tcl.descripcion as tipocliente,v.fecha_emision as fecdoc,v.serie_comprobante,v.numero_comprobante from ERP_Solicitud as s 
@@ -639,3 +831,28 @@ select * from ERP_Solicitud
 select * from ERP_SolicitudArticulo
 
 select * from ERP_OrdenServicio
+
+select * from ERP_Venta
+
+ALTER TABLE ERP_Venta
+ADD anulado varchar(1)
+
+
+select * from ERP_Proforma
+
+
+ALTER VIEW [dbo].[ERP_view_venta] AS SELECT v.anulado,v.idventa, v.serie_comprobante, v.numero_comprobante, v.fecha_emision, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, v.t_monto_total, v.tipo_comprobante,
+CASE WHEN v.saldo IS NULL THEN 0 ELSE v.saldo END AS saldo,
+CASE WHEN v.pagado IS NULL THEN 0 ELSE v.pagado END AS pagado, v.cCodConsecutivo_solicitud, v.nConsecutivo_solicitud, s.tipo_solicitud, s.estado, v.IdTipoDocumento, v.anticipo, v.idventa_referencia
+
+FROM ERP_Venta AS v
+INNER JOIN ERP_Clientes AS c ON(v.idcliente=c.id)
+INNER JOIN ERP_TABLASUNAT AS tc ON(tc.cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+LEFT JOIN ERP_Solicitud AS s ON(s.cCodConsecutivo=v.cCodConsecutivo_solicitud AND s.nConsecutivo=v.nConsecutivo_solicitud)
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+
+
+select * from ERP_CATE
+
+
+select *
