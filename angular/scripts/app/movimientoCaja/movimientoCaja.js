@@ -1937,7 +1937,46 @@ table_container_bancos.jtable('load');
                 
             }
 
+            // PARA DOCUMENTOS PENDIENTES
+            if($("#modalDocumentosPendientes").is(":visible")) {
+                var monto_pagar_dp = parseFloat($("#monto_pagar_dp").val());
+                if(isNaN(monto_pagar_dp)) {
+                    monto_pagar_dp = 0;
+                }
+                if(monto_pagar_dp == 0 || monto_pagar_dp == "") {
+                    $("#monto_pagar_dp").focus();
+                    return false;
+                }
 
+                $.post("movimientoCajas/obtener_consecutivo_comprobante", {},
+                    function (data, textStatus, jqXHR) {
+                        // console.log(data);
+                        if(data.length > 0) {
+                            select_comprobante(data);
+
+                            if (typeof serie_comprobante != "undefined") {
+                                $("#serie_comprobante").trigger("change");
+                            }
+
+                        
+                            $("#total_pagar").val(monto_pagar_dp.toFixed(2));
+                            $("#monto").val(monto_pagar_dp.toFixed(2));
+                        
+
+                            $("#modal-emitir-comprobante").modal("show");
+                        
+                            
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Cree una serie y consecutivo de ticket!',
+                                type: 'info'
+                            });
+                        }
+                    },
+                    "json"
+                );
+            }
 
         }
 
@@ -1967,6 +2006,10 @@ table_container_bancos.jtable('load');
 
             if ($('#modalSolicitud').is(':visible')) {
                 $("#moneda").val($("#IdMoneda").val());
+            }
+
+            if ($('#modalDocumentosPendientes').is(':visible')) {
+                $("#moneda").val($("#idmoneda_dp").val());
             }
            
             $(".clean-monto").val(0);
@@ -2283,6 +2326,46 @@ table_container_bancos.jtable('load');
             );
         }
 
+        function guardar_pago_documentos_pendientes() {
+            // alert("hola");
+
+
+            $.post("movimientoCajas/guardar_pago_documentos_pendientes", $("#formulario-emitir-comprobante").serialize() + "&IdTipoDocumento=12&"+$("#formulario-documentos-pendientes").serialize() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
+            function (data, textStatus, jqXHR) {
+                    if (data.status == "i") {
+                        $("#modal-emitir-comprobante").modal("hide");
+                        $("#modalDocumentosPendientes").modal("hide");
+                        $("#formulario-documentos-pendientes").trigger("reset");
+                       
+                        $("#formulario-emitir-comprobante").trigger("reset");
+                        $("#formulario-formas-pago").trigger("reset");
+                        $("#detalle-formas-pago").html("");
+                        
+                  
+
+                        LoadRecordsButtonComprobantesPendientes.click();
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'El pago se realizó orrectamente.',
+                            type: 'success'
+                        });
+
+                        var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+                        window.open("movimientoCajas/imprimir_ticket_pago_documento_pendiente/" + id);
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    }
+                    // console.log(data);
+                },
+                "json"
+            );
+        }
+
+
         $scope.emitir = function () {
 
             var bval = true;
@@ -2308,6 +2391,11 @@ table_container_bancos.jtable('load');
                 if ($('#modalSolicitudCredito').is(':visible')) {
                     
                     guardar_pago_cuotas_credito();
+                }
+
+                if ($('#modalDocumentosPendientes').is(':visible')) {
+                    
+                    guardar_pago_documentos_pendientes();
                 }
 
                
@@ -3295,6 +3383,208 @@ table_container_bancos.jtable('load');
             });
         }, true);
 
+
+        // DOCUMENTOS PENDIENTES
+        var search_comprobantes_pendientes = getFormSearch('frm-search-comprobantes-pendientes', 'search_b_comprobantes_pendientes', 'LoadRecordsButtonComprobantesPendientes');
+
+        var table_container_comprobantes_pendientes = $("#table_container_comprobantes_pendientes");
+
+        table_container_comprobantes_pendientes.jtable({
+            title: "Lista de Comprobantes",
+            paging: true,
+            sorting: true,
+            actions: {
+                listAction: base_url + '/movimientoCajas/list_comprobantes_pendientes',
+            },
+
+            toolbar: {
+                items: [{
+                    cssClass: 'buscador',
+                    text: search_comprobantes_pendientes
+                }]
+            },
+            fields: {
+                idventa: {
+                    key: true,
+                    create: false,
+                    edit: false,
+                    list: false,
+                    title: 'Código',
+                },
+                cCodConsecutivo_solicitud: {
+                    title: 'cCodConsecutivo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                nConsecutivo_solicitud: {
+                    title: 'nConsecutivo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                tipo_solicitud: {
+                    title: 'tipo_solicitud',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                estado: {
+                    title: 'estado',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                IdTipoDocumento: {
+                    title: 'IdTipoDocumento',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                anticipo: {
+                    title: 'anticipo',
+                    create: false,
+                    edit: false,
+                    list: false,
+
+                },
+                serie_comprobante: {
+                    title: 'Serie',
+
+                },
+                numero_comprobante: {
+                    title: 'Número',
+
+
+                },
+                fecha_emision: {
+                    title: 'Fecha',
+                    display: function (data) {
+                        return moment(data.record.fecha_emision).format('DD/MM/YYYY');
+                    }
+
+                },
+                tipo_documento: {
+                    title: 'Tipo Doc.',
+
+
+                },
+                numero_documento: {
+                    title: 'N° Documento',
+
+
+                },
+                moneda: {
+                    title: 'Moneda',
+
+
+                },
+                t_monto_total: {
+                    title: 'Monto',
+
+
+                },
+                pagado: {
+                    title: 'Pagado',
+
+
+                },
+                saldo: {
+                    title: 'Saldo',
+
+
+                },
+
+                edit: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="emitir-pago-pendiente" data-estado="' + data.record.estado
+                            + '" data-id="' + data.record.idventa + '" title="Emitir Pago Pendiente"><i class="fa fa-money fa-1-5x"></i></a>';
+                       
+                    }
+
+                }
+
+            },
+            recordsLoaded: function (event, data) {
+                $('.emitir-pago-pendiente').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    $.post("movimientoCajas/get_caja_diaria", {},
+                        function (data, textStatus, jqXHR) {
+                            // console.log();
+                            if (data.length > 0) {
+
+                                $.post("ventas/find_documento", { idventa: id },
+                                    function (data, textStatus, jqXHR) {
+                    
+                                        if (data.documento.length > 0) {
+                                            $("#idventa_dp").val(data.documento[0].idventa);
+                                            $("#idcliente_dp").val(data.documento[0].idcliente);
+                                            $("#idmoneda_dp").val(data.documento[0].idmoneda);
+                                            $("#cCodConsecutivo_dp").val(data.documento[0].cCodConsecutivo_solicitud);
+                                            $("#nConsecutivo_dp").val(data.documento[0].nConsecutivo_solicitud);
+                                            $(".simbolo-moneda").text(data.documento[0].simbolo_moneda);
+                                            $(".simbolo-moneda-2").text(data.documento[0].simbolo_moneda);
+                                            $("#documento_dp").val(data.documento[0].documento);
+                                            $("#cliente_dp").val(data.documento[0].cliente);
+                                            $("#correo_electronico").val(data.documento[0].correo_electronico);
+                                            // $("#cliente_dp").val(data.documento[0].cliente);
+                                            $("#monto_pagado_dp").val(parseFloat(data.documento[0].pagado).toFixed(2));
+                                            $("#fecha_pago_dp").val(Helpers.ObtenerFechaActual("server"));
+                                            $("#saldo_capital_dp").val(parseFloat(data.documento[0].saldo).toFixed(2));
+                                            $("#monto_pagar_dp").val(parseFloat(data.documento[0].saldo).toFixed(2));
+                                            $("#modalDocumentosPendientes").modal("show");
+                                        
+                                        }
+                    
+                                        
+                                    
+                    
+                                        
+                                }, "json");
+
+                            } else {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Primero debe apertura la caja del día',
+                                    type: 'info'
+                                });
+                                return false;
+                            }
+                        },
+                        "json"
+                    );
+                    e.preventDefault();
+                });
+
+            }
+        });
+
+        generateSearchForm('frm-search-comprobantes-pendientes', 'LoadRecordsButtonComprobantesPendientes', function () {
+            table_container_comprobantes_pendientes.jtable('load', {
+                search: $('#search_b_comprobantes_pendientes').val()
+            });
+        }, true);
+
+
+        $(document).on("keyup", "#monto_pagar_dp", function () {
+            var value = parseFloat($(this).val());
+            var saldo = parseFloat($("#saldo_capital_dp").val());
+
+            if(value > saldo) {
+                $(this).val(saldo.toFixed(2));
+            }
+
+        });
         
         function find_solicitud_credito(id) {
 
