@@ -213,8 +213,14 @@
                     echo '  <td>'.$value->unidad_medida.'</td>';
                     echo '  <td>'.$value->producto.'</td>';
                     echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
-                   
-                    echo '  <td>'.number_format($value->precio_total, 2).'</td>';
+                    if($value->cOperGrat != "S") {
+
+                        echo '  <td>'.number_format($value->precio_total, 2).'</td>';
+                    } else {
+                        echo '  <td>0.00</td>';
+                    }
+                    
+                    
                    
 
                     echo '</tr>';

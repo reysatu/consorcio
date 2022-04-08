@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Serie extends Model
 {
   
-    protected $table = 'ERP_Serie';
+    protected $table = 'ERP_view_series';
 
     public $timestamps = true;
 

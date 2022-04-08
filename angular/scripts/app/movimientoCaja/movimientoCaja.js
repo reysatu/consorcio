@@ -1618,7 +1618,9 @@ table_container_bancos.jtable('load');
                 numero_documento: {
                     title: 'N° Documento',
 
-
+                },
+                cliente: {
+                    title: 'Cliente',
                 },
                 moneda: {
                     title: 'Moneda',
@@ -3319,6 +3321,11 @@ table_container_bancos.jtable('load');
 
 
                 },
+                cliente: {
+                    title: 'Cliente',
+
+
+                },
                 moneda: {
                     title: 'Moneda',
 
@@ -3476,6 +3483,11 @@ table_container_bancos.jtable('load');
                 },
                 numero_documento: {
                     title: 'N° Documento',
+
+
+                },
+                numero_documento: {
+                    title: 'Cliente',
 
 
                 },
@@ -3907,6 +3919,11 @@ table_container_bancos.jtable('load');
                 },
                 numero_documento: {
                     title: 'N° Documento',
+
+
+                },
+                cliente: {
+                    title: 'Cliente',
 
 
                 },

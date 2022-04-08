@@ -116,7 +116,7 @@
             <label for="">CLIENTE: {{ $cliente[0]->razonsocial_cliente }} </label><br>
             <label for="">RECIBO N°: {{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</label><br>
             <label for="">CORRELATIVO N°: {{ $venta[0]->numero_comprobante }}</label><br>
-            <label for="">FECHA: <?php echo date("d-m-Y H:i"); ?></label><br>
+            <label for="">FECHA: {{ $venta[0]->fecha_emision_user_full }}</label><br>
             <!-- <label for="">MONEDA: {{ $venta[0]->moneda }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T/C: </label><br> -->
         </div>            
     </div>

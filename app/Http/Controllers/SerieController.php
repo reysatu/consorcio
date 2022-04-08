@@ -88,13 +88,13 @@ class SerieController extends Controller
     public function traerSeries(Request $request, SerieInterface $repo){
         $idProducto = $request->input('idProducto');
         $s = $request->input('search', '');
-        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];
+        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo', 'tipo_compra_venta'];
         return parseList($repo->searchMovi($s,$idProducto), $request, 'idSerie', $params);
     }
     public function traerSeriesStock(Request $request, Stock_SerieInterface $repo){
         $idProducto = $request->input('idProducto');
         $s = $request->input('search', '');
-        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo'];
+        $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo', 'tipo_compra_venta'];
         return parseList($repo->searchMovi($s,$idProducto), $request, 'idSerie', $params);
     }
 
