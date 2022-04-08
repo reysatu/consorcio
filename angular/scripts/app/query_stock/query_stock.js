@@ -85,8 +85,11 @@
                 Serie: {
                     title: 'Serie'
                 },
-                Disponible: {
-                    title:'Disponible',
+                Serie: {
+                    title: 'Serie'
+                },
+                tipoCompraVenta: {
+                    title:'Tipo Compra Venta',
                     listClass:'text-right',
                     width: '3%'
                 },

@@ -14,7 +14,7 @@ trait Query_stockTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['Cod. Artículo','Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Remitido','Total','Transito','Costo_Promedio_Unitario','Costo_Total'];
+        $columns[] = ['Cod. Artículo','Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Tipo Compra Venta','Disponible','Remitido','Total','Transito','Costo_Promedio_Unitario','Costo_Total'];
 
         foreach ($info as $i) {
             $columns[] = [
@@ -26,6 +26,7 @@ trait Query_stockTrait
                 ['left', $i->Localizacion],
                 ['left', $i->Lote],
                 ['left', $i->Serie],
+                ['left', $i->tipoCompraVenta],
                 ['right', $i->Disponible],
                 ['right', $i->Remitido],
                 ['right', $i->Total],
