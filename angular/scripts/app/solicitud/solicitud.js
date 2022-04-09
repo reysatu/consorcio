@@ -3254,7 +3254,7 @@
 
                 $(".credito").show();
             }
-
+           
             if (tipo_solicitud == "3") {
                 $(".convenio").show();
                 // $("#cuota_inicial").val("");
@@ -3266,10 +3266,12 @@
                     $(".inputs-credito").removeAttr("readonly");
                 }
 
-                if (tipo_solicitud == "1") {
+                if (tipo_solicitud == "1" || tipo_solicitud == "4") {
+
                     $(".montos-credito").val(0);
                     $(".inputs-credito").attr("readonly", "readonly");
                 }
+               
                 $(".convenio").hide();
             }
 

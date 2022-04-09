@@ -1607,7 +1607,7 @@ table_container_bancos.jtable('load');
                 },
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
-                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero', '4': 'Crédito' },
 
                 },
                 tipo_documento: {
@@ -3170,6 +3170,7 @@ table_container_bancos.jtable('load');
                         $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
                         $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
+                        $("#dia_vencimiento_cuota").val(data.solicitud_credito[0].dia_vencimiento_cuota);
 
                         if (data.solicitud_credito[0].documento_fiador != null) {
                             getPersona("fiador");
@@ -3909,7 +3910,7 @@ table_container_bancos.jtable('load');
                 },
                 tipo_solicitud: {
                     title: 'Tipo Solicitud',
-                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
+                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero', '4': 'Crédito' },
 
                 },
                 tipo_documento: {

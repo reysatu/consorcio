@@ -257,6 +257,30 @@
                     echo '</tr>';
                 }
 
+                if($venta[0]->condicion_pago == "CONTADO") {
+                    $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
+                    $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
+                    $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
+                    $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
+                    $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
+                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                   
+                    echo '<tr>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '  <td>
+                                Marca              : '.$marca.'<br>
+                                Modelo             : '.$modelo.'<br>
+                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Color              : '.$color.'<br>
+                                # Serie            : '.$serie.'<br>
+                                # Motor            : '.$motor.'<br>
+                            </td>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '</tr>';
+                }
+
                 if(count($venta_anticipo_separacion) > 0 && $venta[0]->tipo_comprobante == 1 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                     $venta[0]->t_monto_subtotal = $venta[0]->t_monto_subtotal - $venta_anticipo_separacion[0]->t_monto_total;
                     echo '<tr>';

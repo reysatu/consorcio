@@ -59,7 +59,8 @@ class VentasRepository implements VentasInterface
     public function search_comprobantes_pendientes($s)
     {
         return $this->model->orWhere(function ($q) use ($s) {
-            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%')
+            $q->whereIn('IdTipoDocumento', ['01', '03', '08'])
+                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
                 ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
                 ->where('fecha_emision', 'LIKE', '%' . $s . '%')
                 ->where('numero_documento', 'LIKE', '%' . $s . '%')
