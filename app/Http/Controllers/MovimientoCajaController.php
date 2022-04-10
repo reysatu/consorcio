@@ -939,8 +939,10 @@ class MovimientoCajaController extends Controller
                 }
 
                 $data_venta["condicion_pago"] = $condicion_pago[0]->id;
-            } else {
+            } elseif(count($solicitud) > 0) {
                 $data_venta["condicion_pago"] = $solicitud[0]->condicion_pago;
+            } else {
+                $data_venta["condicion_pago"] = "";
             }
             
 
@@ -2197,7 +2199,7 @@ class MovimientoCajaController extends Controller
     public function list_comprobantes(Request $request, VentasInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 'cliente', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idventa', $params);
     }
@@ -2205,7 +2207,7 @@ class MovimientoCajaController extends Controller
     public function list_comprobantes_pendientes(Request $request, VentasInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 'cliente', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_comprobantes_pendientes($s), $request, 'idventa', $params);
     }

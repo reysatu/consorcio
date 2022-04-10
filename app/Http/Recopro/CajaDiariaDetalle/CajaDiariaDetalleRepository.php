@@ -194,7 +194,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
     
     public function get_venta($idventa) {
-        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos, mo.descripcion AS motivo, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision_user
+        $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos, mo.descripcion AS motivo, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision_user, FORMAT(v.fecha_emision, 'dd/MM/yyyy hh:mm:ss') AS fecha_emision_user_full
         FROM ERP_Venta AS v 
         INNER JOIN ERP_Moneda AS m ON(v.idmoneda=m.IdMoneda)
         INNER JOIN ERP_TipoDocumento AS td ON(td.idTipoDocumento=v.idTipoDocumento)
@@ -257,7 +257,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
   
 
     public function get_venta_detalle($idventa) {
-        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida
+        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida, p.serie
         FROM ERP_Venta AS v 
         INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
         INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)

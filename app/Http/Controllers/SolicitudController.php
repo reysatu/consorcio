@@ -45,7 +45,7 @@ class SolicitudController extends Controller
     public function list_ventas(Request $request, SolicitudInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'cliente', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_ventas($s), $request, 'cCodConsecutivo', $params);
     }
@@ -62,7 +62,7 @@ class SolicitudController extends Controller
     public function list_creditos(Request $request, SolicitudCreditoInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'cliente', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
@@ -99,9 +99,10 @@ class SolicitudController extends Controller
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
 
-            $data["saldo"] = $data["t_monto_total"];
+            
         
             if($data["nConsecutivo"] == "") {
+                $data["saldo"] = $data["t_monto_total"];
                 //SALDOS
                
                 $data["facturado"] = 0;
@@ -137,7 +138,7 @@ class SolicitudController extends Controller
             $data_detalle = array();
             if(count($data["idarticulo"]) > 0) {
 
-                DB::table("ERP_SolicitudArticulo")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+               
                 $data_articulo = $data;
                 for ($i=0; $i < count($data["idarticulo"]); $i++) { 
                     if($i == 0) {
@@ -160,7 +161,7 @@ class SolicitudController extends Controller
                         $idarticulos = explode(",", $data["articulos_id"][$i]);
                      
                         if(count($idSeries) >  0) {
-                            DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+                            
                            
                             
                             $data_detalle = $data;
@@ -184,13 +185,20 @@ class SolicitudController extends Controller
                        
                     }
                 }
-
+                if(count($data_detalle) > 0) {
+                    DB::table("ERP_SolicitudDetalle")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+                  
+                }
+                
                 if(count($data_articulo) > 0) {
+                    DB::table("ERP_SolicitudArticulo")->where("cCodConsecutivo", $data["cCodConsecutivo"])->where("nConsecutivo",  $data["nConsecutivo"])->delete();
+              
 
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_articulo));
                 }
 
                 if(count($data_detalle) > 0) {
+                   
 
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_detalle));
                 }
@@ -446,6 +454,23 @@ class SolicitudController extends Controller
             $response["msg"] = $e->getMessage(); 
             return response()->json($response);
         }
+    }
+
+    public function anular_solicitud(Request $request, SolicitudInterface $solicitud_repositorio) {
+        $data = $request->all();
+      
+        try {
+            DB::beginTransaction();
+            $data["estado"] = 10;
+            $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
+            DB::commit();
+            return response()->json($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ee"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }      
     }
  
 }

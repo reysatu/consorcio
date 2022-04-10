@@ -250,6 +250,9 @@
                                                 <option value="5">Rechazado</option>
                                                 <option value="6">Facturado</option>
                                                 <option value="7">Despachado</option>
+                                                <option value="8">Despachado Parcial</option>
+                                                <option value="9">Refinanciado</option>
+                                                <option value="10">Anulado</option>
                                             </select>
                                         </div>
 
@@ -773,6 +776,10 @@
                         <button style="display: none;" type="button" id="imprimir-cronograma" ng-click="imprimir_cronograma()"  class="btn btn-info btn-sm">
                             <span class="fa fa-calendar"></span>
                             Cronograma
+                        </button>
+                        <button style="display: none;" type="button" id="cancelar-solicitud" ng-click="cancelar_solicitud()"  class="btn btn-warning btn-sm">
+                            <span class="fa fa-ban"></span>
+                            Cancelar
                         </button>
                         <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden"
                             ng-click="guardar_solicitud()">

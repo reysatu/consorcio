@@ -116,7 +116,7 @@
             <label for="">CONCEPTO: {{ $venta[0]->descripcion }} </label><br>
             <label for="">RECIBO N°: {{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</label><br>
             <label for="">CORRELATIVO N°: {{ $venta[0]->numero_comprobante }}</label><br>
-            <label for="">FECHA: <?php echo date("d-m-Y H:i"); ?></label><br>
+             <label for="">FECHA: {{ $venta[0]->fecha_emision_user_full }}</label><br>
         
         </div>            
     </div>

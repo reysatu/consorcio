@@ -213,8 +213,14 @@
                     echo '  <td>'.$value->unidad_medida.'</td>';
                     echo '  <td>'.$value->producto.'</td>';
                     echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
-                   
-                    echo '  <td>'.number_format($value->precio_total, 2).'</td>';
+                    if($value->cOperGrat != "S") {
+
+                        echo '  <td>'.number_format($value->precio_total, 2).'</td>';
+                    } else {
+                        echo '  <td>0.00</td>';
+                    }
+                    
+                    
                    
 
                     echo '</tr>';
@@ -235,6 +241,30 @@
                     echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
                     echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
                     echo '</tr>';
+                    echo '<tr>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '  <td>
+                                Marca              : '.$marca.'<br>
+                                Modelo             : '.$modelo.'<br>
+                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Color              : '.$color.'<br>
+                                # Serie            : '.$serie.'<br>
+                                # Motor            : '.$motor.'<br>
+                            </td>';
+                    echo '  <td></td>';
+                    echo '  <td></td>';
+                    echo '</tr>';
+                }
+
+                if($venta[0]->condicion_pago == "CONTADO") {
+                    $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
+                    $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
+                    $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
+                    $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
+                    $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
+                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                   
                     echo '<tr>';
                     echo '  <td></td>';
                     echo '  <td></td>';

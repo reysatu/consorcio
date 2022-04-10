@@ -19,6 +19,7 @@ Route::post('solicitud/eliminar_solicitud', ['as' => 'solicitud.eliminar_solicit
 
 Route::post('solicitud/find', ['as' => 'solicitud.find', 'uses' => 'SolicitudController@find']);
 Route::post('solicitud/mostrar_aprobaciones', ['as' => 'solicitud.mostrar_aprobaciones', 'uses' => 'SolicitudController@mostrar_aprobaciones']);
+Route::post('solicitud/anular_solicitud', ['as' => 'solicitud.anular_solicitud', 'uses' => 'SolicitudController@anular_solicitud']);
 
 
 Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudController@excel']);

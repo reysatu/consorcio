@@ -65,6 +65,12 @@
         $(document).on("change", "#tipo_solicitud", function () {
             var tipo_solicitud = $(this).val();
             // alert("change " + tipo_solicitud);   
+            $(".condicion_pago").hide();
+            if(tipo_solicitud == "4") {
+              
+                $(".condicion_pago").show();
+            }
+
             if (tipo_solicitud == "1" || tipo_solicitud == "3") {
                 $(".credito").hide();
 
@@ -72,6 +78,8 @@
 
                 $(".credito").show();
             }
+
+
 
             if (tipo_solicitud == "3") {
                 $(".convenio").show();
@@ -345,7 +353,7 @@
                         $("#documento_fiador").val(data.solicitud_credito[0].documento_fiador);
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
                         $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
-
+                        $("#dia_vencimiento_cuota").val(data.solicitud_credito[0].dia_vencimiento_cuota);
                         if (data.solicitud_credito[0].documento_fiador != null) {
                             getPersona("fiador");
                         }

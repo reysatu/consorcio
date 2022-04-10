@@ -58,6 +58,7 @@ class AprobacionSolicitudController extends Controller
             $val=$res[0]->msg;
 
             $conformidad = array();
+            $solicitud = array();
             if(trim($val) == "Aprobada") {
                 $conformidad = $repo->obtener_conformidad($data["nCodConformidad"]);
                 $solicitud = $solicitud_repositorio->get_solicitud($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
@@ -112,8 +113,9 @@ class AprobacionSolicitudController extends Controller
             DB::commit();
             return response()->json([
                 'status' => true,
-                'msg'=>$val,
+                'msg'=>trim($val),
                 'conformidad'=>$conformidad,
+                'solicitud'=>$solicitud,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -17,7 +17,7 @@ class Solicitud extends Model
 
     protected $table = 'ERP_view_solicitud';
 
-    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante'];
+    protected $fillable = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'cliente', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante'];
     protected $primaryKey = 'cCodConsecutivo';
     protected $keyType = 'string';
     public $incrementing = false;
