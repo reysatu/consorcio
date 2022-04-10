@@ -23,8 +23,8 @@ select * from ERP_Ubigeo
 select * from ERP_Moneda
 select top 10 [id], [descripcion], [estado] from [ERP_Empresa] where ([descripcion] LIKE %% or [estado] LIKE %%) order by [created_at DESC] asc, [id] asc
 
-select * from 
-
+select * from ERP_Consecutivos
+select * from ERP_TipoConsecutivos
 select * from ERP_Tecnico where estado='A'
 
 select * from ERP_Solicitud where nConsecutivo='73'
@@ -39,6 +39,9 @@ select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
 select * from ERP_Moneda
 
+SELECT * FROM erp_are
+
+SELECT * FROM ERP_Almacen
 
 ALTER VIEW [dbo].[ERP_VWStockDetalle]
 as
@@ -70,8 +73,31 @@ select * from ERP_Clientes
 ALTER TABLE ERP_Clientes ALTER COLUMN razonsocial_cliente varchar(500) 
 ALTER TABLE ERP_Proveedor ALTER COLUMN razonsocial varchar(500) 
 ALTER TABLE ERP_Persona ALTER COLUMN cRazonSocial varchar(500) 
+select * from ERP_Compania
+select * from ERP_VW_VentaClientes
 
-//////////////
+alter VIEW [dbo].[ERP_VW_VentaClientes] AS
+select pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+GO
+
+
+////////////////////
+select * from ERP_Compradores
+
 CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
 	[nIdAprob] [int] NOT NULL,
 	[nIdUsuario] [int] NOT NULL,
@@ -81,24 +107,99 @@ CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
 	[cIdUsuMod] [varchar](30) NOT NULL,
 	[dFecMod] [datetime] NOT NULL,
 	 PRIMARY KEY (nIdAprob,nIdUsuario)
-	)
+)
+	
+select * from ERP_AprobacionCompra
+select * from ERP_AprobacionCompraDetalle
+
+delete from ERP_AprobacionCompra
+delete from ERP_AprobacionCompraDetalle
+drop table ERP_SolicitudCompra
+
+select * from ERP_Area where estado='A'
+
+select * from ERP_Consecutivos 
+select * from ERP_TipoConsecutivos
+select * from ERP_Tienda
+select * from ERP_AlmacenUsuario
+select * from ERP_Almacen
+
+select * from ERP_SolicitudCompra
+drop table ERP_SolicitudCompra
+CREATE TABLE [dbo].[ERP_SolicitudCompra](
+	[idMovimiento] [int] NOT NULL,
+	[fecha_registro] [datetime] NULL,
+	[fecha_requerida] [datetime] NULL,
+	[fecha_proceso] [datetime] NULL,
+	[idUsuario] [int] NULL,
+	[idTipoOperacion] [int] NULL,
+	[naturaleza] [varchar](1) NULL,
+	[observaciones] [varchar](100) NULL,
+	[idMoneda] [int] NULL,
+	[idAlmacen] [int] NULL,
+	[prioridad] [varchar](1) NULL,
+	[idArea] [int] NULL,
+	[estado] [int] NULL,
+	[user_created] [varchar](10) NULL,
+	[created_at] [datetime] NULL,
+	[user_updated] [varchar](10) NULL,
+	[updated_at] [datetime] NULL,
+	[cCodConsecutivo] [varchar](10) not NULL,
+	[nConsecutivo] [int] not NULL,
+	PRIMARY KEY (idMovimiento,cCodConsecutivo,nConsecutivo)
+)
+delete from ERP_SolicitudCompra_Articulo
+select * from ERP_SolicitudCompra_Articulo
+drop table ERP_SolicitudCompra_Articulo
+CREATE TABLE [dbo].[ERP_SolicitudCompra_Articulo](
+	[idMovimiento] [int] NOT NULL,
+	[idArticulo] [int] NOT NULL,
+	[consecutivo] [int] NOT NULL,
+	[idLote] [int] NULL,
+	[fecha_requerida] [datetime] NULL,
+	[estado] [varchar](1) NULL,
+	[cantidad] [money] NULL,
+	[user_created] [varchar](10) NULL,
+	[created_at] [datetime] NULL,
+	[user_updated] [varchar](10) NULL,
+	[updated_at] [datetime] NULL,
+	PRIMARY KEY (idMovimiento,idArticulo,consecutivo)
+)
+
+delete from ERP_SolicitudCompra_Detalle
+select * from ERP_SolicitudCompra_Detalle
+CREATE TABLE [dbo].[ERP_SolicitudCompra_Detalle](
+	[idMovimiento] [int] NOT NULL,
+	[idArticulo] [int] NOT NULL,
+	[consecutivo] [int] NOT NULL,
+	[serie] [int] NOT NULL,
+	[user_created] [varchar](10) NULL,
+	[created_at] [datetime] NULL,
+	[user_updated] [varchar](10) NULL,
+	[updated_at] [datetime] NULL,
+	PRIMARY KEY (idMovimiento,idArticulo,consecutivo,serie)
+)
 	
 //////////////////////////////
+select * from ERP_Moneda
+drop table ERP_AprobacionCompra
 CREATE TABLE [dbo].[ERP_AprobacionCompra](
 	[nIdAprob] [int] NOT NULL,
-	[nIdTienda] [int] NOT NULL,
-	[nIdMoneda] [int] NOT NULL,
-	[nIdAlmacen] [int] NOT NULL,
-	[montoInicio] [money] NOT NULL,
-	[montoFin] [money] NOT NULL,
-	[dFecIni] [datetime] NOT NULL,
-	[dFecFin] [datetime] NOT NULL,
+	[nIdTienda] [int]  NULL,
+	[nIdMoneda] [int]  NULL,
+	[nIdArea] [int]  NULL,
+	[montoInicio] decimal(10,4)  NULL,
+	[montoFin] decimal(10,4)  NULL,
+	[dFecIni] [datetime]  NULL,
+	[dFecFin] [datetime]  NULL,
 	[cIdUsuCre] [varchar](30) NOT NULL,
 	[dFecCre] [datetime] NOT NULL,
 	[cIdUsuMod] [varchar](30) NOT NULL,
 	[dFecMod] [datetime] NOT NULL
 	 PRIMARY KEY (nIdAprob)
 	)
+select * from erp_area	
+select * from ERP_Moneda
 ///
 CREATE TABLE ERP_Empresa (
 		id int not null,
@@ -110,43 +211,21 @@ CREATE TABLE ERP_Empresa (
 		updated_at datetime null,
 	  PRIMARY KEY (id)
 );
-CREATE TABLE [dbo].[ERP_SolicitudCompra](
-	[cCodConsecutivo] [varchar](10) NOT NULL,
-	[nConsecutivo] [int] NOT NULL,
-	[fecha_registro] [datetime] NULL,
-	[prioridad] [varchar](1) NULL,
-	[fecha_requerida] [datetime] NULL,
-	[idAlmacen] [int] NULL,
-	[estado] [varchar](2) NULL,
-	[user_created] [int] NULL,
-	[user_updated] [int] NULL,
-	[user_deleted] [int] NULL,
-	[created_at] [datetime] NULL,
-	[updated_at] [datetime] NULL,
-	[deleted_at] [datetime] NULL,
-	PRIMARY KEY (cCodConsecutivo,nConsecutivo)
-	
-	)
-	
+CREATE TABLE ERP_Area (
+		id int not null,
+    descripcion varchar(255)  null,
+		estado varchar(1)  null,
+		user_created varchar(10) null,
+		created_at datetime null,
+		user_updated varchar(10) null,
+		updated_at datetime null,
+	  PRIMARY KEY (id)
+);
+
 DROP TABLE ERP_CompraArticulo
-CREATE TABLE [dbo].[ERP_CompraArticulo](
-	[id] [int] NOT NULL,
-	[cCodConsecutivo] [varchar](10) NOT NULL,
-	[nConsecutivo] [int] NOT NULL,
-	[idarticulo] [int] NOT NULL,
-	[cantidad] [money] NULL,
-	[fechaRequerida] [datetime] NULL,
-	[estado] [varchar](2) NULL,
-	[user_created] [int] NULL,
-	[user_updated] [int] NULL,
-	[user_deleted] [int] NULL,
-	[created_at] [datetime] NULL,
-	[updated_at] [datetime] NULL,
-	[deleted_at] [datetime] NULL,
-)
-	
 	
 DROP TABLE ERP_CompraArticulo	
+
 CREATE TABLE [dbo].[ERP_ProveedorCuentaBanco](
 	[Id][int] NOT NULL,
 	[idProveedor] [int] NOT NULL,
@@ -854,5 +933,9 @@ INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
 
 select * from ERP_CATE
 
+INSERT INTO ERP_TipoConsecutivos(cCodTipoCons,cTipoConsecutivo,cObservación,cIdUsuCre,dFecCre,cIdUsuMod,dFecMod)
+VALUES ('SOLCOMPRA','SOLICITUDES COMPRA','PARA LAS SOLICITUDES DE COMPRA',1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'))
 
-select *
+INSERT INTO ERP_Consecutivos(cCodConsecutivo,cCodTipoCons,cDetalle,nCodTienda,nConsecutivo,cIdUsuCre,dFecCre,cIdUsuMod,dFecMod)
+VALUES ('SOLC','SOLCOMPRA','SOLICITUDES DE COMPRA TARAPOTO',1,0,1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'))
+

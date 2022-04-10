@@ -80,6 +80,25 @@ class List_precioController extends Controller
             ]);
         }
     }
+    public function DesaprobarPrecio($id, List_precioInterface $repo)
+    {
+        try {
+          
+            $data['iEstado']=0;
+            $repo->update($id, $data);
+            $data = $repo->find($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function createUpdate($id, List_precioInterface $repo, List_precio_detalleInterface $repoDet,request $request )
     {
         DB::beginTransaction();

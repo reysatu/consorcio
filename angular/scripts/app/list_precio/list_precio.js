@@ -27,6 +27,7 @@
         var titlemodalPrecios=$("#titlemodalPrecios");
         var idDetalle_Delete=[];
         var btn_aprobar=$("#btn_aprobar");
+        var btn_desaprobar=$("#btn_desaprobar");
         var idPrecioDelete=$("#idPrecioDelete");
         var btn_guardar_precios=$("#btn_guardar_precios");
         modalPrecios.on('hidden.bs.modal', function (e) {
@@ -45,7 +46,8 @@
             lista_id.val('');
             iEstado.val('').trigger("change");
             btn_aprobar.prop('disabled',true); 
-            btn_guardar_precios.prop('disabled',false); 
+            btn_guardar_precios.prop('disabled',false);
+            btn_desaprobar.prop('disabled',true);  
             idDetalle_Delete=[];
         }
         function newListPrecio() {
@@ -59,7 +61,7 @@
         $scope.openProducto = function () {
             $('#LoadRecordsButtonProducto').click();
             modalProducto.modal('show');
-        };
+        }; 
         function findListPre(id) {
             titlemodalPrecios.html('Editar Lista de Precios');
             RESTService.get('list_precios/find', id, function (response) {
@@ -81,10 +83,12 @@
                     if(data_p.iEstado==0){
                         btn_guardar_precios.prop('disabled',false); 
                         btn_aprobar.prop('disabled',false); 
+                        btn_desaprobar.prop("disabled",true);
                         iEstado.val(data_p.iEstado).trigger("change");
                         
                     }else{
-                        btn_guardar_precios.prop('disabled',true); 
+                        btn_guardar_precios.prop('disabled',true);
+                        btn_desaprobar.prop("disabled",false); 
                     };
                     modalPrecios.modal('show');
 
@@ -104,11 +108,39 @@
                      var data_p = response.data;
                     if(data_p.iEstado==1){
                          btn_aprobar.prop('disabled',true); 
+                        btn_desaprobar.prop("disabled",false);
                         btn_guardar_precios.prop('disabled',true); 
                          iEstado.val(1).trigger('change');
                           AlertFactory.textType({
                             title: '',
                             message: 'La lista se aprobó correctamente',
+                            type: 'success'
+                        });
+                    };
+                     LoadRecordsButtonList_precio.click();
+                   
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener la lista. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+            });
+        } 
+        $scope.Desaprobar_precios = function () {
+            var id=lista_id.val();
+            RESTService.get('list_precios/DesaprobarPrecio', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    if(data_p.iEstado==0){
+                        btn_desaprobar.prop("disabled",true);
+                        btn_aprobar.prop('disabled',false); 
+                        btn_guardar_precios.prop('disabled',false); 
+                         iEstado.val(0).trigger('change');
+                          AlertFactory.textType({
+                            title: '',
+                            message: 'La lista se Desaprobó correctamente',
                             type: 'success'
                         });
                     };

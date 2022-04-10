@@ -12,6 +12,7 @@ use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteInterface;
 use App\Http\Requests\ReporteVentaClienteRequest;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 class ReporteVentaClienteController extends Controller
 {
      use ReporteVentaClienteTrait;
@@ -87,14 +88,14 @@ class ReporteVentaClienteController extends Controller
        
         $s = $request->input('search', '');
         $filtro_tienda = $request->input('filtro_tienda', '');
-        $idClienteFiltro = $request->input('idClienteFiltro', '');
+        $idClienteFiltro = $request->input('idClienteFiltro', ''); 
         $idVendedorFiltro = $request->input('idVendedorFiltro', '');
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
          $idcategoria = $request->input('idcategoria', '');
         return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)), 'REPORTE DE VENTAS ', 'VENTAS');
     }
-    public function pdf(ReporteVentaClienteInterface $repo,Request $request)
+    public function pdf(ReporteVentaClienteInterface $repo,Solicitud_AsignacionInterface $repcom,Request $request)
     {   
          $s = $request->input('search', '');
         $filtro_tienda = $request->input('filtro_tienda', '');
@@ -103,7 +104,19 @@ class ReporteVentaClienteController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
          $idcategoria = $request->input('idcategoria', '');
-        $data = $this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
-        return generateDataPDFVC($data, 'landscape', 'logo.jpg');
+
+
+            $data_compania=$repcom->get_compania(); 
+         
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
+            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            $image = file_get_contents($path);
+            $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+           
+        $data = $this->generateDataExcel2($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
+        return generateDataPDFVC($data, 'landscape', $image);
     } 
-}
+} 

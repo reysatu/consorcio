@@ -484,12 +484,12 @@ function generateDataPDFVC($data, $orientation, $img, $type_pdf = 1)
             $body2[] = $i[0];
         }
         $info[] = fieldReportVC($body1, false, $body2);
-    }
+    };
 
-    $path = public_path('img/' . $img);
-    $type_image = pathinfo($path, PATHINFO_EXTENSION);
-    $image = file_get_contents($path);
-    $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+    // $path = public_path('img/' . $img);
+    // $type_image = pathinfo($path, PATHINFO_EXTENSION);
+    // $image = file_get_contents($path);
+    $image = $img;
 
     return response()->json([
         'status' => true,

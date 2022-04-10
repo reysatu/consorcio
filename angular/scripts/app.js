@@ -24,6 +24,7 @@
         'sys.app.reporteCreditosAprobados',
         'sys.app.tipoProveedors',
         'sys.app.proveedors',
+        'sys.app.configJerarquiaCompras',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -34,6 +35,8 @@
         'sys.app.approvers_projects',
         'sys.app.reporteMetas',
         'sys.app.empresas',
+        'sys.app.areas',
+        'sys.app.solicitudCompras',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',

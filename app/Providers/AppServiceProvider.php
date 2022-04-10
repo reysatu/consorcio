@@ -27,6 +27,12 @@ use App\Http\Recopro\Empresa\Empresa;
 use App\Http\Recopro\Empresa\EmpresaInterface;
 use App\Http\Recopro\Empresa\EmpresaRepository;
 
+
+use App\Http\Recopro\Area\Area; 
+use App\Http\Recopro\Area\AreaInterface;
+use App\Http\Recopro\Area\AreaRepository;
+
+
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBanco; 
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoInterface;
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoRepository;
@@ -36,6 +42,17 @@ use App\Http\Recopro\Proveedor\Proveedor;
 use App\Http\Recopro\Proveedor\ProveedorInterface;
 use App\Http\Recopro\Proveedor\ProveedorRepository;
 
+use App\Http\Recopro\SolicitudCompra_Detalle\SolicitudCompra_Detalle; 
+use App\Http\Recopro\SolicitudCompra_Detalle\SolicitudCompra_DetalleInterface;
+use App\Http\Recopro\SolicitudCompra_Detalle\SolicitudCompra_DetalleRepository;
+
+use App\Http\Recopro\SolicitudCompra\SolicitudCompra; 
+use App\Http\Recopro\SolicitudCompra\SolicitudCompraInterface;
+use App\Http\Recopro\SolicitudCompra\SolicitudCompraRepository; 
+
+use App\Http\Recopro\SolicitudCompraArticulo\SolicitudCompraArticulo; 
+use App\Http\Recopro\SolicitudCompraArticulo\SolicitudCompraArticuloInterface;
+use App\Http\Recopro\SolicitudCompraArticulo\SolicitudCompraArticuloRepository;
 
 use App\Http\Recopro\TipoProveedor\TipoProveedor; 
 use App\Http\Recopro\TipoProveedor\TipoProveedorInterface;
@@ -188,6 +205,15 @@ use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalleRepository;
 use App\Http\Recopro\ConfigJerarquia\ConfigJerarquia;
 use App\Http\Recopro\ConfigJerarquia\ConfigJerarquiaInterface;
 use App\Http\Recopro\ConfigJerarquia\ConfigJerarquiaRepository;
+
+use App\Http\Recopro\ConfigJerarquiaCompra\ConfigJerarquiaCompra;
+use App\Http\Recopro\ConfigJerarquiaCompra\ConfigJerarquiaCompraInterface;
+use App\Http\Recopro\ConfigJerarquiaCompra\ConfigJerarquiaCompraRepository;
+
+use App\Http\Recopro\ConfigJerarquiaCompraDetalle\ConfigJerarquiaCompraDetalle;
+use App\Http\Recopro\ConfigJerarquiaCompraDetalle\ConfigJerarquiaCompraDetalleInterface;
+use App\Http\Recopro\ConfigJerarquiaCompraDetalle\ConfigJerarquiaCompraDetalleRepository;
+
 
 use App\Http\Recopro\Convenios\Convenios;
 use App\Http\Recopro\Convenios\ConveniosInterface;
@@ -739,7 +765,11 @@ class AppServiceProvider extends ServiceProvider
         $this->registerReporteRepuesto();
         $this->registerReporteVentaCliente();
         $this->registerTipoProveedor();
+        $this->registerSolicitudCompra_Detalle();
+        $this->registerSolicitudCompraArticulo();
+        $this->registerSolicitudCompra();
         $this->registerProveedor();
+        $this->registerArea();
         $this->registerEmpresa();
         $this->registerProveedorCuentaBanco();
         $this->registerReporteOrdenDiario();
@@ -769,7 +799,9 @@ class AppServiceProvider extends ServiceProvider
         $this->registerConsecutivoComprobanteUsuario();
         $this->registerAprobacionUsuario();
         $this->registerConfigJerarquia();
+        $this->registerConfigJerarquiaCompra();
         $this->registerConfigJerarquiaDetalle();
+        $this->registerConfigJerarquiaCompraDetalle();
         $this->registerConvenios();
         $this->registerCuentasBancarias();
         $this->registerAprobacion();
@@ -1060,12 +1092,47 @@ class AppServiceProvider extends ServiceProvider
             return new ReporteOrdenDiarioRepository(new ReporteOrdenDiario());
         });
     }
+    public function registerSolicitudCompraArticulo()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCompraArticuloInterface::class, function ($app) {
+            return new SolicitudCompraArticuloRepository(new SolicitudCompraArticulo());
+        });
+    }
+
+    public function registerSolicitudCompra_Detalle()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCompra_DetalleInterface::class, function ($app) {
+            return new SolicitudCompra_DetalleRepository(new SolicitudCompra_Detalle());
+        });
+    }
+
+    public function registerSolicitudCompra()
+    {
+        $app = $this->app;
+
+        $app->bind(SolicitudCompraInterface::class, function ($app) {
+            return new SolicitudCompraRepository(new SolicitudCompra());
+        });
+    }
+
     public function registerTipoProveedor()
     {
         $app = $this->app;
 
         $app->bind(TipoProveedorInterface::class, function ($app) {
             return new TipoProveedorRepository(new TipoProveedor());
+        });
+    }
+    public function registerArea()
+    {
+        $app = $this->app;
+
+        $app->bind(AreaInterface::class, function ($app) {
+            return new AreaRepository(new Area());
         });
     }
     public function registerProveedor()
@@ -1335,6 +1402,14 @@ class AppServiceProvider extends ServiceProvider
             return new AprobacionUsuarioRepository(new AprobacionUsuario());
         });
     }
+    public function registerConfigJerarquiaCompra()
+    {
+        $app = $this->app;
+
+        $app->bind(ConfigJerarquiaCompraInterface::class, function ($app) {
+            return new ConfigJerarquiaCompraRepository(new ConfigJerarquiaCompra());
+        });
+    }
     public function registerConfigJerarquia()
     {
         $app = $this->app;
@@ -1343,6 +1418,16 @@ class AppServiceProvider extends ServiceProvider
             return new ConfigJerarquiaRepository(new ConfigJerarquia());
         });
     }
+   
+    public function registerConfigJerarquiaCompraDetalle()
+    {
+        $app = $this->app;
+
+        $app->bind(ConfigJerarquiaCompraDetalleInterface::class, function ($app) {
+            return new ConfigJerarquiaCompraDetalleRepository(new ConfigJerarquiaCompraDetalle());
+        });
+    }
+     
     public function registerConfigJerarquiaDetalle()
     {
         $app = $this->app;

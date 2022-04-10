@@ -15,4 +15,7 @@ Route::put('list_precios/savePrecios/{id}', ['as' => 'warehouses.savePrecios', '
 Route::get('list_precios/find/{id}', ['as' => 'list_precios.find', 'uses' => 'List_precioController@find']);
 Route::get('list_precios/aprobarPrecio/{id}', ['as' => 'list_precios.aprobarPrecio', 'uses' => 'List_precioController@aprobarPrecio']);
 
+Route::get('list_precios/DesaprobarPrecio/{id}', ['as' => 'list_precios.DesaprobarPrecio', 'uses' => 'List_precioController@DesaprobarPrecio']);
+
+
 Route::get('list_precios/delete/{id}', ['as' => 'list_precios.delete', 'uses' => 'List_precioController@destroy']);
