@@ -1068,22 +1068,16 @@
             //     precirIn='A';
             //     return false; 
             // }
-            // var cosrIn='A';
-            // acodigos.forEach(function(val,index) {
-            //         var cosr=$('#cosMs_'+val).val();
-            //         if(cosr<1){
-            //             cosrIn='I';
-            //         }
+            var cosrIn='A';
+            acodigos.forEach(function(val,index) {
+                    var cosr=$('#fechareEnv_'+val).val();
+                    if(cosr<$("#fecha_registro").val()){
+                        cosrIn='I';
+                    }
+                   
                     
-            // })
-            // if(cosrIn=='I'){
-            //     AlertFactory.showWarning({
-            //         title: '',
-            //         message: 'El costo de los artículos no puede ser cero'
-            //     });
-            //     cosrIn='A';
-            //     return false; 
-            // }
+            })
+          
             var cantrIn='A';
             // if(naturalezaGeneral!="C"){
             acodigos.forEach(function(val,index) {
@@ -1094,12 +1088,27 @@
                     
             });
             // };
-            if(cantrIn=='I'){
+            if(cosrIn=='I'){
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'La cantidad de los Articulos no puede ser cero'
+                    message: 'La fecha requerida del articulo no puede ser menor a fecha registro'
+                });
+                cosrIn='A';
+                return false; 
+            }
+             if(cantrIn=='I'){
+                AlertFactory.showWarning({
+                    title: '',
+                    message: 'La cantidad no puede ser menor a 1'
                 });
                 cantrIn='A';
+                return false; 
+            }
+            if($("#fecha_requerida").val()<$("#fecha_registro").val()){
+                 AlertFactory.showWarning({
+                    title: '',
+                    message: 'La fecha requerida no puede ser menor a fecha registro'
+                });
                 return false; 
             }
             
@@ -1389,9 +1398,9 @@
             
             // }
             var td4 = $('<td class="text-center"></td>');
-            var estadoda=$('<select class="m_idestado form-control input-sm" disabled ><option value="N"></option><option value="0">Registrado</option><option value="1">Aprobado</option><option value="2">C/Orden de Compra</option><option value="3">Cerrado</option><option value="4">Cancelado</option></select>');
+            var estadoda=$('<select id="estadoEnv_'+codigo+'" class="m_idestado form-control input-sm" disabled ><option value="N"></option><option value="0">Registrado</option><option value="1">Aprobado</option><option value="2">C/Orden de Compra</option><option value="3">Cerrado</option><option value="4">Cancelado</option></select>');
             var td5 = $('<td class="text-center"></td>');
-            var inp5 = $('<input type="date" class="fecharequerida form-control input-sm" value="' + fecharequerida + '" />');
+            var inp5 = $('<input type="date" id="fechareEnv_'+codigo+'" class="fecharequerida form-control input-sm" value="' + fecharequerida + '" />');
             td4.append(estadoda);
              td5.append(inp5);
             // var td5 = $('<td><p>'+impor.toFixed(2) +'</p></td>');
@@ -1424,7 +1433,7 @@
             addAlmaSelec(codigo);
             addlocSele(codigo);
            console.log("entro 123456");
-              $('.m_idestado option[value='+estado+']').prop('selected', 'selected').change();
+              $('#estadoEnv_'+codigo+' option[value='+estado+']').prop('selected', 'selected').change();
             $('.verUpdate').click(function(e){
                 var tipShow = $(this).attr('data-tShow');
                 var codeShow = $(this).attr('data-idv');
@@ -1940,6 +1949,7 @@
                     }
                });
             }else{
+                modalDeleteMovimiento.modal("hide"); 
                  AlertFactory.textType({
                         title: '',
                         message: 'Solo se puede eliminar compras en estado registrado ',
@@ -2219,6 +2229,13 @@
             // if(!idMoneda.prop("disabled")){
             //     bval = bval && idMoneda.required();
             // }
+             if($("#fecha_requerida").val()<$("#fecha_registro").val()){
+                 AlertFactory.showWarning({
+                    title: '',
+                    message: 'La fecha requerida no puede ser menor a fecha registro'
+                });
+                return false; 
+            }
             if (bval) {
                 var params = {
                     'idMovimiento': idMovimiento.val(),

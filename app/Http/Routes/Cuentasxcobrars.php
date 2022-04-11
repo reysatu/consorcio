@@ -2,11 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: JAIR
- * Date: 4/5/2017
+ * Date: 4/5/2017 
  * Time: 6:59 PM
- */
+ */ 
  
 Route::post('cuentasxcobrars/list', ['as' => 'cuentasxcobrars.list', 'uses' => 'AsignacioncobradorController@all']);
+
+Route::post('cuentasxcobrars/listcuentas', ['as' => 'cuentasxcobrars.listcuentas', 'uses' => 'AsignacioncobradorController@allCuentasxcobrar']);
+
 Route::post('cuentasxcobrars/create', ['as' => 'cuentasxcobrars.create', 'uses' => 'AsignacioncobradorController@create']);
 Route::post('cuentasxcobrars/delete', ['as' => 'cuentasxcobrars.delete', 'uses' => 'AsignacioncobradorController@destroy']);
 Route::post('cuentasxcobrars/update', ['as' => 'cuentasxcobrars.update', 'uses' => 'AsignacioncobradorController@update']);

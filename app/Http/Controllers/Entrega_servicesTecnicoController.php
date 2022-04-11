@@ -22,7 +22,7 @@ use App\Http\Recopro\Operation\OperationInterface;
 use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\ProformaRequest;
-use DB;
+use DB; 
 class Entrega_servicesTecnicoController extends Controller
 {
      use Register_movementTrait;
@@ -56,7 +56,14 @@ class Entrega_servicesTecnicoController extends Controller
     public function get_ventas_entrega(Register_movementInterface $Repo, Request $request)
     {
 
-        $response = $Repo->get_ventas_entrega();
+        $dataventa = $Repo->get_ventas_entrega();  
+        $solitud=array(); 
+            
+        foreach ($dataventa as $row) {
+        array_push($solitud, $row->idventa);
+        };
+        $solitud = implode(",",$solitud); 
+        $response = $Repo->get_ventas_entregaUnica($solitud);  
         return response()->json($response);
 
     }
