@@ -40,6 +40,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Params.php';
 
+    require app_path() . '\Http\Routes\Areas.php';
+
      require app_path() . '\Http\Routes\Proveedors.php';
 
     require app_path() . '\Http\Routes\ApproversProjects.php';
@@ -51,6 +53,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Empresas.php';
 
     require app_path() . '\Http\Routes\TipoProveedors.php';
+
+     require app_path() . '\Http\Routes\ConfigJerarquiaCompras.php';
     // Routes Masters
 
     require app_path() . '\Http\Routes\ReporteOrdenDiarios.php';
@@ -126,6 +130,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Series.php';
 
     require app_path() . '\Http\Routes\Register_movements.php';
+
+    require app_path() . '\Http\Routes\SolicitudCompras.php';
 
     require app_path() . '\Http\Routes\Register_transfers.php';
 

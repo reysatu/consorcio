@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
   
-(function () {
+(function () { 
     'use strict';
     angular.module('sys.app.cuentasxcobrars')
         .config(Config)
@@ -91,7 +91,7 @@
             paging: true,
             sorting: true,
             actions: { 
-                listAction: base_url + '/cuentasxcobrars/list',
+                listAction: base_url + '/cuentasxcobrars/listcuentas',
             },
             messages: {
                 addNewRecord: 'Nueva Categoría',

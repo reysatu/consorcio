@@ -21,7 +21,7 @@ class ReporteVentaCliente extends Model
  
     public $incrementing = false;
 
-    protected $fillable = ['idCliente','idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente','Documento','pagado','saldo'];
+    protected $fillable = ['idCliente','idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente','Documento','pagado','saldo','correo_electronico'];
     
      public function user_c()
     {
