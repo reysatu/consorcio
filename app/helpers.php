@@ -90,6 +90,7 @@ function parseDataList($data, $request, $sort_default, $data_select)
         $data = $data->orderBy($search[0], $search[1]);
     }
     
+    // print_r($data); exit;
     $data = $data->get();
 
 

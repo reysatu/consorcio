@@ -1008,8 +1008,12 @@ class MovimientoCajaController extends Controller
                         $data_venta_detalle["precio_total"] = round($subtotal, 2);
                         $data_venta_detalle["monto_descuento"] = 0;
                         $data_venta_detalle["monto_subtotal"] = round($subtotal, 2);
-
-                        $data_venta_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
+                        if($solicitud_articulo[$i]->cOperGrat != "S") {
+                            $data_venta_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
+                        } else {
+                            $data_venta_detalle["precio_unitario"] = round($solicitud_articulo[$i]->precio_unitario, 2);
+                        }
+                        
 
                         if($solicitud_articulo[$i]->impuestos > 0) {
                             $igv = $parametro_igv[0]->value;

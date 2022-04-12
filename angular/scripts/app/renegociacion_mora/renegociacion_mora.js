@@ -92,8 +92,9 @@
                 },
                 numero_documento: {
                     title: 'N° Documento',
-
-
+                },
+                cliente: {
+                    title: 'Cliente',
                 },
                 moneda: {
                     title: 'Moneda',

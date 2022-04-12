@@ -3266,13 +3266,15 @@
                     $(".inputs-credito").removeAttr("readonly");
                 }
 
-                if (tipo_solicitud == "1" || tipo_solicitud == "4") {
-
-                    $(".montos-credito").val(0);
-                    $(".inputs-credito").attr("readonly", "readonly");
-                }
+              
                
                 $(".convenio").hide();
+            }
+
+            if (tipo_solicitud != "2") {
+
+                $(".montos-credito").val(0);
+                $(".inputs-credito").attr("readonly", "readonly");
             }
 
             if (tipo_solicitud == "2" || tipo_solicitud == "3") {
