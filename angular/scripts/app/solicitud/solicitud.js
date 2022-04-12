@@ -3284,6 +3284,12 @@
                 }
 
             }
+
+            if (tipo_solicitud == "3") {
+
+                $("#cuota_inicial").removeAttr("readonly");
+
+            }
         });
 
         function find_solicitud(id) {

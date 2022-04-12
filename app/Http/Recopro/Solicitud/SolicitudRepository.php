@@ -37,6 +37,7 @@ class SolicitudRepository implements SolicitudInterface
         return $this->model->whereIn('estado', [2, 4])->where(function ($q) use ($s) {
             $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%');
             $q->orWhere('nConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
             $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%');
             $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');

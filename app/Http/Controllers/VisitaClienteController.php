@@ -94,14 +94,15 @@ class VisitaClienteController extends Controller
         return response()->json($response);
     }
 
-    public function data_form(VisitaClienteInterface $Repo, CobradorInterface $cobrador, ShopInterface $shop_repo)
+    public function data_form(VisitaClienteInterface $Repo, CobradorInterface $cobrador, ShopInterface $shop_repo, SolicitudInterface $Repo_sol)
     {
-
+        $usuario=auth()->id();
         $motivos = $Repo->get_motivos(); 
       
         $cobrador = $cobrador->getCobrador();
         $clientes = $Repo->getClientes();
         $tiendas = $shop_repo->getTiendas();
+        $convenios = $Repo_sol->obtener_convenios($usuario);
         // $solicitudes = $Repo->getSolicitudes();
 
         // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
@@ -113,6 +114,7 @@ class VisitaClienteController extends Controller
             'cobrador' => $cobrador,
             'clientes' => $clientes,
             'tiendas' => $tiendas,
+            'convenios' => $convenios,
             // 'solicitudes' => $solicitudes,
 
         ]);

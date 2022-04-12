@@ -66,7 +66,11 @@
                     });
 
                   
-
+                    
+                    $("#idconvenio").append('<option value="">Todos</option>');
+                    _.each(response.convenios, function (item) {
+                        $("#idconvenio").append('<option value="' + item.idconvenio + '">' + item.descripcionconvenio + '</option>');
+                    });
 
                     $("#idcobrador").select2();
                     $("#idtienda").select2();

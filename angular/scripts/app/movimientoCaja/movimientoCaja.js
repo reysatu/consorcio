@@ -3466,7 +3466,6 @@ table_container_bancos.jtable('load');
                 numero_comprobante: {
                     title: 'Número',
 
-
                 },
                 fecha_emision: {
                     title: 'Fecha',
@@ -3483,11 +3482,9 @@ table_container_bancos.jtable('load');
                 numero_documento: {
                     title: 'N° Documento',
 
-
                 },
-                numero_documento: {
+                cliente: {
                     title: 'Cliente',
-
 
                 },
                 moneda: {

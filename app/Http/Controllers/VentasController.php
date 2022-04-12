@@ -254,6 +254,14 @@ class VentasController extends Controller
             $where .= " AND v.idtienda={$data["idtienda"]}";
         }
 
+        if(!empty($data["tipo_solicitud"])) {
+            $where .= " AND s.tipo_solicitud={$data["tipo_solicitud"]}";
+        }
+
+        if(!empty($data["idconvenio"])) {
+            $where .= " AND s.idconvenio={$data["idconvenio"]}";
+        }
+
         $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
         FROM ERP_Venta AS v
         INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
