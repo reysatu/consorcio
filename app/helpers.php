@@ -206,6 +206,8 @@ function parseSelectAndSerialOnly($data, $key_id, $key_number, $key_serial)
 
 function generateExcel($data, $file_name, $sheet_name)
 {
+    // echo "<pre>";
+    // print_r($data); exit;
     $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name) {
         $excel->sheet($sheet_name, function ($sheet) use ($data) {
             $sheet->loadView('excel.view')->with('data', $data);

@@ -46,6 +46,20 @@
         var articulo_mov_det = $("#articulo_mov_det");
         var totalDescuento = $("#totalDescuento");
 
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green'
+        }).on('ifChanged', function (e) {
+            $(e.target).click();
+            if(e.target.value=='S'){
+                $("#calcular_intereses").val("N");
+            }else{
+                $("#calcular_intereses").val("S");            
+            };
+            
+            $("#nrocuotas_refinanciamiento").trigger("keyup");
+        });
+
+
         $scope.datos_credito = function () {
             // $("#idconyugue").focus();
 
@@ -416,8 +430,8 @@
                     var porcentaje = 0;
                     var intereses = 0;
                     var valor_cuota = 0;
-
-                    if (data.length > 0) {
+                    // alert($("#calcular_intereses").val());
+                    if (data.length > 0 && $("#calcular_intereses").val() == "S") {
                         porcentaje = parseFloat(data[0].porcentaje);
                     }
 
