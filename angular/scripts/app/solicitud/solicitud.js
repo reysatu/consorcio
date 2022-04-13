@@ -3375,7 +3375,8 @@
                         deshabilitar_inputs();
                     }
 
-                    if (data.solicitud[0].estado >= 6 || data.solicitud[0].estado == 4) {
+                    // solo para credito directo 
+                    if (data.solicitud[0].tipo_solicitud == "2" && (data.solicitud[0].estado >= 6 || data.solicitud[0].estado == 4)) {
                         $("#imprimir-cronograma").show();
                     } else {
                         $("#imprimir-cronograma").hide();

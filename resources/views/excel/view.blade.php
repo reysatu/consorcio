@@ -18,15 +18,25 @@
             <th style="border: 1px solid #000000; text-align: center">{{ $d }}</th>
         @endforeach
     </tr>
-    <?php unset($data['data'][0]) ?>
+    <?php 
+        unset($data['data'][0]);
+       
+    ?>
     </thead>
     <tbody>
     @foreach($data['data'] as $item => $d)
+      
         <tr>
             <td></td>
             <td style="border: 1px solid #000000; text-align: center">{{ $item }}</td>
             @foreach($d as $i)
-                <td style="border: 1px solid #000000; text-align: {{ $i[0] }}">{{ $i[1] }}</td>
+                <?php 
+                    $valor = $i[1];
+                    if(is_numeric($i[1])) {
+                        $valor = sprintf('%.2f', $i[1]); 
+                    } 
+                ?>
+                <td style="border: 1px solid #000000; text-align: {{ $i[0] }}">{{ $valor }}</td>
             @endforeach
         </tr>
     @endforeach
