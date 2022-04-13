@@ -99,6 +99,10 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         })->whereIn('idTipoOperacion', ['8', '9'])->orderBy('idMovimiento', 'DESC');
 
     }
+    public function dataProducto($id){
+         $mostrar=DB::select("select un.Descripcion as unidadMedida,* from ERP_Productos as pr inner join ERP_UnidadMedida as un on (pr.um_id=un.IdUnidadMedida) where pr.id='$id'");
+         return $mostrar; 
+    }
     public function get_movemen_lote($id){
          $mostrar=DB::select("select * from ERP_SolicitudCompra_Articulo as mo inner join ERP_Lote as l on mo.idLote=l.idLote where mo.idMovimiento='$id'");
          return $mostrar; 
@@ -171,7 +175,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $model->update($attributes);
     }
      public function get_movement_articulo($id){
-        $mostrar=DB::select("select FORMAT(Mo.fecha_requerida, 'yyyy-MM-dd') AS fecha_requerida_ad,* from ERP_SolicitudCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id where mo.idMovimiento='$id'");
+        $mostrar=DB::select("select uni.Descripcion as unidaMedida ,FORMAT(Mo.fecha_requerida, 'yyyy-MM-dd') AS fecha_requerida_ad,* from ERP_SolicitudCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id left join ERP_UnidadMedida as uni on (pr.um_id=uni.IdUnidadMedida) where mo.idMovimiento='$id'");
         return $mostrar; 
     }
     public function getOperationFind(){

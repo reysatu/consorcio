@@ -17,7 +17,7 @@
         var  aartML= []; //arrays para guardas los datos de lotes
         var  acodigos=[];//arrays de codigos;
         var  alotML=[];
-        var  afinML=[];
+        var  afinML=[]; 
         var  avenML=[];
         var  tipoCompra; //variable que contendrá los tipos de  compras
         var aartMK=[]; //arrays de id kits 
@@ -416,23 +416,24 @@
                         var tipo='NA';
                         var codl="";
                         var datl="";
-                        if(index.serie=='1'){
-                            ver='N';
-                        }
-                        if(index.serie=='1'){
-                            tipo='SE';
+                        // if(index.serie=='1'){
+                        //     ver='N';
+                        // }
+                        // if(index.serie=='1'){
+                        //     tipo='SE';
                             
-                        }else if(index.lote=='1'){
-                            tipo='LE';
-                            codl=index.idLote;
-                        }
+                        // }else if(index.lote=='1'){
+                        //     tipo='LE';
+                        //     codl=index.idLote;
+                        // }
                         console.log(index.costo2);
                         console.log("sss");
                         var estado="N";
 
                         console.log(fecharequerida,index.fecha_requerida_ad);
                         console.log("fecha requeria");
-                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad);                      
+                        var unida="";
+                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida);                      
                       })
                     // if(p_state.val()=="REGISTRADO"){
                     //     procesarTransfBoton.prop('disabled',false);
@@ -755,7 +756,8 @@
                                 var precio="";
                                 var precioTotal="";
                                 var estado="N";
-                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida);
+                                var unida='';
+                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unida);
                             }
                             if(codPdN.length!=0){
                                  AlertFactory.textType({
@@ -858,6 +860,11 @@
 
         } 
         function seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo) {
+            console.log(idTipoArt,serie,lote);
+            idTipoArt=1;
+            serie=0;
+            lote=0;
+            console.log("total");
             if(idTipoArt=='3'){
                 modalKit.modal('show');
                 $('#cantProductoMK').attr('onkeypress','return soloNumeros(event)');
@@ -1332,7 +1339,7 @@
             }    
         }
 
-        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida){
+        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida,unida){
             acodigos.push(codigo);
         
             var costonew=0;
@@ -1353,6 +1360,7 @@
 
             var tr = $('<tr id="tr_idArticulo' + codigo + '"></tr>');
             var td1 = $('<td>' + desProducto + '</td>');
+              var td12 = $('<td>' + unida + '</td>');
           
             var td2;
             var td3;
@@ -1428,7 +1436,7 @@
             var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
             td6.append(btn1);
             td8.append(btn3);
-            tr.append(td1).append(td2).append(td3).append(td5).append(td4).append(td6).append(td8);
+            tr.append(td1).append(td2).append(td3).append(td12).append(td5).append(td4).append(td6).append(td8);
             articulo_mov_det.append(tr);
             addAlmaSelec(codigo);
             addlocSele(codigo);
@@ -1713,7 +1721,8 @@
                                 var precio="";
                                 var precioTotal="";
                                 var estado="N";
-                                addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,estado,fecharequerida);
+                                var unida="";
+                                addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,estado,fecharequerida,unida);
                                 modalSerieR.modal("hide");
                                 modalMovimietoArticulo.modal("hide");
                       
@@ -1866,7 +1875,8 @@
                         var precio="";
                         var precioTotal="";
                         var estado="N";
-                       addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida);
+                        var unida="";
+                       addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
                        modalSerieR.modal("hide");
                        modalMovimietoArticulo.modal("hide");
                         }
@@ -1923,7 +1933,8 @@
                 var precio="";
                 var precioTotal="";
                 var estado="N";
-                addArticuloTable(idProductoMll.val(),desProductoMll.val(),cantProductoMll.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida);
+                var unida="";
+                addArticuloTable(idProductoMll.val(),desProductoMll.val(),cantProductoMll.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
                 modalLoteR.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2004,6 +2015,7 @@
             }
         }
         function addArtNada(){
+
             var bval = true;
             bval = bval && cantProductoMN.required();
             if (bval) {
@@ -2024,9 +2036,14 @@
                 var precio="";
                 var precioTotal="";
                 var estado="N";
-                addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida);
-                modalNada.modal('hide');
-                modalMovimietoArticulo.modal('hide');
+                var idpr=idProductoMN.val();
+                RESTService.get('solicitudCompras/getDataArticulo', idpr, function(response) {
+                        var datapro=response.data;
+                      addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida);
+                        modalNada.modal('hide');
+                        modalMovimietoArticulo.modal('hide');    
+                });
+              
             }
 
          }
@@ -2074,7 +2091,8 @@
                     var precio="";
                     var precioTotal="";
                     var estado="N";
-                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida);
+                    var unida='';
+                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida,unida);
                     modalLote.modal('hide');
                     modalLoteR.modal('hide');
                     modalMovimietoArticulo.modal('hide');
@@ -2127,7 +2145,8 @@
                 var precio="";
                 var precioTotal="";
                 var estado="N";
-                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida);
+                var unida="";
+                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida,unida);
                 modalKit.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2627,7 +2646,7 @@
             title: "Lista de Articulos",
             paging: true,
             sorting: true,
-             cache: false,
+             cache: false, 
             actions: {
                 listAction: base_url + '/solicitudCompras/getArticulosMinKit'
             },

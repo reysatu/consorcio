@@ -14,7 +14,7 @@ trait TipoProveedorTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['TIPO PROVEEDOR','CUENTA POR PAGAR','CUENTA DE CIERRE DEBITO','CUENTA DE CIERRE CRÉDITO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['TIPO PROVEEDOR','CUENTA POR PAGAR','CENTRO COSTO POR PAGAR','CUENTA DE CIERRE DEBITO','CENTRO COSTO CIERE DEBITO','CUENTA DE CIERRE CRÉDITO','CENTRO COSTO CIERRE CRÉDITO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $estado="ACTIVO";
@@ -24,8 +24,11 @@ trait TipoProveedorTrait
             $columns[] = [
                 ['left', $i->descripcion],
                 ['left', $i->cuentaPagar],
+                 ['left', $i->cCostoCuentaPagar],
                 ['left', $i->cuentaCierreDevito],
+                 ['left', $i->cCostoCuentaCieDev],
                 ['left', $i->cuentaCierreCredito],
+                 ['left', $i->cCostoCuentaCieCre],
                 ['left', $estado],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],

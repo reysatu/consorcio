@@ -21,7 +21,7 @@ class SolicitudCompra extends Model
 
     protected $keyType = 'string';
 
-    public $incrementing = false;
+    public $incrementing = false; 
 
     protected $fillable = ['idMovimiento','fecha_requerida','idTipoOperacion','fecha_registro','fecha_proceso','idUsuario','naturaleza','observaciones','idMoneda','estado','user_created','user_updated','cCodConsecutivo','nConsecutivo','prioridad','idArea'];
     

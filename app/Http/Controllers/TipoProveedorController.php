@@ -24,7 +24,7 @@ class TipoProveedorController extends Controller
     public function all(Request $request, TipoProveedorInterface $repo)
     {
         $s = $request->input('search', '');
-        $params =['id', 'descripcion','cuentaPagar','cuentaCierreDevito','cuentaCierreCredito','estado','cIdUsuCre','cIdUsuMod'];
+        $params =['id', 'descripcion','cuentaPagar','cuentaCierreDevito','cuentaCierreCredito','estado','cIdUsuCre','cIdUsuMod','cCostoCuentaPagar','cCostoCuentaCieDev','cCostoCuentaCieCre'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 

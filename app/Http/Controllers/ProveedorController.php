@@ -163,8 +163,8 @@ class ProveedorController extends Controller
             $nrocuenta_array = explode(',', $nrocuenta_array);
             $tablelMd='ERP_ProveedorCuentaBanco';
             $idtMd='Id';
-           
-            if(!empty($data['idarray'])){
+            
+            if(count($data['idarray'])>0){
                for ($i=0; $i < count($idarray) ; $i++) { 
                 if($idarray[$i]==0){
                      $cub->create([

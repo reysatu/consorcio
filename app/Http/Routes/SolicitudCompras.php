@@ -33,7 +33,10 @@ Route::post('solicitudCompras/getArticulosMinKit', ['as' => 'solicitudCompras.ge
 Route::post('solicitudCompras/getProductoSerie', ['as' => 'solicitudCompras.getProductoSerie', 'uses' => 'SerieController@traerSeries']);
 Route::post('solicitudCompras/getProductoSerieStock', ['as' => 'solicitudCompras.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
 
+
 Route::get('solicitudCompras/validateLote/{id}', ['as' => 'solicitudCompras.validateLote', 'uses' => 'SolicitudCompraController@validateLote']);
+
+
 
 Route::get('solicitudCompras/validateCantSerie/{id}', ['as' => 'solicitudCompras.validateCantSerie', 'uses' => 'SolicitudCompraController@validateCantSerie']);
 
@@ -49,6 +52,9 @@ Route::get('solicitudCompras/validaDetalle/{id}', ['as' => 'solicitudCompras.val
 Route::get('solicitudCompras/valida_series_serve/{id}', ['as' => 'solicitudCompras.valida_series_serve', 'uses' => 'SolicitudCompraController@valida_series_serve']);
 
 Route::get('solicitudCompras/find/{id}', ['as' => 'solicitudCompras.find', 'uses' => 'SolicitudCompraController@find']);
+
+
+Route::get('solicitudCompras/getDataArticulo/{id}', ['as' => 'solicitudCompras.getDataArticulo', 'uses' => 'SolicitudCompraController@getDataArticulo']);
 
 // Route::post('solicitudCompras/delete', ['as' => 'solicitudCompras.delete', 'uses' => 'SolicitudCompraController@destroy']);
 

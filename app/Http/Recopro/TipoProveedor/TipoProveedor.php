@@ -18,13 +18,13 @@ class TipoProveedor extends Model
     protected $primaryKey = 'id';
 
     protected $keyType = 'string';
-
+ 
     public $incrementing = false;
 
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
 
-    protected $fillable = ['id', 'descripcion','cuentaPagar','cuentaCierreDevito','cuentaCierreCredito','estado','cIdUsuCre','cIdUsuMod'];
+    protected $fillable = ['id', 'descripcion','cuentaPagar','cuentaCierreDevito','cuentaCierreCredito','estado','cIdUsuCre','cIdUsuMod','cCostoCuentaPagar','cCostoCuentaCieDev','cCostoCuentaCieCre'];
     
      public function user_c()
     {

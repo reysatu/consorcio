@@ -17,7 +17,7 @@ use App\Http\Recopro\AprobacionTotal\AprobacionTotalInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
 use App\Http\Requests\AprobacionSolicitudRequest;
-use App\Models\BaseModel;
+use App\Models\BaseModel; 
 use DB;
 class AprobacionSolicitudController extends Controller
 {
