@@ -25,5 +25,6 @@ Route::post('lista_cobranza_cuotas/get_venta_separacion', ['as' => 'lista_cobran
 
 
 Route::get('lista_cobranza_cuotas/imprimir_lista_cobraza_cuotas', 'VentasController@imprimir_lista_cobraza_cuotas');
+Route::get('lista_cobranza_cuotas/excel_lista_cobranza_cuotas', 'VentasController@excel_lista_cobranza_cuotas');
 
 

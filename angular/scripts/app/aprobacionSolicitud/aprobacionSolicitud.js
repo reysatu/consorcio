@@ -1046,8 +1046,7 @@
                         if(response.conformidad.length > 0 && response.solicitud.length > 0) {
                             if(response.solicitud[0].tipo_solicitud == 2 && ms == "Aprobada") {
 
-                                modalAprobar.modal("hide"); 
-                                $("#modalSolicitud").modal("hide");
+                               
 
                                 var id = response.conformidad[0].cCodConsecutivo + "|" + response.conformidad[0].nConsecutivo;
 
@@ -1071,9 +1070,12 @@
                                 message: 'El registro se guardó correctamente',
                                 type: 'success'
                             });
-                            modalAprobar.modal("hide"); 
+                           
                             // $("#modalSolicitud").modal("hide");
                         }
+
+                        modalAprobar.modal("hide"); 
+                        $("#modalSolicitud").modal("hide");
 
                         btn_Aprobar.prop('disabled',true);
                         btn_Rechazar.prop('disabled',true);

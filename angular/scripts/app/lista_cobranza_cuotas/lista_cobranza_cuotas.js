@@ -1,7 +1,7 @@
 /**
  * Created by JAIR on 4/5/2017.
  */
- 
+
 (function () {
     'use strict';
     angular.module('sys.app.lista_cobranza_cuotas')
@@ -11,12 +11,109 @@
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
     ListaCobranzaCuotasCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory'];
 
-    function ListaCobranzaCuotasCtrl($scope, _, RESTService, AlertFactory)
-    {
-        function chkState (id) {
+    function ListaCobranzaCuotasCtrl($scope, _, RESTService, AlertFactory) {
+        var departamento = $('#departamento');
+        var provincia = $('#provincia');
+        var distrito = $('#distrito');
+
+        function getDepartamento(bandera) {
+            var id = "0";
+            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    departamento.html('');
+                    departamento.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cDepartamento == bandera) {
+                            departamento.append('<option value="' + item.cDepartamento + '" selected >' + item.cDepartamento + '</option>');
+                        } else {
+                            departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
+                        };
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+        function getProvincia(bandera, id) {
+            RESTService.get('shops/TraerProvincias', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                    provincia.html('');
+                    provincia.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cProvincia == bandera) {
+                            provincia.append('<option value="' + item.cProvincia + '" selected>' + item.cProvincia + '</option>');
+                        } else {
+                            provincia.append('<option value="' + item.cProvincia + '">' + item.cProvincia + '</option>');
+                        }
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error . Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+        function getDistrito(bandera, id) {
+            RESTService.get('shops/TraerDistritos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                    distrito.html('');
+                    distrito.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cCodUbigeo == bandera) {
+                            distrito.append('<option value="' + item.cCodUbigeo + '" selected>' + item.cDistrito + '</option>');
+                        } else {
+                            distrito.append('<option value="' + item.cCodUbigeo + '">' + item.cDistrito + '</option>');
+                        }
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+        departamento.change(function () {
+            var bandera = 'xxxxxx';
+            var id = departamento.val();
+            getProvincia(bandera, id);
+        });
+
+        provincia.change(function () {
+            var bandera = 'xxxxxx';
+            var id = provincia.val();
+            getDistrito(bandera, id);
+
+        });
+
+        var bandera = 'xxxxx';
+        getDepartamento(bandera);
+
+        function chkState(id) {
             id = id.substr(13);
-            var input_val = $('#input_option_'+id);
-            var is_check = $('#check_option_'+id).prop('checked');
+            var input_val = $('#input_option_' + id);
+            var is_check = $('#check_option_' + id).prop('checked');
             input_val.prop('readonly', !is_check);
             if (!is_check) {
                 input_val.val('');
@@ -25,10 +122,10 @@
             }
         }
 
-        function verifyChkOption3 (verify) {
+        function verifyChkOption3(verify) {
             if (verify) {
                 $('.chk_main30').prop('checked', false).iCheck('update');
-                setTimeout(function(){
+                setTimeout(function () {
                     $('.chk_main3').prop('checked', true).iCheck('update').parent().addClass('checked');
                 });
             } else {
@@ -52,26 +149,30 @@
         function obtener_data_for_reporte() {
             RESTService.all('visita_cliente/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    
+
 
                     $("#idcobrador").append('<option value="" selected>Todos</option>');
                     response.cobrador.map(function (index) {
-                       $("#idcobrador").append('<option value="'+index.id+'">'+index.descripcion+'</option>');
+                        $("#idcobrador").append('<option value="' + index.id + '">' + index.descripcion + '</option>');
                     });
 
 
                     $("#idtienda").append('<option value="" selected>Todos</option>');
                     response.tiendas.map(function (index) {
-                       $("#idtienda").append('<option value="'+index.idTienda+'">'+index.descripcion+'</option>');
+                        $("#idtienda").append('<option value="' + index.idTienda + '">' + index.descripcion + '</option>');
                     });
 
-                  
 
+
+                    $("#idconvenio").append('<option value="">Todos</option>');
+                    _.each(response.convenios, function (item) {
+                        $("#idconvenio").append('<option value="' + item.idconvenio + '">' + item.descripcionconvenio + '</option>');
+                    });
 
                     $("#idcobrador").select2();
                     $("#idtienda").select2();
-              
-                   
+
+
 
                 }
             }, function () {
@@ -109,16 +210,45 @@
             bval = bval && $("#fecha_inicio").required();
             bval = bval && $("#fecha_fin").required();
             // bval = bval && $("#idcobrador").required();
-            if(bval) {
+            if (bval) {
 
                 // alert("reporte");
                 $("#formulario-reporte").attr("action", base_url + "/lista_cobranza_cuotas/imprimir_lista_cobraza_cuotas");
                 $("#formulario-reporte").attr("method", "GET");
                 $("#formulario-reporte").attr("target", "imprimir_lista_cobraza_cuotas");
-              
-         
+
+
                 window.open('', 'imprimir_lista_cobraza_cuotas');
                 document.getElementById('formulario-reporte').submit();
+            }
+        }
+
+        $scope.excel = function () {
+            var bval = true;
+            bval = bval && $("#fecha_inicio").required();
+            bval = bval && $("#fecha_fin").required();
+            // bval = bval && $("#idcobrador").required();
+            if (bval) {
+
+                // alert("reporte");
+                // $("#formulario-reporte").attr("action", base_url + "/lista_cobranza_cuotas/excel_lista_cobranza_cuotas");
+                // $("#formulario-reporte").attr("method", "GET");
+                // $("#formulario-reporte").attr("target", "excel_lista_cobranza_cuotas");
+
+
+                // window.open('', 'excel_lista_cobranza_cuotas');
+                // document.getElementById('formulario-reporte').submit();
+
+                $scope.openDoc("lista_cobranza_cuotas/excel_lista_cobranza_cuotas", { 
+                    fecha_inicio: $("#fecha_inicio").val(),
+                    fecha_fin: $("#fecha_fin").val(),
+                    idcobrador: $("#idcobrador").val(),
+                    idtienda: $("#idtienda").val(),
+                    tipo_solicitud: $("#tipo_solicitud").val(),
+                    ubigeo: $("#ubigeo").val(),
+                    idconvenio: $("#idconvenio").val(),
+
+                })
             }
         }
 
@@ -146,7 +276,7 @@
         //             values[idx] = $('#input_option_'+id).val();
         //         }
         //     });
-          
+
         //     console.log(checks);
         //     if (bval) {
         //         var params = {
@@ -154,7 +284,7 @@
         //             'values': values.join(','),
         //             'checks': checks.join(',')
         //         };
-               
+
         //         RESTService.updated('lista_cobranza_cuotas/saveConfig', 0, params, function (response) {
         //             if (!_.isUndefined(response.status) && response.status) {
         //                 AlertFactory.textType({
@@ -187,4 +317,4 @@
         $urlRouterProvider.otherwise('/');
     }
 })
-();
+    ();

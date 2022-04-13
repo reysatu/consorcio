@@ -12,6 +12,7 @@ use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
+use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Recopro\Ventas\VentasTrait;
 use App\Http\Requests\VentasRequest;
@@ -81,6 +82,88 @@ class VentasController extends Controller
     public function excel(VentasInterface $repo)
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE DOCUMENTOS EMITIDOS', 'Ventas');
+    }
+
+    public function excel_lista_cobranza_cuotas(VentasInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio)
+    {
+       
+        // echo "<pre>";
+        $data = $request->all();    
+        // print_r($data);
+        // // print_r($repo->all()); 
+        // exit;
+
+        $where = "";
+
+        if(!empty($data["idcobrador"])) {
+            $where .= " AND s.idCobrador={$data["idcobrador"]}";
+        }
+
+        if(!empty($data["idtienda"])) {
+            $where .= " AND v.idtienda={$data["idtienda"]}";
+        }
+
+        if(!empty($data["tipo_solicitud"])) {
+            $where .= " AND s.tipo_solicitud={$data["tipo_solicitud"]}";
+        }
+
+        if(!empty($data["idconvenio"])) {
+            $where .= " AND s.idconvenio={$data["idconvenio"]}";
+        }
+
+        if(!empty($data["idconvenio"])) {
+            $where .= " AND s.idconvenio={$data["idconvenio"]}";
+        }
+
+        if(!empty($data["ubigeo"])) {
+            $where .= " AND cl.ubigeo={$data["ubigeo"]}";
+        }
+
+        // $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
+        // FROM ERP_Venta AS v
+        // INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
+        // INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
+        // INNER JOIN ERP_Clientes AS cc ON(cc.id=s.idcliente)
+        // WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where}
+        // GROUP BY s.idCobrador, c.descripcion";
+
+        // $cobradores = DB::select($sql_cobradores);
+        $vacios = 0;
+        // foreach ($cobradores as $key => $value) {
+            $sql = "SELECT c.descripcion AS cobrador, c.id AS idcobrador, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision, cl.razonsocial_cliente, v.serie_comprobante, v.numero_comprobante, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento, m.Descripcion AS moneda, v.t_monto_total,DATEDIFF(DAY, sc.fecha_vencimiento, GETDATE())  AS dias_mora, CASE WHEN sc.saldo_cuota=0 THEN 'Cobrado' ELSE 'Pendiente' END AS estado, vd.int_moratorio_pagado, ISNULL(vd.nrocuota, 0) AS nrocuota, vd.valor_cuota_pagada, s.cCodConsecutivo, s.nConsecutivo
+            FROM ERP_Venta AS v
+            INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
+            INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
+            INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
+            INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
+            INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
+            INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' {$where}";
+           
+            $pagos = DB::select($sql);
+            
+            if(count($pagos) <= 0) {
+                $vacios ++;
+            }
+
+            foreach ($pagos as $kp => $vp) {
+                $cuotas = $solicitud_repositorio->get_solicitud_cronograma($vp->cCodConsecutivo, $vp->nConsecutivo);
+                $pagos[$kp]->nrocuotas = count($cuotas);
+            }
+           
+        
+        // }
+
+
+        // echo "<pre>";
+        // print_r($cobradores);
+        // exit;
+
+        if($vacios > 0) {
+            echo '<script>alert("No hay Datos"); window.close(); </script>';
+            exit;
+        }
+        return generateExcel($this->generateDataExcelListaCobranzaCuotas($pagos), 'LISTA DE COBRANZA DE CUOTAS', 'Ventas');
     }
 
     public function find_documento(VentasInterface $Repo, Request $request)
@@ -254,11 +337,27 @@ class VentasController extends Controller
             $where .= " AND v.idtienda={$data["idtienda"]}";
         }
 
+        if(!empty($data["tipo_solicitud"])) {
+            $where .= " AND s.tipo_solicitud={$data["tipo_solicitud"]}";
+        }
+
+        if(!empty($data["idconvenio"])) {
+            $where .= " AND s.idconvenio={$data["idconvenio"]}";
+        }
+
+        if(!empty($data["idconvenio"])) {
+            $where .= " AND s.idconvenio={$data["idconvenio"]}";
+        }
+
+        if(!empty($data["ubigeo"])) {
+            $where .= " AND cc.ubigeo={$data["ubigeo"]}";
+        }
+
         $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
         FROM ERP_Venta AS v
         INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
         INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
-      
+        INNER JOIN ERP_Clientes AS cc ON(cc.id=s.idcliente)
         WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where}
         GROUP BY s.idCobrador, c.descripcion";
 

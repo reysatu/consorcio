@@ -22,24 +22,22 @@ class VentasRepository implements VentasInterface
 
     public function search($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
-                ->where('numero_documento', 'LIKE', '%' . $s . '%');
+        return $this->model->where(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_emision', 'DESC');
     }
 
     public function search_creditos($s)
     {   
-      
-
-        return $this->model->orWhere(function ($q) use ($s) {
-             $q->whereIn('estado', [2, 4])
-                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
-                ->where('numero_documento', 'LIKE', '%' . $s . '%');
+        return $this->model->whereIn('estado', [2, 4])->where(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_emision', 'DESC');
     }
 
@@ -47,24 +45,24 @@ class VentasRepository implements VentasInterface
 
     public function search_documentos($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])
-                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
-                ->where('numero_documento', 'LIKE', '%' . $s . '%');
+        return $this->model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_emision', 'DESC');
     }
     
     public function search_comprobantes_pendientes($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('IdTipoDocumento', ['01', '03', '08'])
-                ->where('serie_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('numero_comprobante', 'LIKE', '%' . $s . '%')
-                ->where('fecha_emision', 'LIKE', '%' . $s . '%')
-                ->where('numero_documento', 'LIKE', '%' . $s . '%')
-                ->where('saldo', '>', '0');
+        return $this->model->whereIn('IdTipoDocumento', ['01', '03', '08'])->where('saldo', '>', '0')->where(function ($q) use ($s) {
+           
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
+           
         })->orderBy('fecha_emision', 'DESC');
     }
     

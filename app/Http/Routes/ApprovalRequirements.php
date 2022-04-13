@@ -9,4 +9,4 @@ Route::post('approval_requirements/list', 'RequirementController@all');
 Route::get('approval_requirements/find/{id}', 'RequirementController@find');
 Route::put('approval_requirements/approveRequirement/{id}', 'ApprovalRequirementController@approveRequirement');
 Route::put('approval_requirements/rejectRequirement/{id}', 'ApprovalRequirementController@rejectRequirement');
-Route::get('approval_requirements/excel', 'ApprovalRequirementController@excel');
+Route::get('approval_requirements/excel', 'ApprovpalRequirementController@excel');

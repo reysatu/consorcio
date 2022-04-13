@@ -1886,9 +1886,8 @@ table_container_bancos.jtable('load');
                         if(data.length > 0) {
                             select_comprobante(data);
 
-                            if (typeof serie_comprobante != "undefined") {
-                                $("#serie_comprobante").trigger("change");
-                            }
+                            $("#serie_comprobante").trigger("change");
+                            
 
                             var monto_pagar = sumar_montos_pago();
                             if(monto_pagar == 0) {
@@ -1956,9 +1955,8 @@ table_container_bancos.jtable('load');
                         if(data.length > 0) {
                             select_comprobante(data);
 
-                            if (typeof serie_comprobante != "undefined") {
-                                $("#serie_comprobante").trigger("change");
-                            }
+                            $("#serie_comprobante").trigger("change");
+                            
 
                         
                             $("#total_pagar").val(monto_pagar_dp.toFixed(2));
@@ -3468,7 +3466,6 @@ table_container_bancos.jtable('load');
                 numero_comprobante: {
                     title: 'Número',
 
-
                 },
                 fecha_emision: {
                     title: 'Fecha',
@@ -3485,11 +3482,9 @@ table_container_bancos.jtable('load');
                 numero_documento: {
                     title: 'N° Documento',
 
-
                 },
-                numero_documento: {
+                cliente: {
                     title: 'Cliente',
-
 
                 },
                 moneda: {

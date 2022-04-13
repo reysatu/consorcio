@@ -22,33 +22,34 @@ class SolicitudRepository implements SolicitudInterface
 
     public function search($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        return $this->model->where(function ($q) use ($s) {
+            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('nConsecutivo', 'LIKE', "%" . $s . "%");
+            $q->orWhere('numero_documento', 'LIKE',  '%' . $s . '%');
+            $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%');
+            $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
     public function search_ventas($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('estado', [2, 4])
-                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        // 
+        return $this->model->whereIn('estado', [2, 4])->where(function ($q) use ($s) {
+            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('nConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%');
+            $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
 
     public function search_solicitudes_refinanciamiento($s)
     {
-        return $this->model->orWhere(function ($q) use ($s) {
-            $q->whereIn('estado', [7])
-                ->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
-                ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
-                ->where('tipo_solicitud', 'LIKE', '%' . $s . '%');
+        return $this->model->whereIn('estado', [7])->where(function ($q) use ($s) {
+            $q->where('cCodConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('nConsecutivo', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%');
+            $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
 

@@ -71,6 +71,8 @@ class BancosController extends Controller
 
     public function excel(BancosInterface $repo)
     {
+        // echo "<pre>";
+        // print_r($this->generateDataExcel($repo->all())); exit;
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE BANCOS', 'Bancos');
     }
 }
