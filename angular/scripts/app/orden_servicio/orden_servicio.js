@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
    
-(function () {
+(function () { 
     'use strict';
     angular.module('sys.app.orden_servicios')
         .config(Config)
@@ -95,7 +95,7 @@
         var terceros=$("#terceros");
         var otros_mo=$("#otros_mo");
         var subtotal_moa=$("#subtotal_moa");
-
+        var idsector=$("#idsector");
         var totalDescuento=$("#totalDescuento");
 
         var btn_ejecucion=$(".btn_ejecucion");
@@ -168,6 +168,9 @@
                          getDepartamento(data_p[0].cDepartamento);
                          getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
                          getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                        
+                        getSector(data_p[0].idsector,data_p[0].cCodUbigeo);
+
                          modaClientes.modal('show');
                          console.log(data_p);
                     } else {
@@ -571,6 +574,32 @@
                     });
                 }
 
+               }); 
+       }
+        function getSector(bandera,id){
+        RESTService.get('orden_servicios/traerSectorOrd', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                     console.log(data_p);
+                      idsector.html('');
+                      idsector.append('<option value="" >Seleccione</option>');
+                     _.each(response.data, function(item) {
+                        if(item.id==bandera){
+                             idsector.append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                         }else{
+                             idsector.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
                });
        }
         function getDistrito(bandera,id){
@@ -792,6 +821,11 @@
                 }
 
              });
+        });
+        distrito.change(function () {
+            var bandera='xxxxxx';
+            var id=distrito.val();
+            getSector(bandera,id);
         });
         
         provincia.change(function () {
@@ -2051,6 +2085,7 @@
             departamento.val('');
             provincia.val('');
             distrito.val('');
+            idsector.val('');
             provincia.html('');
             distrito.html('');
         };
@@ -2807,6 +2842,7 @@ function getDatosCliente(){
             bval = bval && razonsocial_cliente.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
+            bval = bval && idsector.required();
             if(tipodoc.val()=='01' && documento.val().length!=8){
                 AlertFactory.textType({
                             title: '',
@@ -2838,6 +2874,7 @@ function getDatosCliente(){
                     'id_tipocli':id_tipocli.val(), 
                     'IdTipoDocumento':id_tipoDoc_Venta.val(),
                      'cEstadoCivil':cEstadoCivil.val(),
+                     'idsector':idsector.val(),
 
                  };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -2845,6 +2882,11 @@ function getDatosCliente(){
                     if (!_.isUndefined(response.status) && response.status) {
                         documento_or.val(documento.val());
                         getCliente();
+                        AlertFactory.textType({
+                                    title: '',
+                                    message: 'El Cliente se actualizó correctamente',
+                                    type: 'success'
+                                });
                         modaClientes.modal('hide');
                         id_tipoDoc_Venta_or.focus();
                     } else {

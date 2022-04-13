@@ -113,7 +113,7 @@
             },
             fields: {
                 Cronograma: {
-                    title: '',
+                    title: '', 
                     width: '1%',
                     sorting: false,
                     edit: false,

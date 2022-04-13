@@ -6,15 +6,15 @@
  * Time: 11:36 AM
  */
 
-namespace App\Http\Recopro\TipoProveedor;
+namespace App\Http\Recopro\Sector;
 
 use Carbon\Carbon;
 
-trait TipoProveedorTrait
+trait SectorTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['TIPO PROVEEDOR','CUENTA POR PAGAR','CENTRO COSTO POR PAGAR','CUENTA DE CIERRE DEBITO','CENTRO COSTO CIERE DEBITO','CUENTA DE CIERRE CRÉDITO','CENTRO COSTO CIERRE CRÉDITO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['SECTOR','UBIGEO','DEPARTAMENTO','PROVINCIA','DISTRITO','ESTADO', 'U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $estado="ACTIVO";
@@ -23,12 +23,10 @@ trait TipoProveedorTrait
             };
             $columns[] = [
                 ['left', $i->descripcion],
-                ['left', $i->cuentaPagar],
-                 ['left', $i->cCostoCuentaPagar],
-                ['left', $i->cuentaCierreDevito],
-                 ['left', $i->cCostoCuentaCieDev],
-                ['left', $i->cuentaCierreCredito],
-                 ['left', $i->cCostoCuentaCieCre],
+                ['left', $i->ubigeo],
+                ['left', $i->ubigeo_u->cDepartamento],
+                ['left', $i->ubigeo_u->cProvincia],
+                ['left', $i->ubigeo_u->cDistrito],
                 ['left', $estado],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
@@ -39,7 +37,7 @@ trait TipoProveedorTrait
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE TIPOS DE PROVEEDORES'
+            'title' => 'LISTA DE SECTORES'
         ];
 
         return $data;

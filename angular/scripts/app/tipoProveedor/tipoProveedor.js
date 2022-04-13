@@ -62,14 +62,29 @@
                 cuentaPagar: {
                     title: 'Cta. por pagar',
                 },
+                cCostoCuentaPagar: {
+                    title: 'Cen. Costo Pagar',
+                },
                 cuentaCierreDevito: {
                     title: 'Cta. cierre devito',
-                    width: '40%'
+                   
                 },
+
+                cCostoCuentaCieDev: {
+                    title: 'Cen. Costo devito',
+                   
+                },
+
                 cuentaCierreCredito: {
                     title: 'Cta. cierre crédito',
-                    width: '40%'
+                   
                 },
+
+                cCostoCuentaCieCre: {
+                    title: 'Cen. Costo cierre',
+                   
+                },
+
                 estado: {
                     title: 'Estado',
                     values: { 'I': 'Inactivo', 'A': 'Activo' },

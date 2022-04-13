@@ -14,13 +14,21 @@
     function AsignacioncobradorCtrl($scope, _, RESTService, AlertFactory, Helpers)
     {
         var modalCobradores=$("#modalCobradores");
-        var idCobrador=$("#idCobrador"); 
+        var idCobrador=$("#idCobrador");  
+        var p_state = $('#p_state');
+        var banderaEmpi='xxxxxxxx';
+
+        // $scope.chkState = function() {
+        //     var txt = (p_state.prop('checked')) ? 'Activo' : 'Inactivo';
+        //     state_text.html(txt);
+        // };
         //  $scope.chkState = function () {
         //     var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
         //     state_state.html(txt_state2);
         // };
          modalCobradores.on('hidden.bs.modal', function (e) {
-                    idCobrador.val("").trigger("change"); 
+                    idCobrador.val("").trigger("change");
+                    p_state.prop('checked', false).iCheck('update'); 
         });
         $scope.savecobrador = function () {
             var bval = true;
@@ -29,7 +37,8 @@
             $("input[name=idSolicitud]:checkbox:checked").each(function(idx, item) {
                 sele=sele+1;
             });
-            if(sele==0){
+            var tot=((p_state.prop('checked')) ? 'S' : 'N');
+            if(sele==0 && tot=='N'){
                  AlertFactory.showWarning({
                     title: '',
                     message: 'Debe seleccionar al menos una solicitud'
@@ -46,6 +55,7 @@
                 var params = {
                     'idCobrador':idCobrador.val(),
                     'cobradores':cobradores,
+                    'estado': ((p_state.prop('checked')) ? 'S' : 'N'),
                 };
                 var w_id=0;
                
@@ -71,7 +81,8 @@
             }
 
         }
-        
+       
+
          function newAsignacion()
         {  
 
@@ -310,6 +321,22 @@
                     title: 'Cliente',
                     width: '50%',
                 },
+                cDepartamento: {
+                    title: 'Departamento',
+                    width: '50%',
+                },
+                cProvincia: {
+                    title: 'Provincia',
+                    width: '50%',
+                },
+                cDistrito: {
+                    title: 'Distrito',
+                    width: '50%',
+                },
+                sector: {
+                    title: 'Sector',
+                    width: '50%',
+                },
                 estado: {
                        width: '1%',
                     title: 'Estado',
@@ -382,8 +409,12 @@
                 idCobradorFiltro: $('#idCobradorFiltro').val(),
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
-                
 
+                Departamento:  $("#Departamento").val(),
+                provincia:  $("#provincia").val(),
+                iddistrito: $("#distrito").val(),
+                distrito:$("#distrito option:selected").text(),
+                idsector: $('#idsector').val(),
             });
         }, true);
 
@@ -429,6 +460,145 @@
         getDataForm();
         $("#idCobradorFiltro").select2();
         $("#idClienteFiltro").select2();
+
+         function  getDepartamento(banderaEmpi){ 
+            var id="0";
+            RESTService.get('asignacioncobradors/TraerDepartamentosOrde', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                      $("#Departamento").html('');
+                       $("#Departamento").append('<option value="" selected >Departamento</option>');
+                     _.each(response.data, function(item) {
+                        if(item.cDepartamento==banderaEmpi){
+                              $("#Departamento").append('<option value="'+item.cDepartamento+'" selected>'+item.cDepartamento+'</option>');
+                        }else{
+                              $("#Departamento").append('<option value="'+item.cDepartamento+'">'+item.cDepartamento+'</option>');
+                        };
+            
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+        };
+        getDepartamento(banderaEmpi);
+          function getProvincia(bandera,id){
+                RESTService.get('asignacioncobradors/TraerProvinciasOrde', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                   
+                      $("#provincia").html('');
+                      $("#provincia").append('<option value="" >Provincia</option>');
+                     _.each(response.data, function(item) {
+                        if(item.cProvincia==bandera){
+                             $("#provincia").append('<option value="'+item.cProvincia+'" selected>'+item.cProvincia+'</option>');
+                         }else{
+                             $("#provincia").append('<option value="'+item.cProvincia+'">'+item.cProvincia+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error . Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               }); 
+       }
+       function getDistrito(bandera,id){
+        RESTService.get('asignacioncobradors/TraerDistritosOrde', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                 
+                       $("#distrito").html('');
+                      $("#distrito").append('<option value="" >Distrito</option>');
+                     _.each(response.data, function(item) {
+                        if(item.cCodUbigeo==bandera){
+                             $("#distrito").append('<option value="'+item.cCodUbigeo+'" selected>'+item.cDistrito+'</option>');
+                         }else{
+                             $("#distrito").append('<option value="'+item.cCodUbigeo+'">'+item.cDistrito+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+       }
+       function getSector(bandera,id){
+        RESTService.get('asignacioncobradors/traerSectorOrd', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                     console.log(data_p);
+                      $("#idsector").html('');
+                      $("#idsector").append('<option value="" >Sector</option>');
+                     _.each(response.data, function(item) {
+                        if(item.id==bandera){
+                             $("#idsector").append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                         }else{
+                             $("#idsector").append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+       }
+       $("#provincia").change(function () {
+                var bandera='xxxxxx';
+                var id= $("#provincia").val();
+                if(id!=''){
+                    getDistrito(bandera,id);
+                }else{
+                    $("#distrito").html('');
+                    $("#distrito").append('<option value="" >Distrito</option>');
+                }
+           
+        });
+        $("#Departamento").change(function () {
+            var bandera='xxxxxx';
+            var id= $("#Departamento").val();
+            if(id!=''){
+                getProvincia(bandera,id);
+            }else{
+                 $("#provincia").html('');
+                $("#provincia").append('<option value="" >Provincia</option>');
+            }
+          
+        });
+         $("#distrito").change(function () {
+            var bandera='xxxxxx';
+            var id=$("#distrito").val();
+            if(id!=''){
+               getSector(bandera,id); 
+            }else{
+                $("#idsector").html('');
+                $("#idsector").append('<option value="" >Sector</option>');
+            }
+           
+        });
     }
 
     function Config($stateProvider, $urlRouterProvider) {

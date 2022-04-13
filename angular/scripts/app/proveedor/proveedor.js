@@ -473,7 +473,16 @@ function getDatosCliente(){
                             type: 'info'
                 });
              bval = false;
-            };     var idBanco_array =[];
+            };    
+             if(id_tipoDoc_Venta.val()=='01' && tipodoc.val()=='01'){
+                AlertFactory.textType({
+                            title: '',
+                            message: ' Tipo de documento del cliente debe ser R.U.C para el tipo documento venta factura',
+                            type: 'info'
+                });
+                bval = false;
+             }
+             var idBanco_array =[];
             
                    $.each($('.w_idBanco'), function (idx, item) {
                         idBanco_array[idx] = $(item).val();

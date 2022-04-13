@@ -6,7 +6,7 @@
  * Time: 6:59 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\Http\Recopro\Customer\CustomerTrait;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class CustomerController extends Controller
     public function all(Request $request, CustomerInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'tipodoc','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','ubigeo','id_tipocli','IdTipoDocumento'];
+        $params = ['id', 'tipodoc','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','ubigeo','id_tipocli','IdTipoDocumento','idsector'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
     public function createUpdate($id, CustomerInterface $repo,PersonaInterface $rePer, Request $request)
@@ -50,6 +50,7 @@ class CustomerController extends Controller
             $dato['cEmail'] = strtoupper($data['correo_electronico']);
             $dato['cCelular'] = strtoupper($data['celular']);
             $dato['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
+
             $tip='06';
             $raz=strtoupper($data['razonsocial_cliente']);
             if($data['tipodoc']=='01'){
@@ -114,6 +115,7 @@ class CustomerController extends Controller
             $data['ubigeo'] = $data['distrito'];
             $data['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
             $data['idPersona']= $idPersonacl;
+            $data['idsector'] = $data['idsector'];
             $w = $repo->findByCode($data['documento']);
             if ($id != 0) {
                 if ($w && $w->id != $id) {

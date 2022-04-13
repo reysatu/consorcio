@@ -37,6 +37,10 @@ use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBanco;
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoInterface;
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoRepository;
 
+use App\Http\Recopro\Sector\Sector; 
+use App\Http\Recopro\Sector\SectorInterface;
+use App\Http\Recopro\Sector\SectorRepository;
+
 
 use App\Http\Recopro\Proveedor\Proveedor; 
 use App\Http\Recopro\Proveedor\ProveedorInterface;
@@ -771,6 +775,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerProveedor();
         $this->registerArea();
         $this->registerEmpresa();
+        $this->registerSector();
         $this->registerProveedorCuentaBanco();
         $this->registerReporteOrdenDiario();
         $this->registerView_comprobante_movimiento();
@@ -1157,6 +1162,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(EmpresaInterface::class, function ($app) {
             return new EmpresaRepository(new Empresa());
+        });
+    }
+    public function registerSector()
+    {
+        $app = $this->app;
+
+        $app->bind(SectorInterface::class, function ($app) {
+            return new SectorRepository(new Sector());
         });
     }
     public function registerReporteVentaCliente()

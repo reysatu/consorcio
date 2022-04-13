@@ -137,6 +137,23 @@ class UbigeoController extends Controller
             ]);
         }
     }
+     public function traerSectorli($id, UbigeoInterface $repo)
+    {
+       try {
+            $data = $repo->TraerSectores($id);
+
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 
     // public function excel(UbigeoInterface $repo)
     // {

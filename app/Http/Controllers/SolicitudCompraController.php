@@ -516,6 +516,25 @@ class SolicitudCompraController extends Controller
             ]);
         }
     }
+    public function getDataArticulo($id, SolicitudCompraInterface $repo)
+    {
+        try {
+           
+            $data = $repo->dataProducto($id);
+            return response()->json([
+               
+                'status' => true,
+                 'data' => $data,
+              
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function getLocaStock($id, SolicitudCompraInterface $repo){
 
         try {

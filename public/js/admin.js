@@ -1493,6 +1493,26 @@ function getFormSearchAsignacion(form_id, input_id, btn_id) {
                     '<select id="idCobradorFiltro"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "></select>'+
                 '</div>'+
             '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select id="Departamento"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "><option value="">Departemento</option></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="provincia"   style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "><option value="">Provincia</option></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select  id="distrito"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "><option value="">Distrito</option></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="idsector"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "><option value="">Sector</option></select>'+
+                '</div>'+
+            '</div>'+
          '</form>';
 }
 function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {

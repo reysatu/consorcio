@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
   
-(function () {
+(function () { 
     'use strict';
     angular.module('sys.app.reporteVentaClientes')
         .config(Config)
@@ -50,6 +50,9 @@
                     create: false,
                     edit: false,
                     list: false
+                },
+                Documento: {
+                  title: 'Documento',
                 },
                 Fecha: {
                 title: 'FECHA',

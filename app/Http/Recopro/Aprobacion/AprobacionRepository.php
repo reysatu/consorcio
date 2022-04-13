@@ -57,6 +57,13 @@ class AprobacionRepository implements AprobacionInterface
         return $mostrar; 
     }
 
+    public function update_aprobacion($cod,$ncon,$comentario)
+    {   
+        $mostrar=DB::update("UPDATE ERP_Solicitud
+SET comentario_aprobacion = '$comentario' WHERE cCodConsecutivo='$cod' and nConsecutivo='$ncon'");
+        return $mostrar; 
+    }
+
     public function find($id)
     {
         return $this->model->find($id);

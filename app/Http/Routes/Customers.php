@@ -22,3 +22,12 @@ Route::post('customers/getTipoDocumentoVenta', 'CustomerController@getTipoDocume
 Route::get('customers/find/{id}', ['as' => 'customers.find', 'uses' => 'CustomerController@find']);
 
 Route::get('customers/get_cliente_personaCus/{id}', ['as' => 'customers.get_cliente_personaCus', 'uses' => 'Orden_servicioController@get_cliente_persona']);
+
+
+Route::get('customers/TraerDepartamentosCli/{id}', ['as' => 'customers.TraerDepartamentosCli', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('customers/TraerProvinciasCli/{id}', ['as' => 'customers.TraerProvinciasCli', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('customers/TraerDistritosCli/{id}', ['as' => 'customers.TraerDistritosCli', 'uses' => 'UbigeoController@TraerDistritos']);
+Route::get('customers/traerSectorli/{id}', ['as' => 'customers.traerSectorli', 'uses' => 'UbigeoController@traerSectorli']);
+
+
+Route::post('customers/getDistritoCli', 'UbigeoController@getDistrito'); 

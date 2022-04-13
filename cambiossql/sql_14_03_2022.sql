@@ -39,9 +39,62 @@ select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
 select * from ERP_Moneda
 
-SELECT * FROM erp_are
+alter VIEW [dbo].[ERP_VW_VentaClientes] AS
+select ven.anulado, pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+where ven.idVenta not in (select ven.idventa from erp_venta as ven inner join ERP_Venta as nota on(ven.idventa=nota.idventa_referencia)
+)
+
+
+
+ALTER VIEW [dbo].[ERP_view_solicitud_Asignacion] AS 
+SELECT v.idventa,v.IdTipoDocumento,v.serie_comprobante,v.numero_comprobante,co.id as idCobrador ,c.id as idCliente ,c.razonsocial_cliente as cliente , tdoc.Descripcion as tipoComprobanteText,co.descripcion as Cobrador, con.nCodTienda, v.tipo_comprobante,s.cCodConsecutivo, s.nConsecutivo, s.fecha_solicitud, s.tipo_solicitud, s.estado, s.idconvenio, s.descuento_id, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, s.t_monto_total,
+CASE WHEN s.saldo IS NULL THEN 0 ELSE s.saldo END AS saldo,
+CASE WHEN s.pagado IS NULL THEN 0 ELSE s.pagado END AS pagado,
+CASE WHEN s.facturado IS NULL THEN 0 ELSE s.facturado END AS facturado
+FROM ERP_Solicitud AS s
+INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
+INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
+INNER JOIN ERP_Venta AS v on(v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo and v.tipo_comprobante = 0 and v.IdTipoDocumento in ('03','01'))
+INNER JOIN ERP_Consecutivos AS con on (con.cCodConsecutivo=s.cCodConsecutivo)
+INNER JOIN ERP_TipoDocumento AS tdoc on (v.IdTipoDocumento=tdoc.IdTipoDocumento)
+left  join ERP_Cobrador as co on(s.idCobrador=co.id)
+WHERE S.saldo > 0 
+
 
 SELECT * FROM ERP_Almacen
+
+ALTER VIEW [dbo].[ERP_view_solicitud_Asignacion] AS 
+SELECT v.idventa,v.IdTipoDocumento,v.serie_comprobante,v.numero_comprobante,co.id as idCobrador ,c.id as idCliente ,c.razonsocial_cliente as cliente , tdoc.Descripcion as tipoComprobanteText,co.descripcion as Cobrador, con.nCodTienda, v.tipo_comprobante,s.cCodConsecutivo, s.nConsecutivo, s.fecha_solicitud, s.tipo_solicitud, s.estado, s.idconvenio, s.descuento_id, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, s.t_monto_total,
+CASE WHEN s.saldo IS NULL THEN 0 ELSE s.saldo END AS saldo,
+CASE WHEN s.pagado IS NULL THEN 0 ELSE s.pagado END AS pagado,
+CASE WHEN s.facturado IS NULL THEN 0 ELSE s.facturado END AS facturado
+FROM ERP_Solicitud AS s
+INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
+INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
+INNER JOIN ERP_Venta AS v on(v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo and v.tipo_comprobante = 0 and v.IdTipoDocumento in ('03','01'))
+INNER JOIN ERP_Consecutivos AS con on (con.cCodConsecutivo=s.cCodConsecutivo)
+INNER JOIN ERP_TipoDocumento AS tdoc on (v.IdTipoDocumento=tdoc.IdTipoDocumento)
+left  join ERP_Cobrador as co on(s.idCobrador=co.id)
+WHERE S.saldo > 0 AND S.estado > 5 and S.estado <9
+
+GO
+SELECT * from [ERP_view_solicitud_Asignacion]
 
 ALTER VIEW [dbo].[ERP_VWStockDetalle]
 as
@@ -110,21 +163,23 @@ CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
 )
 	
 select * from ERP_AprobacionCompra
-select * from ERP_AprobacionCompraDetalle
+select * from ERP_SolicitudCompra_Detalle
 
 delete from ERP_AprobacionCompra
 delete from ERP_AprobacionCompraDetalle
 drop table ERP_SolicitudCompra
 
-select * from ERP_Area where estado='A'
+select * from ERP_SolicitudCompra
+select * from ERP_SolicitudCompra_Articulo where estado='A'
 
 select * from ERP_Consecutivos 
 select * from ERP_TipoConsecutivos
 select * from ERP_Tienda
 select * from ERP_AlmacenUsuario
 select * from ERP_Almacen
-
+SELECT * FROM ERP_SolicitudDetalle
 select * from ERP_SolicitudCompra
+SELECT * FROM ERP_solici
 drop table ERP_SolicitudCompra
 CREATE TABLE [dbo].[ERP_SolicitudCompra](
 	[idMovimiento] [int] NOT NULL,
@@ -148,6 +203,8 @@ CREATE TABLE [dbo].[ERP_SolicitudCompra](
 	[nConsecutivo] [int] not NULL,
 	PRIMARY KEY (idMovimiento,cCodConsecutivo,nConsecutivo)
 )
+select * from ERP_Productos
+select * from ERP_Lote
 delete from ERP_SolicitudCompra_Articulo
 select * from ERP_SolicitudCompra_Articulo
 drop table ERP_SolicitudCompra_Articulo
@@ -165,6 +222,9 @@ CREATE TABLE [dbo].[ERP_SolicitudCompra_Articulo](
 	[updated_at] [datetime] NULL,
 	PRIMARY KEY (idMovimiento,idArticulo,consecutivo)
 )
+select * from ERP_Lote
+
+select FORMAT(Mo.fecha_requerida, 'yyyy-MM-dd') AS fecha_requerida_ad,* from ERP_SolicitudCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id where mo.idMovimiento='72'
 
 delete from ERP_SolicitudCompra_Detalle
 select * from ERP_SolicitudCompra_Detalle
@@ -911,7 +971,7 @@ select * from ERP_SolicitudArticulo
 
 select * from ERP_OrdenServicio
 
-select * from ERP_Venta
+select * from ERP_view_solicitud_Asignacion
 
 ALTER TABLE ERP_Venta
 ADD anulado varchar(1)
@@ -931,11 +991,65 @@ LEFT JOIN ERP_Solicitud AS s ON(s.cCodConsecutivo=v.cCodConsecutivo_solicitud AN
 INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
 
 
-select * from ERP_CATE
+select * from erp_soli
 
 INSERT INTO ERP_TipoConsecutivos(cCodTipoCons,cTipoConsecutivo,cObservación,cIdUsuCre,dFecCre,cIdUsuMod,dFecMod)
 VALUES ('SOLCOMPRA','SOLICITUDES COMPRA','PARA LAS SOLICITUDES DE COMPRA',1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'))
 
 INSERT INTO ERP_Consecutivos(cCodConsecutivo,cCodTipoCons,cDetalle,nCodTienda,nConsecutivo,cIdUsuCre,dFecCre,cIdUsuMod,dFecMod)
 VALUES ('SOLC','SOLCOMPRA','SOLICITUDES DE COMPRA TARAPOTO',1,0,1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'),1,FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000'))
+
+select * from ERP_SolicitudCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id where mo.idMovimiento='69'
+CREATE VIEW [dbo].[ERP_VW_VentaClientes] AS
+select pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+GO
+
+
+
+alter  VIEW [dbo].[ERP_VW_VentaClientes] AS
+select ven.anulado ,pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+
+
+GO
+
+select * from ERP_Venta
+SELECT * FROM ERP_Solicitud
+
+
+
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa) inner join ERP_SolicitudArticulo as soa on (soa.cCodConsecutivo=so.cCodConsecutivo and soa.nConsecutivo=so.nConsecutivo) where soa.nCantidadPendienteEntregar>0 and so.estado in (6,8) and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC
+
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa)  where ve.idventa IN (69,70) ORDER BY numero_comprobante DESC
+
+select * from ERP_view_solicitud_Asignacion
+
+select * from ERP_VW_VentaClientes WHERE anulado IS NULL  OR anulado !='S' OR 
 

@@ -28,7 +28,7 @@ class Customer extends Model
     const CREATED_AT = 'dFecCre';
     const UPDATED_AT = 'dFecMod';
 
-    protected $fillable = ['tipodoc', 'id','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','id_tipocli','telefono','ubigeo','cIdUsuCre','cIdUsuMod','IdTipoDocumento','idPersona','cEstadoCivil'];
+    protected $fillable = ['tipodoc', 'id','documento','razonsocial_cliente','contacto','direccion','correo_electronico','celular','id_tipocli','telefono','ubigeo','cIdUsuCre','cIdUsuMod','IdTipoDocumento','idPersona','cEstadoCivil','idsector'];
     
    public function user_c()
     {

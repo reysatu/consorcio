@@ -4,7 +4,7 @@
   
 (function () {
     'use strict';
-    angular.module('sys.app.customers')
+    angular.module('sys.app.customers') 
         .config(Config)
         .controller('CustomerCtrl', CustomerCtrl);
 
@@ -30,6 +30,7 @@
         var telefono=$("#telefono");
         var cliente_id=$("#cliente_id");
         var cEstadoCivil=$("#cEstadoCivil");
+        var idsector=$("#idsector");
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_state.html(txt_state2);
@@ -186,6 +187,7 @@ function getDatosCliente(){
                      getDepartamento(data_p[0].cDepartamento);
                      getProvincia(data_p[0].cProvincia,data_p[0].cDepartamento);
                      getDistrito(data_p[0].cCodUbigeo,data_p[0].cProvincia);
+                       getSector(data_p[0].idsector,data_p[0].cCodUbigeo);
 
                      modaClientes.modal('show');
                      console.log(data_p);
@@ -201,7 +203,7 @@ function getDatosCliente(){
       
         function getDepartamento(bandera){
             var id="0";
-            RESTService.get('shops/TraerDepartamentos', id, function(response) {
+            RESTService.get('customers/TraerDepartamentosCli', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      departamento.html('');
@@ -226,7 +228,7 @@ function getDatosCliente(){
                });
         }
           function getProvincia(bandera,id){
-                RESTService.get('shops/TraerProvincias', id, function(response) {
+                RESTService.get('customers/TraerProvinciasCli', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -252,7 +254,7 @@ function getDatosCliente(){
                });
        }
         function getDistrito(bandera,id){
-        RESTService.get('shops/TraerDistritos', id, function(response) {
+        RESTService.get('customers/TraerDistritosCli', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -277,10 +279,42 @@ function getDatosCliente(){
 
                });
        }
+       function getSector(bandera,id){
+        RESTService.get('customers/traerSectorli', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                     console.log(data_p);
+                       idsector.html('');
+                      idsector.append('<option value="" >Seleccione</option>');
+                     _.each(response.data, function(item) {
+                        if(item.id==bandera){
+                             idsector.append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                         }else{
+                             idsector.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+       }
         departamento.change(function () {
             var bandera='xxxxxx';
             var id=departamento.val();
             getProvincia(bandera,id);
+        });
+
+        distrito.change(function () {
+            var bandera='xxxxxx';
+            var id=distrito.val();
+            getSector(bandera,id);
         });
         
         provincia.change(function () {
@@ -309,6 +343,7 @@ function getDatosCliente(){
             departamento.val('');
             provincia.val('');
             distrito.val('');
+            idsector.val("");
             cEstadoCivil.val('');
             provincia.html('');
             distrito.html('');
@@ -323,7 +358,7 @@ function getDatosCliente(){
             bval = bval && documento.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
-            
+            bval = bval && idsector.required();
             if(tipodoc.val()=='01' && documento.val().length!=8){
                 AlertFactory.textType({
                             title: '',
@@ -340,6 +375,15 @@ function getDatosCliente(){
                 });
              bval = false;
             };
+             if(id_tipoDoc_Venta.val()=='01' && tipodoc.val()=='01'){
+                AlertFactory.textType({
+                            title: '',
+                            message: ' Tipo de documento del cliente debe ser R.U.C para el tipo documento venta factura',
+                            type: 'info'
+                });
+                bval = false;
+             }
+
             if(bval){
                  var params = {
                     'tipodoc': tipodoc.val(),
@@ -352,6 +396,7 @@ function getDatosCliente(){
                     'telefono': telefono.val(),
                     'distrito': distrito.val(),
                     'id_tipocli':id_tipocli.val(),
+                    'idsector':idsector.val(),
                     'IdTipoDocumento':id_tipoDoc_Venta.val(),
                     'cEstadoCivil':cEstadoCivil.val(),
 
@@ -482,7 +527,7 @@ function getDatosCliente(){
                 },
                 ubigeo: {
                     title: 'Distrito',
-                     options: base_url + '/shops/getDistrito' 
+                     options: base_url + '/customers/getDistritoCli' 
 
                 },
                 edit: {

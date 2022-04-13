@@ -100,7 +100,7 @@ where IdTipoDocumento in ('01','03')");
         $mostrar=DB::select("Select * from ERP_TABLASUNAT where cNombretabla = 'TIPO_PERSONA'");
         return $mostrar; 
     }
-    public function find($id)
+    public function find($id) 
     {
         $mostra=DB::select("SELECT ti.*, p.*, FORMAT(p.dFechanacimiento, 'dd/MM/yyyy') AS dFechanacimiento , ub.* FROM ERP_Clientes as ti 
         left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo 

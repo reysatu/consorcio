@@ -63,7 +63,7 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
              if(!empty($idcategoria)){
              $q->Where('idCategoria',$idcategoria);
         }
-        });
+        })->whereNull('anulado')->orWhere('anulado','!=','S');
 
     }
     public function allActive()
