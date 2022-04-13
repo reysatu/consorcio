@@ -3,7 +3,7 @@
  */
   
 (function () {
-    'use strict';
+    'use strict'; 
     angular.module('sys.app.aprobacionSolicituds')
         .config(Config)
         .controller('AprobacionSolicitudCtrl', AprobacionSolicitudCtrl);
@@ -16,7 +16,7 @@
 
         var modalVerAproba=$("#modalVerAproba");   
         var btn_verAprobacio=$(".btn_verAprobacio");
-
+        var modalObservacion=$("#modalObservacion");
         var titleModalProduct=$("#titleModalProduct"); 
         var estadoApro=$("#estadoApro");
         var btn_Aprobar=$(".btn_Aprobar");
@@ -38,6 +38,8 @@
         var descuentos;
         var servicios;
         var porcentajeTotal = $("#porcentajeTotal");
+        var comentario_aprobacion=$("#comentario_aprobacion");
+        var btn_observacion=$(".btn_observacion");
         // var t_monto_descuento = $("#t_monto_descuento");
         var valor_moneda;
         var btn_save_cliente = $("#btn_save_cliente");
@@ -104,6 +106,7 @@
         var terceros = $("#terceros");
         var otros_mo = $("#otros_mo");
         var subtotal_moa = $("#subtotal_moa");
+        var btn_guardarObservacion=$("#btn_guardarObservacion");
 
         var totalDescuento = $("#totalDescuento");
 
@@ -145,7 +148,7 @@
         var color = $("#color");
         var idconvenio = $("#idconvenio");
         var idvendedor = $("#idvendedor");
-
+        var comentario_aprobacion_so=$("#comentario_aprobacion_so");
         var AlmacenesSele;//variable para guardar almacenes
         var LotesSele;//variable para guardar lotes
         var DescuentosSele;//variable para guardar los decuentos
@@ -155,6 +158,7 @@
             cleanAprobar();
         });
              modalSolicitud.on('hidden.bs.modal', function (e) {
+                $("#comentario_aprobacion_so").val("");
                         btn_Aprobar.prop('disabled',false);
                          btn_Rechazar.prop('disabled',false);
         });
@@ -485,6 +489,9 @@
                     estadoApro.val("2");
                     modalAprobar.modal('show');
         });
+          btn_observacion.click(function (e) {
+                    modalObservacion.modal('show');
+        });
          btn_Aprobar.click(function (e) {
                  $("#LoadRecordsButtonAsignacioncobrador").click(); 
                  // $('#LoadRecordsButtonAsignacioncobrador').jtable('load');
@@ -574,6 +581,39 @@
 
         btn_save_cliente.click(function (e) {
             saveCliente();
+        });
+        btn_guardarObservacion.click(function (e) {
+            var bval = true;
+            bval = bval && comentario_aprobacion.required();
+            if (bval) {
+                var params = {
+                    'comentario_aprobacion': comentario_aprobacion.val(),
+                };
+                var cli_id =cCodConsecutivo.val()+'_'+nConsecutivo.val();
+
+                RESTService.updated('aprobacionSolicituds/updateComentarioAprobacion', cli_id, params, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                           AlertFactory.textType({
+                                title: '',
+                                message: 'El comentario se guardó correctamente',
+                                type: 'success'
+                            });
+                            comentario_aprobacion_so.val(response.data_comentario);
+                            modalObservacion.modal("hide");
+                            comentario_aprobacion.val(""); 
+                       // response.data_comentario;
+
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Cliente. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                });
+            }
         });
 
         function saveCliente() {
@@ -1586,7 +1626,9 @@
         var aartMSN = [];//ARRAY DE series nueva
         var aartMSE = [];
 
-
+         modalObservacion.on('hidden.bs.modal', function (e) {
+          comentario_aprobacion.val("");
+        });
 
         modalNada.on('hidden.bs.modal', function (e) {
             cleanArtNada();
@@ -3249,6 +3291,7 @@
                     }
 
                     $("#documento_or").val(data.solicitud[0].documento);
+                    $("#comentario_aprobacion_so").val(data.solicitud[0].comentario_aprobacion);
                     getCliente();
                     $("#tipo_solicitud").trigger("change");
                     $("#IdMoneda").trigger("change");
@@ -3264,6 +3307,7 @@
                         $("#documento_conyugue").val(data.solicitud_credito[0].documento_conyugue);
                         $("#documento_fiadorconyugue").val(data.solicitud_credito[0].documento_fiadorconyugue);
                         $("#dia_vencimiento_cuota").val(data.solicitud_credito[0].dia_vencimiento_cuota);
+
                     }
 
                     if (data.solicitud_articulo.length > 0) {

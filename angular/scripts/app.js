@@ -37,6 +37,7 @@
         'sys.app.empresas',
         'sys.app.areas',
         'sys.app.solicitudCompras',
+        'sys.app.sectors',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',

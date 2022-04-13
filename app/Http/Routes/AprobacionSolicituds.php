@@ -55,3 +55,5 @@ Route::post('aprobacionSolicituds/listAsigApro', ['as' => 'aprobacionSolicituds.
 Route::post('aprobacionSolicituds/totalesAproba', ['as' => 'aprobacionSolicituds.totalesAproba', 'uses' => 'AprobacionSolicitudController@allTotales']);
 
 Route::post('aprobacionSolicituds/listpendientesCobro', ['as' => 'aprobacionSolicituds.listpendientesCobro', 'uses' => 'AprobacionSolicitudController@listpendientesCobro']);
+
+Route::put('aprobacionSolicituds/updateComentarioAprobacion/{id}', ['as' => 'aprobacionSolicituds.updateComentarioAprobacion', 'uses' => 'AprobacionSolicitudController@updateComentarioAprobacion']);

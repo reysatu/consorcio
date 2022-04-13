@@ -20,3 +20,12 @@ Route::put('asignacioncobradors/saveCobrador/{id}', ['as' => 'asignacioncobrador
 Route::get('asignacioncobradors/tarjetaCobranza', ['as' => 'asignacioncobradors.tarjetaCobranza', 'uses' => 'AsignacioncobradorController@tarjetaCobranza']);
 
 Route::get('asignacioncobradors/cuentasporcobrar', ['as' => 'asignacioncobradors.cuentasporcobrar', 'uses' => 'AsignacioncobradorController@pdf_cuentasxcobrar']); 
+
+
+Route::get('asignacioncobradors/TraerDepartamentosOrde/{id}', ['as' => 'asignacioncobradors.TraerDepartamentosOrde', 'uses' => 'UbigeoController@TraerDepartamentos']);
+
+Route::get('asignacioncobradors/TraerProvinciasOrde/{id}', ['as' => 'asignacioncobradors.TraerProvinciasOrde', 'uses' => 'UbigeoController@TraerProvincias']);
+
+Route::get('asignacioncobradors/TraerDistritosOrde/{id}', ['as' => 'asignacioncobradors.TraerDistritosOrde', 'uses' => 'UbigeoController@TraerDistritos']);
+
+Route::get('asignacioncobradors/traerSectorOrd/{id}', ['as' => 'asignacioncobradors.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);

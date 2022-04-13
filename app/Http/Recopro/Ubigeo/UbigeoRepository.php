@@ -54,6 +54,12 @@ class UbigeoRepository implements UbigeoInterface
         return $mostrar;
     }
 
+    public function TraerSectores($id)
+    {
+        $mostrar=DB::select("SELECT * FROM ERP_Sector where ubigeo='$id' and estado='A'");
+        return $mostrar;
+    }
+
 
     // public function get_consecutivo($table,$id)
     // {     $mostrar=DB::select("select top 1 * from $table order by CONVERT(INT, $id) DESC");

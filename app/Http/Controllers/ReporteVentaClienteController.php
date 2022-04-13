@@ -24,7 +24,7 @@ class ReporteVentaClienteController extends Controller
 
     public function all(Request $request, ReporteVentaClienteInterface $repo)
     { 
-        $s = $request->input('search', '');
+        $s = $request->input('search', ''); 
         $filtro_tienda = $request->input('filtro_tienda', '');
 
         $idClienteFiltro = $request->input('idClienteFiltro', '');
@@ -32,7 +32,7 @@ class ReporteVentaClienteController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
         $idcategoria= $request->input('idcategoria', '');
-        $params =  ['idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente'];
+        $params =  ['idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Documento','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente']; 
         return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria), $request, 'idCategoria', $params);
     }
 

@@ -202,6 +202,7 @@
                                 message: 'El documento se anuló correctamente',
                                 type: 'success'
                            });
+                           LoadRecordsButtonVentas.click(); 
                     }else {
                         var msg_ = (_.isUndefined(response.message)) ?
                             'No se pudo eliminar. Intente nuevamente.' : response.message;

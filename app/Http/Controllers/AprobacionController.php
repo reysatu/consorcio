@@ -132,6 +132,7 @@ class AprobacionController extends Controller
             ]);
         }
     }
+    
     public function create(AprobacionInterface $repo, AprobacionRequest $request)
     {
         $data = $request->all();

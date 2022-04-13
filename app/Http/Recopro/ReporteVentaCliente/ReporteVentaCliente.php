@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Time: 11:20 AM
  */
 class ReporteVentaCliente extends Model
-{
+{ 
   
     protected $table = 'ERP_VW_VentaClientes';
 

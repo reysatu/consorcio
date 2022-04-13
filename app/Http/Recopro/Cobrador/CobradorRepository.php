@@ -39,6 +39,16 @@ class CobradorRepository implements CobradorInterface
 
         return $result;
     }
+    public function asignar_cobrador_total($idCobrador)
+    {
+
+        $sql = " UPDATE ERP_Solicitud
+                 SET idCobrador = '$idCobrador'
+                 where cCodConsecutivo in (select cCodConsecutivo from ERP_view_solicitud_Asignacion) and  nConsecutivo in (select nConsecutivo from ERP_view_solicitud_Asignacion)";
+        $result = DB::update($sql);
+
+        return $result;
+    }
     public function getCobrador(){
           $mostrar2=DB::select("select * from ERP_Cobrador where estado='A'");
           return $mostrar2;

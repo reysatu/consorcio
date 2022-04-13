@@ -11,6 +11,8 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\AprobacionSolicitud\AprobacionSolicitudInterface;
+use App\Http\Recopro\AprobacionUsuario\AprobacionUsuarioInterface;
+use App\Http\Recopro\Aprobacion\AprobacionInterface;
 use App\Http\Recopro\AprobacionTotal\AprobacionTotalInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\View_PendienteCobro\View_PendienteCobroInterface;
@@ -39,6 +41,34 @@ class AprobacionSolicitudController extends Controller
         $IdMoneda = $request->input('IdMoneda', '');
         $params = ['IdMoneda','idCliente', 't_monto_total','pagado','saldo','serie_comprobante','numero_comprobante','razonsocial_cliente','fecha_emision','cCodConsecutivo_solicitud','nConsecutivo_solicitud','condicion_pago_text','tipoDocumento','moneda'];
         return parseList($repo->search($IdMoneda,$idcliente), $request, 'idcliente', $params);
+    }
+     public function updateComentarioAprobacion($id, AprobacionInterface $repo, AprobacionUsuarioInterface $repoDet, request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $comentario = strtoupper($data['comentario_aprobacion']);
+            $idCom = explode("_", $id);
+           
+            $repo->update_aprobacion($idCom[0],$idCom[1],$comentario);
+           
+
+
+           
+
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+               'data_comentario'=>$comentario,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function AprobarRechazarSolicitud($id, AprobacionSolicitudInterface $repo,Request $request, SolicitudInterface $solicitud_repositorio)
