@@ -18,12 +18,21 @@ class ReporteCreditosAprobadoRepository implements ReporteCreditosAprobadoInterf
         $this->model = $model; 
        
     }
+    public function TraerConvenios()
+    {
+        $sql = "
+          select * from ERP_Convenios where estado='1'
+";
+
+        return DB::select($sql);
+
+    }
 
     public function all()
     {
         return $this->model->get();
     }
-    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio)
     {
         $dato=$this->model;
        if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
@@ -39,12 +48,20 @@ class ReporteCreditosAprobadoRepository implements ReporteCreditosAprobadoInterf
             if($idClienteFiltro !='' ){
             $dato=$dato->where('idcliente',$idClienteFiltro);
         }
+             if($idTipoSolicitud !='' ){
+            $dato=$dato->where('tipo_solicitud',$idTipoSolicitud);
+        }
+            if($idConvenio !='' ){
+            $dato=$dato->where('idconvenio',$idConvenio);
+        }
+
+      
         
         return $dato->get();
     }
-    public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+    public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio)
     {
-        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro){
+        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio){
             if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
                  $q->whereDate('fecha_solicitud','>=',$FechaInicioFiltro);
                  $q->whereDate('fecha_solicitud','<=',$FechaFinFiltro);
@@ -57,6 +74,12 @@ class ReporteCreditosAprobadoRepository implements ReporteCreditosAprobadoInterf
             }
             if($idClienteFiltro !='' ){
                   $q->where('idcliente',$idClienteFiltro);
+            }
+             if($idTipoSolicitud !='' ){
+                  $q->where('tipo_solicitud',$idTipoSolicitud);
+            }
+            if($idConvenio !='' ){
+                  $q->where('idconvenio',$idConvenio);
             }
              
         });

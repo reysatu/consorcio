@@ -1076,10 +1076,18 @@ function getFormSearchReporteVenta(form_id, input_id, btn_id) {
                 '</div>'+
             '</div>'+
             '<div class="form-group">'+
+                '<div class="col-md-3 ">'+
+                    '<select id="idTipoSolicitud"  style="margin-right:5px;width: 100%" name="idTipoSolicitud" class="form-control input-sm "><option value="">Tipo Solicitud</option><option value="1">CONTADO</option><option value="2">CRÉDITO DIRECTO</option><option value="3">CRÉDITO FINANCIERO</option><option value="4">CRÉDITO</option></select>'+
+                '</div>'+
+                '<div class="col-md-3">'+
+                    '<select id="idConvenio"  style="margin-right:5px;width: 100%" name="idConvenio" class="form-control input-sm "><option value="">Convenio</option></select>'+
+                '</div>'+
                 '<div class="col-md-3">'+
                     '<select id="idcategoria"  style="margin-right:5px;width: 100%" name="idcategoria" class="form-control input-sm "></select>'+
                 '</div>'+ 
-                '<div class="col-md-1 col-md-offset-4">' +
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-1 col-md-offset-7">' +
                     '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
                         '<i class="fa fa-search"></i>' +
                     '</button>' +
@@ -1449,6 +1457,72 @@ function getFormSearchAsigApro(form_id, input_id, btn_id) {
         '</div>' +
         '</form>';
 }
+
+
+
+function getFormSearchReporteCreditosAprobados(form_id, input_id, btn_id) {
+   return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+            // '<div class="form-group">'+
+            //     '<div class="col-md-2">'+
+            //         '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+            //     '</div>'+
+                
+            //     '<div class="col-md-2">' +
+            //         '<button  type="button"  id="btn_exportar_dd" class="btn-danger-admin  btn-sm">' +
+            //                 '<i class="fa fa-plus">Asignar Cobrador</i>' +
+            //         '</button>' +
+            //     '</div>'+           
+            // '</div>'+
+             '<div class="form-group">'+
+                 '<div class="col-md-2  ">'+
+                    '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+                '</div>'+
+                '<label class="col-sm-2 control-label">Fecha Inicio</label>'+
+                '<div class="col-md-3">'+
+                     '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
+                '</div>'+
+                '<label class="col-sm-2 control-label">Fecha Fin</label>'+
+                '<div class="col-md-3">'+
+                    '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
+                '</div>'+
+                
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-6 ">'+
+                    '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+                '<div class="col-md-6">'+
+                    '<select id="idVendedorFiltro"  style="margin-right:5px;width: 100%" name="idVendedorFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-3 ">'+
+                    '<select id="idTipoSolicitud"  style="margin-right:5px;width: 100%" name="idTipoSolicitud" class="form-control input-sm "><option value="">Tipo Solicitud</option><option value="1">CONTADO</option><option value="2">CRÉDITO DIRECTO</option><option value="3">CRÉDITO FINANCIERO</option><option value="4">CRÉDITO</option></select>'+
+                '</div>'+
+                '<div class="col-md-3">'+
+                    '<select id="idConvenio"  style="margin-right:5px;width: 100%" name="idConvenio" class="form-control input-sm "><option value="">Convenio</option></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+                '<div class="col-md-1 col-md-offset-7">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</div>'+
+                 '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
+                            '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
+                    '</button>' +
+                '</div>'+ 
+                '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_expPDF" class="btn-success  btn-sm">' +
+                            '<i class="fa fa-file-pdf-o">Exportar Pdf</i>' +
+                    '</button>' +
+                '</div>'+           
+            '</div>'+
+
+         '</form>';
+}
 function getFormSearchAsignacion(form_id, input_id, btn_id) {
    return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
             '<div class="form-group">'+
@@ -1558,6 +1632,34 @@ function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {
                 
                 '<div class="col-md-5">'+
                     '<select id="idCobradorFiltro"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select id="Departamento"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "><option value="">Departemento</option></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="provincia"   style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "><option value="">Provincia</option></select>'+
+                '</div>'+
+            '</div>'+
+            '<div class="form-group">'+
+               
+                '<div class="col-md-5">'+
+                    '<select  id="distrito"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "><option value="">Distrito</option></select>'+
+                '</div>'+
+                
+                '<div class="col-md-5">'+
+                    '<select id="idsector"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "><option value="">Sector</option></select>'+
+                '</div>'+
+            '</div>'+
+              '<div class="form-group">'+
+                '<div class="col-md-5 ">'+
+                    '<select id="idTipoSolicitud"  style="margin-right:5px;width: 100%" name="idTipoSolicitud" class="form-control input-sm "><option value="">Tipo Solicitud</option><option value="1">CONTADO</option><option value="2">CRÉDITO DIRECTO</option><option value="3">CRÉDITO FINANCIERO</option><option value="4">CRÉDITO</option></select>'+
+                '</div>'+
+                '<div class="col-md-5">'+
+                    '<select id="idConvenio"  style="margin-right:5px;width: 100%" name="idConvenio" class="form-control input-sm "><option value="">Convenio</option></select>'+
                 '</div>'+
             '</div>'+
          '</form>';

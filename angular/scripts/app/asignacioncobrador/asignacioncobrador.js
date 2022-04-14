@@ -5,7 +5,7 @@
 (function () {
     'use strict';
     angular.module('sys.app.asignacioncobradors')
-        .config(Config)
+        .config(Config) 
         .controller('AsignacioncobradorCtrl', AsignacioncobradorCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
@@ -488,7 +488,7 @@
                });
         };
         getDepartamento(banderaEmpi);
-          function getProvincia(bandera,id){
+        function getProvincia(bandera,id){
                 RESTService.get('asignacioncobradors/TraerProvinciasOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;

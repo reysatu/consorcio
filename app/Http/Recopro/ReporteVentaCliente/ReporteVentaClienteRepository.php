@@ -20,10 +20,10 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
     }
 
     public function all()
-    {
+    { 
         return $this->model->get(); 
     }
-    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)
+    public function allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio)
     {
         $dato=$this->model;
        if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
@@ -42,11 +42,17 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
          if(!empty($idcategoria)){
              $dato=$dato->Where('idCategoria',$idcategoria);
         }
+             if($idTipoSolicitud !='' ){
+            $dato=$dato->where('tipo_solicitud',$idTipoSolicitud);
+        }
+            if($idConvenio !='' ){
+            $dato=$dato->where('idconvenio',$idConvenio);
+        }
         return $dato->get();
     }
-     public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)
+     public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio)
     {
-        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria){
+        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio){
             if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
                  $q->whereDate('Fecha','>=',$FechaInicioFiltro);
                  $q->whereDate('Fecha','<=',$FechaFinFiltro);
@@ -62,7 +68,16 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
             }
              if(!empty($idcategoria)){
              $q->Where('idCategoria',$idcategoria);
+
+          
+
         }
+           if($idTipoSolicitud !='' ){
+                  $q->where('tipo_solicitud',$idTipoSolicitud);
+            }
+            if($idConvenio !='' ){
+                  $q->where('idconvenio',$idConvenio);
+            }
         })->whereNull('anulado')->orWhere('anulado','!=','S');
 
     }

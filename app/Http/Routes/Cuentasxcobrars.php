@@ -7,7 +7,7 @@
  */ 
  
 Route::post('cuentasxcobrars/list', ['as' => 'cuentasxcobrars.list', 'uses' => 'AsignacioncobradorController@all']);
-
+ 
 Route::post('cuentasxcobrars/listcuentas', ['as' => 'cuentasxcobrars.listcuentas', 'uses' => 'AsignacioncobradorController@allCuentasxcobrar']);
 
 Route::post('cuentasxcobrars/create', ['as' => 'cuentasxcobrars.create', 'uses' => 'AsignacioncobradorController@create']);
@@ -23,3 +23,15 @@ Route::put('cuentasxcobrars/saveCobrador/{id}', ['as' => 'cuentasxcobrars.saveCo
 Route::get('cuentasxcobrars/tarjetaCobranza', ['as' => 'cuentasxcobrars.tarjetaCobranza', 'uses' => 'AsignacioncobradorController@tarjetaCobranza']);
 
 Route::get('cuentasxcobrars/cuentasporcobrar', ['as' => 'cuentasxcobrars.cuentasporcobrar', 'uses' => 'AsignacioncobradorController@pdf_cuentasxcobrar']); 
+
+
+Route::get('cuentasxcobrars/TraerDepartamentosOrde/{id}', ['as' => 'cuentasxcobrars.TraerDepartamentosOrde', 'uses' => 'UbigeoController@TraerDepartamentos']);
+
+Route::get('cuentasxcobrars/TraerProvinciasOrde/{id}', ['as' => 'cuentasxcobrars.TraerProvinciasOrde', 'uses' => 'UbigeoController@TraerProvincias']);
+
+Route::get('cuentasxcobrars/TraerDistritosOrde/{id}', ['as' => 'cuentasxcobrars.TraerDistritosOrde', 'uses' => 'UbigeoController@TraerDistritos']);
+
+Route::get('cuentasxcobrars/traerSectorOrd/{id}', ['as' => 'cuentasxcobrars.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);
+
+
+Route::get('cuentasxcobrars/traerConvenios/{id}', ['as' => 'cuentasxcobrars.traerConvenios', 'uses' => 'ReporteCreditosAprobadoController@traerConvenios']); 

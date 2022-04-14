@@ -13,3 +13,5 @@ Route::post('reporteVentaClientes/update', ['as' => 'reporteVentaClientes.update
 Route::get('reporteVentaClientes/excel', ['as' => 'reporteVentaClientes.excel', 'uses' => 'ReporteVentaClienteController@excel']);
 Route::get('reporteVentaClientes/data_form', ['as' => 'reporteVentaClientes.data_form', 'uses' => 'AsignacioncobradorController@data_form']);
 Route::get('reporteVentaClientes/pdf', ['as' => 'reporteVentaClientes.pdf', 'uses' => 'ReporteVentaClienteController@pdf']);
+
+Route::get('reporteVentaClientes/traerConvenios/{id}', ['as' => 'reporteVentaClientes.traerConvenios', 'uses' => 'ReporteCreditosAprobadoController@traerConvenios']); 
