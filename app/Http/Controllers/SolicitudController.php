@@ -442,8 +442,8 @@ class SolicitudController extends Controller
             DB::beginTransaction();
 
             $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
-            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data));
             $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data));
+            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data));
             $result = $this->base_model->eliminar($this->preparar_datos("dbo.ERP_Solicitud", $data));
         
             DB::commit();

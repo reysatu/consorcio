@@ -19,6 +19,7 @@ use App\Http\Recopro\Ventas\VentasInterface;
 use App\Models\BaseModel;
 use DB;
 use Illuminate\Http\Request;
+use Exception;
 
 class RefinanciamientosController extends Controller
 {

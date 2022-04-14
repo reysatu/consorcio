@@ -138,7 +138,8 @@ class VentasController extends Controller
             INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
             INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
             INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
-            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' {$where}";
+            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' {$where}
+            ORDER BY c.descripcion ASC";
            
             $pagos = DB::select($sql);
             

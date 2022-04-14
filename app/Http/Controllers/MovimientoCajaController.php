@@ -1004,29 +1004,36 @@ class MovimientoCajaController extends Controller
                         $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
                         $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
 
-                      
-                        $data_venta_detalle["precio_total"] = round($subtotal, 2);
+                        $data_venta_detalle["precio_total"] = 0;
                         $data_venta_detalle["monto_descuento"] = 0;
-                        $data_venta_detalle["monto_subtotal"] = round($subtotal, 2);
+                        $data_venta_detalle["monto_subtotal"] = 0;
+                        $data_venta_detalle["impuestos"] = 0;
+                        $data_venta_detalle["monto_afecto"] = 0;
+                        $data_venta_detalle["monto_exonerado"] = 0;
+                        $data_venta_detalle["monto_inafecto"] = 0;
+                        $data_venta_detalle["monto_total"] = 0;
+
                         if($solicitud_articulo[$i]->cOperGrat != "S") {
                             $data_venta_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
+                            $data_venta_detalle["precio_total"] = round($subtotal, 2);
+                            $data_venta_detalle["monto_subtotal"] = round($subtotal, 2);
+
+
+                            if($solicitud_articulo[$i]->impuestos > 0) {
+                                $igv = $parametro_igv[0]->value;
+                                $data_venta_detalle["impuestos"] = $subtotal * $igv / 100;
+                                $data_venta_detalle["monto_afecto"]  = $subtotal;
+                            } else {
+                                $data_venta_detalle["monto_exonerado"] = $subtotal;
+                            }
+
+                            $data_venta_detalle["monto_total"] = $data_venta_detalle["monto_exonerado"] + $data_venta_detalle["monto_afecto"] + $data_venta_detalle["impuestos"];
+    
+
                         } else {
                             $data_venta_detalle["precio_unitario"] = round($solicitud_articulo[$i]->precio_unitario, 2);
                         }
                         
-
-                        if($solicitud_articulo[$i]->impuestos > 0) {
-                            $igv = $parametro_igv[0]->value;
-                            $data_venta_detalle["impuestos"] = $subtotal * $igv / 100;
-                            $data_venta_detalle["monto_afecto"]  = $subtotal;
-                        } else {
-                            $data_venta_detalle["monto_exonerado"] = $subtotal;
-                        }
-
-    
-                        $data_venta_detalle["monto_total"] = $data_venta_detalle["monto_exonerado"] + $data_venta_detalle["monto_afecto"] + $data_venta_detalle["impuestos"];
-    
-                        $data_venta_detalle["monto_inafecto"] = 0;
 
                         $data_venta_detalle["nOperGratuita"] = 0;
                         if($solicitud_articulo[$i]->cOperGrat == "S") {
@@ -1093,29 +1100,41 @@ class MovimientoCajaController extends Controller
 
                     } else {
                         //SEGUNDA VENTA DEL CREDITO
+                        //PRORRATEAMOS
 
                         $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
                         $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
 
-                      
-                        $data_ticket_detalle["precio_total"] = round($subtotal, 2);
+                        $data_ticket_detalle["precio_total"] = 0;
                         $data_ticket_detalle["monto_descuento"] = 0;
-                        $data_ticket_detalle["monto_subtotal"] = round($subtotal, 2);
-
-                        $data_ticket_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
-
-                        if($solicitud_articulo[$i]->impuestos > 0) {
-                            $igv = $parametro_igv[0]->value;
-                            $data_ticket_detalle["impuestos"] = $subtotal * $igv / 100;
-                            $data_ticket_detalle["monto_afecto"]  = $subtotal;
-                        } else {
-                            $data_ticket_detalle["monto_exonerado"] = $subtotal;
-                        }
-
-    
-                        $data_ticket_detalle["monto_total"] = $data_ticket_detalle["monto_exonerado"] + $data_ticket_detalle["monto_afecto"] + $data_ticket_detalle["impuestos"];
-    
+                        $data_ticket_detalle["monto_subtotal"] = 0;
+                        $data_ticket_detalle["impuestos"] = 0;
+                        $data_ticket_detalle["monto_afecto"] = 0;
+                        $data_ticket_detalle["monto_exonerado"] = 0;
                         $data_ticket_detalle["monto_inafecto"] = 0;
+                        $data_ticket_detalle["monto_total"] = 0;
+
+                        if($solicitud_articulo[$i]->cOperGrat != "S") {
+                            $data_ticket_detalle["precio_unitario"] = round( $subtotal / $solicitud_articulo[$i]->cantidad, 2);
+                            $data_ticket_detalle["precio_total"] = round($subtotal, 2);
+                            $data_ticket_detalle["monto_subtotal"] = round($subtotal, 2);
+
+
+                            if($solicitud_articulo[$i]->impuestos > 0) {
+                                $igv = $parametro_igv[0]->value;
+                                $data_ticket_detalle["impuestos"] = $subtotal * $igv / 100;
+                                $data_ticket_detalle["monto_afecto"]  = $subtotal;
+                            } else {
+                                $data_ticket_detalle["monto_exonerado"] = $subtotal;
+                            }
+
+                            $data_ticket_detalle["monto_total"] = $data_ticket_detalle["monto_exonerado"] + $data_ticket_detalle["monto_afecto"] + $data_ticket_detalle["impuestos"];
+    
+
+                        } else {
+                            $data_ticket_detalle["precio_unitario"] = round($solicitud_articulo[$i]->precio_unitario, 2);
+                        }
+                        
 
                         $data_ticket_detalle["nOperGratuita"] = 0;
                         if($solicitud_articulo[$i]->cOperGrat == "S") {
@@ -1526,7 +1545,7 @@ class MovimientoCajaController extends Controller
 
     }
 
-      public function guardar_pago_documentos_pendientes(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio, VentasInterface $ventas_repo) {
+    public function guardar_pago_documentos_pendientes(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio, VentasInterface $ventas_repo) {
 
         $data = $request->all();
 
@@ -1649,7 +1668,7 @@ class MovimientoCajaController extends Controller
                 $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$fp];
                 $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$fp];
                 $data_caja_detalle["monto"] = $data["monto_pago"][$fp];
-                $data_caja_detalle["descripcion"] = "Ingreso por Pago Cuota";
+                $data_caja_detalle["descripcion"] = "Ingreso por Cancelación de Deuda";
                 $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$fp];
                 $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$fp];
                 $data_caja_detalle["naturaleza"] = "E";
@@ -1663,7 +1682,7 @@ class MovimientoCajaController extends Controller
                     $data_caja_detalle["codigoFormaPago"] = "EFE";
                     $data_caja_detalle["idMoneda"] = $data["idmoneda_dp"];
                     $data_caja_detalle["monto"] = $data["vuelto"][$fp];
-                    $data_caja_detalle["descripcion"] = "Vuelto por Pago Cuota";
+                    $data_caja_detalle["descripcion"] = "Vuelto por Pago Documento Pendiente";
                     $data_caja_detalle["nroTarjeta"] = "";
                     $data_caja_detalle["nroOperacion"] = "";
                     $data_caja_detalle["naturaleza"] = "S";

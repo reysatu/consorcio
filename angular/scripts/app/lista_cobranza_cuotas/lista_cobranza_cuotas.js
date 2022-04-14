@@ -12,6 +12,16 @@
     ListaCobranzaCuotasCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory'];
 
     function ListaCobranzaCuotasCtrl($scope, _, RESTService, AlertFactory) {
+
+
+        $(document).on("change", "#tipo_solicitud", function () {
+            var tipo_solicitud = $(this).val();
+            if (tipo_solicitud == "3") {
+                $(".convenio").show();
+            } else {
+                $(".convenio").hide();
+            }
+        })
         var departamento = $('#departamento');
         var provincia = $('#provincia');
         var distrito = $('#distrito');
