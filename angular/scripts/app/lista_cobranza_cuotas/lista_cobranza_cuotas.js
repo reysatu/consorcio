@@ -292,6 +292,7 @@
                     tipo_solicitud: $("#tipo_solicitud").val(),
                     ubigeo: $("#ubigeo").val(),
                     idconvenio: $("#idconvenio").val(),
+                    idsector: $("#idsector").val(),
 
                 })
             }

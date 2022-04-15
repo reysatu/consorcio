@@ -359,7 +359,7 @@ class VentasController extends Controller
         }
 
         if(!empty($data["idsector"])) {
-            $where .= " AND cc.idsector={$data["ubigeo"]}";
+            $where .= " AND cc.idsector={$data["idsector"]}";
         }
 
         $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  

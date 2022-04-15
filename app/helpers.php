@@ -210,7 +210,13 @@ function generateExcel($data, $file_name, $sheet_name)
     // print_r($data); exit;
     $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name) {
         $excel->sheet($sheet_name, function ($sheet) use ($data) {
+            $sheet->setColumnFormat(array(
+                'J' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00,
+                'K' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00
+               
+            ));
             $sheet->loadView('excel.view')->with('data', $data);
+           
         });
     });
 
