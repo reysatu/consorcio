@@ -39,6 +39,92 @@ select * from ERP_Moneda
 select * from ERP_Vendedores where estado='A'
 select * from ERP_Moneda
 
+select * from ERP_Clientes
+select * from ERP_Sector
+ALTER TABLE ERP_Clientes
+ADD idsector int 
+
+
+CREATE TABLE ERP_Sector (
+		id int not null,
+    descripcion varchar(255)  null,
+		ubigeo varchar(10) null,
+		estado varchar(1)  null,
+		user_created varchar(10) null,
+		created_at datetime null,
+		user_updated varchar(10) null,
+		updated_at datetime null,
+	  PRIMARY KEY (id)
+);
+
+SELECT * FROM ERP_Sector where ubigeo='220901'
+
+select * from ERP_TipoProveedor
+
+SELECT * FROM ERP_SolicitudCompra_Articulo
+
+ALTER TABLE ERP_TipoProveedor
+ADD cCostoCuentaPagar varchar(25),
+ cCostoCuentaCieDev varchar(25),
+ cCostoCuentaCieCre varchar(25)
+
+ALTER TABLE ERP_SolicitudCompra_Articulo
+ADD cCostoCuentaPagar varchar(25),
+ cCostoCuentaCieDev varchar(25),
+ cCostoCuentaCieCre varchar(25)
+ 
+ select * from ERP_SolicitudCompra_Detalle
+
+select * from ERP_Productos
+
+select * from ERP_UnidadMedida
+
+select * from ERP_Productos as pr inner join ERP_UnidadMedida as un on (pr.um_id=un.IdUnidadMedida) where pr.id='01'
+
+
+CREATE VIEW [dbo].[ERP_view_solicitud_Asignacion] AS 
+SELECT sect.descripcion as sector,c.idsector,ubi.cDepartamento,ubi.cProvincia,ubi.cDistrito,v.idventa,v.IdTipoDocumento,v.serie_comprobante,v.numero_comprobante,co.id as idCobrador ,c.id as idCliente ,c.razonsocial_cliente as cliente , tdoc.Descripcion as tipoComprobanteText,co.descripcion as Cobrador, con.nCodTienda, v.tipo_comprobante,s.cCodConsecutivo, s.nConsecutivo, s.fecha_solicitud, s.tipo_solicitud, s.estado, s.idconvenio, s.descuento_id, tc.cDescripcion AS tipo_documento, c.documento AS numero_documento, m.Descripcion AS moneda, s.t_monto_total,
+CASE WHEN s.saldo IS NULL THEN 0 ELSE s.saldo END AS saldo,
+CASE WHEN s.pagado IS NULL THEN 0 ELSE s.pagado END AS pagado,
+CASE WHEN s.facturado IS NULL THEN 0 ELSE s.facturado END AS facturado
+FROM ERP_Solicitud AS s
+INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
+left join ERP_Ubigeo as ubi on (ubi.cCodUbigeo=c.ubigeo)
+INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
+INNER JOIN ERP_Venta AS v on(v.cCodConsecutivo_solicitud=s.cCodConsecutivo and v.nConsecutivo_solicitud=s.nConsecutivo and v.tipo_comprobante = 0 and v.IdTipoDocumento in ('03','01'))
+INNER JOIN ERP_Consecutivos AS con on (con.cCodConsecutivo=s.cCodConsecutivo)
+INNER JOIN ERP_TipoDocumento AS tdoc on (v.IdTipoDocumento=tdoc.IdTipoDocumento)
+left  join ERP_Cobrador as co on(s.idCobrador=co.id)
+left join erp_sector as sect on (sect.id=c.idsector)
+WHERE S.saldo > 0 AND S.estado > 5
+
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 alter VIEW [dbo].[ERP_VW_VentaClientes] AS
 select ven.anulado, pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
 sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
@@ -58,6 +144,25 @@ left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
 where ven.idVenta not in (select ven.idventa from erp_venta as ven inner join ERP_Venta as nota on(ven.idventa=nota.idventa_referencia)
 )
 
+alter VIEW [dbo].[ERP_VW_VentaClientes] AS
+select ven.anulado, pr.idCategoria as idCategoria,ven.idtienda as idtienda ,ved.idvendedor as idvendedor,ved.descripcion as usuario,ven.idventa,ven.fecha_emision as Fecha,concat(ven.serie_comprobante,'-', ven.numero_comprobante) as Documento ,ven.serie_comprobante, ven.numero_comprobante,cl.correo_electronico,cl.id as idcliente,cl.documento as DocumentoCliente,cl.razonsocial_cliente as razonsocial_cliente, cl.direccion as Direccion,cl.celular,mo.descripcion as Modelo,ser.motor as Motor,ser.nombreSerie as numero_serie,ser.color as Color , ser.idSerie as idSerie,
+sc.cuota_inicial as cuota_inicial,sa.precio_unitario as precio_unitario,fp.id as idcondicion_pago,fp.description as condicion_pago,mon.IdMoneda as IdMoneda,mon.descripcion as Moneda,ven.saldo, ven.pagado
+from ERP_Venta as ven
+INNER JOIN ERP_Solicitud as s on(ven.cCodConsecutivo_solicitud=s.cCodConsecutivo and ven.nConsecutivo_solicitud=s.nConsecutivo)
+INNER JOIN ERP_SolicitudArticulo as sa on(sa.cCodConsecutivo=s.cCodConsecutivo and sa.nConsecutivo=s.nConsecutivo)
+inner join ERP_Productos as pr on (pr.id=sa.idarticulo)
+inner join ERP_Moneda as mon on (mon.IdMoneda=ven.idmoneda)
+inner join ERP_Venta as tiket on (ven.idventa=tiket.idventa_comprobante)
+left JOIN ERP_SolicitudCredito as sc on(sc.cCodConsecutivo=s.cCodConsecutivo and sc.nConsecutivo=s.nConsecutivo)
+left JOIN ERP_SolicitudDetalle as sd on(sd.cCodConsecutivo=sa.cCodConsecutivo and sd.nConsecutivo=sa.nConsecutivo and sa.id=sd.id_solicitud_articulo)
+LEFT JOIN ERP_Serie AS ser ON (ser.idSerie=sd.idSerie)
+LEFT JOIN ERP_Modelo AS mo ON (pr.idModelo=mo.idModelo)
+LEFT JOIN ERP_Clientes AS cl ON (cl.id=s.idcliente)
+LEFT JOIN ERP_Vendedores AS ved ON (ved.idvendedor=s.idvendedor)
+left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
+where ven.idVenta not in (select ven.idventa from erp_venta as ven inner join ERP_Venta as nota on(ven.idventa=nota.idventa_referencia)
+)
+select * from ERP_view_solicitud_Asignacion
 
 
 ALTER VIEW [dbo].[ERP_view_solicitud_Asignacion] AS 
@@ -148,8 +253,27 @@ left join ERP_CondicionPago as fp on (fp.id=ven.condicion_pago)
 GO
 
 
+
+	
+
 ////////////////////
 select * from ERP_Compradores
+
+CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
+	[nIdAprob] [int] NOT NULL,
+	[nIdUsuario] [int] NOT NULL,
+	[nOrden] [int] NOT NULL,
+	[cIdUsuCre] [varchar](30) NOT NULL,
+	[dFecCre] [datetime] NOT NULL,
+	[cIdUsuMod] [varchar](30) NOT NULL,
+	[dFecMod] [datetime] NOT NULL,
+	 PRIMARY KEY (nIdAprob,nIdUsuario)
+)
+
+
+ALTER TABLE ERP_Venta
+ADD anulado varchar(1)
+
 
 CREATE TABLE [dbo].[ERP_AprobacionCompraDetalle](
 	[nIdAprob] [int] NOT NULL,

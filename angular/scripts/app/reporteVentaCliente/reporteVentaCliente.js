@@ -12,7 +12,7 @@
     ReporteVentaClienteCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
     function ReporteVentaClienteCtrl($scope, _, RESTService, AlertFactory, Helpers)
-    {    
+    {     
 
 
          var modalCobradores=$("#modalCobradores");
@@ -53,6 +53,13 @@
                 },
                 Documento: {
                   title: 'Documento',
+                },
+                tipo_solicitud: {
+                    title: 'tipo_solicitud',
+                    options: { '1': 'CONTADO', '2': 'CRÉDITO DIRECTO', '3': 'CRÉDITO FINANCIERO', '4': 'CRÉDITO'},
+                },
+                convenio: {
+                    title: 'convenio',
                 },
                 Fecha: {
                 title: 'FECHA',
@@ -150,7 +157,8 @@
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
                 idcategoria:$("#idcategoria").val(),
-                
+                  idTipoSolicitud: $('#idTipoSolicitud').val(),
+                 idConvenio:$("#idConvenio").val(),
 
             });
         }, true);
@@ -163,6 +171,8 @@
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
                              idcategoria:$("#idcategoria").val(),
+                              idTipoSolicitud: $('#idTipoSolicitud').val(),
+                             idConvenio:$("#idConvenio").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -176,6 +186,8 @@
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
                              idcategoria:$("#idcategoria").val(),
+                              idTipoSolicitud: $('#idTipoSolicitud').val(),
+                             idConvenio:$("#idConvenio").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -228,6 +240,40 @@
         getDataForm();
         $("#idVendedorFiltro").select2();
         $("#idClienteFiltro").select2();
+        function getConvenio(){
+            var id=0;
+           RESTService.get('reporteVentaClientes/traerConvenios', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                      $("#idConvenio").html('');
+                      $("#idConvenio").append('<option value="" >Convenio</option>');
+                     _.each(response.data, function(item) {
+                             $("#idConvenio").append('<option value="'+item.idconvenio+'">'+item.descripcionconvenio+'</option>');
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+        }
+        $("#idTipoSolicitud").val();
+        $("#idConvenio").val();
+
+        $("#idTipoSolicitud").change(function () {
+            var id=$("#idTipoSolicitud").val();
+            if(id=='3'){
+               getConvenio(); 
+            }else{
+                $("#idConvenio").html('');
+                $("#idConvenio").append('<option value="" >Convenio</option>');
+            }
+           
+        });
     }
 
     function Config($stateProvider, $urlRouterProvider) {

@@ -33,12 +33,19 @@ class AsignacioncobradorController extends Controller
              $filtro_tienda = $request->input('filtro_tienda', '');
              $idInicio = $request->input('idInicio', '');
              $idFin = $request->input('idFin', '');
-             $idClienteFiltro = $request->input('idClienteFiltro', '');
+             $idClienteFiltro = $request->input('idClienteFiltro', ''); 
              $idCobradorFiltro = $request->input('idCobradorFiltro', '');
 
              $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
              $FechaFinFiltro = $request->input('FechaFinFiltro', '');
-             $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
+
+            $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+             $idConvenio = $request->input('idConvenio', '');
+             
+             
+
+             $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio);
+
             $solitud=array(); 
             foreach ($datafilcab as $row) {
                array_push($solitud, $row->idventa);
@@ -147,16 +154,25 @@ class AsignacioncobradorController extends Controller
         $idInicio = $request->input('idInicio', '');
         $idFin = $request->input('idFin', '');
         $idClienteFiltro = $request->input('idClienteFiltro', '');
-        $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+         $idCobradorFiltro = $request->input('idCobradorFiltro', '');
 
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
-        $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+        $FechaFinFiltro = $request->input('FechaFinFiltro', '');  
         
+        $Departamento = $request->input('Departamento', '');
+        $provincia = $request->input('provincia', '');
+        $iddistrito = $request->input('iddistrito', '');
+        $distrito = $request->input('distrito', '');
+
+        $idsector = $request->input('idsector', '');
+
+        $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
 
 
-        $params = ['cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado','Cobrador','nCodTienda','tipoComprobanteText','idcliente','cliente','serie_comprobante','numero_comprobante'];
+        $params = ['convenio','cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idconvenio', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'facturado', 'estado','Cobrador','nCodTienda','tipoComprobanteText','idcliente','cliente','serie_comprobante','numero_comprobante','cDepartamento','cProvincia','cDistrito','idsector','sector'];
         // print_r($repo->search($s)); exit;
-        return parseList($repo->searchAsignacionCobradorxCuentas($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'cCodConsecutivo', $params);
+        return parseList($repo->searchAsignacionCobradorxCuentas($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito,$idTipoSolicitud,$idConvenio), $request, 'cCodConsecutivo', $params);
     }
 
     public function allAproba(Request $request,Solicitud_AsignacionInterface $repo)

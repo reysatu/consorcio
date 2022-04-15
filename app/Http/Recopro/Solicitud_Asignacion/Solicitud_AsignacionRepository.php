@@ -133,13 +133,13 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
              if(($iddistrito!='')){
                   $q->Where('cDistrito',$distrito);
             }
-            // if(($idsector!='')){
-            //       $q->where('idsector',$idsector);
-            // }
+            if(($idsector!='')){
+                  $q->where('idsector',$idsector);
+            }
           
         });
     }
-    public function searchAsignacionCobradorxCuentas($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro) 
+    public function searchAsignacionCobradorxCuentas($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito,$idTipoSolicitud,$idConvenio) 
     { 
         $solitud=[];
         $filtroFechaSol=[];
@@ -155,7 +155,7 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
                    array_push($filtroFechaSol, $row->nConsecutivo);
                 } 
         }   
-        return $this->model->orWhere(function ($q) use ($s,$filtroFechaSol,$filtro_tienda,$idInicio,$idFin,$solitud,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro) {
+        return $this->model->orWhere(function ($q) use ($s,$filtroFechaSol,$filtro_tienda,$idInicio,$idFin,$solitud,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito,$idTipoSolicitud,$idConvenio) {
             $q->whereIn('IdTipoDocumento', ['03','01'])->where('cCodConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('nConsecutivo', 'LIKE', '%' . $s . '%')
                 ->where('fecha_solicitud', 'LIKE', '%' . $s . '%')
@@ -175,6 +175,26 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
             if($idClienteFiltro !='' ){
                   $q->where('idCliente',$idClienteFiltro);
             }
+
+
+            if(($Departamento!='')){
+              $q->Where('cDepartamento',$Departamento);
+            }
+            if(($provincia!='')){
+                  $q->Where('cProvincia',$provincia);
+            }
+             if(($iddistrito!='')){
+                  $q->Where('cDistrito',$distrito);
+            }
+            if(($idsector!='')){
+                  $q->where('idsector',$idsector);
+            }
+            if($idTipoSolicitud !='' ){
+            $q->where('tipo_solicitud',$idTipoSolicitud);
+        }
+            if($idConvenio !='' ){
+            $q->where('idconvenio',$idConvenio);
+        }
           
         })->where('estado','<','9');
     }
@@ -205,7 +225,7 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
     {
         return $this->model->all();
     }
-     public function allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro)
+     public function allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio)
     {
         $dato=$this->model;
         $solitud=[];
@@ -231,12 +251,19 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
             if($idInicio!='' && $idFin!=''){
                 $dato=$dato->whereIn('nConsecutivo',$solitud);
             }
+
              if($idCobradorFiltro !='' ){
                 $dato=$dato->where('idCobrador',$idCobradorFiltro);
             }
             if($idClienteFiltro !='' ){
                 $dato=$dato->where('idCliente',$idClienteFiltro);
             }  
+            if($idTipoSolicitud !='' ){
+            $dato=$dato->where('tipo_solicitud',$idTipoSolicitud);
+        }
+            if($idConvenio !='' ){
+            $dato=$dato->where('idconvenio',$idConvenio);
+        }
 
        
         

@@ -14,10 +14,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Solicitud_Asignacion extends Model
 {
    
-
+ 
     protected $table = 'ERP_view_solicitud_Asignacion';
 
-    protected $fillable = ['sector','cDepartamento','cProvincia','cDistrito','IdTipoDocumento','cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante','Cobrador','tipoComprobanteText','nCodTienda','idcliente','cliente','idCobrador','serie_comprobante','numero_comprobante','idsector'];
+    protected $fillable = ['idconvenio','convenio','sector','cDepartamento','cProvincia','cDistrito','IdTipoDocumento','cCodConsecutivo', 'nConsecutivo', 'fecha_solicitud', 'tipo_solicitud', 'idcliente', 'idmoneda', 'estado', 'tipo_documento', 'documento', 'moneda', 'saldo', 'pagado', 'facturado', 'moneda', 't_monto_total','tipo_comprobante','Cobrador','tipoComprobanteText','nCodTienda','idcliente','cliente','idCobrador','serie_comprobante','numero_comprobante','idsector'];
     protected $primaryKey = 'cCodConsecutivo';
     protected $keyType = 'string';
     public $incrementing = false;

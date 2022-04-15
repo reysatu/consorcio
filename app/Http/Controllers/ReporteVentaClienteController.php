@@ -6,7 +6,7 @@
  * Time: 6:59 PM
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\Http\Recopro\ReporteVentaCliente\ReporteVentaClienteTrait;
 use Illuminate\Http\Request;
@@ -32,8 +32,13 @@ class ReporteVentaClienteController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
         $idcategoria= $request->input('idcategoria', '');
-        $params =  ['idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Documento','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente']; 
-        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria), $request, 'idCategoria', $params);
+
+        $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
+
+
+        $params =  ['idCategoria', 'idtienda','cuota_inicial','idvendedor','usuario','IdMoneda','Moneda','idcondicion_pago','condicion_pago','precio_unitario','Motor','numero_serie','Documento','Color','idSerie','Modelo','serie_comprobante','numero_comprobante','idventa','Fecha','DocumentoCliente','Direccion','celular','razonsocial_cliente','convenio','tipo_solicitud','idconvenio',]; 
+        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio), $request, 'idCategoria', $params);
     }
 
     public function create(ReporteVentaClienteInterface $repo, ReporteVentaClienteRequest $request)
@@ -93,7 +98,11 @@ class ReporteVentaClienteController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
          $idcategoria = $request->input('idcategoria', '');
-        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria)), 'REPORTE DE VENTAS ', 'VENTAS');
+
+          $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
+
+        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio)), 'REPORTE DE VENTAS ', 'VENTAS');
     }
     public function pdf(ReporteVentaClienteInterface $repo,Solicitud_AsignacionInterface $repcom,Request $request)
     {   
@@ -105,6 +114,8 @@ class ReporteVentaClienteController extends Controller
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
          $idcategoria = $request->input('idcategoria', '');
 
+        $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
 
             $data_compania=$repcom->get_compania(); 
          
@@ -116,7 +127,7 @@ class ReporteVentaClienteController extends Controller
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
            
-        $data = $this->generateDataExcel2($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria));
+        $data = $this->generateDataExcel2($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio));
         return generateDataPDFVC($data, 'landscape', $image);
     } 
 } 

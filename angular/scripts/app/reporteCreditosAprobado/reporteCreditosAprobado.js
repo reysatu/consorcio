@@ -3,7 +3,7 @@
  */
   
 (function () {
-    'use strict';
+    'use strict'; 
     angular.module('sys.app.reporteCreditosAprobados')
         .config(Config)
         .controller('ReporteCreditosAprobadoCtrl', ReporteCreditosAprobadoCtrl);
@@ -19,7 +19,7 @@
             state_state.html(txt_state2);
         };
         
-        var search = getFormSearchReporteRepuestos ('frm-search-ReporteCreditosAprobado', 'search_b', 'LoadRecordsButtonReporteCreditosAprobado');
+        var search = getFormSearchReporteCreditosAprobados ('frm-search-ReporteCreditosAprobado', 'search_b', 'LoadRecordsButtonReporteCreditosAprobado');
 
         var table_container_ReporteCreditosAprobado = $("#table_container_ReporteCreditosAprobado");
 
@@ -70,6 +70,13 @@
                     title: 'N°',
                      
 
+                },
+                tipo_solicitud: {
+                    title: 'tipo_solicitud',
+                    options: { '1': 'CONTADO', '2': 'CRÉDITO DIRECTO', '3': 'CRÉDITO FINANCIERO', '4': 'CRÉDITO'},
+                },
+                convenio: {
+                    title: 'convenio',
                 },
                 fecha_solicitud: {
                     title: 'Fecha venta',
@@ -161,6 +168,8 @@
                 idVendedorFiltro: $('#idVendedorFiltro').val(),
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
+                     idTipoSolicitud: $('#idTipoSolicitud').val(),
+                             idConvenio:$("#idConvenio").val(),
               
             });
         }, true);
@@ -172,6 +181,8 @@
                             idVendedorFiltro: $('#idVendedorFiltro').val(),
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
+                                 idTipoSolicitud: $('#idTipoSolicitud').val(),
+                             idConvenio:$("#idConvenio").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -185,6 +196,9 @@
                             FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                             FechaFinFiltro: $('#FechaFinFiltro').val(),
                              idcategoria:$("#idcategoria").val(),
+
+                              idTipoSolicitud: $('#idTipoSolicitud').val(),
+                             idConvenio:$("#idConvenio").val(),
                             search: '',
              };
             //             $scope.openDoc('projects/excel', data_excel);
@@ -237,6 +251,43 @@
         getDataForm();
         $("#idVendedorFiltro").select2();
         $("#idClienteFiltro").select2();
+
+        
+        function getConvenio(){
+            var id=0;
+           RESTService.get('reporteCreditosAprobados/traerConvenios', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                      $("#idConvenio").html('');
+                      $("#idConvenio").append('<option value="" >Convenio</option>');
+                     _.each(response.data, function(item) {
+                             $("#idConvenio").append('<option value="'+item.idconvenio+'">'+item.descripcionconvenio+'</option>');
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+        }
+        $("#idTipoSolicitud").val();
+        $("#idConvenio").val();
+
+        $("#idTipoSolicitud").change(function () {
+            var id=$("#idTipoSolicitud").val();
+            if(id=='3'){
+               getConvenio(); 
+            }else{
+                $("#idConvenio").html('');
+                $("#idConvenio").append('<option value="" >Convenio</option>');
+            }
+           
+        });
+
     }
 
     function Config($stateProvider, $urlRouterProvider) {

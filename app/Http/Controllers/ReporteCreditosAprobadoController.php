@@ -14,7 +14,7 @@ use App\Http\Recopro\ReporteCreditosAprobado\ReporteCreditosAprobadoInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\Query_movements\Query_movementsInterface;
 use App\Http\Requests\ReporteCreditosAprobadoRequest;
-class ReporteCreditosAprobadoController extends Controller
+class ReporteCreditosAprobadoController extends Controller 
 {
      use ReporteCreditosAprobadoTrait;
 
@@ -32,9 +32,30 @@ class ReporteCreditosAprobadoController extends Controller
         $idVendedorFiltro = $request->input('idVendedorFiltro', '');
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+        $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
       
-        $params =['idtienda','documento_ven','vendedor','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado'];
-        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro), $request, 'idtienda', $params);
+        $params =['idtienda','documento_ven','vendedor','financiado', 'Credito','total_financiado','cuota','inicial','precio_lista','intereses','nro_cuotas','IdMoneda','moneda','Simbolo','cCodConsecutivo','nConsecutivo','fecha_solicitud','idvendedor','idcliente','razonsocial_cliente','idTipoCliente','tipocliente','fecdoc','serie_comprobante','numero_comprobante','estado','tipo_solicitud','convenio'];
+        return parseList($repo->search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio), $request, 'idtienda', $params);
+    }
+
+     public function traerConvenios($id, ReporteCreditosAprobadoInterface $repo)
+    {
+       try {
+            $data = $repo->TraerConvenios($id);
+
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     public function create(ReporteCreditosAprobadoInterface $repo, ReporteCreditosAprobadoRequest $request)
@@ -93,7 +114,10 @@ class ReporteCreditosAprobadoController extends Controller
         $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
         $FechaFinFiltro = $request->input('FechaFinFiltro', '');
 
-        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro)), 'LISTA DE CRÉDITOS APROBADOS', 'Créditos');
+        $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+        $idConvenio = $request->input('idConvenio', '');
+
+        return generateExcel($this->generateDataExcel($repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio)), 'LISTA DE CRÉDITOS APROBADOS', 'Créditos');
     }
     public function pdf(ReporteCreditosAprobadoInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom)
     {
@@ -104,8 +128,10 @@ class ReporteCreditosAprobadoController extends Controller
             $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
             $FechaFinFiltro = $request->input('FechaFinFiltro', '');
 
+            $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+            $idConvenio = $request->input('idConvenio', '');
           
-            $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
+            $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio);
 
             $data_compania=$repcom->get_compania(); 
             $simboloMoneda = $repom->getSimboloMonedaTotal();

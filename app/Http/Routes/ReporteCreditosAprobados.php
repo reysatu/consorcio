@@ -12,4 +12,6 @@ Route::post('reporteCreditosAprobados/delete', ['as' => 'reporteCreditosAprobado
 Route::post('reporteCreditosAprobados/update', ['as' => 'reporteCreditosAprobados.update', 'uses' => 'ReporteCreditosAprobadoController@update']);
 Route::get('reporteCreditosAprobados/excel', ['as' => 'reporteCreditosAprobados.excel', 'uses' => 'ReporteCreditosAprobadoController@excel']);
 Route::get('reporteCreditosAprobados/pdf', ['as' => 'reporteCreditosAprobados.pdf', 'uses' => 'ReporteCreditosAprobadoController@pdf']);
-Route::get('reporteCreditosAprobados/data_form', ['as' => 'reporteCreditosAprobados.data_form', 'uses' => 'AsignacioncobradorController@data_form']);
+Route::get('reporteCreditosAprobados/data_form', ['as' => 'reporteCreditosAprobados.data_form', 'uses' => 'AsignacioncobradorController@data_form']); 
+
+Route::get('reporteCreditosAprobados/traerConvenios/{id}', ['as' => 'reporteCreditosAprobados.traerConvenios', 'uses' => 'ReporteCreditosAprobadoController@traerConvenios']); 
