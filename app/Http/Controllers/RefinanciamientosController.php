@@ -104,6 +104,7 @@ class RefinanciamientosController extends Controller
                 
                 $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
                 $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
+                // $datos_nota["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
                 $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
                 $datos_nota["idmotivo"] = "01";
                 $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
@@ -113,24 +114,29 @@ class RefinanciamientosController extends Controller
 
                 // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
                 $data_venta = (array)$comprobante_saldo[0];
+                $data_venta["idventa"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_Venta", "idventa");
                 $data_venta["anticipo"] = 0;
                 $data_venta["t_monto_total"] = $t_monto_total;
                 $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
                 $data_venta["t_monto_afecto"] = $t_monto_afecto;
                 $data_venta["t_impuestos"] = $t_impuestos;
+                $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
-
-                $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
+                   
+               $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
 
                 foreach ($venta_detalle as $kvd => $vvd) {
                     $data_venta_detalle = (array) $vvd;
+                    $data_venta_detalle["idventa"] =   $data_venta["idventa"];
+                    $data_venta_detalle["consecutivo"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                  
                 }
-                
+
+              
+        
             }
-
-          
-
+         
             $sql_solicitud_articulo = "SELECT * FROM ERP_SolicitudArticulo WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
             $solicitud_articulo = DB::select($sql_solicitud_articulo);
 

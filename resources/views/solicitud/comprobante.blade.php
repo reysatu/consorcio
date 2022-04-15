@@ -328,7 +328,7 @@
                         $importe_financiar = ($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total);
                         echo '<tr>';
                         echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';
-                        echo '  <td>'.number_format($solicitud[0]->t_monto_total, 2).'</td>';
+                        echo '  <td>'.number_format($venta[0]->t_monto_total, 2).'</td>';
                         echo '</tr>';
 
                         echo '<tr>';

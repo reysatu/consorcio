@@ -25,6 +25,7 @@
         var departamento = $('#departamento');
         var provincia = $('#provincia');
         var distrito = $('#distrito');
+        var idsector=$("#idsector");
 
         function getDepartamento(bandera) {
             var id = "0";
@@ -104,6 +105,34 @@
 
             });
         }
+
+        function getSector(bandera, id) {
+            RESTService.get('customers/traerSectorli', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                    idsector.html('');
+                    idsector.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.id == bandera) {
+                            idsector.append('<option value="' + item.id + '" selected>' + item.descripcion + '</option>');
+                        } else {
+                            idsector.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
+                        }
+
+                    });
+
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Sector. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+            });
+        }
+
         departamento.change(function () {
             var bandera = 'xxxxxx';
             var id = departamento.val();
@@ -115,6 +144,12 @@
             var id = provincia.val();
             getDistrito(bandera, id);
 
+        });
+
+        distrito.change(function () {
+            var bandera = 'xxxxxx';
+            var id = distrito.val();
+            getSector(bandera, id);
         });
 
         var bandera = 'xxxxx';
@@ -249,7 +284,7 @@
                 // window.open('', 'excel_lista_cobranza_cuotas');
                 // document.getElementById('formulario-reporte').submit();
 
-                $scope.openDoc("lista_cobranza_cuotas/excel_lista_cobranza_cuotas", { 
+                $scope.openDoc("lista_cobranza_cuotas/excel_lista_cobranza_cuotas", {
                     fecha_inicio: $("#fecha_inicio").val(),
                     fecha_fin: $("#fecha_fin").val(),
                     idcobrador: $("#idcobrador").val(),
