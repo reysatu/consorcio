@@ -119,6 +119,10 @@ class VentasController extends Controller
             $where .= " AND cl.ubigeo={$data["ubigeo"]}";
         }
 
+        if(!empty($data["idsector"])) {
+            $where .= " AND cl.idsector={$data["idsector"]}";
+        }
+
         // $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
         // FROM ERP_Venta AS v
         // INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
@@ -352,6 +356,10 @@ class VentasController extends Controller
 
         if(!empty($data["ubigeo"])) {
             $where .= " AND cc.ubigeo={$data["ubigeo"]}";
+        }
+
+        if(!empty($data["idsector"])) {
+            $where .= " AND cc.idsector={$data["idsector"]}";
         }
 
         $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  

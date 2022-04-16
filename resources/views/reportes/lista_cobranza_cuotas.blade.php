@@ -154,17 +154,22 @@
         
         <?php 
 
-            $total = 0;
-            $mora = 0;
+            $total_general = 0;
+            $mora_general = 0;
             foreach ($cobradores as $key => $value) {
+                $total_grupo = 0;
+                $mora_grupo = 0;
+                
                 echo $value->idCobrador." ".$value->cobrador;
                 echo '<hr>';
                 echo '<table style="width: 100%; font-size: 11px !important; ">';
                    
                     foreach ($value->pagos as $kp => $vp) {
-                        $total += (float) $vp->valor_cuota_pagada + (float) $vp->int_moratorio_pagado;
                         $total_cte_soles =  (float) $vp->valor_cuota_pagada + (float) $vp->int_moratorio_pagado;
-                        $mora += (float) $vp->int_moratorio_pagado;
+                        $total_grupo += $total_cte_soles;
+                        $total_general += $total_cte_soles;
+                        $mora_grupo += (float) $vp->int_moratorio_pagado;
+                        $mora_general += (float) $vp->int_moratorio_pagado;
                         echo '<tr>';   
                         echo '  <td style="width: 80px !important;">'.$vp->fecha_emision.'</td>';
                         echo '  <td style="width: 205px !important;">'.$vp->razonsocial_cliente.'</td>';
@@ -187,12 +192,12 @@
                     }
                     echo '<tr>';
                     echo '  <td colspan="7" align="right" style="font-weight: bold; border-top: 1px solid black !important;">Total '.$value->cobrador.'</td>';
-                    echo '  <td style="font-weight: bold; border-top: 1px solid black !important;">'.number_format($total - $mora, 2).'</td>';
+                    echo '  <td style="font-weight: bold; border-top: 1px solid black !important;">'.number_format($total_grupo - $mora_grupo, 2).'</td>';
                     echo '<td colspan="9" style="font-weight: bold; border-top: 1px solid black !important;"></td>';
                     echo '</tr>';
                     echo '<tr >';
                     echo '  <td colspan="7" align="right" style="font-weight: bold;">Total '.$value->cobrador.' Incluido Descuentos y Moras</td>';
-                    echo '  <td style="font-weight: bold;">'.number_format(($total), 2).'</td>';
+                    echo '  <td style="font-weight: bold;">'.number_format(($total_grupo), 2).'</td>';
                     echo '</tr>';
 
                 echo '</table>';
@@ -201,12 +206,12 @@
             echo '<table style="font-size: 11px !important; width: 72%;"> ';
                 echo '<tr>';
                 echo '  <td  align="right" style="font-weight: bold;">Total General</td>';
-                echo '  <td style="font-weight: bold;">'.number_format($total - $mora, 2).'</td>';
+                echo '  <td style="font-weight: bold;">'.number_format($total_general - $mora_general, 2).'</td>';
                 echo '<td  style="font-weight: bold;"></td>';
                 echo '</tr>';
                 echo '<tr >';
                 echo '  <td  align="right" style="font-weight: bold;">Total Incluido Descuentos y Moras</td>';
-                echo '  <td style="font-weight: bold;">'.number_format(($total), 2).'</td>';
+                echo '  <td style="font-weight: bold;">'.number_format(($total_general), 2).'</td>';
                 echo '<td  style="font-weight: bold;"></td>';
                 echo '</tr>';
             echo '</table>';

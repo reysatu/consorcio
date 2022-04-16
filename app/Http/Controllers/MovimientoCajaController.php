@@ -744,7 +744,9 @@ class MovimientoCajaController extends Controller
             // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
             $suma_precio_total = 0;
             for ($sa=0; $sa < count($solicitud_articulo); $sa++) { 
-                $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
+                if($solicitud_articulo[$sa]->cOperGrat != "S") {
+                    $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
+                }
             }
 
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
