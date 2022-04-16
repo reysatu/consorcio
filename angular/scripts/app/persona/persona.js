@@ -454,6 +454,17 @@ function getDatosCliente(){
                 cNumerodocumento: {
                     title: 'Nro Documento',
                 },
+                cNumerodocumento: {
+                    title: 'Nombre o Razón Social',
+                     display: function (data) {
+                      var raz=data.record.cRazonsocial;
+                      if(data.record.cRazonsocial==''){
+                          raz=data.record.cNombrePersona
+                        }
+                          return '<p>'+raz+'</p>';
+                      }
+
+                },
                 cUbigeo: {
                     title: 'Distrito',
                     options: base_url + '/personas/getDistritoPerso' 

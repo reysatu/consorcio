@@ -3,7 +3,7 @@
  */
    
 (function () { 
-    'use strict';
+    'use strict'; 
     angular.module('sys.app.orden_servicios')
         .config(Config)
         .controller('Orden_ServicioCtrl', Orden_ServicioCtrl);
@@ -2087,6 +2087,7 @@
             distrito.val('');
             idsector.val('');
             provincia.html('');
+            idsector.html('');
             distrito.html('');
         };
           $('#btn_cambio_delete').click(function(e){
@@ -2628,7 +2629,7 @@ function llenarTablas(Consecutivo){
                                          if(nclie.length==0){
                                             razonsocial_cliente.val(dataPersona[0].cNombrePersona);
                                          }else{
-                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                            razonsocial_cliente.val(dataPersona[0].cRazonsocial);
                                          }
                                         
                                         documento.val(dataPersona[0].cNumerodocumento);
@@ -2642,6 +2643,7 @@ function llenarTablas(Consecutivo){
                                          getDepartamento(dataPersona[0].cDepartamento);
                                          getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
                                          getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                         getSector("xxxxxx",dataPersona[0].cCodUbigeo);
                                     }
 
 

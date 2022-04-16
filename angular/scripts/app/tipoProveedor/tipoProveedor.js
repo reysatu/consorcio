@@ -60,28 +60,28 @@
                     title: 'Tipo Proveedor',
                 },
                 cuentaPagar: {
-                    title: 'Cta. por pagar',
+                    title: 'Cta. por Pagar',
                 },
                 cCostoCuentaPagar: {
                     title: 'Cen. Costo Pagar',
                 },
                 cuentaCierreDevito: {
-                    title: 'Cta. cierre devito',
+                    title: 'Cta. Cierre Devito',
                    
                 },
 
                 cCostoCuentaCieDev: {
-                    title: 'Cen. Costo devito',
+                    title: 'Cen. Costo Devito',
                    
                 },
 
                 cuentaCierreCredito: {
-                    title: 'Cta. cierre crédito',
+                    title: 'Cta. Cierre Crédito',
                    
                 },
 
                 cCostoCuentaCieCre: {
-                    title: 'Cen. Costo cierre',
+                    title: 'Cen. Costo Cierre',
                    
                 },
 

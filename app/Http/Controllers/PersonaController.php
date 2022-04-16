@@ -25,7 +25,7 @@ class PersonaController extends Controller
     public function all(Request $request, PersonaInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idPersona','cNumerodocumento','cTipopersona','cTipodocumento','cUbigeo'];
+        $params = ['idPersona','cNumerodocumento','cTipopersona','cTipodocumento','cUbigeo','cRazonsocial','cNombrePersona'];
         return parseList($repo->search($s), $request, 'idPersona', $params);
     }
     public function createUpdate($id, PersonaInterface $repo, Request $request)
