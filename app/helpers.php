@@ -203,7 +203,25 @@ function parseSelectAndSerialOnly($data, $key_id, $key_number, $key_serial)
     return $rows;
 }
  
+function generateExcelCuentasxCobrar($data_cabe,$simboloMoneda,$cambio,$file_name, $sheet_name)
+{
+    // echo "<pre>";
+    // print_r($data); exit;
+    $file = Excel::create($file_name, function ($excel) use ($data_cabe,$simboloMoneda,$cambio,$sheet_name) {
+        $excel->sheet($sheet_name, function ($sheet) use ($data_cabe,$simboloMoneda,$cambio) {
+            $sheet->loadView('excel.viewCuentasxCobrar')->with('data_cabe', $data_cabe)->with('simboloMoneda', $simboloMoneda)->with('cambio', $cambio);
+        });
+    });
 
+    $file = $file->string('xlsx');
+
+    $response = [
+        'name' => $file_name,
+        'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
+    ];
+
+    return response()->json($response);
+}
 function generateExcel($data, $file_name, $sheet_name)
 {
     // echo "<pre>";

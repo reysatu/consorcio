@@ -10,7 +10,7 @@ var value = parseFloat(numer);
 value = Math.round(value*100)/100;
 return(value);
 }
-function createTarjetaCobranzaPDF(response) {
+function createTarjetaCobranzaPDF(response) { 
 
      var data_cronograma=response.data_cronograma;  
      var data_cliente=response.data_cliente;
@@ -1509,7 +1509,7 @@ function getFormSearchReporteCreditosAprobados(form_id, input_id, btn_id) {
                         '<i class="fa fa-search"></i>' +
                     '</button>' +
                 '</div>'+
-                 '<div class="col-md-2">' +
+                 '<div class="col-md-2">' + 
                     '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
                             '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
                     '</button>' +
@@ -1622,7 +1622,11 @@ function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {
                 '<div class="col-md-3">'+
                     '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
                 '</div>'+
-                
+                 '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
+                            '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
+                    '</button>' +
+                 '</div>'+ 
             '</div>'+
             '<div class="form-group">'+
                

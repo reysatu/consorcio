@@ -4,7 +4,7 @@
   
 (function () { 
     'use strict';
-    angular.module('sys.app.cuentasxcobrars')
+    angular.module('sys.app.cuentasxcobrars') 
         .config(Config)
         .controller('CuentasxcobrarCtrl', CuentasxcobrarCtrl);
 
@@ -426,6 +426,25 @@
 
             $scope.loadCCPDF('cuentasxcobrars/cuentasporcobrar',data_excel);
         });
+
+         $("#btn_expExcel").click(function(e){
+            var data_excel = {
+                            search: '',
+                            filtro_tienda: $('#filtro_tienda').val(),
+                            idInicio: $('#idInicio').val(),
+                            idFin: $('#idFin').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            idCobradorFiltro: $('#idCobradorFiltro').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
+                            idTipoSolicitud: $('#idTipoSolicitud').val(),
+                            idConvenio:$("#idConvenio").val(),
+             };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.openDoc('cuentasxcobrars/excelCuentasxCobrar',data_excel);
+        });
+
+      
 
         $(".jtable-title-text").removeClass('col-md-4');
         $(".jtable-title-text").addClass('col-md-2');
