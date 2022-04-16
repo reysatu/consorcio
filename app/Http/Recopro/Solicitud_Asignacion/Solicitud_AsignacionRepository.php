@@ -269,6 +269,56 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
         
         return $dato->get();
     }
+    public function allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito)
+    {
+        $dato=$this->model;
+        $solitud=[];
+        $filtroFechaSol=[];
+        if($idInicio!='' && $idFin!=''){
+            $mostrar3 = DB::select("select *,  DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) as fe from ERP_SolicitudCronograma  where saldo_cuota>0  and DATEDIFF (DAY,fecha_vencimiento, CONVERT(DATE,GETDATE())) BETWEEN '$idInicio' AND '$idFin'");
+            foreach ($mostrar3 as $row) {
+               array_push($solitud, $row->nConsecutivo);
+            } 
+        }
+        if($FechaInicioFiltro!='' && $FechaFinFiltro!=''){
+              $mostrar3 = DB::select("select * from ERP_SolicitudCronograma  where convert(date,fecha_vencimiento) >= '$FechaInicioFiltro'  and convert(date,fecha_vencimiento) <='$FechaFinFiltro' and saldo_cuota>0 ");
+                foreach ($mostrar3 as $row) {
+                   array_push($filtroFechaSol, $row->nConsecutivo);
+                } 
+        }
+         if($FechaInicioFiltro!='' && $FechaFinFiltro!=''){
+               $dato=$dato->whereIn('nConsecutivo',$filtroFechaSol);
+            }    
+            if(!empty($filtro_tienda)){
+               $dato=$dato->Where('nCodTienda',$filtro_tienda);
+            }
+            if($idInicio!='' && $idFin!=''){
+                $dato=$dato->whereIn('nConsecutivo',$solitud);
+            }
+
+             if($idCobradorFiltro !='' ){
+                $dato=$dato->where('idCobrador',$idCobradorFiltro);
+            }
+            if($idClienteFiltro !='' ){
+                $dato=$dato->where('idCliente',$idClienteFiltro);
+            }  
+            if(($Departamento!='')){
+              $dato=$dato->where('cDepartamento',$Departamento);
+            }
+            if(($provincia!='')){
+                  $dato=$dato->where('cProvincia',$provincia);
+            }
+             if(($iddistrito!='')){
+                  $dato=$dato->where('cDistrito',$distrito);
+            }
+            if(($idsector!='')){
+                  $dato=$dato->where('idsector',$idsector);
+            }
+
+       
+        
+        return $dato->get();
+    }
 
     public function create(array $attributes)
     {

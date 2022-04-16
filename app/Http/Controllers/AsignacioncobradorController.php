@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: JAIR
- * Date: 4/5/2017
+ * Date: 4/5/2017 
  * Time: 6:59 PM
  */
  
@@ -140,7 +140,7 @@ class AsignacioncobradorController extends Controller
                  'img'=>$image, 
             ]);
     }
-    public function createUpdate($id, CobradorInterface $repo, Request $request)
+    public function createUpdate($id, CobradorInterface $repo,Solicitud_AsignacionInterface $repoas, Request $request)
     { 
         
         try { 
@@ -148,8 +148,41 @@ class AsignacioncobradorController extends Controller
             $idCobrador=$data['idCobrador'];
             $cobrador=$data['cobradores'];
             $cobrador=explode(',', $cobrador);
+            $s = $request->input('search', '');
+            $filtro_tienda = $request->input('filtro_tienda', '');
+            $idInicio = $request->input('idInicio', '');
+            $idFin = $request->input('idFin', '');
+            $idClienteFiltro = $request->input('idClienteFiltro', '');
+            $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+
+            $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+            $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+            $Departamento = $request->input('Departamento', '');
+            $provincia = $request->input('provincia', '');
+            $iddistrito = $request->input('iddistrito', '');
+            $distrito = $request->input('distrito', '');
+
+            $idsector = $request->input('idsector', '');
+            $datafilcab =$repoas->allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito);
+
+            $cod=array(); 
+            foreach ($datafilcab as $row) {
+             $var="'".$row->cCodConsecutivo."'";
+               array_push($cod, $var);
+            };
+
+            $nco=array(); 
+            foreach ($datafilcab as $row) {
+               array_push($nco, $row->nConsecutivo);
+            }
+            $cod = implode(",",$cod); 
+            $nco = implode(",",$nco); 
+             
             if($data['estado']=='S'){
-                  $repo->asignar_cobrador_total($idCobrador);
+                if(count($datafilcab)>0){
+                  $repo->asignar_cobrador_total($idCobrador,$cod,$nco);
+                }
             }else{
                 for ($i=0; $i < count($cobrador) ; $i++) {
                 $totalData=explode('*', $cobrador[$i]);
