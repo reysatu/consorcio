@@ -5,7 +5,7 @@
  * Date: 4/5/2017 
  * Time: 6:59 PM
  */
-
+ 
 Route::post('orden_servicios/list', ['as' => 'orden_servicios.list', 'uses' => 'Orden_servicioController@all']);
 Route::post('orden_servicios/create', ['as' => 'orden_servicios.create', 'uses' => 'Orden_servicioController@create']);
 

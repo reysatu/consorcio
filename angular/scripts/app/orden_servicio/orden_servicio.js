@@ -632,10 +632,11 @@
             var bval = true;
             bval = bval && documento_or.required();
             if(bval){
-            var id=documento_or.val();
+            var id=documento_or.val(); 
             RESTService.get('orden_servicios/get_cliente', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var datos=response.data;
+                    console.log("entro")
                      if(datos.length == 0){
                         titleModalClientes.html('Nuevo Cliente');
                         modaClientes.modal('show');
@@ -2615,9 +2616,11 @@ function llenarTablas(Consecutivo){
         if(code==13){
               $('#show_loading').removeClass('ng-hide');
                  var documentoEnvio=documento.val();
+
                  RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function(response) {
                              if (!_.isUndefined(response.status) && response.status) {
                                     var dataPersona=response.data;
+                                    console.log("entro 1111111111111");
                                     if(dataPersona.length==0){
                                         console.log("no hay en persona");
                                          getDatosCliente();

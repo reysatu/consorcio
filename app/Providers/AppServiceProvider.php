@@ -202,6 +202,12 @@ use App\Http\Recopro\Persona\Persona;
 use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Persona\PersonaRepository;
 
+use App\Http\Recopro\ViewPersona\ViewPersona;
+use App\Http\Recopro\ViewPersona\ViewPersonaInterface;
+use App\Http\Recopro\ViewPersona\ViewPersonaRepository;
+
+
+
 use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalle;
 use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalleInterface;
 use App\Http\Recopro\ConfigJerarquiaDetalle\ConfigJerarquiaDetalleRepository;
@@ -799,6 +805,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerCajaDiaria();
         $this->registerCajaDiariaDenominaciones();
         $this->registerCajaDiariaDetalle();
+        $this->registerViewPersona();
         $this->registerPersona();
         $this->registerDenominaciones();
         $this->registerConsecutivoComprobanteUsuario();
@@ -1380,6 +1387,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(CajaDiariaDetalleInterface::class, function ($app) {
             return new CajaDiariaDetalleRepository(new CajaDiariaDetalle());
+        });
+    }
+    public function registerViewPersona()
+    {
+        $app = $this->app;
+
+        $app->bind(ViewPersonaInterface::class, function ($app) {
+            return new ViewPersonaRepository(new ViewPersona());
         });
     }
     public function registerPersona()

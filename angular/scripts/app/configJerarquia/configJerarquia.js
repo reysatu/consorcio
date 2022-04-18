@@ -300,7 +300,7 @@
                 },
                 nIdTipoSolicitud: {
                     title: 'Tipo Solicitud',
-                    options: { '1': 'Contado', '2': 'Crédito Directo','3':'Credito Financiero'},
+                    options: { '1': 'Contado', '2': 'Crédito Directo','3':'Crédito Financiero','4':'Crédito'},
                 },
                 nIdTienda: {
                     title: 'Tienda',

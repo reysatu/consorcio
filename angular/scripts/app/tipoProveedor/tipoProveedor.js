@@ -66,12 +66,12 @@
                     title: 'Cen. Costo Pagar',
                 },
                 cuentaCierreDevito: {
-                    title: 'Cta. Cierre Devito',
+                    title: 'Cta. Cierre Débito',
                    
                 },
 
                 cCostoCuentaCieDev: {
-                    title: 'Cen. Costo Devito',
+                    title: 'Cen. Costo Débito',
                    
                 },
 

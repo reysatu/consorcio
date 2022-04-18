@@ -443,18 +443,18 @@ function getDatosCliente(){
                     edit: false,
                     list: false
                 },
-                cTipopersona: {
+                TipoPersona: {
                     title: 'Tipo Persona',
-                     options: base_url + '/personas/getTipoPersonaPerso' ,
+                   
                 },
-                cTipodocumento: {
+                TipoDocumento: {
                     title: 'Tipo Documento',
-                    options: base_url + '/personas/getTipoDocumentoPerso' ,
+                   
                 },
                 cNumerodocumento: {
                     title: 'Nro Documento',
                 },
-                cNumerodocumento: {
+                cNumerodocum: {
                     title: 'Nombre o Razón Social',
                      display: function (data) {
                       var raz=data.record.cRazonsocial;
@@ -465,9 +465,8 @@ function getDatosCliente(){
                       }
 
                 },
-                cUbigeo: {
+                cDistrito: {
                     title: 'Distrito',
-                    options: base_url + '/personas/getDistritoPerso' 
                 },
                 edit: {
                     width: '1%',

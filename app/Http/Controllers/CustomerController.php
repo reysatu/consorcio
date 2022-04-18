@@ -6,7 +6,7 @@
  * Time: 6:59 PM
  */
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;  
 
 use App\Http\Recopro\Customer\CustomerTrait;
 use Illuminate\Http\Request;
