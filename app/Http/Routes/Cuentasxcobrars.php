@@ -4,7 +4,7 @@
  * User: JAIR
  * Date: 4/5/2017 
  * Time: 6:59 PM
- */ 
+ */  
  
 Route::post('cuentasxcobrars/list', ['as' => 'cuentasxcobrars.list', 'uses' => 'AsignacioncobradorController@all']);
  

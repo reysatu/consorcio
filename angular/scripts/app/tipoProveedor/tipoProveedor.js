@@ -81,7 +81,7 @@
                 },
 
                 cCostoCuentaCieCre: {
-                    title: 'Cen. Costo Cierre',
+                    title: 'Cen. Costo Crédito',
                    
                 },
 

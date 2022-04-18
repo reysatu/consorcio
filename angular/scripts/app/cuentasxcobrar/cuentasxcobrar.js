@@ -29,7 +29,7 @@
             bval = bval && idCobrador.required();
             var sele=0;
             $("input[name=idSolicitud]:checkbox:checked").each(function(idx, item) {
-                sele=sele+1;
+                sele=sele+1; 
             });
             if(sele==0){
                  AlertFactory.showWarning({
@@ -91,7 +91,7 @@
         table_container_Cuentasxcobrar.jtable({
             title: "Lista de Solicitudes",
             paging: true,
-            sorting: true,
+            sorting: true, 
             actions: { 
                 listAction: base_url + '/cuentasxcobrars/listcuentas',
             },
