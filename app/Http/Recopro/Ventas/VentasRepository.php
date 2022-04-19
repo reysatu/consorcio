@@ -141,8 +141,8 @@ class VentasRepository implements VentasInterface
     public function update_saldos_venta($data) {
         $sql_update = "UPDATE ERP_Venta SET saldo = saldo - {$data["monto"]},
         pagado = pagado + {$data["monto"]}       
-        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S'";
-        die($sql_update);
+        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S' AND IdTipoDocumento IN('01', '03')";
+        // die($sql_update);
         $result = DB::statement($sql_update);
         
         return $result; 

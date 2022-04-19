@@ -777,9 +777,21 @@
                             });
 
                             // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
-                            var id = data.datos[0].cCodConsecutivo+ "|" + data.datos[0].nConsecutivo;
+                            var id = data.datos[0].cCodConsecutivo_solicitud+ "|" + data.datos[0].nConsecutivo_solicitud;
 
                             window.open("movimientoCajas/imprimir_cronograma/" + id);
+
+                             //NUEVA VENTA
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+
+    
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+
+                            // NOTA DE CREDITO
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.idnota;
+
+    
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
 
 
                         } else {

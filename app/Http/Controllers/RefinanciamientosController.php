@@ -109,22 +109,28 @@ class RefinanciamientosController extends Controller
                 $datos_nota["idmotivo"] = "01";
                 $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
                 $datos_nota["nConsecutivo"]    = $comprobante_saldo[0]->nConsecutivo_solicitud;
-
-                $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC);
+                    // print_r($datos_nota);
+                $res_nota = $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC);
+                // print_r($res_nota); exit;
 
                 // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
                 $data_venta = (array)$comprobante_saldo[0];
                 $data_venta["idventa"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_Venta", "idventa");
+                $serie = $repoCC->obtener_consecutivo_comprobante($comprobante_saldo[0]->IdTipoDocumento,  $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda);
+                
+                $data_venta["serie_comprobante"] = $serie[0]->serie;
+                $data_venta["numero_comprobante"] = $serie[0]->actual;
                 $data_venta["anticipo"] = 0;
                 $data_venta["t_monto_total"] = $t_monto_total;
                 $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
                 $data_venta["t_monto_afecto"] = $t_monto_afecto;
                 $data_venta["t_impuestos"] = $t_impuestos;
                 $data_venta["pagado"] = "0";
+                $data_venta["saldo"] = $t_monto_total;
                 $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
-                   
-               $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
+                $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+                $result["idnota"] =  $res_nota["datos"][0]["idventa"];
+                $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
 
                 foreach ($venta_detalle as $kvd => $vvd) {
                     $data_venta_detalle = (array) $vvd;
@@ -133,6 +139,8 @@ class RefinanciamientosController extends Controller
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                   
                 }
+
+                $repoCC->actualizar_correlativo($data_venta["serie_comprobante"], $data_venta["numero_comprobante"]);
 
               
         
@@ -163,7 +171,7 @@ class RefinanciamientosController extends Controller
                     $data_solicitud["facturado"] = ""; 
                     $data_solicitud["pagado"] = ""; 
                     // print_r($data_solicitud);
-                    $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
                     $solicitud_repositorio->actualizar_correlativo($data_solicitud["cCodConsecutivo"], $data_solicitud["nConsecutivo"]);
                 }
     
@@ -177,7 +185,7 @@ class RefinanciamientosController extends Controller
                     $data_solicitud_articulo["cCodConsecutivo"] = $data_solicitud["cCodConsecutivo"];
                     $data_solicitud_articulo["nConsecutivo"] = $data_solicitud["nConsecutivo"];
     
-                    $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_solicitud_articulo));
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data_solicitud_articulo));
 
                     $sql_solicitud_detalle = "SELECT * FROM ERP_SolicitudDetalle WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]} AND id_solicitud_articulo={$vsa->id}";
                     $solicitud_detalle = DB::select($sql_solicitud_detalle);
@@ -190,7 +198,7 @@ class RefinanciamientosController extends Controller
                             $data_solicitud_detalle["nConsecutivo"] = $data_solicitud["nConsecutivo"];
                             $data_solicitud_detalle["id_solicitud_articulo"] = $data_solicitud_articulo["id"];
             
-                            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_solicitud_detalle));
+                            $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data_solicitud_detalle));
                         }
                     }
                 }
@@ -215,7 +223,7 @@ class RefinanciamientosController extends Controller
                     $data_solicitud_credito["intereses"] = $data["intereses_refinanciamiento"];
                     $data_solicitud_credito["valor_cuota_final"] = $data["valor_cuota_final_refinanciamiento"];
     
-                    $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data_solicitud_credito));
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data_solicitud_credito));
                 }
     
             }
@@ -265,7 +273,7 @@ class RefinanciamientosController extends Controller
                 $data_cronograma["saldo_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
                 $data_cronograma["monto_pago"] = "0";
                 // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
-                $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
                 // print_r($res);   
             }
 

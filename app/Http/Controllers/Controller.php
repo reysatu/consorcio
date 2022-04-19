@@ -234,7 +234,9 @@ class Controller extends BaseController
         return $response;
     }
 
-    public function emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC) {
+    // $tipo: R -> nota emitida desde refinanciamiento
+    // $tipo: N -> nota emitida desde modulo de documentos emitidos
+    public function emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC, $tipo = "N") {
         
         $result = array();
         $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
@@ -327,13 +329,28 @@ class Controller extends BaseController
         $update_venta["nConsecutivo"]    = $data["nConsecutivo"];
         $update_venta["monto"]           = $data["monto"];
         $Repo->update_saldos_venta($update_venta);
+        
 
-        // ANULAMOS LA SOLICITUD
-        $update_solicitud = array();
-        $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
-        $update_solicitud["nConsecutivo"]    = $data["nConsecutivo"];
-        $update_solicitud["estado"] = 10;
-        $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+        if($tipo == "N") {
+            // ANULAMOS LA SOLICITUD
+            $update_solicitud = array();
+            $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
+            $update_solicitud["nConsecutivo"]    = $data["nConsecutivo"];
+            $update_solicitud["estado"] = 10;
+            $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
+        }
+       
+
+
+        if($tipo == "R") {
+            // CUANDO LA NOTA SE EMITE DESDE UN REFINANCIAMIENTO POR el SALDO YA NO SE ANULA LA SOLIICTUD ORIGINAL
+            $sql_update = "UPDATE ERP_Solicitud SET saldo = saldo - {$data["monto"]},
+            pagado = pagado + {$data["monto"]}, estado=9    
+            WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
+            // die($sql_update);
+            DB::statement($sql_update);
+        }
+       
 
         $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
         return $result;
