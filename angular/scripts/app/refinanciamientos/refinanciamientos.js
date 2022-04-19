@@ -776,7 +776,7 @@
                                 type: 'success'
                             });
 
-                            // CUANDO ES CREDITO Y ESTA EN ESTADO YA 
+                           
                             var id = data.datos[0].cCodConsecutivo_solicitud+ "|" + data.datos[0].nConsecutivo_solicitud;
 
                             window.open("movimientoCajas/imprimir_cronograma/" + id);

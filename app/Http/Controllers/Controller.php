@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
+use Exception;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,17 +16,17 @@ class Controller extends BaseController
     public function __construct()
     {
         $this->base_model = new BaseModel();
-
     }
 
-    public function listar_campos($tabla) {
+    public function listar_campos($tabla)
+    {
 
-        
+
         $campos = array();
         $is_primary_key = array();
         $is_foreign_key = array();
         $tabla = explode(".", $tabla);
-        
+
         $schema = $tabla[0];
         $table = $tabla[1];
 
@@ -75,96 +76,82 @@ class Controller extends BaseController
 
         return $data;
     }
-    
-    public function preparar_datos($table, $data) {
+
+    public function preparar_datos($table, $data)
+    {
 
         $parametros = array();
 
-      
+
         $fields = $this->listar_campos($table);
         $primary_key = array();
         $foreign_key = array();
-       
+
         $datos = array();
-     
+
         for ($i = 0; $i < count($fields["campos"]); $i++) {
-         
+
             if (isset($data[$fields["campos"][$i]])) {
-               
+
                 $datos[$fields["campos"][$i]] = $data[$fields["campos"][$i]];
 
-                if($fields["is_primary_key"][$i] == "1") {
-                    if(!is_array($data[$fields["campos"][$i]])) {
+                if ($fields["is_primary_key"][$i] == "1") {
+                    if (!is_array($data[$fields["campos"][$i]])) {
                         $primary_key[$fields["campos"][$i]] = $data[$fields["campos"][$i]];
                     } else {
-                        if($fields["is_primary_key"][$i] == "1") {
-                            for ($j=0; $j < count($data[$fields["campos"][$i]]); $j++) { 
-                                if(isset($data[$fields["campos"][$i]]) && $data[$fields["campos"][$i]] != "" && $data[$fields["campos"][$i]] != "null") {
+                        if ($fields["is_primary_key"][$i] == "1") {
+                            for ($j = 0; $j < count($data[$fields["campos"][$i]]); $j++) {
+                                if (isset($data[$fields["campos"][$i]]) && $data[$fields["campos"][$i]] != "" && $data[$fields["campos"][$i]] != "null") {
                                     $primary_key[$j][$fields["campos"][$i]] = $data[$fields["campos"][$i]][$j];
                                 } else {
                                     $primary_key[$j][$fields["campos"][$i]] = NULL;
                                 }
-                                
                             }
                         }
-                        
                     }
-                } 
+                }
 
-                
-                if($fields["is_foreign_key"][$i] == "1") {
+
+                if ($fields["is_foreign_key"][$i] == "1") {
                     $foreign_key[$fields["campos"][$i]] = $data[$fields["campos"][$i]];
-                } 
-                
-                
-
+                }
             }
         }
-      
+
         $contador = 0;
         foreach ($datos as $key => $value) {
             if (in_array($key, $fields["campos"])) {
-                if(is_array($value) && count($value) > 0) {
+                if (is_array($value) && count($value) > 0) {
                     $contador = count($value);
-                    for ($i=0; $i < count($value); $i++) { 
-                        if(isset($value[$i]) && $value[$i] != "" && $value[$i] != "null") {
+                    for ($i = 0; $i < count($value); $i++) {
+                        if (isset($value[$i]) && $value[$i] != "" && $value[$i] != "null") {
                             @$parametros["datos"][$i][$key] = $value[$i];
                         } else {
                             @$parametros["datos"][$i][$key] = NULL;
                         }
-                        
                     }
-
-
                 } elseif ($value != "" && $value != "null") {
-                    $parametros["datos"][0][$key] = $value; 
-                }  
-                
+                    $parametros["datos"][0][$key] = $value;
+                }
             }
-
         }
 
         foreach ($datos as $key => $value) {
             if (in_array($key, $fields["campos"])) {
-                if(!is_array($value) && $contador > 0) {
-                    
-                    for ($i=0; $i <  $contador; $i++) { 
-                        if(isset($value) && $value != "" && $value != "null") {
+                if (!is_array($value) && $contador > 0) {
+
+                    for ($i = 0; $i <  $contador; $i++) {
+                        if (isset($value) && $value != "" && $value != "null") {
                             @$parametros["datos"][$i][$key] = $value;
                         } else {
                             @$parametros["datos"][$i][$key] = NULL;
                         }
-                        
                     }
-
-
                 }
-                
             }
-
         }
 
-        
+
 
         $parametros["primary_key"] = $primary_key;
         $parametros["foreign_key"] = $foreign_key;
@@ -174,8 +161,9 @@ class Controller extends BaseController
 
 
     // $fecha en formato yyyy-mm-dd
-    public function sumar_restar_dias($fecha, $operacion, $dias) {
-     
+    public function sumar_restar_dias($fecha, $operacion, $dias)
+    {
+
         $fecha = strtotime($operacion . $dias . " day", strtotime($fecha));
         $fecha = date("Y-m-d", $fecha);
         $date  = explode("-", $fecha);
@@ -193,13 +181,14 @@ class Controller extends BaseController
     }
 
 
-    public function SubirArchivo($archivo, $ruta, $newname = "") {
+    public function SubirArchivo($archivo, $ruta, $newname = "")
+    {
         $archivo = (array) $archivo;
         // print_r($archivo);
         ini_set('memory_limit', '2024M');
         ini_set('upload_max_filesize', '2024M');
         $dir_subida = $ruta;
-        
+
         if ($newname != "") {
             $exts = explode(".", $archivo['name']);
 
@@ -225,28 +214,33 @@ class Controller extends BaseController
             chmod($fichero_subido, 0777);
             $response["response"]   = "OK";
             $response["NombreFile"] = $filename;
-
         } else {
             $response["response"]   = "ERROR";
             $response["NombreFile"] = $filename;
-
         }
         return $response;
     }
 
     // $tipo: R -> nota emitida desde refinanciamiento
     // $tipo: N -> nota emitida desde modulo de documentos emitidos
-    public function emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC, $tipo = "N") {
-        
+    public function emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC, $tipo = "N")
+    {
+
         $result = array();
         $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
+
+        $parametro_igv =  $caja_diaria_detalle_repo->get_parametro_igv();
             
+        if(count($parametro_igv) <= 0) {
+            throw new Exception("Por favor cree el parametro IGV!");
+        }
+
         $condicion = $data["t_monto_total"] == $data["monto"]; // VENTA AL CONTADO
         $saldo = 0;
-        if(count($venta_ref) > 0) {
+        if (count($venta_ref) > 0) {
             $saldo = $venta_ref[0]->saldo;
 
-            if($venta_ref[0]->condicion_pago != 1) {
+            if ($venta_ref[0]->condicion_pago != 1) {
                 $condicion = $venta_ref[0]->saldo == $data["monto"]; // VENTA CREDITO
             }
         }
@@ -257,12 +251,12 @@ class Controller extends BaseController
         $data_venta["devolucion_producto"] = 0;
         $data_venta["devolucion_dinero"] = 0;
         //si son iguales
-        if ($condicion) { 
-            
+        if ($condicion) {
+
             // solo si es anticipo se devuelve el dinero
             if ($data["tipo_comprobante"] == "1") {
                 $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
-                
+
                 $data_venta["devolucion_producto"] = 0;
                 $data_venta["devolucion_dinero"] = 1;
             }
@@ -272,8 +266,8 @@ class Controller extends BaseController
                 $data_venta["devolucion_producto"] = 1;
             }
 
-            if($data["tipo_comprobante"] == "0") {
-                if(count($venta_ref) > 0 && $venta_ref[0]->saldo == 0) {
+            if ($data["tipo_comprobante"] == "0") {
+                if (count($venta_ref) > 0 && $venta_ref[0]->saldo == 0) {
                     $data_venta["por_aplicar"] = "S";
                 }
             }
@@ -282,8 +276,7 @@ class Controller extends BaseController
 
                 $data_venta["devolucion_producto"] = 1;
             }
-
-        } elseif($saldo > $data["monto"]) {
+        } elseif ($saldo > $data["monto"]) {
             if ($data["condicion_pago"] == "1") { // venta al contado contado
                 $this->devolver_dinero($caja_diaria_detalle_repo, $caja_diaria_repositorio, $data);
                 $data_venta["devolucion_dinero"] = 1;
@@ -311,17 +304,72 @@ class Controller extends BaseController
         $data_venta["idcajero"] = auth()->id();
         $data_venta["idtienda"] = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda;
         $data_venta["idcaja"]   = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idcaja;
-
+        // print_r($data_venta);
         $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($data["idventa"]);
+        // print_r($venta_detalle); exit;
+        // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
+        $suma_precio_total = 0;
+        for ($vd = 0; $vd < count($venta_detalle); $vd++) {
+            if ($venta_detalle[$vd]->cOperGrat != "S") {
+                $suma_precio_total += (float)$venta_detalle[$vd]->precio_total;
+            }
+        }
+
 
         foreach ($venta_detalle as $key => $value) {
             $data_detalle_venta            = (array) $value;
             $data_detalle_venta["idventa"] = $data_venta["idventa"];
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_detalle_venta));
 
+
+            //PORRATEAMOS
+            $porcentaje = $value->precio_total / $suma_precio_total;
+            $subtotal = $data["monto"] * $porcentaje;
+
+            $data_detalle_venta["precio_total"] = 0;
+            $data_detalle_venta["monto_descuento"] = 0;
+            $data_detalle_venta["monto_subtotal"] = 0;
+            $data_detalle_venta["impuestos"] = 0;
+            $data_detalle_venta["monto_afecto"] = 0;
+            $data_detalle_venta["monto_exonerado"] = 0;
+            $data_detalle_venta["monto_inafecto"] = 0;
+            $data_detalle_venta["monto_total"] = 0;
+
+            if ($value->cOperGrat != "S") {
+                $data_detalle_venta["precio_unitario"] = round($subtotal / $value->cantidad, 2);
+                // echo $data_detalle_venta["precio_unitario"];
+                $data_detalle_venta["precio_total"] = round($subtotal, 2);
+                $data_detalle_venta["monto_subtotal"] = round($subtotal, 2);
+
+
+                if ($value->impuestos > 0) {
+                    $igv = $parametro_igv[0]->value;
+                    $data_detalle_venta["impuestos"] = $subtotal * $igv / 100;
+                    $data_detalle_venta["monto_afecto"]  = $subtotal;
+                } else {
+                    $data_detalle_venta["monto_exonerado"] = $subtotal;
+                }
+
+                $data_detalle_venta["monto_total"] = $data_detalle_venta["monto_exonerado"] + $data_detalle_venta["monto_afecto"] + $data_detalle_venta["impuestos"];
+            } else {
+                $data_detalle_venta["precio_unitario"] = round($value->precio_unitario, 2);
+            }
+
+
+            $data_detalle_venta["nOperGratuita"] = 0;
+            if ($value->cOperGrat == "S") {
+
+                $data_detalle_venta["nOperGratuita"] = round($subtotal, 2);
+            }
+
+            $data_detalle_venta["monto_descuento_prorrateado"] = 0;
+            // echo "data detalle nota credito ". $data["monto"]. " ".$subtotal. " ".$porcentaje;
+            // print_r($data_detalle_venta);
+            // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_detalle_venta));
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_detalle_venta));
         }
+        // exit;
 
         //ACTUALIZAR SALDOS EN LA SEGUNDA VENTA POR EL SALDO
         $update_venta                    = array();
@@ -329,9 +377,9 @@ class Controller extends BaseController
         $update_venta["nConsecutivo"]    = $data["nConsecutivo"];
         $update_venta["monto"]           = $data["monto"];
         $Repo->update_saldos_venta($update_venta);
-        
 
-        if($tipo == "N") {
+
+        if ($tipo == "N") {
             // ANULAMOS LA SOLICITUD
             $update_solicitud = array();
             $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
@@ -339,10 +387,10 @@ class Controller extends BaseController
             $update_solicitud["estado"] = 10;
             $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
         }
-       
 
 
-        if($tipo == "R") {
+
+        if ($tipo == "R") {
             // CUANDO LA NOTA SE EMITE DESDE UN REFINANCIAMIENTO POR el SALDO YA NO SE ANULA LA SOLIICTUD ORIGINAL
             $sql_update = "UPDATE ERP_Solicitud SET saldo = saldo - {$data["monto"]},
             pagado = pagado + {$data["monto"]}, estado=9    
@@ -350,13 +398,9 @@ class Controller extends BaseController
             // die($sql_update);
             DB::statement($sql_update);
         }
-       
+
 
         $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
         return $result;
     }
-
-
-
-  
 }

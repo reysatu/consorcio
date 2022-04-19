@@ -61,7 +61,8 @@ class RefinanciamientosController extends Controller
 
 
             
-            $t_monto_total = (float) $data["monto_refinanciamiento"] + (float)$data["intereses_refinanciamiento"];
+            $t_monto_total = (float)$data["monto_refinanciamiento"] + (float)$data["intereses_refinanciamiento"];
+            // print_r($data["monto_refinanciamiento"] ." ".  $data["intereses_refinanciamiento"]." ".$t_monto_total);
             $t_monto_exonerado = 0;
             $t_monto_afecto = 0;
             $t_impuestos = 0;
@@ -79,75 +80,11 @@ class RefinanciamientosController extends Controller
                 throw new Exception("No existe comprobante por el saldo!");
             }
 
-            if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
-
-                //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
-                $datos_nota = (array)$ventas_repo->find_documento($comprobante_saldo[0]->idventa)[0];
-                
-                // $caja_diaria = $caja_diaria_detalle_repo->get_caja_diaria();
-
-                // if($comprobante_saldo[0]->IdTipoDocumento == "01") {
-                //     $like = "FN";
-                // }
-                // if($comprobante_saldo[0]->IdTipoDocumento == "03") {
-                //     $like = "BN";
-                // }
-
-            
-                // $consecutivo_comprobante = $repoCC->obtener_consecutivo_comprobante("07", $caja_diaria[0]->idtienda, $like);
-
-                // if(count($consecutivo_comprobante) <= 0) {
-                //     throw new Exception("Por favor cree una serie de nota de credito para la tienda: ".$caja_diaria[0]->idtienda."!");
-                // }
-
-                $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
-                
-                $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
-                $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
-                // $datos_nota["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
-                $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
-                $datos_nota["idmotivo"] = "01";
-                $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
-                $datos_nota["nConsecutivo"]    = $comprobante_saldo[0]->nConsecutivo_solicitud;
-                    // print_r($datos_nota);
-                $res_nota = $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC);
-                // print_r($res_nota); exit;
-
-                // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
-                $data_venta = (array)$comprobante_saldo[0];
-                $data_venta["idventa"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_Venta", "idventa");
-                $serie = $repoCC->obtener_consecutivo_comprobante($comprobante_saldo[0]->IdTipoDocumento,  $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda);
-                
-                $data_venta["serie_comprobante"] = $serie[0]->serie;
-                $data_venta["numero_comprobante"] = $serie[0]->actual;
-                $data_venta["anticipo"] = 0;
-                $data_venta["t_monto_total"] = $t_monto_total;
-                $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
-                $data_venta["t_monto_afecto"] = $t_monto_afecto;
-                $data_venta["t_impuestos"] = $t_impuestos;
-                $data_venta["pagado"] = "0";
-                $data_venta["saldo"] = $t_monto_total;
-                $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
-                $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
-                $result["idnota"] =  $res_nota["datos"][0]["idventa"];
-                $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
-
-                foreach ($venta_detalle as $kvd => $vvd) {
-                    $data_venta_detalle = (array) $vvd;
-                    $data_venta_detalle["idventa"] =   $data_venta["idventa"];
-                    $data_venta_detalle["consecutivo"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
-                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
-                  
-                }
-
-                $repoCC->actualizar_correlativo($data_venta["serie_comprobante"], $data_venta["numero_comprobante"]);
-
-              
-        
-            }
+           
          
             $sql_solicitud_articulo = "SELECT * FROM ERP_SolicitudArticulo WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
             $solicitud_articulo = DB::select($sql_solicitud_articulo);
+
 
             
 
@@ -174,6 +111,119 @@ class RefinanciamientosController extends Controller
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
                     $solicitud_repositorio->actualizar_correlativo($data_solicitud["cCodConsecutivo"], $data_solicitud["nConsecutivo"]);
                 }
+
+                if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
+
+                    //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
+                    $datos_nota = (array)$ventas_repo->find_documento($comprobante_saldo[0]->idventa)[0];
+    
+                    $datos_nota["monto"] = $comprobante_saldo[0]->saldo;
+                    
+                    $datos_nota["serie_comprobante"] = $data["serie_comprobante"];
+                    $datos_nota["numero_comprobante"] = $data["numero_comprobante"];
+                    // $datos_nota["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
+                    $datos_nota["descripcion"] = "NOTA DE CREDITO APLICADA EN REFINANCIAMIENTO POR EL COMPROBANTE DEL SALDO";
+                    $datos_nota["idmotivo"] = "01";
+                    $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
+                    $datos_nota["nConsecutivo"]    = $comprobante_saldo[0]->nConsecutivo_solicitud;
+                        // print_r($datos_nota);
+                    $res_nota = $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC, "R");
+                    // print_r($res_nota); exit;
+    
+                    // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
+                    $data_venta = (array)$comprobante_saldo[0];
+                    $data_venta["idventa"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_Venta", "idventa");
+                    $serie = $repoCC->obtener_consecutivo_comprobante($comprobante_saldo[0]->IdTipoDocumento,  $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda);
+                    
+                    $data_venta["serie_comprobante"] = $serie[0]->serie;
+                    $data_venta["numero_comprobante"] = $serie[0]->actual;
+                    $data_venta["cCodConsecutivo_solicitud"] = $solicitud[0]->cCodConsecutivo;
+                    $data_venta["nConsecutivo_solicitud"] = $data_solicitud["nConsecutivo"];
+                    $data_venta["anticipo"] = 0;
+                    $data_venta["t_monto_subtotal"] = $t_monto_subtotal;
+                    $data_venta["t_monto_total"] = $t_monto_total;
+                    $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
+                    $data_venta["t_monto_afecto"] = $t_monto_afecto;
+                    $data_venta["t_impuestos"] = $t_impuestos;
+                    $data_venta["pagado"] = "0";
+                    $data_venta["saldo"] = $t_monto_total;
+                    $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
+
+                    // print_r($data_venta);
+
+                    $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
+                    $result["idnota"] =  $res_nota["datos"][0]["idventa"];
+                    $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($comprobante_saldo[0]->idventa);
+
+                    
+                    // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
+                    $suma_precio_total = 0;
+                    for ($vd=0; $vd < count($venta_detalle); $vd++) { 
+                        if($venta_detalle[$vd]->cOperGrat != "S") {
+                            $suma_precio_total += (float)$venta_detalle[$vd]->precio_total;
+                        }
+                    }
+    
+                    foreach ($venta_detalle as $kvd => $vvd) {
+                        $data_venta_detalle = (array) $vvd;
+                        $data_venta_detalle["idventa"] =   $data_venta["idventa"];
+                        $data_venta_detalle["consecutivo"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+
+                        //PORRATEAMOS
+                        $porcentaje = $vvd->precio_total / $suma_precio_total;
+                        $subtotal = $t_monto_subtotal * $porcentaje;
+
+                        $data_venta_detalle["precio_total"] = 0;
+                        $data_venta_detalle["monto_descuento"] = 0;
+                        $data_venta_detalle["monto_subtotal"] = 0;
+                        $data_venta_detalle["impuestos"] = 0;
+                        $data_venta_detalle["monto_afecto"] = 0;
+                        $data_venta_detalle["monto_exonerado"] = 0;
+                        $data_venta_detalle["monto_inafecto"] = 0;
+                        $data_venta_detalle["monto_total"] = 0;
+
+                        if($vvd->cOperGrat != "S") {
+                            $data_venta_detalle["precio_unitario"] = round( $subtotal / $vvd->cantidad, 2);
+                            $data_venta_detalle["precio_total"] = round($subtotal, 2);
+                            $data_venta_detalle["monto_subtotal"] = round($subtotal, 2);
+
+
+                            if($vvd->impuestos > 0) {
+                                $igv = $parametro_igv[0]->value;
+                                $data_venta_detalle["impuestos"] = $subtotal * $igv / 100;
+                                $data_venta_detalle["monto_afecto"]  = $subtotal;
+                            } else {
+                                $data_venta_detalle["monto_exonerado"] = $subtotal;
+                            }
+
+                            $data_venta_detalle["monto_total"] = $data_venta_detalle["monto_exonerado"] + $data_venta_detalle["monto_afecto"] + $data_venta_detalle["impuestos"];
+    
+
+                        } else {
+                            $data_venta_detalle["precio_unitario"] = round($vvd->precio_unitario, 2);
+                        }
+                        
+
+                        $data_venta_detalle["nOperGratuita"] = 0;
+                        if($vvd->cOperGrat == "S") {
+
+                            $data_venta_detalle["nOperGratuita"] = round($subtotal, 2);
+                        }
+
+                        $data_venta_detalle["monto_descuento_prorrateado"] = 0;
+                        // echo "data detalle nnueva boleta";
+                        // print_r($data_venta_detalle);
+                        // exit;
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                        
+                    }
+    
+                    $repoCC->actualizar_correlativo($data_venta["serie_comprobante"], $data_venta["numero_comprobante"]);
+    
+                  
+            
+                }
+
     
             }
  

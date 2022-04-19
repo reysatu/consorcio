@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 {
     protected $model;
- private static $_ACTIVE = 'A';
+    private static $_ACTIVE = 'A';
     public function __construct(CajaDiariaDetalle $model)
     {
         $this->model = $model; 
@@ -322,6 +322,12 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
 
         // print_r($res);
         return $res;
+    }
+
+    public function get_parametro_igv()
+    {
+        $param = DB::select("select * from ERP_Parametros WHERE id=1");
+        return $param;
     }
 
   
