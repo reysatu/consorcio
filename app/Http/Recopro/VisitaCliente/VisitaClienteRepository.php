@@ -124,14 +124,14 @@ class VisitaClienteRepository implements VisitaClienteInterface
     }
 
 
-    public function update_saldos_VisitaCliente($data) {
-        $sql_update = "UPDATE ERP_VisitaCliente SET saldo = saldo - {$data["monto"]}
-        WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S'";
+    // public function update_saldos_VisitaCliente($data) {
+    //     $sql_update = "UPDATE ERP_VisitaCliente SET saldo = saldo - {$data["monto"]}
+    //     WHERE cCodConsecutivo_solicitud='{$data["cCodConsecutivo"]}' AND nConsecutivo_solicitud={$data["nConsecutivo"]} AND /*anticipo > 0*/ comprobante_x_saldo='S' ";
 
-        $result = DB::statement($sql_update);
+    //     $result = DB::statement($sql_update);
         
-        return $result; 
-    }
+    //     return $result; 
+    // }
 
     public function get_notas_devolucion() {
         $sql = "SELECT v.*, c.*, c.razonsocial_cliente AS cliente 

@@ -218,7 +218,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         LEFT JOIN ERP_Usuarios AS u ON(v.idcajero=u.id)
         LEFT JOIN ERP_Tienda AS t ON(v.idtienda=t.idTienda)
         LEFT JOIN ERP_Cajas AS cc ON(cc.idcaja=v.idcaja)
-        WHERE  v.cCodConsecutivo_solicitud='{$cCodConsecutivo}' AND v.nConsecutivo_solicitud={$nConsecutivo} AND /*v.anticipo > 0*/ v.comprobante_x_saldo='S'";
+        WHERE  v.cCodConsecutivo_solicitud='{$cCodConsecutivo}' AND v.nConsecutivo_solicitud={$nConsecutivo} AND /*v.anticipo > 0*/ v.comprobante_x_saldo='S' AND v.IdTipoDocumento IN('01', '03', '12')";
         // die($sql);
         $result = DB::select($sql);
         return $result;
