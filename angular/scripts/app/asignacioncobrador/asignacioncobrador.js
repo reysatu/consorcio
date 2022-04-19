@@ -15,7 +15,7 @@
     {
         var modalCobradores=$("#modalCobradores");
         var idCobrador=$("#idCobrador");  
-        var p_state = $('#p_state');
+        var p_state_total = $('#p_state_total');
         var banderaEmpi='xxxxxxxx';
 
         // $scope.chkState = function() {
@@ -28,7 +28,7 @@
         // };
          modalCobradores.on('hidden.bs.modal', function (e) {
                     idCobrador.val("").trigger("change");
-                    p_state.prop('checked', false).iCheck('update'); 
+                    $("#p_state_total").prop('checked', false).iCheck('update'); 
         });
         $scope.savecobrador = function () {
             var bval = true;
@@ -37,7 +37,7 @@
             $("input[name=idSolicitud]:checkbox:checked").each(function(idx, item) {
                 sele=sele+1;
             });
-            var tot=((p_state.prop('checked')) ? 'S' : 'N');
+            var tot=(($("#p_state_total").prop('checked')) ? 'S' : 'N');
             if(sele==0 && tot=='N'){
                  AlertFactory.showWarning({
                     title: '',
@@ -55,7 +55,19 @@
                 var params = {
                     'idCobrador':idCobrador.val(),
                     'cobradores':cobradores,
-                    'estado': ((p_state.prop('checked')) ? 'S' : 'N'),
+                    'estado': (($("#p_state_total").prop('checked')) ? 'S' : 'N'),
+                    'filtro_tienda': $('#filtro_tienda').val(),
+                    'idInicio': $('#idInicio').val(),
+                    'idFin': $('#idFin').val(),
+                    'idClienteFiltro': $('#idClienteFiltro').val(),
+                    'idCobradorFiltro': $('#idCobradorFiltro').val(),
+                    'FechaInicioFiltro': $('#FechaInicioFiltro').val(),
+                    'FechaFinFiltro': $('#FechaFinFiltro').val(),
+                    'Departamento':  $("#Departamento").val(),
+                    'provincia':  $("#provincia").val(),
+                    'iddistrito': $("#distrito").val(),
+                    'distrito':$("#distrito option:selected").text(),
+                    'idsector': $('#idsector').val(),
                 };
                 var w_id=0;
                

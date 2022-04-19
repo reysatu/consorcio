@@ -2,7 +2,7 @@
 /**
  * Created by PhpStorm.
  * User: JAIR
- * Date: 4/5/2017
+ * Date: 4/5/2017 
  * Time: 6:59 PM
  */
  
@@ -25,8 +25,57 @@ class AsignacioncobradorController extends Controller
     {
 //        $this->middleware('json');
     } 
+      public function excelCuentasxCobrar(Request $request,Orden_servicioInterface $repOs,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
+    {        
+            
+
+             $s = $request->input('search', '');
+             $filtro_tienda = $request->input('filtro_tienda', '');
+             $idInicio = $request->input('idInicio', '');
+             $idFin = $request->input('idFin', '');
+             $idClienteFiltro = $request->input('idClienteFiltro', ''); 
+             $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+
+             $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+             $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+            $idTipoSolicitud = $request->input('idTipoSolicitud', '');
+             $idConvenio = $request->input('idConvenio', '');
+             
+             
+
+             $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio);
+
+            $solitud=array(); 
+            foreach ($datafilcab as $row) {
+               array_push($solitud, $row->idventa);
+            }
+
+            $fecha_actual=date("Y-m-d");
+            $cambio=$repOs->cambio_tipo(2,$fecha_actual);
+
+            $solitud = implode(",",$solitud); 
+            $simboloMoneda = $repomo->getSimboloMonedaTotal();
+            $data_compania=$repo->get_compania();
+            $data_cabe=$repo->get_cuentas_caber($solitud);
+
+            // $data_compania=$repo->get_compania(); 
+            // $path = public_path('/'.$data_compania[0]->ruta_logo);
+            // $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            // $image = file_get_contents($path);
+            // $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
+            // return response()->json([
+            //     'status' => true,
+            //      'img'=>$image,
+            //      'data_cabe'=>$data_cabe,
+            //      'simboloMoneda'=>$simboloMoneda,
+            //      'cambio'=>$cambio,
+            // ]);
+
+            return generateExcelCuentasxCobrar($data_cabe,$simboloMoneda,$cambio, 'CUENTAS POR COBRAR POR CLIENTE', 'Cuentas');
+    }
       public function pdf_cuentasxcobrar(Request $request,Orden_servicioInterface $repOs,Query_movementsInterface $repomo, Solicitud_AsignacionInterface $repo)
-    {       
+    {        
             
 
              $s = $request->input('search', '');
@@ -91,7 +140,7 @@ class AsignacioncobradorController extends Controller
                  'img'=>$image, 
             ]);
     }
-    public function createUpdate($id, CobradorInterface $repo, Request $request)
+    public function createUpdate($id, CobradorInterface $repo,Solicitud_AsignacionInterface $repoas, Request $request)
     { 
         
         try { 
@@ -99,8 +148,41 @@ class AsignacioncobradorController extends Controller
             $idCobrador=$data['idCobrador'];
             $cobrador=$data['cobradores'];
             $cobrador=explode(',', $cobrador);
+            $s = $request->input('search', '');
+            $filtro_tienda = $request->input('filtro_tienda', '');
+            $idInicio = $request->input('idInicio', '');
+            $idFin = $request->input('idFin', '');
+            $idClienteFiltro = $request->input('idClienteFiltro', '');
+            $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+
+            $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
+            $FechaFinFiltro = $request->input('FechaFinFiltro', '');
+
+            $Departamento = $request->input('Departamento', '');
+            $provincia = $request->input('provincia', '');
+            $iddistrito = $request->input('iddistrito', '');
+            $distrito = $request->input('distrito', '');
+
+            $idsector = $request->input('idsector', '');
+            $datafilcab =$repoas->allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito);
+
+            $cod=array(); 
+            foreach ($datafilcab as $row) {
+             $var="'".$row->cCodConsecutivo."'";
+               array_push($cod, $var);
+            };
+
+            $nco=array(); 
+            foreach ($datafilcab as $row) {
+               array_push($nco, $row->nConsecutivo);
+            }
+            $cod = implode(",",$cod); 
+            $nco = implode(",",$nco); 
+             
             if($data['estado']=='S'){
-                  $repo->asignar_cobrador_total($idCobrador);
+                if(count($datafilcab)>0){
+                  $repo->asignar_cobrador_total($idCobrador,$cod,$nco);
+                }
             }else{
                 for ($i=0; $i < count($cobrador) ; $i++) {
                 $totalData=explode('*', $cobrador[$i]);
@@ -237,7 +319,7 @@ class AsignacioncobradorController extends Controller
             'Record' => []
         ]);
     }
-
+ 
     public function update(CobradorInterface $repo, CobradorRequest $request)
     {
         $data = $request->all();

@@ -114,10 +114,14 @@
                                         console.log("si hay ");
                                          tipodoc.val(dataPersona[0].cTipodocumento).trigger('change');
                                          var nclie=dataPersona[0].cRazonsocial;
-                                         if(nclie.length==0){
+                                         console.log(nclie);
+
+                                         console.log("entro cliente");
+                                         if(nclie.length==0 || nclie==''){
+                                            console.log("entro if ");
                                             razonsocial.val(dataPersona[0].cNombrePersona);
                                          }else{
-                                            razonsocial.val(dataPersona[0].razonsocial);
+                                            razonsocial.val(dataPersona[0].cRazonsocial);
                                          }
                                         
                                         documento.val(dataPersona[0].cNumerodocumento);

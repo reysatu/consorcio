@@ -53,6 +53,7 @@
             },
             fields: {
                 id: {
+                     title: '#',
                     key: true,
                     create: false,
                     edit: false,
@@ -92,6 +93,9 @@
                     title:'Tipo Compra Venta',
                     listClass:'text-right',
                     width: '3%'
+                },
+                Disponible:{
+                    title:'Disponible',
                 },
                 Remitido: {
                     title:'Remitido',

@@ -12,12 +12,13 @@
     SolicitudCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
     function SolicitudCtrl($scope, _, RESTService, AlertFactory, Helpers) {
-
+ 
 
 
         var modalSolicitud = $('#modalSolicitud');
         var titlemodalSolicitud = $('#titleModalSolicitud');
         var redondeo;
+        var idsector=$("#idsector");
         var cambCan;
         var cambioChe;
         var cambioDes;
@@ -96,6 +97,7 @@
         var terceros = $("#terceros");
         var otros_mo = $("#otros_mo");
         var subtotal_moa = $("#subtotal_moa");
+        var idsector_ver=$("#idsector_ver");
 
         var totalDescuento = $("#totalDescuento");
 
@@ -353,9 +355,11 @@
                         cliente_id.val(data_p[0].id);
                         id_tipocli.val(data_p[0].id_tipocli).trigger('change');
                         id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
-                        getDepartamento(data_p[0].cDepartamento);
+                        console.log(data_p[0].cDepartamento,'departamento ob');
+                        getDepartamento(data_p[0].cDepartamento); 
                         getProvincia(data_p[0].cProvincia, data_p[0].cDepartamento);
                         getDistrito(data_p[0].cCodUbigeo, data_p[0].cProvincia);
+                         getSector(data_p[0].idsector,data_p[0].cCodUbigeo);
                         modaClientes.modal('show');
                         console.log(data_p);
                     } else {
@@ -485,6 +489,7 @@
             bval = bval && razonsocial_cliente.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
+
             if (tipodoc.val() == '01' && documento.val().length != 8) {
                 AlertFactory.textType({
                     title: '',
@@ -516,6 +521,7 @@
                     'id_tipocli': id_tipocli.val(),
                     'IdTipoDocumento': id_tipoDoc_Venta.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
+                    'idsector':idsector.val(),
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -599,6 +605,7 @@
                             var bandera = 'xxxxx';
                             getDepartamento(bandera);
                             distrito_ver.val("");
+                            idsector_ver.val("");
                             distrito_or.val("");
                             idDocumentoCli.val("");
                             razonsocial_cliente_or.val("");
@@ -617,6 +624,7 @@
                             // id_cliente_tipo_or.val("")
                             // llenarServicios();
                         } else {
+                            idsector_ver.val(datos[0].sector);
                             distrito_ver.val(datos[0].cDistrito);
                             distrito_or.val(datos[0].ubigeo);
                             idDocumentoCli.val(datos[0].tipodoc).trigger('change');
@@ -798,6 +806,11 @@
             getDistritoPersona(bandera, id);
 
         });
+        distrito.change(function () {
+            var bandera='xxxxxx';
+            var id=distrito.val();
+            getSector(bandera,id);
+        });
         cNumerodocumento.keypress(function (e) {
             var bval = true;
             bval = bval && $("#cTipodocumento").required();
@@ -974,6 +987,7 @@
         };
         function getDepartamento(bandera) {
             var id = "0";
+            console.log("entro departaen");
             RESTService.get('shops/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
@@ -981,9 +995,9 @@
                     departamento.append('<option value="" selected >Seleccione</option>');
                     _.each(response.data, function (item) {
                         if (item.cDepartamento == bandera) {
-                            departamento.append('<option value="' + item.cDepartamento + '"  >' + item.cDepartamento + '</option>');
+                            departamento.append('<option value="'+item.cDepartamento+'"  selected >' + item.cDepartamento + '</option>');
                         } else {
-                            departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
+                            departamento.append('<option value="'+item.cDepartamento+'" >' + item.cDepartamento + '</option>');
                         };
 
                     });
@@ -1037,6 +1051,32 @@
             getDistrito(bandera, id);
 
         });
+        function getSector(bandera,id){ 
+        RESTService.get('solicitud/traerSectorOrd', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                     console.log(data_p);
+                      idsector.html('');
+                      idsector.append('<option value="" >Seleccione</option>');
+                     _.each(response.data, function(item) {
+                        if(item.id==bandera){
+                             idsector.append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                         }else{
+                             idsector.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                         }
+                       
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+        }
         function getDistrito(bandera, id) {
             RESTService.get('shops/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -1083,7 +1123,7 @@
                             if (nclie.length == 0) {
                                 razonsocial_cliente.val(dataPersona[0].cNombrePersona);
                             } else {
-                                razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                razonsocial_cliente.val(dataPersona[0].cRazonsocial);
                             }
 
                             documento.val(dataPersona[0].cNumerodocumento);
@@ -1097,6 +1137,8 @@
                             getDepartamento(dataPersona[0].cDepartamento);
                             getProvincia(dataPersona[0].cProvincia, dataPersona[0].cDepartamento);
                             getDistrito(dataPersona[0].cCodUbigeo, dataPersona[0].cProvincia);
+                            getSector("xxxxxx",dataPersona[0].cCodUbigeo);
+
                         }
 
 

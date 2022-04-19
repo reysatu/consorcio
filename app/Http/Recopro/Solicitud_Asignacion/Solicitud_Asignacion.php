@@ -1,6 +1,6 @@
 <?php namespace App\Http\Recopro\Solicitud_Asignacion;
 
-use App\Http\Recopro\User\User;
+use App\Http\Recopro\User\User; 
 // use App\Http\Recopro\Shop\Shop;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

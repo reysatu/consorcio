@@ -10,7 +10,7 @@ var value = parseFloat(numer);
 value = Math.round(value*100)/100;
 return(value);
 }
-function createTarjetaCobranzaPDF(response) {
+function createTarjetaCobranzaPDF(response) { 
 
      var data_cronograma=response.data_cronograma;  
      var data_cliente=response.data_cliente;
@@ -1509,7 +1509,7 @@ function getFormSearchReporteCreditosAprobados(form_id, input_id, btn_id) {
                         '<i class="fa fa-search"></i>' +
                     '</button>' +
                 '</div>'+
-                 '<div class="col-md-2">' +
+                 '<div class="col-md-2">' + 
                     '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
                             '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
                     '</button>' +
@@ -1587,6 +1587,14 @@ function getFormSearchAsignacion(form_id, input_id, btn_id) {
                     '<select id="idsector"  style="margin-right:5px;width: 100%" name="idCobradorFiltro" class="form-control input-sm "><option value="">Sector</option></select>'+
                 '</div>'+
             '</div>'+
+            '<div class="form-group">'+
+                '<label class="col-sm-1 control-label">Todos</label>'+
+                '<div class="col-sm-1">'+
+                  '<label class="checkbox-inline i-checks">'+
+                      '<input type="checkbox" id="p_state_total" >'+
+                  '</label>'+
+                '</div>'+
+            '</div>'+
          '</form>';
 }
 function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {
@@ -1622,7 +1630,11 @@ function getFormSearchCuentasxcobrar(form_id, input_id, btn_id) {
                 '<div class="col-md-3">'+
                     '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
                 '</div>'+
-                
+                 '<div class="col-md-2">' +
+                    '<button  type="button"  id="btn_expExcel" class="btn-primary btn-sm">' +
+                            '<i class="fa fa-file-excel-o">Exportar Excel</i>' +
+                    '</button>' +
+                 '</div>'+ 
             '</div>'+
             '<div class="form-group">'+
                

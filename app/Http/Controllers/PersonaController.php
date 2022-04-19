@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\Persona\PersonaTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Persona\PersonaInterface;
+use App\Http\Recopro\ViewPersona\ViewPersonaInterface;
 use App\Http\Requests\PersonaRequest;
 use DB;
 class PersonaController extends Controller
@@ -22,10 +23,10 @@ class PersonaController extends Controller
 //        $this->middleware('json');
     }
 
-    public function all(Request $request, PersonaInterface $repo)
+    public function all(Request $request, ViewPersonaInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idPersona','cNumerodocumento','cTipopersona','cTipodocumento','cUbigeo'];
+        $params = ['idPersona','cNumerodocumento','cTipodocumento','cRazonsocial','cNombrePersona','cDepartamento','created_at','cProvincia','cDistrito','TipoPersona','cTipopersona','TipoDocumento'];
         return parseList($repo->search($s), $request, 'idPersona', $params);
     }
     public function createUpdate($id, PersonaInterface $repo, Request $request)

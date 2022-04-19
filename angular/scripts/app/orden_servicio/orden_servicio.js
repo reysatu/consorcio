@@ -3,7 +3,7 @@
  */
    
 (function () { 
-    'use strict';
+    'use strict'; 
     angular.module('sys.app.orden_servicios')
         .config(Config)
         .controller('Orden_ServicioCtrl', Orden_ServicioCtrl);
@@ -632,10 +632,11 @@
             var bval = true;
             bval = bval && documento_or.required();
             if(bval){
-            var id=documento_or.val();
+            var id=documento_or.val(); 
             RESTService.get('orden_servicios/get_cliente', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var datos=response.data;
+                    console.log("entro")
                      if(datos.length == 0){
                         titleModalClientes.html('Nuevo Cliente');
                         modaClientes.modal('show');
@@ -2087,6 +2088,7 @@
             distrito.val('');
             idsector.val('');
             provincia.html('');
+            idsector.html('');
             distrito.html('');
         };
           $('#btn_cambio_delete').click(function(e){
@@ -2614,9 +2616,11 @@ function llenarTablas(Consecutivo){
         if(code==13){
               $('#show_loading').removeClass('ng-hide');
                  var documentoEnvio=documento.val();
+
                  RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function(response) {
                              if (!_.isUndefined(response.status) && response.status) {
                                     var dataPersona=response.data;
+                                    console.log("entro 1111111111111");
                                     if(dataPersona.length==0){
                                         console.log("no hay en persona");
                                          getDatosCliente();
@@ -2628,7 +2632,7 @@ function llenarTablas(Consecutivo){
                                          if(nclie.length==0){
                                             razonsocial_cliente.val(dataPersona[0].cNombrePersona);
                                          }else{
-                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                            razonsocial_cliente.val(dataPersona[0].cRazonsocial);
                                          }
                                         
                                         documento.val(dataPersona[0].cNumerodocumento);
@@ -2642,6 +2646,7 @@ function llenarTablas(Consecutivo){
                                          getDepartamento(dataPersona[0].cDepartamento);
                                          getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
                                          getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                         getSector("xxxxxx",dataPersona[0].cCodUbigeo);
                                     }
 
 

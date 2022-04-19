@@ -66,7 +66,7 @@
                                          if(nclie.length==0){
                                             razonsocial_cliente.val(dataPersona[0].cNombrePersona);
                                          }else{
-                                            razonsocial_cliente.val(dataPersona[0].razonsocial_cliente);
+                                            razonsocial_cliente.val(dataPersona[0].cRazonsocial);
                                          }
                                         
                                         documento.val(dataPersona[0].cNumerodocumento);
@@ -80,6 +80,7 @@
                                          getDepartamento(dataPersona[0].cDepartamento);
                                          getProvincia(dataPersona[0].cProvincia,dataPersona[0].cDepartamento);
                                          getDistrito(dataPersona[0].cCodUbigeo,dataPersona[0].cProvincia);
+                                          getSector("xxxxxx",dataPersona[0].cCodUbigeo);
                                     }
 
 

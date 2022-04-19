@@ -110,7 +110,7 @@ where IdTipoDocumento in ('01','03')");
     }
     public function get_cliente_document($id)
     {
-        $mostra=DB::select("SELECT ti.id as idCliente , tipo.descripcion as tipo_cliente_descr,* FROM ERP_Clientes as ti left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo inner join ERP_TipoCliente  as tipo on tipo.id=ti.id_tipocli  where ti.documento='$id'");
+        $mostra=DB::select("SELECT sect.descripcion as sector ,ti.id as idCliente , tipo.descripcion as tipo_cliente_descr,* FROM ERP_Clientes as ti left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo inner join ERP_TipoCliente  as tipo on tipo.id=ti.id_tipocli left join ERP_Sector as sect on (sect.id=ti.idsector) where ti.documento='$id'");
         return $mostra;
     }
 

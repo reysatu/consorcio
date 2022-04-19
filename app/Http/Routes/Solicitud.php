@@ -26,6 +26,7 @@ Route::get('solicitud/excel', ['as' => 'solicitud.excel', 'uses' => 'SolicitudCo
 
 
 
+Route::get('solicitud/traerSectorOrd/{id}', ['as' => 'solicitud.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);
 
 Route::get('solicitud/data_form', ['as' => 'solicitud.data_form', 'uses' => 'SolicitudController@data_form']);
 // Route::post('solicitud/getTiendas', 'ShopController@getTiendas');
