@@ -120,6 +120,7 @@ class RefinanciamientosController extends Controller
                 $data_venta["t_monto_exonerado"] = $t_monto_exonerado;
                 $data_venta["t_monto_afecto"] = $t_monto_afecto;
                 $data_venta["t_impuestos"] = $t_impuestos;
+                $data_venta["pagado"] = "0";
                 $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
                    
