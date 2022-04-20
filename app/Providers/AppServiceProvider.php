@@ -496,6 +496,10 @@ use App\Http\Recopro\Serie\Serie;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Serie\SerieRepository;
 
+use App\Http\Recopro\ViewSerie\ViewSerie;
+use App\Http\Recopro\ViewSerie\ViewSerieInterface;
+use App\Http\Recopro\ViewSerie\ViewSerieRepository;
+
 use App\Http\Recopro\Register_movement\Register_movement;
 use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\Register_movement\Register_movementRepository;
@@ -909,6 +913,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerAccoudet();
         $this->registerUbigeo();
         $this->registerSerie();
+        $this->registerViewSerie();
         $this->registerRegister_movement();
         $this->registerRegister_transfer();
         $this->registerGeneration_remision();
@@ -2232,6 +2237,16 @@ class AppServiceProvider extends ServiceProvider
             return new SerieRepository(new Serie());
         });
     }
+
+    public function registerViewSerie()
+    {
+        $app = $this->app;
+
+        $app->bind(ViewSerieInterface::class, function ($app) {
+            return new ViewSerieRepository(new ViewSerie());
+        });
+    }
+
     public function registerRegister_movement()
     {
         $app = $this->app;

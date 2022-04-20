@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\Serie\SerieTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Serie\SerieInterface;
+use App\Http\Recopro\ViewSerie\ViewSerieInterface;
 use App\Http\Requests\SerieRequest;
 use Carbon\Carbon;
 use DB;
@@ -85,7 +86,7 @@ class SerieController extends Controller
         return response()->json(['Result' => 'OK']);
     }
 
-    public function traerSeries(Request $request, SerieInterface $repo){
+    public function traerSeries(Request $request, ViewSerieInterface $repo){
         $idProducto = $request->input('idProducto');
         $s = $request->input('search', '');
         $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo', 'tipo_compra_venta'];

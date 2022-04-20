@@ -1,4 +1,4 @@
-<?php namespace App\Http\Recopro\Serie;
+<?php namespace App\Http\Recopro\ViewSerie;
 use App\Http\Recopro\User\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Recopro\Product\Product;
@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Date: 10/07/2017
  * Time: 11:20 AM
  */
-class Serie extends Model
+class ViewSerie extends Model
 {
   
-    protected $table = 'ERP_Serie';
+    protected $table = 'ERP_view_series';
 
     public $timestamps = true;
 
