@@ -13,7 +13,7 @@
 
     function Entrega_servicesTecnicoCtrl($scope, _, RESTService, AlertFactory)
     {
-       
+        
         var proformas_completas;
         var codigo_actual; //variable para identificar en que fila voy a gregar lotes o series 
         var cCodConsecutivoOS=$("#cCodConsecutivoOS");
@@ -2325,7 +2325,7 @@
             var todata=data.split("*");
             idMoneda.val(todata[2]);
             $("#documento").val(documento);
-            if(idMovimiento.val()==""){
+            if(idMovimiento.val()==""){ 
 
             RESTService.get('entrega_servicesTecnicos/get_venta_detalle', idventa, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -2434,7 +2434,7 @@
         });
         function cargar_notas() {
             $.post("entrega_servicesTecnicos/get_ventas_entrega", {},
-                function (data, textStatus, jqXHR) {
+                function (data, textStatus, jqXHR) { 
 
                     console.log("carga ventas");
                       console.log(data);
