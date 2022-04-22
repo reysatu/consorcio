@@ -36,7 +36,7 @@ class SolicitudCompraController extends Controller
     public function all(Request $request, SolicitudCompraInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idMovimiento','fecha_requerida','idTipoOperacion','fecha_registro','fecha_proceso','idUsuario','naturaleza','observaciones','idMoneda','estado','user_created','user_updated','cCodConsecutivo','nConsecutivo','prioridad','idArea'];
+        $params = ['idMovimiento','fecha_requerida','fecha_registro','idUsuario','observaciones','estado','user_created','user_updated','cCodConsecutivo','nConsecutivo','prioridad','idArea'];
         return parseList($repo->search($s), $request, 'idMovimiento', $params);
     }
 

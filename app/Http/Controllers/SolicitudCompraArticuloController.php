@@ -53,6 +53,9 @@ class SolicitudCompraArticuloController extends Controller
             $cantidad = $data['cantidad'];
             $cantidad = explode(',', $cantidad);
 
+            $dataObserva = $data['dataObserva'];
+            $dataObserva = explode(',', $dataObserva);
+
             // $costo = $data['costo'];
             // $costo = explode(',', $costo);
 
@@ -204,7 +207,6 @@ class SolicitudCompraArticuloController extends Controller
             // }
              
             if ($idArticulo != '') {
-                   $repo->delete_articulo_detalle($id);
                 $repo->delete_detalle($id);
              
                 if($data['naturaleza']=="C"){
@@ -259,8 +261,8 @@ class SolicitudCompraArticuloController extends Controller
                             // 'idAlmacen' => $idAlmacen[$i],
                             // 'idLocalizacion' =>$idLocalizacion[$i],
                             'consecutivo'=> $lorepo->get_consecutivo($tablelMd,$idtMd),
-                            'idLote' =>$idLB,
                             'cantidad' =>  $cantidad[$i],
+                            'observaciones' =>  $dataObserva[$i],
                             'estado' => $esta, 
                             'fecha_requerida' => $fecharequeridadeta[$i],
                             // 'precio' => $preciot, 

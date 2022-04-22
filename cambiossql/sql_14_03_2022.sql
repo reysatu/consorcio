@@ -45,6 +45,35 @@ ALTER TABLE ERP_Clientes
 ADD idsector int 
 
 
+drop table ERP_SolicitudCompra_Detalle
+
+alter table ERP_SolicitudCompra
+drop COLUMN fecha_proceso, idTipoOperacion, naturaleza,idMoneda,idAlmacen ;
+
+alter table ERP_SolicitudCompra_Articulo
+drop COLUMN idLote
+	
+ALTER TABLE ERP_SolicitudCompra_Articulo
+ADD observaciones varchar(100);
+
+
+
+
+SELECT * FROM ERP_SolicitudCompra_Articulo
+
+select * from ERP_SolicitudCompra
+
+
+
+
+ 
+	select * from ERP_SolicitudCompra_Articulo
+
+delete from ERP_SolicitudCompra_Articulo
+
+select * from erp_s
+
+
 CREATE TABLE ERP_Sector (
 		id int not null,
     descripcion varchar(255)  null,

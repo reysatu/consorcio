@@ -24,7 +24,7 @@ class SolicitudCompraArticulo extends Model
        // protected $fillable = ['idMovimiento', 'idArticulo','idAlmacen','idLocalizacion','idLote','cantidad','costo','costo_total','user_created','user_updated','consecutivo','precio','precio_total'];
     
 
-    protected $fillable = ['idMovimiento', 'idArticulo','idLote','cantidad','fecha_requerida','estado','user_created','user_updated','consecutivo'];
+    protected $fillable = ['idMovimiento', 'idArticulo','idLote','cantidad','fecha_requerida','estado','user_created','user_updated','consecutivo','observaciones'];
     
      public function user_c()
     {
