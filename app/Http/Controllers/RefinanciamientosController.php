@@ -318,12 +318,20 @@ class RefinanciamientosController extends Controller
                 $data_cronograma["nConsecutivo"] = $data_solicitud["nConsecutivo"];
                 $data_cronograma["nrocuota"] = $c;
                 $data_cronograma["fecha_vencimiento"] = $fecha;
-                $data_cronograma["valor_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
+                if( $t_monto_total > $data["valor_cuota_final_refinanciamiento"]) {
+
+                    $data_cronograma["valor_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
+                    $data_cronograma["saldo_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
+                } else {
+                    $data_cronograma["valor_cuota"] = $t_monto_total;
+                    $data_cronograma["saldo_cuota"] =  $t_monto_total;
+                }
                 $data_cronograma["int_moratorio"] = "0";
-                $data_cronograma["saldo_cuota"] =  $data["valor_cuota_final_refinanciamiento"];
+              
                 $data_cronograma["monto_pago"] = "0";
                 // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                $t_monto_total -= (float)$data["valor_cuota_final_refinanciamiento"];
                 // print_r($res);   
             }
 
