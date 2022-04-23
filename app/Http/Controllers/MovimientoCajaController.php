@@ -1365,6 +1365,9 @@ class MovimientoCajaController extends Controller
             $data_venta["idventa_nota"] = $data["idventa_nota"];
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
+            $total_int_moratorio = 0;
+            $total_pagado_mora = 0;
+            $total_saldo_mora = 0;
             for ($i=0; $i < count($data["nrocuota"]); $i++) { 
                 $data_venta_detalle = array();
                 $data_venta_detalle["idventa"] = $data_venta["idventa"];
@@ -1398,9 +1401,26 @@ class MovimientoCajaController extends Controller
                 $update_solicitud_cronograma["cCodConsecutivo"] = $data["cCodConsecutivo"];
                 $update_solicitud_cronograma["nConsecutivo"] = $data["nConsecutivo"];
                 $update_solicitud_cronograma["nrocuota"] = $data["nrocuota"][$i];
-                $update_solicitud_cronograma["saldo_cuota"] = $data["saldo_cuota"][$i];
-                $update_solicitud_cronograma["monto_pago"] = $data["monto_pago_credito"][$i];
+                
+                $update_solicitud_cronograma["monto_pago"] = (float)$data["monto_pago_credito"][$i] + (float)$data["monto_pago_sc"][$i];
+
+                $pagado_mora = $data["int_moratorio"][$i];
+
+                if($data["int_moratorio"][$i] > $data["monto_pago_credito"][$i]) {
+                    $pagado_mora = (float)$data["monto_pago_credito"][$i];
+                }   
+                $saldo_mora = (float)$data["int_moratorio"][$i] - $pagado_mora;
+                $saldo_cuota = (float)$data["valor_cuota"][$i] + (float)$data["int_moratorio"][$i] - ((float)$data["monto_pago_credito"][$i] + (float)$data["monto_pago_sc"][$i]);
+
+                $update_solicitud_cronograma["saldo_cuota"] = round($saldo_cuota, 2);
+              
+                $update_solicitud_cronograma["pagado_mora"] = round($pagado_mora, 2);
+                $update_solicitud_cronograma["saldo_mora"] = round($saldo_mora, 2);
                 $solicitud_repositorio->update_solicitud_cronograma($update_solicitud_cronograma);
+
+                $total_int_moratorio += $data["int_moratorio"][$i];
+                $total_pagado_mora += $pagado_mora;
+                $total_saldo_mora += $saldo_mora;
             }   
 
            
@@ -1521,6 +1541,9 @@ class MovimientoCajaController extends Controller
             $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo"];
             $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
             $update_solicitud["monto_pagar_credito"] = $data["monto_pagar_credito"];
+            $update_solicitud["int_moratorio"] = $total_int_moratorio;
+            $update_solicitud["pagado_mora"] = $total_pagado_mora;
+            $update_solicitud["saldo_mora"] = $total_saldo_mora;
             $solicitud_repositorio->update_saldos_solicitud($update_solicitud);
 
             //ACTUALIZAR SALDOS EN LA SEGUNDA VENTA POR EL SALDO 
