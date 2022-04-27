@@ -232,7 +232,11 @@
             var txt = (p_state.prop('checked')) ? 'Si' : 'No';
             state_text.html(txt);
         };
-        function getDataFormDescuento () { 
+
+      
+
+        function getDataFormDescuento () {
+
             RESTService.all('cajas/data_formDes', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         idusuario.append('<option value="">Seleccionar</option>');
