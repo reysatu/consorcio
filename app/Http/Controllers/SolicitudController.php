@@ -472,5 +472,22 @@ class SolicitudController extends Controller
             return response()->json($response);
         }      
     }
+
+    public function get_cliente_documento($id, CustomerInterface $repo)
+    {
+        try {
+            $data = $repo->get_cliente_document($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    } 
  
 }
