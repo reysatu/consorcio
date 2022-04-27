@@ -207,7 +207,7 @@ select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNE
     }
     public function getCajaDetEfeDolAper($date,$usuario){
         $mostrar=DB::select("select ca.totalEfectivoDol AS monto from ERP_CajaDiaria as ca inner join ERP_CajaDiariaDetalle  as cad on (cad.idCajaDiaria=ca.idCajaDiaria) where cad.codigoTipo='APE' AND ca.idUsuario='$usuario' and convert(date,ca.fechaCaja)='$date'");
-        return $mostrar;
+        return $mostrar; 
     }
     public function getCajaDetEfeDol($date,$usuario){
         $mostrar=DB::select("select cd.codigoTipo as codigoTipo,sum(CASE  

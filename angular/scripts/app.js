@@ -8,6 +8,7 @@
     angular.module('sys', [
         //dependencies
         'ui.router',
+
         'sys.utils.libraries',
         //'sys.templates',
         'sys.utils.services',
@@ -38,6 +39,7 @@
         'sys.app.areas',
         'sys.app.solicitudCompras',
         'sys.app.sectors',
+        'sys.app.registerOrdenCompras',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',

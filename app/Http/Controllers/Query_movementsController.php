@@ -12,6 +12,7 @@ use App\Http\Recopro\Query_movements\Query_movementsTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Query_movements\Query_movementsInterface;
 use App\Http\Requests\Query_movementsRequest;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 class Query_movementsController extends Controller
 {
      use Query_movementsTrait;
@@ -84,8 +85,8 @@ class Query_movementsController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
-    }
-       public function pdf(Request $request, Query_movementsInterface $repo)
+    } 
+       public function pdf(Request $request,Solicitud_AsignacionInterface $repcom, Query_movementsInterface $repo)
     {       
             date_default_timezone_set('America/Lima');
             $fechacA= date("d/m/Y");
@@ -119,8 +120,14 @@ class Query_movementsController extends Controller
             // $type_image = pathinfo($path, PATHINFO_EXTENSION);
             // $image = file_get_contents($path);
             // $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
-            $img='logo.jpg';
-            $path = public_path('img/' . $img);
+
+            $data_compania=$repcom->get_compania(); 
+
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
+
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);

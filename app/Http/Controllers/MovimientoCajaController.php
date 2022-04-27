@@ -28,7 +28,7 @@ use App\Models\BaseModel;
 use DateTime;
 use DateTimeZone;
 use DB;
-use Exception;
+use Exception; 
 use PDF;
 
 class MovimientoCajaController extends Controller

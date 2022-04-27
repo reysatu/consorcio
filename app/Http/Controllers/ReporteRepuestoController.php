@@ -107,9 +107,14 @@ class ReporteRepuestoController extends Controller
           
             $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro);
 
-            $data_compania=$repcom->get_compania(); 
+            
             $simboloMoneda = $repom->getSimboloMoneda();
+            $data_compania=$repcom->get_compania(); 
+
             $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);

@@ -1105,6 +1105,36 @@ function getFormSearchReporteVenta(form_id, input_id, btn_id) {
             '</div>'+
          '</form>';
 }
+function getFormSearchSolicitudCompra(form_id, input_id, btn_id) {
+   return '<form class="form-horizontal" id="' + form_id + '" style="margin-bottom:-3px">' +
+            // '<div class="form-group">'+
+            //     '<div class="col-md-2">'+
+            //         '<select id="filtro_tienda"  style="margin-right:5px;width: 100%" name="filtro_tienda" class="form-control input-sm " placeholder="Oficina"></select>'+
+            //     '</div>'+
+                
+            //     '<div class="col-md-2">' +
+            //         '<button  type="button"  id="btn_exportar_dd" class="btn-danger-admin  btn-sm">' +
+            //                 '<i class="fa fa-plus">Asignar Cobrador</i>' +
+            //         '</button>' +
+            //     '</div>'+           
+            // '</div>'+
+             '<div class="form-group">'+
+                '<label class="col-sm-2 control-label">Consecutivo</label>'+
+                 '<div class="col-md-2">'+
+                    '<input type="text" class="form-control input-sm"  id="consecutivo">'+
+                '</div>'+
+                '<label class="col-sm-3 control-label">Fecha Registro</label>'+
+                '<div class="col-md-4">'+
+                    '<input type="date" class="form-control input-sm"  id="FechaRegistro">'+
+                '</div>'+
+                '<div class="col-md-1">' +
+                    '<button  type="submit" id="' + btn_id + '" class="btn-danger-admin btn-sm">' +
+                        '<i class="fa fa-search"></i>' +
+                    '</button>' +
+                '</div>'+
+            '</div>'+
+         '</form>';
+}
 var limpiar_validaciones = function () {
     $(".mensajes_validador").html('');
 };
