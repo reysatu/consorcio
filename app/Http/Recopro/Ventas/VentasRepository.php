@@ -225,4 +225,6 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
         return DB::select($sql);
     }
 
+   
+
 }

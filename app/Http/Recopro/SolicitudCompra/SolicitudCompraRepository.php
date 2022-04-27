@@ -37,7 +37,6 @@ class SolicitudCompraRepository implements SolicitudCompraInterface
             $q->where('idMovimiento', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
             $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
-            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
         })->orderBy("created_at", "DESC");
 
     }
@@ -104,7 +103,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
          return $mostrar; 
     }
     public function get_movemen_lote($id){
-         $mostrar=DB::select("select * from ERP_SolicitudCompra_Articulo as mo inner join ERP_Lote as l on mo.idLote=l.idLote where mo.idMovimiento='$id'");
+         $mostrar=DB::select("select * from ERP_SolicitudCompra_Articulo");
          return $mostrar; 
     }
      public function get_movemen_lote_entrega($id){
@@ -128,7 +127,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
     //      return $mostrar; 
     // } revisar error en movimientos;
     public function get_movemen_Serie($id){
-        $mostrar=DB::select("select md.consecutivo as identificador,ma.cantidad as cantiTotal,* from ERP_SolicitudCompra_Detalle as md inner join ERP_Serie as s on md.serie=s.idserie  inner join ERP_SolicitudCompra_Articulo as ma on (ma.consecutivo=md.consecutivo and md.idMovimiento=ma.idMovimiento) where md.idMovimiento='$id'");
+        $mostrar=DB::select("select * from ERP_Area where estado='A'");
          return $mostrar; 
     }
 
@@ -259,7 +258,7 @@ where er.idMovimiento='$id'");
         $mostrar=DB::select("
                  SELECT prd.nCant as cantidadRequeridad,prd.nCantidadPendienteEntregar,ma.cantidad as cantidad, ma.consecutivo as consecutivo,pr.description as producto,al.description as almacen,lo.descripcion as localizacion,lot.Lote as lote,un.Abreviatura as unidad FROM ERP_Movimiento_Articulo as ma left JOIN ERP_Almacen  as al on al.id=ma.idAlmacen LEFT join ERP_Localizacion as lo on lo.idLocalizacion=ma.idLocalizacion inner join ERP_Productos as pr on pr.id=ma.idArticulo INNER JOIN ERP_UnidadMedida as un on pr.um_id=un.IdUnidadMedida LEFT JOIN ERP_Lote as lot  on lot.idLote=ma.idLote inner join ERP_Movimiento as mov on(mov.idMovimiento=ma.idMovimiento) inner join ERP_ProformaDetalle as prd on(prd.cCodConsecutivo=mov.cCodConsecutivo and prd.nConsecutivo=mov.nConsecutivo and ma.idArticulo=prd.idProducto) where ma.idMovimiento='$id'");
          return $mostrar; 
-    }
+    } 
     public function get_movement_articulo_printVenta($id)
     {
         $mostrar=DB::select("SELECT sar.cantidad as cantidadRequeridad, sar.nCantidadPendienteEntregar,ma.cantidad as cantidad, ma.consecutivo as consecutivo,pr.description as producto,al.description as almacen,lo.descripcion as localizacion,lot.Lote as lote,un.Abreviatura as unidad FROM ERP_Movimiento_Articulo as ma left JOIN ERP_Almacen  as al on al.id=ma.idAlmacen LEFT join ERP_Localizacion as lo on lo.idLocalizacion=ma.idLocalizacion inner join ERP_Productos as pr on pr.id=ma.idArticulo INNER JOIN ERP_UnidadMedida as un on pr.um_id=un.IdUnidadMedida LEFT JOIN ERP_Lote as lot  on lot.idLote=ma.idLote inner join ERP_Movimiento as mov on(mov.idMovimiento=ma.idMovimiento) inner join ERP_Venta as ven on(ven.serie_comprobante=mov.cCodConsecutivo and ven.numero_comprobante=mov.nConsecutivo ) inner join ERP_Solicitud as solI ON (solI.nConsecutivo=ven.nConsecutivo_solicitud AND solI.cCodConsecutivo=ven.cCodConsecutivo_solicitud) inner join ERP_SolicitudArticulo as sar on (sar.nConsecutivo=solI.nConsecutivo AND sar.cCodConsecutivo=solI.cCodConsecutivo and sar.idarticulo=ma.idArticulo) where ma.idMovimiento='$id'");

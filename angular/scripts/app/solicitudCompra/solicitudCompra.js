@@ -339,6 +339,7 @@
                     nConsecutivo.val(data_p.nConsecutivo);
                     idMovimiento.val(data_p.idMovimiento);
                     fecha_registro.val(data_p.fecha_registro);
+                    observaciones.val(data_p.observaciones);
                     console.log(data_p.idArea)
                     console.log("data_solo_");
                     console.log(data_p.fecha_requerida);
@@ -429,11 +430,15 @@
                         console.log(index.costo2);
                         console.log("sss");
                         var estado="N";
-
+ 
                         console.log(fecharequerida,index.fecha_requerida_ad);
                         console.log("fecha requeria");
                         var unida="";
-                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida);                      
+                        var obser=index.observaciones;
+                        if(index.observaciones==null){
+                            obser='';
+                        }
+                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida,obser);                      
                       })
                     // if(p_state.val()=="REGISTRADO"){
                     //     procesarTransfBoton.prop('disabled',false);
@@ -536,6 +541,7 @@
             ident_detalle.val('');
             estado.val("");
             prioridad.val("");
+            observaciones.val("");
 
             aartML= [];
             acodigos=[];
@@ -757,7 +763,8 @@
                                 var precioTotal="";
                                 var estado="N";
                                 var unida='';
-                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unida);
+                                var obser="";
+                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unida,obser);
                             }
                             if(codPdN.length!=0){
                                  AlertFactory.textType({
@@ -1209,6 +1216,15 @@
                     });
                     
                 datloteEnvi = datloteEnvi.join(',');
+
+                var dataObserva = [];
+                    $.each($('.observrequerida'), function (idx, item) {
+                        dataObserva[idx] = $(item).val();
+                    });
+                    
+                dataObserva = dataObserva.join(',');
+
+                
                 var idProductoSe = [];
                 var serieSe=[];
                 var idSerieSe=[];
@@ -1290,6 +1306,7 @@
                     // 'precio_total':idalPrtolEnv,
                     'idLote':idloteEnvi,
                     'dataLote':datloteEnvi,
+                    'dataObserva':dataObserva,
 
                     'idProductoSe':idProductoSe,
                     'serieSe':serieSe,
@@ -1339,7 +1356,7 @@
             }    
         }
 
-        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida,unida){
+        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser){
             acodigos.push(codigo);
         
             var costonew=0;
@@ -1406,11 +1423,14 @@
             
             // }
             var td4 = $('<td class="text-center"></td>');
+            var tdObser = $('<td class="text-center"></td>');
             var estadoda=$('<select id="estadoEnv_'+codigo+'" class="m_idestado form-control input-sm" disabled ><option value="N"></option><option value="0">Registrado</option><option value="1">Aprobado</option><option value="2">C/Orden de Compra</option><option value="3">Cerrado</option><option value="4">Cancelado</option></select>');
             var td5 = $('<td class="text-center"></td>');
             var inp5 = $('<input type="date" id="fechareEnv_'+codigo+'" class="fecharequerida form-control input-sm" value="' + fecharequerida + '" />');
+            var inpObse = $('<input type="input" id="observa_'+codigo+'" class="observrequerida form-control input-sm" value="' + obser + '" />');
             td4.append(estadoda);
              td5.append(inp5);
+             tdObser.append(inpObse);
             // var td5 = $('<td><p>'+impor.toFixed(2) +'</p></td>');
             // var tdpreT = $('<td><p>'+pretotal.toFixed(2) +'</p></td>');
             var inp = $('<input type="hidden" class="m_articulo_id" value="' + idProducto + '" />');
@@ -1436,7 +1456,7 @@
             var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
             td6.append(btn1);
             td8.append(btn3);
-            tr.append(td1).append(td2).append(td3).append(td12).append(td5).append(td4).append(td6).append(td8);
+            tr.append(td1).append(td2).append(td3).append(td12).append(td5).append(tdObser).append(td4).append(td6).append(td8);
             articulo_mov_det.append(tr);
             addAlmaSelec(codigo);
             addlocSele(codigo);
@@ -2015,7 +2035,7 @@
             }
         }
         function addArtNada(){
-
+            console.log("entro nada");
             var bval = true;
             bval = bval && cantProductoMN.required();
             if (bval) {
@@ -2037,9 +2057,10 @@
                 var precioTotal="";
                 var estado="N";
                 var idpr=idProductoMN.val();
+                var obser='';
                 RESTService.get('solicitudCompras/getDataArticulo', idpr, function(response) {
                         var datapro=response.data;
-                      addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida);
+                      addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida,obser);
                         modalNada.modal('hide');
                         modalMovimietoArticulo.modal('hide');    
                 });
@@ -2092,7 +2113,8 @@
                     var precioTotal="";
                     var estado="N";
                     var unida='';
-                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida,unida);
+                    var obser='';
+                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida,unida,obser);
                     modalLote.modal('hide');
                     modalLoteR.modal('hide');
                     modalMovimietoArticulo.modal('hide');
@@ -2146,7 +2168,8 @@
                 var precioTotal="";
                 var estado="N";
                 var unida="";
-                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida,unida);
+                var obser="";
+                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser);
                 modalKit.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2264,6 +2287,7 @@
                     'fecha_registro': fecha_registro.val(),
                     'prioridad': prioridad.val(),
                     'fecha_requerida': fecha_requerida.val(),
+                    'observaciones':observaciones.val(),
                     'area': area.val(),
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();

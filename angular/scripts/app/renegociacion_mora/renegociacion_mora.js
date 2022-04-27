@@ -273,9 +273,19 @@
                             // html += '<td class="monto-pagar-cuota"></td>';
                             html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) > 0) {
+
+                                var pagado_mora = 0;
+                                if(!isNaN(data.solicitud_cronograma[index].pagado_mora) && data.solicitud_cronograma[index].pagado_mora != null) {
+                                    pagado_mora = parseFloat(data.solicitud_cronograma[index].pagado_mora).toFixed(2)
+                                }
+
                                 html += '<td class=""><input int_moratorio="'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'" type="number" name="monto[]" class="form-control input-sm" /></td>';
                                 html += '<td class=""><input type="text" name="motivo[]" class="form-control input-sm"/></td>';
                                 html += '<input type="hidden" class="" name="nrocuota[]" value="'+data.solicitud_cronograma[index].nrocuota+'" >';
+                                html += '<input type="hidden" class="" name="int_moratorio[]" value="'+data.solicitud_cronograma[index].int_moratorio+'" >';
+                                html += '<input type="hidden" class="" name="valor_cuota[]" value="'+data.solicitud_cronograma[index].valor_cuota+'" >';
+                                html += '<input type="hidden" class="" name="monto_pago[]" value="'+data.solicitud_cronograma[index].monto_pago+'" >';
+                                html += '<input type="hidden" class="" name="pagado_mora[]" value="'+pagado_mora+'" >';
                             } else {
                                 html += '<td class=""></td>';
                                 html += '<td class=""></td>';

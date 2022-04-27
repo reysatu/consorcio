@@ -1,0 +1,87 @@
+{
+    "invoice": {
+        "tipo_doc": "03",
+        "serie": "B001",
+        "correl": "141",
+        "fec_emi": "2022-04-27",
+        "cod_mon": "PEN",
+        "fec_ven": "2022-04-27",
+        "hora_emi": "11:28:59",
+        "ubl_version": "2.1",
+        "customizacion": "2.0",
+        "emisor": {
+            "tip_doc": "6",
+            "num_doc": "20450106357",
+            "raz_soc": "Consorcio y Asociados S.A.C.",
+            "dir": "Jr. Pedro de Urzua  N\u00b0 333",
+            "cod_ubi": "",
+            "dep": "",
+            "prov": "",
+            "dist": "",
+            "cod_pais": "PE",
+            "cod_sucur": ""
+        },
+        "adquiriente": {
+            "tip_doc": 1,
+            "num_doc": "70186068",
+            "raz_soc": "ISABEL RAMIREZ PAREDES",
+            "dir": "JR. PEDRO DE URZUA 333",
+            "cod_pais": "PE"
+        },
+        "tot": {
+            "exo": 7200,
+            "val_vent": 7200,
+            "imp_tot": 7200,
+            "prec_tot": 7200,
+            "impsto_tot": 0,
+            "trib_exo": "0.00",
+            "antic": 2000
+        },
+        "cargo": [
+            {
+                "cod_cd": "",
+                "factor_cd": "",
+                "monto_cd": "",
+                "base_cd": ""
+            }
+        ],
+        "ant": [
+            {
+                "imp_prepagado": 2000,
+                "tip_doc_ant": "03",
+                "serie_correl": "B001",
+                "num_doc": "90",
+                "tip_doc": "01",
+                "moneda": "PEN",
+                "fec_pago": "2022-04-09"
+            }
+        ],
+        "forma_pago": {
+            "descrip": "Cr\u00e9dito",
+            "monto_neto": 7200,
+            "cod_mon": "PEN"
+        },
+        "cuota": [
+            {
+                "descrip": "",
+                "monto_neto": "",
+                "cod_mon": "",
+                "fec_venc": ""
+            }
+        ],
+        "det": [],
+        "leyen": [
+            {
+                "leyen_cod": "1000",
+                "leyen_descrip": "SIETE MIL DOSCIENTOS Y 00\/100 SOLES"
+            },
+            {
+                "leyen_cod": "2002",
+                "leyen_descrip": "SERVICIOS PRESTADOS EN LA AMAZON\u00cdA  REGI\u00d3N SELVA PARA SER CONSUMIDOS EN LA MISMA"
+            },
+            {
+                "leyen_descrip": "No se aceptan cambios ni devoluciones"
+            }
+        ]
+    }
+}
