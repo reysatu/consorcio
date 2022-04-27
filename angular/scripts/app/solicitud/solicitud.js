@@ -596,7 +596,7 @@
             bval = bval && documento_or.required();
             if (bval) {
                 var id = documento_or.val();
-                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+                RESTService.get('solicitud/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
