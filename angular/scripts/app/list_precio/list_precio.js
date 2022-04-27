@@ -225,11 +225,11 @@
                             type: 'info'
                         });
                     }
-                });
+                }); 
             }
-        };
+        }; 
         function getDataFormCustomer () {
-            RESTService.all('customers/data_form', '', function(response) {
+            RESTService.all('list_precios/data_formCus', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                      var tipo_clie=response.tipo_clie;
                      id_tipocli.append('<option value="">Seleccionar</option>');
@@ -245,7 +245,7 @@
         getDataFormCustomer();
 
         function getDataForOrdenServicio () {
-            RESTService.all('orden_servicios/data_form', '', function(response) {
+            RESTService.all('list_precios/data_formOrde', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                       idMoneda.append('<option value="">Seleccionar</option>');
                        _.each(response.moneda, function(item) {
@@ -306,7 +306,7 @@
                 paging: true,
                 sorting: true,
                 actions: {
-                     listAction: base_url +'/articles/getProductosServicio'
+                     listAction: base_url +'/list_precios/getProductosServicio'
                 },
                 toolbar: {
                     items: [{
@@ -433,11 +433,11 @@
                 },
                 id_tpocli: {
                     title: 'Tipo Cliente',
-                    options: base_url + '/customers/getTipoCliente' ,
+                    options: base_url + '/list_precios/getTipoCliente' ,
                 },
                 IdMoneda: {
                     title: 'Moneda',
-                     options: base_url + '/type_change/getMonedas',
+                     options: base_url + '/list_precios/getMonedas',
                 },
                 dFecVigIni: {
                     title: 'Fecha Inicio ',

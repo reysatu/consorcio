@@ -16,7 +16,7 @@
         var xmlAdd=$("#xmlAdd"); 
         var  aartML= []; //arrays para guardas los datos de lotes
         var  acodigos=[];//arrays de codigos;
-        var  alotML=[];
+        var  alotML=[]; 
         var  afinML=[];
         var  avenML=[];
         var  tipoCompra; //variable que contendrá los tipos de  compras

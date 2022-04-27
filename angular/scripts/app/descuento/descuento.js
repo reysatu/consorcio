@@ -158,7 +158,7 @@
             });
         }
          function getDataForOrdenServicio () {
-            RESTService.all('orden_servicios/data_form', '', function(response) {
+            RESTService.all('descuentos/data_formOrde', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         idMoneda.append('<option value="">Seleccionar</option>');
                        _.each(response.moneda, function(item) {

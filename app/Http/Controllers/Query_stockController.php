@@ -12,6 +12,7 @@ use App\Http\Recopro\Query_stock\Query_stockTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Query_stock\Query_stockInterface;
 use App\Http\Requests\Query_stockRequest;
+use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 class Query_stockController extends Controller
 {
      use Query_stockTrait;
@@ -88,7 +89,7 @@ class Query_stockController extends Controller
             ]);
         }
     }
-      public function pdf(Request $request, Query_stockInterface $repo)
+      public function pdf(Request $request,Solicitud_AsignacionInterface $repcom, Query_stockInterface $repo)
     {       
             date_default_timezone_set('America/Lima');
             $fechacA= date("d/m/Y");
@@ -98,8 +99,16 @@ class Query_stockController extends Controller
             $filtro_idLoc =  $request->input('filtro_idLoc');
             $filtro_cate =  $request->input('filtro_cate');
             $simboloMoneda = $repo->getSimboloMoneda();
-              $img='logo.jpg';
-            $path = public_path('img/' . $img);
+            //   $img='logo.jpg'; 
+            // $path = public_path('img/' . $img);
+
+            $data_compania=$repcom->get_compania(); 
+
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
+
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);

@@ -41,6 +41,10 @@ use App\Http\Recopro\Sector\Sector;
 use App\Http\Recopro\Sector\SectorInterface;
 use App\Http\Recopro\Sector\SectorRepository;
 
+use App\Http\Recopro\ViewScomprArticulo\ViewScomprArticulo; 
+use App\Http\Recopro\ViewScomprArticulo\ViewScomprArticuloInterface;
+use App\Http\Recopro\ViewScomprArticulo\ViewScomprArticuloRepository;
+
 
 use App\Http\Recopro\Proveedor\Proveedor; 
 use App\Http\Recopro\Proveedor\ProveedorInterface;
@@ -504,6 +508,14 @@ use App\Http\Recopro\Register_movement\Register_movement;
 use App\Http\Recopro\Register_movement\Register_movementInterface;
 use App\Http\Recopro\Register_movement\Register_movementRepository;
 
+use App\Http\Recopro\RegisterOrdenCompra\RegisterOrdenCompra;
+use App\Http\Recopro\RegisterOrdenCompra\RegisterOrdenCompraInterface;
+use App\Http\Recopro\RegisterOrdenCompra\RegisterOrdenCompraRepository;
+
+use App\Http\Recopro\RegisterOrdenCompraArticulo\RegisterOrdenCompraArticulo;
+use App\Http\Recopro\RegisterOrdenCompraArticulo\RegisterOrdenCompraArticuloInterface;
+use App\Http\Recopro\RegisterOrdenCompraArticulo\RegisterOrdenCompraArticuloRepository;
+
 use App\Http\Recopro\Register_transfer\Register_transfer;
 use App\Http\Recopro\Register_transfer\Register_transferInterface;
 use App\Http\Recopro\Register_transfer\Register_transferRepository;
@@ -786,6 +798,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerArea();
         $this->registerEmpresa();
         $this->registerSector();
+        $this->registerViewScomprArticulo();
         $this->registerProveedorCuentaBanco();
         $this->registerReporteOrdenDiario();
         $this->registerView_comprobante_movimiento();
@@ -915,6 +928,8 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSerie();
         $this->registerViewSerie();
         $this->registerRegister_movement();
+        $this->registerRegisterOrdenCompra();
+        $this->registerRegisterOrdenCompraArticulo();
         $this->registerRegister_transfer();
         $this->registerGeneration_remision();
         $this->registerNaturaleza();
@@ -1174,6 +1189,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(EmpresaInterface::class, function ($app) {
             return new EmpresaRepository(new Empresa());
+        });
+    }
+    public function registerViewScomprArticulo()
+    {
+        $app = $this->app;
+
+        $app->bind(ViewScomprArticuloInterface::class, function ($app) {
+            return new ViewScomprArticuloRepository(new ViewScomprArticulo());
         });
     }
     public function registerSector()
@@ -2244,6 +2267,22 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ViewSerieInterface::class, function ($app) {
             return new ViewSerieRepository(new ViewSerie());
+        });
+    }
+    public function registerRegisterOrdenCompra()
+    {
+        $app = $this->app;
+
+        $app->bind(RegisterOrdenCompraInterface::class, function ($app) {
+            return new RegisterOrdenCompraRepository(new RegisterOrdenCompra());
+        });
+    }
+    public function registerRegisterOrdenCompraArticulo()
+    {
+        $app = $this->app;
+
+        $app->bind(RegisterOrdenCompraArticuloInterface::class, function ($app) {
+            return new RegisterOrdenCompraArticuloRepository(new RegisterOrdenCompraArticulo());
         });
     }
 

@@ -202,11 +202,11 @@ select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNE
         return $mostrar; 
     }
     public function getCajaDetEfeSolAper($date,$usuario){
-        $mostrar=DB::select("select sum(cden.monto * cden.cantidad) as monto from ERP_CajaDiariaDenominaciones as cden inner join ERP_CajaDiaria as c on c.idCajaDiaria=cden.idCajaDiaria  INNER JOIN ERP_Denominaciones as den on cden.idDenominacion=den.id_denominacion where c.fechaCaja='$date' and c.idUsuario='$usuario' and cden.tipo='1' and den.IdMoneda='1' GROUP BY cden.Tipo ");
+        $mostrar=DB::select("select ca.totalEfectivo AS monto from ERP_CajaDiaria as ca inner join ERP_CajaDiariaDetalle  as cad on (cad.idCajaDiaria=ca.idCajaDiaria) where cad.codigoTipo='APE' AND ca.idUsuario='$usuario' and convert(date,ca.fechaCaja)='$date'");
         return $mostrar; 
     }
     public function getCajaDetEfeDolAper($date,$usuario){
-        $mostrar=DB::select("select sum(cden.monto * cden.cantidad) as monto from ERP_CajaDiariaDenominaciones as cden inner join ERP_CajaDiaria as c on c.idCajaDiaria=cden.idCajaDiaria  INNER JOIN ERP_Denominaciones as den on cden.idDenominacion=den.id_denominacion where c.fechaCaja='$date' and c.idUsuario='$usuario' and cden.tipo='1' and den.IdMoneda='2' GROUP BY cden.Tipo ");
+        $mostrar=DB::select("select ca.totalEfectivoDol AS monto from ERP_CajaDiaria as ca inner join ERP_CajaDiariaDetalle  as cad on (cad.idCajaDiaria=ca.idCajaDiaria) where cad.codigoTipo='APE' AND ca.idUsuario='$usuario' and convert(date,ca.fechaCaja)='$date'");
         return $mostrar; 
     }
     public function getCajaDetEfeDol($date,$usuario){

@@ -21,3 +21,5 @@ Route::get('descuentos/deleteProducto/{id}', ['as' => 'descuentos.deleteProducto
 Route::get('descuentos/deleteUsuarioTotal/{id}', ['as' => 'descuentos.deleteUsuarioTotal', 'uses' => 'DescuentoController@deleteUsuarioTotal']);
 
 Route::get('descuentos/deleteProductoTotal/{id}', ['as' => 'descuentos.deleteProductoTotal', 'uses' => 'DescuentoController@deleteProductoTotal']);
+
+Route::get('descuentos/data_formOrde', ['as' => 'descuentos.data_formOrde', 'uses' => 'Orden_servicioController@data_form']);

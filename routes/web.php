@@ -133,6 +133,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Register_movements.php';
 
+    require app_path() . '\Http\Routes\RegisterOrdenCompras.php';
+
     require app_path() . '\Http\Routes\SolicitudCompras.php';
 
     require app_path() . '\Http\Routes\Register_transfers.php';

@@ -237,7 +237,7 @@ class DescuentoController extends Controller
     public function all(Request $request, DescuentoInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id', 'descripcion','estado'];
+        $params =['id', 'descripcion','idTipo','nPorcDescuento','idMoneda','nMonto','estado','dFecIni','dFecFin','nLimiteUso','nCantUso','nSaldoUso','cTipoAplica','nTodosUsusarios','user_created','user_updated'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
 

@@ -16,6 +16,7 @@
         var cambCan;  
         var cambioChe;
         var cambioDes;
+        var descuentosTotales;
         var redondeo;
         var cEstadoCivil=$("#cEstadoCivil");
         var acodigos=[];
@@ -762,11 +763,51 @@
             getProvincia(bandera,id);
         });
           idMoneda.change(function () {
+            console.log("algo");
               if(table_servicios.html()!=""){
                  modalDeleteDetalle.modal("show");
               }
+               var hoy = new Date();
+            var hAnio=hoy.getFullYear();
+            var hmes=hoy.getMonth()+1;
+            if(Number(hmes)<10){
+                hmes='0'+String(hmes);
+            }
+
+            var hdia=hoy.getDate();
+            if(Number(hdia)<10){
+                hdia='0'+String(hdia);
+            }
+            var actu=hAnio+'-'+hmes+'-'+hdia;
+                totalDescuento.html("");
+                totalDescuento.append('<option value="">Seleccionar</option>');
+              _.each(descuentosTotales, function(item) {
+                        if( item.cTipoAplica=='T'){
+                            console.log("entro acá");
+                            var mo=idMoneda.val();
+                             var por=Number(item.nPorcDescuento);
+                            var monto=Number(item.nMonto);
+                             console.log("item tota dhdhdh");
+                            console.log(item.idMoneda);
+                            console.log(mo);
+                            console.log(item.nPorcDescuento);
+                            console.log(item.nSaldoUso);
+                            console.log(item.nLimiteUso);
+                            console.log("item tota");
+                            if((item.idMoneda==mo || item.nPorcDescuento!=0) && (item.nSaldoUso>0 || item.nLimiteUso==0)){
+                               
+                                console.log("entro acá2",item.descripcion);
+
+                                if(item.dFecIni<=actu && item.dFecFin>actu){
+                                    console.log("entro aaaaaaaaaaaaa");
+                                    totalDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                                 }
+                            }
+                    } 
+                    });
               // llenarServicios();
         });
+
         id_cliente_tipo_or.change(function () {
              
               // llenarServicios();
@@ -2971,19 +3012,7 @@ function getDatosCliente(){
                         hdia='0'+String(hdia);
                     }
                     var actu=hAnio+'-'+hmes+'-'+hdia;
-                    totalDescuento.append('<option value="">Seleccionar</option>');
-                     _.each(response.descuentos, function(item) {
-                        if( item.cTipoAplica=='T'){
-                            var mo=idMoneda.val();
-                             var por=Number(item.nPorcDescuento);
-                            var monto=Number(item.nMonto);
-                            if((item.idMoneda==mo || item.nPorcDescuento!='0') && (item.nSaldoUso>0 || item.nLimiteUso=='0')){
-                                if(item.dFecIni<=actu && item.dFecFin>actu){
-                                    totalDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                                 }
-                            }
-                    } 
-                    });
+
                      cCodConsecutivo.append('<option value="">Seleccionar</option>');
                      _.each(response.codigo, function(item) {
                         cCodConsecutivo.append('<option value="'+item.cCodConsecutivo+'">'+item.cCodConsecutivo+'</option>');
@@ -3048,6 +3077,9 @@ function getDatosCliente(){
                        _.each(response.totales, function(item) {
                         tipo_totales_slec.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
                     });
+                       // totalDescuento.append('<option value="">Seleccionar</option>');
+                        descuentosTotales=response.descuentos;
+                     
                 
                 } 
             }, function() {

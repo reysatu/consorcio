@@ -134,6 +134,11 @@ class ReporteCreditosAprobadoController extends Controller
             $data =$repo->allFiltro($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio);
 
             $data_compania=$repcom->get_compania(); 
+
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
             $simboloMoneda = $repom->getSimboloMonedaTotal();
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);

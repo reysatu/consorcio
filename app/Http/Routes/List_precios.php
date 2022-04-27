@@ -17,5 +17,15 @@ Route::get('list_precios/aprobarPrecio/{id}', ['as' => 'list_precios.aprobarPrec
 
 Route::get('list_precios/DesaprobarPrecio/{id}', ['as' => 'list_precios.DesaprobarPrecio', 'uses' => 'List_precioController@DesaprobarPrecio']);
 
+Route::get('list_precios/data_formCus', ['as' => 'list_precios.data_formCus', 'uses' => 'CustomerController@data_form']);
+
 
 Route::get('list_precios/delete/{id}', ['as' => 'list_precios.delete', 'uses' => 'List_precioController@destroy']);
+
+Route::get('list_precios/data_formOrde', ['as' => 'list_precios.data_formOrde', 'uses' => 'Orden_servicioController@data_form']);
+
+Route::post('list_precios/getProductosServicio', ['as' => 'list_precios.getProductosServicio', 'uses' => 'ProductController@traeAll_Servicios']);
+
+Route::post('list_precios/getTipoCliente', 'CustomerController@getTipoCliente');
+
+Route::post('list_precios/getMonedas', 'CurrencyController@getAll');

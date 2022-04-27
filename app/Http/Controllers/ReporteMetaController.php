@@ -145,9 +145,14 @@ class ReporteMetaController extends Controller
             $mes = $request->input('mes', '');
             $data =$repo->allReporteMensual($Anio,$mes);
             $data_orden =$repo->allReporteMensualOrden($Anio,$mes);
-            $data_compania=$repcom->get_compania(); 
+           
             $simboloMoneda = $repom->getSimboloMonedaTotal();
+            $data_compania=$repcom->get_compania(); 
 
+            $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
             $path = public_path('/'.$data_compania[0]->ruta_logo);
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);

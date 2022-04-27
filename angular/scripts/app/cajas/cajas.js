@@ -7,7 +7,7 @@
     angular.module('sys.app.cajas')
         .config(Config)
         .controller('CajasCtrl', CajasCtrl);
-
+ 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
     CajasCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify'];
 
@@ -57,6 +57,7 @@
          
             titleModalCajas.html('Editar Caja');
             RESTService.get('cajas/find', id, function (response) {
+
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     var data_detalle = response.dataDetalle;
@@ -231,8 +232,8 @@
             var txt = (p_state.prop('checked')) ? 'Si' : 'No';
             state_text.html(txt);
         };
-        function getDataFormDescuento () {
-            RESTService.all('descuentos/data_form', '', function(response) {
+        function getDataFormDescuento () { 
+            RESTService.all('cajas/data_formDes', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         idusuario.append('<option value="">Seleccionar</option>');
                        _.each(response.usuarios, function(item) {
@@ -248,7 +249,7 @@
 
         getDataFormDescuento();
         function getDataJerarquiaForm () {
-            RESTService.all('configJerarquias/data_form', '', function(response) {
+            RESTService.all('cajas/data_formConfig', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tiendaTotal=response.tienda;
                      idtienda.append('<option value="" selected>Seleccionar</option>');
