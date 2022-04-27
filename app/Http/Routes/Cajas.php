@@ -12,6 +12,11 @@ Route::post('cajas/delete', ['as' => 'cajas.delete', 'uses' => 'CajasController@
 Route::post('cajas/update', ['as' => 'cajas.update', 'uses' => 'CajasController@update']);
 Route::get('cajas/excel', ['as' => 'cajas.excel', 'uses' => 'CajasController@excel']);
 
+Route::get('cajas/data_formDes', ['as' => 'cajas.data_formDes', 'uses' => 'DescuentoController@data_form']);
+
+
+Route::get('cajas/data_formConfig', ['as' => 'cajas.data_formConfig', 'uses' => 'ConfigJerarquiaCompraController@data_form']);
+
 Route::post('cajas/getTiendas', 'ShopController@getTiendas');
 
 Route::put('cajas/saveCaja/{id}', ['as' => 'cajas.saveCaja', 'uses' => 'CajasController@createUpdate']);
