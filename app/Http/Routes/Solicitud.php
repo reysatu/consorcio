@@ -34,3 +34,7 @@ Route::get('solicitud/data_form', ['as' => 'solicitud.data_form', 'uses' => 'Sol
 Route::get('solicitud/imprimir_solicitud/{id}', 'SolicitudController@imprimir_solicitud');
 
 Route::get('solicitud/get_cliente/{id}', ['as' => 'solicitud.get_cliente', 'uses' => 'SolicitudController@get_cliente_documento']);
+
+Route::get('solicitud/get_cliente_persona/{id}', ['as' => 'solicitud.get_cliente_persona', 'uses' => 'SolicitudController@get_cliente_persona']);
+
+Route::get('solicitud/get_precios_list/{id}', ['as' => 'solicitud.get_precios_list', 'uses' => 'SolicitudController@get_precios_list']);

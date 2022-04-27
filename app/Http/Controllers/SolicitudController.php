@@ -489,5 +489,62 @@ class SolicitudController extends Controller
             ]);
         }
     } 
+
+    public function get_cliente_persona($id, Orden_servicioInterface $repo, Request $request)
+    {   try {
+            $val=$repo->get_clientePersona($id);
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function get_precios_list($id, Orden_servicioInterface $repo, Request $request)
+    {   try {
+            $valtodo=explode("_", $id);
+            $idProducto=$valtodo[0];
+            $idTipoCli=$valtodo[1];
+            $idMoneda=$valtodo[2];
+            $val=$repo->get_precios_list($idProducto, $idTipoCli,$idMoneda);
+            // var_dump($val);
+             $newPrecio='';
+            if(empty($val) && $idMoneda=='1'){
+                $para=$repo->get_parametroPrecio();
+
+                $parametro_moneda = (isset($para[0]->value)) ? $para[0]->value : 0;
+
+                $val=$repo->get_precios_list($idProducto, $idTipoCli,$parametro_moneda);
+                if(!empty($val)){
+                    $fecha_actual=date("Y-m-d");
+                    $cambio=$repo->cambio_tipo($parametro_moneda,$fecha_actual);
+                    $newPrecio=floatval($val[0]->nPrecio)*floatval($cambio[0]->Mensaje);
+                }
+            } else {
+                $newPrecio = $val[0]->nPrecio;
+            }
+        // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
+        //     DB::commit();
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+                'newPrecio'=>$newPrecio,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
  
 }

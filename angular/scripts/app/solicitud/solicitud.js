@@ -1109,7 +1109,7 @@
             if (code == 13) {
                 $('#show_loading').removeClass('ng-hide');
                 var documentoEnvio = documento.val();
-                RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function (response) {
+                RESTService.get('solicitud/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
                         if (dataPersona.length == 0) {
@@ -1403,7 +1403,7 @@
                 var id_tipo_cliente = id_cliente_tipo_or.val();
                 var id = idProductoMN.val() + "_" + id_tipo_cliente + "_" + idMoneda.val();
                 // alert(id);
-                RESTService.get('orden_servicios/get_precios_list', id, function (response) {
+                RESTService.get('solicitud/get_precios_list', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.newPrecio != "") {
                             precio = response.newPrecio;
