@@ -257,7 +257,7 @@
                     echo '</tr>';
                 }
 
-                if($venta[0]->condicion_pago == "CONTADO") {
+                if($venta[0]->condicion_pago == "CONTADO" && !empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
