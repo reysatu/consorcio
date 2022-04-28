@@ -2893,7 +2893,7 @@ table_container_bancos.jtable('load');
                 RESTService.updated('movimientoCajas/createCliente', cli_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         // console.log(response);
-                        $("#idcliente_m").val(response.data[0].idCliente);
+                        // $("#idcliente_m").val(response.data.idCliente);
                         $("#documento_cliente").val(documento.val());
                         getCliente("movimiento_caja");
                         $("#tipo_doc_venta").val(id_tipoDoc_Venta.val());
