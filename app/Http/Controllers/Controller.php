@@ -554,8 +554,12 @@ class Controller extends BaseController
         $json["invoice"] = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
-        $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
-        $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+        $venta_anticipo = array();
+        $solicitud_cronograma = array();
+        if(!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
+            $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+            $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+        }
         $empresa = $compania_repo->find("00000");
 
         $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
