@@ -37,6 +37,108 @@
        var lema2=$("#lema2");
        var direcciones_oficinas=$("#direcciones_oficinas");
 
+       var departamento = $('#departamento');
+       var provincia = $('#provincia');
+       var distrito = $('#distrito');
+ 
+
+       function getDepartamento(bandera) {
+           var id = "0";
+           RESTService.get('shops/TraerDepartamentos', id, function (response) {
+               if (!_.isUndefined(response.status) && response.status) {
+                   var data_p = response.data;
+                   departamento.html('');
+                   departamento.append('<option value="" >Seleccione</option>');
+                   _.each(response.data, function (item) {
+                       if (item.cDepartamento == bandera) {
+                           departamento.append('<option value="' + item.cDepartamento + '" selected >' + item.cDepartamento + '</option>');
+                       } else {
+                           departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
+                       };
+
+                   });
+
+               } else {
+                   AlertFactory.textType({
+                       title: '',
+                       message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                       type: 'error'
+                   });
+               }
+
+           });
+       }
+       function getProvincia(bandera, id) {
+           RESTService.get('shops/TraerProvincias', id, function (response) {
+               if (!_.isUndefined(response.status) && response.status) {
+                   var data_p = response.data;
+                   console.log(data_p);
+                   provincia.html('');
+                   provincia.append('<option value="" >Seleccione</option>');
+                   _.each(response.data, function (item) {
+                       if (item.cProvincia == bandera) {
+                           provincia.append('<option value="' + item.cProvincia + '" selected>' + item.cProvincia + '</option>');
+                       } else {
+                           provincia.append('<option value="' + item.cProvincia + '">' + item.cProvincia + '</option>');
+                       }
+
+                   });
+
+               } else {
+                   AlertFactory.textType({
+                       title: '',
+                       message: 'Hubo un error . Intente nuevamente.',
+                       type: 'error'
+                   });
+               }
+
+           });
+       }
+       function getDistrito(bandera, id) {
+           RESTService.get('shops/TraerDistritos', id, function (response) {
+               if (!_.isUndefined(response.status) && response.status) {
+                   var data_p = response.data;
+                   console.log(data_p);
+                   distrito.html('');
+                   distrito.append('<option value="" >Seleccione</option>');
+                   _.each(response.data, function (item) {
+                       if (item.cCodUbigeo == bandera) {
+                           distrito.append('<option value="' + item.cCodUbigeo + '" selected>' + item.cDistrito + '</option>');
+                       } else {
+                           distrito.append('<option value="' + item.cCodUbigeo + '">' + item.cDistrito + '</option>');
+                       }
+
+                   });
+
+               } else {
+                   AlertFactory.textType({
+                       title: '',
+                       message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                       type: 'error'
+                   });
+               }
+
+           });
+       }
+
+       departamento.change(function () {
+            var bandera = 'xxxxxx';
+            var id = departamento.val();
+            getProvincia(bandera, id);
+        });
+
+        provincia.change(function () {
+            var bandera = 'xxxxxx';
+            var id = provincia.val();
+            getDistrito(bandera, id);
+
+        });
+
+    
+        var bandera = 'xxxxx';
+        getDepartamento(bandera);
+
+
         $('.i-checks').iCheck({
             checkboxClass: 'icheckbox_square-green'
         }).on('ifChanged', function (event) {
@@ -182,9 +284,11 @@
                 var idPe = (idCompania.val() === '') ? 0 : idCompania.val();
 
                 var formData = new FormData(document.getElementById("formulario-compania"));
-
+                // alert($('#departamento option:selected').text());
                 // console.log(formData);
-                
+                formData.append("departamento", $('#departamento option:selected').text());
+                formData.append("provincia", $('#provincia option:selected').text());
+                formData.append("distrito", $('#distrito option:selected').text());
                 $.ajax({
                     url: 'companias/createCompania/' + idPe,
                     type: "post",

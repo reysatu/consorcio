@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
 
-(function () {
+ (function () {
     'use strict'; 
     angular.module('sys.app.movimientoCajas')
         .config(Config)
@@ -2023,7 +2023,7 @@ table_container_bancos.jtable('load');
         $(document).on("change", "#id_tipoDoc_Venta_or", function (event, serie_comprobante) {
             // console.log(IdTipoDocumento, serie_comprobante);
             var tipo_documento = $(this).val();
-            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
+            $.post("movimientoCajas/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
                     select_comprobante(data);
 
@@ -2107,7 +2107,7 @@ table_container_bancos.jtable('load');
             // console.log(IdTipoDocumento, serie_comprobante);
             var tipo_documento = $(this).val();
             // console.log(tipo_documento);
-            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
+            $.post("movimientoCajas/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
                     select_comprobante_m(data);
 
@@ -2447,7 +2447,7 @@ table_container_bancos.jtable('load');
         var data_formas_pago = [];
 
         function obtener_data_for_solicitud() {
-            RESTService.all('solicitud/data_form', '', function (response) {
+            RESTService.all('movimientoCajas/data_form_solicitud', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     if (response.parametro_igv.length > 0) {
                         // alert(response.parametro_igv[0].value);
@@ -2594,9 +2594,11 @@ table_container_bancos.jtable('load');
             }
             bval = bval && documento_or.required();
             if (bval) {
+
                 var id = documento_or.val();
                 // alert(id);
-                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+
+                RESTService.get('movimientoCajas/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -2662,7 +2664,7 @@ table_container_bancos.jtable('load');
         var tipodoc = $("#tipodoc");
 
         function getDataFormCustomer() {
-            RESTService.all('customers/data_form', '', function (response) {
+            RESTService.all('movimientoCajas/data_form_customer', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip = response.tipoc_doc;
                     var tipo_clie = response.tipo_clie;
@@ -2711,10 +2713,11 @@ table_container_bancos.jtable('load');
         var departamento = $('#departamento');
         var provincia = $('#provincia');
         var distrito = $('#distrito');
+        var idsector=$("#idsector");
 
         function getDepartamento(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('movimientoCajas/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
@@ -2745,7 +2748,7 @@ table_container_bancos.jtable('load');
         });
 
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('movimientoCajas/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -2778,7 +2781,7 @@ table_container_bancos.jtable('load');
 
         });
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('movimientoCajas/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -2803,7 +2806,40 @@ table_container_bancos.jtable('load');
 
             });
         }
+
+        distrito.change(function () {
+            var bandera='xxxxxx';
+            var id=distrito.val();
+            getSector(bandera,id);
+        });
         
+        function getSector(bandera,id){ 
+            RESTService.get('movimientoCajas/traerSectorOrd', id, function(response) {
+                     if (!_.isUndefined(response.status) && response.status) {
+                         var data_p = response.data;
+                         console.log(data_p);
+                          idsector.html('');
+                          idsector.append('<option value="" >Seleccione</option>');
+                         _.each(response.data, function(item) {
+                            if(item.id==bandera){
+                                 idsector.append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                             }else{
+                                 idsector.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                             }
+                           
+                        });
+    
+                     }else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                            type: 'error'
+                        });
+                    }
+    
+                   });
+            }
+
         var btn_save_cliente = $("#btn_save_cliente");
         var cEstadoCivil = $("#cEstadoCivil");
         btn_save_cliente.click(function (e) {
@@ -2850,13 +2886,14 @@ table_container_bancos.jtable('load');
                     'id_tipocli': id_tipocli.val(),
                     'IdTipoDocumento': id_tipoDoc_Venta.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
+                    'idsector':idsector.val(),
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
-                RESTService.updated('customers/createCliente', cli_id, params, function (response) {
+                RESTService.updated('movimientoCajas/createCliente', cli_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         // console.log(response);
-                        $("#idcliente_m").val(response.data[0].idCliente);
+                        $("#idcliente_m").val(response.data.id);
                         $("#documento_cliente").val(documento.val());
                         getCliente("movimiento_caja");
                         $("#tipo_doc_venta").val(id_tipoDoc_Venta.val());
@@ -2880,9 +2917,12 @@ table_container_bancos.jtable('load');
         documento.keypress(function (e) {
             var code = (e.keyCode ? e.keyCode : e.which);
             if (code == 13) {
+                
                 $('#show_loading').removeClass('ng-hide');
+
                 var documentoEnvio = documento.val();
-                RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function (response) {
+
+                RESTService.get('movimientoCajas/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
                         if (dataPersona.length == 0) {

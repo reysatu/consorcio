@@ -75,3 +75,26 @@ Route::post('movimientoCajas/obtener_consecutivo_comprobante', ['as' => 'movimie
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
 
 Route::post('movimientoCajas/list_ventas', ['as' => 'movimientoCajas.list_ventas', 'uses' => 'SolicitudController@list_ventas']);
+
+
+Route::get('movimientoCajas/get_cliente/{id}', ['as' => 'movimientoCajas.get_cliente', 'uses' => 'SolicitudController@get_cliente_documento']);
+
+Route::get('movimientoCajas/get_cliente_persona/{id}', ['as' => 'movimientoCajas.get_cliente_persona', 'uses' => 'SolicitudController@get_cliente_persona']);
+
+Route::post('movimientoCajas/obtener_consecutivo_comprobante', 'ConsecutivosComprobantesController@obtener_consecutivo_comprobante');
+
+
+Route::get('movimientoCajas/TraerDepartamentos/{id}', ['as' => 'movimientoCajas.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('movimientoCajas/TraerProvincias/{id}', ['as' => 'movimientoCajas.TraerProvincias', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('movimientoCajas/TraerDistritos/{id}', ['as' => 'movimientoCajas.TraerDistritos', 'uses' => 'UbigeoController@TraerDistritos']);
+
+
+Route::get('movimientoCajas/data_form_solicitud', ['as' => 'movimientoCajas.data_form_solicitud', 'uses' => 'SolicitudController@data_form']);
+
+Route::get('movimientoCajas/data_form_customer', ['as' => 'movimientoCajas.data_form_customer', 'uses' => 'CustomerController@data_form']);
+
+
+Route::put('movimientoCajas/createCliente/{id}', ['as' => 'movimientoCajas.createCliente', 'uses' => 'CustomerController@createUpdate']);
+
+
+Route::get('movimientoCajas/traerSectorOrd/{id}', ['as' => 'movimientoCajas.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);

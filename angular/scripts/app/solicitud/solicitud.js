@@ -718,7 +718,7 @@
 
         function getDepartamentoPersona(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('solicitud/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     cRegion.html('');
@@ -743,7 +743,7 @@
             });
         }
         function getProvinciaPersona(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('solicitud/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -769,7 +769,7 @@
             });
         }
         function getDistritoPersona(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('solicitud/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -987,8 +987,8 @@
         };
         function getDepartamento(bandera) {
             var id = "0";
-            console.log("entro departaen");
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            // console.log("entro departaen");
+            RESTService.get('solicitud/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
@@ -1019,7 +1019,7 @@
         });
 
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('solicitud/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -1078,7 +1078,7 @@
                });
         }
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('solicitud/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -1109,7 +1109,7 @@
             if (code == 13) {
                 $('#show_loading').removeClass('ng-hide');
                 var documentoEnvio = documento.val();
-                RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function (response) {
+                RESTService.get('solicitud/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
                         if (dataPersona.length == 0) {
@@ -1403,7 +1403,7 @@
                 var id_tipo_cliente = id_cliente_tipo_or.val();
                 var id = idProductoMN.val() + "_" + id_tipo_cliente + "_" + idMoneda.val();
                 // alert(id);
-                RESTService.get('orden_servicios/get_precios_list', id, function (response) {
+                RESTService.get('solicitud/get_precios_list', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.newPrecio != "") {
                             precio = response.newPrecio;

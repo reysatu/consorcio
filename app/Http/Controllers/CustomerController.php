@@ -132,6 +132,7 @@ class CustomerController extends Controller
             DB::commit();
             return response()->json([
                 'status' => true,
+                'data' => $data
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

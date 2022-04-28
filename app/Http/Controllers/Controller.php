@@ -550,12 +550,23 @@ class Controller extends BaseController
         return trim($xcadena);
     }
 
-    public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo) {
+    public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio) {
         $json["invoice"] = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
-        $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+        $venta_anticipo = array();
+        $solicitud_cronograma = array();
+        if(!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
+            $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+            $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+        }
         $empresa = $compania_repo->find("00000");
+
+        $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
+
+        if(count($parametro_igv) <= 0) {
+            throw new Exception("Por favor cree el parametro IGV!");
+        }
 
         $json["invoice"]["tipo_doc"] = $venta[0]->IdTipoDocumento;
         $json["invoice"]["serie"] = $venta[0]->serie_comprobante;
@@ -571,35 +582,35 @@ class Controller extends BaseController
         $json["invoice"]["emisor"]["num_doc"] = $empresa->Ruc;
         $json["invoice"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
         $json["invoice"]["emisor"]["dir"] = $empresa->Direccion;
-        $json["invoice"]["emisor"]["cod_ubi"] = "";
-        $json["invoice"]["emisor"]["dep"] = "";
-        $json["invoice"]["emisor"]["prov"] = "";
-        $json["invoice"]["emisor"]["dist"] = "";
+        $json["invoice"]["emisor"]["cod_ubi"] = $empresa->ubigeo;
+        $json["invoice"]["emisor"]["dep"] = $empresa->departamento;
+        $json["invoice"]["emisor"]["prov"] = $empresa->provincia;
+        $json["invoice"]["emisor"]["dist"] = $empresa->distrito;
         $json["invoice"]["emisor"]["cod_pais"] = "PE";
-        $json["invoice"]["emisor"]["cod_sucur"] = "";
+        $json["invoice"]["emisor"]["cod_sucur"] = "0000";
 
-        $json["invoice"]["adquiriente"]["tip_doc"] = (int)$venta[0]->tipodoc;
+        $json["invoice"]["adquiriente"]["tip_doc"] = $venta[0]->tipodoc;
         $json["invoice"]["adquiriente"]["num_doc"] = $venta[0]->documento;
         $json["invoice"]["adquiriente"]["raz_soc"] = $venta[0]->razonsocial_cliente;
         $json["invoice"]["adquiriente"]["dir"] = $venta[0]->direccion;
         $json["invoice"]["adquiriente"]["cod_pais"] = "PE";
 
-        $json["invoice"]["tot"]["exo"] = round($venta[0]->t_monto_exonerado, 2);
-        $json["invoice"]["tot"]["val_vent"] = round($venta[0]->t_monto_total, 2);
-        $json["invoice"]["tot"]["imp_tot"] = round($venta[0]->t_monto_total, 2);
-        $json["invoice"]["tot"]["prec_tot"] = round($venta[0]->t_monto_total, 2);
-        $json["invoice"]["tot"]["impsto_tot"] = round($venta[0]->t_impuestos, 2);
-        $json["invoice"]["tot"]["trib_exo"] = "0.00";
+        $json["invoice"]["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
+        $json["invoice"]["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json["invoice"]["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json["invoice"]["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json["invoice"]["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
+        // $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES DE EXPORTACION
         
         if($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-            $json["invoice"]["tot"]["antic"] = round($venta[0]->anticipo, 2);
+            $json["invoice"]["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
-            $json["invoice"]["cargo"][0]["cod_cd"] = "";
-            $json["invoice"]["cargo"][0]["factor_cd"] = "";
-            $json["invoice"]["cargo"][0]["monto_cd"] = "";
-            $json["invoice"]["cargo"][0]["base_cd"] = "";
+            // $json["invoice"]["cargo"][0]["cod_cd"] = "";
+            // $json["invoice"]["cargo"][0]["factor_cd"] = "";
+            // $json["invoice"]["cargo"][0]["monto_cd"] = "";
+            // $json["invoice"]["cargo"][0]["base_cd"] = "";
 
-            $json["invoice"]["ant"][0]["imp_prepagado"] = round($venta_anticipo[0]->t_monto_total, 2);
+            $json["invoice"]["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
             $json["invoice"]["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
             $json["invoice"]["ant"][0]["serie_correl"] = $venta_anticipo[0]->serie_comprobante;
             $json["invoice"]["ant"][0]["num_doc"] = $venta_anticipo[0]->numero_comprobante;
@@ -613,13 +624,23 @@ class Controller extends BaseController
             $json["invoice"]["forma_pago"]["descrip"] = "Contado";
         } else { // credito
             $json["invoice"]["forma_pago"]["descrip"] = "Crédito";
-            $json["invoice"]["forma_pago"]["monto_neto"] = round($venta[0]->t_monto_total, 2);
+            $json["invoice"]["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
             $json["invoice"]["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
-            $json["invoice"]["cuota"][0]["descrip"] = "";
-            $json["invoice"]["cuota"][0]["monto_neto"] = "";
-            $json["invoice"]["cuota"][0]["cod_mon"] = "";
-            $json["invoice"]["cuota"][0]["fec_venc"] = "";
+
+            $json["invoice"]["cuota"] = array();
+            $cuotas = array();
+            foreach ($solicitud_cronograma as $key => $value) {
+                $cuotas["descrip"] = "Cuota ".$value->nrocuota;
+                $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
+                $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
+                $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
+
+                array_push($json["invoice"]["cuota"], $cuotas);
+            }
+
+
+          
         }
 
         $json["invoice"]["det"] = array();
@@ -632,15 +653,15 @@ class Controller extends BaseController
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
             $detalle_venta["descrip"] = $value->producto;
             $detalle_venta["cant"] = $value->cantidad;
-            $detalle_venta["val_unit_item"] = round($value->precio_unitario, 2);
+            $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
             
-            $detalle_venta["val_vta_item"] = round($value->precio_unitario, 2);
-            $detalle_venta["igv_item"] = round($value->impuestos, 2);
-            $detalle_venta["prec_unit_item"] = round($value->precio_unitario, 2);
-            $detalle_venta["tip_afec_igv"] = "20";
-            $detalle_venta["impsto_tot"] = "";
-            $detalle_venta["base_igv"] = "";
-            $detalle_venta["tasa_igv"] = "";
+            $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
+            $detalle_venta["igv_item"] = sprintf('%.2f', round($value->impuestos, 2));
+            $detalle_venta["prec_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+            $detalle_venta["tip_afec_igv"] = "20";// 10 con igv, 20 sin igv, catalogo 7
+            $detalle_venta["impsto_tot"] = sprintf('%.2f', round($value->impuestos, 2));
+            $detalle_venta["base_igv"] = sprintf('%.2f', round($value->precio_total, 2));
+            $detalle_venta["tasa_igv"] = sprintf('%.2f', round($parametro_igv[0]->value, 2));
 
             $cont ++;
             array_push($json["invoice"]["det"], $detalle_venta);

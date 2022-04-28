@@ -21,7 +21,7 @@ class Compania extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['IdCompania','RutaLog','RutaData','FechaUltBackup','Estado','Base','Correo','Contacto','lema1','lema2','direcciones_oficinas','Telefono4','Telefono3','Telefono2','RazonSocial','NombreComercial','Direccion','Ruc','Telefono1','user_created','user_updated', 'ruta_logo'];
+    protected $fillable = ['IdCompania','RutaLog','RutaData','FechaUltBackup','Estado','Base','Correo','Contacto','lema1','lema2','direcciones_oficinas','Telefono4','Telefono3','Telefono2','RazonSocial','NombreComercial','Direccion','Ruc','Telefono1','user_created','user_updated', 'ruta_logo', 'ubigeo', 'departamento', 'provincia', 'distrito'];
     
      public function user_c()
     {
