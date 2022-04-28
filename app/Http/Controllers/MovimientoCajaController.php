@@ -51,7 +51,7 @@ class MovimientoCajaController extends Controller
             'bancos'=>$bancos,
         ]);
     }
-    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo)
+    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo, SolicitudInterface $solicitud_repositorio)
     {
         DB::beginTransaction();
         try {
@@ -170,7 +170,7 @@ class MovimientoCajaController extends Controller
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                   
                 
-                $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo);
+                $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
                 $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             } else {
                 // PARA LOS TICKET DE MOVIMIENTOS DE CAJA
@@ -1296,7 +1296,7 @@ class MovimientoCajaController extends Controller
 
             // GENERAR JSON CPE
 
-            $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo);
+            $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
 
             DB::commit();
             return response()->json($result);

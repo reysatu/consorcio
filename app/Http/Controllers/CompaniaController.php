@@ -64,6 +64,10 @@ class CompaniaController extends Controller
             $datos['Correo'] = $data['Correo'];
             $datos['lema1'] = $data['lema1'];
             $datos['lema2'] = $data['lema2'];
+            $datos['ubigeo'] = $data['ubigeo'];
+            $datos['departamento'] = $data['departamento'];
+            $datos['provincia'] = $data['provincia'];
+            $datos['distrito'] = $data['distrito'];
             $w = $repo->findByCode($data['Ruc']);
             if ($id !== '0') { 
                 if ($w && $w->IdCompania != $id) {
