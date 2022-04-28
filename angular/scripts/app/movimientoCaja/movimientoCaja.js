@@ -2596,7 +2596,7 @@ table_container_bancos.jtable('load');
             if (bval) {
                 var id = documento_or.val();
                 // alert(id);
-                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+                RESTService.get('solicitud/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -2882,7 +2882,7 @@ table_container_bancos.jtable('load');
             if (code == 13) {
                 $('#show_loading').removeClass('ng-hide');
                 var documentoEnvio = documento.val();
-                RESTService.get('orden_servicios/get_cliente_persona', documentoEnvio, function (response) {
+                RESTService.get('solicitud/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
                         if (dataPersona.length == 0) {
