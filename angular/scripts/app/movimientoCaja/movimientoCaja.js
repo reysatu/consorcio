@@ -2886,6 +2886,7 @@ table_container_bancos.jtable('load');
                     'id_tipocli': id_tipocli.val(),
                     'IdTipoDocumento': id_tipoDoc_Venta.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
+                    'idsector':idsector.val(),
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
