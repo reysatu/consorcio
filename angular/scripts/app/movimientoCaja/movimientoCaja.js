@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
 
-(function () {
+ (function () {
     'use strict'; 
     angular.module('sys.app.movimientoCajas')
         .config(Config)
@@ -2594,8 +2594,10 @@ table_container_bancos.jtable('load');
             }
             bval = bval && documento_or.required();
             if (bval) {
+
                 var id = documento_or.val();
                 // alert(id);
+
                 RESTService.get('solicitud/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
@@ -2880,8 +2882,11 @@ table_container_bancos.jtable('load');
         documento.keypress(function (e) {
             var code = (e.keyCode ? e.keyCode : e.which);
             if (code == 13) {
+                
                 $('#show_loading').removeClass('ng-hide');
+
                 var documentoEnvio = documento.val();
+
                 RESTService.get('solicitud/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
