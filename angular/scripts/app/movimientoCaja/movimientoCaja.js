@@ -2107,7 +2107,7 @@ table_container_bancos.jtable('load');
             // console.log(IdTipoDocumento, serie_comprobante);
             var tipo_documento = $(this).val();
             // console.log(tipo_documento);
-            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
+            $.post("movimientoCajas/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
                     select_comprobante_m(data);
 
@@ -2447,7 +2447,7 @@ table_container_bancos.jtable('load');
         var data_formas_pago = [];
 
         function obtener_data_for_solicitud() {
-            RESTService.all('solicitud/data_form', '', function (response) {
+            RESTService.all('movimientoCajas/data_form_solicitud', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     if (response.parametro_igv.length > 0) {
                         // alert(response.parametro_igv[0].value);
@@ -2664,7 +2664,7 @@ table_container_bancos.jtable('load');
         var tipodoc = $("#tipodoc");
 
         function getDataFormCustomer() {
-            RESTService.all('customers/data_form', '', function (response) {
+            RESTService.all('movimientoCajas/data_form_customer', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip = response.tipoc_doc;
                     var tipo_clie = response.tipo_clie;
