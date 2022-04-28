@@ -743,7 +743,7 @@
             });
         }
         function getProvinciaPersona(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('solicitud/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -769,7 +769,7 @@
             });
         }
         function getDistritoPersona(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('solicitud/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -987,7 +987,7 @@
         };
         function getDepartamento(bandera) {
             var id = "0";
-            console.log("entro departaen");
+            // console.log("entro departaen");
             RESTService.get('solicitud/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
@@ -1019,7 +1019,7 @@
         });
 
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('solicitud/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -1078,7 +1078,7 @@
                });
         }
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('solicitud/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
