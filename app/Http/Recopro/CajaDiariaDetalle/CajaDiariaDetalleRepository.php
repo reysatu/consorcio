@@ -191,8 +191,6 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
-
-    
     public function get_venta($idventa) {
         $sql = "SELECT v.*, m.Descripcion AS moneda, td.Descripcion AS tipo_documento, c.description AS condicion_pago, m.*, u.name AS cajero, t.descripcion AS tienda, t.direccion AS direccion_tienda, cc.nombre_caja, ISNULL(v.t_impuestos, 0) AS t_impuestos, mo.descripcion AS motivo, FORMAT(v.fecha_emision, 'dd/MM/yyyy') AS fecha_emision_user, FORMAT(v.fecha_emision, 'dd/MM/yyyy hh:mm:ss') AS fecha_emision_user_full, FORMAT(v.fecha_emision, 'yyyy-MM-dd') AS fecha_emision_server, FORMAT(v.fecha_emision, 'hh:mm:ss') AS hora_server, cl.*
         FROM ERP_Venta AS v 
