@@ -3407,8 +3407,12 @@ table_container_bancos.jtable('load');
                     var estado = $(this).attr('data-estado');
 
                     if (idtipodocumento == "12") {
+                        if(tipo_solicitud != "null") {
 
-                        window.open("movimientoCajas/imprimir_ticket/" + id);
+                            window.open("movimientoCajas/imprimir_ticket/" + id);
+                        } else {
+                            window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                        }
                     } else {
                         window.open("movimientoCajas/imprimir_comprobante/" + id);
                         // if (tipo_solicitud != "1" && estado == "6") {
