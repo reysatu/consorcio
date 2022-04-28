@@ -2855,7 +2855,7 @@ table_container_bancos.jtable('load');
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
-                RESTService.updated('customers/createCliente', cli_id, params, function (response) {
+                RESTService.updated('movimientoCajas/createCliente', cli_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         // console.log(response);
                         $("#idcliente_m").val(response.data[0].idCliente);

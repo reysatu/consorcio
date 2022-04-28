@@ -92,3 +92,6 @@ Route::get('movimientoCajas/TraerDistritos/{id}', ['as' => 'movimientoCajas.Trae
 Route::get('movimientoCajas/data_form_solicitud', ['as' => 'movimientoCajas.data_form_solicitud', 'uses' => 'SolicitudController@data_form']);
 
 Route::get('movimientoCajas/data_form_customer', ['as' => 'movimientoCajas.data_form_customer', 'uses' => 'CustomerController@data_form']);
+
+
+Route::put('movimientoCajas/createCliente/{id}', ['as' => 'movimientoCajas.createCliente', 'uses' => 'CustomerController@createUpdate']);
