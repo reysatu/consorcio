@@ -75,3 +75,8 @@ Route::post('movimientoCajas/obtener_consecutivo_comprobante', ['as' => 'movimie
 Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
 
 Route::post('movimientoCajas/list_ventas', ['as' => 'movimientoCajas.list_ventas', 'uses' => 'SolicitudController@list_ventas']);
+
+
+Route::get('movimientoCajas/get_cliente/{id}', ['as' => 'movimientoCajas.get_cliente', 'uses' => 'SolicitudController@get_cliente_documento']);
+
+Route::get('movimientoCajas/get_cliente_persona/{id}', ['as' => 'movimientoCajas.get_cliente_persona', 'uses' => 'SolicitudController@get_cliente_persona']);

@@ -2598,7 +2598,7 @@ table_container_bancos.jtable('load');
                 var id = documento_or.val();
                 // alert(id);
 
-                RESTService.get('solicitud/get_cliente', id, function (response) {
+                RESTService.get('movimientoCajas/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -2887,7 +2887,7 @@ table_container_bancos.jtable('load');
 
                 var documentoEnvio = documento.val();
 
-                RESTService.get('solicitud/get_cliente_persona', documentoEnvio, function (response) {
+                RESTService.get('movimientoCajas/get_cliente_persona', documentoEnvio, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var dataPersona = response.data;
                         if (dataPersona.length == 0) {
