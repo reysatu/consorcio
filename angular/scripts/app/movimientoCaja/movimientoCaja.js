@@ -2713,6 +2713,7 @@ table_container_bancos.jtable('load');
         var departamento = $('#departamento');
         var provincia = $('#provincia');
         var distrito = $('#distrito');
+        var idsector=$("#idsector");
 
         function getDepartamento(bandera) {
             var id = "0";
@@ -2805,7 +2806,40 @@ table_container_bancos.jtable('load');
 
             });
         }
+
+        distrito.change(function () {
+            var bandera='xxxxxx';
+            var id=distrito.val();
+            getSector(bandera,id);
+        });
         
+        function getSector(bandera,id){ 
+            RESTService.get('movimientoCajas/traerSectorOrd', id, function(response) {
+                     if (!_.isUndefined(response.status) && response.status) {
+                         var data_p = response.data;
+                         console.log(data_p);
+                          idsector.html('');
+                          idsector.append('<option value="" >Seleccione</option>');
+                         _.each(response.data, function(item) {
+                            if(item.id==bandera){
+                                 idsector.append('<option value="'+item.id+'" selected>'+item.descripcion+'</option>');
+                             }else{
+                                 idsector.append('<option value="'+item.id+'">'+item.descripcion+'</option>');
+                             }
+                           
+                        });
+    
+                     }else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                            type: 'error'
+                        });
+                    }
+    
+                   });
+            }
+
         var btn_save_cliente = $("#btn_save_cliente");
         var cEstadoCivil = $("#cEstadoCivil");
         btn_save_cliente.click(function (e) {

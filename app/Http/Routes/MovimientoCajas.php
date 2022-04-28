@@ -95,3 +95,6 @@ Route::get('movimientoCajas/data_form_customer', ['as' => 'movimientoCajas.data_
 
 
 Route::put('movimientoCajas/createCliente/{id}', ['as' => 'movimientoCajas.createCliente', 'uses' => 'CustomerController@createUpdate']);
+
+
+Route::get('movimientoCajas/traerSectorOrd/{id}', ['as' => 'movimientoCajas.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);
