@@ -2716,7 +2716,7 @@ table_container_bancos.jtable('load');
 
         function getDepartamento(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('movimientoCajas/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
@@ -2747,7 +2747,7 @@ table_container_bancos.jtable('load');
         });
 
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('movimientoCajas/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 
@@ -2780,7 +2780,7 @@ table_container_bancos.jtable('load');
 
         });
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('movimientoCajas/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
 

@@ -83,3 +83,7 @@ Route::get('movimientoCajas/get_cliente_persona/{id}', ['as' => 'movimientoCajas
 
 Route::post('movimientoCajas/obtener_consecutivo_comprobante', 'ConsecutivosComprobantesController@obtener_consecutivo_comprobante');
 
+
+Route::get('movimientoCajas/TraerDepartamentos/{id}', ['as' => 'movimientoCajas.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('movimientoCajas/TraerProvincias/{id}', ['as' => 'movimientoCajas.TraerProvincias', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('movimientoCajas/TraerDistritos/{id}', ['as' => 'movimientoCajas.TraerDistritos', 'uses' => 'UbigeoController@TraerDistritos']);
