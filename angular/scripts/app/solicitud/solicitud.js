@@ -988,7 +988,7 @@
         function getDepartamento(bandera) {
             var id = "0";
             console.log("entro departaen");
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('solicitud/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
