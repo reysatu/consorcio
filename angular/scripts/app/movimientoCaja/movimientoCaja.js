@@ -2023,7 +2023,7 @@ table_container_bancos.jtable('load');
         $(document).on("change", "#id_tipoDoc_Venta_or", function (event, serie_comprobante) {
             // console.log(IdTipoDocumento, serie_comprobante);
             var tipo_documento = $(this).val();
-            $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
+            $.post("movimientoCajas/obtener_consecutivo_comprobante", { tipo_documento: tipo_documento },
                 function (data, textStatus, jqXHR) {
                     select_comprobante(data);
 
