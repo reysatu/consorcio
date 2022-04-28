@@ -1,3 +1,11 @@
+USE [Consorcio]
+GO
+
+/****** Object:  View [dbo].[ERP_view_venta]    Script Date: 28/04/2022 16:47:01 ******/
+DROP VIEW [dbo].[ERP_view_venta]
+GO
+
+/****** Object:  View [dbo].[ERP_view_venta]    Script Date: 28/04/2022 16:47:01 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,9 +18,11 @@ CASE WHEN v.pagado IS NULL THEN 0 ELSE v.pagado END AS pagado, v.cCodConsecutivo
 
 FROM ERP_Venta AS v
 LEFT JOIN ERP_Clientes AS c ON(v.idcliente=c.id)
-INNER JOIN ERP_TABLASUNAT AS tc ON(tc.cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
+LEFT JOIN ERP_TABLASUNAT AS tc ON(tc.cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
 LEFT JOIN ERP_Solicitud AS s ON(s.cCodConsecutivo=v.cCodConsecutivo_solicitud AND s.nConsecutivo=v.nConsecutivo_solicitud)
-INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
+
+
 GO
 
 
