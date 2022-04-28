@@ -38,3 +38,6 @@ Route::get('solicitud/get_cliente/{id}', ['as' => 'solicitud.get_cliente', 'uses
 Route::get('solicitud/get_cliente_persona/{id}', ['as' => 'solicitud.get_cliente_persona', 'uses' => 'SolicitudController@get_cliente_persona']);
 
 Route::get('solicitud/get_precios_list/{id}', ['as' => 'solicitud.get_precios_list', 'uses' => 'SolicitudController@get_precios_list']);
+
+
+Route::get('solicitud/TraerDepartamentos/{id}', ['as' => 'solicitud.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);

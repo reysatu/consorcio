@@ -718,7 +718,7 @@
 
         function getDepartamentoPersona(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('solicitud/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     cRegion.html('');
