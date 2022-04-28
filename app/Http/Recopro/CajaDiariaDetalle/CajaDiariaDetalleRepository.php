@@ -203,7 +203,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         LEFT JOIN ERP_Tienda AS t ON(v.idtienda=t.idTienda)
         LEFT JOIN ERP_Cajas AS cc ON(cc.idcaja=v.idcaja)
         LEFT JOIN ERP_Motivos AS mo ON(mo.codigo=v.idmotivo)
-        INNER JOIN ERP_Clientes as cl ON(cl.id=v.idcliente)
+        LEFT JOIN ERP_Clientes as cl ON(cl.id=v.idcliente)
         WHERE v.idventa={$idventa}";
         $result = DB::select($sql);
         return $result;
