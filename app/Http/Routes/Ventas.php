@@ -4,7 +4,7 @@
  * User: JAIR
  * Date: 4/5/2017
  * Time: 6:59 PM
- */
+ */ 
 
 Route::post('ventas/list', ['as' => 'ventas.list', 'uses' => 'VentasController@all']);
 Route::post('ventas/create', ['as' => 'ventas.create', 'uses' => 'VentasController@create']);
