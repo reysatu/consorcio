@@ -3,7 +3,7 @@
  */
 
  (function () {
-    'use strict';
+    'use strict'; 
     angular.module('sys.app.ventas')
         .config(Config)
         .controller('VentasCtrl', VentasCtrl);
@@ -73,6 +73,7 @@
                     list: false,
 
                 },
+
                 estado: {
                     title: 'estado',
                     create: false,
@@ -131,6 +132,11 @@
                 },
                 numero_documento: {
                     title: 'N° Documento',
+
+
+                },
+                cliente: {
+                    title: 'Cliente',
 
 
                 },

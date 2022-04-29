@@ -21,7 +21,7 @@ use DB;
 use PDF;
 use Illuminate\Http\Request;
 
-class VentasController extends Controller
+class VentasController extends Controller 
 {
     use VentasTrait;
 
@@ -31,11 +31,11 @@ class VentasController extends Controller
 //        $this->middleware('json');
     }
  
-    public function all(Request $request, VentasInterface $repo)
+    public function all(Request $request, VentasInterface $repo) 
     {
 
         $s      = $request->input('search', '');
-        $params = ['idventa','anulado','serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia', 'tipo_comprobante'];
+        $params = ['idventa','cliente','anulado','serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia', 'tipo_comprobante'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_documentos($s), $request, 'idventa', $params);
     }

@@ -45,7 +45,7 @@ class VentasRepository implements VentasInterface
 
     public function search_documentos($s)
     {
-        return $this->model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
+        return $this->model->whereIn('IdTipoDocumento', ['01', '03', '07', '08','12'])->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
