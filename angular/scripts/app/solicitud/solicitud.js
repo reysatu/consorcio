@@ -2862,7 +2862,7 @@
             var idLocali = $("#" + ident);
             var id = idl;
             // alert(id);
-            RESTService.get('register_movements/getLocaStock', id, function (response) {
+            RESTService.get('solicitud/getLocaStock', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
                     idLocali.html('');
