@@ -50,6 +50,7 @@ class VentasRepository implements VentasInterface
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_emision', 'DESC');
     }
     
