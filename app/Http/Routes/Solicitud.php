@@ -43,3 +43,6 @@ Route::get('solicitud/get_precios_list/{id}', ['as' => 'solicitud.get_precios_li
 Route::get('solicitud/TraerDepartamentos/{id}', ['as' => 'solicitud.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);
 Route::get('solicitud/TraerProvincias/{id}', ['as' => 'solicitud.TraerProvincias', 'uses' => 'UbigeoController@TraerProvincias']);
 Route::get('solicitud/TraerDistritos/{id}', ['as' => 'solicitud.TraerDistritos', 'uses' => 'UbigeoController@TraerDistritos']);
+
+
+Route::get('solicitud/getLocaStock/{id}', ['as' => 'solicitud.getLocaStock', 'uses' => 'Register_movementController@getLocaStock']);

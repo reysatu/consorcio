@@ -3173,7 +3173,7 @@ table_container_bancos.jtable('load');
             $("#formulario-creditos").find("input").attr("readonly", "readonly");
             $("#formulario-creditos").find("select").attr("disabled", "disabled");
 
-            $.post("solicitud/find", { id: id },
+            $.post("movimientoCajas/find_solicitud", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     var pagado = 0;
@@ -3597,10 +3597,6 @@ table_container_bancos.jtable('load');
                                             $("#modalDocumentosPendientes").modal("show");
                                         
                                         }
-                    
-                                        
-                                    
-                    
                                         
                                 }, "json");
 
@@ -3640,7 +3636,7 @@ table_container_bancos.jtable('load');
         
         function find_solicitud_credito(id) {
 
-            $.post("solicitud/find", { id: id },
+            $.post("movimientoCajas/find_solicitud", { id: id },
                 function (data, textStatus, jqXHR) {
 
                     if (data.solicitud.length > 0) {

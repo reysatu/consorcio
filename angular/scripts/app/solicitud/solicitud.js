@@ -2862,21 +2862,32 @@
             var idLocali = $("#" + ident);
             var id = idl;
             // alert(id);
-            RESTService.get('register_movements/getLocaStock', id, function (response) {
+            RESTService.get('solicitud/getLocaStock', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
                     idLocali.html('');
                     idLocali.append('<option value="" selected>Seleccionar</option>');
                     _.each(response.LocalizacionAlmacen, function (itemdos) {
+
                         var stock = 0;
                         _.each(response.data, function (item) {
-                            if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
-                                stock = Math.trunc(item.total);
-                            }
+                            // console.table(item);
+                            // if(item.idArticulo == 11) {
+                                // console.log("lasttt " +idPrAl);
+                                // console.log(idPrAl +"=="+ item.idArticulo +"&&"+ itemdos.idLocalizacion +"=="+ item.idLocalizacion);
+                                    if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
+                                        // alert("hola");
+                                        stock = Math.trunc(item.total);
+                                    }
+                            // }
+                            
                         });
+
                         // console.log("hola", naturalezaGeneral);
                         if (naturalezaGeneral == "S") {
+                            // console.log("stock: "+ stock);
                             if (stock > 0) {
+                                
                                 if (itemdos.idLocalizacion == idLocalizacion) {
                                     idLocali.append('<option selected value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
                                 } else {
