@@ -2876,7 +2876,7 @@
                                 // console.log("lasttt " +idPrAl);
                                 // console.log(idPrAl +"=="+ item.idArticulo +"&&"+ itemdos.idLocalizacion +"=="+ item.idLocalizacion);
                                     if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
-                                        alert("hola");
+                                        // alert("hola");
                                         stock = Math.trunc(item.total);
                                     }
                             // }
