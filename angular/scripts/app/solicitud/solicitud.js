@@ -2874,9 +2874,11 @@
                                 stock = Math.trunc(item.total);
                             }
                         });
-                        // console.log("hola", naturalezaGeneral);
+                        console.log("hola", naturalezaGeneral);
                         if (naturalezaGeneral == "S") {
+                            console.log("stock: "+ stock);
                             if (stock > 0) {
+                                
                                 if (itemdos.idLocalizacion == idLocalizacion) {
                                     idLocali.append('<option selected value="' + itemdos.idLocalizacion + '" >' + itemdos.descripcion + ' / ' + stock + '</option>');
                                 } else {
