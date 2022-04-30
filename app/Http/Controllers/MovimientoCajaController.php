@@ -737,7 +737,7 @@ class MovimientoCajaController extends Controller
             // return $ticket;
             $serie_ticket = $ticket[0]->serie;
             $consecutivo_ticket = $ticket[0]->actual;
-
+           
             // print_r($this->preparar_datos("dbo.ERP_VentaFormaPago", $data));
             // exit;
             $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
@@ -750,7 +750,7 @@ class MovimientoCajaController extends Controller
                     $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
                 }
             }
-
+          
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
 
             $data_venta = (array)$solicitud[0];
@@ -799,7 +799,7 @@ class MovimientoCajaController extends Controller
                 $dias = 30;
                 
             }
-
+            // print_r($solicitud_credito);
             if(count($solicitud_credito) > 0) {
 
                 if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
@@ -874,7 +874,11 @@ class MovimientoCajaController extends Controller
                     $data_venta["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
                     $data_venta["pagado"] = "0";
                     $data_venta["anticipo"] = $solicitud_credito[0]->cuota_inicial;
-                    $data_venta["comprobante_x_saldo"] = "S"; // indica que es el comprobante por el saldo
+                    if( $solicitud[0]->tipo_solicitud == 2) {
+                        $data_venta["comprobante_x_saldo"] = "S"; // indica que es el comprobante por el saldo
+                    } else {
+                        $data_venta["comprobante_x_saldo"] = "N"; // indica que es el comprobante por el saldo
+                    }
 
                     //CAMBIAMOS DATOS DE LA SEGUNDA VENTA DEL CREDITO
                     $data_venta["descuento_id"] = "";
@@ -948,7 +952,7 @@ class MovimientoCajaController extends Controller
             } else {
                 $data_venta["condicion_pago"] = "";
             }
-            
+           
 
          
 
@@ -1156,7 +1160,7 @@ class MovimientoCajaController extends Controller
                 // print_r($res);
             }
                 
-            
+          
             // GUARDAR FORMAS DE PAGO EN VENTA Y CAJA   
             $data_formas_pago = $data;
             // var_dump($data["codigo_formapago"]); exit;
@@ -1261,7 +1265,7 @@ class MovimientoCajaController extends Controller
             
             $caja_diaria_repositorio->update_totales($update_caja_diaria);
             // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
-
+          
             $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
 
             //  PARA TICKET
@@ -1281,7 +1285,7 @@ class MovimientoCajaController extends Controller
             }
 
             $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
-
+            
 
 
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
@@ -1289,15 +1293,15 @@ class MovimientoCajaController extends Controller
 
             // update stock
             $repo->update_stock($data_venta["idventa"]);
-            
+           
             $result["datos"][0]["estado"] = (isset($update_solicitud["estado"])) ? $update_solicitud["estado"] : "";
             $result["datos"][0]["tipo_solicitud"] = $solicitud[0]->tipo_solicitud;
             $result["datos"][0]["idventa_ticket"] = $data_ticket["idventa"];
 
             // GENERAR JSON CPE
 
+           
             $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
-
             DB::commit();
             return response()->json($result);
         } catch (\Exception $e) {

@@ -556,10 +556,12 @@ class Controller extends BaseController
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
         $venta_anticipo = array();
         $solicitud_cronograma = array();
+       
         if(!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
             $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
+       
         $empresa = $compania_repo->find("00000");
 
         $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
@@ -601,7 +603,7 @@ class Controller extends BaseController
         $json["invoice"]["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         $json["invoice"]["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
         // $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES DE EXPORTACION
-        
+        // echo $venta[0]->comprobante_x_saldo;
         if($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
             $json["invoice"]["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
@@ -619,7 +621,7 @@ class Controller extends BaseController
             $json["invoice"]["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
 
         }
-
+        // echo "holsa"; exit;
         if($venta[0]->condicion_pago == 1) { // contado
             $json["invoice"]["forma_pago"]["descrip"] = "Contado";
         } else { // credito
@@ -642,6 +644,7 @@ class Controller extends BaseController
 
           
         }
+       
 
         $json["invoice"]["det"] = array();
         $detalle_venta = array(); 
