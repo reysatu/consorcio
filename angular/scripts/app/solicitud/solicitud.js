@@ -2870,9 +2870,13 @@
                     _.each(response.LocalizacionAlmacen, function (itemdos) {
                         var stock = 0;
                         _.each(response.data, function (item) {
-                            if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
-                                stock = Math.trunc(item.total);
+                            if(item.idArticulo == 11) {
+                                console.log(idPrAl +"=="+ item.idArticulo +"&&"+ itemdos.idLocalizacion +"=="+ item.idLocalizacion);
+                                    if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
+                                        stock = Math.trunc(item.total);
+                                    }
                             }
+                            
                         });
                         console.log("hola", naturalezaGeneral);
                         if (naturalezaGeneral == "S") {
