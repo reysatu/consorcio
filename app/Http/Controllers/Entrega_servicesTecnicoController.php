@@ -75,6 +75,7 @@ class Entrega_servicesTecnicoController extends Controller
         $operacion = parseSelectOnly($operRepo->allActive(), 'idTipoOperacion', 'descripcion');
         $usuario=auth()->id();
         $operaciones = $operRepo->getOperation_total($usuario);
+        $Operation_total_entrega = $operRepo->getOperation_total_entrega($usuario);
         $operaciones_entra = $operRepo->getOperation_entra($usuario);
         $almacen_usuario = $WareRepo->getAlmacen_usuario($usuario);
         return response()->json([
@@ -85,6 +86,8 @@ class Entrega_servicesTecnicoController extends Controller
             'operaciones'=> $operaciones,
             'operaciones_entra'=>$operaciones_entra,
             'almacen_usuario'=>$almacen_usuario,
+            'Operation_total_entrega'=>$Operation_total_entrega,
+
         ]);
     }
  

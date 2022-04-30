@@ -159,16 +159,19 @@
         cCodConsecutivoOS.select2();
         $.fn.modal.Constructor.prototype.enforceFocus = function () {};
          function getDataForProforma () {
-            RESTService.all('proformas/data_form', '', function(response) {
+            RESTService.all('entrega_servicesTecnicos/data_formProf', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    proformas_completas=response.proformas_entrega;
 
+                    proformas_completas=response.proformas_entrega;
+                        console.log("aaaaaaaaaaaa");
+                        console.log(proformas_completas);
+                        console.log("aaaaaaaaaaaa");
                     
                 } 
             }, function() {
                 getDataForProforma();
             });
-        }
+        } 
         getDataForProforma();
         cCodConsecutivoOS.change(function () {
                 var val=cCodConsecutivoOS.val();
@@ -177,7 +180,7 @@
                 idMoneda.val(totRep[2]);
                 if(cCodConsecutivoOS.val()!=''){
                     var id=totRep[0]+'_'+totRep[1];
-                    RESTService.get('proformas/getDetalle_entrada', id, function(response) {
+                    RESTService.get('entrega_servicesTecnicos/getDetalle_entradaProf', id, function(response) {
                      if (!_.isUndefined(response.status) && response.status) {
                           var data=response.data;
                           var cont=0;
@@ -253,7 +256,7 @@
                                 idtipoOpe:idtipoOpe,
                                 
                 };
-              $scope.loadMovimientoEntregaPDF('register_movements/pdf', data);
+              $scope.loadMovimientoEntregaPDF('entrega_servicesTecnicos/pdfMovemen', data);
             }
         });
 
@@ -303,22 +306,25 @@
         {   
             titlemodalMovimieto.html('Editar Entrega');
           
-            RESTService.get('register_movements/find', id, function(response) {
+            RESTService.get('entrega_servicesTecnicos/findMovement', id, function(response) {
 
                 if (!_.isUndefined(response.status) && response.status) {
-                   
+                    console.log("a1");
                     var verProforma='ED';
                     cargar_proformas(verProforma);
+                      console.log("a2");
                     var data_p = response.data;
                     var data_ventaMovimiento = response.data_ventaMovimiento;
                     console.log(data_ventaMovimiento);
                     console.log("data_movimiento_info");
                     var mov_ar='';
+                     console.log("a3");
                     var cons=data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda;
                     idMovimiento.val(data_p.idMovimiento);
                      console.log("primer");
-                    
+                      console.log("a4");
                      if(data_p.idTipoOperacion=='2'){
+                        console.log("a5");
                           $("#idventa").append('<option data-conse="'+data_ventaMovimiento[0].cCon_ve+'*'+ data_ventaMovimiento[0].nconse_ve+'*'+data_ventaMovimiento[0].idmoneda+'" data-documento="'+data_ventaMovimiento[0].cCon_ve + '-' + data_ventaMovimiento[0].nconse_ve+'" value="' + data_ventaMovimiento[0].idventa + '">' + data_ventaMovimiento[0].cCon_ve + ' ' + data_ventaMovimiento[0].nconse_ve + ' ' + data_ventaMovimiento[0].razonsocial_cliente + '</option>');
                         console.log("primersss");
                            $("input[name=tipo][value='N']").prop("checked",true);
@@ -330,13 +336,15 @@
                             //    event.preventDefault();
                             // });
                               mov_ar=response.data_movimiento_Articulo_entrega_venta;
-                            
+                              
                      }else{
+                          console.log("a6");
                          console.log("primersaaaa");
                         cCodConsecutivoOS.val(cons);
                          nConsecutivoOS.val(data_p.nConsecutivo);
                           mov_ar=response.data_movimiento_Articulo_entrega;
                      }
+                       console.log("a7");
                         console.log("segundo");
                      
                        $("#idventa").prop('disabled',true);
@@ -351,9 +359,10 @@
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
                     ident_detalle.val("A");
-                     
+                      console.log("a8");
                     naturalezaGeneral=data_p.naturaleza;
                     if(lotE!=''){
+                         console.log("a9");
                          lotE.map(function(index) {
                                 var grubLE={
                                'identificador': index.consecutivo,
@@ -379,14 +388,18 @@
                     }
                     console.log(serE);
                     console.log("serey");
-                    
+                    console.log("a10");
+                    console.log(data_p.idTipoOperacion,data_p.naturaleza,'operacion');
                     idTipoOperacion.val(data_p.idTipoOperacion+'*'+data_p.naturaleza).trigger('change');
+                      console.log("a11a");
                     idTipoOperacion.prop('disabled',true);
+                    console.log("a12");
                     idTipoOperacion.trigger('change');
                   
                     idMoneda.val(data_p.idMoneda).trigger('change');
                     fecha_registro.val(data_p.fecha_registro);
                     observaciones.val(data_p.observaciones);
+                    console.log("a11");
                     if(data_p.estado==0){
                         p_state.val(0).trigger("change");
                     }
@@ -614,7 +627,7 @@
         function getlotes(){
             var id=codigoLoteMll.val();
             if(id!=''){
-                 RESTService.get('register_movements/validateLote', id, function(response) {
+                 RESTService.get('entrega_servicesTecnicos/validateLoteMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                       if(response.data=="N"){
                         if(naturalezaGeneral=="S" || naturalezaGeneral=='R'){
@@ -669,7 +682,7 @@
          $('#ProcesarTransferenciaBoton').click(function(e){
             var id=idMovimiento.val();
           if(articulo_mov_det.html()!=""){
-                    RESTService.get('register_movements/validaDetalle', id, function(response) {
+                    RESTService.get('entrega_servicesTecnicos/validaDetalleMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                         var ide = idMovimiento.val();
                         idTransferenciaProcesar.val(ide);
@@ -700,7 +713,7 @@
         });
          $scope.ProcesarTransferencia = function(){
             var id=idTransferenciaProcesar.val();
-            RESTService.get('register_movements/procesarTransferencia', id, function(response) {
+            RESTService.get('entrega_servicesTecnicos/procesarTransferenciaMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var dta=response.data;
                     if(dta[0]['Mensaje']=="OK"){
@@ -785,7 +798,7 @@
             tablekitdetM.append(tr);
         }
         function getkitDet(codigo){
-             RESTService.get('register_movements/getKit', codigo, function(response) {
+             RESTService.get('entrega_servicesTecnicos/getKitMovement', codigo, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                       var data_p = response.data;
                      _.each(data_p, function (c) {
@@ -803,7 +816,7 @@
         }
         function getLocalizacion(idAlmacen){
              var id=idAlmacen;
-             RESTService.get('register_movements/getLocalizacionSelec', id, function(response) {
+             RESTService.get('getLocalizacionSelecMovement/getLocalizacionSelecMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     LocalizacionesSele=response.data;
                  }else {
@@ -852,7 +865,7 @@
         function getLocaStock(idl,ident,idPrAl,idLocalizacion){
             var idLocali=$("#"+ident);
             var id=idl;
-             RESTService.get('register_movements/getLocaStock', id, function(response) {
+             RESTService.get('entrega_servicesTecnicos/getLocaStockMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     
                         idLocali.html('');
@@ -1805,7 +1818,7 @@
                   
                 if (bval) {
                      camposunicos = camposunicos.join(',');
-                     RESTService.get('register_movements/valida_series_serve', camposunicos, function(response) {
+                     RESTService.get('entrega_servicesTecnicos/valida_series_serve', camposunicos, function(response) {
                      if (!_.isUndefined(response.status) && response.status) {
                         if(cant==cont_table){
                         if(identSerAr.val()!=""){
@@ -1939,7 +1952,7 @@
         }
         $scope.EliminarMovimiento = function(){
             var id=idMovimientoDelete.val();
-            RESTService.get('register_movements/delete', id, function(response) {
+            RESTService.get('entrega_servicesTecnicos/deleteMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var dta=response.data;
                     if(dta[0]['Mensaje']!=""){
@@ -1975,7 +1988,7 @@
             bval = bval && cantProductoMss.required();
             if (bval) {
                 var id=idProductoMss.val()+'*'+cantProductoMss.val();
-                RESTService.get('register_movements/validateCantSerie', id, function(response) {
+                RESTService.get('entrega_servicesTecnicos/validateCantSerieMovement', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     if(response.data=='N'){
                        AlertFactory.textType({
@@ -2246,7 +2259,7 @@
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
 
-                RESTService.updated('register_movements/saveMovimiento', movimiento_id, params, function(response) {
+                RESTService.updated('entrega_servicesTecnicos/saveMovimientoMovement', movimiento_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         titlemodalMovimieto.html('Nueva Entrega '+'['+ response.code+ ']');
                         AlertFactory.textType({
@@ -2284,12 +2297,17 @@
             var tipo = $(this).val();
             // proforma
             if (tipo == "P") {
+                  console.log("entro acáaaaaaaaaa");
+
                 $("#idventa").val("").trigger("change");
+                console.log("entro acáaaaaaaaaa1");
                 $("#documento").val("");
+                console.log("entro acáaaaaaaaaa2");
                 $(".venta").hide();
                 $(".proforma").show();
                 
                 $("#idTipoOperacion").val("7*R");
+                console.log("entro acáaaaaaaaaa");
 
             }
             // nota
@@ -2515,7 +2533,7 @@
             RESTService.all('entrega_servicesTecnicos/data_formRegi', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     idTipoOperacion.append('<option value="" >Seleccionar</option>');
-                     _.each(response.operaciones, function(item) {
+                     _.each(response.Operation_total_entrega, function(item) {
                         var opera='7'+'*'+'R';
                         naturalezaGeneral='R';
                         idTipoOperacion.append('<option value="'+item.IdTipoOperacion+'*'+item.idNaturaleza+'" selected>'+item.descripcion+'</option>');
@@ -2589,11 +2607,11 @@
                 },
                 idTipoOperacion: {
                     title: 'Tipo Operación',
-                    options: base_url + '/operations/getAll' 
+                    options: base_url + '/entrega_servicesTecnicos/getAllOperation' 
                 },
                 idUsuario: {
                     title: 'Usuario',
-                    options: base_url + '/users/getAll' 
+                    options: base_url + '/entrega_servicesTecnicos/getAllUsers' 
                 },
                 estado: {
                     title: 'Estado',
@@ -2657,7 +2675,7 @@
             sorting: true,
              cache: false,
             actions: {
-                listAction: base_url + '/register_movements/getArticulosSelect'
+                listAction: base_url + '/entrega_servicesTecnicos/getArticulosSelect'
             },
             toolbar: {
                 items: [{
@@ -2743,7 +2761,7 @@
             sorting: true,
              cache: false,
             actions: {
-                listAction: base_url + '/register_movements/getArticulosMinKit'
+                listAction: base_url + '/entrega_servicesTecnicos/getArticulosMinKit'
             },
             toolbar: {
                 items: [{
@@ -2840,7 +2858,7 @@
                     listAction: function (postData, jtParams) {
                     return $.Deferred(function ($dfd) {
                         $.ajax({
-                            url:  base_url + '/register_movements/'+url,
+                            url:  base_url + '/entrega_servicesTecnicos/'+url,
                             type: 'POST',
                             dataType: 'json',
                             data:{postData: postData,idProducto:idProducto},

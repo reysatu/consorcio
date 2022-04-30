@@ -165,22 +165,12 @@
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">&nbsp;</label>
                                         <div class="col-sm-5">
-                                             <!--  <button type="button" id="btn_xml" class="btn btn-warning btn-sm" >
-                                                  <span class="fa fa-search"></span>
-                                                  Cargar XML
-                                               </button> -->
-                                              <button type="button" id="btn-guardarMovimiento" class="btn btn-danger-admin btn-sm" >
+                                             
+                                             <!--  <button type="button" id="btn-guardarMovimiento" class="btn btn-danger-admin btn-sm" >
                                                 <span class="fa fa-save"></span>
                                                 Guardar
-                                             </button>
-                                             <!-- <button type="button" disabled class="btn btn-info btn-sm" id="ProcesarTransferenciaBoton">
-                                                <span class="fa fa-save"></span>
-                                                Procesar
                                              </button> -->
-                                             <!-- <button type="button" class="btn btn-success btn-sm" id="btn_imprimirMovimiento">
-                                                <span class="fa fa-file-pdf-o"></span>
-                                                Imprimir
-                                             </button> -->
+                                            
                                         </div>
                                     </div>
                                     <br>
@@ -205,7 +195,7 @@
                                                     <tr>
                                                          <th  width="150px" height="20px" >Artículo</th>
                                                          <th width="90px" height="20px">Cantidad</th>
-                                                          <th width="90px" height="20px">Unidad Medida</th>
+                                                          <!-- <th width="90px" height="20px">Unidad Medida</th> -->
                                                          <th width="90px" height="20px">Cantidad Pendiente</th>
                                                           <th width="90px" height="20px">Cantidad Recibida</th>
                                                           <th width="90px" height="20px">Cantidad Devuelta</th>   <th width="150px" height="20px">Precio Unitario</th> 
@@ -214,6 +204,7 @@
                                                           <th width="90px" height="20px">Porcentaje</th>
                                                           <th width="90px" height="20px">Monto Descuento</th>
                                                         <th width="90px" height="20px">Valor Compra</th>
+                                                         <th width="90px" height="20px">Impuesto</th>
                                                         <th width="90px" height="20px">Total</th>
                                                          <th width="130px">Fecha</th>
                                                          <th width="160px">Estado</th>
@@ -242,13 +233,13 @@
                                                              Monto descuento
                                                            </label>
                                                             <div class="col-sm-3 col-md-offset-1">
-                                                              <input id="montoTotal" class="form-control input-sm"    disabled />
+                                                              <input id="montoTotal" class="form-control input-sm"    disabled value="0"/>
                                                           </div> 
                                                     </div>
                                                     <div class="form-group">
                                                            <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                                           <div class="col-sm-3 col-md-offset-1">
-                                                              <input id="desTotal" class="form-control input-sm" disabled  value="0" />
+                                                              <input data-total="0" id="desTotal" class="form-control input-sm" disabled  value="0" />
                                                           </div>
                                                     </div>
                                       </div>
@@ -259,7 +250,7 @@
                     </div>
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_movimiento_detalle" disabled ng-click="guardarMovimientoDetalle()">
+                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_movimiento_detalle"  ng-click="saveMovimientoCab()">
                             <span class="fa fa-save"></span>
                             Guardar
                         </button>

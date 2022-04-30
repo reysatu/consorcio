@@ -84,7 +84,12 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
 
     }
     public function get_ventas_entregaUnica($solitud)
-    {
+    {   
+      
+        if(empty($solitud)){
+            $solitud='000';
+        }
+      
         $sql = "
       
     select ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda  where ve.idventa IN ($solitud) ORDER BY numero_comprobante DESC
@@ -255,11 +260,11 @@ where er.idMovimiento='$id'");
 
 
     public function getStockLoc($idl,$idArl){
-         $mostrar=DB::select("select total from ERP_almacen_stock_localizacion where idArticulo=$idArl and idLocalizacion=$idl and idArticulo = 11");
+         $mostrar=DB::select("select total from ERP_almacen_stock_localizacion where idArticulo=$idArl and idLocalizacion=$idl /*and idArticulo = 11*/");
          return $mostrar; 
     }
     public function getLocaStock($idAlmacen){
-         $mostrar=DB::select("select los.remitido as remitido,lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen and los.idArticulo = 11");
+         $mostrar=DB::select("select los.remitido as remitido,lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen /*and los.idArticulo = 11*/");
          return $mostrar;
     }
      public function getLocalizacioAlmacen($idAlmacen){

@@ -2868,19 +2868,24 @@
                     idLocali.html('');
                     idLocali.append('<option value="" selected>Seleccionar</option>');
                     _.each(response.LocalizacionAlmacen, function (itemdos) {
+
                         var stock = 0;
                         _.each(response.data, function (item) {
-                            if(item.idArticulo == 11) {
-                                console.log(idPrAl +"=="+ item.idArticulo +"&&"+ itemdos.idLocalizacion +"=="+ item.idLocalizacion);
+                            // console.table(item);
+                            // if(item.idArticulo == 11) {
+                                // console.log("lasttt " +idPrAl);
+                                // console.log(idPrAl +"=="+ item.idArticulo +"&&"+ itemdos.idLocalizacion +"=="+ item.idLocalizacion);
                                     if (idPrAl == item.idArticulo && itemdos.idLocalizacion == item.idLocalizacion) {
+                                        // alert("hola");
                                         stock = Math.trunc(item.total);
                                     }
-                            }
+                            // }
                             
                         });
-                        console.log("hola", naturalezaGeneral);
+
+                        // console.log("hola", naturalezaGeneral);
                         if (naturalezaGeneral == "S") {
-                            console.log("stock: "+ stock);
+                            // console.log("stock: "+ stock);
                             if (stock > 0) {
                                 
                                 if (itemdos.idLocalizacion == idLocalizacion) {
