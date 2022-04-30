@@ -4,7 +4,7 @@
 
  (function () {
     'use strict'; 
-    angular.module('sys.app.ventas')
+    angular.module('sys.app.ventas') 
         .config(Config)
         .controller('VentasCtrl', VentasCtrl);
 
