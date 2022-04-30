@@ -2297,12 +2297,17 @@
             var tipo = $(this).val();
             // proforma
             if (tipo == "P") {
+                  console.log("entro acáaaaaaaaaa");
+
                 $("#idventa").val("").trigger("change");
+                console.log("entro acáaaaaaaaaa1");
                 $("#documento").val("");
+                console.log("entro acáaaaaaaaaa2");
                 $(".venta").hide();
                 $(".proforma").show();
                 
                 $("#idTipoOperacion").val("7*R");
+                console.log("entro acáaaaaaaaaa");
 
             }
             // nota
@@ -2528,7 +2533,7 @@
             RESTService.all('entrega_servicesTecnicos/data_formRegi', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     idTipoOperacion.append('<option value="" >Seleccionar</option>');
-                     _.each(response.operaciones, function(item) {
+                     _.each(response.Operation_total_entrega, function(item) {
                         var opera='7'+'*'+'R';
                         naturalezaGeneral='R';
                         idTipoOperacion.append('<option value="'+item.IdTipoOperacion+'*'+item.idNaturaleza+'" selected>'+item.descripcion+'</option>');
