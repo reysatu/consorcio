@@ -98,3 +98,6 @@ Route::put('movimientoCajas/createCliente/{id}', ['as' => 'movimientoCajas.creat
 
 
 Route::get('movimientoCajas/traerSectorOrd/{id}', ['as' => 'movimientoCajas.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);
+
+
+Route::post('movimientoCajas/find_solicitud', ['as' => 'movimientoCajas.find_solicitud', 'uses' => 'SolicitudController@find']);
