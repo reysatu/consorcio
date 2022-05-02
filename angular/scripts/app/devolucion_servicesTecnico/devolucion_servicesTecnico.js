@@ -985,7 +985,7 @@
         function getLocaStock(idl, ident, idPrAl, idLocalizacion) {
             var idLocali = $("#" + ident);
             var id = idl;
-            console.log(idLocali,"id Localizaciones");
+            console.log(idLocali,"id Localizaciones"); 
             console.log(id,"id algo");
             RESTService.get('devolucion_servicesTecnicos/getLocaStockDevol', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -1002,7 +1002,7 @@
                         
                         console.log(naturalezaGeneral+" <=> "+stock);
 
-                        if (naturalezaGeneral == "S" ) {
+                        if (naturalezaGeneral == "S" || naturalezaGeneral == "D" ) {
                             if($("#cCodConsecutivoOS").val() != "") {
                                 if (stock > 0) {
                                     if (itemdos.idLocalizacion == idLocalizacion) {
