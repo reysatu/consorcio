@@ -340,7 +340,8 @@
                      }else{
                           console.log("a6");
                          console.log("primersaaaa");
-                        cCodConsecutivoOS.val(cons);
+                         cCodConsecutivoOS.append('<option value="'+data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda+'">'+data_p.cCodConsecutivo+' '+data_p.nConsecutivo+' '+data_p.razonsocial_cliente+' '+data_p.cPlacaVeh+'</option>');
+                         cCodConsecutivoOS.val(cons);
                          nConsecutivoOS.val(data_p.nConsecutivo);
                           mov_ar=response.data_movimiento_Articulo_entrega;
                      }
@@ -960,7 +961,7 @@
               
                 acodigos.forEach(function(val,index) {
                     var cosr=$('#preMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         precirIn='I';
                     }
                     
@@ -969,7 +970,7 @@
             if(precirIn=='I'){
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El precio de los artículos no puede ser cero'
+                    message: 'El precio de los artículos no puede ser menor a cero'
                 });
                 precirIn='A';
                 return false; 
@@ -977,7 +978,7 @@
             var cosrIn='A';
             acodigos.forEach(function(val,index) {
                     var cosr=$('#cosMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         cosrIn='I';
                     }
                     
@@ -985,7 +986,7 @@
             if(cosrIn=='I'){
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El costo de los artículos no puede ser cero'
+                    message: 'El costo de los artículos no puede ser menor a cero'
                 });
                 cosrIn='A';
                 return false; 

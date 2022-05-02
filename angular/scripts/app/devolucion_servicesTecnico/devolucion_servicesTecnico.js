@@ -138,10 +138,10 @@
             $(event.target).click();
             $scope.chkState();
         });
-        cCodConsecutivoOS.select2();
+        cCodConsecutivoOS.select2(); 
         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
         function getDataForProforma() {
-            RESTService.all('proformas/data_form', '', function (response) {
+            RESTService.all('devolucion_servicesTecnicos/data_formProfor', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     proformas_completas = response.proformas_entrega;
                 }
@@ -158,14 +158,16 @@
             // alert(idmoneda);
             idMoneda.val(idmoneda);
             // alert(documento);
-            if(idventa == "") {
-                return false;
+            var bval=true;
+            console.log(idventa,"venta  val");
+            if(idventa == "" || idventa==null ) {
+                bval=false;
             }
-
-            $("#documento").val(documento);
+            if(bval){
+                $("#documento").val(documento);
            
-
-            RESTService.get('ventas/get_venta_detalle_devolucion', idventa, function (response) {
+            console.log("ide venta totototot");
+            RESTService.get('devolucion_servicesTecnicos/get_venta_detalle_devolucionDevol', idventa, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data = response.data;
                     var cont = 0;
@@ -218,6 +220,7 @@
                     });
                 }
             });
+            }
         });
 
         cCodConsecutivoOS.change(function () {
@@ -232,7 +235,7 @@
             idMoneda.val(totRep[2]);
             if (cCodConsecutivoOS.val() != '') {
                 var id = totRep[0] + '_' + totRep[1];
-                RESTService.get('proformas/getDetalle_entrada', id, function (response) {
+                RESTService.get('devolucion_servicesTecnicos/getDetalle_entradaDevol', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var data = response.data;
                         var cont = 0;
@@ -303,7 +306,7 @@
                     id: id,
 
                 };
-                $scope.loadMovimientoPDF('register_movements/pdf', data);
+                $scope.loadMovimientoPDF('devolucion_servicesTecnicos/pdfDevol', data);
             }
         });
 
@@ -356,28 +359,55 @@
             $(".m_articulo_idAlm").removeAttr("disabled");
             $(".m_articulo_idLoc").removeAttr("disabled");
             $(".m_articulo_costo ").removeAttr("disabled");
-            $("#ProcesarTransferenciaBoton").removeAttr("disabled");
+           
+            // $("#ProcesarTransferenciaBoton").removeAttr("disabled");
             $(".verUpdate").removeAttr("disabled");
-            $("#btn_movimiento_detalle").removeAttr("disabled");
+            //$("#btn_movimiento_detalle").removeAttr("disabled");
+            if($("#p_state").val()=='0'){
+                 $("#ProcesarTransferenciaBoton").prop('disabled',false);
+            }else{
+                  $("#ProcesarTransferenciaBoton").prop('disabled',true);
+            }
+             if($("#p_state").val()=='1'){
+                  $("#btn_movimiento_detalle").prop('disabled',true);
+            }else{
+                   $("#btn_movimiento_detalle").prop('disabled',false);
+            }
+
         }
 
         function desactivar_inputs() {
+
             $("input[name='tipo']").attr("disabled", "disabled");
             $("#fecha_registro").attr("disabled", "disabled");
             $("#observaciones").attr("disabled", "disabled");
             $(".m_articulo_idAlm").attr("disabled", "disabled");
             $(".m_articulo_idLoc").attr("disabled", "disabled");
             $(".m_articulo_costo ").attr("disabled", "disabled");
-            $("#ProcesarTransferenciaBoton").attr("disabled", "disabled");
+            //$("#ProcesarTransferenciaBoton").attr("disabled", "disabled");
             $(".verUpdate").attr("disabled", "disabled");
-            $("#btn_movimiento_detalle").attr("disabled", "disabled");
+            //$("#btn_movimiento_detalle").attr("disabled", "disabled");
+            //  if($("#p_state").val()==0){
+            //     $("#ProcesarTransferenciaBoton").prop('disabled',false);
+            // }else{
+            //     $("#ProcesarTransferenciaBoton").prop('disabled',true);
+            // }
            
-            
+            if($("#p_state").val()=='0'){
+                 $("#ProcesarTransferenciaBoton").prop('disabled',false);
+            }else{
+                  $("#ProcesarTransferenciaBoton").prop('disabled',true);
+            }
+             if($("#p_state").val()=='1'){
+                  $("#btn_movimiento_detalle").prop('disabled',true);
+            }else{
+                   $("#btn_movimiento_detalle").prop('disabled',false);
+            }
         }
         function findRegister_movement(id) {
             titlemodalMovimieto.html('Editar Devolución');
 
-            RESTService.get('register_movements/find', id, function (response) {
+            RESTService.get('devolucion_servicesTecnicos/findDevol', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                    
@@ -389,8 +419,8 @@
                     // alert(data_p.idTipoOperacion);
                     if(data_p.idTipoOperacion == 9) {
                         $("input[name='tipo'][value='N']").prop("checked", true).trigger("change");
-                        cargar_notas(cons);
-                       
+                        cargar_notas_find(cons);
+                        
                         $("#idventa").prop('disabled', true);
                     } 
 
@@ -652,11 +682,13 @@
             aartMSE = [];
             aartMN = [];
             observaciones.val('');
+            $("#documento").val("");
             idNaturaleza.val('');
             fecha_registro.val('');
             p_state.val('');
             articulo_mov_det.html('');
             cCodConsecutivoOS.prop('disabled', false);
+              $("#idventa").prop('disabled',false);
             btnguardarMovimiento.prop('disabled', false);
             btn_movimiento_detalle.prop('disabled', false);
             btnguardarMovimiento.trigger('change');
@@ -704,7 +736,7 @@
         function getlotes() {
             var id = codigoLoteMll.val();
             if (id != '') {
-                RESTService.get('register_movements/validateLote', id, function (response) {
+                RESTService.get('devolucion_servicesTecnicos/validateLoteDevol', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.data == "N") {
                             if (naturalezaGeneral == "S" || naturalezaGeneral == 'R') {
@@ -759,7 +791,7 @@
         $('#ProcesarTransferenciaBoton').click(function (e) {
             var id = idMovimiento.val();
             if (articulo_mov_det.html() != "") {
-                RESTService.get('register_movements/validaDetalle', id, function (response) {
+                RESTService.get('devolucion_servicesTecnicos/validaDetalleDevol', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var ide = idMovimiento.val();
                         idTransferenciaProcesar.val(ide);
@@ -790,7 +822,7 @@
         });
         $scope.ProcesarTransferencia = function () {
             var id = idTransferenciaProcesar.val();
-            RESTService.get('register_movements/procesarTransferencia', id, function (response) {
+            RESTService.get('devolucion_servicesTecnicos/procesarTransferenciaDevo', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var dta = response.data;
                     if (dta[0]['Mensaje'] == "OK") {
@@ -895,7 +927,7 @@
         }
         function getLocalizacion(idAlmacen) {
             var id = idAlmacen;
-            RESTService.get('register_movements/getLocalizacionSelec', id, function (response) {
+            RESTService.get('devolucion_servicesTecnicos/getLocalizacionSelecDevol', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     LocalizacionesSele = response.data;
                 } else {
@@ -953,7 +985,9 @@
         function getLocaStock(idl, ident, idPrAl, idLocalizacion) {
             var idLocali = $("#" + ident);
             var id = idl;
-            RESTService.get('register_movements/getLocaStock', id, function (response) {
+            console.log(idLocali,"id Localizaciones"); 
+            console.log(id,"id algo");
+            RESTService.get('devolucion_servicesTecnicos/getLocaStockDevol', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
                     idLocali.html('');
@@ -968,7 +1002,7 @@
                         
                         console.log(naturalezaGeneral+" <=> "+stock);
 
-                        if (naturalezaGeneral == "S" || naturalezaGeneral == "D") {
+                        if (naturalezaGeneral == "S" || naturalezaGeneral == "D" ) {
                             if($("#cCodConsecutivoOS").val() != "") {
                                 if (stock > 0) {
                                     if (itemdos.idLocalizacion == idLocalizacion) {
@@ -1092,7 +1126,7 @@
 
                 acodigos.forEach(function (val, index) {
                     var cosr = $('#preMs_' + val).val();
-                    if (cosr < 1) {
+                    if (cosr <= 0) {
                         precirIn = 'I';
                     }
 
@@ -1102,7 +1136,7 @@
             if (precirIn == 'I') {
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El precio de los artículos no puede ser cero'
+                    message: 'El precio de los artículos no puede ser menor cero'
                 });
                 precirIn = 'A';
                 return false;
@@ -1110,7 +1144,7 @@
             var cosrIn = 'A';
             acodigos.forEach(function (val, index) {
                 var cosr = $('#cosMs_' + val).val();
-                if (cosr < 1) {
+                if (cosr <= 0) {
                     cosrIn = 'I';
                 }
 
@@ -1118,7 +1152,7 @@
             if (cosrIn == 'I') {
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El costo de los artículos no puede ser cero'
+                    message: 'El costo de los artículos no puede ser menor cero'
                 });
                 cosrIn = 'A';
                 return false;
@@ -1449,6 +1483,7 @@
 
         function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, cantidaPD) {
             acodigos.push(codigo);
+            console.log(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, cantidaPD,'data articulo');
 
             var costonew = 0;
             var precionew = 0;
@@ -1547,14 +1582,17 @@
             articulo_mov_det.append(tr);
 
             // console.log($("#cCodConsecutivoOS").val()+"<=>"+$("#idventa").val());
-            if($("#cCodConsecutivoOS").val() != "") {
-                addAlmaSelec(codigo);
-            }
+            // if($("#cCodConsecutivoOS").val() != "") {
+            //     addAlmaSelec(codigo);
+            // }
            
-            if($("#idventa").val() != "") {
-                addAlmaTodos(codigo);
-            }
+            // if($("#idventa").val() != "") {
+            //     addAlmaTodos(codigo);
+            // }
            
+            // addlocSele(codigo);
+
+            addAlmaSelec(codigo);
             addlocSele(codigo);
 
             $('.i-checks').iCheck({
@@ -1960,7 +1998,7 @@
                         camposunicos = camposunicos.join(',');
 
 
-                        RESTService.get('register_movements/valida_series_serve', camposunicos, function (response) {
+                        RESTService.get('devolucion_servicesTecnicos/valida_series_serveDevo', camposunicos, function (response) {
                             if (!_.isUndefined(response.status) && response.status) {
 
                                 if (cant == cont_table) {
@@ -2015,7 +2053,7 @@
                                     };
 
                                     var loteIde_id = 0;
-                                    RESTService.updated('series/createserie_varios', loteIde_id, params, function (response) {
+                                    RESTService.updated('devolucion_servicesTecnicos/createserie_variosDevolu', loteIde_id, params, function (response) {
                                         if (!_.isUndefined(response.status) && response.status) {
                                             var idSeries = response.idSeries;
                                             var cod_series = response.cod_series;
@@ -2129,7 +2167,7 @@
         }
         $scope.EliminarMovimiento = function () {
             var id = idMovimientoDelete.val();
-            RESTService.get('register_movements/delete', id, function (response) {
+            RESTService.get('devolucion_servicesTecnicos/deleteDevol', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var dta = response.data;
                     if (dta[0]['Mensaje'] != "") {
@@ -2165,7 +2203,7 @@
             bval = bval && cantProductoMss.required();
             if (bval) {
                 var id = idProductoMss.val() + '*' + cantProductoMss.val();
-                RESTService.get('register_movements/validateCantSerie', id, function (response) {
+                RESTService.get('devolucion_servicesTecnicos/validateCantSerieDevol', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.data == 'N') {
                             AlertFactory.textType({
@@ -2241,7 +2279,7 @@
                     'fecha_vencimiento': fVenPrML.val(),
                 };
                 var loteIde_id = 0;
-                RESTService.updated('lots/createLote', loteIde_id, params, function (response) {
+                RESTService.updated('devolucion_servicesTecnicos/createLoteDevol', loteIde_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
 
                         $("#idLEn" + codigo_actual).val(response.codigol);
@@ -2474,7 +2512,7 @@
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
 
-                RESTService.updated('register_movements/saveMovimiento', movimiento_id, params, function (response) {
+                RESTService.updated('devolucion_servicesTecnicos/saveMovimientoDevo', movimiento_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         titlemodalMovimieto.html('Nueva Devolución ' + '[' + response.code + ']');
                         AlertFactory.textType({
@@ -2511,7 +2549,7 @@
         };
 
         function cargar_notas(id) {
-            $.post("ventas/get_notas_devolucion", {},
+            $.post("devolucion_servicesTecnicos/get_notas_devolucionDevol", {},
                 function (data, textStatus, jqXHR) {
                     $("#idventa").html('');
                     $("#idventa").append('<option value="">Seleccionar</option>');
@@ -2528,6 +2566,28 @@
                 "json"
             );
         }
+        function cargar_notas_find(id) {
+
+            $.post("devolucion_servicesTecnicos/get_notas_devolucion_find",{idt:id},
+                function (data, textStatus, jqXHR) {
+                    console.log(data,"data nota");
+                    $("#idventa").html('');
+                    $("#idventa").append('<option value="">Seleccionar</option>');
+                    _.each(data, function (item) {
+                        if(typeof id != "undefined" && id == item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda) {
+                            $("#idventa").append('<option selected="selected" data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" data-idmoneda="'+item.idmoneda+'" value="' + item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda+'">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.cliente + '</option>');
+                        } else {
+                            $("#idventa").append('<option data-documento="'+item.serie_comprobante + '-' + item.numero_comprobante+'" data-idmoneda="'+item.idmoneda+'" value="' + item.serie_comprobante + '*' + item.numero_comprobante+ '*'+item.idmoneda+'">' + item.serie_comprobante + ' ' + item.numero_comprobante + ' ' + item.cliente + '</option>');
+                        }
+                       var documento = item.serie_comprobante + '-' + item.numero_comprobante;
+                    $("#documento").val(documento);
+                    });
+                    $("#idventa").select2();
+
+                },
+                "json"
+            );
+        }
 
         function newMovimiento() {
             activar_inputs();
@@ -2537,6 +2597,7 @@
             cargar_proformas(verProforma);
 
             cargar_notas();
+
 
         }
 
@@ -2605,12 +2666,12 @@
                 idMoneda.trigger('change');
 
             }
-        });
+        }); 
         function getDataFormMovement() {
-            RESTService.all('register_movements/data_form', '', function (response) {
+            RESTService.all('devolucion_servicesTecnicos/data_formDevol', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     idTipoOperacion.append('<option value="" >Seleccionar</option>');
-                    _.each(response.operaciones, function (item) {
+                    _.each(response.operaciones_devue, function (item) {
                         var opera = '8' + '*' + 'D';
                         naturalezaGeneral = 'D';
                         // idTipoOperacion.append('<option value="' + opera + '" selected>DESRESERVA ST</option>');
@@ -2638,7 +2699,7 @@
         }
         getDataFormMovement();
         function getDataFormSerie() {
-            RESTService.all('series/data_form', '', function (response) {
+            RESTService.all('devolucion_servicesTecnicos/data_formDevolSeri', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     tipoCompra = response.tipoCompra
                     //  _.each(response.tipoCompra, function(item) {
@@ -2690,11 +2751,11 @@
                 },
                 idTipoOperacion: {
                     title: 'Tipo Operación',
-                    options: base_url + '/operations/getAll'
+                    options: base_url + '/devolucion_servicesTecnicos/getAllOper'
                 },
                 idUsuario: {
                     title: 'Usuario',
-                    options: base_url + '/users/getAll'
+                    options: base_url + '/devolucion_servicesTecnicos/getAllUser'
                 },
                 estado: {
                     title: 'Estado',
@@ -2756,7 +2817,7 @@
                 sorting: true,
                 cache: false,
                 actions: {
-                    listAction: base_url + '/register_movements/getArticulosSelect'
+                    listAction: base_url + '/devolucion_servicesTecnicos/getArticulosSelectDevolu'
                 },
                 toolbar: {
                     items: [{
@@ -2842,7 +2903,7 @@
                 sorting: true,
                 cache: false,
                 actions: {
-                    listAction: base_url + '/register_movements/getArticulosMinKit'
+                    listAction: base_url + '/devolucion_servicesTecnicos/getArticulosMinKitDevol'
                 },
                 toolbar: {
                     items: [{
@@ -2939,7 +3000,7 @@
                     listAction: function (postData, jtParams) {
                         return $.Deferred(function ($dfd) {
                             $.ajax({
-                                url: base_url + '/register_movements/' + url,
+                                url: base_url + '/devolucion_servicesTecnicos/' + url,
                                 type: 'POST',
                                 dataType: 'json',
                                 data: { postData: postData, idProducto: idProducto },

@@ -228,6 +228,12 @@ class ProformaRepository implements ProformaInterface
 ");
           return $mostrar3;
     }
+     public function get_detalle_entrada_Devolucion($conse,$nro){ 
+   
+          $mostrar3=DB::select("select pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, od.id as idDetalleRepues,* from ERP_ProformaDetalle as od inner join ERP_Productos as pr on pr.id=od.idProducto  where   pr.type_id ='1'  and od.cCodConsecutivo='$conse' and od.nConsecutivo='$nro'
+");
+          return $mostrar3;
+    }
     
      public function get_repuestos_consecutivo($conse){
    

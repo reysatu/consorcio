@@ -572,152 +572,19 @@
                 addArtNada();
             }
         });
-        // function getlotes(){
-        //     var id=codigoLoteMll.val();
-        //     RESTService.get('registerOrdenCompras/validateLote', id, function(response) {
-        //          if (!_.isUndefined(response.status) && response.status) {
-        //               if(response.data=="N"){
-        //                 if(naturalezaGeneral=="S"){
-        //                     AlertFactory.textType({
-        //                         title: '',
-        //                         message: 'No existe Lote . Intente nuevamente.',
-        //                         type: 'info'
-        //                     });
-        //                 }else{
-        //                     lotProductoML.val(codigoLoteMll.val());
-        //                     idProductoML.val(idProductoMll.val());
-        //                     desProductoML.val(desProductoMll.val());
-        //                     modalLote.modal("show");
-        //                 }
-        //               }else{
-        //                 fechaVl.val(response.fecha);
-        //                 idLoteMll.val(response.codigol);
-        //                 btn_Lotd.prop('disabled',false);
-        //                 codigoLoteMll.prop("readonly",true);
-        //                 codigoLoteMll.trigger('change');
-        //                 btn_Lotd.trigger('change');
-        //               }
-                     
-        //          }else {
-        //             AlertFactory.textType({
-        //                 title: '',
-        //                 message: 'Hubo un error . Intente nuevamente.',
-        //                 type: 'info'
-        //             });
-        //         }
-
-        //        });
-        // }
-         $('#ProcesarTransferenciaBoton').click(function(e){
-            var id=idMovimiento.val();
-          if(articulo_mov_det.html()!=""){
-                    RESTService.get('registerOrdenCompras/validaDetalle', id, function(response) {
-                 if (!_.isUndefined(response.status) && response.status) {
-                        var ide = idMovimiento.val();
-                        idTransferenciaProcesar.val(ide);
-                        modalProcesarTransferencia.modal("show");
-
-                        e.preventDefault();
-                 }else {
-                    var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
-                        AlertFactory.textType({
-                            title: '',
-                            message: msg_,
-                            type: 'info'
-                        });
-                }
-
-               });
-              
-          }else{
-             AlertFactory.textType({
-                    title: '',
-                    message: 'Debe registrar Articulos en este movimiento. Intente nuevamente.',
-                    type: 'info'
-                    });
-
-          }
-                    
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green'
+        }).on('ifChanged', function (event) {
+            $(event.target).click();
+             calcular_total_orden();
+           
         });
-         $('#btn_xml').click(function(e){
-            var bval = true;
-            bval = bval && idTipoOperacion.required();
-            bval = bval && idMoneda.required();
-            bval = bval && fecha_registro.required();
-            bval = bval && xmlAdd.required();
-            if(idTipoOperacion.val()!='1*E'){
-                  AlertFactory.textType({
-                                title: '',
-                                message: 'La operación deber ser tipo compra',
-                                type: 'info'
-                        });
-                   bval=false;      
-            }
-            if (bval) {
-                if(idMovimiento.val()==""){
-                    saveMovimientoCab(); 
-                }
-                cargarXML2(); 
-            }
-        });
+       
+          // $('#p_state').click(function() {
+          //     calcular_total_orden();
+          //   });
+   
         
-        function getFiles()
-{
-    var idFiles=document.getElementById("xmlAdd");
-    // Obtenemos el listado de archivos en un array
-    var archivos=idFiles.files;
-    // Creamos un objeto FormData, que nos permitira enviar un formulario
-    // Este objeto, ya tiene la propiedad multipart/form-data
-    var data=new FormData();
-    // Recorremos todo el array de archivos y lo vamos añadiendo all
-    // objeto data
-    for(var i=0;i<archivos.length;i++)
-    {
-        // Al objeto data, le pasamos clave,valor
-        data.append("archivo"+i,archivos[i]);
-    }
-    return data;
-}
-         $scope.ProcesarTransferencia = function(){
-            var id=idTransferenciaProcesar.val();
-            RESTService.get('registerOrdenCompras/procesarTransferencia', id, function(response) {
-                 if (!_.isUndefined(response.status) && response.status) {
-                    var dta=response.data;
-                    if(dta[0]['Mensaje']=="OK"){
-                         AlertFactory.textType({
-                            title: '',
-                            message: 'El registro se procesó con exitó',
-                            type: 'success'
-                        });
-                        p_state.val("PROCESADO");
-                        if(p_state.val()=="PROCESADO"){
-                            procesarTransfBoton.prop('disabled',true);
-                            procesarTransfBoton.trigger('change');
-                            btnguardarMovimiento.prop('disabled',true);
-                            btnguardarMovimiento.trigger('change');
-                            btn_movimiento_detalle.prop('disabled',true);
-                            btn_movimiento_detalle.trigger('change');
-                        }
-                        modalProcesarTransferencia.modal("hide");
-                        LoadRecordsButtonRegisterOrdenCompra.click(); 
-                    }else{
-                        AlertFactory.textType({
-                                title: '',
-                                message: dta[0]['Mensaje'],
-                                type: 'info'
-                        }); 
-                        modalProcesarTransferencia.modal("hide"); 
-                       
-                    }
-                  
-                    }
-               });
-
-               
-          
-
-        } 
         function seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo) {
            
             idTipoArt=1;
@@ -1486,6 +1353,26 @@
             console.log("entro tabla2");
              $("#articulo_mov_det tr").each(function(){
               console.log("entro tabla");
+            var valorCant= $(this).closest("tr").find("td:eq(1)").children("input").val();
+          
+            $(this).closest("tr").find("td:eq(2)").children("input").val(valorCant);
+            var precioUnitario=$(this).closest("tr").find("td:eq(5)").children("input").val();
+            var precioTotal=Number(valorCant)*Number(precioUnitario);
+            $(this).closest("tr").find("td:eq(6)").children("input").val(addCommas(redondeodecimale(precioTotal).toFixed(2)));
+            var montoDesc= $(this).closest("tr").find("td:eq(9)").children("input").val();
+            var valCompr=Number(precioTotal)-Number(montoDesc);
+            $(this).closest("tr").find("td:eq(10)").children("input").val(addCommas(redondeodecimale(valCompr).toFixed(2)));
+            var idenImpue= (p_state.prop('checked')) ? '1' : '0';
+            var valoImpue=0.00;
+            console.log(idenImpue,"aaaaaaaa");
+            if(idenImpue!=0){
+                valoImpue=calcular_impueso(precioUnitario,valorCant);
+            }
+            $(this).closest("tr").find("td:eq(11)").children("input").val(addCommas(redondeodecimale(valoImpue).toFixed(2)));
+            var total=Number(valCompr)+Number(valoImpue);
+             $(this).closest("tr").find("td:eq(12)").children("input").val(addCommas(redondeodecimale(total).toFixed(2)));
+
+
                 var total_detalle=$(this).closest("tr").find("td:eq(12)").children("input").val();
                 suma_total=suma_total+Number(total_detalle);
                 console.log(total_detalle,'dsdsss');
@@ -1498,40 +1385,18 @@
 
         
         }
-        function calcularTotalOrdenCompra(e){
-            var valorCant= $(e).closest("tr").find("td:eq(1)").children("input").val();
-          
-            $(e).closest("tr").find("td:eq(2)").children("input").val(valorCant);
-            var precioUnitario=$(e).closest("tr").find("td:eq(5)").children("input").val();
-            var precioTotal=Number(valorCant)*Number(precioUnitario);
-            $(e).closest("tr").find("td:eq(6)").children("input").val(addCommas(redondeodecimale(precioTotal).toFixed(2)));
-            var montoDesc= $(e).closest("tr").find("td:eq(9)").children("input").val();
-            var valCompr=Number(precioTotal)-Number(montoDesc);
-            $(e).closest("tr").find("td:eq(10)").children("input").val(addCommas(redondeodecimale(valCompr).toFixed(2)));
-            var idenImpue= $(e).closest("tr").find("td:eq(11)").children("input").attr('data-impues');
-            var valoImpue=0;
-            console.log(idenImpue,"aaaaaaaa");
-            if(idenImpue!=0){
-                valoImpue=calcular_impueso(precioUnitario,valorCant);
-            }
-            $(e).closest("tr").find("td:eq(11)").children("input").val(addCommas(redondeodecimale(valoImpue).toFixed(2)));
-            var total=Number(valCompr)+Number(valoImpue);
-             $(e).closest("tr").find("td:eq(12)").children("input").val(addCommas(redondeodecimale(total).toFixed(2)));
-
-             calcular_total_orden();
-
-        }
+        
         $(document).on("keyup", ".m_articulo_cantidad",".m_articulo_precio", function () {
           
-            calcularTotalOrdenCompra(this);
+            calcular_total_orden();
         });
            $(document).on("keyup",".m_articulo_precio", function () {
            
-            calcularTotalOrdenCompra(this);
+            calcular_total_orden();
         });
          $(document).on("change",".m_articulo_precio", function () {
           
-            calcularTotalOrdenCompra(this);
+            calcular_total_orden();
         });
            $(document).on("change",".descuentosSelect", function () {
             var codigo=$(this).attr('data-desc');
@@ -1556,7 +1421,7 @@
                     $("#porc_"+codigo).val("");
                 }
 
-            calcularTotalOrdenCompra(this);
+            calcular_total_orden();
         });
         
 
@@ -1662,7 +1527,8 @@
                 var codSoli=0;
                 RESTService.get('registerOrdenCompras/getDataArticulo', idpr, function(response) {
                         var datapro=response.data;
-                        console.log(datapro[0].impuesto,"impuesto_ident");
+                        // console.log(datapro[0].impuesto,"impuesto_ident");
+                         ident_impuesto=(p_state.prop('checked')) ? '1' : '0';
                          if ($('#tr_idArt' + idProductoMN.val()).length > 0) {
                             AlertFactory.showWarning({
                                 title: '',
@@ -1671,7 +1537,7 @@
                                     return false;
                                 }else{
 
-                                      addArticuloTable(iddet,idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida,obser,cantProductoMN.val(),cantReci,cantDevu,precio,precioTotal,idDescuento,impuesTotal,nPorcDescuento,nDescuento,datapro[0].impuesto,codSoli);
+                                      addArticuloTable(iddet,idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida,obser,cantProductoMN.val(),cantReci,cantDevu,precio,precioTotal,idDescuento,impuesTotal,nPorcDescuento,nDescuento,ident_impuesto,codSoli);
                                             modalNada.modal('hide');
                                             modalMovimietoArticulo.modal('hide');     
                                 }

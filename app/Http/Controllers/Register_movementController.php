@@ -436,6 +436,9 @@ class Register_movementController extends Controller
             };
             $data['fecha_impresion']=date("d/m/Y");
             $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
@@ -538,6 +541,7 @@ class Register_movementController extends Controller
         $usuario=auth()->id();
         $operaciones = $operRepo->getOperation($usuario);
         $operaciones_entra = $operRepo->getOperation_entra($usuario);
+        $operaciones_totales = $operRepo->getOperation_total_entrega($usuario);
         $almacen_usuario = $WareRepo->getAlmacen_usuario($usuario);
         $almacen_todos = $WareRepo->getAlmacen_todos($usuario);
         return response()->json([
@@ -547,6 +551,7 @@ class Register_movementController extends Controller
             'operacion' => $operacion,
             'operaciones'=> $operaciones,
             'operaciones_entra'=>$operaciones_entra,
+            'operaciones_devue'=>$operaciones_totales,
             'almacen_usuario'=>$almacen_usuario,
             'almacen_todos'=>$almacen_todos,
         ]);
