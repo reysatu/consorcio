@@ -1603,7 +1603,7 @@
                     listAction: function (postData, jtParams) {
                         return $.Deferred(function ($dfd) {
                             $.ajax({
-                                url: base_url + '/register_movements/' + url,
+                                url: base_url + '/solicitud/' + url,
                                 type: 'POST',
                                 dataType: 'json',
                                 data: { postData: postData, idProducto: idProducto },
