@@ -49,3 +49,5 @@ Route::get('solicitud/getLocaStock/{id}', ['as' => 'solicitud.getLocaStock', 'us
 
 
 Route::post('solicitud/getArticulosSelect', ['as' => 'solicitud.getArticulosSelect', 'uses' => 'ProductController@traeAll']);
+
+Route::get('solicitud/validateCantSerie/{id}', ['as' => 'solicitud.validateCantSerie', 'uses' => 'Register_movementController@validateCantSerie']);

@@ -1543,7 +1543,7 @@
             bval = bval && cantProductoMss.required();
             if (bval) {
                 var id = idProductoMss.val() + '*' + cantProductoMss.val();
-                RESTService.get('register_movements/validateCantSerie', id, function (response) {
+                RESTService.get('solicitud/validateCantSerie', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.data == 'N') {
                             AlertFactory.textType({
