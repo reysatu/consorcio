@@ -969,7 +969,7 @@
               
                 acodigos.forEach(function(val,index) {
                     var cosr=$('#preMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         precirIn='I';
                     }
                     
@@ -986,7 +986,7 @@
             var cosrIn='A';
             acodigos.forEach(function(val,index) {
                     var cosr=$('#cosMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         cosrIn='I';
                     }
                     
