@@ -167,6 +167,14 @@ class VentasRepository implements VentasInterface
 
         return DB::select($sql);
     }
+     public function get_notas_devolucion_find($conse,$numer,$idmoneda) {
+        $sql = "SELECT v.*, c.*, c.razonsocial_cliente AS cliente 
+        FROM ERP_Venta AS v
+        INNER JOIN ERP_Clientes AS c ON(c.id=v.idcliente)
+        WHERE v.serie_comprobante='$conse' AND v.numero_comprobante='$numer' and v.idmoneda='$idmoneda'";
+
+        return DB::select($sql);
+    }
 
      public function anular_venta($id) {
         $sql = "UPDATE ERP_Venta

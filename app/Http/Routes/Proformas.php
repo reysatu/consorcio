@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: JAIR
  * Date: 4/5/2017
- * Time: 6:59 PM
+ * Time: 6:59 PM 
  */
 
 Route::post('proformas/list', ['as' => 'proformas.list', 'uses' => 'ProformaController@all']);

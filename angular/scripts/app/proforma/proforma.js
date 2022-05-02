@@ -122,6 +122,7 @@
                                 });
                                 btn_guardarProforma.prop('disabled',true); 
                                 estado.val(1);
+                                  LoadRecordsButtonProforma.click();
                             }else{
                               
 

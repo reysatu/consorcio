@@ -340,7 +340,8 @@
                      }else{
                           console.log("a6");
                          console.log("primersaaaa");
-                        cCodConsecutivoOS.val(cons);
+                         cCodConsecutivoOS.append('<option value="'+data_p.cCodConsecutivo+'*'+data_p.nConsecutivo+'*'+data_p.idMoneda+'">'+data_p.cCodConsecutivo+' '+data_p.nConsecutivo+' '+data_p.razonsocial_cliente+' '+data_p.cPlacaVeh+'</option>');
+                         cCodConsecutivoOS.val(cons);
                          nConsecutivoOS.val(data_p.nConsecutivo);
                           mov_ar=response.data_movimiento_Articulo_entrega;
                      }

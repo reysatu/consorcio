@@ -344,10 +344,10 @@ class ProformaController extends Controller
     {   try {
             $valtodo=explode("_", $id);
             $val=$repo->get_detalle_entrada($valtodo[0],$valtodo[1]);
-            
+            $val_dataDev=$repo->get_detalle_entrada_Devolucion($valtodo[0],$valtodo[1]);
             return response()->json([
                 'status' => true,
-                'data'=>$val,
+                'data'=>$val_dataDev,
             ]);
 
     }catch (\Exception $e) {

@@ -264,6 +264,14 @@ class VentasController extends Controller
         return response()->json($response);
 
     }
+    public function get_notas_devolucion_find(VentasInterface $Repo, Request $request)
+    {
+        $idw = $request->input('idt', '');
+        $arr = explode("*", $idw);
+        $response = $Repo->get_notas_devolucion_find($arr[0],$arr[1],$arr[2]);
+        return response()->json($response);
+
+    }
 
     public function get_venta_detalle_devolucion($id, VentasInterface $repo, Request $request)
     {
