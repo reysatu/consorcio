@@ -961,7 +961,7 @@
               
                 acodigos.forEach(function(val,index) {
                     var cosr=$('#preMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         precirIn='I';
                     }
                     
@@ -970,7 +970,7 @@
             if(precirIn=='I'){
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El precio de los artículos no puede ser cero'
+                    message: 'El precio de los artículos no puede ser menor a cero'
                 });
                 precirIn='A';
                 return false; 
@@ -978,7 +978,7 @@
             var cosrIn='A';
             acodigos.forEach(function(val,index) {
                     var cosr=$('#cosMs_'+val).val();
-                    if(cosr<1){
+                    if(cosr<=0){
                         cosrIn='I';
                     }
                     
@@ -986,7 +986,7 @@
             if(cosrIn=='I'){
                 AlertFactory.showWarning({
                     title: '',
-                    message: 'El costo de los artículos no puede ser cero'
+                    message: 'El costo de los artículos no puede ser menor a cero'
                 });
                 cosrIn='A';
                 return false; 

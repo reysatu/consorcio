@@ -111,6 +111,9 @@ class ProformaController extends Controller
             
             $totalDetalle_to=$data['totalDetalle'];
             $totalMO_to=$data['totalMO'];
+            if($totalMO_to==''){
+                $totalMO_to=0;
+            }
 
             $id_revision_array=$data['id_revision_array'];
             $id_revision_array=explode(',', $id_revision_array);
@@ -151,6 +154,9 @@ class ProformaController extends Controller
             $nDescuento=$data['nDescuentoP'];
             $nPorcDescuento=$data['nPorcDescuentoP'];
             $nIdDscto=$data['nIdDsctoP'];
+            if($nIdDscto==''){
+                $nIdDscto=0;
+            }
             $nOperGratuita=$data['nOperGratuitaP'];
 
             $totalmo=0;
@@ -199,7 +205,6 @@ class ProformaController extends Controller
                 $subtotal,
                 $impuesto,
                 $total,
-
                 $nDescuento,
                 $nPorcDescuento,
                 $nIdDscto,
