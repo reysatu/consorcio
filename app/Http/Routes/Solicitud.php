@@ -46,3 +46,6 @@ Route::get('solicitud/TraerDistritos/{id}', ['as' => 'solicitud.TraerDistritos',
 
 
 Route::get('solicitud/getLocaStock/{id}', ['as' => 'solicitud.getLocaStock', 'uses' => 'Register_movementController@getLocaStock']);
+
+
+Route::post('solicitud/getArticulosSelect', ['as' => 'solicitud.getArticulosSelect', 'uses' => 'ProductController@traeAll']);

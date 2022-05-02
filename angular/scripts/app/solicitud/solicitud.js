@@ -1273,7 +1273,7 @@
                 sorting: true,
                 cache: false,
                 actions: {
-                    listAction: base_url + '/register_movements/getArticulosSelect'
+                    listAction: base_url + '/solicitud/getArticulosSelect'
                 },
                 toolbar: {
                     items: [{
