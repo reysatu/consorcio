@@ -1880,7 +1880,7 @@ table_container_bancos.jtable('load');
 
             //  PARA PAGOS DE CUOTAS DE CREDITO
             if ($('#modalSolicitudCredito').is(':visible')) {
-                $.post("movimientoCajas/obtener_consecutivo_comprobante", {},
+                $.post("movimientoCajas/obtener_consecutivo_comprobante_mc", {},
                     function (data, textStatus, jqXHR) {
                         // console.log(data);
                         if(data.length > 0) {
@@ -1949,7 +1949,7 @@ table_container_bancos.jtable('load');
                     return false;
                 }
 
-                $.post("movimientoCajas/obtener_consecutivo_comprobante", {},
+                $.post("movimientoCajas/obtener_consecutivo_comprobante_mc", {},
                     function (data, textStatus, jqXHR) {
                         // console.log(data);
                         if(data.length > 0) {

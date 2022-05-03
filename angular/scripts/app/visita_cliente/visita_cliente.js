@@ -313,6 +313,9 @@
         $(document).on("change", "#idcliente", function (event, idsolicitud, id_visita, estado) {
             var idcliente = $(this).val();
             $("#idsolicitud").html("");
+            if(idcliente == "") {
+                return false;
+            }
             $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
@@ -376,7 +379,7 @@
                     } else {
                        
                         html += '<td class=""></td>';
-                        html += '<td class=""></td>';
+                        // html += '<td class=""></td>';
                         
                         
                     }
@@ -415,7 +418,9 @@
             var id = $(this).val();
             var idvisita = $("#idvisita").val();
            
-
+            if(id == "" && idvisita == "") {
+                return false;
+            }
             $.post("visita_cliente/obtener_cuotas_cronograma", { id: id, idvisita: idvisita },
                 function (data, textStatus, jqXHR) {
 
@@ -552,6 +557,11 @@
             
             // $("#modal-detalle").modal("hide");  
         }
+
+        $(document).on("click", '.eliminar-detalle-solicitud', function(e) {
+            e.preventDefault();
+            $(this).parent("center").parent("td").parent("tr").remove();
+        })
 
         $scope.guardar_visita = function () {
             var bval = true;

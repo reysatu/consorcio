@@ -1273,7 +1273,7 @@
                 sorting: true,
                 cache: false,
                 actions: {
-                    listAction: base_url + '/register_movements/getArticulosSelect'
+                    listAction: base_url + '/solicitud/getArticulosSelect'
                 },
                 toolbar: {
                     items: [{
@@ -1543,7 +1543,7 @@
             bval = bval && cantProductoMss.required();
             if (bval) {
                 var id = idProductoMss.val() + '*' + cantProductoMss.val();
-                RESTService.get('register_movements/validateCantSerie', id, function (response) {
+                RESTService.get('solicitud/validateCantSerie', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         if (response.data == 'N') {
                             AlertFactory.textType({
@@ -1603,7 +1603,7 @@
                     listAction: function (postData, jtParams) {
                         return $.Deferred(function ($dfd) {
                             $.ajax({
-                                url: base_url + '/register_movements/' + url,
+                                url: base_url + '/solicitud/' + url,
                                 type: 'POST',
                                 dataType: 'json',
                                 data: { postData: postData, idProducto: idProducto },
@@ -3201,7 +3201,7 @@
             var nConsecutivo = $("#nConsecutivo").val();
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
-            window.open("movimientoCajas/imprimir_cronograma/" + id);
+            window.open("solicitud/imprimir_cronograma/" + id);
 
         }
 

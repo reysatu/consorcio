@@ -1777,7 +1777,7 @@ class MovimientoCajaController extends Controller
             $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo_dp"];
             $update_solicitud["nConsecutivo"] = $data["nConsecutivo_dp"];
             $update_solicitud["monto_pagar_credito"] = $data["total_pagar"];
-            $solicitud_repositorio->update_saldos_solicitud($update_solicitud);
+            $solicitud_repositorio->update_saldos_solicitud_solo_credito($update_solicitud);
 
             //ACTUALIZAR SALDOS DEL DOCUMENTO PENDIENTE
             $update_venta = array();
@@ -2130,7 +2130,7 @@ class MovimientoCajaController extends Controller
         return parseList($repo->search_comprobantes_pendientes($s), $request, 'idventa', $params);
     }
 
-    public function obtener_consecutivo_comprobante(CajaDiariaDetalleInterface $repo, ConsecutivosComprobantesInterface $repoCC) {
+    public function obtener_consecutivo_comprobante_mc(CajaDiariaDetalleInterface $repo, ConsecutivosComprobantesInterface $repoCC) {
         
         $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
         return response()->json($ticket);
