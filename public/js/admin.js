@@ -4677,16 +4677,16 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
      var vACEITE=index.ACEITE;
      var vSERVICIO=index.SERVICIO;
      var vTERCEROS=index.TERCEROS;      
-     if(index.REPUESTO==null){
+     if(!index.REPUESTO){
         vREPUESTO=0;
      };
-     if(index.ACEITE==null){
+     if(!index.ACEITE){
         vACEITE=0;
      };
-     if(index.SERVICIO==null){
+     if(!index.SERVICIO){
         vSERVICIO=0;
      };
-     if(index.TERCEROS==null){
+     if(!index.TERCEROS){
         vTERCEROS=0;
      };       
      cr=cr+Number(vREPUESTO);
@@ -4704,10 +4704,10 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
             { fontSize: 8,text:index.vendedor},
             { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.monto_total).toFixed(2)),},
             { fontSize: 8,text:estado,},
-            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.REPUESTO).toFixed(2)),},
-            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.ACEITE).toFixed(2)),},
-            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.SERVICIO).toFixed(2))},
-            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.TERCEROS).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(vREPUESTO).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(vACEITE).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(vSERVICIO).toFixed(2))},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(vTERCEROS).toFixed(2)),},
             { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(mostrador).toFixed(2))},
             { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(taller).toFixed(2))},
     ];
