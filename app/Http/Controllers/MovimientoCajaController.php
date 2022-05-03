@@ -2130,7 +2130,7 @@ class MovimientoCajaController extends Controller
         return parseList($repo->search_comprobantes_pendientes($s), $request, 'idventa', $params);
     }
 
-    public function obtener_consecutivo_comprobante(CajaDiariaDetalleInterface $repo, ConsecutivosComprobantesInterface $repoCC) {
+    public function obtener_consecutivo_comprobante_mc(CajaDiariaDetalleInterface $repo, ConsecutivosComprobantesInterface $repoCC) {
         
         $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
         return response()->json($ticket);
