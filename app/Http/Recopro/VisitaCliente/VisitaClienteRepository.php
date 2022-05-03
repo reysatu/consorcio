@@ -181,7 +181,7 @@ class VisitaClienteRepository implements VisitaClienteInterface
         INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
         INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
         INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
-        WHERE s.estado=6 AND sc.saldo_cuota<>0 AND s.idcliente={$idcliente}
+        WHERE s.estado IN(7, 8, 9) AND sc.saldo_cuota<>0 AND s.idcliente={$idcliente}
         GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo ";
 
         return DB::select($sql);
