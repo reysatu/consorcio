@@ -4669,9 +4669,9 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
     var mostrador=0;
     var taller=0;
             if(index.origen=='V'){
-                $mostrador=Number(index.REPUESTO)+Number(index.ACEITE);
+                mostrador=Number(index.REPUESTO)+Number(index.ACEITE);
             }else{
-                $taller=Number(index.REPUESTO)+Number(index.ACEITE); 
+                taller=Number(index.REPUESTO)+Number(index.ACEITE); 
             };
      cr=cr+Number(index.REPUESTO);
      ca=ca+Number(index.ACEITE);
@@ -4686,14 +4686,14 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
             { fontSize: 8,text:index.documento_ven},
             { fontSize: 8,text:index.razonsocial_cliente},
             { fontSize: 8,text:index.vendedor},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.monto_total).toFixed(2),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.monto_total).toFixed(2)),},
             { fontSize: 8,text:estado,},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.REPUESTO).toFixed(2),},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.ACEITE).toFixed(2),},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.SERVICIO).toFixed(2)},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(index.TERCEROS).toFixed(2),},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(mostrador).toFixed(2)},
-            { fontSize: 8,text:index.Simbolo+' '+redondeodecimale(taller).toFixed(2)},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.REPUESTO).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.ACEITE).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.SERVICIO).toFixed(2))},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(index.TERCEROS).toFixed(2)),},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(mostrador).toFixed(2))},
+            { fontSize: 8,text:index.Simbolo+' '+addCommas(redondeodecimale(taller).toFixed(2))},
     ];
     dataBodyReportes.push(subtituloSolesEfec);
    }     
@@ -4706,12 +4706,12 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
             { fontSize: 7,text:"",border: [false,false, false, false],},
             { fontSize: 7,text:"",border: [false,false, false, false],},
             { fontSize: 7,text:"",border: [false,false, false, false],},
-            { fontSize: 7,text:sim+''+redondeodecimale(cr).toFixed(2),fillColor: '#eeeeee'},
-            { fontSize: 7,text:sim+''+redondeodecimale(ca).toFixed(2),fillColor: '#eeeeee'},
-            { fontSize: 7,text:sim+''+redondeodecimale(cs).toFixed(2),fillColor: '#eeeeee'},
-            { fontSize: 7,text:sim+''+redondeodecimale(ct).toFixed(2),fillColor: '#eeeeee'},
-            { fontSize: 7,text:sim+''+redondeodecimale(cv).toFixed(2),fillColor: '#eeeeee'},
-            { fontSize: 7,text:sim+''+redondeodecimale(cta).toFixed(2),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(cr).toFixed(2)),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(ca).toFixed(2)),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(cs).toFixed(2)),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(ct).toFixed(2)),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(cv).toFixed(2)),fillColor: '#eeeeee'},
+            { fontSize: 7,text:sim+''+addCommas(redondeodecimale(cta).toFixed(2)),fillColor: '#eeeeee'},
     ];
     dataBodyReportes.push(totales);
     return dataBodyReportes; 

@@ -1118,12 +1118,14 @@
                             <label class="control-label">Profesión</label>
                             <input type="text" class="form-control input-sm " id="profesion" name="profesion">
                         </div>
+                       
+                    </div>
+                    <h5 class="linea"><span>Dependiente</span></h5>
+                    <div class="row">
                         <div class="col-sm-3">
                             <label class="control-label">Centro Trabajo</label>
                             <input type="text" class="form-control input-sm " id="centro_trabajo" name="centro_trabajo">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-2">
                             <label class="control-label">Cargo</label>
                             <input type="text" class="form-control input-sm " id="cargo" name="cargo">
@@ -1137,6 +1139,10 @@
                             <input type="text" class="form-control input-sm " id="direccion_trabajo"
                                 name="direccion_trabajo">
                         </div>
+                       
+                    </div>
+                    <h5 class="linea"><span>Independiente</span></h5>
+                    <div class="row">
                         <div class="col-sm-2">
                             <label class="control-label">Razon Social Negocio</label>
                             <input type="text" class="form-control input-sm " id="razon_social_negocio"
@@ -1147,13 +1153,23 @@
                             <input type="text" class="form-control input-sm " id="actividad_negocio"
                                 name="actividad_negocio">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
                             <label class="control-label">Dirección Negocio</label>
                             <input type="text" class="form-control input-sm " id="direccion_negocio"
                                 name="direccion_negocio">
                         </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Cargo</label>
+                            <input type="text" class="form-control input-sm " id="cargo_independiente" name="cargo_independiente">
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Tiempo Laboral (años)</label>
+                            <input type="text" class="form-control input-sm " id="tiempo_laboral_independiente" name="tiempo_laboral_independiente">
+                        </div>
+                     
+                    </div>
+                    <h5 class="linea"><span>-.-</span></h5>
+                    <div class="row">
                         <div class="col-sm-2">
                             <label class="control-label">Ingreso Neto Mensual</label>
                             <div class="input-group">
@@ -1195,7 +1211,7 @@
                                     <strong class="simbolo-moneda"></strong>
                                 </span>
                                 <input type="number" class="form-control input-sm " id="total_ingresos"
-                                name="total_ingresos">
+                                name="total_ingresos" readonly="readonly">
                             </div>
                         </div>
                     </div>
@@ -1205,7 +1221,7 @@
                         <div class="col-sm-2">
                             <label class="control-label">Tipo Documento</label>
                            
-                            <select id="tipo_documento_conyugue" name="tipo_documento_conyugue" class="form-control input-sm" disabled="disabled"></select>
+                            <select id="tipo_documento_conyugue" name="tipo_documento_conyugue" class="form-control input-sm select-persona" disabled="disabled"></select>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Documento</label>
@@ -1214,22 +1230,27 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Nombres</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="nombres_conyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="nombres_conyugue"
                                 name="nombres_conyugue">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Paterno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_paterno_conyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_paterno_conyugue"
                                 name="apellido_paterno_conyugue">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Materno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_materno_conyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_materno_conyugue"
                                 name="apellido_materno_conyugue">
                         </div>
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
+                            <button type="button" id="btn_editar_conyugue" data-tipo="conyugue"
+                                class="btn btn-danger-admin btn-sm btn-editar-persona">
+                                <span class="fa fa-save"></span>
+                                Editar Conyugue
+                            </button>
                         </div>
                     </div>
 
@@ -1239,7 +1260,7 @@
                         <div class="col-sm-2">
                             <label class="control-label">Tipo Documento</label>
                            
-                            <select id="tipo_documento_fiador" name="tipo_documento_fiador" class="form-control input-sm" disabled="disabled"></select>
+                            <select id="tipo_documento_fiador" name="tipo_documento_fiador" class="form-control input-sm select-persona" disabled="disabled"></select>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Documento</label>
@@ -1248,22 +1269,27 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Nombres</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="nombres_fiador"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="nombres_fiador"
                                 name="nombres_fiador">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Paterno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_paterno_fiador"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_paterno_fiador"
                                 name="apellido_paterno_fiador">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Materno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_materno_fiador"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_materno_fiador"
                                 name="apellido_materno_fiador">
                         </div>
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
+                            <button type="button" id="btn_editar_fiador" data-tipo="fiador"
+                                class="btn btn-danger-admin btn-sm btn-editar-persona">
+                                <span class="fa fa-save"></span>
+                                Editar Fiador
+                            </button>
                         </div>
                     </div>
                   
@@ -1295,13 +1321,15 @@
                             <input type="text" class="form-control input-sm " id="profesion_fiador"
                                 name="profesion_fiador">
                         </div>
+                       
+                    </div>
+                    <h5 class="linea"><span>Dependiente</span></h5>
+                    <div class="row">
                         <div class="col-sm-3">
                             <label class="control-label">Centro Trabajo</label>
                             <input type="text" class="form-control input-sm " id="centro_trabajo_fiador"
                                 name="centro_trabajo_fiador">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-2">
                             <label class="control-label">Cargo</label>
                             <input type="text" class="form-control input-sm " id="cargo_fiador" name="cargo_fiador">
@@ -1313,9 +1341,14 @@
                         </div>
                         <div class="col-sm-3">
                             <label class="control-label">Dirección Trabajo</label>
-                            <input type="number" class="form-control input-sm " id="direccion_trabajo_fiador"
+                            <input type="text" class="form-control input-sm " id="direccion_trabajo_fiador"
                                 name="direccion_trabajo_fiador">
                         </div>
+                        
+                    </div>
+                    <h5 class="linea"><span>Independiente</span></h5>
+                    <div class="row">
+                       
                         <div class="col-sm-2">
                             <label class="control-label">Razon Social Negocio</label>
                             <input type="text" class="form-control input-sm " id="razon_social_negocio_fiador"
@@ -1326,13 +1359,23 @@
                             <input type="text" class="form-control input-sm " id="actividad_negocio_fiador"
                                 name="actividad_negocio_fiador">
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
                             <label class="control-label">Dirección Negocio</label>
                             <input type="text" class="form-control input-sm " id="direccion_negocio_fiador"
                                 name="direccion_negocio_fiador">
                         </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Cargo</label>
+                            <input type="text" class="form-control input-sm " id="cargo_independiente_fiador" name="cargo_independiente_fiador">
+                        </div>
+                        <div class="col-sm-2">
+                            <label class="control-label">Tiempo Laboral (años)</label>
+                            <input type="text" class="form-control input-sm " id="tiempo_laboral_independiente_fiador" name="tiempo_laboral_independiente_fiador">
+                        </div>
+                    </div>
+
+                    <h5 class="linea"><span>-.-</span></h5>
+                    <div class="row">
                         <div class="col-sm-2">
                             <label class="control-label">Ingreso Neto Mensual</label>
                            
@@ -1374,20 +1417,18 @@
                                 <span class="input-group-addon input-sm">
                                     <strong class="simbolo-moneda"></strong>
                                 </span>
-                                <input type="number" class="form-control input-sm " id="total_ingresos_fiador"
+                                <input type="number" readonly="readonly" class="form-control input-sm " id="total_ingresos_fiador"
                                 name="total_ingresos_fiador">
                             </div>
                         </div>
                     </div>
-
-
                     <h5 class="linea"><span>Fiador/Conyugue</span></h5>
                     <div class="row">
                         <input type="hidden" name="idfiadorconyugue" id="idfiadorconyugue" />
                         <div class="col-sm-2">
                             <label class="control-label">Tipo Documento</label>
                            
-                            <select id="tipo_documento_fiadorconyugue" name="tipo_documento_fiadorconyugue" class="form-control input-sm" disabled="disabled"></select>
+                            <select id="tipo_documento_fiadorconyugue" name="tipo_documento_fiadorconyugue" class="form-control input-sm select-persona" disabled="disabled"></select>
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Documento</label>
@@ -1396,22 +1437,27 @@
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Nombres</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="nombres_fiadorconyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="nombres_fiadorconyugue"
                                 name="nombres_fiadorconyugue">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Paterno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_paterno_fiadorconyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_paterno_fiadorconyugue"
                                 name="apellido_paterno_fiadorconyugue">
                         </div>
                         <div class="col-sm-2">
                             <label class="control-label">Apellido Materno</label>
-                            <input type="text" class="form-control input-sm " readonly="readonly" id="apellido_materno_fiadorconyugue"
+                            <input type="text" class="form-control input-sm datos-persona" readonly="readonly" id="apellido_materno_fiadorconyugue"
                                 name="apellido_materno_fiadorconyugue">
                         </div>
                        
                         <div class="col-sm-1" style="margin-top: 5px;">
                             <label class="control-label"></label>
+                            <button type="button" id="btn_editar_fiadorconyugue" data-tipo="fiadorconyugue"
+                                class="btn btn-danger-admin btn-sm btn-editar-persona">
+                                <span class="fa fa-save"></span>
+                                Editar <br>Fiador/Conyugue
+                            </button>
                         </div>
                     </div>
 
@@ -1439,7 +1485,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> 
 
 
 <div class="modal" id="modalPersona" role="dialog">
