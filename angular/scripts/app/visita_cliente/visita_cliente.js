@@ -558,6 +558,11 @@
             // $("#modal-detalle").modal("hide");  
         }
 
+        $(document).on("click", '.eliminar-detalle-solicitud', function(e) {
+            e.preventDefault();
+            $(this).parent("center").parent("td").parent("tr").remove();
+        })
+
         $scope.guardar_visita = function () {
             var bval = true;
             bval = bval && $("#fechareg").required();
