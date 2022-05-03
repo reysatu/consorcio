@@ -313,6 +313,9 @@
         $(document).on("change", "#idcliente", function (event, idsolicitud, id_visita, estado) {
             var idcliente = $(this).val();
             $("#idsolicitud").html("");
+            if(idcliente == "") {
+                return false;
+            }
             $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
@@ -415,7 +418,9 @@
             var id = $(this).val();
             var idvisita = $("#idvisita").val();
            
-
+            if(id == "" || idvisita == "") {
+                return false;
+            }
             $.post("visita_cliente/obtener_cuotas_cronograma", { id: id, idvisita: idvisita },
                 function (data, textStatus, jqXHR) {
 
