@@ -167,7 +167,7 @@ class VisitaClienteRepository implements VisitaClienteInterface
         INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
         INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
         INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
-        WHERE s.estado=6 AND sc.saldo_cuota<>0
+        WHERE s.estado IN(7, 8, 9) AND sc.saldo_cuota<>0
         GROUP BY c.id, c.razonsocial_cliente ";
 
         return DB::select($sql);
