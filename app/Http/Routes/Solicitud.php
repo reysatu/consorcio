@@ -54,3 +54,5 @@ Route::get('solicitud/validateCantSerie/{id}', ['as' => 'solicitud.validateCantS
 
 Route::post('solicitud/getProductoSerie', ['as' => 'solicitud.getProductoSerie', 'uses' => 'SerieController@traerSeries']);
 Route::post('solicitud/getProductoSerieStock', ['as' => 'solicitud.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
+
+Route::get('solicitud/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');

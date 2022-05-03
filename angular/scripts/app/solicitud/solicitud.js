@@ -3201,7 +3201,7 @@
             var nConsecutivo = $("#nConsecutivo").val();
 
             var id = cCodConsecutivo + "|" + nConsecutivo;
-            window.open("movimientoCajas/imprimir_cronograma/" + id);
+            window.open("solicitud/imprimir_cronograma/" + id);
 
         }
 
