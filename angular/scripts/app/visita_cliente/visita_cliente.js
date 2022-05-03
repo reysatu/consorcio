@@ -379,7 +379,7 @@
                     } else {
                        
                         html += '<td class=""></td>';
-                        html += '<td class=""></td>';
+                        // html += '<td class=""></td>';
                         
                         
                     }
