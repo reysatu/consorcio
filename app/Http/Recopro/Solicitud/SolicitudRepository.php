@@ -387,6 +387,18 @@ class SolicitudRepository implements SolicitudInterface
         return $result; 
     }
 
+    public function update_saldos_solicitud_solo_credito($data) {
+        $sql_update = "UPDATE ERP_Solicitud SET 
+        saldo = ISNULL(saldo, 0) - {$data["monto_pagar_credito"]},
+        pagado = ISNULL(pagado, 0) + {$data["monto_pagar_credito"]}
+       
+        WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
+    // die($sql_update);
+        $result = DB::statement($sql_update);
+        
+        return $result; 
+    }
+
     // public function update_montos_mora($data) {
     //     $sql_update = "UPDATE ERP_SolicitudCronograma SET int_moratorio = int_moratorio - {$data["monto"]}       
     //     WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]} AND nrocuota={$data["nrocuota"]}";
