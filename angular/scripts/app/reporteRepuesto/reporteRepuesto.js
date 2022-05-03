@@ -34,7 +34,7 @@
                 // deleteAction: base_url + '/reporteRepuestos/delete',
             },
             messages: {
-                addNewRecord: 'Nueva Categoría',
+                addNewRecord: 'Nueva Categoría', 
                 editRecord: 'Editar Categoría',
             },
             toolbar: {

@@ -4673,10 +4673,26 @@ function crearTablasoles(data,dataBodyReportes,idMoneda){
             }else{
                 taller=Number(index.REPUESTO)+Number(index.ACEITE); 
             };
-     cr=cr+Number(index.REPUESTO);
-     ca=ca+Number(index.ACEITE);
-     cs=cs+Number(index.SERVICIO);
-     ct=ct+Number(index.TERCEROS);
+     var vREPUESTO=index.REPUESTO;
+     var vACEITE=index.ACEITE;
+     var vSERVICIO=index.SERVICIO;
+     var vTERCEROS=index.TERCEROS;      
+     if(index.REPUESTO==null){
+        vREPUESTO=0;
+     };
+     if(index.ACEITE==null){
+        vACEITE=0;
+     };
+     if(index.SERVICIO==null){
+        vSERVICIO=0;
+     };
+     if(index.TERCEROS==null){
+        vTERCEROS=0;
+     };       
+     cr=cr+Number(vREPUESTO);
+     ca=ca+Number(vACEITE);
+     cs=cs+Number(vSERVICIO);
+     ct=ct+Number(vTERCEROS);
      cv=cv+Number(mostrador);
      cta=cta+Number(taller);
      sim=index.Simbolo;
