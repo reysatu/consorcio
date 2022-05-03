@@ -361,10 +361,10 @@ class SolicitudRepository implements SolicitudInterface
 
     public function mostrar_aprobaciones($cCodConsecutivo, $nConsecutivo) {
 
-        $sql = "SELECT sc.*, u.name AS nombre_usuario, a.nombre_aprobacion, FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg, u.username AS usuario, CASE WHEN sc.iEstado = 1 THEN 'Aprobado'  WHEN sc.iEstado = 2 THEN 'Rechazado' ELSE 'Pendiente' END AS iEstado, FORMAT(sc.updated_at, 'dd/MM/yyyy') AS updated_at, ISNULL(sc.cObservacion, '') AS cObservacion
+        $sql = "SELECT sc.*, u.name AS nombre_usuario, /*a.nombre_aprobacion,*/ FORMAT(sc.dFecReg, 'dd/MM/yyyy') AS dFecReg, u.username AS usuario, CASE WHEN sc.iEstado = 1 THEN 'Aprobado'  WHEN sc.iEstado = 2 THEN 'Rechazado' ELSE 'Pendiente' END AS iEstado, FORMAT(sc.updated_at, 'dd/MM/yyyy') AS updated_at, ISNULL(sc.cObservacion, '') AS cObservacion
         FROM ERP_SolicitudConformidad AS sc
         INNER JOIN ERP_Usuarios AS u ON(u.id=sc.nIdUsuario)
-        INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)
+        /*INNER JOIN ERP_Aprobacion AS a ON(a.idaprobacion=sc.nIdAprob)*/
         WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo}";
     // die($sql);
         $result = DB::select($sql);
