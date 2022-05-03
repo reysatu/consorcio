@@ -418,7 +418,7 @@
             var id = $(this).val();
             var idvisita = $("#idvisita").val();
            
-            if(id == "" || idvisita == "") {
+            if(id == "" && idvisita == "") {
                 return false;
             }
             $.post("visita_cliente/obtener_cuotas_cronograma", { id: id, idvisita: idvisita },
