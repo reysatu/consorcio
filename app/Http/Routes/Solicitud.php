@@ -56,3 +56,5 @@ Route::post('solicitud/getProductoSerie', ['as' => 'solicitud.getProductoSerie',
 Route::post('solicitud/getProductoSerieStock', ['as' => 'solicitud.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
 
 Route::get('solicitud/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
+
+Route::get('solicitud/find/{id}', ['as' => 'solicitud.find', 'uses' => 'CustomerController@find']);

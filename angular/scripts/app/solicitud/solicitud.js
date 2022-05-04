@@ -340,7 +340,7 @@
             } else {
                 titleModalClientes.html('Editar Cliente');
                 var id = cliente_id_or.val();
-                RESTService.get('customers/find', id, function (response) {
+                RESTService.get('solicitud/find', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var data_p = response.data;
                         tipodoc.val(data_p[0].tipodoc).trigger('change');
