@@ -58,3 +58,7 @@ Route::post('solicitud/getProductoSerieStock', ['as' => 'solicitud.getProductoSe
 Route::get('solicitud/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
 
 Route::get('solicitud/find/{id}', ['as' => 'solicitud.find', 'uses' => 'CustomerController@find']);
+
+Route::get('solicitud/data_form_customer', ['as' => 'solicitud.data_form_customer', 'uses' => 'CustomerController@data_form']);
+Route::put('solicitud/createCliente/{id}', ['as' => 'solicitud.createCliente', 'uses' => 'CustomerController@createUpdate']);
+

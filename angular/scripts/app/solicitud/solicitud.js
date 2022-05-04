@@ -525,7 +525,7 @@
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
-                RESTService.updated('customers/createCliente', cli_id, params, function (response) {
+                RESTService.updated('solicitud/createCliente', cli_id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         documento_or.val(documento.val());
                         getCliente();
@@ -545,7 +545,7 @@
 
         };
         function getDataFormCustomer() {
-            RESTService.all('customers/data_form', '', function (response) {
+            RESTService.all('solicitud/data_form_customer', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var tip = response.tipoc_doc;
                     var tipo_clie = response.tipo_clie;
