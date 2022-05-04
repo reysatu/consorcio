@@ -37,3 +37,9 @@ Route::get('cuentasxcobrars/traerSectorOrd/{id}', ['as' => 'cuentasxcobrars.trae
 
 
 Route::get('cuentasxcobrars/traerConvenios/{id}', ['as' => 'cuentasxcobrars.traerConvenios', 'uses' => 'ReporteCreditosAprobadoController@traerConvenios']); 
+
+Route::get('cuentasxcobrars/TraerDepartamentosOrde/{id}', ['as' => 'cuentasxcobrars.TraerDepartamentosOrde', 'uses' => 'UbigeoController@TraerDepartamentos']);
+
+Route::get('cuentasxcobrars/TraerProvinciasOrde/{id}', ['as' => 'cuentasxcobrars.TraerProvinciasOrde', 'uses' => 'UbigeoController@TraerProvincias']);
+
+Route::get('cuentasxcobrars/TraerDistritosOrde/{id}', ['as' => 'cuentasxcobrars.TraerDistritosOrde', 'uses' => 'UbigeoController@TraerDistritos']);

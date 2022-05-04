@@ -484,7 +484,7 @@
 
         function  getDepartamento(banderaEmpi){ 
             var id="0";
-            RESTService.get('asignacioncobradors/TraerDepartamentosOrde', id, function(response) {
+            RESTService.get('cuentasxcobrars/TraerDepartamentosOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                       $("#Departamento").html('');
@@ -537,7 +537,7 @@
                }); 
        }
        function getDistrito(bandera,id){
-        RESTService.get('asignacioncobradors/TraerDistritosOrde', id, function(response) {
+        RESTService.get('cuentasxcobrars/TraerDistritosOrde', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                  
@@ -563,7 +563,7 @@
                });
        }
        function getSector(bandera,id){
-        RESTService.get('asignacioncobradors/traerSectorOrd', id, function(response) {
+        RESTService.get('cuentasxcobrars/traerSectorOrd', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);

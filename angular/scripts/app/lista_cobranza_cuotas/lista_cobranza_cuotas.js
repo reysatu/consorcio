@@ -29,7 +29,7 @@
 
         function getDepartamento(bandera) {
             var id = "0";
-            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+            RESTService.get('lista_cobranza_cuotas/TraerDepartamentos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     departamento.html('');
@@ -54,7 +54,7 @@
             });
         }
         function getProvincia(bandera, id) {
-            RESTService.get('shops/TraerProvincias', id, function (response) {
+            RESTService.get('lista_cobranza_cuotas/TraerProvincias', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -80,7 +80,7 @@
             });
         }
         function getDistrito(bandera, id) {
-            RESTService.get('shops/TraerDistritos', id, function (response) {
+            RESTService.get('lista_cobranza_cuotas/TraerDistritos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -192,7 +192,7 @@
 
 
         function obtener_data_for_reporte() {
-            RESTService.all('visita_cliente/data_form', '', function (response) {
+            RESTService.all('lista_cobranza_cuotas/data_form', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
 
 
