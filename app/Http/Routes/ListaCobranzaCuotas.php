@@ -14,7 +14,7 @@ Route::get('lista_cobranza_cuotas/excel', ['as' => 'lista_cobranza_cuotas.excel'
 
 Route::post('lista_cobranza_cuotas/find', ['as' => 'lista_cobranza_cuotas.find', 'uses' => 'VentasController@find']);
 Route::post('lista_cobranza_cuotas/find_documento', ['as' => 'lista_cobranza_cuotas.find_documento', 'uses' => 'VentasController@find_documento']);
-Route::get('lista_cobranza_cuotas/data_form', ['as' => 'lista_cobranza_cuotas.data_form', 'uses' => 'VentasController@data_form']);
+
 
 Route::post('lista_cobranza_cuotas/guardar_venta', ['as' => 'lista_cobranza_cuotas.guardar_venta', 'uses' => 'VentasController@guardar_venta']);
 Route::post('lista_cobranza_cuotas/get_notas_devolucion', ['as' => 'lista_cobranza_cuotas.get_notas_devolucion', 'uses' => 'VentasController@get_notas_devolucion']);
@@ -28,3 +28,8 @@ Route::get('lista_cobranza_cuotas/imprimir_lista_cobraza_cuotas', 'VentasControl
 Route::get('lista_cobranza_cuotas/excel_lista_cobranza_cuotas', 'VentasController@excel_lista_cobranza_cuotas');
 
 
+Route::get('lista_cobranza_cuotas/data_form', ['as' => 'lista_cobranza_cuotas.data_form', 'uses' => 'VisitaClienteController@data_form']);
+
+Route::get('lista_cobranza_cuotas/TraerDepartamentos/{id}', ['as' => 'lista_cobranza_cuotas.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('lista_cobranza_cuotas/TraerProvincias/{id}', ['as' => 'lista_cobranza_cuotas.TraerProvincias', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('lista_cobranza_cuotas/TraerDistritos/{id}', ['as' => 'lista_cobranza_cuotas.TraerDistritos', 'uses' => 'UbigeoController@TraerDistritos']);
