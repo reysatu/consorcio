@@ -178,7 +178,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $model->update($attributes);
     }
      public function get_movement_articulo($id){
-        $mostrar=DB::select("select uni.Descripcion as unidaMedida ,FORMAT(Mo.fecha_requerida, 'yyyy-MM-dd') AS fecha_requerida_ad,* from ERP_RegisterOrdenCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id left join ERP_UnidadMedida as uni on (pr.um_id=uni.IdUnidadMedida) where mo.id='$id'");
+        $mostrar=DB::select("select Mo.id as idDetalle,uni.Descripcion as unidaMedida ,pr.description as productoDescripcion,FORMAT(Mo.dFecRequerida, 'yyyy-MM-dd') AS dFecRequerida_add,* from ERP_OrdenCompraArticulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id left join ERP_UnidadMedida as uni on (pr.um_id=uni.IdUnidadMedida) where mo.idOrden='$id'");
         return $mostrar; 
     }
     public function getOperationFind(){

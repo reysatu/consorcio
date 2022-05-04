@@ -802,20 +802,14 @@
         function getPersona(tipo) {
             //    alert(tipo);
             var bval = true;
-            console.log("entro2");
-            console.log(tipo);
             bval = bval && $("#documento_" + tipo).required();
             if (bval) {
-                var id = '40696351';
-                console.log("tew");
-                console.log($("#documento_fiadorconyugue").val())
-                console.log("fdsfdssaaaaaa");
-                console.log(id);
-                console.log("dhdhdh");
+                var id = $("#documento_" + tipo).val();
                 RESTService.get('aprobacionSolicituds/get_persona_documentoAprobac', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
+                            console.log("entroooooooooooooooooooooooooooooooooooooooo");
                             $("#titleModalPersona").html('Nueva Persona');
                             $("#modalPersona").modal('show');
                             $("#formulario-persona").trigger("reset");

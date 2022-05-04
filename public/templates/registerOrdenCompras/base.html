@@ -118,19 +118,14 @@
                                         <div class="col-sm-2">
                                             <input type="date" class="form-control input-sm" id="fecha_requerida">
                                         </div>
-                                        <label class="col-sm-1  control-label">Area</label>
+                                        <label class="col-sm-1  control-label">Moneda</label>
                                         <div class="col-sm-2">
-                                           <select id="area" name="area"  style="width: 100%;"
-                                                class="form-control input-sm js-example-responsive">
-                                                <option value="" selected> </option>
-                                                <option value="0">Registrado</option>
-                                                <option value="1">Aprobado</option>
-                                                <option value="2">Con Orden de Compra</option>
-                                                <option value="3">Cerrado</option>
-                                                <option value="4">Cancelado</option>
-                                             
+                                            <select id="idMoneda" name="idMoneda"  style="width: 100%;"
+                                                    class="form-control input-sm js-example-responsive">
+                                                    <option value="" selected> </option>
+                                                    <option value="0">Registrado</option>
                                             </select>
-                                         </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-sm-1  control-label">Proveedor</label>
@@ -147,14 +142,7 @@
                                                     <option value="0">Registrado</option>
                                             </select>
                                         </div>
-                                        <label class="col-sm-1  control-label">Moneda</label>
-                                        <div class="col-sm-2">
-                                            <select id="idMoneda" name="idMoneda"  style="width: 100%;"
-                                                    class="form-control input-sm js-example-responsive">
-                                                    <option value="" selected> </option>
-                                                    <option value="0">Registrado</option>
-                                            </select>
-                                        </div>
+                                        
                                     </div> 
                                     <div class="form-group">
                                       <label class="col-sm-1 control-label">Dirección</label>
@@ -178,6 +166,10 @@
                                                 <span class="fa fa-save"></span>
                                                 Guardar
                                              </button> -->
+                                             <button type="button" class="btn btn-success btn-sm" id="btn_imprimirMovimiento">
+                                                <span class="fa fa-file-pdf-o"></span>
+                                                Imprimir
+                                             </button>
                                             
                                         </div>
                                     </div>
@@ -247,7 +239,7 @@
                                                     <div class="form-group">
                                                            <label class="col-sm-2 col-md-offset-6 control-label">Total</label>
                                                           <div class="col-sm-3 col-md-offset-1">
-                                                              <input data-total="0" id="desTotal" class="form-control input-sm" disabled  value="0" />
+                                                              <input data-total="0" data-impuesto="0" id="desTotal" class="form-control input-sm" disabled  value="0" />
                                                           </div>
                                                     </div>
                                       </div>
@@ -262,18 +254,11 @@
                             <span class="fa fa-save"></span>
                             Guardar
                         </button>
-                        <button type="button" class="btn btn-success btn-sm"  id="btn_movimiento_aprobar" disabled >
+                        <button type="button" class="btn btn-success btn-sm"  id="btn_movimiento_Por_aprobar" disabled >
                             <span class="fa fa-check"></span>
-                            Aprobar
+                            Por Aprobar
                         </button>
-                        <button type="button" class="btn btn-warning btn-sm"  id="btn_movimiento_cancelar" disabled >
-                            <span class="fa fa-close"></span>
-                            Cancelar
-                        </button>
-                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_movimiento_cerrar" disabled >
-                            <span class="fa fa-check"></span>
-                            Cerrar Compra
-                        </button>
+                      
                         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
                             <span class="fa fa-times"></span> Cerrar 
                         </button>

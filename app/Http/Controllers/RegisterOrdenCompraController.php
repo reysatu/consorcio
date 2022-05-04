@@ -20,6 +20,7 @@ use App\Http\Recopro\Localizacion\LocalizacionInterface;
 use App\Http\Requests\RegisterOrdenCompraRequest;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
+use App\Http\Recopro\RegisterOrdenCompraArticulo\RegisterOrdenCompraArticuloInterface;
 use App\Http\Recopro\ViewScomprArticulo\ViewScomprArticuloInterface;
 use Carbon\Carbon;
 use DB;
@@ -38,7 +39,7 @@ class RegisterOrdenCompraController extends Controller
     {
         $s = $request->input('search', '');
         $params = ['id','cCodConsecutivo','nConsecutivo','dFecRegistro','prioridad','dFecRequerida','idProveedor','idMoneda','idcondicion_pago','subtotal','nDescuento','nPorcDescuento','nIdDscto','valorCompra','nImpuesto','total','direccionEntrega','iEstado','user_created','created_at','user_updated','updated_at'];
-        return parseList($repo->search($s), $request, 'idMovimiento', $params);
+        return parseList($repo->search($s), $request, 'id', $params);
     }
     public function allScomprArticulo(Request $request, ViewScomprArticuloInterface $repo)
     { 
@@ -239,66 +240,131 @@ class RegisterOrdenCompraController extends Controller
             ]);
         }
     }
-    public function createUpdate($id, RegisterOrdenCompraInterface $repo, Request $request, OperationInterface $opRepo)
+    public function createUpdate($id, RegisterOrdenCompraInterface $repo, Request $request, OperationInterface $opRepo,RegisterOrdenCompraArticuloInterface $repoArti)
     {
-       
+        
         try {
+
             $data = $request->all();
-            $table="ERP_RegisterOrdenCompra";
-            $idt='idMovimiento';
+            $table="ERP_OrdenCompra";
+            $idt='id';
             $idcon='nConsecutivo';
-            $data['idUsuario']=auth()->id();
-            $data['idArea']=$data["area"];
-            $nco='';
             if ($id != 0) {
                 $repo->update($id, $data);
                 $movement = $repo->find($id);
-                $idMovimiento = $movement->idMovimiento;
-                $estado = $movement->estado;
+                $id = $movement->id;
+                $estado = $movement->iEstado;
                 $nco = $movement->nConsecutivo;
 
             }else {
-                $data['idMovimiento'] = $repo->get_consecutivo($table,$idt);
+                $data['id'] = $repo->get_consecutivo($table,$idt);
                 $data['nConsecutivo'] = $repo->get_consecutivo($table,$idcon);
                 $movement = $repo->create($data);
                 $id = $movement->id;
-                $idMovimiento = $movement->idMovimiento;
-                $estado = $movement->estado;
+                $estado = $movement->iEstado;
                 $nco = $movement->nConsecutivo;
             }
-            // if ($data['idKit'] != 0) {
-            //     $kitrepo->destroy($data['idKit']);
-            // };
-            // if (isset($data['cantidad'])) {
-            //         $datoLo=[];
-            //         $idt='idArticuloKit';
-            //         $table="ERP_Articulo_kit";
-            //         $datoLo['idArticuloKit'] = $kitrepo->get_consecutivo($table,$idt);
-            //         $datoLo['idArticulo'] = $id ;
-            //         $datoLo['cantidad'] =$data['cantidad'];
-            //         $valor=$kitrepo->create($datoLo);
-            //         $idKit = $valor->idArticuloKit;
-            //         $idArticuloKitT=$data['idArticuloKit'];
-            //         $idArticuloKit=explode(',', $idArticuloKitT);
 
-            //         $cantidadKitT=$data['cantidadKit'];
-            //         $cantidadKit=explode(',', $cantidadKitT);
+            
 
-            //         for ($i=0; $i < count($idArticuloKit) ; $i++) { 
-            //             $datKit=[];
-            //             $datKit['idArticuloKit'] =$idKit;
-            //             $datKit['idArticulo'] = $idArticuloKit[$i] ;
-            //             $datKit['cantidad'] =$cantidadKit[$i];
-            //             $kitrepo->create($datKit);
 
-            //     }
+            $idArticulo = $data['idArticulo'];
+            $idArticulo = explode(',', $idArticulo);
 
-            // }
+            $cantidad = $data['cantidad'];
+            $cantidad = explode(',', $cantidad);
+
+            $cantidadPendiente = $data['cantidadPendiente'];
+            $cantidadPendiente = explode(',', $cantidadPendiente);
+
+
+            $cantidadRecibida = $data['cantidadRecibida'];
+            $cantidadRecibida = explode(',', $cantidadRecibida);
+
+            $cantidadDevuelta = $data['cantidadDevuelta'];
+            $cantidadDevuelta = explode(',', $cantidadDevuelta);
+
+            $precioUnitario = $data['precioUnitario'];
+            $precioUnitario = explode(',', $precioUnitario);
+
+            $precioTotal = $data['precioTotal'];
+            $precioTotal = explode(',', $precioTotal);
+
+            $nImpuestoDetalle = $data['nImpuestoDetalle'];
+            $nImpuestoDetalle = explode(',', $nImpuestoDetalle);
+
+            ////
+            $nIdDsctoDetalle = $data['nIdDsctoDetalle'];
+            $nIdDsctoDetalle = explode(',', $nIdDsctoDetalle);
+
+            $nDescuentoDetalle = $data['nDescuentoDetalle'];
+            $nDescuentoDetalle = explode(',', $nDescuentoDetalle);
+
+            $nPorcDescuentoDetalle = $data['nPorcDescuentoDetalle'];
+            $nPorcDescuentoDetalle = explode(',', $nPorcDescuentoDetalle);
+
+
+            $valorCompraDetalle = $data['valorCompraDetalle'];
+            $valorCompraDetalle = explode(',', $valorCompraDetalle);
+
+
+            $totalDetalle = $data['totalDetalle'];
+            $totalDetalle = explode(',', $totalDetalle);
+
+
+            $dFecRequeridaDetalle = $data['dFecRequeridaDetalle'];
+            $dFecRequeridaDetalle = explode(',', $dFecRequeridaDetalle);
+
+
+            $iEstadoDetalle = $data['iEstadoDetalle'];
+            $iEstadoDetalle = explode(',', $iEstadoDetalle);
+
+
+            $detalleModo = $data['detalleModo'];
+            $detalleModo = explode(',', $detalleModo);
+
+
+            for ($i = 0; $i < count($idArticulo); $i++) {
+                    $datoLo = [];
+                    $datoLo['idArticulo'] = $idArticulo[$i];
+                    $datoLo['idOrden'] = $id;
+                    $datoLo['cantidad'] = $cantidad[$i];
+                    $datoLo['cantidadPendiente'] = $cantidadPendiente[$i];
+                    $datoLo['cantidadRecibida'] = $cantidadRecibida[$i];
+                    $datoLo['cantidadDevuelta'] = $cantidadDevuelta[$i];
+                    $datoLo['precioUnitario'] = $precioUnitario[$i];
+                    $datoLo['precioTotal'] = $precioTotal[$i];
+                    $datoLo['nImpuesto'] = $nImpuestoDetalle[$i];
+                    $datoLo['nIdDscto'] = $nIdDsctoDetalle[$i];
+                    $datoLo['nDescuento'] = $nDescuentoDetalle[$i];
+                    $datoLo['nPorcDescuento'] = $nPorcDescuentoDetalle[$i];
+                    $datoLo['valorCompra'] = $valorCompraDetalle[$i];
+                    $datoLo['total'] = $totalDetalle[$i];
+                    $datoLo['dFecRequerida'] = $dFecRequeridaDetalle[$i];
+                    $esta=$iEstadoDetalle[$i];
+                    if($iEstadoDetalle[$i]=='N'){
+                        $esta=0;
+                    }
+                    $datoLo['iEstado'] = $esta;
+
+                if ($detalleModo[$i] == 0) {
+                    $idt = 'id';
+                    $table ="ERP_OrdenCompraArticulo";
+                    $datoLo['id'] = $repoArti->get_consecutivo($table,$idt);
+                    $repoArti->create($datoLo);
+                }else {
+                    $repoArti->update($detalleModo[$i], $datoLo);
+                };
+
+            }
+
+
+            
           
             DB::commit();
             return response()->json([
                 'status' => true,
-                'code' => $idMovimiento,
+                'code' => $id,
                 'estado'=>$estado,
                 'nco'=>$nco,
             ]);
@@ -494,28 +560,28 @@ class RegisterOrdenCompraController extends Controller
             $operaciones = $repo->getOperationFind();
             $data = $repo->find($id);
             $data_movimiento_Articulo = $repo->get_movement_articulo($id);
-            $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
-            $data_movimiento_Articulo_entrega_venta = $repo->get_movimiento_Articulo_entrega_venta($id);
-            $data_movimiento_lote=$repo->get_movemen_lote($id);
-            $data_movimiento_serie=$repo->get_movemen_Serie($id);
-            $data_movimiento_lote_entrega=$repo->get_movemen_lote_entrega($id);
-            $data_movimiento_serie_entrega=$repo->get_movemen_Serie_entrega($id);
-            $data_ventaMovimiento=$repo->get_movimientoVenta($id);
+            // $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
+            // $data_movimiento_Articulo_entrega_venta = $repo->get_movimiento_Articulo_entrega_venta($id);
+            // $data_movimiento_lote=$repo->get_movemen_lote($id);
+            // $data_movimiento_serie=$repo->get_movemen_Serie($id);
+            // $data_movimiento_lote_entrega=$repo->get_movemen_lote_entrega($id);
+            // $data_movimiento_serie_entrega=$repo->get_movemen_Serie_entrega($id);
+            // $data_ventaMovimiento=$repo->get_movimientoVenta($id);
             $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
              $data['fecha_requerida']=date("Y-m-d", strtotime($data['fecha_requerida']));
 
             return response()->json([
                    'operaciones'=>$operaciones,
-                'status' => true,
-                'data' => $data,
-                 'movimiento_Ar'=>$data_movimiento_Articulo,
-                 'data_movimiento_lote'=>$data_movimiento_lote,
-                 'data_movimiento_serie'=>$data_movimiento_serie,
-                 'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
-                 'data_movimiento_Articulo_entrega_venta'=>$data_movimiento_Articulo_entrega_venta,
-                 'data_ventaMovimiento'=>$data_ventaMovimiento,
-                 'data_movimiento_lote_entrega'=>$data_movimiento_lote_entrega,
-                 'data_movimiento_serie_entrega'=>$data_movimiento_serie_entrega,
+                    'status' => true,
+                    'data' => $data,
+                    'movimiento_Ar'=>$data_movimiento_Articulo,
+                 // 'data_movimiento_lote'=>$data_movimiento_lote,
+                 // 'data_movimiento_serie'=>$data_movimiento_serie,
+                 // 'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
+                 // 'data_movimiento_Articulo_entrega_venta'=>$data_movimiento_Articulo_entrega_venta,
+                 // 'data_ventaMovimiento'=>$data_ventaMovimiento,
+                 // 'data_movimiento_lote_entrega'=>$data_movimiento_lote_entrega,
+                 // 'data_movimiento_serie_entrega'=>$data_movimiento_serie_entrega,
             ]);
 
         } catch (\Exception $e) {

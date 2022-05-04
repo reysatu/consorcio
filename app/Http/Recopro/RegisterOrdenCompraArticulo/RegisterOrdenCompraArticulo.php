@@ -11,17 +11,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class RegisterOrdenCompraArticulo extends Model
 {
   
-    protected $table = 'ERP_Movimiento_Articulo';
+    protected $table = 'ERP_OrdenCompraArticulo';
 
     public $timestamps = true;
 
-    protected $primaryKey = 'idMovimiento';
+    protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento', 'idArticulo','idAlmacen','idLocalizacion','idLote','cantidad','costo','costo_total','user_created','user_updated','consecutivo','precio','precio_total'];
+    protected $fillable = ['id', 'idArticulo','idOrden','cantidad','cantidadPendiente','cantidadRecibida','cantidadDevuelta','precioUnitario','precioTotal','nImpuesto','nIdDscto','nDescuento','nPorcDescuento','valorCompra','total','dFecRequerida','iEstado','user_created','user_updated'];
     
      public function user_c()
     {
