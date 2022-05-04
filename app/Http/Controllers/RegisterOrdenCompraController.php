@@ -385,7 +385,7 @@ class RegisterOrdenCompraController extends Controller
 
     public function excel(RegisterOrdenCompraInterface $repo)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE SOLICITUDES DE COMPRA', 'Lista de solicitudes');
+        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE ORDENES DE COMPRA', 'Lista de ordenes de compra');
     }
     
     public function getLocalizacionSelec($id, LocalizacionInterface $repo)
@@ -560,6 +560,7 @@ class RegisterOrdenCompraController extends Controller
             $operaciones = $repo->getOperationFind();
             $data = $repo->find($id);
             $data_movimiento_Articulo = $repo->get_movement_articulo($id);
+            $dataDescuento=$repo->get_data_descuento($data['nIdDscto']);
             // $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
             // $data_movimiento_Articulo_entrega_venta = $repo->get_movimiento_Articulo_entrega_venta($id);
             // $data_movimiento_lote=$repo->get_movemen_lote($id);
@@ -567,14 +568,15 @@ class RegisterOrdenCompraController extends Controller
             // $data_movimiento_lote_entrega=$repo->get_movemen_lote_entrega($id);
             // $data_movimiento_serie_entrega=$repo->get_movemen_Serie_entrega($id);
             // $data_ventaMovimiento=$repo->get_movimientoVenta($id);
-            $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
-             $data['fecha_requerida']=date("Y-m-d", strtotime($data['fecha_requerida']));
+            $data['fecha_registro']=date("Y-m-d", strtotime($data['dFecRegistro']));
+             $data['fecha_requerida']=date("Y-m-d", strtotime($data['dFecRequerida']));
 
             return response()->json([
                    'operaciones'=>$operaciones,
                     'status' => true,
                     'data' => $data,
                     'movimiento_Ar'=>$data_movimiento_Articulo,
+                    'dataDescuento'=>$dataDescuento,
                  // 'data_movimiento_lote'=>$data_movimiento_lote,
                  // 'data_movimiento_serie'=>$data_movimiento_serie,
                  // 'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
@@ -591,6 +593,23 @@ class RegisterOrdenCompraController extends Controller
             ]);
         }
     }
+    public function deleteDetalle($id, RegisterOrdenCompraInterface $repo, Request $request)
+    {   try {
+            
+            $repo->destroy_detalle_Orden($id);
+            return response()->json([
+                'status' => true,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function getDataArticulo($id, RegisterOrdenCompraInterface $repo)
     {
         try {
@@ -677,22 +696,5 @@ class RegisterOrdenCompraController extends Controller
             'idProveedor'=>$idProveedor,
         ]);
     }
-     public function getKit($id, RegisterOrdenCompraInterface $repo,ProductInterface $repoPro)
-    {
-       try {
-           
-            $info=$repoPro->getidArticuloKit($id);
-            $idkit=$info[0]->idArticuloKit;
-            $data = $repoPro->getDetalleKitCom($idkit,$id);        
-            return response()->json([
-                'status' => true,
-                'data' => $data
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
+     
 }

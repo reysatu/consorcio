@@ -75,6 +75,7 @@ CREATE TABLE [dbo].[ERP_OrdenCompra](
 	[nPorcDescuento] [decimal](18, 2) NULL,
 	[nIdDscto] [int] NULL,
 	[valorCompra] [decimal](18, 5) NULL,
+	[impuesto] varchar(1) NULL,
 	[nImpuesto] [decimal](18, 5) NULL,
 	[total] [decimal](18, 5) NULL,
 	[direccionEntrega] [varchar](255) NULL,
@@ -85,7 +86,6 @@ CREATE TABLE [dbo].[ERP_OrdenCompra](
 	[updated_at] [datetime] NULL,
 	 PRIMARY KEY (id,cCodConsecutivo,nConsecutivo)
 	 )
-	;
 	
 	CREATE TABLE [dbo].[ERP_OrdenCompraArticulo](
 	[id] [int] NOT NULL,
