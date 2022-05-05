@@ -17,6 +17,7 @@
         var cambioChe;
         var cambioDes;
         var descuentosTotales;
+        var dataServicioGeneral;
         var redondeo;
         var cEstadoCivil=$("#cEstadoCivil");
         var acodigos=[];
@@ -1352,6 +1353,7 @@
       
        
         function addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento,impuesTotal,nPorcDescuento,nDescuento){
+            var cat_servicio=$("#servicios_select").find(':selected').attr('data-categoria');
             var arrayRe=vto.split("*");
             var porcentajeid=0;
             var montoid=0;
@@ -1425,7 +1427,7 @@
              var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
              var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS2="' + code + '"  value="'+tipoText+'" readonly/>');
-             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"  onkeypress="return validDecimals(event, this, 2)"/>');
+             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'" data-categoriaServicio="'+cat_servicio+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"  onkeypress="return validDecimals(event, this, 2)"/>');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
              tdImpu.append(inpDes);
              tdOper.append(chek);
@@ -1481,8 +1483,10 @@
                console.log("perdio");
                  var preciofin = $(this).val();
                   var precioOr=$(this).attr('data-precioOrigen');
+                   var catServicio=$(this).attr('data-categoriaservicio');
                  var newpp=Number(precioOr)+Number(redondeo);
                         var newpn=Number(precioOr)-Number(redondeo);
+                        if(catServicio!=dataServicioGeneral){
                         if(preciofin>newpp || preciofin<newpn){
                             AlertFactory.textType({
                                     title: '',
@@ -1491,6 +1495,7 @@
                                 });
                             $(this).val(precioOr);
 
+                        }
                         }
                     calcular_total_MO();
                     sumar_key();
@@ -1500,14 +1505,15 @@
             
              $('.precio_m').keypress(function (e) {
                
-                 var precioOr=$(this).attr('data-precioOrigen');
-
+                var precioOr=$(this).attr('data-precioOrigen');
+                var catServicio=$(this).attr('data-categoriaservicio');
              
                 var code = (e.keyCode ? e.keyCode : e.which);
                     if(code==13){
                         var preciofin = $(this).val();
                         var newpp=Number(precioOr)+Number(redondeo);
                         var newpn=Number(precioOr)-Number(redondeo);
+                        if(catServicio!=dataServicioGeneral){
                         if(preciofin>newpp || preciofin<newpn){
                             AlertFactory.textType({
                                     title: '',
@@ -1517,6 +1523,7 @@
                             $(this).val(precioOr);
 
                         }
+                    }
                     calcular_total_MO();
                     sumar_key();
                       
@@ -1777,6 +1784,7 @@
             RESTService.all('orden_servicios/data_formOrden', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                      igv=response.igv[0].value;
+                        dataServicioGeneral=response.data_servicioGeneral[0].value;
                     //   articulos_repuestos.append('<option value="">Seleccionar</option>');
                     //  _.each(response.articulos_repuestos, function(item) {
                     //     articulos_repuestos.append('<option value="'+item.id+'*'+item.nPrecio+'">'+item.code_article+' '+item.description+'</option>');
@@ -3066,7 +3074,7 @@ function getDatosCliente(){
                       servicios_select.html(''); 
                       servicios_select.append('<option value="" selected>Seleccionar </option>');
                         _.each(response.servicios_todos, function(item) {
-                            servicios_select.append('<option value="'+item.id+'">'+item.code_article+' '+item.description+'</option>');
+                            servicios_select.append('<option  data-categoria="'+item.idCategoria+'" value="'+item.id+'">'+item.code_article+' '+item.description+'</option>');
                         }); 
                         idMoneda.append('<option value="">Seleccionar</option>');
                        _.each(response.moneda, function(item) {

@@ -185,6 +185,11 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $mostrar=DB::select("select * from ERP_TipoOperacion");
         return $mostrar;
     }
+    public function destroy_detalle_movimiento($idMovimiento,$iddeta)
+    {   
+        DB::table('ERP_Movimiento_Articulo')->where('idMovimiento',$idMovimiento)->where('consecutivo',$iddeta)->delete();
+        DB::table('ERP_Movimiento_Detalle')->where('idMovimiento',$idMovimiento)->where('consecutivo',$iddeta)->delete();
+    }
      public function get_movement_articulo_entrega($id){
         $mostrar=DB::select(" select mov.idTipoOperacion AS idTipoOperacion ,mov.naturaleza as naturaleza,   pr.type_id as type_id,pr.serie as serie,pr.lote as lote,pr.kit as kit,pd.nCantidadPendienteDevolver as nCantidadPendienteDevolver, pd.nCantidadPendienteEntregar as nCantidadPendienteEntregar ,mov.cCodConsecutivo as cCodConsecutivo, mov.nConsecutivo as nConsecutivo ,lot.Lote  as cod_lote,Mo.costo as costo2,Mo.idArticulo as idArticulo,Mo.idAlmacen as idAlmacen,Mo.idLocalizacion as idLocalizacion,Mo.idLote as idLote,Mo.cantidad as cantidad, Mo.costo as costo, Mo.costo_total as costo_total,Mo.consecutivo  as consecutivo,Mo.precio  as precio,Mo.precio_total  as precio_total,pr.description as description from ERP_Movimiento_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id LEFT JOIN ERP_Lote as lot on lot.idLote=Mo.idLote inner join ERP_Movimiento as mov on mov.idMovimiento=Mo.idMovimiento LEFT JOIN  ERP_ProformaDetalle as pd on( pd.cCodConsecutivo=mov.cCodConsecutivo and pd.nConsecutivo=mov.nConsecutivo and mo.idArticulo=pd.idProducto) where Mo.idMovimiento='$id'");
         return $mostrar; 

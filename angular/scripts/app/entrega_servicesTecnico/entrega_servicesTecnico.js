@@ -212,7 +212,8 @@
                                 // add 
                                 cont=cont+1;
                                    console.log("ejeci _7");
-                                addArticuloTable(index.idProducto,
+                                var idDetalle=0;   
+                                addArticuloTable(idDetalle,index.idProducto,
                                     index.description,Math.trunc(index.nCant),
                                     ver,index.idDetalleRepues,tipo,codl,
                                     datl,idAlmacen,
@@ -221,16 +222,14 @@
                                     costo_total,
                                     index.nPrecioUnitario,
                                     precioTotal,Math.trunc(index.nCantidadPendienteEntregar));
-                               //fin
-                               //  addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
-                               // addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.idAlmacen,index.idLocalizacion,index.costo2,index.costo_total,index.precio,index.precio_total);                      
+                              
                             })
                           }
                             
                         }else {
                             AlertFactory.textType({
                                 title: '',
-                                message: 'Hubo un error . Intente nuevamente.',
+                                message: 'Hubo un error . Intente nuevamente.2',
                                 type: 'info'
                             });
                         }
@@ -238,13 +237,7 @@
                 }
         });
          btn_imprimirMovimiento.click(function(e){
-            // var data = {
-            //                     referral_guide_id:1,
-                               
-            // };
-            // // window.open(base_url + '/templates/register_transfers/reporte.html', 'name'); 
-            // localStorage.setItem('Nombre', 'Miguel Antonio')
-            //  $scope.loadTransferPDF('referral_guides/referralGuidePDF', data);
+          
             var id= idMovimiento.val();
             if(id!=''){
                 var str2=idTipoOperacion.val();
@@ -273,9 +266,7 @@
         modalKit.on('hidden.bs.modal', function (e) {
             cleanArtKit();
         });
-        // modalSerie.on('hidden.bs.modal', function (e) {
-        //     cleanArtSerie();
-        // });  
+      
         modalNada.on('hidden.bs.modal', function (e) {
             cleanArtNada();
         });
@@ -310,6 +301,8 @@
 
                 if (!_.isUndefined(response.status) && response.status) {
                     console.log("a1");
+                    aartMLE=[];
+                    aartMSE=[];
                     var verProforma='ED';
                     cargar_proformas(verProforma);
                       console.log("a2");
@@ -464,7 +457,7 @@
                       
                        
                        
-                        addArticuloTable(index.idArticulo,
+                        addArticuloTable(index.consecutivo,index.idArticulo,
                                 index.description,Math.trunc(index.cantidad),
                                 ver,index.consecutivo,tipo,idLoteEnviar,
                                 idCodLoteEnviar,
@@ -671,7 +664,7 @@
                  }else {
                     AlertFactory.textType({
                         title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
+                        message: 'Hubo un error . Intente nuevamente.3',
                         type: 'info'
                     });
                 }
@@ -808,7 +801,7 @@
                  }else {
                     AlertFactory.textType({
                         title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
+                        message: 'Hubo un error . Intente nuevamente.4',
                         type: 'error'
                     });
                 }
@@ -1185,7 +1178,7 @@
                     'idLote':idloteEnvi,
                     'dataLote':datloteEnvi,
 
-                    'idProductoSe':idProductoSe,
+                    'idProductoSe':idProductoSe, 
                     'serieSe':serieSe,
                     'idSerieSe':idSerieSe,
                     'serieNenv':serieNenv,
@@ -1266,7 +1259,9 @@
                     'naturaleza':naturalezaGeneral,
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
-               
+               console.log("bbbbbbbbbbbbbbbbbb");
+               console.log(paramsCabezera);
+               console.log("aaaaaaaaaaaaaaaaaa");
                 RESTService.updated('entrega_servicesTecnicos/saveEntrega', movimiento_id, paramsCabezera, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         titlemodalMovimieto.html('Nueva Entrega '+'['+ response.code+ ']');
@@ -1288,6 +1283,7 @@
                         p_state.val(response.estado).trigger('change');
                         btn_movimiento_detalle.prop('disabled',false);
                         btn_movimiento_detalle.trigger('change');
+                        findRegister_movement(response.code);
                         LoadRecordsButtonRegister_Movement.click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
@@ -1325,7 +1321,7 @@
             }    
         }
 
-        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,presio_total,cantidaPD){
+        function addArticuloTable(idDetalle,idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,presio_total,cantidaPD){
             acodigos.push(codigo);
            
             var costonew=0;
@@ -1418,7 +1414,7 @@
             var td6 = $('<td class="text-center"></td>');
             var btn1 = $('<button class="btn btn-info btn-xs verUpdate" id="btn_ver'+codigo+'" title="añadir" data-cantiShow="'+cantProducto+'" data-descrip="'+desProducto+'" data-idProducto="'+idProducto+'" data-tShow="'+tipo+'" data-idv="' + codigo + '" data-lote="'+datl+'" type="button"><span class="fa fa-eye"></span></button>');
             var td8 = $('<td class="text-center"></td>');
-            var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
+            var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-idDetalle="' + idDetalle + '" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
             td6.append(btn1);
             td8.append(btn3);
             tr.append(td1).append(td2).append(tdy).append(td3).append(tdCantPen).append(td4).append(td5).append(tdpr).append(tdCheck).append(td6).append(td8);
@@ -1517,6 +1513,15 @@
              $('.delMovPro').click(function (e) {
                 var code = $(this).attr('data-id');
                 var tip = $(this).attr('data-tipo');
+                var idDetalle = $(this).attr('data-idDetalle');
+                 if($("#p_state").val()!=0){
+                     AlertFactory.textType({
+                                title: '',
+                                message: 'Solo se puede eliminar artículos de una Entrega en estado registrado',
+                                type: 'info'
+                        });
+                    return false; 
+                 }
                 AlertFactory.confirm({
                     title: '',
                     message: '¿Está seguro que desea quitar este Artículo?',
@@ -1553,6 +1558,27 @@
                          return car.identificador !==code; 
                         })
                         aartMSE=arrTSE;
+                    }
+                    if(idMovimiento.val()!='' && idDetalle!=0){
+                        var id=idMovimiento.val()+'_'+idDetalle;
+
+                        RESTService.get('entrega_servicesTecnicos/deleteDetalleST', id, function(response) {
+                        if (!_.isUndefined(response.status) && response.status) {
+                                   AlertFactory.textType({
+                                    title: '',
+                                    message: 'El Articulo se eliminó correctamente',
+                                    type: 'success'
+                                });
+                            }else {
+                                var msg_ = (_.isUndefined(response.message)) ?
+                                'No se pudo eliminar. Intente nuevamente.' : response.message;
+                                    AlertFactory.textType({
+                                        title: '',
+                                        message: msg_,
+                                        type: 'error'
+                                    });
+                            }
+                        });
                     }
                     $('#tr_idArticulo' + code).remove();
                 });
@@ -1726,7 +1752,8 @@
                                 var precio="";
                                 var precioTotal="";
                                 console.log("ejeci _1");
-                                addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                                var idDetalle=0;  
+                                addArticuloTable(idDetalle,idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                                 modalSerieR.modal("hide");
                                 modalMovimietoArticulo.modal("hide");
                       
@@ -1879,7 +1906,8 @@
                         var precio="";
                         var precioTotal="";
                            console.log("ejeci _2");
-                       addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                        var idDetalle=0;   
+                       addArticuloTable(idDetalle,idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                        modalSerieR.modal("hide");
                        modalMovimietoArticulo.modal("hide");
                         }
@@ -2044,7 +2072,8 @@
                 var precio="";
                 var precioTotal="";
                    console.log("ejeci _3");
-                addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                var idDetalle=0;   
+                addArticuloTable(idDetalle,idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                 modalNada.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2094,7 +2123,8 @@
                     var precio="";
                     var precioTotal="";
                        console.log("ejeci _4");
-                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                    var idDetalle=0;   
+                    addArticuloTable(idDetalle,idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                     modalLote.modal('hide');
                     modalLoteR.modal('hide');
                     modalMovimietoArticulo.modal('hide');
@@ -2147,7 +2177,8 @@
                 var precio="";
                 var precioTotal="";
                    console.log("ejeci _5");
-                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
+                var idDetalle=0;
+                addArticuloTable(idDetalle,idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,idAlmacen,idLocalizacion,costo,costo_total,precio,precioTotal);
                 modalKit.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2282,6 +2313,7 @@
                         idTipoOperacion.trigger('change');
                         btn_movimiento_detalle.prop('disabled',false);
                         btn_movimiento_detalle.trigger('change');
+                        findRegister_movement(response.code);
                         LoadRecordsButtonRegister_Movement.click();
                     } else {
                         AlertFactory.textType({
@@ -2334,6 +2366,8 @@
             cargar_notas()
         }
          $(document).on("change", "#idventa", function () {
+            aartMLE=[];
+            aartMSE=[];
             var idventa = $(this).val();
             var documento =  $('#idventa').find(':selected').data('documento');
             var data =  $('#idventa').find(':selected').data('conse');
@@ -2422,7 +2456,8 @@
                         var cost=parseFloat(index.costo2);
                         var cottota= parseFloat(index.costo_total);
                            console.log("ejeci _6");
-                        addArticuloTable(index.idArticulo,
+                        var idDetalle=0;
+                        addArticuloTable(idDetalle,index.idArticulo,
                                 index.description,Math.trunc(index.cantidad),
                                 ver,index.consecutivo,tipo,idLoteEnviar,
                                 idCodLoteEnviar,index.idAlmacen,
@@ -2444,7 +2479,7 @@
                 } else {
                     AlertFactory.textType({
                         title: '',
-                        message: 'Hubo un error . Intente nuevamente.',
+                        message: 'Hubo un error . Intente nuevamente.1',
                         type: 'info'
                     });
                 }

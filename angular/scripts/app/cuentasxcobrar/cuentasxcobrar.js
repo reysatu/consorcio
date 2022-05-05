@@ -239,12 +239,7 @@
                     title: 'N°',
                        width: '1%',
                 },
-                tipo_solicitud: {
-                       width: '1%',
-                    title: 'Tipo Solicitud',
-                    options: { '1': 'Contado', '2': 'Crédito Directo', '3': 'Crédito Financiero' },
-
-                },
+               
                 tipo_documento: {
                        width: '1%',
                     title: 'Tipo Doc.',

@@ -43,8 +43,14 @@
                   
                     var data=response.data;
                     var detalle=response.detalle;
-                   
+                    var dataProf=response.dataProforma;
+                    console.log("/////////////");
+                    console.log(data);
+                    console.log(detalle);
+                    console.log(dataProf);
+                    console.log("/////////////");
                     titleModalControl.html('Editar Control');
+                     cCodConsecutivoOS.append('<option value="'+dataProf[0].cCodConsecutivo+'*'+dataProf[0].nConsecutivo+'">'+dataProf[0].cCodConsecutivo+' '+dataProf[0].nConsecutivo+' '+dataProf[0].razonsocial_cliente+' '+dataProf[0].cPlacaVeh+'</option>');
                     var con=data[0].cCodConsecutivoOS+'*'+data[0].nConsecutivoOS;
                     cCodConsecutivoOS.val(con).trigger("change")
                     dFechaRegistro.val(data.dFechaRegistro2);
@@ -106,6 +112,7 @@
             cOtros.val("");
             btn_guardarCalida.prop('disabled',false); 
             idcontrol_calidad.val("");
+            getDataForProforma();
             // datos_calidad.html("");
          $('.valcheck').prop('checked', false);
           
@@ -198,10 +205,11 @@
                 var val=cCodConsecutivoOS.val();
                 var totRep=val.split('*');
                 nConsecutivoOS.val(totRep[1]);
-        });
+        }); 
         function getDataForProforma () { 
             RESTService.all('quality_controls/data_formProf', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
+                    cCodConsecutivoOS.html("");
                      cCodConsecutivoOS.append('<option value="">Seleccionar</option>');
                      _.each(response.getTotal_Orden_total_calidad, function(item) {
                         cCodConsecutivoOS.append('<option value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>');

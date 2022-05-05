@@ -313,9 +313,10 @@ class ProformaController extends Controller
         // $articulos_repuestos=$Repo->get_articuloRepuestos();
         $getTotal_Orden_total=$Repo->getTotal_Orden_total();
         $get_proformas_entrega=$Repo->get_proformas_entrega();
-        $get_proformas_devolucion=$Repo->get_proformas_devolucion();
+        $get_proformas_devolucion=$Repo->get_proformas_devolucion(); 
         $getTotal_Orden_total_calidad=$Repo->getTotal_Orden_total_calidad();
-         $igv=$Repo->get_igv();
+        $data_servicioGeneral=$Repo->getDataGeneralServicio();
+        $igv=$Repo->get_igv();
         return response()->json([
             'status' => true,
             'codigo_proforma'=>$codigo_proforma,
@@ -325,6 +326,7 @@ class ProformaController extends Controller
             'proformas_devolucion'=>$get_proformas_devolucion,
             'getTotal_Orden_total_calidad'=>$getTotal_Orden_total_calidad,
             'igv'=>$igv,
+            'data_servicioGeneral'=>$data_servicioGeneral,
         ]);
     }
     public function deleteDetalleServicio($id, ProformaInterface $repo, Request $request)

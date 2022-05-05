@@ -90,7 +90,7 @@ class AsignacioncobradorController extends Controller
 
             $idTipoSolicitud = $request->input('idTipoSolicitud', '');
              $idConvenio = $request->input('idConvenio', '');
-             
+              
              
 
              $datafilcab=$repo->allFiltro($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idTipoSolicitud,$idConvenio);
@@ -108,8 +108,12 @@ class AsignacioncobradorController extends Controller
             $data_compania=$repo->get_compania();
             $data_cabe=$repo->get_cuentas_caber($solitud);
             $data_compania=$repo->get_compania(); 
+            
             $path = public_path('/'.$data_compania[0]->ruta_logo);
-            $type_image = pathinfo($path, PATHINFO_EXTENSION);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
+            $type_image = pathinfo($path, PATHINFO_EXTENSION); 
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);
             return response()->json([

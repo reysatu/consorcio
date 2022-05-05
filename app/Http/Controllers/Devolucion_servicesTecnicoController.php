@@ -28,6 +28,7 @@ class Devolucion_servicesTecnicoController extends Controller
         $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
         return parseList($repo->search_devolucion($s), $request, '', $params);
     }
+    
 
     public function create(CategoryInterface $repo, CategoryRequest $request)
     {

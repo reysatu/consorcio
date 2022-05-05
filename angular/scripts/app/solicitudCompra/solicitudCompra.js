@@ -2338,8 +2338,13 @@
          $scope.addArticulo = function()
         {   
             var bval = true;
-            bval = bval && idTipoOperacion.required();
             bval = bval && fecha_registro.required();
+
+            bval = bval && $("#prioridad").required();
+            bval = bval && $("#fecha_requerida").required();
+
+            bval = bval && $("#area").required();
+
             if(!idMoneda.prop("disabled")){
                 bval = bval && idMoneda.required();
             }

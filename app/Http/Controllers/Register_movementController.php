@@ -39,6 +39,22 @@ class Register_movementController extends Controller
         $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
         return parseList($repo->search($s), $request, 'idMovimiento', $params);
     }
+    public function deleteDetalleST($id, Register_movementInterface $repo, Request $request)
+    {   try {
+            $array=explode("_", $id);
+            $val=$repo->destroy_detalle_movimiento($array[0],$array[1]);
+            return response()->json([
+                'status' => true,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 
     public function create(Register_movementInterface $repo, Register_movementRequest $request)
     {

@@ -20,6 +20,9 @@ Route::get('entrega_servicesTecnicos/get_venta_detalle/{id}', ['as' => 'entrega_
 
 Route::get('entrega_servicesTecnicos/data_formProf', ['as' => 'entrega_servicesTecnicos.data_formProf', 'uses' => 'ProformaController@data_form']);
 
+Route::get('entrega_servicesTecnicos/deleteDetalleST/{id}', ['as' => 'entrega_servicesTecnicos.deleteDetalleST', 'uses' => 'Register_movementController@deleteDetalleST']);
+
+
 Route::get('entrega_servicesTecnicos/getDetalle_entradaProf/{id}', ['as' => 'entrega_servicesTecnicos.getDetalle_entradaProf', 'uses' => 'ProformaController@getDetalle_entrada']);
 
 Route::get('entrega_servicesTecnicos/pdfMovemen', 'Register_movementController@pdf');

@@ -14,17 +14,32 @@ trait RegisterOrdenCompraTrait
 {
     public function generateDataExcel($info)
     {
-        $columns[] = ['IDMOVIMIENTO','OPERACIÓN','USUARIO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
+        $columns[] = ['ID ORDEN','CÓDIGO','CONSECUTIVO','ESTADO','U.CREADO', 'F.CREADO', 'U.MODIFICADO', 'F.MODIFICADO'];
 
         foreach ($info as $i) {
             $estado="REGISTRADO";
-            if($i->estado==1){
-                $estado='PROCESADO';
+            if($i->iEstado==1){
+                $estado='POR APROBAR';
+            };
+            if($i->iEstado==2){
+                $estado='APROBADO';
+            };
+            if($i->iEstado==3){
+                $estado='RECIBIDO';
+            };
+            if($i->iEstado==4){
+                $estado='BACKORDER';
+            };
+            if($i->iEstado==5){
+                $estado='CERRADO';
+            };
+            if($i->iEstado==6){
+                $estado='CANCELADO';
             };
             $columns[] = [
-                ['left', $i->idMovimiento],
-                ['left', $i->Operation->descripcion],
-                ['left', $i->user_d->name],
+                ['left', $i->id],
+                ['left', $i->cCodConsecutivo],
+                ['left', $i->nConsecutivo],
                 ['left', $estado],
                 ['left', $i->user_c->name],
                 ['center', (Carbon::parse($i->created_at)->format('d-m-Y'))],
@@ -35,7 +50,7 @@ trait RegisterOrdenCompraTrait
 
         $data = [
             'data' => $columns,
-            'title' => 'LISTA DE MOVIMIENTOS'
+            'title' => 'LISTA DE ORDENES DE COMPRA'
         ];
 
         return $data;

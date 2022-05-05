@@ -212,10 +212,10 @@
             }, function() {
                 getDataForm();
             });
-        }
+        } 
         getDataForm();
          function getDataFormMoneda () {
-            RESTService.all('register_movements/data_form', '', function(response) {
+            RESTService.all('objetivos/data_formRegis', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     idMoneda.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.moneda, function(item) {
@@ -418,11 +418,11 @@
                 },
                 id_tipoobj: {
                     title: 'Tipo de Objetivo',
-                    options: base_url + '/typeObjets/getTipoObjetivo',
+                    options: base_url + '/objetivos/getTipoObjetivo',
                 },
                 IdMoneda: {
                     title: 'Moneda',
-                    options: base_url + '/type_change/getMonedas',
+                    options: base_url + '/objetivos/getMonedas',
                 },
                 nAno: {
                     title: 'Año',
