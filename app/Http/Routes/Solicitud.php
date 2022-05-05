@@ -62,3 +62,5 @@ Route::get('solicitud/find/{id}', ['as' => 'solicitud.find', 'uses' => 'Customer
 Route::get('solicitud/data_form_customer', ['as' => 'solicitud.data_form_customer', 'uses' => 'CustomerController@data_form']);
 Route::put('solicitud/createCliente/{id}', ['as' => 'solicitud.createCliente', 'uses' => 'CustomerController@createUpdate']);
 
+Route::post('solicitud/validar_parametro_categoria', ['as' => 'solicitud.validar_parametro_categoria', 'uses' => 'SolicitudController@validar_parametro_categoria']);
+
