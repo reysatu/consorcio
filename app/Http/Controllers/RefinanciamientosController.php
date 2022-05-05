@@ -20,6 +20,7 @@ use App\Models\BaseModel;
 use DB;
 use Illuminate\Http\Request;
 use Exception;
+use App\Http\Recopro\Persona\PersonaInterface;
 
 class RefinanciamientosController extends Controller
 {
@@ -355,6 +356,23 @@ class RefinanciamientosController extends Controller
             return response()->json($response);
         }
     }
+
+    public function get_persona_documento($id, PersonaInterface $repo)
+    {
+        try {
+            $data = $repo->get_persona_documento($id);
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    } 
 
     
 }
