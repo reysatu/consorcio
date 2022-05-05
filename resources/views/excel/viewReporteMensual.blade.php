@@ -74,6 +74,7 @@
     </tr>
      <?php $metaToFin=0;?>
       <?php $porfToFin=0;?>
+        <?php $metaB=1;?>
     @foreach($data_tecnico as $d)
       <?php $meta=0;?>
       <?php $conFin=0;?>
@@ -84,7 +85,7 @@
     <tr>
         <th></th>
         <th width="20" style="border: 1px solid #000000" ><h6>{{$d->descripcion}}</h6></th>
-          @for ($i = 1; $i <= 31; $i++)
+           @for ($i = 1; $i <= 31; $i++)
             <?php $contd=0;?>
                 @foreach($data_info as $din)
                     @if( $mes==$din->mes and $din->dia == $i and $d->id == $din->idTecnico)
@@ -93,13 +94,14 @@
                 @endforeach
                <td  width="4" style="border: 1px solid #000000;text-align: center;color:#000000;background-color:#ffff00;vertical-align: middle;"><center>{{$contd}}</center></td>
 
-          @endfor
-         @foreach($data_metas as $met) 
+           @endfor
+           @foreach($data_metas as $met) 
             @if( $mes==$met->Mes and $met->id_Persona == $d->id)
                 <?php $meta=$met->nCant;?>
+                <?php $metaB=$met->nCant;?>
             @endif  
-         @endforeach
-         <?php $porFin=$conFin*100/$meta;?>
+           @endforeach
+         <?php if($meta==0){$metaB=1;}; $porFin=$conFin*100/$metaB;?>
           <?php $metaToFin=$metaToFin+$meta;?>
          <?php $porfToFin=$porfToFin+$porFin;?>
          <td width="15" style="border: 1px solid #000000;background-color:#96be25;text-align: center;vertical-align: middle"><center>{{$conFin}}</center></td>
@@ -180,12 +182,17 @@
                <td  width="4" style="border: 1px solid #000000;text-align: center;color:#000000;background-color:#ffff99;vertical-align: middle;"><center>{{$contd}}</center></td>
 
           @endfor
+         <?php $metaB=1;?>
+         <?php $meta=0;?>
+       
+
          @foreach($data_metas as $met) 
             @if( $mes==$met->Mes and $met->id_Persona == $d->id)
                 <?php $meta=$met->nCant;?>
+                <?php $metaB=$met->nCant;?>
             @endif  
          @endforeach
-         <?php $porFin=$conFin2*100/$meta;?>
+         <?php if($meta==0){$metaB=1;}; $porFin=$conFin2*100/$metaB;?>
           <?php $metaToFin=$metaToFin+$meta;?>
          <?php $porfToFin=$porfToFin+$porFin;?>
          <td width="15" style="border: 1px solid #000000;background-color:#ffff99;vertical-align: middle">{{$conFin2}}</td>
@@ -198,7 +205,7 @@
      <tr>
         <th></th>
      </tr>
-     <tr>
+    <tr>
         <th></th>
         <th width="15" rowspan="{{count($mantenimientos)+1}}" style="border: 1px solid #000000;background-color:#ffff99;vertical-align: middle"><center><h6 >TOTALIZADO</h6></center></th>
          @for ($i = 1; $i <= 31; $i++)

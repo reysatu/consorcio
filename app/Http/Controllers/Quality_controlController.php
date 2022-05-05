@@ -145,14 +145,15 @@ class Quality_controlController extends Controller
      public function find($id, Quality_controlInterface $repo)
     {
         try {
-
             $data = $repo->find($id);
             $detalle= $repo->find_Detalle($id);
+            $dataProforma= $repo->findProforma($data[0]->cCodConsecutivoOS,$data[0]->nConsecutivoOS);
             $data['dFechaRegistro2']=date("Y-m-d", strtotime($data[0]->dFechaRegistro));
             return response()->json([
                 'status' => true,
                 'data' => $data,
                  'detalle' => $detalle,
+                 'dataProforma'=>$dataProforma
             ]);
 
         } catch (\Exception $e) {

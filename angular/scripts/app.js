@@ -347,6 +347,8 @@
                 url: base_url + '/' + url,
                 data: params,
                 success: function (response) {
+                    console.log(response);
+                    console.log("algo excel");
                     if(response!='N'){
 
                                       
