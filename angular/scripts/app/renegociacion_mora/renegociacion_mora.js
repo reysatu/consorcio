@@ -30,7 +30,7 @@
         var table_container_solicitud_creditos = $("#table_container_solicitud_creditos");
         // alert(base_url + '/solicitud/list_creditos');
         table_container_solicitud_creditos.jtable({
-            title: "Lista de Solicitudes de Crédito Pendientes",
+            title: "Lista de Solicitudes",
             paging: true,
             sorting: true,
             actions: {
