@@ -1421,8 +1421,8 @@
                         var cOperGrat = "N"
                         var posee_serie = $("#posee-serie").val();
                         var um_id = $("#um_id").val();
-                        // alert("antes " + posee_serie);
-                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie, um_id, "", "");
+                        // alert(responsa.data[0].type_id);
+                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie, um_id, "", "", response.data[0].type_id, response.data[0].idCategoria);
                         modalNada.modal('hide');
                         modalMovimietoArticulo.modal('hide');
                     } else {
@@ -1977,7 +1977,7 @@
 
 
 
-        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id, series_id_sd, articulos_id_sd) {
+        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id, series_id_sd, articulos_id_sd, type_id, idCategoria) {
 
 
             if ($("#articulo_mov_det").html() != "") {
@@ -2020,7 +2020,7 @@
             //  if(naturalezaGeneral=="C"){
             //     impor=0;
             //  }
-            var tr = $('<tr id="tr_idArticulo' + codigo + '"></tr>');
+            var tr = $('<tr id="tr_idArticulo' + codigo + '" type_id="'+type_id+'" idCategoria="'+idCategoria+'"></tr>');
             var td1 = $('<td>' + desProducto + '</td>');
 
             var td3;
@@ -2396,24 +2396,47 @@
 
 
         $(document).on("blur", "input[name='precio_unitario[]']", function () {
-            // console.log("perdio");
+            // console.log();
+            var type_id = $(this).parent("td").parent("tr").attr("type_id");
+            var idCategoria = $(this).parent("td").parent("tr").attr("idCategoria");
+            // alert(type_id +" "+idCategoria);
             var preciofin = $(this).val();
             var precioOr = $(this).attr('data-precioorigen');
             var codigo = $(this).attr("codigo");
             // alert(precioOr);
             var newpp = Number(precioOr) + Number(redondeo);
             var newpn = Number(precioOr) - Number(redondeo);
-            if (preciofin > newpp || preciofin < newpn) {
-                AlertFactory.textType({
-                    title: '',
-                    message: 'El precio del producto solo se puede ajustar +- ' + redondeo,
-                    type: 'info'
-                });
 
-                $(this).val(precioOr);
+            $.post("solicitud/validar_parametro_categoria", {},
+                function (data, textStatus, jqXHR) {
+                    // console.log(data);
+                    if(data.length > 0) {
+                        if(type_id != 2 && idCategoria != data[0].value) {
+                            if (preciofin > newpp || preciofin < newpn) {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'El precio del producto solo se puede ajustar +- ' + redondeo,
+                                    type: 'info'
+                                });
+                
+                                $(this).val(precioOr);
+                
+                            }
+                        }
+                        
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'No existe el parametro <<Código de categoría que permite registrar libremente el precio>>',
+                            type: 'info'
+                        });
+                    }
+                    
+                },
+                "json"
+            );
 
-
-            }
+            
             $("#canMs_" + codigo).trigger("keyup");
             // calcular_total_MO();
             // sumar_key();
@@ -3029,8 +3052,9 @@
                 if ($("#tipo_solicitud").val() == "1") {
                     var cont = 0;
                     $.each($("select[name='idalmacen[]']"), function (indexInArray, idalmacen) {
-                        // console.log(idalmacen);
-                        if (idalmacen.value == "") {
+                        var type_id = $(this).parent("td").parent("tr").attr("type_id");
+                      
+                        if (idalmacen.value == "" && type_id != 2) { // no valida para type_id que son servicios
                             idalmacen.classList.add("border-red");
                             idalmacen.focus();
                             cont++;
@@ -3040,7 +3064,8 @@
 
                     $.each($("select[name='idlocalizacion[]']"), function (indexInArray, idlocalizacion) {
                         // console.log(idlocalizacion);
-                        if (idlocalizacion.value == "") {
+                        var type_id = $(this).parent("td").parent("tr").attr("type_id");
+                        if (idlocalizacion.value == "" && type_id != 2) { // no valida para type_id que son servicios
                             idlocalizacion.classList.add("border-red");
                             idlocalizacion.focus();
                             cont++;
@@ -3096,7 +3121,6 @@
                         }
 
                     }
-
                     // return false;
                 }
                 // alert(cont);
@@ -3381,7 +3405,7 @@
 
                             var codigo = Math.random().toString(36).substr(2, 18);
                             // console.log("um_id => "+data.solicitud_articulo[i].um_id);
-                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie, data.solicitud_articulo[i].um_id, arr_id_series.join(","), arr_id_articulos.join(","));
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie, data.solicitud_articulo[i].um_id, arr_id_series.join(","), arr_id_articulos.join(","), data.solicitud_articulo[i].type_id, data.solicitud_articulo[i].idCategoria);
 
                         }
                     }
