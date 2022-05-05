@@ -21,3 +21,9 @@ Route::put('objetivos/saveObjetivos/{id}', ['as' => 'objetivos.saveObjetivos', '
 Route::get('objetivos/find/{id}', ['as' => 'objetivos.find', 'uses' => 'ObjetivoController@find']);
 
 Route::get('objetivos/aprobarObjetivo/{id}', ['as' => 'objetivos.aprobarObjetivo', 'uses' => 'ObjetivoController@aprobarObjetivo']);
+
+Route::get('objetivos/data_formRegis', ['as' => 'objetivos.data_formRegis', 'uses' => 'Register_movementController@data_form']);
+
+Route::post('objetivos/getTipoObjetivo', 'TypeObjetController@getAll');
+
+Route::post('objetivos/getMonedas', 'CurrencyController@getAll');
