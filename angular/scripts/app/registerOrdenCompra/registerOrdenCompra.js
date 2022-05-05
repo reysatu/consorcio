@@ -874,7 +874,7 @@
                     if(idMovimiento.val()!='' && iddet!=0){
                         console.log("entro a eliminar");
                         var id=iddet;
-                        RESTService.get('registerOrdenCompras/deleteDetalle', id, function(response) {
+                        RESTService.get('registerOrdenCompras/deleteDetalleST', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
                                    AlertFactory.textType({
                                     title: '',
@@ -1890,6 +1890,12 @@
             sorting: true,
             actions: {  
                 listAction: base_url + '/registerOrdenCompras/list',
+                deleteAction:   function (data) {
+                    $('#AuthorTableContainer').jtable('deleteRecord', {
+                        key: data.keyValue,
+                        clientOnly:true
+                    });
+                }
             },
             toolbar: {
                 items: [{
@@ -1942,16 +1948,6 @@
                             +'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
-                },Eliminar: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center',
-                    display: function (data) {
-                        return '<a data-target="#" data-estado="'+data.record.estado+'" data-ide="'+data.record.id+'"   title="Eliminar" class="jtable-command-button eliminar-movimiento"><i class="fa fa-trash fa-1-5x fa-red"><span>Eliminar</span></i></a>';
-                    }
-                    
                 }
 
             },

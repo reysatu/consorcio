@@ -32,6 +32,8 @@ Route::get('devolucion_servicesTecnicos/getLocalizacionSelecDevol/{id}', ['as' =
 
 Route::get('devolucion_servicesTecnicos/getLocaStockDevol/{id}', ['as' => 'devolucion_servicesTecnicos.getLocaStockDevol', 'uses' => 'Register_movementController@getLocaStock']);
 
+Route::get('devolucion_servicesTecnicos/deleteDetalleST/{id}', ['as' => 'devolucion_servicesTecnicos.deleteDetalleST', 'uses' => 'Register_movementController@deleteDetalleST']);
+
 Route::get('devolucion_servicesTecnicos/valida_series_serveDevo/{id}', ['as' => 'devolucion_servicesTecnicos.valida_series_serveDevo', 'uses' => 'Register_movementController@valida_series_serve']);
 
 Route::put('devolucion_servicesTecnicos/createserie_variosDevolu/{id}', ['as' => 'devolucion_servicesTecnicos.createserie_variosDevolu', 'uses' => 'SerieController@createUpdateVarios']);
@@ -61,4 +63,6 @@ Route::post('devolucion_servicesTecnicos/getArticulosMinKitDevol', ['as' => 'dev
 Route::post('devolucion_servicesTecnicos/getProductoSerie', ['as' => 'devolucion_servicesTecnicos.getProductoSerie', 'uses' => 'SerieController@traerSeries']);
 
 Route::post('devolucion_servicesTecnicos/getProductoSerieStock', ['as' => 'devolucion_servicesTecnicos.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
+
+Route::put('devolucion_servicesTecnicos/saveEntrega/{id}', ['as' => 'devolucion_servicesTecnicos.saveEntrega', 'uses' => 'Entrega_servicesTecnicoController@createUpdate']);
 

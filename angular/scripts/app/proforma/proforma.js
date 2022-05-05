@@ -23,6 +23,7 @@
         var desTotal=$("#desTotal");
         var servicios;
         var igv;
+        var dataServicioGeneral;
         var montoTotal=$("#montoTotal");
         var porcentajeTotal=$("#porcentajeTotal");
         var btn_aprobarProforma=$(".btn_aprobarProforma");
@@ -1495,6 +1496,7 @@
             });
         }
         function addServicios(vto,tipoTo,tipoText,modo_ser,iddet,cant,opera,idDescuento,impuesTotal,nPorcDescuento,nDescuento){
+            var cat_servicio=$("#servicios_select").find(':selected').attr('data-categoria');
             var arrayRe=vto.split("*");
             var porcentajeid=0;
             var montoid=0;
@@ -1571,7 +1573,7 @@
              var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
              var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="'+tipoTo+'" data-idS2="' + code + '"  value="'+tipoText+'" readonly/>');
-             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"   data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"   onkeypress="return validDecimals(event, this, 2)" />');
+             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="'+tipoTo+'" id="tr_prec_'+code+'"  data-categoriaServicio="'+cat_servicio+'" data-precioOrigen="' +preci_t+ '" value="' +preci_t+ '"   onkeypress="return validDecimals(event, this, 2)" />');
              var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="'+iddet+'" data_idTipoDel="'+tipoTo+'" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
              tdImpu.append(inpDes);
              tdOper.append(chek);
@@ -1608,17 +1610,22 @@
              sumar_key(); 
              $('.precio_m').blur(function (e) {
                 var preciOr=$(this).attr('data-precioOrigen');
+                var catServicio=$(this).attr('data-categoriaservicio');
                        var precioEs = $(this).val();
                        var newpp=Number(preciOr)+Number(redondeo);
                        var newpn=Number(preciOr)-Number(redondeo);
-                       if(precioEs>newpp || precioEs<newpn){
-                           AlertFactory.textType({
-                                   title: '',
-                                   message: 'El precio de este producto solo puede estar entre '+newpn +' y '+newpp,
-                                   type: 'info'
-                               });
-                           $(this).val(preciOr);
+                       console.log(catServicio,dataServicioGeneral," servicios data ");
+                       if(catServicio!=dataServicioGeneral){
+                        console.log("entro a validar");
+                              if(precioEs>newpp || precioEs<newpn){
+                                   AlertFactory.textType({
+                                           title: '',
+                                           message: 'El precio del producto solo se puede ajustar +- '+ redondeo,
+                                           type: 'info'
+                                       });
+                                   $(this).val(preciOr);
 
+                               }
                        }
                    calcular_total_MO();
                    sumar_key();
@@ -1628,22 +1635,24 @@
              $('.precio_m').keypress(function (e) {
                
                 var preciOr=$(this).attr('data-precioOrigen');
-
+                var catServicio=$(this).attr('data-categoriaservicio');
             
                var code = (e.keyCode ? e.keyCode : e.which);
                    if(code==13){
                        var precioEs = $(this).val();
                        var newpp=Number(preciOr)+Number(redondeo);
                        var newpn=Number(preciOr)-Number(redondeo);
+                       if(catServicio!=dataServicioGeneral){
                        if(precioEs>newpp || precioEs<newpn){
                            AlertFactory.textType({
                                    title: '',
-                                   message: 'El precio de este producto solo puede estar entre '+newpn +' y '+newpp,
+                                   message: 'El precio del producto solo se puede ajustar +- '+ redondeo,
                                    type: 'info'
                                });
                            $(this).val(preciOr);
 
                        }
+                   }
                    calcular_total_MO();
                    sumar_key();
                      
@@ -1985,7 +1994,7 @@
           servicios_select.html(''); 
           servicios_select.append('<option value="" selected>Seleccionar </option>');
             _.each(servicios, function(item) {
-                    servicios_select.append('<option value="'+item.id+'">'+item.code_article+' '+item.description+'</option>');
+                    servicios_select.append('<option data-categoria="'+item.idCategoria+'" value="'+item.id+'">'+item.code_article+' '+item.description+'</option>');
             });  
             var id=cCodConsecutivo.val();
              RESTService.get('proformas/get_repuestos_consecutivo', id, function(response) {
@@ -2220,13 +2229,15 @@
                     cCodConsecutivo_orden.html("");
                      cCodConsecutivo_orden.append('<option value="">Seleccionar</option>');
                      proformaTotal=response.codigo_proforma;
+                     dataServicioGeneral=response.data_servicioGeneral[0].value;
                      _.each(response.codigo_proforma, function(item) {
                         if(item.est=='0' || item.est=='1' || item.est=='2'){
                             cCodConsecutivo_orden.append('<option data-info="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'*'+item.IdMoneda+'*'+item.idcCondicionPago+'*'+item.idAsesor+'*'+item.asesor+'*'+item.idCliente+'*'+item.documento+'*'+item.idTipoCliente+'*'+item.razonsocial_cliente+'*'+item.cPlacaVeh+'*'+item.nKilometraje+'*'+item.cMotor+'*'+item.cColor+'" value="'+item.cCodConsecutivo+'*'+item.nConsecutivo+'">'+item.cCodConsecutivo+' '+item.nConsecutivo+' '+item.razonsocial_cliente+' '+item.cPlacaVeh+'</option>'); 
                         } 
                        
                     });
-                     igv=response.igv[0].value;
+                    igv=response.igv[0].value;
+
                      // repuestos_array=response.articulos_repuestos;
                     //   articulos_repuestos.append('<option value="">Seleccionar</option>');
                     //  _.each(response.articulos_repuestos, function(item) {
