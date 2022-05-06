@@ -157,6 +157,15 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+    public function get_caja_tienda() {
+        $idusuario = auth()->id();
+        // $fechacA = date("Y-m-d");
+        $sql = "SELECT * FROM  ERP_Cajas AS c
+        WHERE c.usuario='$idusuario'";
+        $result = DB::select($sql);
+        return $result;
+    }
+
     public function get_cajero() {
         $idusuario = auth()->id();
         $fechacA = date("Y-m-d");

@@ -660,13 +660,13 @@
         
 
         function select_comprobante() {
-            $.post("refinanciamientos/get_caja_diaria", {},
+            $.post("refinanciamientos/get_caja_tienda", {},
                 function (data, textStatus, jqXHR) {
                     // console.log();
 
                     if (data.length > 0) {
 
-                        $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+                        $.post("refinanciamientos/obtener_consecutivo_comprobante", { tipo_documento: '07' },
                             function (data, textStatus, jqXHR) {
                                 $("#serie_comprobante").html("");
                                 $("#serie_comprobante").append('<option value="">Seleccionar</option>');
@@ -684,7 +684,7 @@
                     } else {
                         AlertFactory.textType({
                             title: '',
-                            message: 'Primero debe apertura la caja del día',
+                            message: 'El usuario no tiene asignado una caja',
                             type: 'info'
                         });
                         return false;

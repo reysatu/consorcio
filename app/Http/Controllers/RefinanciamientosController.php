@@ -375,4 +375,18 @@ class RefinanciamientosController extends Controller
     } 
 
     
+    public function get_caja_tienda(CajaDiariaDetalleInterface $repo) {
+        $result = $repo->get_caja_tienda();
+        return response()->json($result);
+
+    }
+
+    public function obtener_consecutivo_comprobante(ConsecutivosComprobantesInterface $repo, Request $request, CajaDiariaDetalleInterface $caja_repo) {
+
+        $data = $request->all();
+        $caja_diaria = $caja_repo->get_caja_tienda();
+        $consecutivo_comprobante = $repo->obtener_consecutivo_comprobante($data["tipo_documento"], $caja_diaria[0]->idtienda);
+
+        return response()->json($consecutivo_comprobante);
+    }
 }
