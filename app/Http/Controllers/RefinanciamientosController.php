@@ -108,6 +108,10 @@ class RefinanciamientosController extends Controller
                     $data_solicitud["saldo"] = $t_monto_total; 
                     $data_solicitud["facturado"] = ""; 
                     $data_solicitud["pagado"] = ""; 
+
+                    $data_solicitud["int_moratorio"] = "0"; 
+                    $data_solicitud["pagado_mora"] = "0"; 
+                    $data_solicitud["saldo_mora"] = "0"; 
                     // print_r($data_solicitud);
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
                     $solicitud_repositorio->actualizar_correlativo($data_solicitud["cCodConsecutivo"], $data_solicitud["nConsecutivo"]);
