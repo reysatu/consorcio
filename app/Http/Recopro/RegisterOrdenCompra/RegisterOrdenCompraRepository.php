@@ -220,10 +220,10 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         // $pdo=DB::connection()->getPdo();
          // $destroy=DB::select("SET NOCOUNT ON; EXEC AL_Elimina_Movimiento '$id'");
          // return $destroy;
-        $mostrar=DB::table('ERP_RegisterOrdenCompra')->where('id', $id)->delete();
+        $mostrar=DB::table('ERP_OrdenCompra')->where('id', $id)->delete();
         
-        $mostrar=DB::table('ERP_RegisterOrdenCompra_Detalle')->where('id', $id)->delete();
-        $mostrar=DB::table('ERP_RegisterOrdenCompra_Articulo')->where('id', $id)->delete();
+        $mostrar=DB::table('ERP_OrdenCompraArticulo')->where('idOrden', $id)->delete();
+        // $mostrar=DB::table('ERP_RegisterOrdenCompra_Articulo')->where('id', $id)->delete();
 
     }
      public function find($id)

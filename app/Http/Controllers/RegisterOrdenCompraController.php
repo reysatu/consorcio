@@ -195,23 +195,29 @@ class RegisterOrdenCompraController extends Controller
     }
 
 
-    public function destroy($id, RegisterOrdenCompraInterface $repo, Request $request)
-    {   try {
-        $val=$repo->destroy($id);
-        // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
-        //     DB::commit();
-            return response()->json([
-                'status' => true,
-                'data'=>$val,
-            ]);
+    // public function destroy($id, RegisterOrdenCompraInterface $repo, Request $request)
+    // {   try {
+    //     $val=$repo->destroy($id);
+    //     // throw new \Exception('Ya existe un almacen con este código interno. Por favor ingrese otro código.');
+    //     //     DB::commit();
+    //         return response()->json([
+    //             'status' => true,
+                
+    //         ]);
 
-    }catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
+    // }catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => $e->getMessage()
+    //         ]);
+    //     }
+    // }
+    public function destroy(RegisterOrdenCompraInterface $repo, Request $request)
+    {
+        $id = $request->input('id');
+        $repo->destroy($id);
+        return response()->json(['Result' => 'OK']);
     }
     public function cambiarEstado($id, RegisterOrdenCompraInterface $repo, Request $request)
     {
