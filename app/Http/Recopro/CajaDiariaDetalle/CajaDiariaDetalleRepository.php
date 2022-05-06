@@ -162,7 +162,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         // $fechacA = date("Y-m-d");
         $sql = "SELECT * FROM  ERP_Cajas AS c
         WHERE c.usuario='$idusuario'";
-        die
+      
         $result = DB::select($sql);
         return $result;
     }
