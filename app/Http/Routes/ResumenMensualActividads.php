@@ -12,3 +12,4 @@ Route::post('resumenMensualActividads/delete', ['as' => 'resumenMensualActividad
 Route::post('resumenMensualActividads/update', ['as' => 'resumenMensualActividads.update', 'uses' => 'ResumenMensualActividadController@update']);
 Route::get('resumenMensualActividads/excel', ['as' => 'resumenMensualActividads.excel', 'uses' => 'ResumenMensualActividadController@excel']);
 Route::get('resumenMensualActividads/pdf', ['as' => 'resumenMensualActividads.pdf', 'uses' => 'ResumenMensualActividadController@pdf']);
+Route::get('resumenMensualActividads/excelMetas', ['as' => 'resumenMensualActividads.excelMetas', 'uses' => 'ResumenMensualActividadController@excelMetas']);

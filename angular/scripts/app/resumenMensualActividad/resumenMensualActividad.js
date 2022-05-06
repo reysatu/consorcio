@@ -21,6 +21,20 @@
         var btn_imprimirMovimiento=$("#btn_imprimirMovimiento");
 
 
+        
+
+        $("#btn_imprimirExcelMetas").click(function(e){
+            
+            var data_excel = {
+                            Anio: $('#Anio').val(),
+                            mes: $('#mes').val(),
+            };
+            //             $scope.openDoc('projects/excel', data_excel);
+            $scope.openDocExeclMesMetas('resumenMensualActividads/excelMetas',data_excel);
+        });
+
+
+
         $("#btn_imprimirMovimiento").click(function(e){
             var data_excel = {
                             Anio: $('#Anio').val(),
