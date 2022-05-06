@@ -160,8 +160,9 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
     public function get_caja_tienda() {
         $idusuario = auth()->id();
         // $fechacA = date("Y-m-d");
-        $sql = "SELECT * FROM  ERP_Cajas AS c
-        WHERE c.usuario='$idusuario'";
+        $sql = "SELECT c.* FROM  ERP_Cajas AS c
+        INNER JOIN ERP_CajaUsuario AS cu ON(c.idcaja=cu.idCaja)
+        WHERE cu.idUsuario='$idusuario'";
       
         $result = DB::select($sql);
         return $result;
