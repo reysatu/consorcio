@@ -112,7 +112,7 @@ class RefinanciamientosController extends Controller
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_Solicitud", $data_solicitud));
                     $solicitud_repositorio->actualizar_correlativo($data_solicitud["cCodConsecutivo"], $data_solicitud["nConsecutivo"]);
                 }
-
+               
                 if(count($comprobante_saldo) > 0 && $comprobante_saldo[0]->saldo > 0) {
 
                     //GENERAMOS UNA NOTA DE CREDITO POR EL SALDO 
@@ -127,16 +127,17 @@ class RefinanciamientosController extends Controller
                     $datos_nota["idmotivo"] = "01";
                     $datos_nota["cCodConsecutivo"] = $comprobante_saldo[0]->cCodConsecutivo_solicitud;
                     $datos_nota["nConsecutivo"]    = $comprobante_saldo[0]->nConsecutivo_solicitud;
-                        // print_r($datos_nota);
+                     
                     $res_nota = $this->emitir_nota($datos_nota, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $ventas_repo, $repoCC, "R");
                     // print_r($res_nota); exit;
-    
+                  
                     // GENERAMOS UNA NUEVA BOLETA POR EL SALDO 
                     $data_venta = (array)$comprobante_saldo[0];
                     $data_venta["idventa"] = $caja_diaria_detalle_repo->get_consecutivo("ERP_Venta", "idventa");
-                    $serie = $repoCC->obtener_consecutivo_comprobante($comprobante_saldo[0]->IdTipoDocumento,  $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda);
+                    $serie = $repoCC->obtener_consecutivo_comprobante($comprobante_saldo[0]->IdTipoDocumento,  $caja_diaria_detalle_repo->get_caja_tienda()[0]->idtienda);
                     
                     $data_venta["serie_comprobante"] = $serie[0]->serie;
+                    $data_venta["fecha_emision"]             = $data["fecha_refinanciamiento"]." ".date("H:i:s");
                     $data_venta["numero_comprobante"] = $serie[0]->actual;
                     $data_venta["cCodConsecutivo_solicitud"] = $solicitud[0]->cCodConsecutivo;
                     $data_venta["nConsecutivo_solicitud"] = $data_solicitud["nConsecutivo"];
@@ -228,7 +229,7 @@ class RefinanciamientosController extends Controller
     
             }
  
-            
+           
             if(count($solicitud_articulo) > 0) {
                 foreach ($solicitud_articulo as $ksa => $vsa) {
                     $data_solicitud_articulo = (array) $vsa;
