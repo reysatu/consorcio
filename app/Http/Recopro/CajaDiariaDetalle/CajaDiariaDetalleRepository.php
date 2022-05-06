@@ -157,6 +157,16 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+    public function get_caja_tienda() {
+        $idusuario = auth()->id();
+        // $fechacA = date("Y-m-d");
+        $sql = "SELECT * FROM  ERP_Cajas AS c
+        WHERE c.usuario='$idusuario'";
+        die
+        $result = DB::select($sql);
+        return $result;
+    }
+
     public function get_cajero() {
         $idusuario = auth()->id();
         $fechacA = date("Y-m-d");
@@ -257,7 +267,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
   
 
     public function get_venta_detalle($idventa) {
-        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida, p.serie
+        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida, p.serie, p.code_article
         FROM ERP_Venta AS v 
         INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
         INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
@@ -265,6 +275,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
        
        
         WHERE v.idventa={$idventa}";
+        // die($sql);
         $result = DB::select($sql);
         return $result;
     }

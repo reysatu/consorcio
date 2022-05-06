@@ -265,7 +265,7 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN a.description IS NULL THEN '-.-' ELSE a.description END AS almacen, 
         CASE WHEN lo.Lote IS NULL  THEN '-.-' ELSE lo.lote END AS lote, 
         CASE WHEN l.descripcion IS NULL THEN '-.-' ELSE l.descripcion END AS localizacion, 
-        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto, um.Abreviatura AS unidad_medida, p.code_article
+        CASE WHEN d.descripcion IS NULL THEN '-.-' ELSE d.descripcion END AS descuento, ISNULL(sa.porcentaje_descuento, 0) AS porcentaje_descuento, ISNULL(sa.monto_descuento, 0) AS monto_descuento, CASE WHEN sa.cOperGrat IS NULL THEN '-.-' ELSE sa.cOperGrat END AS cOperGrat, p.serie, p.id AS idproducto, um.Abreviatura AS unidad_medida, p.code_article, p.type_id, p.idCategoria
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
         LEFT JOIN ERP_UnidadMedida AS um ON(um.IdUnidadMedida=sa.um_id)

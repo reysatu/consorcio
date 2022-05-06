@@ -21,3 +21,13 @@ Route::post('refinanciamientos/generar_refinanciamiento', ['as' => 'refinanciami
 
 
 Route::post('refinanciamientos/list_solicitudes_refinanciamiento', ['as' => 'refinanciamientos.list_solicitudes_refinanciamiento', 'uses' => 'SolicitudController@list_solicitudes_refinanciamiento']);
+
+
+Route::get('refinanciamientos/get_persona_documento/{id}', ['as' => 'refinanciamientos.get_persona_documento', 'uses' => 'RefinanciamientosController@get_persona_documento']);
+Route::post('refinanciamientos/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
+Route::post('refinanciamientos/get_caja_tienda', 'RefinanciamientosController@get_caja_tienda');
+
+
+Route::get('refinanciamientos/get_cliente/{id}', ['as' => 'refinanciamientos.get_cliente', 'uses' => 'CustomerController@get_cliente_documento']);
+
+Route::post('refinanciamientos/obtener_consecutivo_comprobante', 'RefinanciamientosController@obtener_consecutivo_comprobante');

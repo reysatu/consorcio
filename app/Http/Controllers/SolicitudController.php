@@ -546,5 +546,11 @@ class SolicitudController extends Controller
             ]);
         }
     }
+
+    public function validar_parametro_categoria() {
+        $sql = "SELECT * FROM ERP_Parametros WHERE id=18";
+        $result = DB::select($sql);
+        echo json_encode($result);
+    }
  
 }

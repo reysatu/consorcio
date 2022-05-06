@@ -21,3 +21,5 @@ Route::post('renegociacion_mora/get_notas_devolucion', ['as' => 'renegociacion_m
 
 Route::get('renegociacion_mora/get_venta_detalle/{id}', ['as' => 'renegociacion_mora.get_venta_detalle', 'uses' => 'RenegociacionMoraController@get_venta_detalle']);
 
+
+Route::post('renegociacion_mora/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');

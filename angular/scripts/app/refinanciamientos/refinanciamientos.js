@@ -224,7 +224,7 @@
             bval = bval && documento_or.required();
             if (bval) {
                 var id = documento_or.val();
-                RESTService.get('orden_servicios/get_cliente', id, function (response) {
+                RESTService.get('refinanciamientos/get_cliente', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -293,7 +293,7 @@
             bval = bval && $("#documento_" + tipo).required();
             if (bval) {
                 var id = $("#documento_" + tipo).val();
-                RESTService.get('personas/get_persona_documento', id, function (response) {
+                RESTService.get('refinanciamientos/get_persona_documento', id, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var datos = response.data;
                         if (datos.length == 0) {
@@ -660,13 +660,13 @@
         
 
         function select_comprobante() {
-            $.post("movimientoCajas/get_caja_diaria", {},
+            $.post("refinanciamientos/get_caja_tienda", {},
                 function (data, textStatus, jqXHR) {
                     // console.log();
 
                     if (data.length > 0) {
 
-                        $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+                        $.post("refinanciamientos/obtener_consecutivo_comprobante", { tipo_documento: '07' },
                             function (data, textStatus, jqXHR) {
                                 $("#serie_comprobante").html("");
                                 $("#serie_comprobante").append('<option value="">Seleccionar</option>');
@@ -684,7 +684,7 @@
                     } else {
                         AlertFactory.textType({
                             title: '',
-                            message: 'Primero debe apertura la caja del día',
+                            message: 'El usuario no tiene asignado una caja',
                             type: 'info'
                         });
                         return false;

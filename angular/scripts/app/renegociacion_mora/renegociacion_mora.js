@@ -30,7 +30,7 @@
         var table_container_solicitud_creditos = $("#table_container_solicitud_creditos");
         // alert(base_url + '/solicitud/list_creditos');
         table_container_solicitud_creditos.jtable({
-            title: "Lista de Solicitudes de Crédito Pendientes",
+            title: "Lista de Solicitudes",
             paging: true,
             sorting: true,
             actions: {
@@ -143,24 +143,24 @@
             recordsLoaded: function (event, data) {
                 $('.emitir-pago').click(function (e) {
                     var id = $(this).attr('data-id');
-                    $.post("movimientoCajas/get_caja_diaria", {},
-                        function (data, textStatus, jqXHR) {
-                            // console.log();
+                    // $.post("renegociacion_mora/get_caja_diaria", {},
+                    //     function (data, textStatus, jqXHR) {
+                    //         // console.log();
 
-                            if (data.length > 0) {
+                    //         if (data.length > 0) {
 
                                 find_solicitud_credito(id);
-                            } else {
-                                AlertFactory.textType({
-                                    title: '',
-                                    message: 'Primero debe apertura la caja del día',
-                                    type: 'info'
-                                });
-                                return false;
-                            }
-                        },
-                        "json"
-                    );
+                    //         } else {
+                    //             AlertFactory.textType({
+                    //                 title: '',
+                    //                 message: 'Primero debe apertura la caja del día',
+                    //                 type: 'info'
+                    //             });
+                    //             return false;
+                    //         }
+                    //     },
+                    //     "json"
+                    // );
                     e.preventDefault();
                 });
                 $('.eliminar-Orden').click(function (e) {
