@@ -377,9 +377,12 @@ class SolicitudRepository implements SolicitudInterface
         $sql_update = "UPDATE ERP_Solicitud SET 
         saldo = ISNULL(saldo, 0) - {$data["monto_pagar_credito"]},
         pagado = ISNULL(pagado, 0) + {$data["monto_pagar_credito"]}, 
-        int_moratorio = ISNULL(int_moratorio, 0) + {$data["int_moratorio"]}, 
+        /*int_moratorio = ISNULL(int_moratorio, 0) + {$data["int_moratorio"]},
         pagado_mora = ISNULL(pagado_mora, 0) + {$data["pagado_mora"]}, 
-        saldo_mora = ISNULL(saldo_mora, 0) +  {$data["saldo_mora"]}
+        saldo_mora = ISNULL(saldo_mora, 0) +  {$data["saldo_mora"]}*/
+        /*int_moratorio = {$data["int_moratorio"]},
+        pagado_mora = {$data["pagado_mora"]}, 
+        saldo_mora = {$data["saldo_mora"]}
         WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
     // die($sql_update);
         $result = DB::statement($sql_update);
