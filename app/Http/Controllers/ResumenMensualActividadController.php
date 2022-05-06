@@ -24,6 +24,7 @@ class ResumenMensualActividadController extends Controller
 //        $this->middleware('json');
     }
 
+    
     public function all(Request $request, ResumenMensualActividadInterface $repo)
     {
         $s = $request->input('search', '');
@@ -82,6 +83,23 @@ class ResumenMensualActividadController extends Controller
     {
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE CATEGORÍAS', 'Categoría');
     }
+    public function excelMetas(ResumenMensualActividadInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom,Orden_servicioInterface $repOs)
+    { 
+            $idusu=auth()->id();
+            $usuario=$repo->getUsuario($idusu);
+            $fecha_actual=date("Y-m-d");
+            $cambio=$repOs->cambio_tipo(2,$fecha_actual);
+            $Anio = $request->input('Anio', '');
+            $mes = $request->input('mes', '');
+            $data_mensual =$repo->allReporteMensual($Anio,$mes);
+            $data_orden =$repo->allReporteMensualOrden($Anio,$mes);
+            $data_compania=$repcom->get_compania(); 
+            $simboloMoneda = $repom->getSimboloMonedaTotal();
+
+            return generateExcelMetas($this->generateDataExcel($repo->all()), 'RESUMEN MENSUAL DE ACTIVIDADES','Resumen', $idusu,$usuario,$fecha_actual,$cambio,$Anio,$mes,$data_mensual,$data_orden,$data_compania,$simboloMoneda);
+       
+       
+    }
      public function pdf(ResumenMensualActividadInterface $repo,Request $request,Query_movementsInterface $repom,Solicitud_AsignacionInterface $repcom,Orden_servicioInterface $repOs)
     {
             $idusu=auth()->id();
@@ -94,8 +112,11 @@ class ResumenMensualActividadController extends Controller
             $data_orden =$repo->allReporteMensualOrden($Anio,$mes);
             $data_compania=$repcom->get_compania(); 
             $simboloMoneda = $repom->getSimboloMonedaTotal();
-
             $path = public_path('/'.$data_compania[0]->ruta_logo);
+            if(!file_exists($path)){
+                $path = public_path('/img/a1.jpg');
+            }
+           
             $type_image = pathinfo($path, PATHINFO_EXTENSION);
             $image = file_get_contents($path);
             $image = 'data:image/' . $type_image . ';base64,' . base64_encode($image);

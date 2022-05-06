@@ -393,6 +393,25 @@ function generateExcelMensual($data, $file_name, $sheet_name,$data_info,$anio,$d
     return response()->json($response);
 }
 
+function generateExcelMetas($data, $file_name, $sheet_name,$idusu,$usuario,$fecha_actual,$cambio,$Anio,$mes,$data_mensual,$data_orden,$data_compania,$simboloMoneda)
+{
+    
+    $file = Excel::create($file_name, function ($excel) use ($sheet_name,$idusu,$usuario,$fecha_actual,$cambio,$Anio,$mes,$data_mensual,$data_orden,$data_compania,$simboloMoneda) {
+          $excel->sheet($sheet_name, function ($sheet) use ($idusu,$usuario,$fecha_actual,$cambio,$Anio,$mes,$data_mensual,$data_orden,$data_compania,$simboloMoneda) {
+             $sheet->loadView('excel.viewReporteMeta')->with('idusu', $idusu)->with('usuario', $usuario)->with('fecha_actual', $fecha_actual)->with('cambio', $cambio)->with('Anio', $Anio)->with('mes', $mes)->with('data_orden', $data_orden)->with('data_compania', $data_compania)->with('simboloMoneda', $simboloMoneda)->with('data_mensual', $data_mensual);
+          });    
+    });
+
+    $file = $file->string('xlsx');
+
+    $response = [
+        'name' => $file_name,
+        'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
+    ];
+
+    return response()->json($response);
+}
+
 function generatePDF($data, $file_name, $type)
 {
 //    $pdf = PDF::loadView('pdf.table', compact('data'))->setPaper('a4', $type)->setWarnings(false);
