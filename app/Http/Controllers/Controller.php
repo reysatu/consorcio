@@ -305,8 +305,8 @@ class Controller extends BaseController
         $data["anticipo"]     = 0;
 
         $data_venta["idcajero"] = auth()->id();
-        $data_venta["idtienda"] = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idtienda;
-        $data_venta["idcaja"]   = $caja_diaria_detalle_repo->get_caja_diaria()[0]->idcaja;
+        $data_venta["idtienda"] = $caja_diaria_detalle_repo->get_caja_tienda()[0]->idtienda;
+        $data_venta["idcaja"]   = $caja_diaria_detalle_repo->get_caja_tienda()[0]->idcaja;
         // print_r($data_venta);
         $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
