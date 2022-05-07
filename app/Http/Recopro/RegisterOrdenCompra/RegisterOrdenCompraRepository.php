@@ -18,7 +18,11 @@ class RegisterOrdenCompraRepository implements RegisterOrdenCompraInterface
         $this->model = $model; 
        
     }
-
+     public function update_estadoOrdenCompra($id, array $attributes)
+    {
+        $attributes['user_updated'] = auth()->id();
+        $this->model->where('id',$id)->update($attributes);
+    }
     public function all()
     {
         return $this->model->get();
@@ -30,6 +34,11 @@ class RegisterOrdenCompraRepository implements RegisterOrdenCompraInterface
      public function all_devolucion_servicio()
     {
         return $this->model->get()->where('naturaleza','D');
+    }
+    public function destroy_ordenCompra($id)
+    {   
+        DB::table('ERP_OrdenCompraArticulo')->where('id',$id)->delete();
+       
     }
      public function search($s)
     {
@@ -181,10 +190,12 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $mostrar=DB::select("select Mo.id as idDetalle,uni.Descripcion as unidaMedida ,pr.description as productoDescripcion,FORMAT(Mo.dFecRequerida, 'yyyy-MM-dd') AS dFecRequerida_add,* from ERP_OrdenCompraArticulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id left join ERP_UnidadMedida as uni on (pr.um_id=uni.IdUnidadMedida) where mo.idOrden='$id'");
         return $mostrar; 
     }
+
     public function getOperationFind(){
         $mostrar=DB::select("select * from ERP_TipoOperacion");
         return $mostrar;
     }
+
      public function get_data_descuento($id){
         $mostrar=DB::select("select * from ERP_Descuentos where id='$id'");
         return $mostrar;
@@ -223,8 +234,22 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $mostrar=DB::table('ERP_OrdenCompra')->where('id', $id)->delete();
         
         $mostrar=DB::table('ERP_OrdenCompraArticulo')->where('idOrden', $id)->delete();
+
         // $mostrar=DB::table('ERP_RegisterOrdenCompra_Articulo')->where('id', $id)->delete();
 
+    }
+     public function getDetalleArticulos($id)
+    {
+        $mostrar=DB::select("select * from ERP_OrdenCompraArticulo where idOrden='$id'");
+        return $mostrar; 
+    }
+     public function cambiar_estado($id,$estado)
+    {
+        $mostrar=DB::update("UPDATE ERP_OrdenCompra
+                      SET iEstado = '$estado' where id='$id'");
+        $mostrar=DB::update("UPDATE ERP_OrdenCompraArticulo
+                      SET iEstado = '$estado' where idOrden='$id'");
+         return $mostrar; 
     }
      public function find($id)
     {

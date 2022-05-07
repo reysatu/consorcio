@@ -6,14 +6,15 @@
  * Time: 11:29 AM
  */
 
-namespace App\Http\Recopro\RegisterOrdenCompraArticulo;
+namespace App\Http\Recopro\View_OrdenCompra;
 use Illuminate\Support\Facades\DB;
 
-class RegisterOrdenCompraArticuloRepository implements RegisterOrdenCompraArticuloInterface
+class View_OrdenCompraRepository implements View_OrdenCompraInterface
 {
     protected $model;
- private static $_ACTIVE = 'A';
-    public function __construct(RegisterOrdenCompraArticulo $model)
+    private static $_ACTIVE = 'A';
+
+    public function __construct(View_OrdenCompra $model)
     {
         $this->model = $model; 
        
@@ -26,14 +27,12 @@ class RegisterOrdenCompraArticuloRepository implements RegisterOrdenCompraArticu
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
-            $q->where('descripcion', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
-            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
-        });
+            $q->where('id', 'LIKE', '%'.$s.'%');
+            $q->orWhere('cCodConsecutivo', 'LIKE', '%'.$s.'%');
+            $q->orWhere('nConsecutivo', 'LIKE', '%'.$s.'%');
+            $q->orWhere('iEstado', 'LIKE', '%'.$s.'%');
+        })->orderBy("created_at", "DESC");
 
-    }
-     public function getDataOrdeCompraArt($id){
-        $mostrar=DB::select("select * from ERP_OrdenCompraArticulo where id='$id'");
-        return $mostrar;
     }
     public function allActive()
     {
@@ -62,7 +61,6 @@ class RegisterOrdenCompraArticuloRepository implements RegisterOrdenCompraArticu
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
-
     public function destroy($id)
     {
         $attributes = [];
@@ -71,19 +69,5 @@ class RegisterOrdenCompraArticuloRepository implements RegisterOrdenCompraArticu
         $model->delete();
      
     }
-    public function delete_articulo_detalle($id)
-    {
-        $mostrar=DB::table('ERP_Movimiento_Detalle')->where('idMovimiento', $id)->delete();
-     
-    }
-    public function delete_detalle($id){
-        $mostrar=DB::table('ERP_Movimiento_Articulo')->where('idMovimiento', $id)->delete();
-    }
-    public function traerTipo($idArticulo){
-         $mostrar=DB::select("select serie from ERP_Productos where id='$idArticulo'");
-         return $mostrar;
-
-    }
-
 
 }

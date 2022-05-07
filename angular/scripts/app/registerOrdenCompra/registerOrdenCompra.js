@@ -177,16 +177,16 @@
 
         var fecharequerida= actu;
 
-        btn_movimiento_aprobar.click(function(e){
+        $("#btn_movimiento_Por_aprobar").click(function(e){
             cambiarEstado(1);
         });
-        btn_movimiento_cancelar.click(function(e){
-            cambiarEstado(4);
-        });
+        // btn_movimiento_cancelar.click(function(e){
+        //     cambiarEstado(4);
+        // });
 
-        btn_movimiento_cerrar.click(function(e){
-            cambiarEstado(3);
-        });
+        // btn_movimiento_cerrar.click(function(e){
+        //     cambiarEstado(3);
+        // });
 
 
         function cambiarEstado(estadoCambio){
@@ -199,7 +199,7 @@
                         var messan=response.mensaje;
                          AlertFactory.textType({
                             title: '',
-                            message:'el registró se ' + messan + ' con éxito',
+                            message:'el registró se modificó con éxito',
                             type: 'success'
                          });
                          findRegisterOrdenCompra(id);
@@ -386,7 +386,7 @@
                         addArticuloTable(index.idDetalle,index.idArticulo,index.productoDescripcion,Math.trunc(index.cantidad),ver,index.idDetalle,tipoArt,codl,datl,index.iEstado,index.dFecRequerida_add,"","",Math.trunc(index.cantidad),Math.trunc(index.cantidadRecibida),Math.trunc(index.cantidadDevuelta),Number(index.precioUnitario),Number(index.precioTotal),idDescuento,index.nImpuesto,Number(index.nPorcDescuento),Number(index.nDescuento),ident_impuesto,codSoli,Number(index.total),Number(index.valorCompra));
                         // addArticuloTable(iddet,index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida,obser);                      
                       })
-                   
+                   activarbotones();
                     modalMovimieto.modal("show");
                     
                    
@@ -758,7 +758,7 @@
             var tdDescue = $('<td></td>');
             var tdPorcentaje = $('<td></td>');
             var tdMonto = $('<td></td>');
-
+ 
             var tr = $('<tr id="tr_idArticulo' + codigo + '" class="tr_idSolicitud'+codSoli+'" ></tr>');
             var td1 = $('<td id="tr_idArt' + idProducto + '">' + desProducto + '</td>');
             var td12 = $('<td>' + unida + '</td>');
@@ -879,7 +879,7 @@
                     console.log(iddet,"ide detalle");
                     if(idMovimiento.val()!='' && iddet!=0){
                         console.log("entro a eliminar");
-                        var id=iddet;
+                        var id=iddet; 
                         RESTService.get('registerOrdenCompras/deleteDetalleST', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
                                    AlertFactory.textType({
@@ -1370,6 +1370,14 @@
                 }); 
                 estadoDetalle = estadoDetalle.join(',');
 
+                var codSolicitud =[];
+                $.each($('.cod_solicitud_compra'), function (idx, item) {
+                    codSolicitud[idx] = $(item).val();
+                }); 
+                codSolicitud = codSolicitud.join(',');
+
+
+
                 var params = {
                     'id': idMovimiento.val(),
                     'iEstado':0,
@@ -1407,6 +1415,7 @@
                     'dFecRequeridaDetalle':fecharequeridaDetalle,
                     'iEstadoDetalle':estadoDetalle,
                     'detalleModo':detalleModo,
+                    'codSolicitud':codSolicitud,
                 };
                 var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
 
@@ -1629,6 +1638,7 @@
                         procesarTransfBoton.trigger('change');
                          articulo_mov_det.html("");
                          findRegisterOrdenCompra(id_Movimiento);
+                         activarbotones();
                          LoadRecordsButtonRegisterOrdenCompra.click();
                     } else {
                         var msg_ = (_.isUndefined(response.message)) ?
@@ -1643,10 +1653,25 @@
                 
             }    
         } 
-        
+        function activarbotones(){
+            if($("#estado").val()=="0"){
+                console.log("entro accccccccccccccccccccccccccccccc");
+                $("#btn_movimiento_detalle").prop('disabled',false);
+                $("#btn_movimiento_Por_aprobar").prop('disabled',false);
+            }else if($("#estado").val()=="1"){
+                 console.log("entro accaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+                $("#btn_movimiento_detalle").prop('disabled',true);
+                $("#btn_movimiento_Por_aprobar").prop('disabled',true);
+            }else{
+                 console.log("entro accbbbbbbbbbbbbbbb");
+                 $("#btn_movimiento_detalle").prop('disabled',false);
+                $("#btn_movimiento_Por_aprobar").prop('disabled',true);
+            }
+        }
         function newMovimiento()
         {    idMoneda.val("1").trigger("change");
             titlemodalMovimieto.html('Nueva Orden de Compra');
+            activarbotones();
             modalMovimieto.modal('show');
 
         }
@@ -1896,10 +1921,10 @@
             sorting: true,
             actions: {  
                 listAction: base_url + '/registerOrdenCompras/list',
-                deleteAction:  function (postData) {
-                    console.log(postData);
-                    console.log("jjjsjsjjs");
-                    if(item.iEstado!=0){
+                deleteAction:  function (item) {
+                    var total=item.ident;
+                    var arra=total.split("*");
+                    if(arra[1]!=0){
                             AlertFactory.textType({
                                 title: '',
                                 message: 'Solo se pueden eliminar ordenes en estado registrado',
@@ -1915,7 +1940,7 @@
                                 url: '/registerOrdenCompras/delete',
                                 type: 'POST',
                                 dataType: 'json',
-                                data: {id:item.id},
+                                data: {id:arra[0]},
                                 success: function (data) {
                                     $dfd.resolve({ 'Result': "OK" });
                                 },
@@ -1945,9 +1970,15 @@
                 }]
             },
             fields: {
-                id: {
+                ident: {
                     title: '#',
                     key: true,
+                    list:false,
+                    create: false,
+                    listClass: 'text-center',
+                },
+                id: {
+                    title: '#',
                     create: false,
                     listClass: 'text-center',
                 },

@@ -35,6 +35,22 @@ class SolicitudCompraArticuloRepository implements SolicitudCompraArticuloInterf
     {
        return $this->model->where('estado', self::$_ACTIVE)->get();
     }
+    public function getDetalleArticulosSolicitud($id)
+    {
+        $mostrar=DB::select("select * from ERP_SolicitudCompra_Articulo where idMovimiento='$id'");
+        return $mostrar; 
+    }
+     public function getidSolicitud($id)
+    {
+        $mostrar=DB::select("select sca.idMovimiento from  ERP_OrdenCompraArticulo as oca inner join ERP_SolicitudCompra_Articulo as sca on sca.consecutivo=oca.codSolicitud where oca.idOrden='$id' 
+");
+        return $mostrar; 
+    }
+     public function update_estado($id, array $attributes)
+    {
+        $attributes['user_updated'] = auth()->id();
+        $this->model->where('consecutivo',$id)->update($attributes);
+    }
      public function create(array $attributes)
     {
         $attributes['user_created'] = auth()->id();
@@ -57,6 +73,12 @@ class SolicitudCompraArticuloRepository implements SolicitudCompraArticuloInterf
         $attributes['user_updated'] = auth()->id();
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
+    }
+     public function update_estadoSolicitudCompra($id, array $attributes)
+    {
+        $attributes['user_updated'] = auth()->id();
+        DB::table('ERP_SolicitudCompra')->where('idMovimiento',$id)->update($attributes);
+        
     }
 
     public function destroy($id)

@@ -23,6 +23,11 @@ Route::get('registerOrdenCompras/excel', ['as' => 'registerOrdenCompras.excel', 
 
 Route::get('registerOrdenCompras/getDataArticulo/{id}', ['as' => 'registerOrdenCompras.getDataArticulo', 'uses' => 'SolicitudCompraController@getDataArticulo']);
 
+Route::get('registerOrdenCompras/deleteDetalleST/{id}', ['as' => 'registerOrdenCompras.deleteDetalleST', 'uses' => 'RegisterOrdenCompraController@deleteDetalleST']);
+
+Route::put('registerOrdenCompras/cambiarEstado/{id}', ['as' => 'registerOrdenCompras.cambiarEstado', 'uses' => 'RegisterOrdenCompraController@cambiarEstadoTotal']);
+
+
 Route::get('registerOrdenCompras/data_formOrden', ['as' => 'registerOrdenCompras.data_formOrden', 'uses' => 'Orden_servicioController@data_form']);
 
 Route::get('registerOrdenCompras/data_formOrdenPro', ['as' => 'registerOrdenCompras.data_formOrdenPro', 'uses' => 'ProformaController@data_form']);
