@@ -173,7 +173,7 @@
                  $mcl=floatval($mcl)+floatval($montoAcie); 
             }else if($index->id_tipomant==6){
               
-                $mrr=floatval($mrr)+floatval(montoRep); 
+                $mrr=floatval($mrr)+floatval($montoRep); 
                  $mrs=floatval($mrs)+floatval($montoServi);
                 $mrl=floatval($mrl)+floatval($montoAcie);  
             }else if($index->id_tipomant==7){
@@ -356,7 +356,10 @@
             $totaMob=floatval($montoServi)+$totaMob;
             $totb=$totb+1;
        }
+
     }
+    $tofinR=floatval($totaReb)+floatval($totaRea);
+    $tofinL=floatval($totaACb)+floatval($totaACa);
 
 ?>    
 <table>

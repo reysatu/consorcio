@@ -11,7 +11,12 @@ Route::post('registerOrdenCompras/getScompraArticulo', ['as' => 'registerOrdenCo
 Route::post('registerOrdenCompras/list', ['as' => 'registerOrdenCompras.list', 'uses' => 'RegisterOrdenCompraController@all']);
 
 Route::post('registerOrdenCompras/create', ['as' => 'registerOrdenCompras.create', 'uses' => 'RegisterOrdenCompraController@create']);
-Route::get('registerOrdenCompras/delete/{id}', ['as' => 'registerOrdenCompras.delete', 'uses' => 'RegisterOrdenCompraController@destroy']);
+
+// Route::get('registerOrdenCompras/delete/{id}', ['as' => 'registerOrdenCompras.delete', 'uses' => 'RegisterOrdenCompraController@destroy']);
+
+Route::post('registerOrdenCompras/delete', ['as' => 'registerOrdenCompras.delete', 'uses' => 'RegisterOrdenCompraController@destroy']);
+
+
 Route::post('registerOrdenCompras/update', ['as' => 'registerOrdenCompras.update', 'uses' => 'RegisterOrdenCompraController@update']);
 Route::get('registerOrdenCompras/excel', ['as' => 'registerOrdenCompras.excel', 'uses' => 'RegisterOrdenCompraController@excel']);
 

@@ -245,7 +245,13 @@
         });
         // modalSerie.on('hidden.bs.modal', function (e) {
         //     cleanArtSerie();
-        // });  
+        // });
+        function cleanArtNada(){
+            idProductoMN.val("");
+            desProductoMN.val("");
+            cantProductoMN.val("");
+
+        }  
         modalNada.on('hidden.bs.modal', function (e) {
             cleanArtNada();
         });
@@ -1890,10 +1896,33 @@
             sorting: true,
             actions: {  
                 listAction: base_url + '/registerOrdenCompras/list',
-                deleteAction:   function (data) {
-                    $('#AuthorTableContainer').jtable('deleteRecord', {
-                        key: data.keyValue,
-                        clientOnly:true
+                deleteAction:  function (postData) {
+                    console.log(postData);
+                    console.log("jjjsjsjjs");
+                    if(item.iEstado!=0){
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Solo se pueden eliminar ordenes en estado registrado',
+                                type: 'info'
+                            });
+                        $('.close').click();
+    
+                        return false;    
+
+                    }
+                    return $.Deferred(function ($dfd) {
+                            $.ajax({
+                                url: '/registerOrdenCompras/delete',
+                                type: 'POST',
+                                dataType: 'json',
+                                data: {id:item.id},
+                                success: function (data) {
+                                    $dfd.resolve({ 'Result': "OK" });
+                                },
+                                error: function () {
+                                    $dfd.reject();
+                                }
+                            })
                     });
                 }
             },
@@ -1931,6 +1960,7 @@
                     
                 },
                 iEstado: {
+
                     title: 'Estado',
                     values: { '0': 'Registrado', '1': 'Por Aprobar','2':'Aprobado','3':'Recibido','4':'Backorder','5':'Cerrado','6':'Cancelado'},
                     type: 'checkbox',
