@@ -85,14 +85,16 @@ class CajaDiariaController extends Controller
             ]);
         }
     }
-    public function data_form (CajaDiariaInterface $moventRepo)
+    public function data_form (CajaDiariaInterface $moventRepo, CajaDiariaDetalleInterface $caja_diaria_repo)
     {
         $usuario=auth()->id();
         $cajas = $moventRepo->getcajas($usuario);
+        $clientes = $caja_diaria_repo->get_clientes();
         
         return response()->json([
             'status' => true,
             'cajas' => $cajas,
+            'clientes' => $clientes,
             'usuario'=>$usuario,
            
         ]);

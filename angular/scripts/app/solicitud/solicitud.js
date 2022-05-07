@@ -1695,6 +1695,32 @@
                     //     var lote = $(this).attr('data-lote');
                     //     e.preventDefault();
                     // });
+                
+                    $('.valcheck').on('ifChanged', function(event){
+                        var idserie = $(this).attr("data_idSerie");
+                        // console.log($(this).attr("data_idSerie"));
+                        if ($(this).prop('checked')) {
+                            $.post("solicitud/validar_serie", { idserie: idserie},
+                                function (data, textStatus, jqXHR) {
+                                    if(data.length > 0) {
+                                        AlertFactory.textType({
+                                            title: '',
+                                            message: 'La serie ya ha sido asignada a una solicitud anterior',
+                                            type: 'info'
+                                        });
+                                        $("#btn_serC").attr("disabled", "disabled");
+                                        
+                                    } else {
+                                        $("#btn_serC").removeAttr("disabled");
+                                    }
+                                },
+                                "json"
+                            );
+                            // alert(event.type + ' checked');
+                        } else {
+                            // alert(event.type + ' unchecked');
+                        };
+                    });
 
                     $('.i-checks').iCheck({
                         checkboxClass: 'icheckbox_square-green'
@@ -3033,8 +3059,9 @@
 
         });
 
-        $scope.guardar_solicitud = function () {
-
+        $scope.guardar_solicitud = function () {    
+            // alert($("#ingreso_neto_mensual").val());
+            // return false;
             var bval = true;
             bval = bval && cCodConsecutivo.required();
 
@@ -3045,6 +3072,16 @@
             if ($("#tipo_solicitud").val() == "2") {
                 bval = bval && $("#cuota_inicial").required();
                 bval = bval && $("#nro_cuotas").required();
+                
+            }
+
+            if ($("#tipo_solicitud").val() == "2" && $("#ingreso_neto_mensual").val() == "") {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Por Favor Ingrese los datos del credito: ',
+                    type: 'info'
+                });
+                return false;
             }
 
             if (bval) {

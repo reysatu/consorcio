@@ -1923,6 +1923,8 @@ class MovimientoCajaController extends Controller
         $datos["empresa"] = $repo->get_empresa(); 
    
         $datos["venta"] = $repo->get_venta($idventa); 
+        $idcliente = (isset($datos["venta"][0]) && !empty($datos["venta"][0]->idcliente)) ? $datos["venta"][0]->idcliente : "0";
+        $datos["cliente"] = $cliente_repositorio->find($idcliente);
        
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
         // echo "<pre>";

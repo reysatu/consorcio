@@ -22,7 +22,19 @@ class VentasRepository implements VentasInterface
 
     public function search($s)
     {
-        return $this->model->where(function ($q) use ($s) {
+
+
+        // print_r($_REQUEST);
+        $model = $this->model;
+        if(!empty($_REQUEST["FechaInicioFiltro"]) && !empty($_REQUEST["FechaFinFiltro"])) {
+           $model = $model->whereBetween('fecha_emision_server', [$_REQUEST["FechaInicioFiltro"] , $_REQUEST["FechaFinFiltro"]]); 
+
+        }
+
+        if(!empty($_REQUEST["idClienteFiltro"])) {
+            $model = $model->where("idcliente", $_REQUEST["idClienteFiltro"]);
+        }
+        return $model->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('cliente', 'LIKE', '%' . $s . '%');

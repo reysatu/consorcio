@@ -332,6 +332,7 @@ table_container_bancos.jtable('load');
                     }
                }
         });
+
         tipoMovimientoAdd.change(function (e) {
             $(".separacion").hide();
             if (tipoMovimientoAdd.val() == 'BCO') {
@@ -350,6 +351,11 @@ table_container_bancos.jtable('load');
             if (tipoMovimientoAdd.val() == 'SEP') {
             
                 $(".separacion").show();
+            }
+
+            if (tipoMovimientoAdd.val() == 'ING' || tipoMovimientoAdd.val() == 'EGR') {
+            
+                $(".ingresos_egresos").show();
             }
         });
         $('#btn_Mcierra').click(function (e) {
@@ -593,11 +599,18 @@ table_container_bancos.jtable('load');
                         });
                     }
                     cuentaBancaria
+                    $("#idClienteFiltro").append('<option value="">Seleccionar</option>');
+                    _.each(response.clientes, function (item) {
+                        $("#idClienteFiltro").append('<option value="' + item.id + '">' + item.razonsocial_cliente + '</option>');
+                    });
+                    $("#idClienteFiltro").select2();
                 }
             }, function () {
                 getDataFormCajaDiaria();
             });
         }
+
+      
         getDataFormCajaDiaria();
         // $('#btn_apertura').click(function (e) {
         //     ventanaP='A';
@@ -2554,13 +2567,16 @@ table_container_bancos.jtable('load');
             // tipo 1: contado
             // tipo 2: credito
             // alert(tipo);
-            // todas las formas de pago menos "a credito"
+            // todas las formas de pago menos "a credito" y 'DSCTO PLANILLA'
             $("#forma_pago").html("");
+            // alert(tipo);
             if(tipo == 1) {
                 $("#forma_pago").append('<option value="">Seleccionar</option>');
                 _.each(data_formas_pago, function (item) {
-                    if(item.codigo_formapago != "ACR") {
+                    if(item.codigo_formapago != "ACR" && item.codigo_formapago != "PLA") {
                         $("#forma_pago").append('<option value="' + item.codigo_formapago + '">' + item.descripcion_subtipo + '</option>');
+                    } else {
+                        
                     }
                     
                 });
@@ -2570,9 +2586,12 @@ table_container_bancos.jtable('load');
             if(tipo == 2) {
                 $("#forma_pago").append('<option value="">Seleccionar</option>');
                 _.each(data_formas_pago, function (item) {
-                    if(item.codigo_formapago != "ACR" || item.codigo_formapago != "PLA") {
+                    if(!(item.codigo_formapago != "ACR" && item.codigo_formapago != "PLA")) {
                         $("#forma_pago").append('<option value="' + item.codigo_formapago + '">' + item.descripcion_subtipo + '</option>');
+                    } else {
+                       
                     }
+                    
                     
                 });
             }
@@ -3175,12 +3194,26 @@ table_container_bancos.jtable('load');
 
             $.post("movimientoCajas/find_solicitud", { id: id },
                 function (data, textStatus, jqXHR) {
+
+                    if(data.solicitud.length > 0 && data.solicitud[0].estado == 10) { // anulado
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'La solicitud se encuentra anulada por favor recargue la página!',
+                            type: 'info'
+                        });
+                        return false;
+                    }
+
                     // console.log(data);
                     var pagado = 0;
                     var cuota_inicial = 0;
                     var tipo_solicitud = 0;
                     if(data.solicitud.length > 0) {
+                        // alert(isNaN(pagado));
                         pagado = parseFloat(data.solicitud[0].pagado);
+                        if(isNaN(pagado)) {
+                            pagado = 0;
+                        }
                         tipo_solicitud = data.solicitud[0].tipo_solicitud;
                     }
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
@@ -3222,6 +3255,7 @@ table_container_bancos.jtable('load');
                             getPersona("documento_fiadorconyugue");
                         }
                     }
+                    // alert(cuota_inicial+" "+pagado);
 
                     if((cuota_inicial > 0 && pagado == 0) || tipo_solicitud == 1) {
                         change_formas_pago(1);
@@ -3266,7 +3300,9 @@ table_container_bancos.jtable('load');
         }
 
         //COMPROBANTES
-        var search_comprobantes = getFormSearch('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
+       
+
+        var search_comprobantes = getFormSearchComprobantes('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
 
         var table_container_comprobantes = $("#table_container_comprobantes");
 
@@ -3429,9 +3465,19 @@ table_container_bancos.jtable('load');
 
         generateSearchForm('frm-search-comprobantes', 'LoadRecordsButtonComprobantes', function () {
             table_container_comprobantes.jtable('load', {
-                search: $('#search_b_comprobantes').val()
+                search: $('#search_b_comprobantes').val(),
+                FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                FechaFinFiltro: $('#FechaFinFiltro').val(),
+                idClienteFiltro: $('#idClienteFiltro').val(),
             });
         }, true);
+
+        $(document).on("click", '#limpiar-filtro-comprobantes', function () {
+            $('#FechaInicioFiltro').val(""),
+            $('#FechaFinFiltro').val(""),
+            $('#idClienteFiltro').val(""),
+            LoadRecordsButtonComprobantes.click();
+        });
 
 
         // DOCUMENTOS PENDIENTES
@@ -3579,6 +3625,8 @@ table_container_bancos.jtable('load');
                                     function (data, textStatus, jqXHR) {
                     
                                         if (data.documento.length > 0) {
+                                            change_formas_pago(1);
+
                                             $("#idventa_dp").val(data.documento[0].idventa);
                                             $("#idcliente_dp").val(data.documento[0].idcliente);
                                             $("#idmoneda_dp").val(data.documento[0].idmoneda);
@@ -3655,6 +3703,7 @@ table_container_bancos.jtable('load');
                         $("#cCodConsecutivo_credito").val(data.solicitud[0].cCodConsecutivo);
                         $("#nConsecutivo_credito").val(data.solicitud[0].nConsecutivo);
                     }
+                    change_formas_pago(1);
 
                     var prox_venc = "";
                     if (data.solicitud_cronograma.length > 0) {

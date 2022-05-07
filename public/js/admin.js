@@ -9352,3 +9352,42 @@ function create_receptionTransfer_pdf(response) {
 
 }
 
+
+
+
+function getFormSearchComprobantes(form_id, input_id, btn_id) {
+    return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
+            '<div class="form-group">'+
+              
+               
+                '<div class="col-md-2">'+
+                    '<label class="control-label">Fecha Inicio</label>'+
+                        '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
+                '</div>'+
+               
+                '<div class="col-md-2">'+
+                    '<label class="control-label">Fecha Fin</label>'+
+                    '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
+                '</div>'+
+                '<div class="col-md-4 ">'+
+                    '<label class="control-label">Cliente</label>'+
+                    '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
+                '</div>'+
+                '<div class="col-md-4 "><br>'+
+                '<div class="input-group input-group-sm">' +
+                '<input type="text" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
+                '<span class="input-group-btn">' +
+                '<button type="submit" id="' + btn_id + '" class="btn btn-danger-admin">' +
+                '<i class="fa fa-search"></i>' +
+                '</button>' +
+                '<button title="Limpiar Filtro" type="button" id="limpiar-filtro-comprobantes" class="btn btn-warning">' +
+                '<i class="fa fa-trash-o"></i>' +
+                '</button>' +
+                '</span>' +
+                '</div>' +
+                '</div>'+
+                
+            '</div>'+
+       
+        '</form>';
+}

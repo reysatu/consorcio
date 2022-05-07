@@ -342,6 +342,11 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $param;
     }
 
+    public function get_clientes() {
+        $sql = "SELECT * FROM ERP_Clientes";
+        $result = DB::select($sql);
+        return $result;
+    }
   
     
 

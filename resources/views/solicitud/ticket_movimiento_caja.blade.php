@@ -112,8 +112,11 @@
     <div class="row">
            
         <div class="col" style="width: 100%; line-height: 20px; margin-top: 5px;">
-          
+            <?php if(!empty($cliente[0]->razonsocial_cliente)) { ?>
+            <label for="">CLIENTE: {{ $cliente[0]->razonsocial_cliente }} </label><br>
+            <?php } ?>
             <label for="">CONCEPTO: {{ $venta[0]->descripcion }} </label><br>
+            
             <label for="">RECIBO N°: {{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</label><br>
             <label for="">CORRELATIVO N°: {{ $venta[0]->numero_comprobante }}</label><br>
              <label for="">FECHA: {{ $venta[0]->fecha_emision_user_full }}</label><br>

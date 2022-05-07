@@ -552,5 +552,11 @@ class SolicitudController extends Controller
         $result = DB::select($sql);
         echo json_encode($result);
     }
+
+    public function validar_serie(Request $request, SolicitudInterface $repo) {
+        $data = $request->all();
+        $result = $repo->validar_serie($data["idserie"]);
+        return response()->json($result);
+    }
  
 }

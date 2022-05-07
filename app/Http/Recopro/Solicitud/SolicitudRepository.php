@@ -380,7 +380,7 @@ class SolicitudRepository implements SolicitudInterface
         /*int_moratorio = ISNULL(int_moratorio, 0) + {$data["int_moratorio"]},
         pagado_mora = ISNULL(pagado_mora, 0) + {$data["pagado_mora"]}, 
         saldo_mora = ISNULL(saldo_mora, 0) +  {$data["saldo_mora"]}*/
-        /*int_moratorio = {$data["int_moratorio"]},
+        /*int_moratorio = {$data["int_moratorio"]},*/
         pagado_mora = {$data["pagado_mora"]}, 
         saldo_mora = {$data["saldo_mora"]}
         WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
@@ -440,5 +440,16 @@ class SolicitudRepository implements SolicitudInterface
         $result = DB::statement($sql_update);
         
         return $result; 
+    }
+
+    public function validar_serie($idserie) {
+        $sql = "SELECT * FROM ERP_Solicitud AS s
+        INNER JOIN ERP_SolicitudArticulo AS sa ON(sa.cCodConsecutivo=s.cCodConsecutivo AND sa.nConsecutivo=s.nConsecutivo)
+        INNER JOIN ERP_SolicitudDetalle AS sd ON(sa.id=sd.id_solicitud_articulo AND sa.cCodConsecutivo=sd.cCodConsecutivo AND sa.nConsecutivo=sd.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND sd.idSerie={$idserie}";
+        
+        $result = DB::select($sql);
+        return $result;
+        
     }
 }

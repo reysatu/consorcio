@@ -64,3 +64,5 @@ Route::put('solicitud/createCliente/{id}', ['as' => 'solicitud.createCliente', '
 
 Route::post('solicitud/validar_parametro_categoria', ['as' => 'solicitud.validar_parametro_categoria', 'uses' => 'SolicitudController@validar_parametro_categoria']);
 
+Route::post('solicitud/validar_serie', ['as' => 'solicitud.validar_serie', 'uses' => 'SolicitudController@validar_serie']);
+
