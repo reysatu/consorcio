@@ -148,8 +148,8 @@
 
 
         function newSolicitud() {
-            $("#imprimir-cronograma").hide();
-            $("#cancelar-solicitud").hide();
+            $(".imprimir-cronograma").hide();
+            $(".cancelar-solicitud").hide();
             // var hoy = new Date();
             // var hAnio=hoy.getFullYear();
             // var hmes=hoy.getMonth()+1;
@@ -186,10 +186,10 @@
             }
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
-            $("#imprimir-solicitud").hide();
+            $(".imprimir-solicitud").hide();
             habilitar_inputs();
-            $("#enviar_solicitud").hide();
-            $("#aprobaciones").hide();
+            $(".enviar_solicitud").hide();
+            $(".aprobaciones").hide();
             $("#articulo_mov_det").html("");
             $("#formulario-solicitud").trigger("reset");
             $("#formulario-creditos").trigger("reset");
@@ -3179,13 +3179,13 @@
                                 type: 'success'
                             });
                             // alert("show");
-                            $("#enviar_solicitud").show();
-                            $("#imprimir-solicitud").show();
+                            $(".enviar_solicitud").show();
+                            $(".imprimir-solicitud").show();
 
                             if (data.datos[0].estado == "1" || data.datos[0].estado == "2") {
-                                $("#cancelar-solicitud").show();
+                                $(".cancelar-solicitud").show();
                             } else {
-                                $("#cancelar-solicitud").hide();
+                                $(".cancelar-solicitud").hide();
                             }
 
                         } else {
@@ -3320,7 +3320,7 @@
                                 message: 'La solicitud se envio correctamente. Se cambio al estado: ' + $("#estado option[value='" + $("#estado").val() + "']").text(),
                                 type: 'success'
                             });
-                            $("#aprobaciones").show();
+                            $(".aprobaciones").show();
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -3475,15 +3475,15 @@
                     }
 
                     if (data.solicitud[0].estado == "1" || data.solicitud[0].estado == "2") {
-                        $("#cancelar-solicitud").show();
+                        $(".cancelar-solicitud").show();
                     } else {
-                        $("#cancelar-solicitud").hide();
+                        $(".cancelar-solicitud").hide();
                     }
 
 
                     if (data.solicitud[0].estado == "1") {
                         habilitar_inputs();
-                        $("#enviar_solicitud").show();
+                        $(".enviar_solicitud").show();
                     } else {
 
                         deshabilitar_inputs();
@@ -3491,14 +3491,14 @@
 
                     // solo para credito directo 
                     if (data.solicitud[0].tipo_solicitud == "2" && (data.solicitud[0].estado >= 6 || data.solicitud[0].estado == 4)) {
-                        $("#imprimir-cronograma").show();
+                        $(".imprimir-cronograma").show();
                     } else {
-                        $("#imprimir-cronograma").hide();
+                        $(".imprimir-cronograma").hide();
                     }
 
                     $("#tipo_sol").val(data.solicitud[0].tipo);
-                    $("#aprobaciones").show();
-                    $("#imprimir-solicitud").show();
+                    $(".aprobaciones").show();
+                    $(".imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
@@ -3547,7 +3547,7 @@
 
             $("#agregar-articulo").hide();
             $("#btn_editar_cliente").hide();
-            $("#enviar_solicitud").hide();
+            $(".enviar_solicitud").hide();
             $("#btn_editar_conyugue").hide();
             $("#btn_editar_fiador").hide();
 

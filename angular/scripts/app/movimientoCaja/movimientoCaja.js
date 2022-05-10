@@ -3475,7 +3475,10 @@ table_container_bancos.jtable('load');
         $(document).on("click", '#limpiar-filtro-comprobantes', function () {
             $('#FechaInicioFiltro').val(""),
             $('#FechaFinFiltro').val(""),
-            $('#idClienteFiltro').val(""),
+            $('#idClienteFiltro').val("").trigger("change"),
+            $("#idClienteFiltro").select2("val", "");
+            $('#search_b_comprobantes').val(""),
+            // $('#idClienteFiltro').val(""),
             LoadRecordsButtonComprobantes.click();
         });
 

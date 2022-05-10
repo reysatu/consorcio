@@ -96,30 +96,43 @@
                         <br>
                         <div>
                             <div style="float:left">
-                                <!-- <button type="button" id="" disabled class="btn btn-primary btn-sm btn_ejecucion">
-                                <span class="fa fa-save"></span>
-                                En Ejecución
-                            </button>
-                            <button type="button" id="" disabled class="btn btn-warning btn-sm btn_terminada">
-                                <span class="fa fa-save"></span>
-                                Terminada
-                            </button>
-                            <button type="button" id="" disabled class="btn btn-info btn-sm btn_cancelar">
-                                <span class="fa fa-ban"></span>
-                                Cancelar
-                            </button> -->
+                                <!-- <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" disabled>
+                                    <span class="fa fa-save"></span>
+                                    En Ejecución
+                                </button>
+                                <button type="button" id="" class="btn btn-warning btn-sm btn_terminada" disabled>
+                                    <span class="fa fa-save"></span>
+                                    Terminada
+                                </button> -->
+                                <button type="button" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm aprobaciones" style="display: none;" >
+                                    <span class="fa fa-check"></span>
+                                    Aprobaciones
+                                </button>
                             </div>
                             <div style="float:right">
-                                <!-- <button type="button" id="" class="btn btn-info btn-sm btn_imprimir">
-                                <span class="fa fa-file-pdf-o"></span>
-                                Imprimir
-                            </button> -->
-
-
+                                <button type="button" ng-click="enviar_solicitud()"  style="display: none;" class="btn btn-success btn-sm enviar_solicitud">
+                                    <span class="fa fa-send"></span>
+                                    Enviar
+                                </button>
+                                <button type="button" ng-click="imprimir_solicitud()"  class="btn btn-info btn-sm imprimir-solicitud">
+                                    <span class="fa fa-file-pdf-o"></span>
+                                    Imprimir
+                                </button>
+                                <button style="display: none;" type="button" ng-click="imprimir_cronograma()"  class="btn btn-info btn-sm imprimir-cronograma">
+                                    <span class="fa fa-calendar"></span>
+                                    Cronograma
+                                </button>
+                                <button style="display: none;" type="button" ng-click="cancelar_solicitud()"  class="btn btn-warning btn-sm cancelar-solicitud">
+                                    <span class="fa fa-ban"></span>
+                                    Cancelar
+                                </button>
                                 <button type="button" id="" class="btn btn-danger-admin btn-sm btn_guardarOrden"
                                     ng-click="guardar_solicitud()">
                                     <span class="fa fa-save"></span>
                                     Guardar
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+                                    <span class="fa fa-times"></span> Cerrar
                                 </button>
                             </div>
                         </div>
@@ -770,25 +783,25 @@
                             <span class="fa fa-save"></span>
                             Terminada
                         </button> -->
-                        <button type="button" id="aprobaciones" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm " style="display: none;" >
+                        <button type="button" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm aprobaciones" style="display: none;" >
                             <span class="fa fa-check"></span>
                             Aprobaciones
                         </button>
                     </div>
                     <div style="float:right">
-                        <button type="button" id="enviar_solicitud" ng-click="enviar_solicitud()"  style="display: none;" class="btn btn-success btn-sm">
+                        <button type="button" ng-click="enviar_solicitud()"  style="display: none;" class="btn btn-success btn-sm enviar_solicitud">
                             <span class="fa fa-send"></span>
                             Enviar
                         </button>
-                        <button type="button" id="imprimir-solicitud" ng-click="imprimir_solicitud()"  class="btn btn-info btn-sm">
+                        <button type="button" ng-click="imprimir_solicitud()"  class="btn btn-info btn-sm imprimir-solicitud">
                             <span class="fa fa-file-pdf-o"></span>
                             Imprimir
                         </button>
-                        <button style="display: none;" type="button" id="imprimir-cronograma" ng-click="imprimir_cronograma()"  class="btn btn-info btn-sm">
+                        <button style="display: none;" type="button" ng-click="imprimir_cronograma()"  class="btn btn-info btn-sm imprimir-cronograma">
                             <span class="fa fa-calendar"></span>
                             Cronograma
                         </button>
-                        <button style="display: none;" type="button" id="cancelar-solicitud" ng-click="cancelar_solicitud()"  class="btn btn-warning btn-sm">
+                        <button style="display: none;" type="button" ng-click="cancelar_solicitud()"  class="btn btn-warning btn-sm cancelar-solicitud">
                             <span class="fa fa-ban"></span>
                             Cancelar
                         </button>
