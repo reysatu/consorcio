@@ -22,6 +22,8 @@ use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\RegisterOrdenCompraArticulo\RegisterOrdenCompraArticuloInterface;
 use App\Http\Recopro\ViewScomprArticulo\ViewScomprArticuloInterface;
+use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraInterface;
+use App\Http\Recopro\SolicitudCompraArticulo\SolicitudCompraArticuloInterface;
 use Carbon\Carbon;
 use DB;
 
@@ -34,11 +36,84 @@ class RegisterOrdenCompraController extends Controller
     {
 //        $this->middleware('json');
     }
+    public function deleteDetalleST($id,SolicitudCompraArticuloInterface $repoSolComp, RegisterOrdenCompraInterface $repo,RegisterOrdenCompraArticuloInterface $repoOart, Request $request)
+    {   try {
+            $dataSo=[];
+            $dataSo['estado'] =  1;
+            
+            $art=$repoOart->getDataOrdeCompraArt($id);
 
-    public function all(Request $request, RegisterOrdenCompraInterface $repo)
+           
+
+            $repoSolComp->update_estado($art[0]->codSolicitud, $dataSo);
+
+            
+
+            $this->cambiarEstadoSolicitud($art[0]->idOrden,$repoSolComp);
+
+            $val=$repo->destroy_ordenCompra($id);
+
+            return response()->json([
+                'status' => true,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function cambiarEstadoTotal($id, RegisterOrdenCompraInterface $repo, Request $request)
+    {
+        try {
+             $mensaje='';
+             $estado =$request->input('estadoCambio');
+          
+             $val=$repo->cambiar_estado($id,$estado);
+            if($estado==1){
+                $mensaje='Aprobó';
+            }else if($estado==3){
+                $mensaje='Cerró';
+            }else if($estado==4){
+                $mensaje='Canceló';
+            }
+            return response()->json([
+                'status' => true,
+                'mensaje'=>$mensaje,
+            ]);
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    protected function cambiarEstadoSolicitud($id,$repo)
+    {
+        $idSolicitud=$repo->getidSolicitud($id);
+        foreach ($idSolicitud as $value) {
+           $dataArticulos=$repo->getDetalleArticulosSolicitud($value->idMovimiento);
+         
+           $cont=$dataArticulos[0]->estado;
+            foreach ($dataArticulos as $row) {
+                if($cont>$row->estado){
+                    $cont=$row->estado;
+                }
+            }
+            $dataSo=[];
+            $dataSo['estado'] = $cont;
+            $repo->update_estadoSolicitudCompra($value->idMovimiento, $dataSo);
+        }
+        
+    }
+    public function all(Request $request, View_OrdenCompraInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['id','cCodConsecutivo','nConsecutivo','dFecRegistro','prioridad','dFecRequerida','idProveedor','idMoneda','idcondicion_pago','subtotal','nDescuento','nPorcDescuento','nIdDscto','valorCompra','nImpuesto','total','direccionEntrega','iEstado','user_created','created_at','user_updated','updated_at'];
+        $params = ['id','cCodConsecutivo','nConsecutivo','iEstado','ident','created_at'];
         return parseList($repo->search($s), $request, 'id', $params);
     }
     public function allScomprArticulo(Request $request, ViewScomprArticuloInterface $repo)
@@ -213,10 +288,20 @@ class RegisterOrdenCompraController extends Controller
     //         ]);
     //     }
     // }
-    public function destroy(RegisterOrdenCompraInterface $repo, Request $request)
+    public function destroy(RegisterOrdenCompraInterface $repo,SolicitudCompraArticuloInterface $repoSolComp, Request $request)
     {
+        
         $id = $request->input('id');
+        $dataArticulos=$repo->getDetalleArticulos($id);
+        foreach ($dataArticulos as $row) {
+            $dataSo=[];
+            $dataSo['estado'] =  1;
+            $repoSolComp->update_estado($row->codSolicitud, $dataSo);
+        }
+       
+        $this->cambiarEstadoSolicitud($id,$repoSolComp);
         $repo->destroy($id);
+
         return response()->json(['Result' => 'OK']);
     }
     public function cambiarEstado($id, RegisterOrdenCompraInterface $repo, Request $request)
@@ -246,7 +331,7 @@ class RegisterOrdenCompraController extends Controller
             ]);
         }
     }
-    public function createUpdate($id, RegisterOrdenCompraInterface $repo, Request $request, OperationInterface $opRepo,RegisterOrdenCompraArticuloInterface $repoArti)
+    public function createUpdate($id, RegisterOrdenCompraInterface $repo, Request $request, OperationInterface $opRepo,RegisterOrdenCompraArticuloInterface $repoArti,SolicitudCompraArticuloInterface $repoSolComp)
     {
         
         try {
@@ -276,6 +361,9 @@ class RegisterOrdenCompraController extends Controller
 
             $idArticulo = $data['idArticulo'];
             $idArticulo = explode(',', $idArticulo);
+
+            $codSolicitud = $data['codSolicitud'];
+            $codSolicitud = explode(',', $codSolicitud);
 
             $cantidad = $data['cantidad'];
             $cantidad = explode(',', $cantidad);
@@ -334,7 +422,8 @@ class RegisterOrdenCompraController extends Controller
                     $datoLo = [];
                     $datoLo['idArticulo'] = $idArticulo[$i];
                     $datoLo['idOrden'] = $id;
-                    $datoLo['cantidad'] = $cantidad[$i];
+                    $datoLo['cantidad'] = $cantidad[$i]; 
+                    $datoLo['codSolicitud'] = $codSolicitud[$i]; 
                     $datoLo['cantidadPendiente'] = $cantidadPendiente[$i];
                     $datoLo['cantidadRecibida'] = $cantidadRecibida[$i];
                     $datoLo['cantidadDevuelta'] = $cantidadDevuelta[$i];
@@ -363,6 +452,13 @@ class RegisterOrdenCompraController extends Controller
                 };
 
             }
+             for ($i = 0; $i < count($codSolicitud); $i++) {
+                $dataSo=[];
+                $dataSo['estado'] =  2;
+                $repoSolComp->update_estado($codSolicitud[$i], $dataSo);
+             }
+             $this->cambiarEstadoSolicitud($id,$repoSolComp);
+
 
 
             
@@ -388,6 +484,7 @@ class RegisterOrdenCompraController extends Controller
     // // {
     // //     return parseSelect($repo->all(), 'id', 'description');
     // // }
+   
 
     public function excel(RegisterOrdenCompraInterface $repo)
     {

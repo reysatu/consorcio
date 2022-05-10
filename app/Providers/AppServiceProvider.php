@@ -27,6 +27,12 @@ use App\Http\Recopro\Empresa\Empresa;
 use App\Http\Recopro\Empresa\EmpresaInterface;
 use App\Http\Recopro\Empresa\EmpresaRepository;
 
+use App\Http\Recopro\View_OrdenCompra\View_OrdenCompra; 
+use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraInterface;
+use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraRepository;
+
+
+
 
 use App\Http\Recopro\Area\Area; 
 use App\Http\Recopro\Area\AreaInterface;
@@ -797,6 +803,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerProveedor();
         $this->registerArea();
         $this->registerEmpresa();
+        $this->registerView_OrdenCompra();
         $this->registerSector();
         $this->registerViewScomprArticulo();
         $this->registerProveedorCuentaBanco();
@@ -1181,6 +1188,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ProveedorCuentaBancoInterface::class, function ($app) {
             return new ProveedorCuentaBancoRepository(new ProveedorCuentaBanco());
+        });
+    }
+    public function registerView_OrdenCompra()
+    {
+        $app = $this->app;
+
+        $app->bind(View_OrdenCompraInterface::class, function ($app) {
+            return new View_OrdenCompraRepository(new View_OrdenCompra());
         });
     }
     public function registerEmpresa()

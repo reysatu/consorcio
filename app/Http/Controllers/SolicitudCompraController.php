@@ -169,20 +169,7 @@ class SolicitudCompraController extends Controller
             ]);
         }
     }
-    public function update(SolicitudCompraInterface $repo, SolicitudCompraRequest $request)
-    {
-        $data = $request->all();
-        $id = $data['idCategoria'];
-        $data['descripcion'] = strtoupper($data['Categoria']);
-        $estado='A';
-        if(!isset($data['estado'])){
-            $estado='I';
-        };
-        $data['estado'] =  $estado;
-        $repo->update($id, $data);
-
-        return response()->json(['Result' => 'OK']);
-    }
+   
 
 
     public function destroy($id, SolicitudCompraInterface $repo, Request $request)

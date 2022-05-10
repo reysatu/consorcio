@@ -173,6 +173,7 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $model = $this->model->findOrFail($id);
         $model->update($attributes);
     }
+   
      public function get_movement_articulo($id){
         $mostrar=DB::select("select uni.Descripcion as unidaMedida ,FORMAT(Mo.fecha_requerida, 'yyyy-MM-dd') AS fecha_requerida_ad,* from ERP_SolicitudCompra_Articulo as Mo inner join ERP_Productos as pr on mo.idArticulo=pr.id left join ERP_UnidadMedida as uni on (pr.um_id=uni.IdUnidadMedida) where mo.idMovimiento='$id'");
         return $mostrar; 
