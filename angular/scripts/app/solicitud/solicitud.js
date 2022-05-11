@@ -1587,14 +1587,19 @@
         var identSerAr = $("#identSerAr");//identificador para modificar el array de series esxisten
 
         function cargarTableSerie(idProducto, aarraySe) {
+ 
+            // console.log($("#table_container_Series_Articulo").find(".jtable-main-container"));
+           
+            
+
             cont_check = 0;
             identiSelec = "A";
             var search_cc4 = getFormSearch('frm-search-cc4', 'search_cc4', 'LoadRecordsButtonCC4');
             table_container_cc4 = $("#table_container_Series_Articulo");
             var url = 'getProductoSerie';
-            if (naturalezaGeneral == "S") {
-                url = 'getProductoSerieStock';
-            };
+            // if (naturalezaGeneral == "S") {
+            //     url = 'getProductoSerieStock';
+            // };
             table_container_cc4.jtable({
                 title: "Lista de Series",
                 paging: true,
@@ -1664,6 +1669,20 @@
                         listClass: 'text-center',
                         display: function (data) {
                             var ichc = 'N';
+
+                            var codigo_tr = $("#btnSeleSerie").attr("codigo_tr");
+                            var tr = $("#tr_idArticulo"+codigo_tr);
+                            var arr_series = []
+                            // console.log(tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']"));
+                            if(tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']").length > 0) {
+
+                                arr_series = tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']").val().split(",");
+                            }
+
+                            // console.log(arr_series);  
+                            // console.log(data.record);  
+                            
+
                             if (identSerAr.val() != "") {
                                 console.log("entro");
                                 aartMSE.map(function (index) {
@@ -1671,7 +1690,8 @@
                                         ichc = 'A';
                                     }
                                 });
-                                if (ichc == 'A') {
+                                // console.log("ichc: "+ichc);
+                                if (ichc == 'A' || arr_series.indexOf(data.record.idSerie) != -1) {
                                     cont_check = cont_check + 1;
                                     ichc = 'N';
                                     return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '" checked ></label>';
@@ -1679,7 +1699,13 @@
                                     return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
                                 }
                             } else {
-                                return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
+                                console.log(arr_series.indexOf(data.record.idSerie));
+                                if(arr_series.indexOf(data.record.idSerie) != -1) {
+                                    return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '" checked ></label>';
+                                } else {
+                                    return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
+                                }
+                                
                             }
 
 
@@ -2476,11 +2502,17 @@
             var articulo = $(this).data("articulo");
             var codigo_tr = $(this).data("id");
             var cantidad = $(this).data("cantidad");
+            $("#btnSeleSerie").attr("codigo_tr", codigo_tr);
             desProductoMss.val(articulo);
             idProductoMss.val(idarticulo);
             costoAS.val(costo);
             $("#codigo-tr").val(codigo_tr);
             modalSerieR.modal('show');
+            // $("#table_container_Series_Articulo").html("");
+            if($("#table_container_Series_Articulo").find(".jtable-main-container").length > 0) {
+                $('#table_container_Series_Articulo').jtable('destroy');
+                $("#table_container_Series_Articulo").empty();
+            }
             // alert(cantidad);
             $("#cantProductoMss").val(cantidad);
             $("#cantProductoMss").focus();

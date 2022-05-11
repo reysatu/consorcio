@@ -53,7 +53,7 @@ Route::post('solicitud/getArticulosSelect', ['as' => 'solicitud.getArticulosSele
 Route::get('solicitud/validateCantSerie/{id}', ['as' => 'solicitud.validateCantSerie', 'uses' => 'Register_movementController@validateCantSerie']);
 
 Route::post('solicitud/getProductoSerie', ['as' => 'solicitud.getProductoSerie', 'uses' => 'SerieController@traerSeries']);
-Route::post('solicitud/getProductoSerieStock', ['as' => 'solicitud.getProductoSerieStock', 'uses' => 'SerieController@traerSeriesStock']);
+Route::post('solicitud/getProductoSerieStock', ['as' => 'solicitud.getProductoSerieStock', 'uses' => 'SerieController@imprimir_cronograma']);
 
 Route::get('solicitud/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
 
