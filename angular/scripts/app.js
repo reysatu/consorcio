@@ -124,6 +124,7 @@
         'sys.app.refinanciamientos',
         'sys.app.visita_cliente',
         'sys.app.lista_cobranza_cuotas',
+        'sys.app.avance_morosidad',
         
         // Almacen
         'sys.app.receptions',

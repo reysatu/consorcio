@@ -11,6 +11,8 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
+use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Ventas\VentasInterface;
@@ -426,6 +428,272 @@ class VentasController extends Controller
         $data = $request->all();
         $result = $repo->get_segunda_venta_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
         return response()->json($result);
+    }
+
+    public function obtener_data_reporte($data, $repo_orden) {
+        $where = "";
+        if(!empty($data["idcobrador"])) {
+            $where .= " AND s.idCobrador={$data["idcobrador"]}";
+        }
+
+        if(!empty($data["idtienda"])) {
+            $where .= " AND c.nCodTienda={$data["idtienda"]}";
+        }
+
+        if(!empty($data["tipo_solicitud"])) {
+            $where .= " AND s.tipo_solicitud={$data["tipo_solicitud"]}";
+        }
+
+        $fecha_actual = date("Y-m-d");
+        $cambio = $repo_orden->cambio_tipo_venta("2", $fecha_actual);
+        $tipo_cambio = (float)$cambio[0]->tipo_cambio_venta;
+
+        $result = array();
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) = 0 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $cuentas_vencer = DB::select($sql);
+        $total_cuentas_vencer = 0;
+
+        foreach ($cuentas_vencer as $key => $value) {
+            $total_cuentas_vencer += (float) $value->saldo;
+        }
+
+        $result["cuentas_vencer"]["monto_soles"] = number_format($total_cuentas_vencer, 2);
+        $result["cuentas_vencer"]["monto_dolares"] = number_format($total_cuentas_vencer * $tipo_cambio, 2);
+        $result["cuentas_vencer"]["clientes"] = count($cuentas_vencer);
+        $result["cuentas_vencer"]["mora_porcentaje"] = 0;
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) > 0 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $cuentas_vencidas = DB::select($sql);
+        $total_cuentas_vencidas = 0;
+
+        foreach ($cuentas_vencidas as $key => $value) {
+            $total_cuentas_vencidas += (float) $value->saldo;
+        }
+
+        $total_general = $total_cuentas_vencer + $total_cuentas_vencidas;
+        $total_clientes = count($cuentas_vencer) + count($cuentas_vencidas);
+
+        $result["cuentas_vencidas"]["monto_soles"] = number_format($total_cuentas_vencidas, 2);
+        $result["cuentas_vencidas"]["monto_dolares"] = number_format($total_cuentas_vencidas * $tipo_cambio, 2);
+        $result["cuentas_vencidas"]["clientes"] = count($cuentas_vencidas);
+        $result["cuentas_vencidas"]["mora_porcentaje"] = number_format($total_cuentas_vencidas / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 1 AND 8 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_1_8 = DB::select($sql);
+        $total_de_1_8 = 0;
+
+        foreach ($de_1_8 as $key => $value) {
+            $total_de_1_8 += (float) $value->saldo;
+        }
+       
+        $result["de_1_8"]["monto_soles"] = number_format($total_de_1_8, 2);
+        $result["de_1_8"]["monto_dolares"] = number_format($total_de_1_8 * $tipo_cambio, 2);
+        $result["de_1_8"]["clientes"] = count($de_1_8);
+        $result["de_1_8"]["mora_porcentaje"] = number_format($total_de_1_8 / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 9 AND 30 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_9_30 = DB::select($sql);
+        $total_de_9_30 = 0;
+
+        foreach ($de_9_30 as $key => $value) {
+            $total_de_9_30 += (float) $value->saldo;
+        }
+       
+        $result["de_9_30"]["monto_soles"] = number_format($total_de_9_30, 2);
+        $result["de_9_30"]["monto_dolares"] = number_format($total_de_9_30 * $tipo_cambio, 2);
+        $result["de_9_30"]["clientes"] = count($de_9_30);
+        $result["de_9_30"]["mora_porcentaje"] = number_format($total_de_9_30 / $total_general, 2);
+
+        
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 31 AND 60 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_31_60 = DB::select($sql);
+        $total_de_31_60 = 0;
+
+        foreach ($de_31_60 as $key => $value) {
+            $total_de_31_60 += (float) $value->saldo;
+        }
+       
+        $result["de_31_60"]["monto_soles"] = number_format($total_de_31_60, 2);
+        $result["de_31_60"]["monto_dolares"] = number_format($total_de_31_60 * $tipo_cambio, 2);
+        $result["de_31_60"]["clientes"] = count($de_31_60);
+        $result["de_31_60"]["mora_porcentaje"] = number_format($total_de_31_60 / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 61 AND 90 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_61_90 = DB::select($sql);
+        $total_de_61_90 = 0;
+
+        foreach ($de_61_90 as $key => $value) {
+            $total_de_61_90 += (float) $value->saldo;
+        }
+       
+        $result["de_61_90"]["monto_soles"] = number_format($total_de_61_90, 2);
+        $result["de_61_90"]["monto_dolares"] = number_format($total_de_61_90 * $tipo_cambio, 2);
+        $result["de_61_90"]["clientes"] = count($de_61_90);
+        $result["de_61_90"]["mora_porcentaje"] = number_format($total_de_61_90 / $total_general, 2);
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 91 AND 120 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_91_120 = DB::select($sql);
+        $total_de_91_120 = 0;
+
+        foreach ($de_91_120 as $key => $value) {
+            $total_de_91_120 += (float) $value->saldo;
+        }
+       
+        $result["de_91_120"]["monto_soles"] = number_format($total_de_91_120, 2);
+        $result["de_91_120"]["monto_dolares"] = number_format($total_de_91_120 * $tipo_cambio, 2);
+        $result["de_91_120"]["clientes"] = count($de_91_120);
+        $result["de_91_120"]["mora_porcentaje"] = number_format($total_de_91_120 / $total_general, 2);
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 121 AND 150 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_121_150 = DB::select($sql);
+        $total_de_121_150 = 0;
+
+        foreach ($de_121_150 as $key => $value) {
+            $total_de_121_150 += (float) $value->saldo;
+        }
+       
+        $result["de_121_150"]["monto_soles"] = number_format($total_de_121_150, 2);
+        $result["de_121_150"]["monto_dolares"] = number_format($total_de_121_150 * $tipo_cambio, 2);
+        $result["de_121_150"]["clientes"] = count($de_121_150);
+        $result["de_121_150"]["mora_porcentaje"] = number_format($total_de_121_150 / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 151 AND 270 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_151_270 = DB::select($sql);
+        $total_de_151_270 = 0;
+
+        foreach ($de_151_270 as $key => $value) {
+            $total_de_151_270 += (float) $value->saldo;
+        }
+       
+        $result["de_151_270"]["monto_soles"] = number_format($total_de_151_270, 2);
+        $result["de_151_270"]["monto_dolares"] = number_format($total_de_151_270 * $tipo_cambio, 2);
+        $result["de_151_270"]["clientes"] = count($de_151_270);
+        $result["de_151_270"]["mora_porcentaje"] = number_format($total_de_151_270 / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) BETWEEN 271 AND 360 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_271_360 = DB::select($sql);
+        $total_de_271_360 = 0;
+
+        foreach ($de_271_360 as $key => $value) {
+            $total_de_271_360 += (float) $value->saldo;
+        }
+       
+        $result["de_271_360"]["monto_soles"] = number_format($total_de_271_360, 2);
+        $result["de_271_360"]["monto_dolares"] = number_format($total_de_271_360 * $tipo_cambio, 2);
+        $result["de_271_360"]["clientes"] = count($de_271_360);
+        $result["de_271_360"]["mora_porcentaje"] = number_format($total_de_271_360 / $total_general, 2);
+
+
+        $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
+        INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(s.cCodConsecutivo=sc.cCodConsecutivo AND s.nConsecutivo=sc.nConsecutivo)
+        WHERE s.estado NOT IN(5, 10) AND isnull(sc.dias_mora, 0) > 361 AND s.saldo > 0 {$where}
+        GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo";
+
+        $de_361 = DB::select($sql);
+        $total_de_361 = 0;
+
+        foreach ($de_361 as $key => $value) {
+            $total_de_361 += (float) $value->saldo;
+        }
+       
+        $result["de_361"]["monto_soles"] = number_format($total_de_361, 2);
+        $result["de_361"]["monto_dolares"] = number_format($total_de_361 * $tipo_cambio, 2);
+        $result["de_361"]["clientes"] = count($de_361);
+        $result["de_361"]["mora_porcentaje"] = number_format($total_de_361 / $total_general, 2);
+
+        return $result;
+    }
+
+    public function ver_reporte_avance_morosidad(Request $request, Orden_servicioInterface $repo_orden) {
+        $data = $request->all();
+        // print_r($data);
+        $result = $this->obtener_data_reporte($data, $repo_orden);
+
+        return response()->json($result);
+
+    }
+
+    public function imprimir_avance_morosidad(Request $request, Orden_servicioInterface $repo_orden, CajaDiariaDetalleInterface $repo_caja, ShopInterface $shop_repo) {
+        $data = $request->all();
+        $result = $this->obtener_data_reporte($data, $repo_orden);
+        $datos = array();
+        $datos["data"] = $result;
+        $datos["empresa"] = $repo_caja->get_empresa(); 
+        $tienda = "TODAS LAS TIENDAS";
+        if(!empty($data["idtienda"])) {
+            $tienda = $shop_repo->find($data["idtienda"])[0]->descripcion;
+        }
+
+        $fecha_actual = date("Y-m-d");
+        $cambio = $repo_orden->cambio_tipo_venta("2", $fecha_actual);
+        $tipo_cambio = (float)$cambio[0]->tipo_cambio_venta;
+
+        // echo "<pre>";
+        // print_r($datos);
+        $datos["tienda"] = $tienda;
+        $datos["tipo_cambio"] = number_format($tipo_cambio, 4);
+        $pdf = PDF::loadView("reportes.avance_morosidad", $datos);
+        return $pdf->stream("avance_morosidad.pdf"); // ver
+
+
     }
   
 }

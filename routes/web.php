@@ -225,6 +225,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Refinanciamientos.php';
     require app_path() . '\Http\Routes\VisitaCliente.php';
     require app_path() . '\Http\Routes\ListaCobranzaCuotas.php';
+    require app_path() . '\Http\Routes\AvanceMorosidad.php';
 
     //Route Purchases
 
