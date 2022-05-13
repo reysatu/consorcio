@@ -32,6 +32,22 @@ class SolicitudCompraController extends Controller
     {
 //        $this->middleware('json');
     }
+    public function deleteDetalleSC($id, SolicitudCompraInterface $repo, Request $request)
+    {   try {
+            $array=explode("_", $id);
+            $val=$repo->destroy_detalle_solicitudCompra($array[0],$array[1]);
+            return response()->json([
+                'status' => true,
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 
     public function all(Request $request, SolicitudCompraInterface $repo)
     {
@@ -197,6 +213,7 @@ class SolicitudCompraController extends Controller
              $estado =$request->input('estadoCambio');
           
              $val=$repo->cambiar_estado($id,$estado);
+             
             if($estado==1){
                 $mensaje='Aprobó';
             }else if($estado==3){

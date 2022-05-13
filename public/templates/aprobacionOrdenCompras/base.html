@@ -1,49 +1,89 @@
- 
 <style>
-   .table-wrapper {
+    .table-wrapper {
 
-  max-height: 200px !important;
-  width: auto !important;
-  overflow: auto !important;
-  display:inline-block !important;
-}
-.table-earnings {
-  background: #F3F5F6 !important;
-}
-.modal2 {
-  text-align: center;
-  padding: 0!important;
-}
+        max-height: 200px !important;
+        width: auto !important;
+        overflow: auto !important;
+        display: inline-block !important;
+    }
 
-.modal2:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-  margin-right: -4px;
-}
+    .table-earnings {
+        background: #F3F5F6 !important;
+    }
+   .danger_admin  th{
+        background-color: #ec1415 !important;
+        color:#fff;
+    }
 
-.modal-dialog2 {
-  display: inline-block;
-  text-align: left;
-  vertical-align: middle;
-}
+    .modal2 {
+        text-align: center;
+        padding: 0 !important;
+    }
+   #table_container_pendienteCobro thead tr th{
+        background-color: #ec1415 !important;
+        color:#fff;
+    }
+
+    .modal2:before {
+        content: '';
+        display: inline-block; 
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -4px;
+    }
+
+    .modal-dialog2 { 
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .modal-open {
+        overflow: scroll !important;
+    }
+
+    h5 {
+        font: sans-serif;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    h5.linea {
+        position: relative;
+        z-index: 1;
+    }
+
+    h5.linea:before {
+        border-top: 2px solid #D6DBDF;
+        content: "";
+        margin: 0 auto;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 95%;
+        z-index: -1;
+    }
+
+    h5.linea span {
+
+        background: #fff;
+        padding: 0 15px;
+    }
 </style>
-<div class="panel  panel-danger-admin">
+<div class="panel panel-danger-admin">
     <div class="panel-heading">
-        Gestión de Orden de Compra
+        Gestión de Aprobación de Ordenes de Compra
     </div>
     <div class="panel-body">
-        <div class="row"> 
+        <div class="row">
             <div class="col-md-12">
-                <div id="table_container_RegisterOrdenCompra" class="table-responsive"></div>
+                <div id="table_container_AprobacionOrdenCompra" class="table-responsive"></div>
             </div>
         </div>
-       
-        
-        <div ng-include src="'/templates/partials/crop.html'"></div>
     </div>
-</div> 
+</div>
 <div class="modal" id="modalMovimieto" role="dialog" style="overflow-y: scroll;">
             <div class="modal-dialog  modal-lg" style="width:100%;" role="document">
                 <div class="modal-content"> 
@@ -54,6 +94,32 @@
                         <h4 class="modal-title" id="titlemodalMovimieto"></h4>
                     </div>
                     <div class="modal-body">
+                        <div class="tab-content">
+                        <br>
+                            <div style="float:left">
+                                <button type="button" id=""  class="btn btn-primary btn-sm btn_verAprobacio">
+                                    <span class="fa fa-eye"></span>
+                                    Ver aprobaciones
+                                </button>
+                               
+                               
+                                 <button type="button" id=""  class="btn btn-warning btn-sm btn_Aprobar">
+                                    <span class="fa fa-save"></span>
+                                    Aprobar
+                                </button>
+                                <button type="button" id=""  class="btn btn-info btn-sm btn_Rechazar">
+                                    <span class="fa fa-ban"></span>
+                                    Rechazar
+                                </button>
+                                <button type="button" id=""  class="btn btn-danger-admin btn-sm btn_observacion">
+                                    <span class="fa fa-ban"></span>
+                                    Observación de Aprobación
+                                </button>
+                            </div>
+                              <br>
+                        </div>
+                        <br>
+                          <br>
                         <div class="form-horizontal">
                             <div class="row">
                               <form id="id_formulario">
@@ -113,6 +179,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                     <input type="hidden" id="iEstadoConformidad">
                                     <div class="form-group">
                                         <label class="col-sm-1  control-label">Proveedor</label>
                                         <div class="col-sm-4">
@@ -176,18 +243,6 @@
                                     <br>
                                     <div class="form-group">
                                        <input type="hidden" id="ident_detalle">
-                                        <div class="col-sm-2">
-                                              <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArticulo()">
-                                                <span class="fa fa-plus"></span>
-                                                Agregar Artículo
-                                             </button>
-                                        </div>
-                                         <div class="col-sm-2">
-                                              <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArticuloSolicitud()">
-                                                <span class="fa fa-plus"></span>
-                                                Agregar Artículo Solicitud
-                                             </button>
-                                        </div>
                                     </div>
                                     <div class="table-responsive">
                                             <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
@@ -250,15 +305,6 @@
                     </div>
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-admin btn-sm"  id="btn_movimiento_detalle"  ng-click="saveMovimientoCab()">
-                            <span class="fa fa-save"></span>
-                            Guardar
-                        </button>
-                        <button type="button" class="btn btn-success btn-sm"  id="btn_movimiento_Por_aprobar"  >
-                            <span class="fa fa-check"></span>
-                            Por Aprobar
-                        </button>
-                      
                         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
                             <span class="fa fa-times"></span> Cerrar 
                         </button>
@@ -266,239 +312,138 @@
                 </div>
             </div>
 </div>
-
-<div class="modal modal2 fade" id="modalProcesarTransferencia" role="dialog">
-    <div class="modal-dialog  modal-dialog2 modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">¿Esta seguro ?</h4>
-          <input type="hidden" id="idTransferenciaProcesar">
-        </div>
-        <div class="modal-body">
-          <div class="alert alert-danger hide" role="alert" id="msg_cont_ProcesarTransferencia">
-              <span class="fa fa-warning"></span>
-              <p></p>            
-          </div> 
-          <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> El registro será Procesado. ¿Está seguro?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger-admin btn-sm"   ng-click="ProcesarTransferencia()">
-              Procesar 
-          </button>
-          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
-             Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal modal2 fade" id="modalDeleteMovimiento" role="dialog">
-    <div class="modal-dialog  modal-dialog2 modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">¿Esta seguro ?</h4>
-          <input type="hidden" id="idMovimientoDelete">
-          <input type="hidden" id="estadoDelete">
-        </div>
-        <div class="modal-body">
-          <div class="alert alert-danger hide" role="alert" id="msg_cont_EliminarMovimiento">
-              <span class="fa fa-warning"></span>
-              <p></p>            
-          </div> 
-          <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span> El registro será eliminado. ¿Está seguro?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger-admin btn-sm" ng-click="EliminarMovimiento()">
-              Eliminar 
-          </button>
-          <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
-             Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal " id="modalMovimietoArticulo" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <input type="hidden" id="idenifcador_table_art" value="I">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="titlemodalMovimietoArticulo">Artículos</h4>
-        </div>
-        <div class="modal-body">
-             <div class="row">
-                <div class="col-md-12">
-                    <div id="table_container_Register_Articulo" class="table-responsive"></div>
+<div class="modal" id="modalVerAproba" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="titleModalClientes">Aprobadores</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                       <div class="form-horizontal">
+                                        <br> 
+                                     
+                                            <div class="table-responsive">
+                                            <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                                <thead >
+                                                    <tr class="danger_admin" >
+                                                        <th>Aprobadores</th>
+                                                        <th>Comentarios</th>
+                                                        <th>Fecha registro</th>
+                                                        <th>Fecha modificación</th>
+                                                        <th>Estado</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="aprobadores_table"></tbody>
+                                            </table>
+                                            </div> 
+                                      
+                        </div> 
+                    </div>
                 </div>
             </div>
-            <br>
-            <div class="row">
-                <div class="col-md-12">
-                    <input type="hidden" id="idArtSerie">
-                    <input type="hidden" id="cantArtSerie">
-                     <input type="hidden" id="desArtSerie">
-                    
-                </div> 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
             </div>
+
         </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArtLisSeri()">
-            <span class="fa fa-plus"></span>
-                            Agregar
-        </button>   
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-      
+
     </div>
-</div> 
-
-
-<div class="modal" id="modalKit" role="dialog">
-    <div class="modal-dialog" role="document">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="titleModalLote">Kit</h4>
-        </div>
-        <div class="modal-body">
-              <div class="form-horizontal">
-                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-danger hide" role="alert" id="msg_cont">
-                            <span class="fa fa-warning"></span>
-                            Debe seleccionar un Artículo
-                        </div> 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Artículo</label>
-                                <div class="col-sm-6">
-                                        <input type="hidden" id="idProductoMK" readonly class="form-control input-sm">
-                                        <input type="hidden" id="costoMK" readonly class="form-control input-sm">
-                                        <input type="text" id="desProductoMK" readonly class="form-control input-sm">
+</div>
+<div class="modal" id="modalObservacion" role="dialog" style="overflow-y: scroll;">
+            <div class="modal-dialog " role="document">
+               <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="titleModalLote">Comentario Aprobación</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <label class="control-label">Comentario</label>
+                                            <textarea name="comentario_aprobacion" id="comentario_aprobacion" cols="30" rows="3"
+                                                class="form-control input-sm"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
-                            <label class="col-sm-2 control-label">Cantidad</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control input-sm" id="cantProductoMK">
-                            </div>   
+                            </div>
                         </div>
                     </div>
-                 </div>   
-              </div>  
-        </div>
-        <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArtkit()" >Agregar</button>   -->
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-      
-    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn_guardarObservacion"  class="btn btn-danger-admin btn-sm"
+                            >Guardar</button>
+                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
 </div>
-<div class="modal" id="modalNada" role="dialog">
-    <div class="modal-dialog" role="document">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="titleModalLote">Artículo</h4>
-        </div>
-        <div class="modal-body">
-              <div class="form-horizontal">
-                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-danger hide" role="alert" id="msg_cont">
-                            <span class="fa fa-warning"></span>
-                            Debe seleccionar un Artículo
-                        </div> 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Artículo</label>
-                                <div class="col-sm-6">
-                                        <input type="hidden" id="idProductoMN" readonly class="form-control input-sm">
-                                        <input type="hidden" id="costoNa" readonly class="form-control input-sm">
-                                        <input type="text" id="desProductoMN" readonly class="form-control input-sm">
+<div class="modal" id="modalAprobar" role="dialog" style="overflow-y: scroll;">
+            <div class="modal-dialog " style="width:80%;" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="titleModalProduct"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a data-target="#general" aria-controls="general" role="tab" data-toggle="tab">Pendiente de pagar</a>
+                                </li>
+                                <li role="presentation">
+                                    <a data-target="#sales" aria-controls="sales" role="tab"
+                                       data-toggle="tab">Comentarios</a>
+                                </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="general">
+                                    <br>
+                                  
+                                        <div class="col-md-12">
+                                            <div id="table_container_pendienteCobro" class="table-responsive"></div>
+                                        </div>
+                                   
                                 </div>
-                            <label class="col-sm-2 control-label">Cantidad</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control input-sm" id="cantProductoMN">
-                            </div>   
+                                <div role="tabpanel" class="tab-pane " id="sales">
+                                    <div class="form-horizontal">
+                                        <div class="row"> 
+                                            <div class="col-md-12">
+                                                <br>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Comentarios</label>
+                                                    <input type="hidden" id="estadoApro">
+                                                    <input type="hidden" id="nCodConformidad">
+                                                    <div class="col-sm-10">
+                                                        <textarea id="AprobaComentario" rows="2"
+                                                                  class="form-control input-sm"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                 </div>   
-              </div>  
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-      
-    </div>
-</div>
-<div class="modal " id="modalAlmacenArticulo" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="titlemodalAlmacenArticulo">Stock en Almacén</h4>
-        </div>
-
-        <div class="modal-body">
-             <div class="row">
-                <div class="col-md-12">
-                    <div id="table_container_Almacen_Articulo" class="table-responsive"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="aprobarSolitud()">
+                            <span class="fa fa-save"></span>
+                            Aceptar
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
+                            <span class="fa fa-times"></span> Cerrar
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArtLisSeri()">
-            <span class="fa fa-plus"></span>
-                            Agregar
-        </button>   
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-      
-    </div>
 </div>
-
-
-
-<div class="modal " id="modalSolicitudArticulo" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-           <input type="hidden" id="identificador_solicitud_compra" value="I">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" id="titlemodalSolicitudArticulo">Artículos Solicitud Compra</h4>
-        </div>
-        <div class="modal-body">
-             <div class="row">
-                <div class="col-md-12">
-                    <div id="table_container_solicitudCompra" class="table-responsive"></div>
-                </div>
-            </div>
-            <br>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-danger-admin btn-sm" ng-click="addArtsolicitud()">
-            <span class="fa fa-plus"></span>
-                            Agregar
-        </button>   
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
-      
-    </div>
-</div> 

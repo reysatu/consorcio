@@ -23,7 +23,7 @@ class RegisterOrdenCompra extends Model
     public $incrementing = false;
 
 
-    protected $fillable = ['id','cCodConsecutivo','nConsecutivo','dFecRegistro','prioridad','dFecRequerida','idProveedor','idMoneda','idcondicion_pago','subtotal','nDescuento','nPorcDescuento','nIdDscto','valorCompra','nImpuesto','total','direccionEntrega','iEstado','user_created','created_at','user_updated','updated_at','impuesto'];
+    protected $fillable = ['id','cCodConsecutivo','nConsecutivo','dFecRegistro','prioridad','dFecRequerida','idProveedor','idMoneda','idcondicion_pago','subtotal','nDescuento','nPorcDescuento','nIdDscto','valorCompra','nImpuesto','total','direccionEntrega','iEstado','user_created','created_at','user_updated','updated_at','impuesto','comentario','comentarioAprobacion'];
     
      public function user_c()
     {

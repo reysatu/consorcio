@@ -31,6 +31,10 @@ class SolicitudCompraRepository implements SolicitudCompraInterface
     {
         return $this->model->get()->where('naturaleza','D');
     }
+    public function destroy_detalle_solicitudCompra($idMovimiento,$iddeta)
+    {   
+        DB::table('ERP_SolicitudCompra_Articulo')->where('idMovimiento',$idMovimiento)->where('consecutivo',$iddeta)->delete();
+    }
      public function search($s)
     {
         return $this->model->where(function($q) use ($s){
@@ -222,6 +226,8 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
      public function cambiar_estado($id,$estado)
     {
         $mostrar=DB::update("UPDATE ERP_SolicitudCompra
+                      SET estado = '$estado' where idMovimiento='$id'");
+         $mostrar=DB::update("UPDATE ERP_SolicitudCompra_Articulo
                       SET estado = '$estado' where idMovimiento='$id'");
          return $mostrar; 
     }

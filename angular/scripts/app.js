@@ -142,6 +142,7 @@
         'sys.app.report_stocks',
         'sys.app.report_movements',
         'sys.app.aperturaCajas',
+        'sys.app.aprobacionOrdenCompras',
         // Proyectos
         'sys.app.projects',
         'sys.app.direct_billing',

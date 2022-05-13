@@ -91,6 +91,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Fronts.php';
 
+    require app_path() . '\Http\Routes\AprobacionOrdenCompras.php';
+
     require app_path() . '\Http\Routes\PettyCashs.php';
 
     require app_path() . '\Http\Routes\PaymentConditions.php';
