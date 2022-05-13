@@ -42,7 +42,7 @@ class AprobacionSolicitudController extends Controller
         $params = ['IdMoneda','idCliente', 't_monto_total','pagado','saldo','serie_comprobante','numero_comprobante','razonsocial_cliente','fecha_emision','cCodConsecutivo_solicitud','nConsecutivo_solicitud','condicion_pago_text','tipoDocumento','moneda'];
         return parseList($repo->search($IdMoneda,$idcliente), $request, 'idcliente', $params);
     }
-     public function updateComentarioAprobacion($id, AprobacionInterface $repo, AprobacionUsuarioInterface $repoDet, request $request)
+    public function updateComentarioAprobacion($id, AprobacionInterface $repo, AprobacionUsuarioInterface $repoDet, request $request)
     {
         DB::beginTransaction();
         try {

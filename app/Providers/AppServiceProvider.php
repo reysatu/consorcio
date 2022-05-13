@@ -81,6 +81,9 @@ use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiario;
 use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiarioInterface;
 use App\Http\Recopro\ReporteOrdenDiario\ReporteOrdenDiarioRepository;
 
+use App\Http\Recopro\View_OrdenCompraConformidad\View_OrdenCompraConformidad; 
+use App\Http\Recopro\View_OrdenCompraConformidad\View_OrdenCompraConformidadInterface;
+use App\Http\Recopro\View_OrdenCompraConformidad\View_OrdenCompraConformidadRepository;
 
 use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimiento; 
 use App\Http\Recopro\View_comprobante_movimiento\View_comprobante_movimientoInterface;
@@ -807,6 +810,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSector();
         $this->registerViewScomprArticulo();
         $this->registerProveedorCuentaBanco();
+        $this->registerView_OrdenCompraConformidad();
         $this->registerReporteOrdenDiario();
         $this->registerView_comprobante_movimiento();
         $this->registerView_comprobantes_caja_detalle();
@@ -1121,6 +1125,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(ReporteMetaInterface::class, function ($app) {
             return new ReporteMetaRepository(new ReporteMeta());
+        });
+    }
+    public function registerView_OrdenCompraConformidad()
+    {
+        $app = $this->app;
+
+        $app->bind(View_OrdenCompraConformidadInterface::class, function ($app) {
+            return new View_OrdenCompraConformidadRepository(new View_OrdenCompraConformidad());
         });
     }
     public function registerReporteOrdenDiario()

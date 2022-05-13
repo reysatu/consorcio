@@ -27,6 +27,7 @@ Route::get('registerOrdenCompras/deleteDetalleST/{id}', ['as' => 'registerOrdenC
 
 Route::put('registerOrdenCompras/cambiarEstado/{id}', ['as' => 'registerOrdenCompras.cambiarEstado', 'uses' => 'RegisterOrdenCompraController@cambiarEstadoTotal']);
 
+Route::put('registerOrdenCompras/cambiarEstadoParcial/{id}', ['as' => 'registerOrdenCompras.cambiarEstadoParcial', 'uses' => 'RegisterOrdenCompraController@cambiarEstado']);
 
 Route::get('registerOrdenCompras/data_formOrden', ['as' => 'registerOrdenCompras.data_formOrden', 'uses' => 'Orden_servicioController@data_form']);
 

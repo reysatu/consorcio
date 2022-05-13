@@ -68,10 +68,12 @@ class RegisterOrdenCompraController extends Controller
     public function cambiarEstadoTotal($id, RegisterOrdenCompraInterface $repo, Request $request)
     {
         try {
-             $mensaje='';
-             $estado =$request->input('estadoCambio');
+            $mensaje='';
+            $estado =$request->input('estadoCambio');
+            $cCodConsecutivo =$request->input('cCodConsecutivo');
+            $nConsecutivo =$request->input('nConsecutivo');
           
-             $val=$repo->cambiar_estado($id,$estado);
+             $val=$repo->cambiar_estado_porAprobar($id,$estado,$cCodConsecutivo,$nConsecutivo);
             if($estado==1){
                 $mensaje='Aprobó';
             }else if($estado==3){
@@ -82,6 +84,7 @@ class RegisterOrdenCompraController extends Controller
             return response()->json([
                 'status' => true,
                 'mensaje'=>$mensaje,
+                'val'=>$val
             ]);
 
         }catch (\Exception $e) {
@@ -438,7 +441,7 @@ class RegisterOrdenCompraController extends Controller
                     $datoLo['dFecRequerida'] = $dFecRequeridaDetalle[$i];
                     $esta=$iEstadoDetalle[$i];
                     if($iEstadoDetalle[$i]=='N'){
-                        $esta=0;
+                        $esta=1;
                     }
                     $datoLo['iEstado'] = $esta;
 

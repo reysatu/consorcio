@@ -2,19 +2,27 @@
  * Created by JAIR on 4/5/2017.
  */
   
-(function () { 
+(function () {
     'use strict';
-    angular.module('sys.app.registerOrdenCompras')
+    angular.module('sys.app.aprobacionOrdenCompras')
         .config(Config)
-        .controller('RegisterOrdenCompraCtrl', RegisterOrdenCompraCtrl);
+        .controller('AprobacionOrdenCompraCtrl', AprobacionOrdenCompraCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    RegisterOrdenCompraCtrl.$inject = ['$scope','_', 'RESTService', 'AlertFactory', 'Notify'];
+    AprobacionOrdenCompraCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
-    function RegisterOrdenCompraCtrl($scope, _, RESTService, AlertFactory, Notify)
-    {
-        var xmlAdd=$("#xmlAdd");  
-        var descuentosTotales;
+    function AprobacionOrdenCompraCtrl($scope, _, RESTService, AlertFactory, Helpers)
+    {   var btn_verAprobacio=$(".btn_verAprobacio");
+        var modalVerAproba=$("#modalVerAproba"); 
+        var btn_Rechazar=$(".btn_Rechazar"); 
+        var modalObservacion=$("#modalObservacion");
+        var comentario_aprobacion=$("#comentario_aprobacion");
+        var titleModalProduct=$("#titleModalProduct"); 
+        var xmlAdd=$("#xmlAdd"); 
+         var aprobaComentario=$("#AprobaComentario"); 
+           var estadoApro=$("#estadoApro");
+        var btn_Aprobar=$(".btn_Aprobar");
+         var descuentosTotales;
         var idProveedor=$("#idProveedor");
         var totalDescuento=$("#totalDescuento");
         var desTotal=$("#desTotal");
@@ -150,12 +158,14 @@
         var nConsecutivo=$("#nConsecutivo");
         var prioridad=$("#prioridad");
         var area=$("#area");
+        var modalAprobar=$("#modalAprobar");
         var estado=$("#estado");
          var btn_movimiento_detalle=$("#btn_movimiento_detalle");
         var btn_movimiento_aprobar=$("#btn_movimiento_aprobar");
         var btn_movimiento_cancelar=$("#btn_movimiento_cancelar");
         var btn_movimiento_cerrar=$("#btn_movimiento_cerrar");
-
+        var btn_observacion=$(".btn_observacion");
+        var btn_guardarObservacion=$("#btn_guardarObservacion");
          var hoy = new Date();
         var hAnio=hoy.getFullYear();
         var hmes=hoy.getMonth()+1;
@@ -178,10 +188,188 @@
         var actu=hAnio+'-'+hmes+'-'+hdia;
 
         var fecharequerida= actu;
+        modalVerAproba.on('hidden.bs.modal', function (e) {
+            cleanAprobadores();
+        });
+        function cleanAprobadores() {
+           $("#aprobadores_table").html("");
+        }
+        $scope.aprobarSolitud = function () {
+            var bval = true;
+            if (bval) {
+                var params = {
+                    'nCodConformidad': $("#nCodConformidad").val(),
+                    'aprobaComentario': aprobaComentario.val(),
+                    'iEstado': estadoApro.val(), 
+                };
+                var idPe =idMovimiento.val();
+                console.log(idPe);
+                RESTService.updated('aprobacionOrdenCompras/AprobarRechazar', idPe, params, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                        var ms=response.msg;
+                        console.log(ms);
 
+                        // if(response.conformidad.length > 0 && response.solicitud.length > 0) {
+                        //     if(response.solicitud[0].tipo_solicitud == 2 && ms == "Aprobada") {
+
+                               
+
+                        //         var id = response.conformidad[0].cCodConsecutivo + "|" + response.conformidad[0].nConsecutivo;
+
+                        //         window.open("movimientoCajas/imprimir_cronograma/" + id);
+
+
+                        //     }
+                          
+                      
+                        // }   
+
+                        if(ms!='OK'){
+                            AlertFactory.textType({
+                                title: '',
+                                message: ms,
+                                type: 'info'
+                                });
+                        }else{
+                           AlertFactory.textType({
+                                title: '',
+                                message: 'El registro se guardó correctamente',
+                                type: 'success'
+                            });
+                           
+                            // $("#modalSolicitud").modal("hide");
+                        }
+
+                        modalAprobar.modal("hide"); 
+                        $("#modalMovimieto").modal("hide");
+
+                        btn_Aprobar.prop('disabled',true);
+                        btn_Rechazar.prop('disabled',true);
+                        $("#LoadRecordsButtonAprobacionOrdenCompra").click(); 
+                        // modalPersona.modal('hide');
+                       
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar . Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                });
+            }
+        }
+        function addAprobadores(Aprbador,comentarios,estadoText,fre,fmo){
+                var tr = $('<tr></tr>');
+                var td1 = $('<td id="tr_identO ">' + Aprbador + '</td>');
+                var tda = $('<td>' + comentarios + '</td>');
+                var tdb = $('<td>' + fre + '</td>');
+                var td2 = $('<td>' + fmo + '</td>');
+                var td3 = $('<td>' + estadoText + '</td>');
+                tr.append(td1).append(tda).append(tdb).append(td2).append(td3);
+                $("#aprobadores_table").append(tr);
+        } 
         $("#btn_movimiento_Por_aprobar").click(function(e){
             cambiarEstado(2);
         });
+        btn_Aprobar.click(function (e) {
+               
+                    titleModalProduct.html("Aprobar");
+                    estadoApro.val("1");
+                    modalAprobar.modal('show');
+        
+        });
+         btn_Rechazar.click(function (e) {
+                
+                    titleModalProduct.html("Rechazar");
+                    estadoApro.val("2");
+                    modalAprobar.modal('show');
+        });
+         modalAprobar.on('hidden.bs.modal', function (e) {
+            cleanAprobar();
+        });
+         function cleanAprobar() {
+            titleModalProduct.html("");
+           $("#aprobacion_ventas").html("");
+            $("#AprobaComentario").val("");
+        } 
+         btn_observacion.click(function (e) {
+                    modalObservacion.modal('show');
+        });
+         modalObservacion.on('hidden.bs.modal', function (e) {
+          comentario_aprobacion.val("");
+        }); 
+         btn_verAprobacio.click(function (e) {
+             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+              RESTService.get('aprobacionOrdenCompras/getAprobadores', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                     data_p.map(function(index) {
+                        var com='';
+                        if(index.cObservacion!=null){
+                            com=index.cObservacion;
+                        }
+                        var est='Por Aprobar'; 
+                                if(index.iEstado==1){
+                                    est='Aprobado';
+                                }else if(index.iEstado==2){
+                                    est='Rechazado';
+                                };
+                         var fre=moment(index.dFecReg).format('DD/MM/YYYY');;
+                         var fmo=moment(index.updated_at).format('DD/MM/YYYY');;      
+
+                        addAprobadores(index.name,com,est,fre,fmo);
+                         });
+                  
+                    modalVerAproba.modal('show');
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                        type: 'error'
+                    });
+                } 
+            });
+        
+        });
+
+
+         btn_guardarObservacion.click(function (e) {
+            var bval = true;
+            bval = bval && comentario_aprobacion.required();
+            if (bval) {
+                var params = {
+                    'comentarioAprobacion': comentario_aprobacion.val(),
+                };
+                var cli_id =cCodConsecutivo.val()+'_'+nConsecutivo.val();
+
+                RESTService.updated('aprobacionOrdenCompras/updateComentarioAprobacion', cli_id, params, function (response) {
+                    if (!_.isUndefined(response.status) && response.status) {
+                           AlertFactory.textType({
+                                title: '',
+                                message: 'El comentario se guardó correctamente',
+                                type: 'success'
+                            });
+                            comentarioAprobacion.val(response.data_comentario);
+                            modalObservacion.modal("hide");
+                            comentario_aprobacion.val(""); 
+                       // response.data_comentario;
+
+                    } else {
+                        var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar el Cliente. Intente nuevamente.' : response.message;
+                        AlertFactory.textType({
+                            title: '',
+                            message: msg_,
+                            type: 'info'
+                        });
+                    }
+                });
+            }
+        });
+
         // btn_movimiento_cancelar.click(function(e){
         //     cambiarEstado(4);
         // });
@@ -191,45 +379,7 @@
         // });
 
 
-        function cambiarEstado(estadoCambio){
-               var params = {
-                    'estadoCambio':estadoCambio,
-                    'cCodConsecutivo':cCodConsecutivo.val(),
-                    'nConsecutivo':nConsecutivo.val(),
-                }; 
-               var id=idMovimiento.val();
-
-               RESTService.updated('registerOrdenCompras/cambiarEstado',id, params, function(response) {
-                    if (!_.isUndefined(response.status) && response.status) {
-                        var messan=response.mensaje;
-                        var valorPorApr=response.val;
-                        if(valorPorApr[0].msg=='OK'){
-                            AlertFactory.textType({
-                                title: '',
-                                message:'el registró se modificó con éxito',
-                                type: 'success'
-                            });
-                             findRegisterOrdenCompra(id);
-                             LoadRecordsButtonRegisterOrdenCompra.click();
-                        }else{
-                            AlertFactory.textType({
-                                title: '',
-                                message: valorPorApr[0].msg,
-                                type: 'info'
-                            });
-                        }
-                      
-                    } else {
-                        var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
-                        AlertFactory.textType({
-                            title: '',
-                            message: msg_,
-                            type: 'info'
-                        });
-                    }
-                });
-         }
+       
 
 
        
@@ -241,7 +391,7 @@
                                 id: id,
                                 
                 };
-              $scope.loadMovimientoPDF('registerOrdenCompras/pdf', data);
+              $scope.loadMovimientoPDF('aprobacionOrdenCompras/pdf', data);
             }
         });
 
@@ -255,9 +405,7 @@
          modalLote.on('hidden.bs.modal', function (e) {
             cleanArtLote();
         });
-        modalKit.on('hidden.bs.modal', function (e) {
-            cleanArtKit();
-        });
+       
         // modalSerie.on('hidden.bs.modal', function (e) {
         //     cleanArtSerie();
         // });
@@ -301,10 +449,20 @@
           });
         
          function findRegisterOrdenCompra(id)
-        {
-            titlemodalMovimieto.html('Editar Orden de Compra');
-          
-            RESTService.get('registerOrdenCompras/find', id, function(response) {
+
+        {  
+            console.log($("#iEstadoConformidad").val(),"estado ddd");
+             if($("#iEstadoConformidad").val()!=0){
+            console.log("entro acá");
+                btn_Aprobar.prop('disabled',true);
+                btn_Rechazar.prop('disabled',true);
+            }else{
+                 btn_Aprobar.prop('disabled',false);
+                btn_Rechazar.prop('disabled',false);
+                console.log("entro aca bbb");
+            }
+            
+            RESTService.get('aprobacionOrdenCompras/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     var dataDescuento=response.dataDescuento;
@@ -313,7 +471,7 @@
                     var mov_ar=response.movimiento_Ar;
 
 
-                    titlemodalMovimieto.html('Editar  Orden de Compra '+'['+ data_p.id+ ']');
+                   
                     
                     btn_movimiento_detalle.prop('disabled',false);
                     btn_movimiento_detalle.trigger('change');
@@ -352,35 +510,6 @@
                     $('#desTotal').val(addCommas(redondeodecimale(data_p.total).toFixed(2)));
                     $('#desTotal').attr('data-impuesto', addCommas(redondeodecimale(data_p.nImpuesto).toFixed(2)));
 
-                     // if(data_p.estado==0){
-                     //     btn_movimiento_aprobar.prop('disabled',false);
-                     //     btn_movimiento_cancelar.prop('disabled',true);
-                     //     btn_movimiento_cerrar.prop('disabled',true);
-                     //     btnguardarMovimiento.prop('disabled',false);
-                     //     btn_movimiento_detalle.prop('disabled',false);
-                     // }else if(data_p.estado==1){
-                     //     btn_movimiento_aprobar.prop('disabled',true);
-                     //     btn_movimiento_cancelar.prop('disabled',false);
-                     //     btn_movimiento_cerrar.prop('disabled',true);
-                     //     btnguardarMovimiento.prop('disabled',true);
-                     //     btn_movimiento_detalle.prop('disabled',true);
-                     // }else if(data_p.estado==2){
-                     //     btn_movimiento_aprobar.prop('disabled',true);
-                     //     btn_movimiento_cancelar.prop('disabled',true);
-                     //     btn_movimiento_cerrar.prop('disabled',false);
-                     //     btnguardarMovimiento.prop('disabled',true);
-                     //     btn_movimiento_detalle.prop('disabled',true);
-                     // }else{
-                     //    btn_movimiento_aprobar.prop('disabled',true);
-                     //     btn_movimiento_cancelar.prop('disabled',true);
-                     //     btn_movimiento_cerrar.prop('disabled',true);
-                     //     btnguardarMovimiento.prop('disabled',true);
-                     //     btn_movimiento_detalle.prop('disabled',true);
-                     // }
-
-                    
-                    
-                    
                     articulo_mov_det.html("");
                      mov_ar.map(function(index) {
                         var ver='A';
@@ -542,7 +671,7 @@
         
         function getLocalizacion(idAlmacen){
              var id=idAlmacen;
-             RESTService.get('registerOrdenCompras/getLocalizacionSelec', id, function(response) {
+             RESTService.get('aprobacionOrdenCompras/getLocalizacionSelec', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     LocalizacionesSele=response.data;
                  }else {
@@ -559,7 +688,7 @@
         function getLocaStock(idl,ident,idPrAl,idLocalizacion){
             var idLocali=$("#"+ident);
             var id=idl;
-             RESTService.get('registerOrdenCompras/getLocaStock', id, function(response) {
+             RESTService.get('aprobacionOrdenCompras/getLocaStock', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                         console.log("dddd");
                         idLocali.html('');
@@ -658,7 +787,7 @@
 
 
        
-         function addDescuentos(idProducto,idDescuento,codigo){
+        function addDescuentos(idProducto,idDescuento,codigo){
             console.log("entro acá 222222222");
             console.log(codigo);
             var selectDescuento=$("#id_desc_"+codigo);
@@ -898,7 +1027,7 @@
                     if(idMovimiento.val()!='' && iddet!=0){
                         console.log("entro a eliminar");
                         var id=iddet; 
-                        RESTService.get('registerOrdenCompras/deleteDetalleST', id, function(response) {
+                        RESTService.get('aprobacionOrdenCompras/deleteDetalleST', id, function(response) {
                         if (!_.isUndefined(response.status) && response.status) {
                                    AlertFactory.textType({
                                     title: '',
@@ -1073,7 +1202,7 @@
                 if($("#identificador_solicitud_compra").val()!='I'){
                      table_container_ccsolart.jtable('destroy');
                   }
-                cargartableSolicitufArti();
+                // cargartableSolicitufArti();
                 $("#identificador_solicitud_compra").val("A");  
                 modalSolicitudArticulo.modal('show');
             
@@ -1087,7 +1216,7 @@
         
         
          function getDataForProforma () {
-            RESTService.all('registerOrdenCompras/data_formOrdenPro', '', function(response) {
+            RESTService.all('aprobacionOrdenCompras/data_formOrdenPro', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                      igv=response.igv[0].value;
                     //   articulos_repuestos.append('<option value="">Seleccionar</option>');
@@ -1144,7 +1273,7 @@
                 var codSoli=0;
                 var totalDetalle=0;
                 var valorCompra=0;
-                RESTService.get('registerOrdenCompras/getDataArticulo', idpr, function(response) {
+                RESTService.get('aprobacionOrdenCompras/getDataArticulo', idpr, function(response) {
                         var datapro=response.data;
                         // console.log(datapro[0].impuesto,"impuesto_ident");
                          ident_impuesto=(p_state.prop('checked')) ? '1' : '0';
@@ -1167,510 +1296,8 @@
 
          }
         
-       $scope.saveMovimientoCab = function()
-        {
-            var bval = true;
-            bval = bval && cCodConsecutivo.required();
-            bval = bval && fecha_registro.required();
-            bval = bval && prioridad.required();
-            bval = bval && fecha_requerida.required();
-            bval = bval && idProveedor.required();  
-            bval = bval && idcondicion_pago.required();
-            bval = bval && idMoneda.required(); 
-             if (bval && articulo_mov_det.html() === '' ) {
-                AlertFactory.showWarning({
-                    title: '',
-                    message: 'Debe agregar mínimo 1 Artículo'
-                });
-                return false;
-            }
-             if($("#fecha_requerida").val()<$("#fecha_registro").val()){
-                 AlertFactory.showWarning({
-                    title: '',
-                    message: 'La fecha requerida no puede ser menor a fecha registro'
-                });
-                return false; 
-            }
-            var subtotal=Number($("#desTotal").attr('data-total'))-Number($("#desTotal").attr('data-impuesto'));
-            var valorCompra= Number(desTotal.val())-Number($("#desTotal").attr('data-impuesto'));
-            var totalValorDescu=$("#totalDescuento").val();
-            var arrDes=0;
-            if(totalValorDescu!=''){
-                arrDes=totalValorDescu.split('*');
-                arrDes=arrDes[0];
-            }
-            
-            acodigos.forEach(function(val,index) {
-                var canr=$('#canMs_'+val);
-                bval = bval && canr.required();
-            });
-            acodigos.forEach(function(val,index) {
-                var canr=$('#fechareEnv_'+val);
-                bval = bval && canr.required();
-            });
-            var cantrIn='A';
-            // if(naturalezaGeneral!="C"){
-            acodigos.forEach(function(val,index) {
-                    var cantEn=$('#canMs_'+val).val();
-                    if(cantEn<1){
-                        cantrIn='I';
-                    }
-                    
-            });
-            var precirIn='A';
-            acodigos.forEach(function(val,index) {
-                    var cosr=$('#preMs_'+val).val();
-                    if(cosr<=0){
-                        precirIn='I';
-                    }
-                    
-            })
-            
-            if(cantrIn=='I'){
-                AlertFactory.showWarning({
-                    title: '',
-                    message: 'La cantidad no puede ser menor a 1'
-                });
-                cantrIn='A';
-                return false; 
-            }
-            if(precirIn=='I'){
-                AlertFactory.showWarning({
-                    title: '',
-                    message: 'El precio de los artículos no puede ser cero'
-                });
-                precirIn='A';
-                return false; 
-            } 
-            var cosrIn='A';
-            acodigos.forEach(function(val,index) {
-                    var cosr=$('#fechareEnv_'+val).val();
-                    if(cosr<$("#fecha_registro").val()){
-                        cosrIn='I';
-                    }
-                   
-                    
-            })
-          
-            if(cosrIn=='I'){
-                AlertFactory.showWarning({
-                    title: '',
-                    message: 'La fecha requerida del articulo no puede ser menor a fecha registro'
-                });
-                cosrIn='A';
-                return false; 
-            }
-             
-            if($("#fecha_requerida").val()<$("#fecha_registro").val()){
-                 AlertFactory.showWarning({
-                    title: '',
-                    message: 'La fecha requerida no puede ser menor a fecha registro'
-                });
-                return false; 
-            }
-            if (bval) {
-                
-                
-                
-                var idartEnv = [];
-                    $.each($('.m_articulo_id'), function (idx, item) {
-                        idartEnv[idx] = $(item).val();
-                    });
-                    
-                idartEnv = idartEnv.join(',');
-
-                 var detalleModo = [];
-                    $.each($('.modo_detalle'), function (idx, item) {
-                        detalleModo[idx] = $(item).val();
-                    });
-                    
-                detalleModo = detalleModo.join(',');
-
-
-                var idalcantEnv = [];
-                    $.each($('.m_articulo_cantidad'), function (idx, item) {
-                        idalcantEnv[idx] = $(item).val();
-                    });
-                idalcantEnv = idalcantEnv.join(',');
-
-                var idalcantPend = [];
-                    $.each($('.m_articulo_cantidadCanP'), function (idx, item) {
-                        idalcantPend[idx] = $(item).val();
-                    });
-                idalcantPend = idalcantPend.join(',');
-
-                 var idalcantRecib = [];
-                    $.each($('.m_articulo_cantidadCanR'), function (idx, item) {
-                        idalcantRecib[idx] = $(item).val();
-                    });
-                idalcantRecib = idalcantRecib.join(',');
-
-                var idalcantDevul = [];
-                    $.each($('.m_articulo_cantidadCanD'), function (idx, item) {
-                        idalcantDevul[idx] = $(item).val();
-                    });
-                idalcantDevul = idalcantDevul.join(',');
-
-                 var idalpretEnv = [];
-                    $.each($('.m_articulo_precio'), function (idx, item) {
-                        idalpretEnv[idx] = $(item).val();
-                    });
-                    
-                idalpretEnv = idalpretEnv.join(',');
-
-                 var idalPrtolEnv = [];
-                    $.each($('.m_articulo_precioTotal'), function (idx, item) {
-                        idalPrtolEnv[idx] = $(item).val();
-                    });
-                    
-                idalPrtolEnv = idalPrtolEnv.join(',');
-
-                var impuesto_articulo =[];
-                $.each($('.totalImpuesto_articulo'), function (idx, item) {
-                    impuesto_articulo[idx] = $(item).val();
-                });
-                impuesto_articulo = impuesto_articulo.join(',');
-
-                var idDescuenDeta=[];
-                $.each($('.descuentosSelect'), function (idx, item) {
-                  
-                    var valo= $(item).val();
-                    var arrayRe=valo.split("*");
-                    var coded=arrayRe[0];
-                    idDescuenDeta[idx] =coded
-                });
-
-                idDescuenDeta = idDescuenDeta.join(',');
-
-                 var porDeta =[];
-                $.each($('.porcent'), function (idx, item) {
-                   
-                    var porcen= $(item).val();
-                    if(porcen==""){
-                        porcen=0;
-                    }
-                    porDeta[idx] =porcen;
-                });
-                porDeta = porDeta.join(',');
-
-                var montoDeta =[];
-                $.each($('.monto'), function (idx, item) {
-                  
-                    var montod= $(item).val();
-                    if(montod==""){
-                        montod=0;
-                    }
-                    montoDeta[idx] =montod;
-                }); 
-                montoDeta = montoDeta.join(',');
-
-                var valorCompraDetalle =[];
-                $.each($('.valor_compra_detalle'), function (idx, item) {
-                    valorCompraDetalle[idx] = $(item).val();
-                }); 
-                valorCompraDetalle = valorCompraDetalle.join(',');
-
-                var totalCompraDetalle =[];
-                $.each($('.m_total_detalle'), function (idx, item) {
-                    totalCompraDetalle[idx] = $(item).val();
-                }); 
-                totalCompraDetalle = totalCompraDetalle.join(',');
-
-                var fecharequeridaDetalle =[];
-                $.each($('.fecharequerida'), function (idx, item) {
-                    fecharequeridaDetalle[idx] = $(item).val();
-                }); 
-                fecharequeridaDetalle = fecharequeridaDetalle.join(',');
-
-                var estadoDetalle =[];
-                $.each($('.m_idestado'), function (idx, item) {
-                    estadoDetalle[idx] = $(item).val();
-                }); 
-                estadoDetalle = estadoDetalle.join(',');
-
-                var codSolicitud =[];
-                $.each($('.cod_solicitud_compra'), function (idx, item) {
-                    codSolicitud[idx] = $(item).val();
-                }); 
-                codSolicitud = codSolicitud.join(',');
-
-
-
-                var params = {
-                    'id': idMovimiento.val(),
-                    'iEstado':1,
-                    'impuesto':((p_state.prop('checked')) ? 1 : 0),
-                    'cCodConsecutivo': cCodConsecutivo.val(),
-                    'nConsecutivo': nConsecutivo.val(),
-                    'dFecRegistro': fecha_registro.val(),
-                    'prioridad': prioridad.val(),
-                    'dFecRequerida': fecha_requerida.val(),
-                    'direccionEntrega':direccionEntrega.val(),
-                    'idProveedor': idProveedor.val(),
-                    'idcondicion_pago': idcondicion_pago.val(),
-                    'idMoneda': idMoneda.val(),
-                    'subtotal': subtotal,
-                    'nDescuento':Number($("#montoTotal").val()),
-                    'nPorcDescuento':Number($("#porcentajeTotal").val()),
-                    'nIdDscto':arrDes,
-                    'valorCompra':valorCompra,
-                    'nImpuesto':$("#desTotal").attr('data-impuesto'),
-                    'total': desTotal.val(),
-                    'comentario': comentario.val(),
-                    'idArticulo':idartEnv,
-                    'cantidad':idalcantEnv,
-                    'cantidadPendiente':idalcantPend,
-                    'cantidadRecibida':idalcantRecib,
-                    'cantidadDevuelta':idalcantDevul,
-                    'precioUnitario':idalpretEnv,
-                    'precioTotal':idalPrtolEnv,
-                    'nImpuestoDetalle':impuesto_articulo,
-                    'nIdDsctoDetalle':idDescuenDeta,
-                    'nDescuentoDetalle':montoDeta,
-                    'nPorcDescuentoDetalle':porDeta,
-                    'valorCompraDetalle':valorCompraDetalle,
-                    'totalDetalle':totalCompraDetalle,
-                    'dFecRequeridaDetalle':fecharequeridaDetalle,
-                    'iEstadoDetalle':estadoDetalle,
-                    'detalleModo':detalleModo,
-                    'codSolicitud':codSolicitud,
-                };
-                var movimiento_id = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
-
-                RESTService.updated('registerOrdenCompras/saveMovimiento', movimiento_id, params, function(response) {
-                    if (!_.isUndefined(response.status) && response.status) {
-                        titlemodalMovimieto.html('Nueva Orden de Compra');
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'El registro se guardó correctamente',
-                            type: 'success'
-                        });
-                        nConsecutivo.val(response.nco);
-                        estado.val(response.estado);
-                        
-                        idMovimiento.val(response.code);
-                        
-                        findRegisterOrdenCompra(response.code);
-                        
-                        // idTipoOperacion.prop('disabled',true);
-                        // idTipoOperacion.trigger('change');
-                        // btn_movimiento_detalle.prop('disabled',false);
-                        // btn_movimiento_detalle.trigger('change');
-
-                        LoadRecordsButtonRegisterOrdenCompra.click();
-                    } else {
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'Hubo un error al guardar el artículo. Intente nuevamente.',
-                            type: 'error'
-                        });
-                    }
-                });
-          }
-
-        };
-       $scope.guardarMovimientoDetalle = function(){
-            var bval =true;
-
-            // if (bval && articulo_mov_det.html() === '' ) {
-            //     AlertFactory.showWarning({
-            //         title: '',
-            //         message: 'Debe agregar mínimo 1 Artículo'
-            //     });
-            //     return false;
-            // }
-          
-           
-
-            
-            
-            
-            if(bval){
-                var idartEnv = [];
-                    $.each($('.m_articulo_id'), function (idx, item) {
-                        idartEnv[idx] = $(item).val();
-                    });
-                    
-                idartEnv = idartEnv.join(',');
-              
-                var idalcantEnv = [];
-                    $.each($('.m_articulo_cantidad'), function (idx, item) {
-                        idalcantEnv[idx] = $(item).val();
-                    });
-                
-                var identificador_serie_bd = [];
-                    $.each($('.identificador_serie_bd'), function (idx, item) {
-                        identificador_serie_bd[idx] = $(item).val();
-                    });
-                    
-                identificador_serie_bd = identificador_serie_bd.join(',');    
-
-                idalcantEnv = idalcantEnv.join(',');
-
-                var estadodeta = [];
-                    $.each($('.m_idestado'), function (idx, item) {
-                        estadodeta[idx] = $(item).val();
-                    });
-                    
-                estadodeta = estadodeta.join(',');
-
-                 var fecharequeridadeta = [];
-                    $.each($('.fecharequerida'), function (idx, item) {
-                        fecharequeridadeta[idx] = $(item).val();
-                    });
-                    
-                fecharequeridadeta = fecharequeridadeta.join(',');
-
-
-                var idloteEnvi = [];
-                    $.each($('.m_codigo_lote'), function (idx, item) {
-                        idloteEnvi[idx] = $(item).val();
-                    });
-                    
-                idloteEnvi = idloteEnvi.join(',');
-
-                var datloteEnvi = [];
-                    $.each($('.m_dato_lote'), function (idx, item) {
-                        datloteEnvi[idx] = $(item).val();
-                    });
-                    
-                datloteEnvi = datloteEnvi.join(',');
-
-                var dataObserva = [];
-                    $.each($('.observrequerida'), function (idx, item) {
-                        dataObserva[idx] = $(item).val();
-                    });
-                    
-                dataObserva = dataObserva.join(',');
-
-                
-                var idProductoSe = [];
-                var serieSe=[];
-                var idSerieSe=[];
-                var cont=0;
-                var ident_serie_bd_serie=[]; 
-                aartMSE.map(function(index) {
-                         ident_serie_bd_serie[cont]=index.identificador;
-                         idProductoSe[cont] = index.idProducto;
-                         serieSe[cont] = index.serie;
-                         idSerieSe[cont]=index.idSerie;
-                         cont=cont+1;
-                      })
-                ident_serie_bd_serie=ident_serie_bd_serie.join(",");
-                  idProductoSe = idProductoSe.join(',');
-                  serieSe = serieSe.join(',');
-                idSerieSe = idSerieSe.join(',');
-
-
-                
-                var serieNenv = [];
-                var idProductoSeN = [];
-                var chasiNs=[];
-                var motorNs=[];
-                var anioNFs=[];
-                var anioNVs=[];
-                var colorNs=[];
-                var idTipoCompraVenta=[];
-                var nPoliza=[];
-                var nLoteCompra=[];
-                var cont2=0;
-                var ident_serie_bd_serie2=[];
-                aartMSN.map(function(index) {
-                        ident_serie_bd_serie2[cont2]=index.identificador;
-                        serieNenv[cont2] = index.serie;
-                        idProductoSeN[cont2] = index.idProducto;
-                        chasiNs[cont2] = index.chasis;
-                        motorNs[cont2] = index.motor;
-                        anioNFs[cont2] = index.anio_fabricacion;
-                        anioNVs[cont2] = index.anio_modelo;
-                        colorNs[cont2] = index.color;
-                        idTipoCompraVenta[cont2]=index.idTipoCompraVenta;
-                        nPoliza[cont2]=index.nPoliza;
-                        nLoteCompra[cont2]=index.nLoteCompra;
-                         cont2=cont2+1;
-                      })
-                serieNenv = serieNenv.join(',');
-                idProductoSeN = idProductoSeN.join(',');
-                chasiNs = chasiNs.join(',');
-                motorNs = motorNs.join(',');
-                anioNFs = anioNFs.join(',');
-                anioNVs = anioNVs.join(',');
-                colorNs = colorNs.join(',');
-                idTipoCompraVenta=idTipoCompraVenta.join(',');
-                nPoliza=nPoliza.join(',');
-                nLoteCompra=nLoteCompra.join(',');
-                ident_serie_bd_serie2=ident_serie_bd_serie2.join(",");
-                var ident_det="";
-                if(articulo_mov_det.html() !=''){
-                    ident_det="A";
-                };
-              
-               
-
-                var params = {
-                    'art_nada':aartMN,
-                    'idArticulo':idartEnv,
-                    // 'idAlmacen':idalmaEnv,
-                    // 'idLocalizacion':idalLocEnv,
-                    'estadodeta':estadodeta,
-                    'fecharequeridadeta':fecharequeridadeta,
-                    'cantidad':idalcantEnv,
-                    // 'costo':idalcostEnv,
-                    // 'costo_total':idalcostotalEnv,
-                    // 'precio':idalpretEnv,
-                    // 'precio_total':idalPrtolEnv,
-                    'idLote':idloteEnvi,
-                    'dataLote':datloteEnvi,
-                    'dataObserva':dataObserva,
-
-                    'idProductoSe':idProductoSe,
-                    'serieSe':serieSe,
-                    'idSerieSe':idSerieSe,
-                    'serieNenv':serieNenv,
-                    'idProductoSeN':idProductoSeN,
-                    'chasiNs':chasiNs,
-                    'motorNs':motorNs,
-                    'anioNFs':anioNFs,
-                    'anioNVs':anioNVs,
-                    'colorNs':colorNs,
-                    'ident_detalle':ident_det,
-                    'idTipoCompraVenta':idTipoCompraVenta,
-                    'nPoliza':nPoliza,
-                    'nLoteCompra':nLoteCompra,
-                    'identificador_serie_bd':identificador_serie_bd,
-                    'ident_serie_bd_serie2':ident_serie_bd_serie2,
-                    'ident_serie_bd_serie':ident_serie_bd_serie,
-                    'naturaleza':naturalezaGeneral,
-                };
-             
-                 var id_Movimiento = (idMovimiento.val() === '') ? 0 : idMovimiento.val();
-                RESTService.updated('registerOrdenCompras/saveMovimientArticulo',id_Movimiento, params, function(response) {
-                    if (!_.isUndefined(response.status) && response.status) {
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'El registro se guardó correctamente',
-                            type: 'success'
-                        });
-
-                        procesarTransfBoton.prop('disabled',false);
-                        procesarTransfBoton.trigger('change');
-                         articulo_mov_det.html("");
-                         findRegisterOrdenCompra(id_Movimiento);
-                         activarbotones();
-                         LoadRecordsButtonRegisterOrdenCompra.click();
-                    } else {
-                        var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo guardar el movimiento. Intente nuevamente.' : response.message;
-                        AlertFactory.textType({
-                            title: '',
-                            message: msg_,
-                            type: 'info'
-                        });
-                    }
-                });
-                
-            }    
-        } 
+       
+     
         function activarbotones(){
             if($("#estado").val()=="1"){
                 console.log("entro accccccccccccccccccccccccccccccc");
@@ -1693,6 +1320,7 @@
         {    idMoneda.val("1").trigger("change");
             titlemodalMovimieto.html('Nueva Orden de Compra');
             activarbotones();
+           
             modalMovimieto.modal('show');
 
         }
@@ -1757,7 +1385,7 @@
            }
         });
         function getDataFormMovement () {
-            RESTService.all('registerOrdenCompras/data_form', '', function(response) {
+            RESTService.all('aprobacionOrdenCompras/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         var hoy = new Date();
                         var hAnio=hoy.getFullYear();
@@ -1823,23 +1451,11 @@
             }, function() {
                 getDataFormMovement();
             });
-        }idProveedor.select2();
+        }
+        idProveedor.select2();
         getDataFormMovement();
 
-        function getDataFormSerie () {
-            RESTService.all('series/data_form', '', function(response) {
-                if (!_.isUndefined(response.status) && response.status) {
-                    tipoCompra=response.tipoCompra
-                    //  _.each(response.tipoCompra, function(item) {
-                    //     tipoCompra.append('<option value="'+item.idTipoCompraVenta+'">'+item.descripcion+'</option>');
-                    // });
-                    
-                }
-            }, function() {
-                getDataFormSerie();
-            });
-        }
-        getDataFormSerie();
+       
         idMoneda.change(function () {
            
               // if(table_servicios.html()!=""){
@@ -1880,7 +1496,7 @@
               // llenarServicios();
         });
         function getDataForOrdenServicio () {
-            RESTService.all('registerOrdenCompras/data_formOrden', '', function(response) {
+            RESTService.all('aprobacionOrdenCompras/data_formOrden', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                    
                      descuentos=response.descuentos;
@@ -1932,92 +1548,212 @@
         }
         getDataForOrdenServicio();
 
-        var search = getFormSearch('frm-search-RegisterOrdenCompra', 'search_b', 'LoadRecordsButtonRegisterOrdenCompra');
+       
 
-        var table_container_RegisterOrdenCompra = $("#table_container_RegisterOrdenCompra");
+       
 
-        table_container_RegisterOrdenCompra.jtable({
-            title: "Lista de Ordenes de Compras",
+        // function cargartableSolicitufArti(){
+        //      var search_ccsolart = getFormSearchSolicitudCompra('frm-search-ccsolart', 'search_ccsolart', 'LoadRecordsButtonCCsolart');
+        //     table_container_ccsolart = $("#table_container_solicitudCompra");
+        //     table_container_ccsolart.jtable({
+        //         title: "Lista de Articulos",
+        //         paging: true,
+        //         sorting: true,
+        //          cache: false, 
+        //         actions: {
+        //             listAction: base_url + '/aprobacionOrdenCompras/getScompraArticulo'
+        //         },
+        //         toolbar: {
+        //             items: [{
+        //                 cssClass: 'buscador',
+        //                 text: search_ccsolart
+        //             }]
+        //         },
+                
+        //         fields: {
+        //             consecutivo: {
+        //                 key: true,
+        //                 create: false,
+        //                 edit: false,
+        //                 list: false
+        //             },
+        //             select: {
+        //                 width: '1%', 
+        //                 sorting: false,
+        //                 edit: false,
+        //                 create: false,
+        //                 listClass: 'text-center',
+        //                 display: function (data) {
+        //                    return '<label class="checkbox-inline i-checks"> <input name="idSolicitud" class="check valcheck" type="checkbox" id="p_state" data-nConsecutivo="'+data.record.nConsecutivo+'" data-consecutivo="'+data.record.consecutivo+'" data-cantida="'+data.record.cantidad+'" data-idProducto="'+data.record.idArticulo+'" data-DesProducto="'+data.record.articulo+'" data-unidaMedida="'+data.record.unidadMedida+'" data-impuesto="'+data.record.impuesto+'"></label>';
+        //                }
+        //             },
+        //             cCodConsecutivo: {
+        //                 title: 'Código'
+        //             },
+        //             nConsecutivo: {
+        //                  title: 'Consecutivo'
+        //             },
+        //             idArticulo: {
+        //                 create: false,
+        //                 edit: false,
+        //                 list: false
+        //             },
+        //             articulo: {
+        //                 title: 'Artículo'
+
+        //             },
+                    
+        //             unidadMedida: {
+        //                 title: 'Unida Medida'
+
+        //             },
+        //             cantidad: {
+        //                 title: 'Cantidad',
+        //                 display: function (data) {
+        //                    return Number(data.record.cantidad);
+        //                }
+        //             },
+        //             fecha_requerida: {
+        //                 title: 'Fecha Requerida',
+        //                  display: function (data) {
+        //                     return moment(data.record.fecha_requerida).format('DD/MM/YYYY');
+        //                 }
+        //             },
+
+                    
+        //         },
+        //         recordsLoaded: function(event, data) {
+        //             $('.i-checks').iCheck({
+        //                 checkboxClass: 'icheckbox_square-green'
+        //             }).on('ifChanged', function (event) {
+        //                     $(event.target).click();
+        //             });
+
+        //             $('.select_cc').click(function(e){
+        //                 var codigo = $(this).attr('data-code');
+        //                 var descripcionArt = $(this).attr('data-name');
+        //                 var idTipoArt = $(this).attr('data-type');
+        //                 var serie = $(this).attr('data-serie');
+        //                 var lote = $(this).attr('data-lote');
+        //                 var costo = $(this).attr('data-costo');
+        //                 seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
+        //                 e.preventDefault();
+        //             });
+        //         }
+        //     });
+
+        //     generateSearchForm('frm-search-ccsolart', 'LoadRecordsButtonCCsolart', function(){
+        //         table_container_ccsolart.jtable('load', {
+        //             search: $('#search_ccsolart').val(),
+        //             consecutivo: $('#consecutivo').val(),
+        //             FechaRegistro: $('#FechaRegistro').val(),
+        //         });
+        //     }, false);
+
+        // }
+        
+        var search = getFormSearch('frm-search-AprobacionOrdenCompra', 'search_b', 'LoadRecordsButtonAprobacionOrdenCompra');
+
+        var table_container_AprobacionOrdenCompra = $("#table_container_AprobacionOrdenCompra");
+
+        table_container_AprobacionOrdenCompra.jtable({
+            title: "Lista de Ordenes de Compra",
             paging: true,
             sorting: true,
-            actions: {  
-                listAction: base_url + '/registerOrdenCompras/list',
-                deleteAction:  function (item) {
-                    var total=item.ident;
-                    var arra=total.split("*");
-                    if(arra[1]!=0){
-                            AlertFactory.textType({
-                                title: '',
-                                message: 'Solo se pueden eliminar ordenes en estado registrado',
-                                type: 'info'
-                            });
-                        $('.close').click();
-    
-                        return false;    
-
-                    }
-                    return $.Deferred(function ($dfd) {
-                            $.ajax({
-                                url: '/registerOrdenCompras/delete',
-                                type: 'POST',
-                                dataType: 'json',
-                                data: {id:arra[0]},
-                                success: function (data) {
-                                    $dfd.resolve({ 'Result': "OK" });
-                                },
-                                error: function () {
-                                    $dfd.reject();
-                                }
-                            })
-                    });
-                }
+            actions: { 
+                listAction: base_url + '/aprobacionOrdenCompras/list',
+                // createAction: base_url + '/aprobacionOrdenCompras/create',
+                // updateAction: base_url + '/aprobacionOrdenCompras/update',
+                // deleteAction: base_url + '/aprobacionOrdenCompras/delete',
+            },
+            messages: {
+                addNewRecord: 'Nueva Categoría',
+                editRecord: 'Editar Categoría',
             },
             toolbar: {
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
-                    cssClass: 'btn-primary',
-                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
-                    click: function () {
-                        $scope.openDoc('registerOrdenCompras/excel', {});
-                    }
-                },{
-                    cssClass: 'btn-danger-admin',
-                    text: '<i class="fa fa-plus"></i> Nuevo Orden de Compra',
-                    click: function () {
-                        newMovimiento();
-                    }
                 }]
             },
             fields: {
-                ident: {
-                    title: '#',
+                idOrdenCompra: {
                     key: true,
-                    list:false,
                     create: false,
-                    listClass: 'text-center',
+                    edit: false,
+                    list: false
                 },
-                id: {
-                    title: '#',
+                Codigo: {
                     create: false,
-                    listClass: 'text-center',
-                },
-                 cCodConsecutivo: {
-                    title: 'Código',
-                    
-                },
-                 nConsecutivo: {
-                    title: 'Consecutivo',
-                    
-                },
-                iEstado: {
+                    edit: false,
+                    list: false
+                }, 
+                Conformidad: {
+                    title: 'Conformidad',
+                     
 
-                    title: 'Estado',
-                    values: { '1': 'Registrado', '2': 'Por Aprobar','3':'Aprobado','4':'Recibido','5':'Backorder','6':'Cerrado','7':'Cancelado','8':'Rechazado'},
+                },
+                 Consecutivo: {
+                    title: 'Consecutivo',
+                     
+
+                },
+                 Usuario: {
+                    title: 'Usuario',
+                     
+
+                },
+                EstadoAprob: {
+                    title: 'Estado Aprobación',
+                    values: {'0':'Por Aprobar', '1': 'Aprobado', '2': 'Rechazado'},
                     type: 'checkbox',
                     defaultValue: 'A',
-                   
+                     
+
+                },
+                 Fecha: {
+                    title: 'Fecha',
+                    display: function (data) {
+                            return moment(data.record.Fecha).format('DD/MM/YYYY');
+                    } 
+
+                },
+                 FechaReq: {
+                    title: 'Fecha Requerida',
+                     display: function (data) {
+                            return moment(data.record.FechaReq).format('DD/MM/YYYY');
+                    }
+
+                },
+                 TipoDoc: {
+                    title: 'TipoDoc',
+                     
+
+                },
+                 NumeroDoc: {
+                    title: 'NumeroDoc',
+                     
+
+                },
+                 Proveedor: {
+                    title: 'Proveedor',
+                     
+
+                },
+                 Moneda: {
+                    title: 'Moneda',
+                     
+
+                },
+                Total: {
+                    title: 'Total',
+                     
+
+                },
+                 EstadoOC: {
+                    title: 'Estado Orden Compra',
+                     
+
                 },
                 edit: {
                     width: '1%',
@@ -2026,326 +1762,75 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="edit-serie" data-id="'+data.record.id
-                            +'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="edit-solicitud" data-nrConfr="' + data.record.Conformidad
+                            + '" data-id="' + data.record.idOrdenCompra+'" data-iEstadoCompra="' + data.record.EstadoAprob+'" title="Editar"><i class="fa fa-search fa-1-5x"></i></a>';
                     }
 
-                }
+                },
 
             },
-            recordsLoaded: function(event, data) {
-                $('.edit-serie').click(function(e){
+           
+            recordsLoaded: function (event, data) {
+                $('.edit-solicitud').click(function (e) {
                     var id = $(this).attr('data-id');
+                    var conformi = $(this).attr('data-nrConfr');
+                    var estado = $(this).data('estado');
+                    var estadoConf = $(this).attr('data-iEstadoCompra');
+                    $("#nCodConformidad").val(conformi);
+                    $("#iEstadoConformidad").val(estadoConf);
 
+                    // if (estado != "1" && estado != "4") {
+                    //     AlertFactory.textType({
+                    //         title: '',
+                    //         message: 'No se puede modificar, la solicitud ya no se encuentra en estado Registrado',
+                    //         type: 'info'
+                    //     });
+                    //     return false;
+                    // }
+                    // console.log(id);
                     findRegisterOrdenCompra(id);
                     e.preventDefault();
                 });
-                  $('.eliminar-movimiento').click(function(e){
-                    var ide = $(this).attr('data-ide');
-                    var estadoEli = $(this).attr('data-estado');
-                    idMovimientoDelete.val(ide);
-                    $("#estadoDelete").val(estadoEli);
-                  
-                    modalDeleteMovimiento.modal("show");
-                    e.preventDefault();
+            },
+            formCreated: function (event, data) {
+                data.form.find('input[name="Categoria"]').attr('onkeypress','return soloLetras(event)');
+                $('#Edit-estado').parent().addClass('i-checks');
+               
+                $('.i-checks').iCheck({
+                    checkboxClass: 'icheckbox_square-green'
+                }).on('ifChanged', function (e) {
+                    $(e.target).click();
+                     if(e.target.value=='A'){
+                        $("#Edit-estado").val("I");
+                        $(".i-checks span").text("Inactivo");
+
+                     }else{
+                        $("#Edit-estado").val("A");
+                        $(".i-checks span").text("Activo");
+                     };
                 });
-           }
-           
+            },
+            formSubmitting: function (event, data) {
+                var bval = true;
+                bval = bval && data.form.find('input[name="Categoria"]').required();
+                return bval;
+            }
         });
 
-        generateSearchForm('frm-search-RegisterOrdenCompra', 'LoadRecordsButtonRegisterOrdenCompra', function(){
-            table_container_RegisterOrdenCompra.jtable('load', {
+        generateSearchForm('frm-search-AprobacionOrdenCompra', 'LoadRecordsButtonAprobacionOrdenCompra', function(){
+            table_container_AprobacionOrdenCompra.jtable('load', {
                 search: $('#search_b').val()
             });
         }, true);
-
-        function cargartableMovAr(){
-             var search_cc2 = getFormSearch('frm-search-cc2', 'search_cc2', 'LoadRecordsButtonCC2');
-         table_container_cc2 = $("#table_container_Register_Articulo");
-        table_container_cc2.jtable({
-            title: "Lista de Articulos 1",
-            paging: true,
-            sorting: true,
-             cache: false,
-            actions: {
-                listAction: base_url + '/registerOrdenCompras/getArticulosSelect'
-            },
-            toolbar: {
-                items: [{
-                    cssClass: 'buscador',
-                    text: search_cc2
-                }]
-            },
-            fields: {
-                id: {
-                    key: true,
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                type_id: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                serie: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                lote: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                 code_article: {
-                    title: 'Código'
-
-                },
-                description: {
-                    title: 'Articulos'
-
-                },
-                costo: {
-                    title: 'costo'
-
-                },
-                select: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center',
-                    display: function (data) {
-                        return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-costo="'+data.record.costo+'" data-name="'+
-                            data.record.description+'" data-type="'+data.record.type_id+'"  data-serie="'+data.record.serie+'" data-lote="'+data.record.lote+'" data-code="'+data.record.id+'"><i class="fa fa-'+
-                            icon_select+' fa-1-5x"></i></a>';
-                   }
-                }
-            },
-            recordsLoaded: function(event, data) {
-                $('.select_cc').click(function(e){
-                    var codigo = $(this).attr('data-code');
-                    var descripcionArt = $(this).attr('data-name');
-                    var idTipoArt = $(this).attr('data-type');
-                    var serie = $(this).attr('data-serie');
-                    var lote = $(this).attr('data-lote');
-                    var costo = $(this).attr('data-costo');
-                    seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
-                    e.preventDefault();
-                });
-            }
-        });
-
-        generateSearchForm('frm-search-cc2', 'LoadRecordsButtonCC2', function(){
-            table_container_cc2.jtable('load', {
-                search: $('#search_cc2').val()
-            });
-        }, false);
-
-        }
-
-        function cargartableSolicitufArti(){
-             var search_ccsolart = getFormSearchSolicitudCompra('frm-search-ccsolart', 'search_ccsolart', 'LoadRecordsButtonCCsolart');
-            table_container_ccsolart = $("#table_container_solicitudCompra");
-            table_container_ccsolart.jtable({
-                title: "Lista de Articulos",
-                paging: true,
-                sorting: true,
-                 cache: false, 
-                actions: {
-                    listAction: base_url + '/registerOrdenCompras/getScompraArticulo'
-                },
-                toolbar: {
-                    items: [{
-                        cssClass: 'buscador',
-                        text: search_ccsolart
-                    }]
-                },
-                
-                fields: {
-                    consecutivo: {
-                        key: true,
-                        create: false,
-                        edit: false,
-                        list: false
-                    },
-                    select: {
-                        width: '1%', 
-                        sorting: false,
-                        edit: false,
-                        create: false,
-                        listClass: 'text-center',
-                        display: function (data) {
-                           return '<label class="checkbox-inline i-checks"> <input name="idSolicitud" class="check valcheck" type="checkbox" id="p_state" data-nConsecutivo="'+data.record.nConsecutivo+'" data-consecutivo="'+data.record.consecutivo+'" data-cantida="'+data.record.cantidad+'" data-idProducto="'+data.record.idArticulo+'" data-DesProducto="'+data.record.articulo+'" data-unidaMedida="'+data.record.unidadMedida+'" data-impuesto="'+data.record.impuesto+'"></label>';
-                       }
-                    },
-                    cCodConsecutivo: {
-                        title: 'Código'
-                    },
-                    nConsecutivo: {
-                         title: 'Consecutivo'
-                    },
-                    idArticulo: {
-                        create: false,
-                        edit: false,
-                        list: false
-                    },
-                    articulo: {
-                        title: 'Artículo'
-
-                    },
-                    
-                    unidadMedida: {
-                        title: 'Unida Medida'
-
-                    },
-                    cantidad: {
-                        title: 'Cantidad',
-                        display: function (data) {
-                           return Number(data.record.cantidad);
-                       }
-                    },
-                    fecha_requerida: {
-                        title: 'Fecha Requerida',
-                         display: function (data) {
-                            return moment(data.record.fecha_requerida).format('DD/MM/YYYY');
-                        }
-                    },
-
-                    
-                },
-                recordsLoaded: function(event, data) {
-                    $('.i-checks').iCheck({
-                        checkboxClass: 'icheckbox_square-green'
-                    }).on('ifChanged', function (event) {
-                            $(event.target).click();
-                    });
-
-                    $('.select_cc').click(function(e){
-                        var codigo = $(this).attr('data-code');
-                        var descripcionArt = $(this).attr('data-name');
-                        var idTipoArt = $(this).attr('data-type');
-                        var serie = $(this).attr('data-serie');
-                        var lote = $(this).attr('data-lote');
-                        var costo = $(this).attr('data-costo');
-                        seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
-                        e.preventDefault();
-                    });
-                }
-            });
-
-            generateSearchForm('frm-search-ccsolart', 'LoadRecordsButtonCCsolart', function(){
-                table_container_ccsolart.jtable('load', {
-                    search: $('#search_ccsolart').val(),
-                    consecutivo: $('#consecutivo').val(),
-                    FechaRegistro: $('#FechaRegistro').val(),
-                });
-            }, false);
-
-        }
-
-        function cargartableMovAr2(){
-             var search_cc22 = getFormSearch('frm-search-cc22', 'search_cc22', 'LoadRecordsButtonCC22');
-         table_container_cc2 = $("#table_container_Register_Articulo");
-        table_container_cc2.jtable({
-            title: "Lista de Articulos",
-            paging: true,
-            sorting: true,
-             cache: false, 
-            actions: {
-                listAction: base_url + '/registerOrdenCompras/getArticulosMinKit'
-            },
-            toolbar: {
-                items: [{
-                    cssClass: 'buscador',
-                    text: search_cc22
-                }]
-            },
-            fields: {
-                id: {
-                    key: true,
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                type_id: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                serie: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                lote: {
-                    create: false,
-                    edit: false,
-                    list: false
-                },
-                code_article: {
-                    title: 'Código'
-
-                },
-                description: {
-                    title: 'Articulos'
-
-                },
-
-                costo: {
-                    title: 'costo'
-
-                },
-                select: {
-                    width: '1%',
-                    sorting: false,
-                    edit: false,
-                    create: false,
-                    listClass: 'text-center',
-                    display: function (data) {
-                        return '<a href="javascript:void(0)" title="Seleccionar" class="select_cc" data-costo="'+data.record.costo+'" data-name="'+
-                            data.record.description+'" data-type="'+data.record.type_id+'"  data-serie="'+data.record.serie+'" data-lote="'+data.record.lote+'" data-code="'+data.record.id+'"><i class="fa fa-'+
-                            icon_select+' fa-1-5x"></i></a>';
-                   }
-                }
-            },
-            recordsLoaded: function(event, data) {
-                $('.select_cc').click(function(e){
-                    var codigo = $(this).attr('data-code');
-                    var descripcionArt = $(this).attr('data-name');
-                    var idTipoArt = $(this).attr('data-type');
-                    var serie = $(this).attr('data-serie');
-                    var lote = $(this).attr('data-lote');
-                    var costo = $(this).attr('data-costo');
-                    seleccionarModal(codigo,descripcionArt,idTipoArt,serie,lote,costo); 
-                    e.preventDefault();
-                });
-            }
-        });
-
-        generateSearchForm('frm-search-cc22', 'LoadRecordsButtonCC22', function(){
-            table_container_cc2.jtable('load', {
-                search: $('#search_cc22').val()
-            });
-        }, false);
-
-        }
-        
-       
-
-       
-
-      
     }
 
     function Config($stateProvider, $urlRouterProvider) {
         $stateProvider
 
-            .state('registerOrdenCompras', {
-                url: '/registerOrdenCompras',
-                templateUrl: base_url + '/templates/registerOrdenCompras/base.html',
-                controller: 'RegisterOrdenCompraCtrl'
+            .state('aprobacionOrdenCompras', {
+                url: '/aprobacionOrdenCompras',
+                templateUrl: base_url + '/templates/aprobacionOrdenCompras/base.html',
+                controller: 'AprobacionOrdenCompraCtrl'
             });
 
         $urlRouterProvider.otherwise('/');

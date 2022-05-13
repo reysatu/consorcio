@@ -284,7 +284,7 @@
         }
          function findSolicitudCompra(id)
         {
-            titlemodalMovimieto.html('Editar Compra');
+            titlemodalMovimieto.html('Editar Solicitud Compra');
           
             RESTService.get('solicitudCompras/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -298,7 +298,7 @@
                     // });
                     // console.log(data_p);
 
-                    titlemodalMovimieto.html('Editar Compra '+'['+ data_p.idMovimiento+ ']');
+                    titlemodalMovimieto.html('Editar Solicitud Compra '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
                     btn_movimiento_detalle.prop('disabled',false);
@@ -438,7 +438,8 @@
                         if(index.observaciones==null){
                             obser='';
                         }
-                        addArticuloTable(index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida,obser);                      
+                        var idDetalle=0;
+                        addArticuloTable(index.consecutivo,index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida,obser);                      
                       })
                     // if(p_state.val()=="REGISTRADO"){
                     //     procesarTransfBoton.prop('disabled',false);
@@ -764,7 +765,8 @@
                                 var estado="N";
                                 var unida='';
                                 var obser="";
-                                addArticuloTable(idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unida,obser);
+                                var idDetalle=0;
+                                addArticuloTable(idDetalle,idProd[i],descPd[i],Number(cantPd[i]),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unida,obser);
                             }
                             if(codPdN.length!=0){
                                  AlertFactory.textType({
@@ -1285,11 +1287,7 @@
                 if(articulo_mov_det.html() !=''){
                     ident_det="A";
                 };
-                 console.log(aartMSE);
-                console.log(ident_serie_bd_serie);
-                console.log(identificador_serie_bd);
-                console.log("test");
-               console.log(aartMSN);
+                 
                
 
                 var params = {
@@ -1356,7 +1354,7 @@
             }    
         }
 
-        function addArticuloTable(idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser){
+        function addArticuloTable(idDetalle,idProducto,desProducto,cantProducto,ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser){
             acodigos.push(codigo);
         
             var costonew=0;
@@ -1383,32 +1381,7 @@
             var td3;
             var td4;
             var inp3;
-            // if(naturalezaGeneral=="S" || naturalezaGeneral=="A" ){
-            //     var tdpr = $('<td></td>');
-            //     var inpr = $('<input type="number" id="preMs_'+codigo+'" min="1" class="m_articulo_precio form-control input-sm" value="' + precionew + '" />');
-            // }else{
-            //     precionew="";
-            //     var tdpr =  $('<td><p>'+ precionew + '</p></td>');
-            //     var inpr = $('<input type="hidden" id="preMs_'+codigo+'" min="1" class="m_articulo_precio form-control input-sm" value="' + precionew + '" />');
-            // }
             
-            // if(naturalezaGeneral=="E" || naturalezaGeneral=="C"){
-            //     var td4 = $('<td></td>');
-            //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
-            // }else{
-            //     var td4 =  $('<td><p>'+ costonew + '</p></td>');
-            //     var inp4 = $('<input type="hidden" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
-            // }
-
-            // if(naturalezaGeneral=="C"){
-            //     var tdy = $('<td></td>');
-            //     var td2 = $('<td></td>');
-            //     // var inpy=$('<select  data-arts="'+idProducto+'" data-idLocalizacion="'+idLocalizacion+'" id="Al_'+codigo+'" data-idAraAl="'+codigo+'" class="m_articulo_idAlm form-control input-sm" disabled></select>');
-            //     var inpl=$('<select id="'+codigo+'" data-idArl="'+idProducto+'" class="m_articulo_idLoc form-control input-sm" disabled ></select>');
-            //     var td3 = $('<td><p></p></td>');
-            //     var inp3 = $('<input type="hidden" id="canMs_'+codigo+'" class="m_articulo_cantidad" value="0" />');
-            // }
-            // else{
                 if (ver=='A'){
                  var td3 = $('<td class="text-center"></td>');
                  var inp3 = $('<input type="text" id="canMs_'+codigo+'" onkeypress="return soloNumeros(event)" class="m_articulo_cantidad form-control input-sm" value="' + cantProducto + '" />');
@@ -1453,7 +1426,7 @@
             var td6 = $('<td class="text-center"></td>');
             var btn1 = $('<button class="btn btn-info btn-xs verUpdate" title="ver" data-cantiShow="'+cantProducto+'" data-descrip="'+desProducto+'" data-idProducto="'+idProducto+'" data-tShow="'+tipo+'" data-idv="' + codigo + '" type="button"><span class="fa fa-eye"></span></button>');
             var td8 = $('<td class="text-center"></td>');
-            var btn3 = $('<button class="btn btn-danger btn-xs delMovPro" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
+            var btn3 = $('<button class="btn btn-danger btn-xs delMovPro"  data-idDetalle="'+idDetalle+'" data-tipo="'+tipo+'" title="Eliminar" data-id="' + codigo + '" type="button"><span class="fa fa-trash"></span></button>');
             td6.append(btn1);
             td8.append(btn3);
             tr.append(td1).append(td2).append(td3).append(td12).append(td5).append(tdObser).append(td4).append(td6).append(td8);
@@ -1533,6 +1506,15 @@
              $('.delMovPro').click(function (e) {
                 var code = $(this).attr('data-id');
                 var tip = $(this).attr('data-tipo');
+                var idDet=$(this).attr('data-idDetalle');
+                if($("#estado").val()!=0){
+                     AlertFactory.textType({
+                                title: '',
+                                message: 'Solo se puede eliminar artículos de una Solicitud de compra en estado registrado',
+                                type: 'info'
+                        });
+                    return false; 
+                 }
                 AlertFactory.confirm({
                     title: '',
                     message: '¿Está seguro que desea quitar este Artículo?',
@@ -1569,6 +1551,26 @@
                          return car.identificador !==code; 
                         })
                         aartMSE=arrTSE;
+                    }
+                    if(idMovimiento.val()!='' && idDet!=0){
+                        var id=idMovimiento.val()+'_'+idDet;
+                        RESTService.get('solicitudCompras/deleteDetalleSC', id, function(response) {
+                        if (!_.isUndefined(response.status) && response.status) {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'El Articulo se eliminó correctamente',
+                                    type: 'success'
+                                });
+                            }else {
+                                var msg_ = (_.isUndefined(response.message)) ?
+                                'No se pudo eliminar. Intente nuevamente.' : response.message;
+                                    AlertFactory.textType({
+                                        title: '',
+                                        message: msg_,
+                                        type: 'error'
+                                    });
+                            }
+                        });
                     }
                     $('#tr_idArticulo' + code).remove();
                 });
@@ -1742,7 +1744,8 @@
                                 var precioTotal="";
                                 var estado="N";
                                 var unida="";
-                                addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,estado,fecharequerida,unida);
+                                var idDetalle=0;
+                                addArticuloTable(idDetalle,idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),vers,codigoLSr,tipoArtLSr,codl,datl,estado,fecharequerida,unida);
                                 modalSerieR.modal("hide");
                                 modalMovimietoArticulo.modal("hide");
                       
@@ -1896,7 +1899,8 @@
                         var precioTotal="";
                         var estado="N";
                         var unida="";
-                       addArticuloTable(idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
+                        var idDetalle=0;
+                       addArticuloTable(idDetalle,idProductoMss.val(),desProductoMss.val(),cantProductoMss.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
                        modalSerieR.modal("hide");
                        modalMovimietoArticulo.modal("hide");
                         }
@@ -1954,7 +1958,8 @@
                 var precioTotal="";
                 var estado="N";
                 var unida="";
-                addArticuloTable(idProductoMll.val(),desProductoMll.val(),cantProductoMll.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
+                var idDetalle=0;
+                addArticuloTable(idDetalle,idProductoMll.val(),desProductoMll.val(),cantProductoMll.val(),ver,codigoLr,tipoArtLr,codl,datl,estado,fecharequerida,unida);
                 modalLoteR.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2058,9 +2063,10 @@
                 var estado="N";
                 var idpr=idProductoMN.val();
                 var obser='';
+                var idDetalle=0;
                 RESTService.get('solicitudCompras/getDataArticulo', idpr, function(response) {
                         var datapro=response.data;
-                      addArticuloTable(idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida,obser);
+                      addArticuloTable(idDetalle,idProductoMN.val(),desProductoMN.val(),cantProductoMN.val(),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,datapro[0].unidadMedida,obser);
                         modalNada.modal('hide');
                         modalMovimietoArticulo.modal('hide');    
                 });
@@ -2114,7 +2120,8 @@
                     var estado="N";
                     var unida='';
                     var obser='';
-                    addArticuloTable(idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida,unida,obser);
+                    var idDetalle=0;
+                    addArticuloTable(idDetalle,idProductoML.val(),desProductoML.val(),cantProductoML.val(),ver,codigoLtr,tipolr,codl,datl,estado,fecharequerida,unida,obser);
                     modalLote.modal('hide');
                     modalLoteR.modal('hide');
                     modalMovimietoArticulo.modal('hide');
@@ -2169,7 +2176,8 @@
                 var estado="N";
                 var unida="";
                 var obser="";
-                addArticuloTable(idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser);
+                var idDetalle=0;
+                addArticuloTable(idDetalle,idProductoMK.val(),desProductoMK.val(),cantProductoMK.val(),ver,codigo,tipo,codl,datl,estado,fecharequerida,unida,obser);
                 modalKit.modal('hide');
                 modalMovimietoArticulo.modal('hide');
             }
@@ -2294,7 +2302,7 @@
 
                 RESTService.updated('solicitudCompras/saveMovimiento', movimiento_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
-                        titlemodalMovimieto.html('Nueva Compra');
+                        titlemodalMovimieto.html('Nueva Solicitud de Compra');
                         AlertFactory.textType({
                             title: '',
                             message: 'El registro se guardó correctamente',
@@ -2332,7 +2340,7 @@
         };
         function newMovimiento()
         {
-            titlemodalMovimieto.html('Nueva Compra');
+            titlemodalMovimieto.html('Nueva Solicitud de Compra');
             modalMovimieto.modal('show');
         }
          $scope.addArticulo = function()
@@ -2482,7 +2490,7 @@
         var table_container_SolicitudCompra = $("#table_container_SolicitudCompra");
 
         table_container_SolicitudCompra.jtable({
-            title: "Lista de Compras",
+            title: "Lista de Solicitudes Compras",
             paging: true,
             sorting: true,
             actions: { 

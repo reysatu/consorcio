@@ -15,7 +15,7 @@ Route::get('solicitudCompras/excel', ['as' => 'solicitudCompras.excel', 'uses' =
 Route::get('solicitudCompras/procesarTransferencia/{id}', ['as' => 'register_transfers.procesarTransferencia', 'uses' => 'SolicitudCompraController@procesarTransferencia']);
 
 Route::get('solicitudCompras/data_form', ['as' => 'solicitudCompras.data_form', 'uses' => 'SolicitudCompraController@data_form']);
-
+ 
 Route::put('solicitudCompras/saveMovimiento/{id}', ['as' => 'solicitudCompras.saveMovimiento', 'uses' => 'SolicitudCompraController@createUpdate']);
 
 Route::get('solicitudCompras/getKit/{id}', ['as' => 'solicitudCompras.getKit', 'uses' => 'SolicitudCompraController@getKit']);
@@ -67,3 +67,5 @@ Route::post('solicitudCompras/getAllOperationRegMov', 'OperationController@getAl
 Route::post('solicitudCompras/getAllUserRegMov', 'UserController@getAll');
 
 Route::get('solicitudCompras/archivoTxt', 'SolicitudCompraController@archivoTxt');
+
+Route::get('solicitudCompras/deleteDetalleSC/{id}', ['as' => 'solicitudCompras.deleteDetalleSC', 'uses' => 'SolicitudCompraController@deleteDetalleSC']);

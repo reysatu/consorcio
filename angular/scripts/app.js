@@ -17,6 +17,7 @@
         'angucomplete-alt',
         'sys.utils.widgets',
         'sys.utils.filters',
+        'sys.app.cancelarCerrarOcs',
         'sys.api',
         'sys.app.extends',
         'sys.app.home',
@@ -143,6 +144,7 @@
         'sys.app.report_stocks',
         'sys.app.report_movements',
         'sys.app.aperturaCajas',
+        'sys.app.aprobacionOrdenCompras',
         // Proyectos
         'sys.app.projects',
         'sys.app.direct_billing',

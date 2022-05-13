@@ -243,6 +243,33 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
         $mostrar=DB::select("select * from ERP_OrdenCompraArticulo where idOrden='$id'");
         return $mostrar; 
     }
+    public function cambiar_estado_porAprobar($id,$estado,$cCodConsecutivo,$nConsecutivo)
+    {
+        // $mostrar=DB::update("UPDATE ERP_OrdenCompra
+        //               SET iEstado = '$estado' where id='$id'");
+        
+        $sql = "
+        DECLARE @return_value int,
+        @sMensaje varchar(250)
+        SELECT  @sMensaje = N''''''
+
+        SET NOCOUNT ON; EXEC  @return_value = [dbo].[COM_EnvioAprobarOrd]
+                @cCodConsecutivo = N'{$cCodConsecutivo}',
+                @nConsecutivo = {$nConsecutivo},
+                @Usuario = " . auth()->id() . ",
+                @sMensaje = @sMensaje OUTPUT
+
+        SELECT  @return_value AS 'return_value', @sMensaje as 'msg'";
+
+        // echo $sql; exit;
+        $res = DB::select($sql);
+        if($res[0]->msg=='OK'){
+          $mostrar=DB::update("UPDATE ERP_OrdenCompraArticulo
+                      SET iEstado = '$estado' where idOrden='$id'");
+        }
+        
+        return $res;
+    }
      public function cambiar_estado($id,$estado)
     {
         $mostrar=DB::update("UPDATE ERP_OrdenCompra

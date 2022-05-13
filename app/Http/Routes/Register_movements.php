@@ -12,7 +12,7 @@ Route::get('register_movements/delete/{id}', ['as' => 'register_movements.delete
 Route::post('register_movements/update', ['as' => 'register_movements.update', 'uses' => 'Register_movementController@update']);
 Route::get('register_movements/excel', ['as' => 'register_movements.excel', 'uses' => 'Register_movementController@excel']);
 
-Route::get('register_movements/procesarTransferencia/{id}', ['as' => 'register_transfers.procesarTransferencia', 'uses' => 'Register_movementController@procesarTransferencia']);
+Route::get('register_movements/procesarTransferencia/{id}', ['as' => 'register_movements.procesarTransferencia', 'uses' => 'Register_movementController@procesarTransferencia']);
 
 Route::get('register_movements/data_form', ['as' => 'register_movements.data_form', 'uses' => 'Register_movementController@data_form']);
 
