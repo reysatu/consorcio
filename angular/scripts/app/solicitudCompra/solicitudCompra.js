@@ -284,7 +284,7 @@
         }
          function findSolicitudCompra(id)
         {
-            titlemodalMovimieto.html('Editar Compra');
+            titlemodalMovimieto.html('Editar Solicitud Compra');
           
             RESTService.get('solicitudCompras/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
@@ -298,7 +298,7 @@
                     // });
                     // console.log(data_p);
 
-                    titlemodalMovimieto.html('Editar Compra '+'['+ data_p.idMovimiento+ ']');
+                    titlemodalMovimieto.html('Editar Solicitud Compra '+'['+ data_p.idMovimiento+ ']');
                     var lotE=response.data_movimiento_lote;
                     var serE=response.data_movimiento_serie;
                     btn_movimiento_detalle.prop('disabled',false);
@@ -2302,7 +2302,7 @@
 
                 RESTService.updated('solicitudCompras/saveMovimiento', movimiento_id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
-                        titlemodalMovimieto.html('Nueva Compra');
+                        titlemodalMovimieto.html('Nueva Solicitud de Compra');
                         AlertFactory.textType({
                             title: '',
                             message: 'El registro se guardó correctamente',
@@ -2340,7 +2340,7 @@
         };
         function newMovimiento()
         {
-            titlemodalMovimieto.html('Nueva Compra');
+            titlemodalMovimieto.html('Nueva Solicitud de Compra');
             modalMovimieto.modal('show');
         }
          $scope.addArticulo = function()

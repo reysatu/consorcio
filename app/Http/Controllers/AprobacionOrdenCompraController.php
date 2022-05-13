@@ -61,6 +61,7 @@ class AprobacionOrdenCompraController extends Controller
                 $data_update['aprobaComentario']=null;
             }
             $data_update['iEstado'] = $data['iEstado'];
+            $data_update['id']=$id;
             $res = $repo->aprobarRechazar($data_update);
             $val=$res[0]->msg;
 

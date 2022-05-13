@@ -17,6 +17,7 @@
         'angucomplete-alt',
         'sys.utils.widgets',
         'sys.utils.filters',
+        'sys.app.cancelarCerrarOcs',
         'sys.api',
         'sys.app.extends',
         'sys.app.home',

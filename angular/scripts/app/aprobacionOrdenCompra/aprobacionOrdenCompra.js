@@ -202,7 +202,8 @@
                     'aprobaComentario': aprobaComentario.val(),
                     'iEstado': estadoApro.val(), 
                 };
-                var idPe =0;
+                var idPe =idMovimiento.val();
+                console.log(idPe);
                 RESTService.updated('aprobacionOrdenCompras/AprobarRechazar', idPe, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
                         var ms=response.msg;

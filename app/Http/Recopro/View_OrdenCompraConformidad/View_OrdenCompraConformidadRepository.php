@@ -51,13 +51,18 @@ class View_OrdenCompraConformidadRepository implements View_OrdenCompraConformid
         $mostrar=DB::update("UPDATE ERP_OrdenCompra
             SET comentarioAprobacion = '$comentario' WHERE cCodConsecutivo='$cod' and nConsecutivo='$ncon'");
         return $mostrar; 
-    }
+    } 
     public function aprobarRechazar($data)
 
-    {
-
+    {   
+        $esta='';
+        if($data["iEstado"]=='1'){
+              $esta='3';
+        }else if ($data["iEstado"]=='2') {
+              $esta='8';
+        }
         
-        
+        $id=$data["id"];
         $sql = "
         DECLARE @return_value int,
         @sMensaje varchar(250)
@@ -72,7 +77,8 @@ class View_OrdenCompraConformidadRepository implements View_OrdenCompraConformid
 
         SELECT  @return_value AS 'return_value', @sMensaje as 'msg'";
         // echo $sql; exit;
-      $res = DB::select($sql);
+      $mostrar=DB::update("UPDATE ERP_OrdenCompraArticulo SET iEstado = '$esta' where idOrden='$id'");  
+      $res = DB::select($sql); 
 
         // print_r($res);
         return $res;
