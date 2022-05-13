@@ -43,3 +43,6 @@ Route::get('cuentasxcobrars/TraerDepartamentosOrde/{id}', ['as' => 'cuentasxcobr
 Route::get('cuentasxcobrars/TraerProvinciasOrde/{id}', ['as' => 'cuentasxcobrars.TraerProvinciasOrde', 'uses' => 'UbigeoController@TraerProvincias']);
 
 Route::get('cuentasxcobrars/TraerDistritosOrde/{id}', ['as' => 'cuentasxcobrars.TraerDistritosOrde', 'uses' => 'UbigeoController@TraerDistritos']);
+
+
+Route::get('cuentasxcobrars/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');

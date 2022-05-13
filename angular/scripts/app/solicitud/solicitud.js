@@ -148,8 +148,8 @@
 
 
         function newSolicitud() {
-            $("#imprimir-cronograma").hide();
-            $("#cancelar-solicitud").hide();
+            $(".imprimir-cronograma").hide();
+            $(".cancelar-solicitud").hide();
             // var hoy = new Date();
             // var hAnio=hoy.getFullYear();
             // var hmes=hoy.getMonth()+1;
@@ -186,10 +186,10 @@
             }
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
-            $("#imprimir-solicitud").hide();
+            $(".imprimir-solicitud").hide();
             habilitar_inputs();
-            $("#enviar_solicitud").hide();
-            $("#aprobaciones").hide();
+            $(".enviar_solicitud").hide();
+            $(".aprobaciones").hide();
             $("#articulo_mov_det").html("");
             $("#formulario-solicitud").trigger("reset");
             $("#formulario-creditos").trigger("reset");
@@ -1587,14 +1587,19 @@
         var identSerAr = $("#identSerAr");//identificador para modificar el array de series esxisten
 
         function cargarTableSerie(idProducto, aarraySe) {
+ 
+            // console.log($("#table_container_Series_Articulo").find(".jtable-main-container"));
+           
+            
+
             cont_check = 0;
             identiSelec = "A";
             var search_cc4 = getFormSearch('frm-search-cc4', 'search_cc4', 'LoadRecordsButtonCC4');
             table_container_cc4 = $("#table_container_Series_Articulo");
             var url = 'getProductoSerie';
-            if (naturalezaGeneral == "S") {
-                url = 'getProductoSerieStock';
-            };
+            // if (naturalezaGeneral == "S") {
+            //     url = 'getProductoSerieStock';
+            // };
             table_container_cc4.jtable({
                 title: "Lista de Series",
                 paging: true,
@@ -1664,6 +1669,20 @@
                         listClass: 'text-center',
                         display: function (data) {
                             var ichc = 'N';
+
+                            var codigo_tr = $("#btnSeleSerie").attr("codigo_tr");
+                            var tr = $("#tr_idArticulo"+codigo_tr);
+                            var arr_series = []
+                            // console.log(tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']"));
+                            if(tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']").length > 0) {
+
+                                arr_series = tr.find("td").eq(0).find(".list-series").find("input[name='series_id[]']").val().split(",");
+                            }
+
+                            // console.log(arr_series);  
+                            // console.log(data.record);  
+                            
+
                             if (identSerAr.val() != "") {
                                 console.log("entro");
                                 aartMSE.map(function (index) {
@@ -1671,7 +1690,8 @@
                                         ichc = 'A';
                                     }
                                 });
-                                if (ichc == 'A') {
+                                // console.log("ichc: "+ichc);
+                                if (ichc == 'A' || arr_series.indexOf(data.record.idSerie) != -1) {
                                     cont_check = cont_check + 1;
                                     ichc = 'N';
                                     return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '" checked ></label>';
@@ -1679,7 +1699,13 @@
                                     return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
                                 }
                             } else {
-                                return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
+                                console.log(arr_series.indexOf(data.record.idSerie));
+                                if(arr_series.indexOf(data.record.idSerie) != -1) {
+                                    return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '" checked ></label>';
+                                } else {
+                                    return '<label class="checkbox-inline i-checks"> <input class="check valcheck" type="checkbox" id="p_state" data_idSerie="' + data.record.idSerie + '" data-code="' + data.record.serie + '"  ></label>';
+                                }
+                                
                             }
 
 
@@ -2476,11 +2502,17 @@
             var articulo = $(this).data("articulo");
             var codigo_tr = $(this).data("id");
             var cantidad = $(this).data("cantidad");
+            $("#btnSeleSerie").attr("codigo_tr", codigo_tr);
             desProductoMss.val(articulo);
             idProductoMss.val(idarticulo);
             costoAS.val(costo);
             $("#codigo-tr").val(codigo_tr);
             modalSerieR.modal('show');
+            // $("#table_container_Series_Articulo").html("");
+            if($("#table_container_Series_Articulo").find(".jtable-main-container").length > 0) {
+                $('#table_container_Series_Articulo').jtable('destroy');
+                $("#table_container_Series_Articulo").empty();
+            }
             // alert(cantidad);
             $("#cantProductoMss").val(cantidad);
             $("#cantProductoMss").focus();
@@ -3179,13 +3211,13 @@
                                 type: 'success'
                             });
                             // alert("show");
-                            $("#enviar_solicitud").show();
-                            $("#imprimir-solicitud").show();
+                            $(".enviar_solicitud").show();
+                            $(".imprimir-solicitud").show();
 
                             if (data.datos[0].estado == "1" || data.datos[0].estado == "2") {
-                                $("#cancelar-solicitud").show();
+                                $(".cancelar-solicitud").show();
                             } else {
-                                $("#cancelar-solicitud").hide();
+                                $(".cancelar-solicitud").hide();
                             }
 
                         } else {
@@ -3320,7 +3352,7 @@
                                 message: 'La solicitud se envio correctamente. Se cambio al estado: ' + $("#estado option[value='" + $("#estado").val() + "']").text(),
                                 type: 'success'
                             });
-                            $("#aprobaciones").show();
+                            $(".aprobaciones").show();
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -3475,15 +3507,15 @@
                     }
 
                     if (data.solicitud[0].estado == "1" || data.solicitud[0].estado == "2") {
-                        $("#cancelar-solicitud").show();
+                        $(".cancelar-solicitud").show();
                     } else {
-                        $("#cancelar-solicitud").hide();
+                        $(".cancelar-solicitud").hide();
                     }
 
 
                     if (data.solicitud[0].estado == "1") {
                         habilitar_inputs();
-                        $("#enviar_solicitud").show();
+                        $(".enviar_solicitud").show();
                     } else {
 
                         deshabilitar_inputs();
@@ -3491,14 +3523,14 @@
 
                     // solo para credito directo 
                     if (data.solicitud[0].tipo_solicitud == "2" && (data.solicitud[0].estado >= 6 || data.solicitud[0].estado == 4)) {
-                        $("#imprimir-cronograma").show();
+                        $(".imprimir-cronograma").show();
                     } else {
-                        $("#imprimir-cronograma").hide();
+                        $(".imprimir-cronograma").hide();
                     }
 
                     $("#tipo_sol").val(data.solicitud[0].tipo);
-                    $("#aprobaciones").show();
-                    $("#imprimir-solicitud").show();
+                    $(".aprobaciones").show();
+                    $(".imprimir-solicitud").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"
@@ -3547,7 +3579,7 @@
 
             $("#agregar-articulo").hide();
             $("#btn_editar_cliente").hide();
-            $("#enviar_solicitud").hide();
+            $(".enviar_solicitud").hide();
             $("#btn_editar_conyugue").hide();
             $("#btn_editar_fiador").hide();
 

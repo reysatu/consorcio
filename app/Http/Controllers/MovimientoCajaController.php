@@ -742,6 +742,9 @@ class MovimientoCajaController extends Controller
             // exit;
             $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
             $solicitud_articulo = $solicitud_repositorio->get_solicitud_articulo($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            if(count($solicitud_articulo) <= 0) {
+                throw new Exception("La solicitud no tiene un detalle de articulos!");
+            }
 
             // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
             $suma_precio_total = 0;

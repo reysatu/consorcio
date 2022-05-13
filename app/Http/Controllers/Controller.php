@@ -233,8 +233,8 @@ class Controller extends BaseController
         $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
 
         $parametro_igv =  $caja_diaria_detalle_repo->get_parametro_igv();
-            
-        if(count($parametro_igv) <= 0) {
+
+        if (count($parametro_igv) <= 0) {
             throw new Exception("Por favor cree el parametro IGV!");
         }
 
@@ -550,36 +550,124 @@ class Controller extends BaseController
         return trim($xcadena);
     }
 
-    public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio) {
+    public function get_header($username, $secret)
+    {
+       // Create a unique identifier, or nonce.
+       // This example is used for simplicity in demonstration. Use a method
+       // that guarantees uniqueness in a production environment.
+       //$nonce = md5(rand());
+       //$created = date("Y-m-d H:i:s");
+       //$combo_string = $nonce . $created . $secret;
+    
+       // The sha1 command is not available in all versions of PHP.
+       // If your version of PHP does not support this command, use
+       //openssl directly with the command:
+       // echo -n <string> | openssl dgst -sha1
+       //$sha1_string = sha1($combo_string);
+       //$password = base64_encode($sha1_string);
+       $password=$secret;
+       
+       $headers = '<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+          <wsse:UsernameToken xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+             <wsse:Username>'.$username.'</wsse:Username>
+             <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">'.$password.'</wsse:Password>         
+          </wsse:UsernameToken>
+       </wsse:Security>';
+       return $headers;
+    }
+
+    public function envio_json_cpe($ruta_json)
+    {
+        $cliente = new  \nusoap_client("https://e-factura.tuscomprobantes.pe/wsseencpe/billService?wsdl", true);
+
+        $err = $cliente->getError();
+        if ($err) {
+            die('Error: ' . $err);
+        }
+        $filename = $ruta_json; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.txt
+       
+        if (!file_exists(base_path("public/CPE/"))) {
+            mkdir(base_path("public/CPE/"), 0777, true);
+        }
+
+        $pathRoot = base_path("public/CPE/"); //directorio local donde se generan los txt desde el sistema en PHP
+
+        $username = '20450106357EMISI355'; //RUC del emisor y usuario Sol concatenado
+        $password = 'EysuUjdi33'; //clave sol
+        $contentfile = base64_encode(file_get_contents($pathRoot . $filename));
+        $parametros = array('fileName' => $filename, 'contentFile' => $contentfile);
+        $respuesta = $cliente->call("sendBill", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
+
+
+        print_r($respuesta); exit;
+
+        $_strFaultCode = '';
+        $_strFaultString = '';
+        $_strContentFile = '';
+        foreach ($respuesta as $key => $value) {
+            switch ($key) {
+                case 'faultcode':
+                    $_strFaultCode = $value;
+                    break;
+                case 'faultstring':
+                    $_strFaultString = $value;
+                    break;
+                case 'applicationResponse': //DEVOLVERA UN VALOR SI ESTA TODO CORRECTO
+                    $_strContentFile = $value;
+                    break;
+                default:
+                    echo 'sin respuesta';
+                    break;
+            }
+        }
+        if (!(!isset($_strFaultCode) || trim($_strFaultCode) === '')) {
+            #DEVUELVE CODIGO DE ERROR O RECHAZO
+            echo $_strFaultCode;
+            echo $_strFaultString;
+        } else if (!(!isset($_strContentFile) || trim($_strContentFile) === '')) { //si esta todo correcto devuelve el xml firmado y puede extraer el valor resumen
+            $doc = new DOMDocument;
+            $doc->loadXML(base64_decode(array_values($respuesta)[0]));
+            echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue; //obtiene el valor resumen codigo unico por comprobante enviado
+            //  print_R($filename); exit;
+            file_put_contents(str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
+            #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
+        }
+    }
+
+    public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio)
+    {
+
         $json["invoice"] = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
         $venta_anticipo = array();
         $solicitud_cronograma = array();
-       
-        if(!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
+
+        if (!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
             $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
-       
+
         $empresa = $compania_repo->find("00000");
 
         $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
 
-        if(count($parametro_igv) <= 0) {
+        if (count($parametro_igv) <= 0) {
             throw new Exception("Por favor cree el parametro IGV!");
         }
 
-        $json["invoice"]["tipo_doc"] = $venta[0]->IdTipoDocumento;
+        $json["invoice"]["tip_doc"] = $venta[0]->IdTipoDocumento;
         $json["invoice"]["serie"] = $venta[0]->serie_comprobante;
-        $json["invoice"]["correl"] = $venta[0]->numero_comprobante;
+        $json["invoice"]["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         $json["invoice"]["fec_emi"] = $venta[0]->fecha_emision_server;
         $json["invoice"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
+        $json["invoice"]["tip_oper"] = "0101";
         $json["invoice"]["fec_ven"] = $venta[0]->fecha_emision_server;
-        $json["invoice"]["hora_emi"] = $venta[0]->hora_server;
+        
+        // $json["invoice"]["hora_emi"] = $venta[0]->hora_server;
         $json["invoice"]["ubl_version"] = "2.1";
         $json["invoice"]["customizacion"] = "2.0";
-        
+
         $json["invoice"]["emisor"]["tip_doc"] = "6";
         $json["invoice"]["emisor"]["num_doc"] = $empresa->Ruc;
         $json["invoice"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
@@ -591,7 +679,7 @@ class Controller extends BaseController
         $json["invoice"]["emisor"]["cod_pais"] = "PE";
         $json["invoice"]["emisor"]["cod_sucur"] = "0000";
 
-        $json["invoice"]["adquiriente"]["tip_doc"] = $venta[0]->tipodoc;
+        $json["invoice"]["adquiriente"]["tip_doc"] = (string)(int)$venta[0]->tipodoc;
         $json["invoice"]["adquiriente"]["num_doc"] = $venta[0]->documento;
         $json["invoice"]["adquiriente"]["raz_soc"] = $venta[0]->razonsocial_cliente;
         $json["invoice"]["adquiriente"]["dir"] = $venta[0]->direccion;
@@ -604,7 +692,7 @@ class Controller extends BaseController
         $json["invoice"]["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
         // $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES DE EXPORTACION
         // echo $venta[0]->comprobante_x_saldo;
-        if($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
+        if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
             $json["invoice"]["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
             // $json["invoice"]["cargo"][0]["cod_cd"] = "";
@@ -619,62 +707,63 @@ class Controller extends BaseController
             $json["invoice"]["ant"][0]["tip_doc"] = $venta_anticipo[0]->tipodoc;
             $json["invoice"]["ant"][0]["moneda"] = $venta_anticipo[0]->EquivalenciaSunat;
             $json["invoice"]["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
-
         }
         // echo "holsa"; exit;
-        if($venta[0]->condicion_pago == 1) { // contado
+        if ($venta[0]->condicion_pago == 1) { // contado
             $json["invoice"]["forma_pago"]["descrip"] = "Contado";
         } else { // credito
             $json["invoice"]["forma_pago"]["descrip"] = "Crédito";
             $json["invoice"]["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
             $json["invoice"]["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
-
-            $json["invoice"]["cuota"] = array();
-            $cuotas = array();
+            if(count($solicitud_cronograma) > 0) {
+                $json["invoice"]["cuota"] = array();
+                $cuotas = array();
+            }
+         
             foreach ($solicitud_cronograma as $key => $value) {
-                $cuotas["descrip"] = "Cuota ".$value->nrocuota;
+                $cuotas["descrip"] = "Cuota " . $value->nrocuota;
                 $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
                 $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
 
                 array_push($json["invoice"]["cuota"], $cuotas);
             }
-
-
-          
         }
+
        
 
         $json["invoice"]["det"] = array();
-        $detalle_venta = array(); 
+      
+        $detalle_venta = array();
         $cont = 1;
         foreach ($venta_detalle as $key => $value) {
 
             $detalle_venta["nro_item"] = $cont;
-            $detalle_venta["cod_prod"] = $value->idarticulo;
+            $detalle_venta["cod_prod"] = str_pad($value->idarticulo, 8, "0", STR_PAD_LEFT);
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
             $detalle_venta["descrip"] = $value->producto;
-            $detalle_venta["cant"] = $value->cantidad;
+            $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
-            
+
             $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
             $detalle_venta["igv_item"] = sprintf('%.2f', round($value->impuestos, 2));
             $detalle_venta["prec_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
-            $detalle_venta["tip_afec_igv"] = "20";// 10 con igv, 20 sin igv, catalogo 7
+            $detalle_venta["tip_afec_igv"] = "20"; // 10 con igv, 20 sin igv, catalogo 7
             $detalle_venta["impsto_tot"] = sprintf('%.2f', round($value->impuestos, 2));
             $detalle_venta["base_igv"] = sprintf('%.2f', round($value->precio_total, 2));
             $detalle_venta["tasa_igv"] = sprintf('%.2f', round($parametro_igv[0]->value, 2));
 
-            $cont ++;
+            $cont++;
             array_push($json["invoice"]["det"], $detalle_venta);
         }
-        
+
 
         $json["invoice"]["leyen"][0]["leyen_cod"] = "1000";
+       
         $json["invoice"]["leyen"][0]["leyen_descrip"] = $this->convertir($venta[0]->t_monto_total);
 
-        if($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
+        if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
             $json["invoice"]["leyen"][1]["leyen_cod"] = "2002";
             $json["invoice"]["leyen"][1]["leyen_descrip"] = "SERVICIOS PRESTADOS EN LA AMAZONÍA  REGIÓN SELVA PARA SER CONSUMIDOS EN LA MISMA";
 
@@ -684,16 +773,14 @@ class Controller extends BaseController
             $json["invoice"]["leyen"][1]["leyen_descrip"] = "BIENES TRANSFERIDOS EN LA AMAZONIA REGION SELVA PARA SER CONSUMIDOS EN LA MISMA";
         }
 
-        $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE);
+        $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         if (!file_exists(base_path("public/CPE/"))) {
             mkdir(base_path("public/CPE/"), 0777, true);
         }
 
-        $name = $empresa->Ruc."-".$venta[0]->IdTipoDocumento."-".$venta[0]->serie_comprobante."-".$venta[0]->numero_comprobante;
-        file_put_contents(base_path("public/CPE/").$name.".json", $json_encode); 
-       
-
-       
+        $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
+        file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
+        $this->envio_json_cpe($name . ".json");
     }
 }

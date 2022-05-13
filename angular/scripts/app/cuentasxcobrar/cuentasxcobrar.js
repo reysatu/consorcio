@@ -188,17 +188,17 @@
                         return $img;
                     }
                 },
-                //  print: {
-                //     width: '1%',
-                //     sorting: false,
-                //     edit: false,
-                //     create: false,
-                //     listClass: 'text-center', 
-                //     display: function (data) {
-                //         return '<a href="javascript:void(0)" title="Tarjeta" class="print_content" data-code="' +
-                //             data.record.cCodConsecutivo +'*'+data.record.nConsecutivo+'"><i class="fa fa-file fa-1-5x fa-green"></i></a>';
-                //     }
-                // },
+                 print: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center', 
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" title="Imprimir Cronograma" class="print_content" data-code="' +
+                            data.record.cCodConsecutivo +'*'+data.record.nConsecutivo+'"><i class="fa fa-file-pdf-o fa-1-5x fa-red"></i></a>';
+                    }
+                },
                 cCodConsecutivo: {
                     key: true,
                     create: false,
@@ -343,11 +343,14 @@
                 $('.print_content').click(function (e) {
                     var id = $(this).attr('data-code');
                     var totalid = id.split("*");
-                    var data_pdf = {
-                        cCodConsecutivo: totalid[0],
-                        nConsecutivo: totalid[1],
-                    };
-                    $scope.loadTarjetaCobranzaPDF('cuentasxcobrars/tarjetaCobranza', data_pdf);
+                    // var data_pdf = {
+                    //     cCodConsecutivo: totalid[0],
+                    //     nConsecutivo: totalid[1],
+                    // };
+
+                    var id = totalid[0] + "|" + totalid[1];
+                    window.open("cuentasxcobrars/imprimir_cronograma/" + id);
+                   // $scope.loadTarjetaCobranzaPDF('cuentasxcobrars/tarjetaCobranza', data_pdf);
 
                     e.preventDefault();
                 });
