@@ -419,8 +419,10 @@ class SolicitudRepository implements SolicitudInterface
 
         monto_pago = {$data["monto_pago"]},
         saldo_cuota = {$data["saldo_cuota"]}, 
-        pagado_mora = {$data["pagado_mora"]}, 
-        saldo_mora = {$data["saldo_mora"]}   
+        /*pagado_mora = {$data["pagado_mora"]}, 
+        saldo_mora = {$data["saldo_mora"]}  */
+        pagado_mora = ISNULL(pagado_mora, 0)  + {$data["pagado_mora"]},
+        saldo_mora = ISNULL(saldo_mora, 0) - {$data["saldo_mora"]}
         WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]} AND nrocuota={$data["nrocuota"]}";
 
         $result = DB::statement($sql_update);
@@ -433,8 +435,10 @@ class SolicitudRepository implements SolicitudInterface
         $sql_update = "UPDATE ERP_SolicitudCronograma SET 
         monto_pago = {$data["monto_pago"]},
         saldo_cuota = {$data["saldo_cuota"]}, 
-        pagado_mora = {$data["pagado_mora"]}, 
-        saldo_mora = {$data["saldo_mora"]}   
+        /*pagado_mora = {$data["pagado_mora"]}, 
+        saldo_mora = {$data["saldo_mora"]}   */
+        pagado_mora = ISNULL(pagado_mora, 0)  + {$data["pagado_mora"]},
+        saldo_mora = ISNULL(saldo_mora, 0) - {$data["saldo_mora"]}
         WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]} AND nrocuota={$data["nrocuota"]}";
 
         $result = DB::statement($sql_update);

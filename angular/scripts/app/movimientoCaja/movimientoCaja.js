@@ -3729,9 +3729,12 @@ table_container_bancos.jtable('load');
                             html += '<input type="hidden" class="subtotal-pagar" value="'+saldo_pagar.toFixed(2)+'" >';
                             html += '<td class="valor-cuota">'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
                             html += '<td class="int-moratorio">'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
-                            html += '<td>'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
-                            html += '<td class="saldo-cuota">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
-                            html += '<td>'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
+
+                            html += '<td>'+parseFloat(data.solicitud_cronograma[index].monto_pago).toFixed(2)+'</td>';
+
+                            // html += '<td>'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
+                            // html += '<td class="saldo-cuota">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
+                            // html += '<td>'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
                             
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) == 0) {
                                 disabled = 'disabled="disabled"';
