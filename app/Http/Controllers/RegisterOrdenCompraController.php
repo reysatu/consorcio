@@ -291,7 +291,7 @@ class RegisterOrdenCompraController extends Controller
     //         ]);
     //     }
     // }
-    public function destroy(RegisterOrdenCompraInterface $repo,SolicitudCompraArticuloInterface $repoSolComp, Request $request)
+    public function destroy(RegisterOrdenCompraInterface $repo,SolicitudCompraArticuloInterface $repoSolComp, Request $request) 
     {
         
         $id = $request->input('id');
@@ -303,17 +303,27 @@ class RegisterOrdenCompraController extends Controller
         }
        
         $this->cambiarEstadoSolicitud($id,$repoSolComp);
-        $repo->destroy($id);
+        $repo->destroy($id); 
 
         return response()->json(['Result' => 'OK']);
     }
-    public function cambiarEstado($id, RegisterOrdenCompraInterface $repo, Request $request)
+    public function cambiarEstado($id, RegisterOrdenCompraInterface $repo,SolicitudCompraArticuloInterface $repoSolComp,Request $request)
     {
         try {
              $mensaje='';
              $estado =$request->input('estadoCambio');
           
              $val=$repo->cambiar_estado($id,$estado);
+            if($estado==7){
+                $dataArticulos=$repo->getDetalleArticulos($id);
+                foreach ($dataArticulos as $row) {
+                    $dataSo=[];
+                    $dataSo['estado'] =  1;
+                    $repoSolComp->update_estado($row->codSolicitud, $dataSo);
+                }
+               
+                $this->cambiarEstadoSolicitud($id,$repoSolComp);
+            }
             if($estado==1){
                 $mensaje='Aprobó';
             }else if($estado==3){

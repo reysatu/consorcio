@@ -38,6 +38,10 @@ use App\Http\Recopro\Area\Area;
 use App\Http\Recopro\Area\AreaInterface;
 use App\Http\Recopro\Area\AreaRepository;
 
+use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompra; 
+use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompraInterface;
+use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompraRepository;
+
 
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBanco; 
 use App\Http\Recopro\ProveedorCuentaBanco\ProveedorCuentaBancoInterface;
@@ -805,6 +809,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSolicitudCompra();
         $this->registerProveedor();
         $this->registerArea();
+        $this->registerAnulacionOrdenCompra();
         $this->registerEmpresa();
         $this->registerView_OrdenCompra();
         $this->registerSector();
@@ -1176,6 +1181,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(TipoProveedorInterface::class, function ($app) {
             return new TipoProveedorRepository(new TipoProveedor());
+        });
+    }
+    public function registerAnulacionOrdenCompra()
+    {
+        $app = $this->app;
+
+        $app->bind(AnulacionOrdenCompraInterface::class, function ($app) {
+            return new AnulacionOrdenCompraRepository(new AnulacionOrdenCompra());
         });
     }
     public function registerArea()
