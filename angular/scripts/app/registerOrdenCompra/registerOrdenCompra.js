@@ -399,7 +399,7 @@
                         if(index.nIdDscto!=0){
                             idDescuento =index.nIdDscto+"*"+porcen+'*'+monto;
                          }
-                        addArticuloTable(index.idDetalle,index.idArticulo,index.productoDescripcion,Math.trunc(index.cantidad),ver,index.idDetalle,tipoArt,codl,datl,index.iEstado,index.dFecRequerida_add,"","",Math.trunc(index.cantidad),Math.trunc(index.cantidadRecibida),Math.trunc(index.cantidadDevuelta),Number(index.precioUnitario),Number(index.precioTotal),idDescuento,index.nImpuesto,Number(index.nPorcDescuento),Number(index.nDescuento),ident_impuesto,codSoli,Number(index.total),Number(index.valorCompra));
+                        addArticuloTable(index.idDetalle,index.idArticulo,index.productoDescripcion,Math.trunc(index.cantidad),ver,index.idDetalle,tipoArt,codl,datl,index.iEstado,index.dFecRequerida_add,"","",Math.trunc(index.cantidad),Math.trunc(index.cantidadRecibida),Math.trunc(index.cantidadDevuelta),Number(index.precioUnitario),Number(index.precioTotal),idDescuento,index.nImpuesto,Number(index.nPorcDescuento),Number(index.nDescuento),ident_impuesto,index.codSolicitud,Number(index.total),Number(index.valorCompra));
                         // addArticuloTable(iddet,index.idArticulo,index.description,Math.trunc(index.cantidad),ver,index.consecutivo,tipo,codl,datl,index.estado,index.fecha_requerida_ad,index.unidaMedida,obser);                      
                       })
                    activarbotones();
@@ -647,7 +647,7 @@
                                 message: 'Ya se agregó el artículo de la solicitud '+nConsecutivo,
                              });
                         }else{
-                            console.log(codSoli);
+                            console.log(codSoli,'cod soli');
                             addArticuloTable(iddet,idProduc,desProducto,Number(cantidad),ver,codigo,tipoArt,codl,datl,estado,fecharequerida,unidadMedida,obser,Number(cantidad),cantReci,cantDevu,precio,precioTotal,idDescuento,impuesTotal,nPorcDescuento,nDescuento,ident_impuesto,codSoli,totaldetalle,valorCompra);
                         }
                       
@@ -1945,7 +1945,7 @@
                 deleteAction:  function (item) {
                     var total=item.ident;
                     var arra=total.split("*");
-                    if(arra[1]!=0){
+                    if(arra[1]!=1){
                             AlertFactory.textType({
                                 title: '',
                                 message: 'Solo se pueden eliminar ordenes en estado registrado',
@@ -1955,7 +1955,7 @@
     
                         return false;    
 
-                    }
+                    } 
                     return $.Deferred(function ($dfd) {
                             $.ajax({
                                 url: '/registerOrdenCompras/delete',
