@@ -3716,13 +3716,14 @@ table_container_bancos.jtable('load');
                         for (var index = 0; index < data.solicitud_cronograma.length; index++) {
                             disabled = "";
                             checked = "";
-                            //    console.log(data.solicitud_cronograma[index].saldo_cuota);
+                           
                             if (data.solicitud_cronograma[index].saldo_cuota != 0 && prox_venc == "") {
                                 prox_venc = data.solicitud_cronograma[index].fecha_vencimiento_credito;
                             }
 
-                            // var saldo_pagar = parseFloat(data.solicitud_cronograma[index].saldo_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio);
-                            var saldo_pagar = parseFloat(data.solicitud_cronograma[index].valor_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio) - parseFloat(data.solicitud_cronograma[index].monto_pago);
+                           
+                            // var saldo_pagar = parseFloat(data.solicitud_cronograma[index].valor_cuota) + parseFloat(data.solicitud_cronograma[index].int_moratorio) - parseFloat(data.solicitud_cronograma[index].monto_pago);
+                            var saldo_pagar = parseFloat(data.solicitud_cronograma[index].saldo_cuota);
 
                             html += '<tr>';
                             html += '<td><span class="inputs-hidden" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" ></span>'+data.solicitud_cronograma[index].fecha_vencimiento+'</td>';
@@ -3732,25 +3733,19 @@ table_container_bancos.jtable('load');
 
                             html += '<td>'+parseFloat(data.solicitud_cronograma[index].monto_pago).toFixed(2)+'</td>';
 
-                            // html += '<td>'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'</td>';
-                            // html += '<td class="saldo-cuota">'+parseFloat(data.solicitud_cronograma[index].saldo_cuota).toFixed(2)+'</td>';
-                            // html += '<td>'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'</td>';
+                       
                             
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) == 0) {
                                 disabled = 'disabled="disabled"';
                                 checked = 'checked="checked"';
+                                $("#monto_pagar_credito").attr(index);
+                            }
+                            var saldo_mora = parseFloat(data.solicitud_cronograma[index].saldo_mora);
+                            if(isNaN(saldo_mora)) {
+                                saldo_mora = 0;
                             }
 
-                            // console.log(parseFloat(data.solicitud_cronograma[index].saldo_cuota), disabled);
-                            // console.log(data.solicitud_cronograma[index].pagado_mora);
-                            var pagado_mora = 0;
-                            if(!isNaN(data.solicitud_cronograma[index].pagado_mora) && data.solicitud_cronograma[index].pagado_mora != null) {
-                                pagado_mora = parseFloat(data.solicitud_cronograma[index].pagado_mora).toFixed(2)
-                            }
-
-                            // console.log("gf ", pagado_mora);
-
-                            html += '<td><center><input '+disabled+' '+checked+'     saldo_pagar="'+saldo_pagar.toFixed(2)+'" valor_cuota="'+parseFloat(data.solicitud_cronograma[index].valor_cuota).toFixed(2)+'" int_moratorio="'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'" monto_pago="'+parseFloat(data.solicitud_cronograma[index].monto_pago).toFixed(2)+'" pagado_mora="'+pagado_mora+'" type="checkbox" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" class="check-cuota" /></center></td>';
+                            html += '<td><center><input '+disabled+' '+checked+' saldo_pagar="'+saldo_pagar.toFixed(2)+'" saldo_mora="'+saldo_mora.toFixed(2)+'"  type="checkbox" nrocuota="'+data.solicitud_cronograma[index].nrocuota+'" class="check-cuota" /></center></td>';
                             html += '<td class="monto-pagar-cuota"></td>';
                             html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
                             html += '<td class="saldo-pagar">'+saldo_pagar.toFixed(2)+'</td>';
@@ -3772,10 +3767,11 @@ table_container_bancos.jtable('load');
         $(document).on("click", ".check-cuota", function (e) {
             var saldo_pagar = parseFloat($(this).attr("saldo_pagar"));
             var nrocuota = $(this).attr("nrocuota");
-            var valor_cuota = parseFloat($(this).attr("valor_cuota"));
-            var int_moratorio = parseFloat($(this).attr("int_moratorio"));
-            var monto_pago = parseFloat($(this).attr("monto_pago"));
-            var pagado_mora = parseFloat($(this).attr("pagado_mora"));
+           
+            var saldo_mora = parseFloat($(this).attr("saldo_mora"));
+            var pagado_mora = 0;
+            var nuevo_saldo_mora = 0;
+            var nuevo_saldo_cuota = 0;
 
             var html = "";
             if((nrocuota-1) > 0 && !$(".check-cuota[nrocuota='"+(nrocuota-1)+"']").is(":checked")) {
@@ -3784,25 +3780,28 @@ table_container_bancos.jtable('load');
                 return false;
             }   
             
-            // if(!$(".check-cuota[nrocuota='"+(nrocuota-1)+"']").is(":checked") && (nrocuota-1) > 0) {
-            //     console.log("checked anterior");
-            // } else {
-            //     console.log("nooo checked anterior");
-            // }
-            // console.log($(".check-cuota[nrocuota='"+(nrocuota-1)+"']"));
-
             if($(this).is(":checked")) {
                 $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text(saldo_pagar.toFixed(2));
                 $(this).parent("center").parent("td").siblings(".saldo-pagar").text("0.00");
+                nuevo_saldo_cuota = 0;
+                if(saldo_mora > 0) {
+                    if(saldo_pagar > saldo_mora) { // se paga primero la mora
+                        nuevo_saldo_mora = 0;
+                        pagado_mora = saldo_mora;
+                       
+                    } else {
+                        nuevo_saldo_mora = saldo_mora - saldo_pagar;
+                        pagado_mora = saldo_pagar;
+                       
+                    }
+                }
+
                 html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
-                html += '<input type="hidden" name="saldo_cuota[]" value="0" />';
-                html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_pagar.toFixed(2)+'" />';
-
-
-                html += '<input type="hidden" name="monto_pago_sc[]" value="'+monto_pago.toFixed(2)+'" />';
-                html += '<input type="hidden" name="valor_cuota[]" value="'+valor_cuota.toFixed(2)+'" />';
-                html += '<input type="hidden" name="int_moratorio[]" value="'+int_moratorio.toFixed(2)+'" />';
+                html += '<input type="hidden" name="saldo_cuota[]" value="'+nuevo_saldo_cuota.toFixed(2)+'" />';
+                html += '<input type="hidden" name="monto_pago_cuota[]" value="'+saldo_pagar.toFixed(2)+'" />';
+             
                 html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
+                html += '<input type="hidden" name="saldo_mora[]" value="'+nuevo_saldo_mora.toFixed(2)+'" />';
                
             } else {
                 $(this).parent("center").parent("td").siblings(".monto-pagar-cuota").text("0.00");
@@ -3815,174 +3814,118 @@ table_container_bancos.jtable('load');
         });
 
         $(document).on("keyup", "#monto_pagar_credito", function () {
-            var monto_pagar_credito = parseFloat($("#monto_pagar_credito").val());
-            var saldo_capital_credito = parseFloat($("#saldo_capital_credito").val());
-
-            var nrocuota = "";
-            var monto_pago = 0;
-            var valor_cuota = 0;
-            var int_moratorio = 0;
-            var pagado_mora = 0;
-
+            var monto_pagar_credito = parseFloat($(this).val());
             if(isNaN(monto_pagar_credito)) {
                 monto_pagar_credito = 0;
             }
-
-            var nuevo_saldo_pagar = parseFloat(saldo_capital_credito) - monto_pagar_credito;
-            $("#nuevo_saldo_pagar_credito").val(nuevo_saldo_pagar.toFixed(2));
-
-            var saldo_pagar = parseFloat($(".valor-cuota").eq(0).text()) + parseFloat($(".int-moratorio").eq(0).text());
-
-            
-
-            //CUOTAS PAGADAS
-            var checks = $(".check-cuota");
-            var pagados = 0;
-            for (var check = 0; check < checks.length; check++) {
-                if(typeof $(checks[check]).attr("disabled") != "undefined" && $(checks[check]).is(":checked")) {
-                    pagados++;
-                }
-
-                if(typeof $(checks[check]).attr("disabled") == "undefined") {
-                    // console.log(check);
-                    $(checks[check]).prop("checked", false);   
-                    $(checks[check]).text(saldo_pagar.toFixed(2));
-                    $(".monto-pagar-cuota").eq(check).text("");
-                    if(parseFloat($(".saldo-cuota").eq(check).text()) != saldo_pagar) {
-                        $(".saldo-pagar").eq(check).text(parseFloat($(".saldo-cuota").eq(check).text()).toFixed(2));
-                    } else {
-                        $(".saldo-pagar").eq(check).text(saldo_pagar.toFixed(2));
-                    }
-                    
-                }
-            }
-
-             // SI ES NEGATIVO  O CERO YA NO CONTINUA
-             if(monto_pagar_credito <= 0) {
-                return false;
-            }
-            // alert(monto_pagar_credito);
-            //SI EXISTE ALGUN SALDO SE CUOTA PAGADA ANTERIOR
-            // console.log(parseFloat($(".saldo-cuota").eq(pagados).text()));
-            var saldo_cuota_anterior = parseFloat($(".saldo-cuota").eq(pagados).text());
-            var diff = 0;
-            if(saldo_cuota_anterior != saldo_pagar) {
-                diff = monto_pagar_credito - saldo_cuota_anterior;
-
-                nrocuota = $(".check-cuota").eq(pagados).attr("nrocuota");
-                monto_pago = parseFloat($(".check-cuota").eq(pagados).attr("monto_pago"));
-                valor_cuota = parseFloat($(".check-cuota").eq(pagados).attr("valor_cuota"));
-                int_moratorio = parseFloat($(".check-cuota").eq(pagados).attr("int_moratorio"));
-                pagado_mora = parseFloat($(".check-cuota").eq(pagados).attr("pagado_mora"));
-
-                $(".check-cuota").eq(pagados).prop("checked", true); 
-                html = "";
-                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
-                html += '<input type="hidden" name="monto_pago_sc[]" value="'+monto_pago.toFixed(2)+'" />';
-                html += '<input type="hidden" name="valor_cuota[]" value="'+valor_cuota.toFixed(2)+'" />';
-                html += '<input type="hidden" name="int_moratorio[]" value="'+int_moratorio.toFixed(2)+'" />';
-                html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
-
-
-                if(diff < 0) {
-                    // console.log("diff: " + diff);
-                  
-
-                
-                    $(".monto-pagar-cuota").eq(pagados).text(monto_pagar_credito.toFixed(2));
-                    $(".saldo-pagar").eq(pagados).text(Math.abs(diff).toFixed(2));
-    
-                   
-                    html += '<input type="hidden" name="saldo_cuota[]" value="'+Math.abs(diff).toFixed(2)+'" />';
-                    html += '<input type="hidden" name="monto_pago_credito[]" value="'+Math.abs(monto_pagar_credito).toFixed(2)+'" />';
-
-
-                  
-                } else {
-                    // console.log("saldo_cuota_anterior: " + saldo_cuota_anterior);
-                
-                    $(".monto-pagar-cuota").eq(pagados).text(saldo_cuota_anterior.toFixed(2));
-                    $(".saldo-pagar").eq(pagados).text("0.00");
-    
-                    html += '<input type="hidden" name="saldo_cuota[]" value="0.00" />';
-                    html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_cuota_anterior.toFixed(2)+'" />';
-
-                }
-
-                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
-                monto_pagar_credito = monto_pagar_credito - saldo_cuota_anterior;
-                pagados++;
-              
-            }   
-
-            // SI ES NEGATIVO  O CERO YA NO CONTINUA
-            if(monto_pagar_credito <= 0) {
-                return false;
-            }
-            // console.log("monto_pagar_credito: "+monto_pagar_credito);
-
-
-            var resto = monto_pagar_credito % saldo_pagar;
-            var entero = Math.floor(monto_pagar_credito/saldo_pagar) + pagados;
-
-           
-            
-
-            var nuevo_saldo_pagar = saldo_pagar - resto;
+            var resto = monto_pagar_credito;
+            var monto_pagar_credito_final = 0;
+            var cont = parseInt($(this).attr("cont")) + 1;
+            var saldo_pagar = 0;
             var html = "";
+
+            
             var nrocuota = "";
-            // console.log(pagados, entero);
-            for (var i = pagados; i < entero; i++) {
-                html = "";
-                nrocuota = $(".check-cuota").eq(i).attr("nrocuota");
-                monto_pago = parseFloat($(".check-cuota").eq(i).attr("monto_pago"));
-                valor_cuota = parseFloat($(".check-cuota").eq(i).attr("valor_cuota"));
-                int_moratorio = parseFloat($(".check-cuota").eq(i).attr("int_moratorio"));
-                pagado_mora = parseFloat($(".check-cuota").eq(i).attr("pagado_mora"));
+            var pagado_mora = 0;
+            var saldo_mora = 0;
+            var nuevo_saldo_mora = 0;
+            var nuevo_saldo_cuota = 0;
 
-                $(".check-cuota").eq(i).prop("checked", true); 
+            // primero restauramos todos a su valor original
+            var checks = $(".check-cuota");
+            for (var check = cont; check < checks.length; check++) {
+                saldo_pagar = parseFloat($(".subtotal-pagar").eq(check).val());    
+                nrocuota = $(".check-cuota").eq(check).attr("nrocuota");
+
+                $(checks[check]).prop("checked", false);  
+
+                $(".monto-pagar-cuota").eq(check).text("");
+                $(".saldo-pagar").eq(check).text(saldo_pagar.toFixed(2));
+                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html("");
+            }
+
+            // ahora si empezamos a descontar cuota por cuota
+            while(resto > 0) {
+                pagado_mora = 0;
+                saldo_mora = 0;
+                nuevo_saldo_mora = 0;
+                nuevo_saldo_cuota = 0;
+
+                html = "";
+                saldo_pagar = parseFloat($(".subtotal-pagar").eq(cont).val());    
+                resto = resto - saldo_pagar;
+
+                nrocuota = $(".check-cuota").eq(cont).attr("nrocuota");
+                saldo_mora = parseFloat($(".check-cuota").eq(cont).attr("saldo_mora"));
               
-                $(".monto-pagar-cuota").eq(i).text(saldo_pagar.toFixed(2));
-                $(".saldo-pagar").eq(i).text("0.00");
 
-                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
-                html += '<input type="hidden" name="saldo_cuota[]" value="0" />';
-                html += '<input type="hidden" name="monto_pago_credito[]" value="'+saldo_pagar.toFixed(2)+'" />';
+                if(resto > 0) {
 
-                html += '<input type="hidden" name="monto_pago_sc[]" value="'+monto_pago.toFixed(2)+'" />';
-                html += '<input type="hidden" name="valor_cuota[]" value="'+valor_cuota.toFixed(2)+'" />';
-                html += '<input type="hidden" name="int_moratorio[]" value="'+int_moratorio.toFixed(2)+'" />';
-                html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
-                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+                    $(".check-cuota").eq(cont).prop("checked", true); 
+                    $(".monto-pagar-cuota").eq(cont).text(saldo_pagar.toFixed(2));
+                    $(".saldo-pagar").eq(cont).text("0.00");
+                    nuevo_saldo_cuota = 0
+                    if(saldo_mora > 0) {
+                        if(saldo_pagar > saldo_mora) { // se paga primero la mora
+                            nuevo_saldo_mora = 0;
+                            pagado_mora = saldo_mora;
+                          
+                        } else {
+                            nuevo_saldo_mora = saldo_mora - saldo_pagar;
+                            pagado_mora = saldo_pagar;
+                          
+                        }
+                    }
+                 
+                    html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                    html += '<input type="hidden" name="saldo_cuota[]" value="'+nuevo_saldo_cuota.toFixed(2)+'" />';
+                    html += '<input type="hidden" name="monto_pago_cuota[]" value="'+saldo_pagar.toFixed(2)+'" />';
+                 
+                    html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
+                    html += '<input type="hidden" name="saldo_mora[]" value="'+nuevo_saldo_mora.toFixed(2)+'" />';
+                  
+                    $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+                    cont ++;
+                }
+
+                if(resto < 0) {
+                    monto_pagar_credito_final = saldo_pagar - Math.abs(resto);
+                    
+                    $(".check-cuota").eq(cont).prop("checked", true); 
+                    $(".monto-pagar-cuota").eq(cont).text(Math.abs(monto_pagar_credito_final).toFixed(2));
+                    $(".saldo-pagar").eq(cont).text(Math.abs(resto).toFixed(2));
+
+                    nuevo_saldo_cuota = Math.abs(resto);
+                    if(saldo_mora > 0) {
+                        if(monto_pagar_credito_final > saldo_mora) { // se paga primero la mora
+                            nuevo_saldo_mora = 0;
+                            pagado_mora = saldo_mora;
+                            
+                        } else {
+                            nuevo_saldo_mora = saldo_mora - monto_pagar_credito_final;
+                            pagado_mora = monto_pagar_credito_final;
+                           
+                        }
+                    }
+
+                    html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
+                    html += '<input type="hidden" name="saldo_cuota[]" value="'+nuevo_saldo_cuota.toFixed(2)+'" />';
+                    html += '<input type="hidden" name="monto_pago_cuota[]" value="'+Math.abs(monto_pagar_credito_final).toFixed(2)+'" />';
+                 
+                    html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
+                    html += '<input type="hidden" name="saldo_mora[]" value="'+nuevo_saldo_mora.toFixed(2)+'" />';
+                  
+                    $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
+
+                    cont ++;
+                }
 
             }
-            
-            if(resto > 0) {
-                html = "";
-                nrocuota = $(".check-cuota").eq(entero).attr("nrocuota");
-                monto_pago = parseFloat($(".check-cuota").eq(entero).attr("monto_pago"));
-                valor_cuota = parseFloat($(".check-cuota").eq(entero).attr("valor_cuota"));
-                int_moratorio = parseFloat($(".check-cuota").eq(entero).attr("int_moratorio"));
-                pagado_mora = parseFloat($(".check-cuota").eq(entero).attr("pagado_mora"));
 
-                $(".check-cuota").eq(entero).prop("checked", true); 
-                $(".monto-pagar-cuota").eq(entero).text(resto.toFixed(2));
-                $(".saldo-pagar").eq(entero).text(nuevo_saldo_pagar.toFixed(2));
 
-                html += '<input type="hidden" name="nrocuota[]" value="'+nrocuota+'" />';
-                html += '<input type="hidden" name="saldo_cuota[]" value="'+nuevo_saldo_pagar.toFixed(2)+'" />';
-                html += '<input type="hidden" name="monto_pago_credito[]" value="'+resto.toFixed(2)+'" />';
+        })  
 
-                html += '<input type="hidden" name="monto_pago_sc[]" value="'+monto_pago.toFixed(2)+'" />';
-                html += '<input type="hidden" name="valor_cuota[]" value="'+valor_cuota.toFixed(2)+'" />';
-                html += '<input type="hidden" name="int_moratorio[]" value="'+int_moratorio.toFixed(2)+'" />';
-                html += '<input type="hidden" name="pagado_mora[]" value="'+pagado_mora.toFixed(2)+'" />';
-                $(".inputs-hidden[nrocuota='"+nrocuota+"']").html(html);
-            
-            }
-
-         
-        })
+      
 
         function sumar_montos_pago() {
             var montos_pago = $(".monto-pagar-cuota");

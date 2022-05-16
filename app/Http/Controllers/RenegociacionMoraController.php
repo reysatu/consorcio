@@ -46,7 +46,7 @@ class RenegociacionMoraController extends Controller
             DB::beginTransaction();
             
             // echo  $solicitud_repositorio->get_consecutivo("ERP_SolicitudNegociaMora", "idsolicitudmora");
-            $total_int_moratorio = 0;
+           
             $total_pagado_mora = 0;
             $total_saldo_mora = 0;
             $monto_total = 0;
@@ -70,14 +70,9 @@ class RenegociacionMoraController extends Controller
                 $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudNegociaMora", $detalle_mora));
                 // print_r($result);
 
-                $pagado_mora = $data["int_moratorio"][$i];
-
-                if($data["int_moratorio"][$i] > $data["monto"][$i]) {
-                    $pagado_mora = (float)$data["monto"][$i];
-                }   
-
-                $saldo_mora = (float)$data["int_moratorio"][$i] - $pagado_mora;
-                $saldo_cuota = (float)$data["valor_cuota"][$i] + (float)$data["int_moratorio"][$i] - ((float)$data["monto"][$i] + (float)$data["monto_pago"][$i]);
+                $saldo_mora = (float)$data["saldo_mora"][$i] - (float)$data["monto"][$i];
+                $pagado_mora = (float)$data["monto"][$i];
+                $saldo_cuota = (float)$data["saldo_cuota"][$i] - $pagado_mora;
 
                  //ACTUALIZAR MONTOS EN solicitud cronograma
                 $update_montos_mora = array();
@@ -88,10 +83,10 @@ class RenegociacionMoraController extends Controller
                 $update_montos_mora["pagado_mora"] = round($pagado_mora, 2);
                 $update_montos_mora["saldo_mora"] = round($saldo_mora, 2);
                 $update_montos_mora["saldo_cuota"] = round($saldo_cuota, 2);
-                $update_montos_mora["monto_pago"] = (float)$data["monto"][$i] + (float)$data["monto_pago"][$i];
+                $update_montos_mora["monto_pago"] = (float)$data["monto"][$i];
                 $solicitud_repositorio->update_montos_mora($update_montos_mora);
 
-                $total_int_moratorio += $data["int_moratorio"][$i];
+        
                 $total_pagado_mora += $pagado_mora;
                 $total_saldo_mora += $saldo_mora;
                 $monto_total += (float)$data["monto"][$i];
@@ -104,7 +99,6 @@ class RenegociacionMoraController extends Controller
             $update_solicitud["cCodConsecutivo"] = $data["cCodConsecutivo_credito"];
             $update_solicitud["nConsecutivo"] = $data["nConsecutivo_credito"];
             $update_solicitud["monto_pagar_credito"] = $monto_total;
-            $update_solicitud["int_moratorio"] = $total_int_moratorio;
             $update_solicitud["pagado_mora"] = $total_pagado_mora;
             $update_solicitud["saldo_mora"] = $total_saldo_mora;
             $solicitud_repositorio->update_saldos_solicitud($update_solicitud);
