@@ -141,7 +141,7 @@
                 echo '  <td>'.$value->producto.' N° '.$value->nrocuota.'</td>';
                 echo '  <td>'.$serie.'-'.$numero.'</td>';
 
-                echo '  <td>'.number_format($value->valor_cuota_pagada - $value->int_moratorio_pagado, 2).'</td>';
+                echo '  <td>'.number_format($value->valor_cuota_pagada, 2).'</td>';
 
                 echo '</tr>';
                 $total += (float) $value->valor_cuota_pagada;

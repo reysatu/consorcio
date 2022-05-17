@@ -243,7 +243,11 @@
                         var html = "";
                         var disabled = "";
                         var checked = "";
+                        var pagado_mora = 0;
+                        var saldo_mora = 0;
                         for (var index = 0; index < data.solicitud_cronograma.length; index++) {
+                            pagado_mora = 0;
+                            saldo_mora = 0;
                             disabled = "";
                             checked = "";
                             //    console.log(data.solicitud_cronograma[index].saldo_cuota);
@@ -274,9 +278,13 @@
                             html += '<td>'+data.solicitud_cronograma[index].nrocuota+'</td>';
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) > 0) {
 
-                                var pagado_mora = 0;
+                                
                                 if(!isNaN(data.solicitud_cronograma[index].pagado_mora) && data.solicitud_cronograma[index].pagado_mora != null) {
                                     pagado_mora = parseFloat(data.solicitud_cronograma[index].pagado_mora).toFixed(2)
+                                }
+
+                                if(!isNaN(data.solicitud_cronograma[index].saldo_mora) && data.solicitud_cronograma[index].saldo_mora != null) {
+                                    saldo_mora = parseFloat(data.solicitud_cronograma[index].saldo_mora).toFixed(2)
                                 }
 
                                 html += '<td class=""><input int_moratorio="'+parseFloat(data.solicitud_cronograma[index].int_moratorio).toFixed(2)+'" type="number" name="monto[]" class="form-control input-sm" /></td>';
@@ -286,6 +294,10 @@
                                 html += '<input type="hidden" class="" name="valor_cuota[]" value="'+data.solicitud_cronograma[index].valor_cuota+'" >';
                                 html += '<input type="hidden" class="" name="monto_pago[]" value="'+data.solicitud_cronograma[index].monto_pago+'" >';
                                 html += '<input type="hidden" class="" name="pagado_mora[]" value="'+pagado_mora+'" >';
+                                html += '<input type="hidden" class="" name="saldo_mora[]" value="'+saldo_mora+'" >';
+                                html += '<input type="hidden" class="" name="saldo_cuota[]" value="'+data.solicitud_cronograma[index].saldo_cuota+'" >';
+
+
                             } else {
                                 html += '<td class=""></td>';
                                 html += '<td class=""></td>';
