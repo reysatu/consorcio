@@ -66,7 +66,7 @@ class Register_movement_ArticuloController extends Controller
             $idTipoCompraVenta = $data['idTipoCompraVenta'];
             $idTipoCompraVenta = explode(',', $idTipoCompraVenta);
 
-            $nPoliza = $data['nPoliza'];
+            $nPoliza = $data['nPoliza']; 
             $nPoliza = explode(',', $nPoliza);
 
             $nLoteCompra = $data['nLoteCompra'];
@@ -274,6 +274,10 @@ class Register_movement_ArticuloController extends Controller
                                 $idtse='idSerie';
 
                                 for ($k=0; $k < count($serieNenv) ; $k++) { 
+                                        $tipocv=strtoupper($idTipoCompraVenta[$k]);
+                                        if($tipocv==""){
+                                            $tipocv=null;
+                                        }
                                         if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
                                                 $contserie = $seri->create([
                                                 'idSerie' => $seri->get_consecutivo($tablese,$idtse),
@@ -284,7 +288,7 @@ class Register_movement_ArticuloController extends Controller
                                                 'anio_fabricacion' => $anioNFs[$k],
                                                 'anio_modelo' => $anioNVs[$k],
                                                 'color' => strtoupper($colorNs[$k]),
-                                                'idTipoCompraVenta' => strtoupper($idTipoCompraVenta[$k]),
+                                                'idTipoCompraVenta' => $tipocv,
                                                 'nPoliza' => strtoupper($nPoliza[$k]),
                                                 'nLoteCompra' => strtoupper($nLoteCompra[$k]),
                                                  ]);

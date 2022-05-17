@@ -65,6 +65,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\AnulacionOrdenCompras.php';
 
+    require app_path() . '\Http\Routes\RecepcionOrdenCompras.php';
+
     require app_path() . '\Http\Routes\Entities.php';
 
     require app_path() . '\Http\Routes\Products.php';

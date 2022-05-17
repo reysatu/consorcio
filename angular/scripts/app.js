@@ -27,6 +27,7 @@
         'sys.app.tipoProveedors',
         'sys.app.proveedors',
         'sys.app.configJerarquiaCompras',
+        'sys.app.recepcionOrdenCompras',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
