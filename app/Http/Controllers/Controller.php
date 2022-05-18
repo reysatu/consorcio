@@ -599,7 +599,7 @@ class Controller extends BaseController
         $respuesta = $cliente->call("sendBill", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
 
 
-        print_r($respuesta); exit;
+        // print_r($respuesta); exit;
 
         $_strFaultCode = '';
         $_strFaultString = '';
@@ -616,20 +616,25 @@ class Controller extends BaseController
                     $_strContentFile = $value;
                     break;
                 default:
-                    echo 'sin respuesta';
+                    $_strFaultString = "sin respuesta";
+                    // echo 'sin respuesta';
                     break;
             }
         }
         if (!(!isset($_strFaultCode) || trim($_strFaultCode) === '')) {
             #DEVUELVE CODIGO DE ERROR O RECHAZO
-            echo $_strFaultCode;
-            echo $_strFaultString;
+            // echo $_strFaultCode;
+            // echo $_strFaultString;
+            $response["status"] = "ei"; 
+            $response["msg"] = $_strFaultCode.": ".$_strFaultString; 
+            return response()->json($response);
+
         } else if (!(!isset($_strContentFile) || trim($_strContentFile) === '')) { //si esta todo correcto devuelve el xml firmado y puede extraer el valor resumen
-            $doc = new DOMDocument;
+            $doc = new \DOMDocument;
             $doc->loadXML(base64_decode(array_values($respuesta)[0]));
-            echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue; //obtiene el valor resumen codigo unico por comprobante enviado
+            // echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue; //obtiene el valor resumen codigo unico por comprobante enviado
             //  print_R($filename); exit;
-            file_put_contents(str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
+            file_put_contents("XML/".str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
             #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
         }
     }

@@ -2244,9 +2244,13 @@ table_container_bancos.jtable('load');
         }
 
         function guardar_comprobante() {
+
+            $("#emitir-comprobante").attr("disabled", "disabled");
+            $("#cerrar-emitir-comprobante").attr("disabled", "disabled");
             $.post("movimientoCajas/guardar_comprobante", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo").val() + "&nConsecutivo=" + $("#nConsecutivo").val() + "&IdTipoDocumento=" + $("#id_tipoDoc_Venta_or").val() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
                 function (data, textStatus, jqXHR) {
-
+                    $("#emitir-comprobante").removeAttr("disabled");
+                    $("#cerrar-emitir-comprobante").removeAttr("disabled");
                     if (data.status == "i") {
 
                         // $("#id_tipoDoc_Venta_or").val(data.datos[0].IdTipoDocumento).trigger("change", [data.datos[0].serie_comprobante]);
@@ -2285,7 +2289,7 @@ table_container_bancos.jtable('load');
 
                         id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa_ticket;
                         window.open("movimientoCajas/imprimir_ticket/" + id);
-
+                       
 
                     } else {
                         AlertFactory.textType({

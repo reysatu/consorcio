@@ -12,3 +12,4 @@ Homestead.yaml
 composer.lock
 /public/logos
 /public/CPE
+/public/XML
