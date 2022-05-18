@@ -41,11 +41,14 @@ class RegisterOrdenCompraController extends Controller
            
             $val=$repo->get_detalleOrdenCompra($id);
             $valDev=$repo->get_detalleOrdenCompraDevolucion($id);
+
+            $valConf=$repo->get_detalleOrdenCompraConformidad($id);
             // $val_dataDev=$repo->get_detalle_entrada_Devolucion($valtodo[0],$valtodo[1]);
             return response()->json([
                 'status' => true,
                 'data'=>$val,
-                'valDev'=>$valDev
+                'valDev'=>$valDev,
+                'valConf'=>$valConf
             ]);
 
     }catch (\Exception $e) {
@@ -62,10 +65,14 @@ class RegisterOrdenCompraController extends Controller
             $dataOrdenes=$repo->getOrdeneRecepcion();
             
             $dataOrdenesDevolucion=$repo->getOrdeneDevolucion();
+
+            $dataOrdenesConformidad=$repo->getOrdeneConformidad();
+
             return response()->json([
                 'status' => true,
                 'dataOrdenes' => $dataOrdenes,
                 'dataOrdenesDevolucion'=>$dataOrdenesDevolucion,
+                'dataOrdenesConformidad'=>$dataOrdenesConformidad,
                 
             ]);
         } catch (\Exception $e) {

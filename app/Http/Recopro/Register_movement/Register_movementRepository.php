@@ -59,6 +59,7 @@ class Register_movementRepository implements Register_movementInterface
         })->Where('idTipoOperacion','1')->where('cCodConsecutivo','ORDC')->orderBy("created_at", "DESC");
 
     }
+     
      public function search_devolucionCompra($s)
     {
         return $this->model->where(function($q) use ($s){

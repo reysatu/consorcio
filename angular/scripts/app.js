@@ -44,6 +44,7 @@
         'sys.app.registerOrdenCompras',
         'sys.app.anulacionOrdenCompras',
         'sys.app.devolucionOrdenCompras',
+        'sys.app.conformidadServicios',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',
