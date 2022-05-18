@@ -29,7 +29,11 @@ class Register_movementRepository implements Register_movementInterface
     }
       public function all_orden_compra()
     {
-        return $this->model->get()->where('cCodConsecutivo','ORDC');
+        return $this->model->get()->where('cCodConsecutivo','ORDC')->Where('idTipoOperacion','1');
+    }
+       public function all_devolucion_oc()
+    {
+        return $this->model->get()->where('cCodConsecutivo','ORDC')->Where('idTipoOperacion','10');
     }
      public function all_devolucion_servicio()
     {
@@ -52,7 +56,17 @@ class Register_movementRepository implements Register_movementInterface
             $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
             $q->orWhere('estado', 'LIKE', '%'.$s.'%');
             $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
-        })->where('cCodConsecutivo','ORDC')->orderBy("created_at", "DESC");
+        })->Where('idTipoOperacion','1')->where('cCodConsecutivo','ORDC')->orderBy("created_at", "DESC");
+
+    }
+     public function search_devolucionCompra($s)
+    {
+        return $this->model->where(function($q) use ($s){
+            $q->where('idMovimiento', 'LIKE', '%'.$s.'%');
+            $q->orWhere('idUsuario', 'LIKE', '%'.$s.'%');
+            $q->orWhere('estado', 'LIKE', '%'.$s.'%');
+            $q->orWhere('idTipoOperacion', 'LIKE', '%'.$s.'%');
+        })->Where('idTipoOperacion','10')->where('cCodConsecutivo','ORDC')->orderBy("created_at", "DESC");
 
     }
     public function searchMovCierre($s,$perido_busquedad)
@@ -159,6 +173,12 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
          return $mostrar; 
     }
     public function get_movimientoCompra($id){
+        $mostrar=DB::select( 
+                        "select prv.razonsocial AS proveedor,m.nConsecutivo as nconse_ve,m.cCodConsecutivo as cCon_ve,* from ERP_Movimiento as m inner join ERP_OrdenCompra as c on m.cCodConsecutivo=c.cCodConsecutivo and m.nConsecutivo=c.nConsecutivo inner join ERP_Proveedor as prv on (prv.id = c.idProveedor) where m.idMovimiento='$id'");
+         return $mostrar; 
+    }
+
+    public function get_movimientoCompraDevol($id){
         $mostrar=DB::select( 
                         "select prv.razonsocial AS proveedor,m.nConsecutivo as nconse_ve,m.cCodConsecutivo as cCon_ve,* from ERP_Movimiento as m inner join ERP_OrdenCompra as c on m.cCodConsecutivo=c.cCodConsecutivo and m.nConsecutivo=c.nConsecutivo inner join ERP_Proveedor as prv on (prv.id = c.idProveedor) where m.idMovimiento='$id'");
          return $mostrar; 
@@ -291,7 +311,7 @@ where er.idMovimiento='$id'");
          $mostrar=DB::select("select total from ERP_almacen_stock_localizacion where idArticulo=$idArl and idLocalizacion=$idl /*and idArticulo = 11*/");
     }
     public function getLocaStock($idAlmacen){
-         $mostrar=DB::select("select los.remitido as remitido,lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen /*and los.idArticulo = 11*/");
+         $mostrar=DB::select("select los.disponible as disponible,los.remitido as remitido,lo.idLocalizacion,lo.descripcion,los.idArticulo, los.total from ERP_Localizacion as lo LEFT JOIN ERP_almacen_stock_localizacion as los on lo.idLocalizacion=los.idLocalizacion where lo.idALmacen=$idAlmacen /*and los.idArticulo = 11*/");
          return $mostrar;
     }
      public function getLocalizacioAlmacen($idAlmacen){

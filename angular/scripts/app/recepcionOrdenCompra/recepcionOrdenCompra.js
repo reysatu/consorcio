@@ -929,7 +929,7 @@
                             var stock=0;
                               _.each(response.data, function(item) {
                                 if(idPrAl==item.idArticulo && itemdos.idLocalizacion==item.idLocalizacion){
-                                     stock=Math.trunc(item.total);
+                                     stock=Math.trunc(item.disponible);
                                   }
                               });
                               if(naturalezaGeneral=="S" || naturalezaGeneral=="R" ){

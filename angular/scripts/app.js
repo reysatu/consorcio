@@ -43,6 +43,7 @@
         'sys.app.sectors',
         'sys.app.registerOrdenCompras',
         'sys.app.anulacionOrdenCompras',
+        'sys.app.devolucionOrdenCompras',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',
