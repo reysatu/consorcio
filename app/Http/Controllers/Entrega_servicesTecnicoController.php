@@ -205,8 +205,17 @@ class Entrega_servicesTecnicoController extends Controller
             $serieNenv = $data['serieNenv'];
             $serieNenv = explode(',', $serieNenv);
 
+            $idTipoCompraVenta = $data['idTipoCompraVenta'];
+            $idTipoCompraVenta = explode(',', $idTipoCompraVenta);
+
             $idProductoSeN = $data['idProductoSeN'];
             $idProductoSeN = explode(',', $idProductoSeN);
+
+            $nPoliza = $data['nPoliza'];
+            $nPoliza = explode(',', $nPoliza);
+
+             $nLoteCompra = $data['nLoteCompra'];
+            $nLoteCompra = explode(',', $nLoteCompra);
 
             $chasiNs = $data['chasiNs'];
             $chasiNs = explode(',', $chasiNs);
@@ -271,8 +280,9 @@ class Entrega_servicesTecnicoController extends Controller
                         
                     }
                 }
-                $valida2=$valida[0]->Mensaje;
+                
                 if($data['naturaleza']=="S"){
+                   $valida2=$valida[0]->Mensaje;
                    if($valida2!="OK"){
                      $descripcionArticuloGet=$vali->traerDescripcionArticulo($idArticulo[$i]);
                      $descripcion=$descripcionArticuloGet[0]->description;
@@ -301,23 +311,25 @@ class Entrega_servicesTecnicoController extends Controller
                 }else{
                 for ($i=0; $i < count($idArticulo) ; $i++) { 
                              $idLB=$idLote[$i];
-                            if($idLote[$i]==""){
-                              // if($dataLote[$i]!=""){
-                              //    $lotn = explode('*',$dataLote[$i]);
-                              //    $tablelot="ERP_Lote";
-                              //    $idtlote='idLote';
-                              //    $datosLote['Lote'] = strtoupper($lotn[2]);
-                              //    $datosLote['fechaIngreso'] =$lotn[3];
-                              //    $datosLote['fechaVencimiento'] =$lotn[4];
-                              //    $datosLote['cantidad'] =$lotn[1];
-                              //    $datosLote['idArticulo'] = $lotn[0];
-                              //    $datosLote['idLote'] = $lorepo->get_consecutivo($tablelot,$idtlote);
-                              //    $contLot=$lorepo->create($datosLote);
-                              //    $idLB=$contLot->idLote;
-                              //   }else{
+                            if($idLote[$i]==""){ 
+                                 if($dataLote[$i]!=""){
+                                 $lotn = explode('*',$dataLote[$i]);
+                                 $tablelot="ERP_Lote";
+                                 $idtlote='idLote';
+                                 $datosLote['Lote'] = strtoupper($lotn[2]);
+                                 $datosLote['fechaIngreso'] =$lotn[3];
+                                 $datosLote['fechaVencimiento'] =$lotn[4];
+                                 $datosLote['cantidad'] =$cantidad[$i];
+                                 $datosLote['idArticulo'] = $lotn[0];
+                                 $datosLote['idLote'] = $lorepo->get_consecutivo($tablelot,$idtlote);
+                                 $contLot=$lorepo->create($datosLote);
+                                 $idLB=$contLot->idLote;
+                                }else{
                                   $idLB=null;
-                                // }
+                                }
+                                
                             }
+                            
                             $tablelMd="ERP_Movimiento_Articulo";
                             $idtMd="consecutivo";
                             $preciot="";
@@ -361,32 +373,36 @@ class Entrega_servicesTecnicoController extends Controller
                                     }
 
                                 }
-                            //     $tablese="ERP_Serie";
-                            //     $idtse='idSerie';
-                            //     for ($k=0; $k < count($serieNenv) ; $k++) { 
-                            //             if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
-                            //                     $contserie = $seri->create([
-                            //                     'idSerie' => $seri->get_consecutivo($tablese,$idtse),
-                            //                     'nombreSerie' => strtoupper($serieNenv[$k]),
-                            //                     'idArticulo' => $idProductoSeN[$k],
-                            //                     'chasis' =>strtoupper($chasiNs[$k]),
-                            //                     'motor' =>strtoupper($motorNs[$k]),
-                            //                     'anio_fabricacion' => $anioNFs[$k],
-                            //                     'anio_modelo' => $anioNVs[$k],
-                            //                     'color' => strtoupper($colorNs[$k]),
-                            //                     'idTipoCompraVenta' => strtoupper($idTipoCompraVenta[$k]),
-                            //                     'nPoliza' => strtoupper($nPoliza[$k]),
-                            //                     'nLoteCompra' => strtoupper($nLoteCompra[$k]),
-                            //                      ]);
-                            //                     $conseSn=$varinfo->consecutivo;
-                            //                     $redm->create([
-                            //                     'idMovimiento' => $id,
-                            //                     'idArticulo' => $idProductoSeN[$k],
-                            //                     'consecutivo' => $conseSn,
-                            //                     'serie' =>$contserie->idSerie,
-                            //                         ]);  
-                            //             }
-                            //     }
+                                $tablese="ERP_Serie";
+                                $idtse='idSerie';
+                                for ($k=0; $k < count($serieNenv) ; $k++) { 
+                                        $tipocv=strtoupper($idTipoCompraVenta[$k]);
+                                        if($tipocv==""){
+                                            $tipocv=null;
+                                        }
+                                        if($ident_serie_bd_serie2[$k]==$identificador_serie_bd[$i]){
+                                                $contserie = $seri->create([
+                                                'idSerie' => $seri->get_consecutivo($tablese,$idtse),
+                                                'nombreSerie' => strtoupper($serieNenv[$k]),
+                                                'idArticulo' => $idProductoSeN[$k],
+                                                'chasis' =>strtoupper($chasiNs[$k]),
+                                                'motor' =>strtoupper($motorNs[$k]),
+                                                'anio_fabricacion' => $anioNFs[$k],
+                                                'anio_modelo' => $anioNVs[$k],
+                                                'color' => strtoupper($colorNs[$k]),
+                                                'idTipoCompraVenta' =>$tipocv,
+                                                'nPoliza' => strtoupper($nPoliza[$k]),
+                                                'nLoteCompra' => strtoupper($nLoteCompra[$k]),
+                                                 ]);
+                                                $conseSn=$varinfo->consecutivo;
+                                                $redm->create([
+                                                'idMovimiento' => $idMovimiento,
+                                                'idArticulo' => $idProductoSeN[$k],
+                                                'consecutivo' => $conseSn,
+                                                'serie' =>$contserie->idSerie,
+                                                    ]);  
+                                        }
+                                }
 
 
                              } 

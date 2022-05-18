@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     require app_path() . '\Http\Routes\Empresas.php';
 
+    require app_path() . '\Http\Routes\DevolucionOrdenCompras.php';
+
     require app_path() . '\Http\Routes\TipoProveedors.php';
 
      require app_path() . '\Http\Routes\ConfigJerarquiaCompras.php';
@@ -64,6 +66,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     require app_path() . '\Http\Routes\Brands.php';
 
     require app_path() . '\Http\Routes\AnulacionOrdenCompras.php';
+
+    require app_path() . '\Http\Routes\RecepcionOrdenCompras.php';
 
     require app_path() . '\Http\Routes\Entities.php';
 

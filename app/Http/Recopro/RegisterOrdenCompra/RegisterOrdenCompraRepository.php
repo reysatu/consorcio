@@ -35,7 +35,7 @@ class RegisterOrdenCompraRepository implements RegisterOrdenCompraInterface
     {
         return $this->model->get()->where('naturaleza','D');
     }
-    public function destroy_ordenCompra($id)
+    public function destroy_ordenCompra($id) 
     {   
         DB::table('ERP_OrdenCompraArticulo')->where('id',$id)->delete();
        
@@ -121,6 +121,28 @@ select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobant
     }
     public function get_consecutivo_proforma($cod,$nro){
          $mostrar=DB::select("select * from ERP_ProformaDetalle where cCodConsecutivo='$cod' and nConsecutivo='$nro'");
+         return $mostrar; 
+    }
+    public function get_detalleOrdenCompra($id){ 
+   
+          $mostrar3=DB::select("
+select od.id as idDetalleOc,pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, od.id as idDetalleRepues,* from ERP_OrdenCompraArticulo as od inner join ERP_Productos as pr on pr.id=od.idArticulo  where   pr.type_id ='1' and od.cantidadPendiente >0 and od.idOrden='$id'
+");
+          return $mostrar3;
+    }
+    public function get_detalleOrdenCompraDevolucion($id){ 
+   
+          $mostrar3=DB::select("
+select od.id as idDetalleOc,pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, od.id as idDetalleRepues,* from ERP_OrdenCompraArticulo as od inner join ERP_Productos as pr on pr.id=od.idArticulo  where   pr.type_id ='1' and od.cantidadRecibida >0 and od.idOrden='$id'
+");
+          return $mostrar3;
+    }
+    public function getOrdeneRecepcion(){
+         $mostrar=DB::select("select os.id as idOrden,prv.razonsocial as razonSocialProveedor,mo.Descripcion as moneda, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,os.iEstado as est from ERP_OrdenCompra as os inner join ERP_Moneda as mo on os.idMoneda=mo.IdMoneda  inner join ERP_Proveedor as prv on (prv.id=os.idProveedor) where os.id in (select idOrden from ERP_OrdenCompraArticulo where cantidadPendiente>0) and os.iEstado in(3,5)");
+         return $mostrar; 
+    }
+     public function getOrdeneDevolucion(){
+         $mostrar=DB::select("select os.id as idOrden,prv.razonsocial as razonSocialProveedor,mo.Descripcion as moneda, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,os.iEstado as est from ERP_OrdenCompra as os inner join ERP_Moneda as mo on os.idMoneda=mo.IdMoneda  inner join ERP_Proveedor as prv on (prv.id=os.idProveedor) where os.id in (select idOrden from ERP_OrdenCompraArticulo where cantidadRecibida>0) and os.iEstado in(4,5,6)");
          return $mostrar; 
     }
     public function getConsecutivo(){

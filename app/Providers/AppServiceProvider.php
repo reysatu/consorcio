@@ -38,6 +38,10 @@ use App\Http\Recopro\Area\Area;
 use App\Http\Recopro\Area\AreaInterface;
 use App\Http\Recopro\Area\AreaRepository;
 
+use App\Http\Recopro\View_movimiento\View_movimiento; 
+use App\Http\Recopro\View_movimiento\View_movimientoInterface;
+use App\Http\Recopro\View_movimiento\View_movimientoRepository;
+
 use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompra; 
 use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompraInterface;
 use App\Http\Recopro\AnulacionOrdenCompra\AnulacionOrdenCompraRepository;
@@ -809,6 +813,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerSolicitudCompra();
         $this->registerProveedor();
         $this->registerArea();
+        $this->registerView_movimiento();
         $this->registerAnulacionOrdenCompra();
         $this->registerEmpresa();
         $this->registerView_OrdenCompra();
@@ -1189,6 +1194,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(AnulacionOrdenCompraInterface::class, function ($app) {
             return new AnulacionOrdenCompraRepository(new AnulacionOrdenCompra());
+        });
+    }
+    public function registerView_movimiento()
+    {
+        $app = $this->app;
+
+        $app->bind(View_movimientoInterface::class, function ($app) {
+            return new View_movimientoRepository(new View_movimiento());
         });
     }
     public function registerArea()

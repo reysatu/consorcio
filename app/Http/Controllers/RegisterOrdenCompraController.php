@@ -36,6 +36,46 @@ class RegisterOrdenCompraController extends Controller
     {
 //        $this->middleware('json');
     }
+    public function getDetalle_ordenCompra($id, RegisterOrdenCompraInterface $repo, Request $request)
+    {   try {
+           
+            $val=$repo->get_detalleOrdenCompra($id);
+            $valDev=$repo->get_detalleOrdenCompraDevolucion($id);
+            // $val_dataDev=$repo->get_detalle_entrada_Devolucion($valtodo[0],$valtodo[1]);
+            return response()->json([
+                'status' => true,
+                'data'=>$val,
+                'valDev'=>$valDev
+            ]);
+
+    }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+     public function getDataOrdenComprasRecepcion(RegisterOrdenCompraInterface $repo)
+    {
+        try {
+            $dataOrdenes=$repo->getOrdeneRecepcion();
+            
+            $dataOrdenesDevolucion=$repo->getOrdeneDevolucion();
+            return response()->json([
+                'status' => true,
+                'dataOrdenes' => $dataOrdenes,
+                'dataOrdenesDevolucion'=>$dataOrdenesDevolucion,
+                
+            ]);
+        } catch (\Exception $e) {
+//            throw new \Exception($e);
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
     public function deleteDetalleST($id,SolicitudCompraArticuloInterface $repoSolComp, RegisterOrdenCompraInterface $repo,RegisterOrdenCompraArticuloInterface $repoOart, Request $request)
     {   try {
             $dataSo=[];

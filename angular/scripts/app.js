@@ -27,6 +27,7 @@
         'sys.app.tipoProveedors',
         'sys.app.proveedors',
         'sys.app.configJerarquiaCompras',
+        'sys.app.recepcionOrdenCompras',
         // Seguridad
         'sys.app.profiles',
         'sys.app.modules',
@@ -42,6 +43,7 @@
         'sys.app.sectors',
         'sys.app.registerOrdenCompras',
         'sys.app.anulacionOrdenCompras',
+        'sys.app.devolucionOrdenCompras',
         // Maestros
         'sys.app.descuentos',
         'sys.app.brands',

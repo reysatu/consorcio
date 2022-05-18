@@ -898,9 +898,11 @@
                         idLocali.append('<option value="" selected>Seleccionar</option>');
                       _.each(response.LocalizacionAlmacen, function(itemdos) {
                             var stock=0;
+                            console.log(response.data);
+                            console.log("lote lote lote");
                               _.each(response.data, function(item) {
                                 if(idPrAl==item.idArticulo && itemdos.idLocalizacion==item.idLocalizacion){
-                                     stock=Math.trunc(item.total);
+                                     stock=Math.trunc(item.disponible);
                                   }
                               });
                               if(naturalezaGeneral=="S"){

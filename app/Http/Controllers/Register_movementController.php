@@ -475,17 +475,19 @@ class Register_movementController extends Controller
 
     public function find($id, Register_movementInterface $repo)
     {
-        try {
-            $operaciones = $repo->getOperationFind();
+        try {  
+            $operaciones = $repo->getOperationFind(); 
             $data = $repo->find($id);
             $data_movimiento_Articulo = $repo->get_movement_articulo($id);
             $data_movimiento_Articulo_entrega = $repo->get_movement_articulo_entrega($id);
             $data_movimiento_Articulo_entrega_venta = $repo->get_movimiento_Articulo_entrega_venta($id);
+            $data_movimiento_Articulo_recepcionCompra=$repo->get_movement_articulo_recepcionCompra($id);
             $data_movimiento_lote=$repo->get_movemen_lote($id);
             $data_movimiento_serie=$repo->get_movemen_Serie($id);
             $data_movimiento_lote_entrega=$repo->get_movemen_lote_entrega($id);
             $data_movimiento_serie_entrega=$repo->get_movemen_Serie_entrega($id);
             $data_ventaMovimiento=$repo->get_movimientoVenta($id);
+            $data_compraMovimiento=$repo->get_movimientoCompra($id);
             $data['fecha_registro']=date("Y-m-d", strtotime($data['fecha_registro']));
 
             return response()->json([
@@ -497,7 +499,9 @@ class Register_movementController extends Controller
                  'data_movimiento_serie'=>$data_movimiento_serie,
                  'data_movimiento_Articulo_entrega'=>$data_movimiento_Articulo_entrega,
                  'data_movimiento_Articulo_entrega_venta'=>$data_movimiento_Articulo_entrega_venta,
+                 'data_movimiento_Articulo_recepcionCompra'=>$data_movimiento_Articulo_recepcionCompra,
                  'data_ventaMovimiento'=>$data_ventaMovimiento,
+                 'data_compraMovimiento'=>$data_compraMovimiento,
                  'data_movimiento_lote_entrega'=>$data_movimiento_lote_entrega,
                  'data_movimiento_serie_entrega'=>$data_movimiento_serie_entrega,
             ]);

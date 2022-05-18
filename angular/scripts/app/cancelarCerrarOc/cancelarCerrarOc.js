@@ -22,7 +22,7 @@
                var params = {
                     'estadoCambio':estadoCambio,
                   
-                }; 
+                };  
                RESTService.updated('cancelarCerrarOcs/cambiarEstadoParcial',id, params, function(response) {
                     if (!_.isUndefined(response.status) && response.status) {
 
@@ -138,6 +138,7 @@
                     cancel: 'No'
                     }, function () {
                        cambiarEstado(code,7);
+
                     });
                     e.preventDefault();
                 }else{
