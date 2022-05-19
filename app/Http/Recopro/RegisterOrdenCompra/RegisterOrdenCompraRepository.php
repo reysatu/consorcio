@@ -130,6 +130,13 @@ select od.id as idDetalleOc,pr.costo as costo2,pr.costo as costo_total,pr.id as 
 ");
           return $mostrar3;
     }
+    public function get_detalleOrdenCompraConformidad($id){ 
+   
+          $mostrar3=DB::select("
+select od.id as idDetalleOc,pr.costo as costo2,pr.costo as costo_total,pr.id as idProducto, od.id as idDetalleRepues,* from ERP_OrdenCompraArticulo as od inner join ERP_Productos as pr on pr.id=od.idArticulo  where   pr.type_id ='2' and od.cantidadPendiente >0 and od.idOrden='$id'
+");
+          return $mostrar3;
+    }
     public function get_detalleOrdenCompraDevolucion($id){ 
    
           $mostrar3=DB::select("
@@ -143,6 +150,10 @@ select od.id as idDetalleOc,pr.costo as costo2,pr.costo as costo_total,pr.id as 
     }
      public function getOrdeneDevolucion(){
          $mostrar=DB::select("select os.id as idOrden,prv.razonsocial as razonSocialProveedor,mo.Descripcion as moneda, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,os.iEstado as est from ERP_OrdenCompra as os inner join ERP_Moneda as mo on os.idMoneda=mo.IdMoneda  inner join ERP_Proveedor as prv on (prv.id=os.idProveedor) where os.id in (select idOrden from ERP_OrdenCompraArticulo where cantidadRecibida>0) and os.iEstado in(4,5,6)");
+         return $mostrar; 
+    }
+    public function getOrdeneConformidad(){
+         $mostrar=DB::select("select os.id as idOrden,prv.razonsocial as razonSocialProveedor,mo.Descripcion as moneda, os.cCodConsecutivo as cCodConsecutivo, os.nConsecutivo as nConsecutivo, os.IdMoneda as IdMoneda,os.iEstado as est from ERP_OrdenCompra as os inner join ERP_Moneda as mo on os.idMoneda=mo.IdMoneda  inner join ERP_Proveedor as prv on (prv.id=os.idProveedor) where os.id in (select coc.idOrden from ERP_OrdenCompraArticulo as coc inner join ERP_Productos as prd on(coc.idArticulo=prd.id) where coc.cantidadPendiente>0 and prd.type_id='2') and os.iEstado in(3,5)");
          return $mostrar; 
     }
     public function getConsecutivo(){

@@ -341,11 +341,19 @@ class Entrega_servicesTecnicoController extends Controller
                                 $preciot=$precio[$i];
                                 $precio_totalt=$precio_total[$i]; 
                             };
+                            $idalm=$idAlmacen[$i];
+                            $idloc=$idLocalizacion[$i];
+                            if($idalm==''){
+                                $idalm=null;
+                            };
+                            if($idloc==''){
+                                $idloc=null;
+                            };
                            $varinfo=$repo->create([
                             'idMovimiento' => $idMovimiento,
                             'idArticulo' => $idArticulo[$i],
-                            'idAlmacen' => $idAlmacen[$i],
-                            'idLocalizacion' =>$idLocalizacion[$i],
+                            'idAlmacen' => $idalm,
+                            'idLocalizacion' =>$idloc,
                             'consecutivo'=>  $identificador_serie_bd[$i],
                             'idLote' =>$idLB,
                             'cantidad' =>  $cantidad[$i],

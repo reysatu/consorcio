@@ -27,6 +27,11 @@ use App\Http\Recopro\Empresa\Empresa;
 use App\Http\Recopro\Empresa\EmpresaInterface;
 use App\Http\Recopro\Empresa\EmpresaRepository;
 
+
+use App\Http\Recopro\View_Movimiento_Conformidad_Compra\View_Movimiento_Conformidad_Compra; 
+use App\Http\Recopro\View_Movimiento_Conformidad_Compra\View_Movimiento_Conformidad_CompraInterface;
+use App\Http\Recopro\View_Movimiento_Conformidad_Compra\View_Movimiento_Conformidad_CompraRepository;
+
 use App\Http\Recopro\View_OrdenCompra\View_OrdenCompra; 
 use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraInterface;
 use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraRepository;
@@ -816,6 +821,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerView_movimiento();
         $this->registerAnulacionOrdenCompra();
         $this->registerEmpresa();
+        $this->registerView_Movimiento_Conformidad_Compra();
         $this->registerView_OrdenCompra();
         $this->registerSector();
         $this->registerViewScomprArticulo();
@@ -1234,6 +1240,14 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(View_OrdenCompraInterface::class, function ($app) {
             return new View_OrdenCompraRepository(new View_OrdenCompra());
+        });
+    }
+    public function registerView_Movimiento_Conformidad_Compra()
+    {
+        $app = $this->app;
+
+        $app->bind(View_Movimiento_Conformidad_CompraInterface::class, function ($app) {
+            return new View_Movimiento_Conformidad_CompraRepository(new View_Movimiento_Conformidad_Compra());
         });
     }
     public function registerEmpresa()
