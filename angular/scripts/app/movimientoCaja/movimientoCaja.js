@@ -3742,7 +3742,7 @@ table_container_bancos.jtable('load');
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) == 0) {
                                 disabled = 'disabled="disabled"';
                                 checked = 'checked="checked"';
-                                $("#monto_pagar_credito").attr(index);
+                                $("#monto_pagar_credito").attr("cont", index);
                             }
                             var saldo_mora = parseFloat(data.solicitud_cronograma[index].saldo_mora);
                             if(isNaN(saldo_mora)) {
