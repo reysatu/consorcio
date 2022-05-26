@@ -22,7 +22,7 @@ class ApprovalAutonomyController extends Controller
     }
 
     public function createUpdate($id, Approval_autonomyInterface $repo, Approval_autonomyRequest $request)
-    {
+    { 
         DB::beginTransaction();
         try {
             $aa_id = explode(',', $request->input('approval_id'));
