@@ -151,11 +151,11 @@
             echo '  <td colspan="2">MORA</td>';
             echo '  <td>'.number_format($mora, 2).'</td>';
             echo '</tr>';
-          
+            $total_abonado = $total + $mora;
         ?>
       <tr>
           <td style="border-top: 1px dashed black;" colspan="2">TOTAL ABONADO</td>
-          <td style="border-top: 1px dashed black;" colspan="1"><?php echo number_format($total, 2); ?></td>  
+          <td style="border-top: 1px dashed black;" colspan="1"><?php echo number_format($total_abonado, 2); ?></td>  
       </tr>
   </table>
     <br>

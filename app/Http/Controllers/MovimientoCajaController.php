@@ -1559,7 +1559,7 @@ class MovimientoCajaController extends Controller
             $update_venta = array();
             $update_venta["cCodConsecutivo"] = $data["cCodConsecutivo"];
             $update_venta["nConsecutivo"] = $data["nConsecutivo"];
-            $update_venta["monto_pagar_credito"] = $data["monto_pagar_credito"];
+            $update_venta["monto_pagar_credito"] = (float)$data["monto_pagar_credito"] - $total_pagado_mora;
             $caja_diaria_repositorio->update_saldos_venta($update_venta);
 
             // echo "ola"; exit;   

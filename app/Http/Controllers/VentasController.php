@@ -464,7 +464,7 @@ class VentasController extends Controller
         }
 
         $result["cuentas_vencer"]["monto_soles"] = number_format($total_cuentas_vencer, 2);
-        $result["cuentas_vencer"]["monto_dolares"] = number_format($total_cuentas_vencer * $tipo_cambio, 2);
+        $result["cuentas_vencer"]["monto_dolares"] = number_format($total_cuentas_vencer / $tipo_cambio, 2);
         $result["cuentas_vencer"]["clientes"] = count($cuentas_vencer);
         $result["cuentas_vencer"]["mora_porcentaje"] = 0;
 
@@ -486,9 +486,9 @@ class VentasController extends Controller
         $total_clientes = count($cuentas_vencer) + count($cuentas_vencidas);
 
         $result["cuentas_vencidas"]["monto_soles"] = number_format($total_cuentas_vencidas, 2);
-        $result["cuentas_vencidas"]["monto_dolares"] = number_format($total_cuentas_vencidas * $tipo_cambio, 2);
+        $result["cuentas_vencidas"]["monto_dolares"] = number_format($total_cuentas_vencidas / $tipo_cambio, 2);
         $result["cuentas_vencidas"]["clientes"] = count($cuentas_vencidas);
-        $result["cuentas_vencidas"]["mora_porcentaje"] = number_format($total_cuentas_vencidas / $total_general, 2);
+        $result["cuentas_vencidas"]["mora_porcentaje"] = number_format($total_cuentas_vencidas / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -505,9 +505,9 @@ class VentasController extends Controller
         }
        
         $result["de_1_8"]["monto_soles"] = number_format($total_de_1_8, 2);
-        $result["de_1_8"]["monto_dolares"] = number_format($total_de_1_8 * $tipo_cambio, 2);
+        $result["de_1_8"]["monto_dolares"] = number_format($total_de_1_8 / $tipo_cambio, 2);
         $result["de_1_8"]["clientes"] = count($de_1_8);
-        $result["de_1_8"]["mora_porcentaje"] = number_format($total_de_1_8 / $total_general, 2);
+        $result["de_1_8"]["mora_porcentaje"] = number_format($total_de_1_8 / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -524,9 +524,9 @@ class VentasController extends Controller
         }
        
         $result["de_9_30"]["monto_soles"] = number_format($total_de_9_30, 2);
-        $result["de_9_30"]["monto_dolares"] = number_format($total_de_9_30 * $tipo_cambio, 2);
+        $result["de_9_30"]["monto_dolares"] = number_format($total_de_9_30 / $tipo_cambio, 2);
         $result["de_9_30"]["clientes"] = count($de_9_30);
-        $result["de_9_30"]["mora_porcentaje"] = number_format($total_de_9_30 / $total_general, 2);
+        $result["de_9_30"]["mora_porcentaje"] = number_format($total_de_9_30 / $total_general, 2) * 100;
 
         
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -543,9 +543,9 @@ class VentasController extends Controller
         }
        
         $result["de_31_60"]["monto_soles"] = number_format($total_de_31_60, 2);
-        $result["de_31_60"]["monto_dolares"] = number_format($total_de_31_60 * $tipo_cambio, 2);
+        $result["de_31_60"]["monto_dolares"] = number_format($total_de_31_60 / $tipo_cambio, 2);
         $result["de_31_60"]["clientes"] = count($de_31_60);
-        $result["de_31_60"]["mora_porcentaje"] = number_format($total_de_31_60 / $total_general, 2);
+        $result["de_31_60"]["mora_porcentaje"] = number_format($total_de_31_60 / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -562,9 +562,9 @@ class VentasController extends Controller
         }
        
         $result["de_61_90"]["monto_soles"] = number_format($total_de_61_90, 2);
-        $result["de_61_90"]["monto_dolares"] = number_format($total_de_61_90 * $tipo_cambio, 2);
+        $result["de_61_90"]["monto_dolares"] = number_format($total_de_61_90 / $tipo_cambio, 2);
         $result["de_61_90"]["clientes"] = count($de_61_90);
-        $result["de_61_90"]["mora_porcentaje"] = number_format($total_de_61_90 / $total_general, 2);
+        $result["de_61_90"]["mora_porcentaje"] = number_format($total_de_61_90 / $total_general, 2) * 100;
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
         INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
@@ -580,9 +580,9 @@ class VentasController extends Controller
         }
        
         $result["de_91_120"]["monto_soles"] = number_format($total_de_91_120, 2);
-        $result["de_91_120"]["monto_dolares"] = number_format($total_de_91_120 * $tipo_cambio, 2);
+        $result["de_91_120"]["monto_dolares"] = number_format($total_de_91_120 / $tipo_cambio, 2);
         $result["de_91_120"]["clientes"] = count($de_91_120);
-        $result["de_91_120"]["mora_porcentaje"] = number_format($total_de_91_120 / $total_general, 2);
+        $result["de_91_120"]["mora_porcentaje"] = number_format($total_de_91_120 / $total_general, 2) * 100;
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
         INNER JOIN ERP_Consecutivos AS c ON(c.cCodConsecutivo=s.cCodConsecutivo)
@@ -598,9 +598,9 @@ class VentasController extends Controller
         }
        
         $result["de_121_150"]["monto_soles"] = number_format($total_de_121_150, 2);
-        $result["de_121_150"]["monto_dolares"] = number_format($total_de_121_150 * $tipo_cambio, 2);
+        $result["de_121_150"]["monto_dolares"] = number_format($total_de_121_150 / $tipo_cambio, 2);
         $result["de_121_150"]["clientes"] = count($de_121_150);
-        $result["de_121_150"]["mora_porcentaje"] = number_format($total_de_121_150 / $total_general, 2);
+        $result["de_121_150"]["mora_porcentaje"] = number_format($total_de_121_150 / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -617,9 +617,9 @@ class VentasController extends Controller
         }
        
         $result["de_151_270"]["monto_soles"] = number_format($total_de_151_270, 2);
-        $result["de_151_270"]["monto_dolares"] = number_format($total_de_151_270 * $tipo_cambio, 2);
+        $result["de_151_270"]["monto_dolares"] = number_format($total_de_151_270 / $tipo_cambio, 2);
         $result["de_151_270"]["clientes"] = count($de_151_270);
-        $result["de_151_270"]["mora_porcentaje"] = number_format($total_de_151_270 / $total_general, 2);
+        $result["de_151_270"]["mora_porcentaje"] = number_format($total_de_151_270 / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -636,9 +636,9 @@ class VentasController extends Controller
         }
        
         $result["de_271_360"]["monto_soles"] = number_format($total_de_271_360, 2);
-        $result["de_271_360"]["monto_dolares"] = number_format($total_de_271_360 * $tipo_cambio, 2);
+        $result["de_271_360"]["monto_dolares"] = number_format($total_de_271_360 / $tipo_cambio, 2);
         $result["de_271_360"]["clientes"] = count($de_271_360);
-        $result["de_271_360"]["mora_porcentaje"] = number_format($total_de_271_360 / $total_general, 2);
+        $result["de_271_360"]["mora_porcentaje"] = number_format($total_de_271_360 / $total_general, 2) * 100;
 
 
         $sql = "SELECT s.cCodConsecutivo, s.nConsecutivo, s.saldo, count(*) AS cuotas FROM ERP_Solicitud AS s
@@ -655,9 +655,9 @@ class VentasController extends Controller
         }
        
         $result["de_361"]["monto_soles"] = number_format($total_de_361, 2);
-        $result["de_361"]["monto_dolares"] = number_format($total_de_361 * $tipo_cambio, 2);
+        $result["de_361"]["monto_dolares"] = number_format($total_de_361 / $tipo_cambio, 2);
         $result["de_361"]["clientes"] = count($de_361);
-        $result["de_361"]["mora_porcentaje"] = number_format($total_de_361 / $total_general, 2);
+        $result["de_361"]["mora_porcentaje"] = number_format($total_de_361 / $total_general, 2) * 100;
 
         return $result;
     }

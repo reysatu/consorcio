@@ -1662,7 +1662,7 @@ table_container_bancos.jtable('load');
                 },
                 estado: {
                     title: 'Estado',
-                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
+                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado', '8': 'Despachado Parcial', '9': 'Refinanciado', '10': 'Anulado' },
                 },
                 edit: {
                     width: '1%',
@@ -3742,7 +3742,7 @@ table_container_bancos.jtable('load');
                             if(parseFloat(data.solicitud_cronograma[index].saldo_cuota) == 0) {
                                 disabled = 'disabled="disabled"';
                                 checked = 'checked="checked"';
-                                $("#monto_pagar_credito").attr(index);
+                                $("#monto_pagar_credito").attr("cont", index);
                             }
                             var saldo_mora = parseFloat(data.solicitud_cronograma[index].saldo_mora);
                             if(isNaN(saldo_mora)) {
@@ -4052,7 +4052,7 @@ table_container_bancos.jtable('load');
                 },
                 estado: {
                     title: 'Estado',
-                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado' },
+                    options: { '1': 'Registrado', '2': 'Vigente', '3': 'Por Aprobar', '4': 'Aprobado', '5': 'Rechazado', '6': 'Facturado', '7': 'Despachado', '8': 'Despachado Parcial', '9': 'Refinanciado', '10': 'Anulado' },
                 },
                 edit: {
                     width: '1%',
