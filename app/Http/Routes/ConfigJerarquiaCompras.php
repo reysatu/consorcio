@@ -22,3 +22,6 @@ Route::post('configJerarquiaCompras/getTiendaConfig', 'ShopController@getTiendas
 Route::get('configJerarquiaCompras/find/{id}', ['as' => 'configJerarquiaCompras.find', 'uses' => 'ConfigJerarquiaCompraController@find']);
 
 Route::get('configJerarquiaCompras/deleteUsuario/{id}', ['as' => 'configJerarquiaCompras.deleteUsuario', 'uses' => 'ConfigJerarquiaCompraController@deleteDetalle']);
+
+
+Route::get('configJerarquiaCompras/data_formDesc', ['as' => 'configJerarquiaCompras.data_formDesc', 'uses' => 'DescuentoController@data_form']);

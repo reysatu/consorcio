@@ -13,7 +13,7 @@
 
     function ConfigJerarquiaCompraCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
-        
+         
          $scope.chkState = function () {
             var txt_state2 = (w_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_state.html(txt_state2);
@@ -110,7 +110,7 @@
         {
             var bval = true;
             bval = bval && nIdTienda.required();
-            bval = bval && nIdArea.required();
+            // bval = bval && nIdArea.required();
             bval = bval && dFecIni.required();
             bval = bval && dFecFin.required();
             bval = bval && montoInicio.required();
@@ -246,8 +246,8 @@
             titleModalconfigJerarquiaCompras.html('Nueva Jerarquía');
             modalconfigJerarquiaCompras.modal('show');
         }
-         function getDataFormDescuento () {
-            RESTService.all('descuentos/data_form', '', function(response) {
+         function getDataFormDescuento () { 
+            RESTService.all('configJerarquiaCompras/data_formDesc', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                         nIdUsuario.append('<option value="">Seleccionar</option>');
                        _.each(response.usuarios, function(item) {
