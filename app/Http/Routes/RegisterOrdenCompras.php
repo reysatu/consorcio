@@ -82,3 +82,5 @@ Route::post('registerOrdenCompras/getAllUserRegMov', 'UserController@getAll');
 Route::get('registerOrdenCompras/archivoTxt', 'RegisterOrdenCompraController@archivoTxt');
 
 Route::get('registerOrdenCompras/deleteDetalle/{id}', ['as' => 'registerOrdenCompras.deleteDetalle', 'uses' => 'RegisterOrdenCompraController@deleteDetalle']);
+
+Route::get('registerOrdenCompras/getAprobadores/{id}', ['as' => 'registerOrdenCompras.getAprobadores', 'uses' => 'AprobacionOrdenCompraController@getAprobadores']); 

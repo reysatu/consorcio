@@ -14,6 +14,10 @@
   text-align: center;
   padding: 0!important;
 }
+.danger_admin  th{
+        background-color: #ec1415 !important;
+        color:#fff;
+    }
 
 .modal2:before {
   content: '';
@@ -54,6 +58,18 @@
                         <h4 class="modal-title" id="titlemodalMovimieto"></h4>
                     </div>
                     <div class="modal-body">
+                        <div class="tab-content">
+                      
+                            <div style="float:left">
+                                <button type="button" id=""  class="btn btn-primary btn-sm btn_verAprobacio">
+                                    <span class="fa fa-eye"></span>
+                                    Ver aprobaciones
+                                </button>
+                            </div>
+                          <br>
+                          <br>
+                          <br>
+                        </div>
                         <div class="form-horizontal">
                             <div class="row">
                               <form id="id_formulario">
@@ -500,5 +516,46 @@
         </div>
       </div>
       
+    </div>
+</div>
+<div class="modal" id="modalVerAproba" role="dialog">
+    <div class="modal-dialog" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="titleModalClientes">Aprobadores</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="row">
+                       <div class="form-horizontal">
+                                        <br> 
+                                     
+                                            <div class="table-responsive">
+                                            <table class="table table-bordered table-striped table-hover" id="tabla_articulo_movi" >
+                                                <thead >
+                                                    <tr class="danger_admin" >
+                                                        <th>Aprobadores</th>
+                                                        <th>Comentarios</th>
+                                                        <th>Fecha registro</th>
+                                                        <th>Fecha modificación</th>
+                                                        <th>Estado</th> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="aprobadores_table"></tbody>
+                                            </table>
+                                            </div> 
+                                      
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+
     </div>
 </div> 

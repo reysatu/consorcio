@@ -329,9 +329,13 @@
                     edit: false,
                     list: false
                 },
-                nIdArea: {
-                    title: 'Area',
-                    options: base_url + '/configJerarquiaCompras/getAreaComfig' ,
+                // nIdArea: {
+                //     title: 'Area',
+                //     options: base_url + '/configJerarquiaCompras/getAreaComfig' ,
+                // },
+                 nIdMoneda: {
+                    title: 'Moneda',
+                     options: base_url + '/configJerarquiaCompras/getMonedas',
                 },
                 nIdTienda: {
                     title: 'Tienda',

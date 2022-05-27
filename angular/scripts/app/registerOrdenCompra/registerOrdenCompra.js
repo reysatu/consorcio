@@ -13,6 +13,8 @@
 
     function RegisterOrdenCompraCtrl($scope, _, RESTService, AlertFactory, Notify)
     {
+        var btn_verAprobacio=$(".btn_verAprobacio");
+        var modalVerAproba=$("#modalVerAproba"); 
         var xmlAdd=$("#xmlAdd");  
         var descuentosTotales;
         var idProveedor=$("#idProveedor");
@@ -182,6 +184,12 @@
         $("#btn_movimiento_Por_aprobar").click(function(e){
             cambiarEstado(2);
         });
+         modalVerAproba.on('hidden.bs.modal', function (e) {
+            cleanAprobadores();
+        });
+         function cleanAprobadores() {
+           $("#aprobadores_table").html("");
+        }
         // btn_movimiento_cancelar.click(function(e){
         //     cambiarEstado(4);
         // });
@@ -190,7 +198,50 @@
         //     cambiarEstado(3);
         // });
 
+        btn_verAprobacio.click(function (e) {
+             var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
+              RESTService.get('aprobacionOrdenCompras/getAprobadores', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                     data_p.map(function(index) {
+                        var com='';
+                        if(index.cObservacion!=null){
+                            com=index.cObservacion;
+                        }
+                        var est='Por Aprobar'; 
+                                if(index.iEstado==1){
+                                    est='Aprobado';
+                                }else if(index.iEstado==2){
+                                    est='Rechazado';
+                                };
+                         var fre=moment(index.dFecReg).format('DD/MM/YYYY');;
+                         var fmo=moment(index.updated_at).format('DD/MM/YYYY');;      
 
+                        addAprobadores(index.name,com,est,fre,fmo);
+                         });
+                  
+                    modalVerAproba.modal('show');
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Cliente. Intente nuevamente.',
+                        type: 'error'
+                    });
+                } 
+            });
+        
+        });
+        function addAprobadores(Aprbador,comentarios,estadoText,fre,fmo){
+                var tr = $('<tr></tr>');
+                var td1 = $('<td id="tr_identO ">' + Aprbador + '</td>');
+                var tda = $('<td>' + comentarios + '</td>');
+                var tdb = $('<td>' + fre + '</td>');
+                var td2 = $('<td>' + fmo + '</td>');
+                var td3 = $('<td>' + estadoText + '</td>');
+                tr.append(td1).append(tda).append(tdb).append(td2).append(td3);
+                $("#aprobadores_table").append(tr);
+        } 
         function cambiarEstado(estadoCambio){
                var params = {
                     'estadoCambio':estadoCambio,
