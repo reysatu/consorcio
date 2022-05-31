@@ -335,7 +335,7 @@ function getDatosCliente(){
       
         function getDepartamento(bandera){
             var id="0";
-            RESTService.get('shops/TraerDepartamentos', id, function(response) {
+            RESTService.get('proveedors/TraerDepartamentos', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      departamento.html('');
@@ -358,9 +358,9 @@ function getDatosCliente(){
                 }
 
                });
-        }
+        } 
           function getProvincia(bandera,id){
-                RESTService.get('shops/TraerProvincias', id, function(response) {
+                RESTService.get('proveedors/TraerProvincias', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -386,7 +386,7 @@ function getDatosCliente(){
                });
        }
         function getDistrito(bandera,id){
-        RESTService.get('shops/TraerDistritos', id, function(response) {
+        RESTService.get('proveedors/TraerDistritos', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                      var data_p = response.data;
                      console.log(data_p);
@@ -685,7 +685,7 @@ function getDatosCliente(){
                 },
                 ubigeo: {
                     title: 'Distrito',
-                     options: base_url + '/shops/getDistrito' 
+                     options: base_url + '/proveedors/getDistrito' 
 
                 },
                 edit: {

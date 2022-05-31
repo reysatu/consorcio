@@ -5,7 +5,7 @@
  * Date: 4/5/2017
  * Time: 6:59 PM
  */
-
+ 
 Route::post('proveedors/list', ['as' => 'proveedors.list', 'uses' => 'ProveedorController@all']);
 Route::post('proveedors/create', ['as' => 'proveedors.create', 'uses' => 'ProveedorController@create']);
 Route::post('proveedors/delete', ['as' => 'proveedors.delete', 'uses' => 'ProveedorController@destroy']);
@@ -26,3 +26,10 @@ Route::post('proveedors/getTipoDocumentoVenta', 'ProveedorController@getTipoDocu
 Route::get('proveedors/find/{id}', ['as' => 'proveedors.find', 'uses' => 'ProveedorController@find']);
 
 Route::get('proveedors/get_cliente_personaCus/{id}', ['as' => 'proveedors.get_cliente_personaCus', 'uses' => 'Orden_servicioController@get_cliente_persona']);
+
+
+Route::get('proveedors/TraerDepartamentos/{id}', ['as' => 'proveedors.TraerDepartamentos', 'uses' => 'UbigeoController@TraerDepartamentos']);
+Route::get('proveedors/TraerProvincias/{id}', ['as' => 'proveedors.TraerProvincias', 'uses' => 'UbigeoController@TraerProvincias']);
+Route::get('proveedors/TraerDistritos/{id}', ['as' => 'proveedors.TraerDistritos', 'uses' => 'UbigeoController@TraerDistritos']);
+
+Route::post('proveedors/getDistrito', 'UbigeoController@getDistrito'); 

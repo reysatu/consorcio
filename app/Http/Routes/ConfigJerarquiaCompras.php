@@ -5,7 +5,7 @@
  * Date: 4/5/2017
  * Time: 6:59 PM
  */
-
+ 
 Route::post('configJerarquiaCompras/list', ['as' => 'configJerarquiaCompras.list', 'uses' => 'ConfigJerarquiaCompraController@all']);
 Route::post('configJerarquiaCompras/create', ['as' => 'configJerarquiaCompras.create', 'uses' => 'ConfigJerarquiaCompraController@create']);
 Route::post('configJerarquiaCompras/delete', ['as' => 'configJerarquiaCompras.delete', 'uses' => 'ConfigJerarquiaCompraController@destroy']);
@@ -22,3 +22,9 @@ Route::post('configJerarquiaCompras/getTiendaConfig', 'ShopController@getTiendas
 Route::get('configJerarquiaCompras/find/{id}', ['as' => 'configJerarquiaCompras.find', 'uses' => 'ConfigJerarquiaCompraController@find']);
 
 Route::get('configJerarquiaCompras/deleteUsuario/{id}', ['as' => 'configJerarquiaCompras.deleteUsuario', 'uses' => 'ConfigJerarquiaCompraController@deleteDetalle']);
+
+
+Route::get('configJerarquiaCompras/data_formDesc', ['as' => 'configJerarquiaCompras.data_formDesc', 'uses' => 'DescuentoController@data_form']);
+
+
+Route::post('configJerarquiaCompras/getMonedas', 'CurrencyController@getAll');

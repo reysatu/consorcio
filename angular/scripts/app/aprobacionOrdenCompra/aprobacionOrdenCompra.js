@@ -12,9 +12,9 @@
     AprobacionOrdenCompraCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory', 'Helpers'];
 
     function AprobacionOrdenCompraCtrl($scope, _, RESTService, AlertFactory, Helpers)
-    {   var btn_verAprobacio=$(".btn_verAprobacio");
+    {   var btn_verAprobacio=$(".btn_verAprobacio"); 
         var modalVerAproba=$("#modalVerAproba"); 
-        var btn_Rechazar=$(".btn_Rechazar"); 
+        var btn_Rechazar=$(".btn_Rechazar");  
         var modalObservacion=$("#modalObservacion");
         var comentario_aprobacion=$("#comentario_aprobacion");
         var titleModalProduct=$("#titleModalProduct"); 
@@ -302,7 +302,7 @@
         }); 
          btn_verAprobacio.click(function (e) {
              var id=cCodConsecutivo.val()+'*'+nConsecutivo.val();
-              RESTService.get('aprobacionOrdenCompras/getAprobadores', id, function (response) {
+              RESTService.get('registerOrdenCompras/getAprobadores', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     console.log(data_p);
@@ -1659,7 +1659,7 @@
         table_container_AprobacionOrdenCompra.jtable({
             title: "Lista de Ordenes de Compra",
             paging: true,
-            sorting: true,
+            sorting: true, 
             actions: { 
                 listAction: base_url + '/aprobacionOrdenCompras/list',
                 // createAction: base_url + '/aprobacionOrdenCompras/create',
