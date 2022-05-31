@@ -34,10 +34,10 @@
 
         footer {
             position: fixed; 
-            bottom: -60px; 
+            bottom: -100px; 
             left: 1cm;
             right: 1cm;
-            height: 150px; 
+            height: 200px; 
             /* border: 1px solid black; */
 
             /** Extra personal styles **/
@@ -257,6 +257,8 @@
                     echo '</tr>';
                 }
 
+
+
                 if($venta[0]->condicion_pago == "CONTADO" && !empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud) && count($producto) > 0) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
@@ -292,6 +294,18 @@
                     echo '</tr>';
                    
                 }
+
+
+                // agregar campo comentario facturacion
+                echo '<tr>';
+                echo '  <td></td>';
+                echo '  <td></td>';
+                echo '  <td>
+                            <br>'.$solicitud[0]->comentario_facturacion.'
+                        </td>';
+                echo '  <td></td>';
+                echo '  <td></td>';
+                echo '</tr>';
                 
             ?>
         </table>
@@ -397,6 +411,21 @@
                 </td>
                 <td style="width: 30%;">
                     <table style="width: 100%;">
+                        <tr>
+                            <td>Descuento</td>
+                            <td>{{ $venta[0]->Simbolo }} </td>
+                            <td style="text-align: right; border: 1px solid black;">
+                                
+                                <?php 
+                                    // if($venta[0]->t_impuestos > 0) {
+                                    //     echo $venta[0]->t_monto_afecto;
+                                    // } else {
+                                    //     echo $venta[0]->t_monto_exonerado;
+                                    // }
+                                    echo number_format($venta[0]->t_monto_descuento, 2);
+                                ?>
+                            </td>
+                        </tr>
                         <tr>
                             <td>Valor de Venta</td>
                             <td>{{ $venta[0]->Simbolo }} </td>

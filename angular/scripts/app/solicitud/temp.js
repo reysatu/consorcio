@@ -2,7 +2,7 @@
  * Created by JAIR on 4/5/2017.
  */
 
-(function () {
+ (function () {
     'use strict';
     angular.module('sys.app.solicitud')
         .config(Config)
@@ -194,7 +194,6 @@
             $("#formulario-solicitud").trigger("reset");
             $("#formulario-creditos").trigger("reset");
             $("#formulario-persona").trigger("reset");
-            $("#comentario_facturacion").attr("readonly", "readonly");
             $("#tipo_sol").val("N");
         }
 
@@ -1453,8 +1452,7 @@
                 $(".btn_guardarOrden").removeAttr("disabled");
             }
 
-            if ($("#estado").val() == "1" || $("#estado").val() == "2" || $("#estado").val() == "4" || $("#estado").val() == "") {
-                // alert("hola manus");
+            if ($("#estado").val() == "1" || $("#estado").val() == "4" || $("#estado").val() == "") {
                 $(".btn_guardarOrden").removeAttr("disabled");
             } else {
 
@@ -2027,6 +2025,8 @@
 
         var articulo_mov_det = $("#articulo_mov_det");
         var LocalizacionesSele;//variable para guardar localizaciones del almacen
+
+
 
 
         function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id, series_id_sd, articulos_id_sd, type_id, idCategoria) {
@@ -3198,31 +3198,19 @@
                     return false;
                 }
 
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val(),
+                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val(),
                     function (data, textStatus, jqXHR) {
 
-                        if (data.status == "i" || data.status == "m") {
-
-                            if(data.status == "i") {
-                                AlertFactory.textType({
-                                    title: '',
-                                    message: 'La solicitud se registró correctamente.',
-                                    type: 'success'
-                                });
-                            }
-
-                            if(data.status == "m") {
-                                AlertFactory.textType({
-                                    title: '',
-                                    message: 'La solicitud se modificó correctamente.',
-                                    type: 'success'
-                                });
-                            }
-
+                        if (data.status == "i") {
                             LoadRecordsButtonSolicitud.click();
                             $("#nConsecutivo").val(data.datos[0].nConsecutivo);
                             $("#estado").val(data.datos[0].estado);
-                           
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'La solicitud se registró correctamente.',
+                                type: 'success'
+                            });
+                            // alert("show");
                             $(".enviar_solicitud").show();
                             $(".imprimir-solicitud").show();
 
@@ -3455,35 +3443,6 @@
             $.post("solicitud/find", { id: id },
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
-                    var hoy = new Date();
-                    var hAnio = hoy.getFullYear();
-                    var hmes = hoy.getMonth() + 1;
-                    if (Number(hmes) < 10) {
-                        hmes = '0' + String(hmes);
-                    }
-
-                    var hdia = hoy.getDate();
-                    if (Number(hdia) < 10) {
-                        hdia = '0' + String(hdia);
-                    }
-                    var actu = hAnio + '-' + hmes + '-' + hdia;
-                    totalDescuento.html("");
-                    totalDescuento.append('<option value="">Seleccionar</option>');
-                    _.each(data.descuentos, function (item) {
-                        if (item.cTipoAplica == 'T') {
-                            var mo = idMoneda.val();
-                            var por = Number(item.nPorcDescuento);
-                            var monto = Number(item.nMonto);
-                            if ((item.idMoneda == mo || item.nPorcDescuento != '0') && (item.nSaldoUso > 0 || item.nLimiteUso == '0')) {
-                                if (item.dFecIni <= actu && item.dFecFin > actu) {
-                                    totalDescuento.append('<option idTipo="' + item.idTipo + '" value="' + item.id + '*' + por + '*' + monto + '" >' + item.descripcion + '</option>');
-                                }
-                            }
-                        }
-
-                        
-                    });
-
 
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
                     if (data.solicitud_credito.length > 0) {
@@ -3553,6 +3512,7 @@
                         $(".cancelar-solicitud").hide();
                     }
 
+
                     if (data.solicitud[0].estado == "1") {
                         habilitar_inputs();
                         $(".enviar_solicitud").show();
@@ -3566,15 +3526,6 @@
                         $(".imprimir-cronograma").show();
                     } else {
                         $(".imprimir-cronograma").hide();
-                    }
-
-                
-                    if(data.solicitud[0].estado == "2") { // solo cuando es vigente se muestra
-                        $("#comentario_facturacion").removeAttr("readonly");
-                       
-                    } else {
-                        $("#comentario_facturacion").attr("readonly", "readonly");
-                       
                     }
 
                     $("#tipo_sol").val(data.solicitud[0].tipo);

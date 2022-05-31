@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiariaDenominaciones\CajaDiariaDenominacionesInterface;
+use App\Http\Recopro\Ventas\VentasInterface;
 use App\Http\Requests\CajaDiariaRequest;
 use DB;
 class CajaDiariaController extends Controller
@@ -99,10 +100,20 @@ class CajaDiariaController extends Controller
            
         ]);
     }
-    public function createUpdate($id, CajaDiariaInterface $repo, CajaDiariaDetalleInterface $repoDet,CajaDiariaDenominacionesInterface $repoDeno , request $request)
+
+
+    public function createUpdate($id, CajaDiariaInterface $repo, CajaDiariaDetalleInterface $repoDet,CajaDiariaDenominacionesInterface $repoDeno , request $request, VentasInterface $ventas_repo)
     {
         DB::beginTransaction();
         try {
+
+            // $comprobantes = $ventas_repo->obtener_comprobantes();
+            // // print_r($comprobantes );
+            // foreach ($comprobantes as $key => $value) {
+            //     $this->consultar_cdr("20450106357-03-B001-00000156");
+            // }
+            // exit;
+
             $data = $request->all();
             $data['fechaCaja'] = strtoupper($data['fechaCaja']);
             $data['idCaja'] = strtoupper($data['idCaja']);
