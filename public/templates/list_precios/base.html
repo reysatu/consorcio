@@ -82,6 +82,21 @@
                     <div class="tab-content">
                             <div class="form-horizontal">
                                 <div class="form-group">
+                                <button type="button" id="btn_guardar_precios" class="btn btn-danger-admin btn-sm btn_guardar_precios" ng-click="savePrecios()">
+                                    <span class="fa fa-save"></span>
+                                    Guardar
+                                </button>
+                                <button type="button"  id="btn_aprobar" class="btn btn-info btn-sm btn_aprobar" disabled ng-click="Aprobar_precios()">
+                                    <span class="fa fa-save"></span>
+                                    Aprobar
+                                </button>
+                                <button type="button"  id="btn_desaprobar" class="btn btn-warning btn-sm btn_desaprobar" disabled ng-click="Desaprobar_precios()">
+                                    <span class="fa fa-save"></span>
+                                    Desaprobar
+                                </button>
+                                </div>
+                                <br>
+                                <div class="form-group">
                                     <input type="hidden" id="lista_id">
                                     <label class="col-sm-2 control-label">Descripción</label>
                                     <div class="col-sm-4">
@@ -135,6 +150,7 @@
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
                                         <tr>
+                                            <th>Código</th>
                                             <th>Productos</th>
                                             <th width="100px" height="20px">Precio</th>
                                             <th width="50px"></th>
@@ -148,15 +164,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btn_guardar_precios" class="btn btn-danger-admin btn-sm" ng-click="savePrecios()">
+                <button type="button" id="btn_guardar_precios" class="btn btn-danger-admin btn-sm btn_guardar_precios" ng-click="savePrecios()">
                     <span class="fa fa-save"></span>
                     Guardar
                 </button>
-                <button type="button"  id="btn_aprobar" class="btn btn-info btn-sm" disabled ng-click="Aprobar_precios()">
+                <button type="button"  id="btn_aprobar" class="btn btn-info btn-sm btn_aprobar" disabled ng-click="Aprobar_precios()">
                     <span class="fa fa-save"></span>
                     Aprobar
                 </button>
-                <button type="button"  id="btn_desaprobar" class="btn btn-warning btn-sm" disabled ng-click="Desaprobar_precios()">
+                <button type="button"  id="btn_desaprobar" class="btn btn-warning btn-sm btn_desaprobar" disabled ng-click="Desaprobar_precios()">
                     <span class="fa fa-save"></span>
                     Desaprobar
                 </button>

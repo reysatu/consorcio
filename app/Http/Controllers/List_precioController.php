@@ -44,6 +44,7 @@ class List_precioController extends Controller
                     'idProducto' => $bp->idProducto,
                     'descripcion' => $bp->description,
                     'nPrecio' => $bp->nPrecio,
+                    'code_article' => $bp->code_article,
                 ];
             }
             $data['productos'] = $productos;
