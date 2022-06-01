@@ -2633,7 +2633,7 @@
             }
 
 
-            $(".de[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
+            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
 
             $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
             $(".monto_afecto[codigo=" + codigo + "]").find("p").text(monto_afecto.toFixed(2));
@@ -3198,8 +3198,29 @@
                     return false;
                 }
 
+              
+                if($("#nConsecutivo").val() != "" && $("#estado").val() != "4") {
+                    $(".m_articulo_idAlm").removeAttr("disabled");
+                    $(".m_articulo_idLoc").removeAttr("disabled");
+                    $(".select_lote").removeAttr("disabled");
+                    $(".select_descuento").removeAttr("disabled");
+                }
+                
+                $(".btn_guardarOrden").attr("disabled", "disabled");
+
                 $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
+
+                        $(".btn_guardarOrden").removeAttr("disabled");
+                        // console.log("nConsecutivo " +$("#nConsecutivo").val() );
+                        // console.log("estado " +$("#estado").val()  );
+                        if($("#nConsecutivo").val() != "" && $("#estado").val() != "4") {
+                            // console.log("disactivar de nuvoooo");
+                            $(".m_articulo_idAlm").attr("disabled", "disabled");
+                            $(".m_articulo_idLoc").attr("disabled", "disabled");
+                            $(".select_lote").attr("disabled", "disabled");
+                            $(".select_descuento").attr("disabled", "disabled");
+                        }
 
                         if (data.status == "i" || data.status == "m") {
 

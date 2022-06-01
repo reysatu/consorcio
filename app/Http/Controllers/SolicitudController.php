@@ -94,6 +94,7 @@ class SolicitudController extends Controller
         try {
             DB::beginTransaction();
 
+            
             $desc = explode("*", $data["descuento_id"]);
             $descuento_id = $desc[0];
             $data["descuento_id"] = $descuento_id;
@@ -142,7 +143,8 @@ class SolicitudController extends Controller
    
             $data_articulo = array();
             $data_detalle = array();
-            if(count($data["idarticulo"]) > 0 && isset($data["idalmacen"]) && isset($data["idlocalizacion"]) && isset($data["idlote"]) && count($data["idalmacen"]) > 0 && count($data["idlocalizacion"]) > 0  && count($data["idlote"]) > 0 && isset($data["iddescuento"]) && count($data["iddescuento"]) > 0) {
+            
+            if(count($data["idarticulo"]) > 0) {
 
                
                 $data_articulo = $data;
