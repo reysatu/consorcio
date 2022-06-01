@@ -1963,12 +1963,12 @@
                      var por=Number(item.nPorcDescuento);
                      var monto=Number(item.nMonto);
                     if(item.cTipoAplica=='T'){
-                        if(item.idMoneda==mo || item.nPorcDescuento!=0){
-                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
-                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
-                            }
+                        // if(item.idMoneda==mo || item.nPorcDescuento!=0){
+                        //     if(item.nSaldoUso>0 || item.nLimiteUso==0){
+                        //           selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+                        //     }
                           
-                        }
+                        // }
                     }else{
                          if(item.idMoneda==mo || item.nPorcDescuento!=0){
                             if(item.nSaldoUso>0 || item.nLimiteUso==0){

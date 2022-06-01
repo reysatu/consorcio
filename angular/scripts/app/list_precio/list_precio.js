@@ -17,7 +17,7 @@
         var descripcion=$("#descripcion");
         var id_tipocli=$("#id_tipocli");
         var idMoneda=$("#IdMoneda");
-        var lista_id=$("#lista_id");
+        var lista_id=$("#lista_id"); 
         var dFecVigIni=$("#dFecVigIni");
         var dFecVigFin=$("#dFecVigFin");
         var iEstado=$("#iEstado");
@@ -26,10 +26,10 @@
         var modalPrecios=$("#modalPrecios");
         var titlemodalPrecios=$("#titlemodalPrecios");
         var idDetalle_Delete=[];
-        var btn_aprobar=$("#btn_aprobar");
-        var btn_desaprobar=$("#btn_desaprobar");
+        var btn_aprobar=$(".btn_aprobar");
+        var btn_desaprobar=$(".btn_desaprobar");
         var idPrecioDelete=$("#idPrecioDelete");
-        var btn_guardar_precios=$("#btn_guardar_precios");
+        var btn_guardar_precios=$(".btn_guardar_precios");
         modalPrecios.on('hidden.bs.modal', function (e) {
             cleanPrecios();
         });
@@ -76,9 +76,11 @@
                     dFecVigIni.val(data_p.dFecVigIni);
                     dFecVigFin.val(data_p.dFecVigFin);
                     _.each(data_p.productos, function (c) {
+                        console.log(data_p.productos);
+                        console.log("dataata");
                           // var codigo=String(c.id_lista)+'_'+String(c.idProducto);
                           var pre=Number(c.nPrecio);
-                           addToProductos(c.idProducto,c.descripcion,pre.toFixed(2),c.idProducto)
+                           addToProductos(c.idProducto,c.descripcion,pre.toFixed(2),c.idProducto,c.code_article)
                      });
                     if(data_p.iEstado==0){
                         btn_guardar_precios.prop('disabled',false); 
@@ -258,7 +260,7 @@
         }
         getDataForOrdenServicio();
 
-        function addToProductos(code,description,precio,idProducto){
+        function addToProductos(code,description,precio,idProducto,code_article){
             if ($('#tr_b_' + code).length > 0) {
                 AlertFactory.showWarning({
                     title: '',
@@ -268,6 +270,7 @@
             } 
 
             var tr = $('<tr id="tr_b_' + code + '"></tr>');
+            var td0 = $('<td>' + code_article +'</td>');
             var td1 = $('<td>' + description + '</td>');
             var tdu = $('<td></td>');
             var inp = $('<input type="hidden" class="w_idProducto" value="' + idProducto + '" />');
@@ -277,8 +280,8 @@
             var td2 = $('<td class="text-center"></td>');
             var btn = $('<button class="btn btn-danger btn-xs delProducto" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
             td2.append(btn);
-            tr.append(td1).append(tdu).append(td2);
-            p_table_productos.append(tr);
+            tr.append(td0).append(td1).append(tdu).append(td2);
+            p_table_productos.prepend(tr);
             modalProducto.modal('hide');
             $('.delProducto').click(function (e) {
                 var code = $(this).attr('data-id');
@@ -336,7 +339,8 @@
                         create: false,
                         listClass: 'text-center',
                         display: function (data) {
-                            return '<a href="javascript:void(0)" title="Seleccionar" class="select_p"  data-name="'+
+                            return '<a href="javascript:void(0)" title="Seleccionar" class="select_p"  data-codeArticle="'+
+                            data.record.code_article+'" data-name="'+
                             data.record.description+'" data-code="'+data.record.id+'" ><i class="fa fa-' +
                                 icon_select + ' fa-1-5x"></i></a>';
                         }
@@ -344,10 +348,11 @@
                 },
                 recordsLoaded: function (event, data) {
                     $('.select_p').click(function (e) {
+                            var code_article=$(this).attr('data-codeArticle');
                             var code = $(this).attr('data-code');
                             var description = $(this).attr('data-name');
                             var precio=0;
-                            addToProductos(code,description,precio,code);
+                            addToProductos(code,description,precio,code,code_article);
                             e.preventDefault();
                     });
                    
@@ -468,7 +473,8 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" title="Editar" class="edit_w" data-code="' +
+                        return '<a href="javascript:void(0)" title="Editar" class="edit_w"  data-codeArticle="' +
+                        data.record.code_article + '" data-code="' +
                             data.record.id + '"><i class="fa fa-pencil-square-o fa-1-5x fa-green"></i></a>';
                     }
                 }
