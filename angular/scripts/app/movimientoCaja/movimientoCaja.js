@@ -2390,15 +2390,6 @@ table_container_bancos.jtable('load');
             bval = bval && $("#numero_comprobante").required();
             bval = bval && $("#correo_electronico").required();
             // alert($("#detalle-formas-pago").html());
-            if ($("#detalle-formas-pago").html() == "") {
-                AlertFactory.textType({
-                    title: '',
-                    message: 'Debe ingresar al menos 1 registro al detalle',
-                    type: 'info'
-                });
-
-                return false;
-            }
 
             if (bval) {
                 if ($('#modalSolicitud').is(':visible')) {
@@ -2406,11 +2397,29 @@ table_container_bancos.jtable('load');
                 }
 
                 if ($('#modalSolicitudCredito').is(':visible')) {
+                    if ($("#detalle-formas-pago").html() == "") {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Debe ingresar al menos 1 registro al detalle',
+                            type: 'info'
+                        });
+        
+                        return false;
+                    }
                     
                     guardar_pago_cuotas_credito();
                 }
 
                 if ($('#modalDocumentosPendientes').is(':visible')) {
+                    if ($("#detalle-formas-pago").html() == "") {
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Debe ingresar al menos 1 registro al detalle',
+                            type: 'info'
+                        });
+        
+                        return false;
+                    }
                     
                     guardar_pago_documentos_pendientes();
                 }
@@ -4047,8 +4056,6 @@ table_container_bancos.jtable('load');
                 },
                 facturado: {
                     title: 'Facturado',
-
-
                 },
                 estado: {
                     title: 'Estado',

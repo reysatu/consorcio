@@ -131,6 +131,7 @@
         'sys.app.lista_cobranza_cuotas',
         'sys.app.avance_morosidad',
         
+        
         // Almacen
         'sys.app.receptions',
         'sys.app.transfers',

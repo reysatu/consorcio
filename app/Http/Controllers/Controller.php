@@ -787,5 +787,86 @@ class Controller extends BaseController
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
         $this->envio_json_cpe($name . ".json");
+        
+    }
+
+    public function consultar_cdr($documento_cpe) {
+        // consultar comprobantes
+        // https://emite.tuscomprobantes.pe/
+        // 20450106357
+        // usuario: casociadmin  clave: 765419
+      
+        $cliente = new  \nusoap_client("https://e-factura.tuscomprobantes.pe/wsseencpe/billService?wsdl", true);
+
+        if (!file_exists(base_path("public/CDR/"))) {
+            mkdir(base_path("public/CDR/"), 0777, true);
+        }
+
+        $err = $cliente->getError();
+        if($err){
+            die('Error: '.$err);
+        }
+        $filename = $documento_cpe.'.xml'; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.xml
+        //$pathRoot = 'C:/Users/Javier/Documents/app/'; //directorio local donde se generan los xml del cdr desde el sistema en PHP
+        $username = '20450106357EMISI355'; //USUARIO DEL API por empresa, solicitar a jmariscal@seencorp.pe
+        $password = 'EysuUjdi33'; //CLAVE DEL API por empresa, solicitar a jmariscal@seencorp.pe
+
+        $parametros = array('fileName'=>$filename);
+        $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
+
+        print_r($respuesta);
+        echo '<br>';
+
+        $_strFaultCode='';
+        $_strFaultString='';
+        $_strContentFile='';
+        $_strStatusCode='';
+        foreach ($respuesta as $key => $value){
+            switch($key){
+                case 'faultcode':
+                    $_strFaultCode=$value;
+                    break;
+                case 'faultstring':
+                    $_strFaultString=$value;
+                break;
+                case 'applicationResponse':
+                    $_strContentFile=$value;	
+                break;
+                case 'statusCdr':
+                    foreach ($value as $key2 => $value2){
+                        switch($key2){
+                            case 'content':
+                                $_strContentFile=$value2;	
+                            break;
+                            case 'statusCode':
+                                $_strStatusCode=$value2;	
+                            break;
+                        }
+                    }			
+                break;
+                default:		
+                    echo 'sin respuesta';
+                break;
+                
+            }
+        }
+        ############################
+        #obtener codigo 
+        ############################
+        if(!(!isset($_strFaultCode) || trim($_strFaultCode)==='')){
+            echo $_strFaultCode.'<br>'; #codigo de error|
+            echo $_strFaultString.'<br>'; #descripcion del error
+        }else if(!(!isset($_strContentFile) || trim($_strContentFile)==='')){
+            #cuando devuelve cdr
+            $doc = new \DOMDocument;
+            $doc->loadXML(base64_decode($_strContentFile));
+            echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue;	#valor resumen del cdr
+            echo $_strStatusCode; #codigo de respuesta del cdr
+            #graba el archuvo CDR de respuesta de SUNAT
+            file_put_contents("CDR/".'R-'.$filename, base64_decode($_strContentFile));
+        }
+
+        return $respuesta;
+
     }
 }

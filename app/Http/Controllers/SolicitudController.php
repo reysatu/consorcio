@@ -99,11 +99,17 @@ class SolicitudController extends Controller
             $data["descuento_id"] = $descuento_id;
             $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
 
+            // solo en estado regisstrado actualizara el saldo
+            
+            if($data["estado"] == "1") { 
+                //SALDOS
+                $data["saldo"] = $data["t_monto_total"];
+            }
             
         
             if($data["nConsecutivo"] == "") {
-                $data["saldo"] = $data["t_monto_total"];
-                //SALDOS
+              
+                
                
                 $data["facturado"] = 0;
                 $data["pagado"] = 0;
@@ -136,7 +142,7 @@ class SolicitudController extends Controller
    
             $data_articulo = array();
             $data_detalle = array();
-            if(count($data["idarticulo"]) > 0) {
+            if(count($data["idarticulo"]) > 0 && isset($data["idalmacen"]) && isset($data["idlocalizacion"]) && isset($data["idlote"]) && count($data["idalmacen"]) > 0 && count($data["idlocalizacion"]) > 0  && count($data["idlote"]) > 0 && isset($data["iddescuento"]) && count($data["iddescuento"]) > 0) {
 
                
                 $data_articulo = $data;
@@ -350,7 +356,7 @@ class SolicitudController extends Controller
         return response()->json($res);
     }
 
-    public function find(SolicitudInterface $Repo, Request $request) {
+    public function find(SolicitudInterface $Repo, Request $request, Orden_servicioInterface $repo_orden) {
         $data = $request->all();
         $arr = explode("_", $data["id"]);
         $cCodConsecutivo = $arr[0];
@@ -362,6 +368,7 @@ class SolicitudController extends Controller
         $response["solicitud_detalle"] = $Repo->get_solicitud_detalle($cCodConsecutivo, $nConsecutivo);
         $response["solicitud_credito"] = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
         $response["solicitud_cronograma"] = $Repo->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+        $response["descuentos"] =$repo_orden->get_descuentos_all();
 
         return response()->json($response);
     }

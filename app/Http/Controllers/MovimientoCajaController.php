@@ -753,10 +753,16 @@ class MovimientoCajaController extends Controller
                     $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
                 }
             }
-          
+
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            
+            $empresa = $compania_repo->find("00000");
+
+            $name_cpe = $empresa->Ruc . "-" . $data["IdTipoDocumento"] . "-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
+            // print_r($name); exit;
 
             $data_venta = (array)$solicitud[0];
+            $data_venta["documento_cpe"] = $name_cpe;
             $data_venta["descuento_id"] = explode("*", $solicitud[0]->descuento_id)[0];
             $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
@@ -958,7 +964,8 @@ class MovimientoCajaController extends Controller
            
 
          
-
+            
+           
 
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
@@ -1165,130 +1172,138 @@ class MovimientoCajaController extends Controller
                 
           
             // GUARDAR FORMAS DE PAGO EN VENTA Y CAJA   
-            $data_formas_pago = $data;
-            // var_dump($data["codigo_formapago"]); exit;
-            $efectivo_soles = 0;
-            $no_efectivo_soles = 0;
-            $efectivo_dolares = 0;
-            $no_efectivo_dolares = 0;
-
-            for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
-                $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
-                // actualizamos la venta por separacion
-                if($data["codigo_formapago"][$i] == "SEP") {
-                    $sql_update = "UPDATE ERP_Venta SET aplicado_separacion = 'S'       
-                    WHERE idventa={$data["idventa_separacion"]}";
-            
-                    DB::statement($sql_update);
-                }
-
-                 // actualizamos la venta por nota
-                 if($data["codigo_formapago"][$i] == "NCR") {
-                    $sql_update = "UPDATE ERP_Venta SET aplicado_nota= 'S'       
-                    WHERE idventa={$data["idventa_nota"]}";
-            
-                    DB::statement($sql_update);
-                }
-
+       
+            if(isset($data["codigo_formapago"])) {
+                $data_formas_pago = $data;
+                // var_dump($data["codigo_formapago"]); exit;
+                $efectivo_soles = 0;
+                $no_efectivo_soles = 0;
+                $efectivo_dolares = 0;
+                $no_efectivo_dolares = 0;
+    
+                for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
+                    $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
+                    // actualizamos la venta por separacion
+                    if($data["codigo_formapago"][$i] == "SEP") {
+                        $sql_update = "UPDATE ERP_Venta SET aplicado_separacion = 'S'       
+                        WHERE idventa={$data["idventa_separacion"]}";
                 
-
-                if($i == 0) {
-
-                    $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
-                   
-                } else {
-                    $data_formas_pago["consecutivo"][$i] = $data_formas_pago["consecutivo"][$i-1] + 1;
-                }
-
-                $data_caja_detalle = array();
-                $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
-                $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
-                $data_caja_detalle["codigoTipo"] = "VTA";
-                $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$i];
-                $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$i];
-                $data_caja_detalle["monto"] = $data["monto_pago"][$i];
-                $data_caja_detalle["descripcion"] = "Ingreso por Ventas";
-                $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$i];
-                $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$i];
-                $data_caja_detalle["naturaleza"] = "E";
-
-                $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
-
-                if($data["vuelto"][$i] > 0) {
+                        DB::statement($sql_update);
+                    }
+    
+                     // actualizamos la venta por nota
+                     if($data["codigo_formapago"][$i] == "NCR") {
+                        $sql_update = "UPDATE ERP_Venta SET aplicado_nota= 'S'       
+                        WHERE idventa={$data["idventa_nota"]}";
+                
+                        DB::statement($sql_update);
+                    }
+    
+                    
+    
+                    if($i == 0) {
+    
+                        $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                       
+                    } else {
+                        $data_formas_pago["consecutivo"][$i] = $data_formas_pago["consecutivo"][$i-1] + 1;
+                    }
+    
                     $data_caja_detalle = array();
                     $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
                     $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
                     $data_caja_detalle["codigoTipo"] = "VTA";
-                    $data_caja_detalle["codigoFormaPago"] = "EFE";
-                    $data_caja_detalle["idMoneda"] = $solicitud[0]->idmoneda;
-                    $data_caja_detalle["monto"] = $data["vuelto"][$i];
-                    $data_caja_detalle["descripcion"] = "Vuelto por Ventas";
-                    $data_caja_detalle["nroTarjeta"] = "";
-                    $data_caja_detalle["nroOperacion"] = "";
-                    $data_caja_detalle["naturaleza"] = "S";
-                    
+                    $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$i];
+                    $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$i];
+                    $data_caja_detalle["monto"] = $data["monto_pago"][$i];
+                    $data_caja_detalle["descripcion"] = "Ingreso por Ventas";
+                    $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$i];
+                    $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$i];
+                    $data_caja_detalle["naturaleza"] = "E";
+    
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
-
-                    if($solicitud[0]->idmoneda == "1") {
-                        $efectivo_soles -= $data["vuelto"][$i];
+    
+                    if($data["vuelto"][$i] > 0) {
+                        $data_caja_detalle = array();
+                        $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                        $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                        $data_caja_detalle["codigoTipo"] = "VTA";
+                        $data_caja_detalle["codigoFormaPago"] = "EFE";
+                        $data_caja_detalle["idMoneda"] = $solicitud[0]->idmoneda;
+                        $data_caja_detalle["monto"] = $data["vuelto"][$i];
+                        $data_caja_detalle["descripcion"] = "Vuelto por Ventas";
+                        $data_caja_detalle["nroTarjeta"] = "";
+                        $data_caja_detalle["nroOperacion"] = "";
+                        $data_caja_detalle["naturaleza"] = "S";
+                        
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+    
+                        if($solicitud[0]->idmoneda == "1") {
+                            $efectivo_soles -= $data["vuelto"][$i];
+                        }
+    
+                        if($solicitud[0]->idmoneda == "2") {
+                            $efectivo_dolares -= $data["vuelto"][$i];
+                        }
                     }
-
-                    if($solicitud[0]->idmoneda == "2") {
-                        $efectivo_dolares -= $data["vuelto"][$i];
+    
+    
+                    if($data["IdMoneda"][$i] == "1") {
+                        if($data["codigo_formapago"][$i] == "EFE") {
+                            $efectivo_soles += (float)$data["monto_pago"][$i];
+                        } else {
+                            $no_efectivo_soles += (float)$data["monto_pago"][$i];
+                        }
+                    }
+    
+                    if($data["IdMoneda"][$i] == "2") {
+                        if($data["codigo_formapago"][$i] == "EFE") {
+                            $efectivo_dolares += (float)$data["monto_pago"][$i];
+                        } else {
+                            $no_efectivo_dolares += (float)$data["monto_pago"][$i];
+                        }
                     }
                 }
 
-
-                if($data["IdMoneda"][$i] == "1") {
-                    if($data["codigo_formapago"][$i] == "EFE") {
-                        $efectivo_soles += (float)$data["monto_pago"][$i];
-                    } else {
-                        $no_efectivo_soles += (float)$data["monto_pago"][$i];
-                    }
-                }
-
-                if($data["IdMoneda"][$i] == "2") {
-                    if($data["codigo_formapago"][$i] == "EFE") {
-                        $efectivo_dolares += (float)$data["monto_pago"][$i];
-                    } else {
-                        $no_efectivo_dolares += (float)$data["monto_pago"][$i];
-                    }
-                }
-            }
-
-
-            //ACTUALIZAMOS MONTOS EN CAJA DIARIA
-            $update_caja_diaria = array();
-            $update_caja_diaria["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
-            $update_caja_diaria["totalEfectivo"] = $efectivo_soles;
-            $update_caja_diaria["totalNoEfectivo"] = $no_efectivo_soles;
-            $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
-            $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
-
-            
-            $caja_diaria_repositorio->update_totales($update_caja_diaria);
-            // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
-          
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
-
-            //  PARA TICKET
-            $data_formas_pago_ticket = $data;
-            for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
-                $data_formas_pago_ticket["idventa"][$i] = $data_ticket["idventa"];
-               
-                if($i == 0) {
-
-                    $data_formas_pago_ticket["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
-                   
-                } else {
-                    $data_formas_pago_ticket["consecutivo"][$i] = $data_formas_pago_ticket["consecutivo"][$i-1] + 1;
-                }
+                  //ACTUALIZAMOS MONTOS EN CAJA DIARIA
+                $update_caja_diaria = array();
+                $update_caja_diaria["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                $update_caja_diaria["totalEfectivo"] = $efectivo_soles;
+                $update_caja_diaria["totalNoEfectivo"] = $no_efectivo_soles;
+                $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
+                $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
 
                 
+                $caja_diaria_repositorio->update_totales($update_caja_diaria);
+                // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
+            
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
             }
 
-            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
-            
+
+          
+
+            //  PARA TICKET
+            if(isset($data["codigo_formapago"])) {
+                $data_formas_pago_ticket = $data;
+                for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
+                    $data_formas_pago_ticket["idventa"][$i] = $data_ticket["idventa"];
+                   
+                    if($i == 0) {
+    
+                        $data_formas_pago_ticket["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                       
+                    } else {
+                        $data_formas_pago_ticket["consecutivo"][$i] = $data_formas_pago_ticket["consecutivo"][$i-1] + 1;
+                    }
+    
+                    
+                }
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
+                
+            }
+           
 
 
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
