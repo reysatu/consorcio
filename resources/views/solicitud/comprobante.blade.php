@@ -297,11 +297,12 @@
 
 
                 // agregar campo comentario facturacion
+                $comentario_facturacion = (isset($solicitud[0]->comentario_facturacion)) ? $solicitud[0]->comentario_facturacion : "";
                 echo '<tr>';
                 echo '  <td></td>';
                 echo '  <td></td>';
                 echo '  <td>
-                            <br>'.$solicitud[0]->comentario_facturacion.'
+                            <br>'.$comentario_facturacion.'
                         </td>';
                 echo '  <td></td>';
                 echo '  <td></td>';
