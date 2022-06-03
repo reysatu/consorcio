@@ -2896,7 +2896,7 @@ function getDatosCliente(){
             bval = bval && razonsocial_cliente.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
-            bval = bval && idsector.required();
+            // bval = bval && idsector.required();
             if(tipodoc.val()=='01' && documento.val().length!=8){
                 AlertFactory.textType({
                             title: '',

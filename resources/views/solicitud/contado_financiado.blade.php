@@ -173,7 +173,13 @@
                 echo '<tr>';
                 echo '  <td>' . $i . '</td>';
                 echo '  <td>' . $value->idproducto . '</td>';
-                echo '  <td>' . $value->producto . '</td>';
+                if(empty($value->descripcion_articulo)) {
+
+                    echo '  <td>' . $value->producto . '</td>';
+                } else {
+                    echo '  <td>' . $value->descripcion_articulo . '</td>';
+                }
+               
                 echo '  <td>' . $value->unidad_medida . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
 

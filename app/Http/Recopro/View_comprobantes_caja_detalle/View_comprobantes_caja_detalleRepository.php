@@ -38,7 +38,7 @@ class View_comprobantes_caja_detalleRepository implements View_comprobantes_caja
       public function searchComproMoviDetaSol($usuario,$fechacA,$IdTipoDocumento)
     {
         return $this->model->where(function($q) use ($usuario,$fechacA,$IdTipoDocumento){
-            $q->where('idcajero',$usuario)->where('fecha',$fechacA)->where('idmoneda',1);
+            $q->where('idcajero',$usuario)->where('IdTipoDocumento',$IdTipoDocumento)->where('fecha',$fechacA)->where('idmoneda',1);
         });
 
     }

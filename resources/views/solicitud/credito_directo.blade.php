@@ -208,7 +208,12 @@
                 echo '  <td>' . number_format($value->precio_unitario, 2) . '</td>';
                 echo '  <td>' . $value->code_article . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
-                echo '  <td>' . $value->producto . '</td>';
+                if(empty($value->descripcion_articulo)) {
+
+                    echo '  <td>' . $value->producto . '</td>';
+                } else {
+                    echo '  <td>' . $value->descripcion_articulo . '</td>';
+                }
                 echo '</tr>';
             }
 

@@ -857,6 +857,12 @@ table_container_bancos.jtable('load');
             if (tipoMovimientoAdd.val() != 'BCO') {
                 bval = bval && conceptoAdd.required();
             }
+
+            if (tipoMovimientoAdd.val() == 'SEP') {
+                bval = bval && $("#documento_cliente").required();
+                bval = bval && $("#tipo_doc_venta").required();
+                bval = bval && $("#serie_comprobante_m").required();
+            }
             if (bval) {
                 var to = cuentaBancaria.val();
                 var toCuenta = to.split('*');
@@ -2657,6 +2663,16 @@ table_container_bancos.jtable('load');
                             // id_cliente_tipo_or.val("")
                             // llenarServicios();
                         } else {
+                            if(datos[0].tipodoc == "01") { // dni
+                                $("#tipo_doc_venta option[value='01']").hide();
+                                $("#tipo_doc_venta option[value='03']").show();
+                            }
+
+                            if(datos[0].tipodoc == "06") { // ruc
+                                $("#tipo_doc_venta option[value='03']").hide();
+                                $("#tipo_doc_venta option[value='01']").show();
+
+                            }
                             distrito_ver.val(datos[0].cDistrito);
                             distrito_or.val(datos[0].ubigeo);
                             idDocumentoCli.val(datos[0].tipodoc).trigger('change');
@@ -3282,6 +3298,7 @@ table_container_bancos.jtable('load');
                         for (var i = 0; i < data.solicitud_articulo.length; i++) {
                             html += '<tr>';
                             html += '   <td>' + data.solicitud_articulo[i].producto + '</td>';
+                            html += '   <td>' + data.solicitud_articulo[i].descripcion_articulo + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].almacen + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].localizacion + '</td>';
                             html += '   <td>' + data.solicitud_articulo[i].lote + '</td>';

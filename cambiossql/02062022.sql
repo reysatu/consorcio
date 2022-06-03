@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[ERP_SolicitudArticulo] ADD [descripcion_articulo] text NULL;

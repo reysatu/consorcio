@@ -1423,7 +1423,7 @@
                         var posee_serie = $("#posee-serie").val();
                         var um_id = $("#um_id").val();
                         // alert(responsa.data[0].type_id);
-                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie, um_id, "", "", response.data[0].type_id, response.data[0].idCategoria);
+                        addArticuloTable(idProductoMN.val(), desProductoMN.val(), cantProductoMN.val(), ver, codigo, tipoArt, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, precioTotal, impuesto_articulo, lote_articulo, cOperGrat, "", posee_serie, um_id, "", "", response.data[0].type_id, response.data[0].idCategoria, '');
                         modalNada.modal('hide');
                         modalMovimietoArticulo.modal('hide');
                     } else {
@@ -2029,7 +2029,7 @@
         var LocalizacionesSele;//variable para guardar localizaciones del almacen
 
 
-        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id, series_id_sd, articulos_id_sd, type_id, idCategoria) {
+        function addArticuloTable(idProducto, desProducto, cantProducto, ver, codigo, tipo, codl, datl, idAlmacen, idLocalizacion, costo, costo_total, precio, presio_total, impuesto_articulo, lote_articulo, cOperGrat, iddescuento, posee_serie, um_id, series_id_sd, articulos_id_sd, type_id, idCategoria, descripcion_articulo) {
 
 
             if ($("#articulo_mov_det").html() != "") {
@@ -2227,7 +2227,7 @@
 
 
             td8.append(btn3);
-            tr.append(td1).append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(chek).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
+            tr.append(td1).append('<td><input type="text" class="form-control input-sm" name="descripcion_articulo[]" value="'+descripcion_articulo+'" /></td>').append(td2).append(tdy).append(td_lote).append(td3).append(td4).append(chek).append(td5).append(td_descuentos).append(tdpr).append(tdpreT).append(html).append(td8);
             articulo_mov_det.append(tr);
             addAlmaSelec(codigo);
             addlocSele(codigo);
@@ -3162,8 +3162,8 @@
                         var cantidad = articulos_id[ar].getAttribute("cantidad");
                         var producto = articulos_id[ar].getAttribute("producto");
                         if (posee_serie == "1") {
-                            // console.log(series_id);
-                            // console.log(ar, series_id[ar]);
+                            console.log(series_id);
+                            console.log(ar, series_id[ar]);
                             if (typeof series_id[ar] == "undefined") {
                                 // console.log(series_id[ar]);
                                 AlertFactory.textType({
@@ -3536,7 +3536,7 @@
 
                             var codigo = Math.random().toString(36).substr(2, 18);
                             // console.log("um_id => "+data.solicitud_articulo[i].um_id);
-                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie, data.solicitud_articulo[i].um_id, arr_id_series.join(","), arr_id_articulos.join(","), data.solicitud_articulo[i].type_id, data.solicitud_articulo[i].idCategoria);
+                            addArticuloTable(data.solicitud_articulo[i].idarticulo, data.solicitud_articulo[i].producto, data.solicitud_articulo[i].cantidad, 'A', codigo, 'NA', "", "", data.solicitud_articulo[i].idalmacen, data.solicitud_articulo[i].idlocalizacion, data.solicitud_articulo[i].costo, data.solicitud_articulo[i].costo_total, data.solicitud_articulo[i].precio_unitario, data.solicitud_articulo[i].precio_total, data.solicitud_articulo[i].impuesto, data.solicitud_articulo[i].lote, data.solicitud_articulo[i].cOperGrat, data.solicitud_articulo[i].iddescuento, data.solicitud_articulo[i].serie, data.solicitud_articulo[i].um_id, arr_id_series.join(","), arr_id_articulos.join(","), data.solicitud_articulo[i].type_id, data.solicitud_articulo[i].idCategoria, data.solicitud_articulo[i].descripcion_articulo);
 
                         }
                     }

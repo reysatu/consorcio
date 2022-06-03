@@ -38,7 +38,7 @@ Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'u
 
 Route::get('movimientoCajas/data_formIncio', ['as' => 'movimientoCajas.data_formIncio', 'uses' => 'MovimientoCajaController@data_formIncio']);
 
-Route::put('movimientoCajas/saveCajasDiarias/{id}', ['as' => 'movimientoCajas.saveCajasDiarias', 'uses' => 'CajaDiariaController@createUpdate']);
+Route::put('movimientoCajas/saveCajasDiarias/{id}', ['as' => 'movimientoCajas.saveCajasDiarias', 'uses' => 'CajaDiariaController@list_ventas']);
 
 Route::get('movimientoCajas/find/{id}', ['as' => 'movimientoCajas.find', 'uses' => 'CajaDiariaController@find']);
 Route::post('movimientoCajas/getMonedasMoc', 'CurrencyController@getAll');
