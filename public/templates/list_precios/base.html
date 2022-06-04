@@ -146,8 +146,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                     <div class="col-sm-5">
+                                        <input class="form-control col-md-12 light-table-filter" data-table="order-table" type="text" placeholder="Buscar..">
+                                    </div>
+                                </div>
+                                
+
                                  <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover">
+                                    <table class="table order-table table-bordered table-striped table-hover" >
                                         <thead>
                                         <tr>
                                             <th>Código</th>
@@ -158,6 +165,7 @@
                                         </thead>
                                         <tbody id="p_table_productos"></tbody>
                                     </table>
+
                                 </div>
                             </div>
                     </div>
@@ -206,3 +214,46 @@
       
     </div>
   </div> 
+  <script type="text/javascript">
+    (function(document) {
+      'use strict';
+
+      var LightTableFilter = (function(Arr) {
+
+        var _input;
+
+        function _onInputEvent(e) {
+          _input = e.target;
+          var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+          Arr.forEach.call(tables, function(table) {
+            Arr.forEach.call(table.tBodies, function(tbody) {
+              Arr.forEach.call(tbody.rows, _filter);
+            });
+          });
+        }
+
+        function _filter(row) {
+          var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+          row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+        }
+
+        return {
+          init: function() {
+            var inputs = document.getElementsByClassName('light-table-filter');
+            Arr.forEach.call(inputs, function(input) {
+              input.oninput = _onInputEvent;
+            });
+          }
+        };
+      })(Array.prototype);
+
+     $('.light-table-filter').on('keyup', function() {
+        if (document.readyState === 'complete') {
+          LightTableFilter.init();
+        }
+      });
+
+    })(document);
+   
+    
+    </script>
