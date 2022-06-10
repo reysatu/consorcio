@@ -149,6 +149,7 @@ class Orden_servicioController extends Controller
             $idAsesor=strtoupper($data['idAsesor']);
             $idcCondicionPago=strtoupper($data['idcCondicionPago']);
             $cObservaciones=strtoupper($data['cObservaciones']);
+            $comentario_facturacion=strtoupper($data['comentario_facturacion']);
             $id_tipoDoc_Venta_or=strtoupper($data['id_tipoDoc_Venta_or']);
             $mo_revision=strtoupper($data['mo_revision']);
             $mo_mecanica=strtoupper($data['mo_mecanica']);
@@ -260,11 +261,11 @@ class Orden_servicioController extends Controller
                 $nDescuento,
                 $nOperGratuita,
                 $modo,
-                $usuario
+                $usuario, $comentario_facturacion
             );
             if(intval($res[0]->Mensaje)){
 
-                $id_mantenimiento_array=$data['id_mantenimiento_array'];
+            $id_mantenimiento_array=$data['id_mantenimiento_array'];
             $id_mantenimiento_array=explode(',', $id_mantenimiento_array);
 
             $id_revision_array=$data['id_revision_array'];

@@ -2292,6 +2292,10 @@
                      
 
                 },
+                razonsocial_cliente: {
+                    title: 'Cliente',
+                   
+                },
                 cCodConsecutivoOS: {
                     title: 'Código Orden',
                    

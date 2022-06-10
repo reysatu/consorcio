@@ -347,6 +347,10 @@ use App\Http\Recopro\Proforma\Proforma;
 use App\Http\Recopro\Proforma\ProformaInterface;
 use App\Http\Recopro\Proforma\ProformaRepository;
 
+use App\Http\Recopro\ProformaView\ProformaView;
+use App\Http\Recopro\ProformaView\ProformaViewInterface;
+use App\Http\Recopro\ProformaView\ProformaViewRepository;
+
 use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevision;
 use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevisionInterface;
 use App\Http\Recopro\QualitycontrolRevision\QualitycontrolRevisionRepository;
@@ -891,6 +895,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerMotiveTransfer();
 
         $this->registerProforma();
+        $this->registerProformaView();
         $this->registerQualitycontrolRevision();
         $this->registerProforma_detalle();
         $this->registerProforma_mo();
@@ -2572,6 +2577,16 @@ class AppServiceProvider extends ServiceProvider
             return new ProformaRepository(new Proforma());
         });
     }
+
+    public function registerProformaView()
+    {
+        $app = $this->app;
+
+        $app->bind(ProformaViewInterface::class, function ($app) {
+            return new ProformaViewRepository(new ProformaView());
+        });
+    }
+
       public function registerQualitycontrolRevision()
     {
         $app = $this->app;

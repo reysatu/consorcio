@@ -257,7 +257,7 @@ where IdTipoDocumento in ('01','03')");
                 $nDescuento,
                 $nOperGratuita,
                 $modo,
-                $usuario){
+                $usuario, $comentario_facturacion){
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaOrdenServicio 
                 '$cCodConsecutivo',
@@ -297,7 +297,7 @@ where IdTipoDocumento in ('01','03')");
                 '$nIdDscto',
                 '$nOperGratuita',
                 '$modo',
-                '$usuario'");
+                '$usuario', '$comentario_facturacion'");
          return $destroy;
     }
     public function getcodigo_proforma(){

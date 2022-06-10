@@ -347,10 +347,13 @@
             
             RESTService.get('orden_servicios/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                  
+                    
                     var data=response.data;
                     console.log(response.val);
                     console.log("datos");
+                   
+
+
                     titlemodalOrdenServivio.html('Editar Orden '+'['+data[0].nConsecutivo+ ']');
                     cCodConsecutivo.prop('disabled',true);
                     cCodConsecutivo.val(data[0].cCodConsecutivo).trigger("change");
@@ -383,6 +386,7 @@
                     documento_or.val(data_cliente[0].documento);
                     getCliente();
                     observaciones.val(data[0].cObservaciones);
+                    $("#comentario_facturacion").val(data[0].comentario_facturacion);
                     nKilometraje.val(Number(data[0].nKilometraje));
                     placa.val(data[0].cPlacaVeh);
                     getPlaca();
@@ -457,7 +461,21 @@
                         var monto=Number(data[0].montoDes);
                         destotal =data[0].nIdDscto+"*"+porcen+'*'+monto;
                      }
+
                     totalDescuento.val(destotal).trigger("change");
+
+                     //0: 'Registrado', 1: 'Con Proforma', 2:'En ejecución'
+                     if(data[0].iEstado <= 2) { // solo estados 0,1,2
+                        $("#comentario_facturacion").removeAttr("readonly");
+                        $("#observaciones").removeAttr("readonly");
+                        $(".btn_guardarOrden").removeAttr("disabled");
+                    } else {
+                        $("#comentario_facturacion").attr("readonly", "readonly");
+                         $("#observaciones").attr("readonly", "readonly");
+                         $(".btn_guardarOrden").attr("disabled", "disabled");
+                    }
+
+                    
                     modalOrdenServivio.modal("show");
                 } else {
                     AlertFactory.textType({
@@ -2102,6 +2120,7 @@
             articulo_dd_det.html("");
             nKilometraje.val("");
             observaciones.val("");
+            $("#comentario_facturacion").val("");
             mo_revision.val("");
             mo_mecanica.val("");
             terceros.val("");
@@ -2469,6 +2488,7 @@
                     'idAsesor': idAsesor.val(),
                     'idcCondicionPago': idcCondicionPago.val(),
                     'cObservaciones': observaciones.val(),
+                    'comentario_facturacion': $("#comentario_facturacion").val(),
                     'id_tipoDoc_Venta_or':id_tipoDoc_Venta_or.val(),
                     'mo_revision': mo_revision.val(),
 
@@ -3138,8 +3158,6 @@ function getDatosCliente(){
                 },
                 nConsecutivo: {
                     title: 'Consecutivo',
-                     
-
                 },
                 dFecRec: {
                     title: 'Fecha Registro',

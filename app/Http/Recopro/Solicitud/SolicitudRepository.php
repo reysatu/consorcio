@@ -28,6 +28,7 @@ class SolicitudRepository implements SolicitudInterface
             $q->orWhere('numero_documento', 'LIKE',  '%' . $s . '%');
             $q->orWhere('fecha_solicitud', 'LIKE', '%' . $s . '%');
             $q->orWhere('tipo_solicitud', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
         })->orderBy('fecha_solicitud', 'DESC');
     }
 

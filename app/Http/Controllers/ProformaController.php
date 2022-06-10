@@ -12,6 +12,7 @@ use App\Http\Recopro\Proforma\ProformaTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Proforma\ProformaInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
+use App\Http\Recopro\ProformaView\ProformaViewInterface;
 use App\Http\Requests\ProformaRequest;
 use DB;
 class ProformaController extends Controller
@@ -40,10 +41,10 @@ class ProformaController extends Controller
                 'data_cliente'=>$data_cliente,
             ]);
     } 
-    public function all(Request $request, ProformaInterface $repo)
+    public function all(Request $request, ProformaViewInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo','cCodConsecutivoOS','nConsecutivoOS','dFechaRegistro','iEstado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo', 'razonsocial_cliente','cCodConsecutivoOS','nConsecutivoOS','dFechaRegistro','iEstado'];
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
      public function deleteDetalleMO($id, ProformaInterface $repo, Request $request)
