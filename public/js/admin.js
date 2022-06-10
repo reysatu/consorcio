@@ -9178,17 +9178,26 @@ function create_pdf_movimiento(response) {
     var column4  = [];
     var column5  = [];
     var column6= [];
+    var file_comentario_movement= [];
+    var title_comentario_movement= [];
     var header=[];
     column1.push({image: response.img,rowSpan: 3, colSpan: 8, alignment: 'center',width:120,height:50}, {}, {}, {},{}, {}, {},{}, {text:'MOVIMIENTO DE '+operacion[0].descripcion,alignment: 'center', bold: true,colSpan: 39,height:80},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {},{}, {},{},{}, {},{}, {},{},{}, {},{},{}); 
     column2.push({}, {}, {}, {},{}, {}, {},{}, {text:' \n N° Movimiento:',bold: true,alignment: 'center',fontSize: 10,border: [false, false, false, true],rowSpan: 2, colSpan: 7,height:200},{}, {},{}, {}, {},{}, {text:' \n'+data_p.idMovimiento,border: [false, false, true, true],fontSize: 10,rowSpan: 2, colSpan: 3,height:200}, {},{}, {text:'\n Fecha Transacción: ',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', rowSpan: 2,colSpan: 10,height:80}, {},{}, {},{}, {},{}, {}, {},{},{text:'\n'+data_p.fecha_proceso,fontSize: 10,border: [false, false, true, true], rowSpan: 2,colSpan: 5,height:80}, {}, {},{},{}, {text:'\n Fecha Impresión:',bold: true,fontSize: 10,border: [false, false, false, true],alignment: 'center', colSpan: 9,rowSpan: 2,height:80}, {},{}, {},{},{}, {},{}, {},{text:'\n'+data_p.fecha_impresion,fontSize: 10,border: [false, false, true, true], colSpan: 5,rowSpan: 2,height:80},{}, {},{},{}); 
     column3.push({}, {}, {}, {},{}, {}, {},{}, ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
     column4.push({text:' ', border: [true, false, true, true], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
     column5.push({text:'Item',bold: true, colSpan: 2, fontSize: 10,height:100}, {}, {text:'Artículo',alignment: 'center',bold: true, colSpan: 16, fontSize: 10,height:100},{}, {}, {},{},{}, {},{}, {},{}, {}, {}, {},{}, {}, {}, {text:'Almacén',bold: true, colSpan: 7, fontSize: 10,height:100}, {},{}, {}, {},{}, {}, {text:'Localización',bold: true, colSpan: 8, fontSize: 10,height:100},{}, {}, {},{}, {},{}, {},{text:'Lote',bold: true, colSpan: 9, fontSize: 10,height:100},{}, {},{}, {},{},{},{},{}, {text:'Unidad',bold: true,colSpan: 2, fontSize: 10,height:100},{},{text:'Cantidad', bold: true,colSpan: 3,fontSize: 10,height:100},{},{}); 
+    title_comentario_movement.push({text:"Observaciones",bold: true, border: [true, false, true, true], fontSize: 10,alignment: 'center', colSpan: 47,height:500}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+    file_comentario_movement.push({text:data_p.observaciones, border: [true, false, true, true], fontSize: 10,alignment: 'center', colSpan: 47,height:500}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 
+
+
     header.push(column1);
     header.push(column2);
     header.push(column3);
     header.push(column4);
+   
     header.push(column5);
+
+   
     var cont=0;
     mov_ar.map(function(index) {
         var cantidad=Math.trunc(index.cantidad);
@@ -9217,6 +9226,8 @@ function create_pdf_movimiento(response) {
 
 
     });
+    header.push(title_comentario_movement);
+    header.push(file_comentario_movement);
     for (var i = 0; i < 8; i++) {
         var colum_espacio_blanco=[];
         colum_espacio_blanco.push({text:' ', border: [false, false, false, false], fontSize: 6,alignment: 'center', colSpan: 47,height:100}, ' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1', ' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1', ' 1',' 1',' 1', ' 1',' 1',' 1'); 

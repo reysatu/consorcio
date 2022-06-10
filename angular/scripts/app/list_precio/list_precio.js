@@ -49,6 +49,7 @@
             btn_guardar_precios.prop('disabled',false);
             btn_desaprobar.prop('disabled',true);  
             idDetalle_Delete=[];
+            $(".light-table-filter").val("");
         }
         function newListPrecio() {
             modalPrecios.modal('show');
