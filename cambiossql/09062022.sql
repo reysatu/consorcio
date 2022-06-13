@@ -177,3 +177,141 @@ inner join ERP_Clientes AS c on(c.id=p.idCliente)
 GO
 
 
+ALTER TABLE [dbo].[ERP_Descuentos] ADD [todos_articulos] varchar(1) NULL
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'S -> se listaran todos los descuentos para cualquier articulo del detalle de la solicitud, proforma, orden de servicio
+N -> solo se listara el descuento si el articulo esta asignado en el detalle del maestro de descuentos, esto para el detalle de la solicitud, proforma, orden de servicio',
+'SCHEMA', N'dbo',
+'TABLE', N'ERP_Descuentos',
+'COLUMN', N'todos_articulos';
+
+
+
+
+/****** Object:  StoredProcedure [dbo].[ST_ActualizaDescuento]    Script Date: 12/06/2022 09:30:45 a.m. ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER procedure [dbo].[ST_ActualizaDescuento]
+@Id int, -- Si es nuevo enviar 0
+@descripcion varchar(150),
+@idTipo varchar(1), -- P:Porcentaje, M:Monto 
+@nPorcDescuento decimal (18,2),
+@idMoneda varchar(5),
+@nMonto decimal (18,5),
+@estado varchar(1), -- A:Activo I:Inactivo
+@dFecIni datetime,
+@dFecFin datetime,
+@nLimiteUso int, -- 0: Infinito, si es mayor a 0 se controla (10)
+@nCantUso int, 
+@nSaldoUso int, 
+@nTodosUsusarios int, -- 0: Elegir Usuarios, 1: Todos los Usuarios (Check)
+@cTipoAplica varchar(1), -- T:Total, L:Por Línea
+@Modo int, -- 0: Inserta, 1: Actualiza
+@Usuario int,
+@todos_articulos varchar(1)
+as
+
+declare @nNro int
+declare @dFecha datetime = FORMAT(GetDate(), 'yyyy-MM-dd hh:mm:ss.000')
+declare @Mensaje varchar(250) = ''
+set @dFecIni = FORMAT(@dFecIni, 'yyyy-MM-dd hh:mm:ss.000')
+set @dFecFin = FORMAT(@dFecFin, 'yyyy-MM-dd hh:mm:ss.000')
+
+if @Modo = 0
+begin
+	-- Calcula el nro de la transación
+	select @nNro = max(id) from ERP_Descuentos
+	set @nNro = isnull(@nNro,0) + 1
+		
+	begin try
+		insert into ERP_Descuentos(id,descripcion,idTipo,nPorcDescuento,idMoneda,nMonto,estado,dFecIni,dFecFin,nLimiteUso,nCantUso,nSaldoUso,
+					nTodosUsusarios,cTipoAplica,user_created,user_updated,created_at,updated_at, todos_articulos) 
+		values(@nNro,@descripcion,@idTipo,@nPorcDescuento,@idMoneda,@nMonto,@estado,@dFecIni,@dFecFin,@nLimiteUso,@nCantUso,@nSaldoUso,
+					@nTodosUsusarios,@cTipoAplica,@Usuario,@Usuario,@dFecha,@dFecha, @todos_articulos)
+
+		set @Mensaje = @nNro
+
+	end try
+	begin catch
+		set @Mensaje = 'Error en el registro de información, comuníquese con el área de sistemas'
+	end catch
+end
+
+if @Modo = 1
+begin
+
+	declare @iEstado varchar(1)
+
+	select @iEstado = estado  from ERP_Descuentos
+	where id = @Id
+
+	declare @Val int
+	select @Val = count (nIdDscto) from (
+											select nIdDscto from ERP_OrdenServicio where iEstado <> 4 and nIdDscto = @Id
+											union all
+											select d.nIdDscto from ERP_OrdenServicioDetalle D 
+											inner join ERP_OrdenServicio O 
+											on O.iEstado <> 4 and d.cCodConsecutivo = o.cCodConsecutivo and d.nConsecutivo = o.nConsecutivo
+											where d.nIdDscto = @Id
+											union all
+											select nIdDscto from ERP_Proforma where iEstado <> 6 and nIdDscto = @Id
+											union all
+											select de.nIdDscto from ERP_ProformaDetalle De
+											inner join ERP_Proforma P 
+											on P.iEstado <> 4 and de.cCodConsecutivo = p.cCodConsecutivo and de.nConsecutivo = p.nConsecutivo
+											where de.nIdDscto = @Id
+											union all
+											select dem.nIdDscto from ERP_ProformaMO Dem
+											inner join ERP_Proforma P 
+											on P.iEstado <> 4 and dem.cCodConsecutivo = p.cCodConsecutivo and dem.nConsecutivo = p.nConsecutivo
+											where dem.nIdDscto = @Id) Val
+
+	set @val = isnull(@val,0)
+
+	if @iEstado <> 'A'  
+	begin    
+		set @Mensaje = 'Sólo se pueden modificar Descuentos en estado Activo'  
+	end                
+	else
+	begin
+		if @Val <> 0
+		begin
+			set @Mensaje = 'El Descuento ha sido utilizado y no se puede modificar'  
+		end
+		else
+		begin
+			update ERP_Descuentos
+			set descripcion = @descripcion,
+				idTipo = @idTipo,
+				nPorcDescuento = @nPorcDescuento,
+				idMoneda = @idMoneda,
+				nMonto = @nMonto,
+				estado = @estado,
+				dFecIni = @dFecIni,
+				dFecFin = @dFecFin,
+				nLimiteUso = @nLimiteUso,
+				--nCantUso = @nCantUso, No deben modificarse
+				--nSaldoUso = @nSaldoUso, No deben modificarse
+				nTodosUsusarios = @nTodosUsusarios,
+				cTipoAplica = @cTipoAplica,
+				user_updated = @Usuario,
+				updated_at = @dFecha,
+				todos_articulos = @todos_articulos
+			where id = @Id
+
+			--select @nCons as 'Nro'
+			set @Mensaje = @Id
+		end
+	end
+end 
+
+select @Mensaje as 'Mensaje'
+GO
+
+

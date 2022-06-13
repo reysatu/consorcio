@@ -96,11 +96,19 @@
                          p_stateUsuar.prop('checked', true).iCheck('update');
                      }
                      if(data[0].cTipoAplica=='L'){
-                         productos_select.prop("disabled",false);
+                        //  productos_select.prop("disabled",false);
                          p_stateAplica.prop('checked', false).iCheck('update');
                      }else{
                          p_stateAplica.prop('checked', true).iCheck('update');
                      }
+
+                     if(data[0].todos_articulos=='N'){
+                        productos_select.prop("disabled",false);
+                        $("#todos_articulos").prop('checked', false).iCheck('update');
+                    }else{
+                        $("#todos_articulos").prop('checked', true).iCheck('update');
+                    }
+
                      if(data[0].estado=='I'){
                          p_state.prop('checked', false).iCheck('update');
                      }else{
@@ -354,7 +362,7 @@
                     }
                
             };
-            if(!p_stateAplica.prop('checked')){
+            if(!p_stateAplica.prop('checked') && !$("#todos_articulos").prop('checked')){
                  if($("#table_articulo").html()==''){
                        AlertFactory.showWarning({
                             title: '',
@@ -442,6 +450,7 @@
                     'idUsuarioDeta': idUsuarioDeta,
                     'nTodosUsusarios':((p_stateUsuar.prop('checked')) ? '1' : '0'),
                     'cTipoAplica':((p_stateAplica.prop('checked')) ? 'T' : 'L'),                  
+                    'todos_articulos':(($("#todos_articulos").prop('checked')) ? 'S' : 'N'),                  
 
                  };
                 var id = (idDescuento.val() === '') ? 0 : idDescuento.val();
@@ -544,7 +553,9 @@
 
         }
 
-        $scope.chkState = function () {
+        $scope.chkState = function (e) {
+            
+           
             var txt_state2 = (p_state.prop('checked')) ? 'Activo' : 'Inactivo';
             state_text.html(txt_state2);
 
@@ -563,7 +574,23 @@
                
                 
             }
-            var checkProducto= (p_stateAplica.prop('checked')) ? '1' : '2';
+            
+            //comentado por manuel 11/06/2022
+            var stateAplica= (p_stateAplica.prop('checked')) ? '1' : '2';
+            
+
+            if(stateAplica == "1" ) {
+                $("#todos_articulos").prop('checked', false).iCheck('update');
+                $(".todos_articulos").hide();
+            }
+
+            if(stateAplica == "2") {
+                // $("#todos_articulos").prop('checked', true).iCheck('update');
+                $(".todos_articulos").show();
+            }
+           
+           
+            var checkProducto= ($("#todos_articulos").prop('checked')) ? '1' : '2';
             if(checkProducto=="1"){
                 productos_select.prop("disabled",true);
                 borrarProductos();
@@ -572,6 +599,7 @@
                
                
             }
+
 
         };
         function borrarUsuarios(){

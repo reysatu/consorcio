@@ -130,7 +130,7 @@ class DescuentoRepository implements DescuentoInterface
                 $nTodosUsusarios,
                 $cTipoAplica,
                 $Modo,
-                $Usuario){
+                $Usuario, $todos_articulos){
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaDescuento 
                 '$id',
@@ -148,7 +148,7 @@ class DescuentoRepository implements DescuentoInterface
                 '$nTodosUsusarios',
                 '$cTipoAplica',
                 '$Modo',
-                '$Usuario'");
+                '$Usuario', '$todos_articulos'");
          return $destroy;
     }
     public function get_consecutivo($table,$id)

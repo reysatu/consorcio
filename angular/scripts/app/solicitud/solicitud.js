@@ -2911,14 +2911,18 @@
             }
             var actu = hAnio + '-' + hmes + '-' + hdia;
 
+            var descuentos_agregados = [];
             idDescSele.append('<option value="" selected>Seleccionar</option>');
             _.each(DescuentosSele, function (item) {
+                // console.log(item);
                 // idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
 
                 var mo = idMoneda.val();
-                if (item.nIdProducto == idarticulo || item.cTipoAplica == 'T') {
-                    var por = Number(item.nPorcDescuento);
-                    var monto = Number(item.nMonto);
+                var por = Number(item.nPorcDescuento);
+                var monto = Number(item.nMonto);
+
+                if (item.cTipoAplica == 'T' && descuentos_agregados.indexOf(item.id) == -1) {
+                    
                     if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0) && item.cTipoAplica == 'L') {
                         if (item.dFecIni <= actu && item.dFecFin > actu) {
                             var valDes = item.id + '*' + por + '*' + monto;
@@ -2932,7 +2936,39 @@
 
                         }
                     }
+                } else {
+
+                    if(item.cTipoAplica == 'L' && descuentos_agregados.indexOf(item.id) == -1) {
+                        if(item.todos_articulos == "N") {
+                            
+                            if (item.nIdProducto == idarticulo ) {
+                                 
+                                if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0)) {
+                                    if (item.dFecIni <= actu && item.dFecFin > actu) {
+                                        var valDes = item.id + '*' + por + '*' + monto;
+                                       
+                                        idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+                                        // }
+
+
+                                    }
+                                }
+                            }
+                        } else {
+                            if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0)) {
+                                if (item.dFecIni <= actu && item.dFecFin > actu) {
+                                    var valDes = item.id + '*' + por + '*' + monto;
+                                    
+                                    idDescSele.append('<option nPorcDescuento="' + item.nPorcDescuento + '" nMonto="' + item.nMonto + '" idTipo="' + item.idTipo + '" value="' + item.id + '" >' + item.descripcion + '</option>');
+                                 
+
+                                }
+                            }
+                        }
+                    }
                 }
+
+                descuentos_agregados.push(item.id);
             });
         }
 

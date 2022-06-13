@@ -76,6 +76,8 @@ class DescuentoController extends Controller
             $idUsuarioDeta=$data['idUsuarioDeta'];
             $idUsuarioDeta=explode(',', $idUsuarioDeta);
 
+            $todos_articulos= strtoupper($data['todos_articulos']);
+
             $val=1;
             if($id==0){
                 $val=0;
@@ -98,7 +100,8 @@ class DescuentoController extends Controller
                 $nTodosUsusarios,
                 $cTipoAplica,
                 $modo,
-                $usuario
+                $usuario,
+                $todos_articulos
             );
             if(intval($res[0]->Mensaje)){
                 if($nTodosUsusarios=='0'){
@@ -113,7 +116,7 @@ class DescuentoController extends Controller
                 }
               
              
-             if($cTipoAplica=='L'){
+             if($cTipoAplica=='L' && $todos_articulos == "N"){
                     for ($i=0; $i < count($idProducto) ; $i++) {
                         $modo=1;
                         if($idProductoDeta[$i]=='0'){

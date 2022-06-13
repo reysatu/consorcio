@@ -1271,7 +1271,7 @@
                 hdia='0'+String(hdia);
             }
             var actu=hAnio+'-'+hmes+'-'+hdia;
-
+            var descuentos_agregados = [];
             selectDescuento.append('<option value="" selected>Seleccionar</option>');
               _.each(descuentos, function(item) {
 
@@ -1305,15 +1305,31 @@
                           
                         // }
                     }else{
-                         if(item.idMoneda==mo || item.nPorcDescuento!=0){
-                            if(item.nSaldoUso>0 || item.nLimiteUso==0){
-                                if(item.nIdProducto==codigo){
-                                  selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+
+                          // solo para el detalle
+                          if(item.cTipoAplica == 'L' && descuentos_agregados.indexOf(item.id) == -1) {
+                            if(item.todos_articulos == "N") { // cuando es no, valida por articulo
+                                
+                                if (item.nIdProducto == idarticulo ) {
+                                     
+                                    if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0)) {
+                                        
+                                        selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+
+                                    }
+                                }
+                            } else {
+                                if ((item.idMoneda == mo || item.nPorcDescuento != 0) && (item.nSaldoUso > 0 || item.nLimiteUso == 0)) {
+
+                                    selectDescuento.append('<option value="'+item.id+'*'+por+'*'+monto+'" >'+item.descripcion+'</option>');
+
                                 }
                             }
-                          
                         }
+
+                       
                     }
+                    descuentos_agregados.push(item.id);
 
                 }
 

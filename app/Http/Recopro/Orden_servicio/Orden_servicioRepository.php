@@ -179,7 +179,10 @@ where IdTipoDocumento in ('01','03')");
     }
      public function get_descuentos($usuario)
     {
-          $sql = "SELECT * FROM ERP_Descuentos as de  left join ERP_DescuentosUsuario as du on du.nIdDscto=de.id left JOIN ERP_DescuentosProducto as dp on de.id=dp.nIdDscto where  (du.nIdUsuario='$usuario' or nTodosUsusarios='1') and de.estado='A'";
+          $sql = "SELECT * FROM ERP_Descuentos as de  
+          left join ERP_DescuentosUsuario as du on du.nIdDscto=de.id 
+          left JOIN ERP_DescuentosProducto as dp on de.id=dp.nIdDscto 
+          where  (du.nIdUsuario='$usuario' or nTodosUsusarios='1') and de.estado='A'";
       //     echo $sql;
             $mostrar3=DB::select($sql);
             return $mostrar3;
