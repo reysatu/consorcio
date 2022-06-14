@@ -1956,7 +1956,7 @@ class MovimientoCajaController extends Controller
     }
 
 
-    public function imprimir_ticket_pago_cuota($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+    public function imprimir_ticket_pago_cuota($id, , SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
         $nConsecutivo = $array[1];

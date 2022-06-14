@@ -35,7 +35,7 @@ class Product extends Model
         'year_enter', 'cc_debe_id', 'cc_haber_id', 'retention_id', 'sale_blocked', 'serie', 'lote', 'kit', 'code_matrix',
         'price_service_reference', 'commission_sale', 'sale', 'sale_description', 'maker', 'image', 'matrix', 'code_article',
         'average_cost',
-        'user_created', 'user_updated', 'user_deleted','idModelo','idCategoria','idFamilia','idSubFamilia','idGrupoContableCabecera','impuesto','motor','chasis','anio_modelo','anio_fabricacion','idMarca','color','disponible_venta','costo','idCatVeh'];
+        'user_created', 'user_updated', 'user_deleted','idModelo','idCategoria','idFamilia','idSubFamilia','idGrupoContableCabecera','impuesto','motor','chasis','anio_modelo','anio_fabricacion','idMarca','color','disponible_venta','costo','idCatVeh', 'idcarroceria'];
 
  
 

@@ -444,6 +444,32 @@ class SolicitudController extends Controller
         // return $pdf->stream("credito_directo.pdf"); // ver
     }
 
+    public function imprimir_clausula_solicitud($id, SolicitudInterface $Repo, CajaDiariaDetalleInterface $repo_caja, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+       
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+
+        $datos = array();
+
+        $solicitud = $Repo->get_solicitud($cCodConsecutivo, $nConsecutivo);
+        $solicitud_credito = $Repo->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+        
+        $solicitud_articulo = $Repo->get_solicitud_articulo($cCodConsecutivo, $nConsecutivo);
+        
+        $datos["cliente"] = $cliente_repositorio->find($solicitud[0]->idcliente);
+     
+        $datos["solicitud_credito"] = $solicitud_credito; 
+
+        $datos["solicitud"] = $solicitud; 
+        $datos["solicitud_articulo"] = $solicitud_articulo; 
+        $datos["producto"] = $Repo->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        $datos["segunda_venta"] = $repo_caja->get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo); 
+
+        $pdf = PDF::loadView("solicitud.clausula_solicitud", $datos);
+        return $pdf->stream("clausula_solicitud.pdf"); // ver
+    }
+
     public function eliminar_solicitud(Request $request, SolicitudInterface $solicitud_repositorio) {
         $data = $request->all();
         

@@ -22,6 +22,10 @@ use App\Http\Recopro\Bancos\Bancos;
 use App\Http\Recopro\Bancos\BancosInterface;
 use App\Http\Recopro\Bancos\BancosRepository; 
 
+use App\Http\Recopro\Carroceria\Carroceria;
+use App\Http\Recopro\Carroceria\CarroceriaInterface;
+use App\Http\Recopro\Carroceria\CarroceriaRepository; 
+
 
 use App\Http\Recopro\Empresa\Empresa; 
 use App\Http\Recopro\Empresa\EmpresaInterface;
@@ -806,6 +810,7 @@ class AppServiceProvider extends ServiceProvider
         // Module Masters
         $this->registerBrand();
         $this->registerBancos();
+        $this->registerCarroceria();
         $this->registerFactorCredito();
         $this->registerTiposMovimiento();
         $this->registerGuiaRemision();
@@ -1112,6 +1117,15 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(BancosInterface::class, function ($app) {
             return new BancosRepository(new Bancos());
+        });
+    }
+
+    public function registerCarroceria()
+    {
+        $app = $this->app;
+
+        $app->bind(CarroceriaInterface::class, function ($app) {
+            return new CarroceriaRepository(new Carroceria());
         });
     }
 

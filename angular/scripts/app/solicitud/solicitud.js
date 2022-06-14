@@ -187,6 +187,7 @@
             modalSolicitud.modal('show');
             titlemodalSolicitud.html('Nueva Solicitud');
             $(".imprimir-solicitud").hide();
+            $(".imprimir-clausula-solicitud").hide();
             habilitar_inputs();
             $(".enviar_solicitud").hide();
             $(".aprobaciones").hide();
@@ -3282,6 +3283,7 @@
                            
                             $(".enviar_solicitud").show();
                             $(".imprimir-solicitud").show();
+                            $(".imprimir-clausula-solicitud").show();
 
                             if (data.datos[0].estado == "1" || data.datos[0].estado == "2") {
                                 $(".cancelar-solicitud").show();
@@ -3354,6 +3356,18 @@
             var id = cCodConsecutivo + "|" + nConsecutivo;
 
             window.open("solicitud/imprimir_solicitud/" + id);
+
+        }
+
+        $scope.imprimir_clausula_solicitud = function () {
+
+            var cCodConsecutivo = $("#cCodConsecutivo").val();
+            var nConsecutivo = $("#nConsecutivo").val();
+
+            var id = cCodConsecutivo + "|" + nConsecutivo;
+            // alert(id);
+
+            window.open("solicitud/imprimir_clausula_solicitud/" + id);
 
         }
 
@@ -3637,6 +3651,7 @@
                     $("#tipo_sol").val(data.solicitud[0].tipo);
                     $(".aprobaciones").show();
                     $(".imprimir-solicitud").show();
+                    $(".imprimir-clausula-solicitud").show();
                     $("#modalSolicitud").modal("show");
                 },
                 "json"

@@ -291,7 +291,7 @@ class SolicitudRepository implements SolicitudInterface
         CASE WHEN mo.descripcion IS NULL THEN '.' ELSE  mo.descripcion END AS modelo,
        
         s.nombreSerie AS serie, cv.idCatVeh,
-        s.motor, s.color, s.anio_fabricacion, p.description AS producto
+        s.motor, s.color, s.anio_fabricacion, p.description AS producto, crr.descripcion AS carroceria
 
         FROM ERP_SolicitudArticulo AS sa
         INNER JOIN ERP_Productos AS p ON(sa.idarticulo=p.id)
@@ -302,6 +302,7 @@ class SolicitudRepository implements SolicitudInterface
         
         INNER JOIN ERP_Categoria AS c ON(c.idCategoria=p.idCategoria)
         INNER JOIN ERP_CategoriaVeh AS cv ON(cv.idCatVeh=p.idCatVeh)
+        LEFT JOIN ERP_Carroceria AS crr ON(crr.idcarroceria=p.idcarroceria)
         WHERE sa.cCodConsecutivo='{$cCodConsecutivo}' AND sa.nConsecutivo={$nConsecutivo} AND p.idCategoria IN(1,2)";
         $result = DB::select($sql);
 

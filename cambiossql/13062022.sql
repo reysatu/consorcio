@@ -1,0 +1,1 @@
+ALTER TABLE [dbo].[ERP_Productos] ADD [idcarroceria] int NULL;

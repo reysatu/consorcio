@@ -103,6 +103,7 @@
         'sys.app.resetearContrasenias',
         'sys.app.reporteVentaClientes',
         'sys.app.resumenMensualActividads',
+        'sys.app.carroceria',
         // Compras
         'sys.app.requirements',
         'sys.app.requirements_contests',

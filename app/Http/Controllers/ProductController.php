@@ -25,6 +25,7 @@ use App\Http\Recopro\Family\FamilyInterface;
 use App\Http\Recopro\SubFamily\SubFamilyInterface;
 use App\Http\Recopro\HeadAccountan\HeadAccountanInterface;
 use App\Http\Recopro\Articulo_Kit\Articulo_KitInterface;
+use App\Http\Recopro\Carroceria\CarroceriaInterface;
 use App\Http\Recopro\Measure\MeasureInterface;
 use Carbon\Carbon;
 use DB;
@@ -66,6 +67,7 @@ class ProductController extends Controller
        
         try {
             $data = $request->all();
+            // print_r($data); exit;
             $data['code_article'] = strtoupper($data['code_article']);
             $data['code_matrix'] = strtoupper($data['code_matrix']);
             $data['color'] = strtoupper($data['color']);
@@ -76,6 +78,7 @@ class ProductController extends Controller
                 if ($w && $w->id != $id) {
                     throw new \Exception('Ya existe un Articulo con este código . Por favor ingrese otro código.');
                 }
+                // print_r($data);
                 $repo->update($id, $data);
                 $product = $repo->find($id);
                 $code = $product->code_article;
@@ -264,7 +267,7 @@ class ProductController extends Controller
         return response()->json(['Result' => 'OK']);
     }
  
-    public function data_form(TypeInterface $typeRepo,ModeloInterface $modeloRepo, CategoryInterface $categoriaRepo, BrandInterface $brandRepo, FamilyInterface $familyRepo,SubFamilyInterface $subfamilyRepo ,HeadAccountanInterface $headRepo,MeasureInterface $unidad,ProductInterface $repo)
+    public function data_form(TypeInterface $typeRepo,ModeloInterface $modeloRepo, CategoryInterface $categoriaRepo, BrandInterface $brandRepo, FamilyInterface $familyRepo,SubFamilyInterface $subfamilyRepo ,HeadAccountanInterface $headRepo,MeasureInterface $unidad,ProductInterface $repo, CarroceriaInterface $car_repo)
     {
         $modelo = parseSelectOnly($modeloRepo->allActive(), 'idModelo', 'descripcion');
         $categoria = parseSelectOnly($categoriaRepo->allActive(), 'idCategoria', 'descripcion');
@@ -275,6 +278,7 @@ class ProductController extends Controller
         $unidadMedida = parseSelectOnly($unidad->allActive(), 'IdUnidadMedida', 'Descripcion'); 
         $types = parseSelectOnly($typeRepo->all(), 'id', 'description'); 
         $cateVehicular=$repo->getCategoriaVehicular();
+        $carrocerias=$car_repo->getCarrocerias();
         return response()->json([ 
             'status' => true,
             'modelo' => $modelo,
@@ -286,6 +290,7 @@ class ProductController extends Controller
             'types' => $types,
             'unidadMedida'=>$unidadMedida,
             'cateVehicular'=>$cateVehicular,
+            'carrocerias'=>$carrocerias,
         ]);
     }
 

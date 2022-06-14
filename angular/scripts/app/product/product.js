@@ -84,6 +84,7 @@
         p_id_subfamilia.select2();
         p_id_grupocontable.select2();
         idCatVeh.select2();
+        $("#idcarroceria").select2();
         // btn_kit.prop('disabled',true) 
        
         
@@ -267,6 +268,7 @@
                     p_id_modelo.val(data_p.idModelo).trigger('change');
                     p_id_tipo.val(data_p.type_id).trigger('change');
                     idCatVeh.val(data_p.idCatVeh).trigger("change");
+                    $("#idcarroceria").val(data_p.idcarroceria).trigger("change");
                     p_id_grupocontable.val(data_p.idGrupoContableCabecera).trigger('change');                  
                     // p_retention_id.val(data_p.retention_id).trigger('change');
 
@@ -437,6 +439,7 @@
                     'idKit':kitid,
                     'um_id':p_id_unidad_medidad.val(),
                     'idCatVeh':idCatVeh.val(),
+                    'idcarroceria':$("#idcarroceria").val(),
                 };
              
                
@@ -481,6 +484,10 @@
                          idCatVeh.append('<option value="'+index.idCatVeh+'">'+index.idCatVeh+' '+index.descripcion+'</option>');
                       });
 
+                      $("#idcarroceria").append('<option value="" selected>Seleccionar</option>');
+                      response.carrocerias.map(function (index) {
+                        $("#idcarroceria").append('<option value="'+index.idcarroceria+'">'+index.descripcion+'</option>');
+                      });
 
                     //  p_id_modelo.append('<option value="" selected>Seleccionar</option>');
                     // _.each(response.modelo, function(item) {

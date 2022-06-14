@@ -32,6 +32,7 @@ Route::get('solicitud/data_form', ['as' => 'solicitud.data_form', 'uses' => 'Sol
 // Route::post('solicitud/getTiendas', 'ShopController@getTiendas');
 
 Route::get('solicitud/imprimir_solicitud/{id}', 'SolicitudController@imprimir_solicitud');
+Route::get('solicitud/imprimir_clausula_solicitud/{id}', 'SolicitudController@imprimir_clausula_solicitud');
 
 Route::get('solicitud/get_cliente/{id}', ['as' => 'solicitud.get_cliente', 'uses' => 'SolicitudController@get_cliente_documento']);
 
