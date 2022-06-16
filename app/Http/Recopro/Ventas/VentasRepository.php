@@ -229,15 +229,15 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
     }
 
     public function get_venta_separacion($idcliente) {
-        $sql = "SELECT v.* FROM ERP_Venta AS v
+        $sql = "SELECT v.*, ISNULL(v.devolucion_producto, '') AS devolucion_producto FROM ERP_Venta AS v
         INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
-        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND ISNULL(v.aplicado_separacion, 'N')<>'S'";
+        WHERE v.idcliente={$idcliente} AND vd.idarticulo=1862 AND ISNULL(v.aplicado_separacion, 'N')<>'S' AND v.IdTipoDocumento IN('01', '03')";
 
         return DB::select($sql);
     }
 
     public function get_venta_nota($idcliente) {
-        $sql = "SELECT v.* FROM ERP_Venta AS v
+        $sql = "SELECT v.*, ISNULL(v.devolucion_producto, '') AS devolucion_producto FROM ERP_Venta AS v
         INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
         WHERE v.idcliente={$idcliente} AND v.IdTipoDocumento='07' AND vd.idarticulo<>1859 AND ISNULL(v.aplicado_nota, 'N')<>'S'"; // QUE NO SEA DE UNA VENTA ANTICIPO LA NOTA DE CREDITO
     // die($sql);

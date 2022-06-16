@@ -120,6 +120,7 @@
                     for ($i=0; $i < count($direcciones); $i++) { 
                         echo $direcciones[$i]."<br>";
                     }
+                   
                ?>
             
                <br>
@@ -174,7 +175,7 @@
                 ?>
                 </td>
             </tr>
-            <?php if($venta[0]->IdTipoDocumento == "07") { ?>
+            <?php  if($venta[0]->IdTipoDocumento == "07") { ?>
                 <tr>
                     <td style="width: 20%;">Doc. Que Modifica: </td>
                     <td style="width: 55%;">{{ $venta_referencia[0]->tipo_documento }} {{ $venta_referencia[0]->serie_comprobante }}-{{ $venta_referencia[0]->numero_comprobante }}</td>
@@ -188,8 +189,7 @@
             <?php } ?>
         </table>
         
-
-      
+       
         <table style="width: 100%; font-size: 10px !important;" >
             <tr style="">
                 <td style="border-bottom: 1px solid black; border-right: 1px solid black; background: #adadad;">CANT.</td>
@@ -233,7 +233,7 @@
                     echo '</tr>';
 
                 }
-
+              
                 if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") && $venta[0]->comprobante_x_saldo == "S") {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
@@ -264,7 +264,7 @@
                     echo '</tr>';
                 }
 
-
+               
 
                 if($venta[0]->condicion_pago == "CONTADO" && !empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud) && count($producto) > 0) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
@@ -289,7 +289,7 @@
                     echo '  <td></td>';
                     echo '</tr>';
                 }
-
+              
                 if(count($venta_anticipo_separacion) > 0 && $venta[0]->tipo_comprobante == 1 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
                     $venta[0]->t_monto_subtotal = $venta[0]->t_monto_subtotal - $venta_anticipo_separacion[0]->t_monto_total;
                     echo '<tr>';
@@ -302,9 +302,11 @@
                    
                 }
 
-
+                // print_R(count($solicitud));
+              
                 // agregar campo comentario facturacion
-                $comentario_facturacion = (isset($solicitud[0]->comentario_facturacion)) ? $solicitud[0]->comentario_facturacion : "";
+                $comentario_facturacion = (count($solicitud) > 0 && isset($solicitud[0]->comentario_facturacion)) ? $solicitud[0]->comentario_facturacion : "";
+                
                 echo '<tr>';
                 echo '  <td></td>';
                 echo '  <td></td>';
@@ -321,6 +323,7 @@
         <br>
         <br>
        
+      
 
         <table style="width: 100%;">               
             <?php 
@@ -389,11 +392,14 @@
         <br>
         <br>
         <br>
-        <?php if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03" && count($solicitud) > 0) { ?>
+        <?php if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03" && count($solicitud) > 0) { 
+            $vendedor = (count($solicitud) > 0 && isset($solicitud[0]->vendedor)) ? $solicitud[0]->vendedor : "";
+            
+            ?>
         <table style="width: 100%;">
             <tr>
                 <td style="width: 20%;">Vendedor:</td>
-                <td style="width: 80%;">{{ $solicitud[0]->vendedor }}</td>
+                <td style="width: 80%;">{{ $vendedor }}</td>
                
             </tr>
         </table>

@@ -55,6 +55,8 @@ class MovimientoCajaController extends Controller
     {
         DB::beginTransaction();
         try {
+          
+            $idventa_ticket = "";
             $data = $request->all();
             $dataCaja = $recaj->find($id);
             $datoDet = [];
@@ -172,6 +174,62 @@ class MovimientoCajaController extends Controller
                 
                 $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
                 $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
+
+                // GUARDAR TAMBIEN UN TICKET
+                $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
+                if(count($ticket) <= 0) {
+                    throw new Exception("Cree una serie y consecutivo de ticket");
+                }
+                // return $ticket;
+                $serie_ticket = $ticket[0]->serie;
+                $consecutivo_ticket = $ticket[0]->actual;
+
+
+                $data_ticket = array();
+               
+                $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_ticket["serie_comprobante"] =  $serie_ticket;
+                $data_ticket["numero_comprobante"] = $consecutivo_ticket;
+                $data_ticket["condicion_pago"] = 1;
+                $data_ticket["fecha_emision"] = date("Y-m-d H:i:s");
+                $data_ticket["idcliente"] = $data["idcliente"];
+                $data_ticket["tipo_comprobante"] = "1"; // anticipo
+                $data_ticket["IdTipoDocumento"] = 12;
+                $data_ticket["t_monto_subtotal"] = $data["montoAdd"];
+                $data_ticket["t_monto_total"] = $data["montoAdd"];
+                $data_ticket["saldo"] = "0";
+                $data_ticket["pagado"] = $data["montoAdd"];
+                $data_ticket["idmoneda"] = $data['idMonedaAdd'];
+                $data_ticket["idcajero"] = auth()->id();
+                $data_ticket["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
+                $data_ticket["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+    
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
+    
+               
+                $data_ticket_detalle = array();
+                $data_ticket_detalle["idventa"] = $data_ticket["idventa"];
+                $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                $data_ticket_detalle["idarticulo"] = $parametro_separacion[0]->value;
+                $data_ticket_detalle["um_id"] = "07"; //codigo unidad
+                $data_ticket_detalle["cantidad"] = 1;
+                $data_ticket_detalle["precio_unitario"] = $data["montoAdd"];
+            
+                $data_ticket_detalle["precio_total"] = $data["montoAdd"];
+            
+                $data_ticket_detalle["monto_subtotal"] = $data["montoAdd"];
+        
+                $data_ticket_detalle["monto_total"] = $data["montoAdd"];
+        
+                
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
+                  
+                
+            
+                $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
+                $idventa_ticket = $data_ticket["idventa"];
+
+
             } else {
                 // PARA LOS TICKET DE MOVIMIENTOS DE CAJA
                 $parametro_articulo_movimiento_caja = $repo->get_parametro_articulo_movimiento_caja();
@@ -237,6 +295,7 @@ class MovimientoCajaController extends Controller
                 'status' => true,
                 "idventa" => $data_venta["idventa"],
                 "tipoMovimientoAdd" => $data["tipoMovimientoAdd"],
+                "idventa_ticket" => $idventa_ticket,
                
             ]);
 
@@ -1956,7 +2015,7 @@ class MovimientoCajaController extends Controller
     }
 
 
-    public function imprimir_ticket_pago_cuota($id, , SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+    public function imprimir_ticket_pago_cuota($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
         $nConsecutivo = $array[1];

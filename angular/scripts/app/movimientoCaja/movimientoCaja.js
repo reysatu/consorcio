@@ -897,12 +897,17 @@ table_container_bancos.jtable('load');
                         getDataFormMovementCaja();
                         $('#table_container_movimientoCaja').jtable('reload');
                         LoadRecordsButtonComprobantes.click();
-
+                        // alert(response.idventa+" "+response.tipoMovimientoAdd);
                         if(response.idventa != "") {
                             var id = "0|0|" + response.idventa;
 
                             if(response.tipoMovimientoAdd == "SEP") {
                                 window.open("movimientoCajas/imprimir_comprobante/" + id);
+
+
+                                id =  "0|0|" + response.idventa_ticket;
+                                // alert(id);   
+                                window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
                             } else {
                                 
                                 window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
@@ -2053,22 +2058,58 @@ table_container_bancos.jtable('load');
                 "json"
             );
         });
+        $(document).on("change", "#idventa", function (event) {
+            var idventa = $(this).val();
+            var tipo = $(this).attr("tipo");
+            var monto_venta = parseFloat($(this).find("option[value="+idventa+"]").attr("t_monto_total"));
+            var devolucion_producto = $(this).find("option[value="+idventa+"]").attr("devolucion_producto");
+          
+           
+          
+            if(tipo == "separacion") {
+              
+                $("#idventa_separacion").val(idventa);
+                $("#devolucion_producto").val(devolucion_producto);
+                $("#idventa_nota").val("");
+                $("#monto_p").val(monto_venta.toFixed(2));
+                $("#monto_aplicar").val(monto_venta.toFixed(2));
+            }
+
+            if(tipo == "nota_credito") {
+                $("#idventa_nota").val(idventa);
+                $("#devolucion_producto").val(devolucion_producto);
+                $("#idventa_separacion").val("");
+                
+                $("#monto_p").val(monto_venta.toFixed(2));
+                $("#monto_aplicar").val(monto_venta.toFixed(2));
+            }
+
+        });
 
         $(document).on("change", "#forma_pago", function (event) {
             // console.log(IdTipoDocumento, serie_comprobante);
             var forma_pago = $(this).val();
             var idcliente = cliente_id_or.val();
+            $(".venta").hide();
+            $("#idventa").html("");
+            $("#idventa").removeAttr("tipo");
+
             if(forma_pago == "SEP") {
                 $.post("ventas/get_venta_separacion", { idcliente: idcliente },
                     function (data, textStatus, jqXHR) {
                         // console.log(data);
                         if(data.length > 0) {
-                            var monto_venta = parseFloat(data[0].t_monto_total);
-                            $("#idventa_separacion").val(data[0].idventa);
-                            $("#devolucion_producto").val(data[0].devolucion_producto);
-                            $("#idventa_nota").val("");
-                            $("#monto_p").val(monto_venta.toFixed(2));
-                            $("#monto_aplicar").val(monto_venta.toFixed(2));
+                            $(".venta").show();
+                            $("#idventa").attr("tipo", "separacion");
+                            var html = '<option value="">Seleccione</option>';
+
+                            for (var index = 0; index < data.length; index++) {
+                                html += '<option t_monto_total="'+data[index].t_monto_total+'" devolucion_producto="'+data[index].devolucion_producto+'" value="'+data[index].idventa+'">'+data[index].serie_comprobante+'-'+data[index].numero_comprobante+'</option>';
+                                
+                            }
+                            $("#idventa").html(html);
+
+                          
                            
 
                         } else {
@@ -2089,6 +2130,16 @@ table_container_bancos.jtable('load');
                         function (data, textStatus, jqXHR) {
                             // console.log(data);
                             if(data.length > 0) {
+                                $(".venta").show();
+                                $("#idventa").attr("tipo", "nota_credito");
+                                var html = '<option value="">Seleccione</option>';
+
+                                for (var index = 0; index < data.length; index++) {
+                                    html += '<option t_monto_total="'+data[index].t_monto_total+'" devolucion_producto="'+data[index].devolucion_producto+'" value="'+data[index].idventa+'">'+data[index].serie_comprobante+'-'+data[index].numero_comprobante+'</option>';
+                                    
+                                }
+                                $("#idventa").html(html);
+
                                 var monto_venta = parseFloat(data[0].t_monto_total);
                                 $("#idventa_nota").val(data[0].idventa);
                                 $("#devolucion_producto").val(data[0].devolucion_producto);
