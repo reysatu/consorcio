@@ -190,6 +190,7 @@ N -> solo se listara el descuento si el articulo esta asignado en el detalle del
 
 
 
+
 /****** Object:  StoredProcedure [dbo].[ST_ActualizaDescuento]    Script Date: 12/06/2022 09:30:45 a.m. ******/
 SET ANSI_NULLS ON
 GO
