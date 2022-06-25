@@ -141,14 +141,45 @@
         //     var id=departamento.val();
         //     getProvincia(bandera,id);
         // });
+        $("#btn_editar_articulo").click(function(e){
 
+            if($("#placa").val()==''){
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Debe seleccionar un producto',
+                    type: 'info'
+                });
+
+                return false;
+            }
+
+            $.post("orden_servicios/update_articulo", $("#form-articulo").serialize(),
+                function (data, textStatus, jqXHR) {
+                    if(data.status == "m"){
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'error'
+                        });
+                    }
+                },
+                "json"
+            );
+        })
+        
         btn_editar_cliente.click(function(e){
             if(cliente_id_or.val()==''){
                  AlertFactory.textType({
-                                    title: '',
-                                    message: 'Debe seleccionar un cliente',
-                                    type: 'info'
-                                });
+                    title: '',
+                    message: 'Debe seleccionar un cliente',
+                    type: 'info'
+                });
             }else{
                titleModalClientes.html('Editar Cliente');
                var id=cliente_id_or.val(); 
@@ -252,6 +283,47 @@
                 });
         }
         totalDescuento.select2();
+        $("#idmarca").select2();
+        $("#idmodelo").select2();
+
+        $("#idmarca").change(function () {
+            var bandera='xxxxxx';
+            var id=$("#idmarca").val();
+            if(id !=""){
+                getModelo(bandera,id);
+                 
+            }
+           
+           
+        });
+
+        function getModelo(bandera,id){
+            RESTService.get('articles/TraerModelos', id, function(response) {
+                 if (!_.isUndefined(response.status) && response.status) {
+                     var data_p = response.data;
+                     $("#idmodelo").html('');
+                      $("#idmodelo").append('<option value="" selected>Seleccione</option>');
+                     _.each(response.data, function(item) {
+                       
+                        if(item.idModelo==bandera){
+                        
+                             $("#idmodelo").append('<option value="'+item.idModelo+'" selected >'+item.descripcion+'</option>');
+                        }else{
+                             $("#idmodelo").append('<option value="'+item.idModelo+'" >'+item.descripcion+'</option>');
+                        };
+            
+                    });
+
+                 }else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Modelo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
+
+               });
+        }
       
         // totalDescuento.change(function () {
           
@@ -724,7 +796,8 @@
             RESTService.get('orden_servicios/get_Placa', id, function(response) {
                  if (!_.isUndefined(response.status) && response.status) {
                     var datos=response.data;
-                 
+                    
+
                     idMarca_add.html("");
                     idMarca_add.append('<option value="" selected>Seleccionar</option>');
                      _.each(response.marca, function(item) {
@@ -741,7 +814,17 @@
                         color.val("");
                         motor.val("");
                         tipo_vehi.val("");
+                        $("#tipo_articulo").val("");
+                        $("#idmarca").val("").trigger("change");
+                        $("#idmodelo").val("").trigger("change");
+                        $("#id_").val("");
+                        $("#idproducto").val("");
                      }else{
+                        $("#idmarca").val(datos[0].idMarca).trigger('change');
+                        getModelo(datos[0].idModelo,datos[0].idMarca);
+                        $("#tipo_articulo").val(datos[0].tipo);
+                        $("#id_").val(datos[0].id);
+                        $("#idproducto").val(datos[0].idproducto);
                         placa.val(datos[0].placa);
                         marca.val(datos[0].marca);
                         modelo.val(datos[0].modelo);
@@ -3039,11 +3122,19 @@ function getDatosCliente(){
         function getDataForOrdenServicio () {
             RESTService.all('orden_servicios/data_form', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                   
+                    
                      descuentos=response.descuentos;
                      redondeo=response.dataredondeo
                      console.log("redondeo");
                      console.log(redondeo);
+
+                    $("#idmarca").append('<option value="" selected>Seleccionar</option>');
+                    _.each(response.marca, function(item) {
+                        $("#idmarca").append('<option value="'+item.Value+'">'+item.DisplayText+'</option>');
+                    });
+
+                    
+
                     var hoy = new Date();
                     var hAnio=hoy.getFullYear();
                     var hmes=hoy.getMonth()+1;

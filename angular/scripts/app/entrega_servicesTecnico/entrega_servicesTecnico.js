@@ -2362,7 +2362,17 @@
             titlemodalMovimieto.html('Nueva Entrega');
             modalMovimieto.modal('show');
             var verProforma='CR';
-            cargar_proformas(verProforma);
+            RESTService.all('entrega_servicesTecnicos/data_formProf', '', function(response) {
+                if (!_.isUndefined(response.status) && response.status) {
+
+                    proformas_completas=response.proformas_entrega;
+                    cargar_proformas(verProforma);
+                    
+                } 
+            }, function() {
+               
+            });
+          
             cargar_notas()
         }
          $(document).on("change", "#idventa", function () {

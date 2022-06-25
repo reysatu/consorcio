@@ -1,3 +1,13 @@
+
+<style>
+    .mensajeCaja {
+        color: red;
+        cursor: pointer;
+    }
+    .negrita {
+        font-weight: bold;
+    }
+</style>
 <div class="panel panel-danger-admin">
     <div class="panel-heading">
         Gestión de Apertura de Caja
@@ -26,19 +36,19 @@
                                     <input type="hidden" id="idCajaDiaria" > 
                                     <input type="hidden" id="consecutivo" >
                                     <div class="form-group">
-                                        <label class="col-sm-1 control-label">Fecha</label>
+                                        <label class="col-sm-1 control-label negrita">Fecha</label>
                                         <div class="col-sm-2">
                                            <input type="date" class="form-control input-sm" id="fechaCaja">
                                         </div>
-                                        <label class="col-sm-1 control-label">Caja</label>
+                                        <label class="col-sm-1 control-label negrita">Caja</label>
                                         <div class="col-sm-2">
                                              <select id="idCaja"  style="width: 100%;" class="form-control input-sm" ></select>
                                         </div>
-                                        <label class="col-sm-1 control-label">Usuario</label>
+                                        <label class="col-sm-1 control-label negrita">Usuario</label>
                                         <div class="col-sm-2">
                                            <select id="idUsuario" style="width: 100%;" class="form-control input-sm" disabled></select>
                                         </div>
-                                        <label class="col-sm-1 control-label">Estado</label>
+                                        <label class="col-sm-1 control-label negrita">Estado</label>
                                         <div class="col-sm-2">
                                              <select id="estado" class="form-control input-sm" disabled>
                                                  <option value=""></option>
@@ -57,21 +67,21 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Total Efectivo</label>
+                                                <label class="col-sm-3 control-label negrita">Total Efectivo</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalEfectivo" value="0" disabled >
                                                 </div>
-                                                <label class="col-sm-3 control-label">Total Egreso</label>
+                                                <label class="col-sm-3 control-label negrita">Total Egreso</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalEgresos" value="0"  disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Total Otros Ingresos</label>
+                                                <label class="col-sm-3 control-label negrita">Total Otros Ingresos</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalOtrosIngresos" value="0"  disabled>
                                                 </div>
-                                                <label class="col-sm-3 control-label">No Efectivo</label>
+                                                <label class="col-sm-3 control-label negrita">No Efectivo</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalNoEfectivo" value="0"  disabled>
                                                 </div>
@@ -85,21 +95,21 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Total Efectivo</label>
+                                                <label class="col-sm-3 control-label negrita">Total Efectivo</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalEfectivoDol" value="0"  disabled >
                                                 </div>
-                                                <label class="col-sm-3 control-label">Total Egreso</label>
+                                                <label class="col-sm-3 control-label negrita">Total Egreso</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalEgresosDol" value="0" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Total Otros Ingresos</label>
+                                                <label class="col-sm-3 control-label negrita">Total Otros Ingresos</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalOtrosIngresosDol" value="0"  disabled>
                                                 </div>
-                                                <label class="col-sm-3 control-label">No Efectivo</label>
+                                                <label class="col-sm-3 control-label negrita">No Efectivo</label>
                                                 <div class="col-sm-3">
                                                    <input type="text" class="form-control input-sm" id="totalNoEfectivoDol" value="0"  disabled>
                                                 </div>
@@ -113,7 +123,7 @@
                                               <button type="button" id="btn_cierra" class="btn btn-primary btn-sm">Cierre Caja</button>
                                             </div>
                                         </div>
-                                        <label class="col-sm-1 col-md-offset-5 control-label">Reportes</label>
+                                        <label class="col-sm-1 col-md-offset-5 control-label negrita">Reportes</label>
                                         <div class="col-sm-2">
                                             <select id="estadReporte" class="form-control input-sm" >
                                                 <option value="">Seleccionar</option>
@@ -149,7 +159,7 @@
                                                 </table>
                                             </div>
                                             <div class="form-group">
-                                               <label class="col-sm-8 control-label">Total</label>
+                                               <label class="col-sm-8 control-label negrita">Total</label>
                                                 <div class="col-sm-4">
                                                    <input type="text" class="form-control input-sm" id="totalSoles" disabled>
                                                 </div>
@@ -175,7 +185,7 @@
                                                 </table>
                                             </div>
                                             <div class="form-group">
-                                               <label class="col-sm-8 control-label">Total</label>
+                                               <label class="col-sm-8 control-label negrita">Total</label>
                                                 <div class="col-sm-4">
                                                    <input type="text" class="form-control input-sm" id="totalDolares" disabled>
                                                 </div>

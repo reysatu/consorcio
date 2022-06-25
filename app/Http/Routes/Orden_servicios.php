@@ -57,3 +57,6 @@ Route::get('orden_servicios/data_formCliOrden', ['as' => 'orden_servicios.data_f
 Route::get('orden_servicios/get_cliente_persona/{id}', ['as' => 'orden_servicios.get_cliente_persona', 'uses' => 'Orden_servicioController@get_cliente_persona']);
 
 Route::get('orden_servicios/traerSectorOrd/{id}', ['as' => 'orden_servicios.traerSectorOrd', 'uses' => 'UbigeoController@traerSectorli']);
+
+
+Route::post('orden_servicios/update_articulo', ['as' => 'orden_servicios.update_articulo', 'uses' => 'Orden_servicioController@update_articulo']);

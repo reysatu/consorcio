@@ -6,14 +6,17 @@
  * Time: 6:59 PM
  */
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;
 
+use App\Http\Recopro\Brand\BrandInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioTrait;
 use Illuminate\Http\Request;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Requests\Orden_servicioRequest;
 
 use App\Http\Recopro\Customer\CustomerInterface;
+use App\Http\Recopro\Modelo\ModeloInterface;
+use App\Models\BaseModel;
 use DB;
 class Orden_servicioController extends Controller
 {
@@ -21,6 +24,7 @@ class Orden_servicioController extends Controller
 
     public function __construct()
     {
+        $this->base_model = new BaseModel();
 //        $this->middleware('json');
     } 
      public function pdf(Request $request, Orden_servicioInterface $repo)
@@ -337,7 +341,7 @@ class Orden_servicioController extends Controller
     {
         return parseSelect($repo->all(), 'id', 'razonsocial_cliente');
     }
-     public function data_form (Orden_servicioInterface $Repo)
+     public function data_form (Orden_servicioInterface $Repo, ModeloInterface $modeloRepo, BrandInterface $brandRepo)
     {
         
         $codigo = $Repo->getcodigo();
@@ -357,6 +361,8 @@ class Orden_servicioController extends Controller
         $usuario=auth()->id();
         $descuentos=$Repo->get_descuentos($usuario);
         $dataredondeo=$Repo->get_redondeo();
+        $modelo = parseSelectOnly($modeloRepo->allActive(), 'idModelo', 'descripcion');
+        $marca = parseSelectOnly($brandRepo->all(), 'id', 'description');
         // print_r($dataredondeo); exit;
         return response()->json([
             'status' => true,
@@ -377,6 +383,8 @@ class Orden_servicioController extends Controller
             'tipo_document_venta'=>$tipo_document_venta,
             'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
             'usuario'=>$usuario,
+            'modelo'=>$modelo,
+            'marca'=>$marca,
         ]);
     }
 
@@ -529,5 +537,60 @@ class Orden_servicioController extends Controller
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    public function update_articulo(Request $request) {
+        $data = $request->all();
+        $result = array();
+        // print_r($data);
+
+        try {
+
+            DB::beginTransaction();
+
+            if($data["tipo_articulo"] == "terceros") {
+                $update = array();
+                $update["id"] = $data["id_"];
+                $update["placa"] = $data["placa"];
+                $update["idModelo"] = $data["idmodelo"];
+                $update["idMarca"] = $data["idmarca"];
+                $update["n_chasis"] = $data["chasis"];
+                $update["anio_fabricacion"] = $data["anio_fabricacion"];
+                $update["color"] = $data["color"];
+                $update["motor"] = $data["motor"];
+                $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_VehTerceros", $update));
+                
+            }
+
+            
+            if($data["tipo_articulo"] == "series") {
+                $update_serie = array();
+                $update_serie["idSerie"] = $data["id_"];
+                $update_serie["placa"] = $data["placa"];
+               
+                $update_serie["chasis"] = $data["chasis"];
+                $update_serie["anio_fabricacion"] = $data["anio_fabricacion"];
+                $update_serie["color"] = $data["color"];
+                $update_serie["motor"] = $data["motor"];
+                $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Serie", $update_serie));
+
+                $update_producto = array();
+                $update_producto["id"] = $data["idproducto"];
+    
+                $update_producto["idModelo"] = $data["idmodelo"];
+                $update_producto["idMarca"] = $data["idmarca"];
+              
+                $this->base_model->modificar($this->preparar_datos("dbo.ERP_Productos", $update_producto));
+            }
+
+            DB::commit();
+            return response()->json($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ei"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }
+
     }
 }

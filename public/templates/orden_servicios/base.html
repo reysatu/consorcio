@@ -316,47 +316,69 @@ h5.linea span {
                                     <h5 class="linea"><span>Vehículo</span></h5>
                                     <div class="form-horizontal">
                                         <br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="col-sm-1 control-label">Placa</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="placa" class="form-control input-sm"  />
+                                        <form id="form-articulo">
+                                            <input type="hidden" name="tipo_articulo" id="tipo_articulo">
+                                            <input type="hidden" name="id_" id="id_">
+                                            <input type="hidden" name="idproducto" id="idproducto">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-1 control-label">Placa</label>
+                                                        <div class="col-sm-2">
+                                                           <input id="placa" name="placa" class="form-control input-sm"  />
+                                                        </div>
+                                                        <label class="col-sm-1 control-label">Kilometraje</label>
+                                                        <div class="col-sm-2">
+                                                            <input type="number" id="nKilometraje" name="nKilometraje"
+                                                                      class="form-control input-sm" min="1" />
+                                                        </div>
+                                                        <label class="col-sm-1 control-label">Marca</label>
+                                                        <div class="col-sm-2">
+                                                            <select style="width:100%;" id="idmarca" name="idmarca" class="form-control input-sm"></select>
+                                                           <!-- <input id="marca" class="form-control input-sm" disabled/> -->
+                                                        </div>
+                                                         <label class="col-sm-1 control-label">Modelo</label>
+                                                        <div class="col-sm-2">
+                                                            <select style="width:100%;" id="idmodelo" name="idmodelo" class="form-control input-sm"></select>
+                                                           <!-- <input id="modelo" class="form-control input-sm" disabled /> -->
+                                                        </div>
+                                                    </div>    
+                                                    <div class="form-group">
+                                                        <label class="col-sm-1 control-label">Chasis</label>
+                                                        <div class="col-sm-2">
+                                                           <!-- <input id="chasis" class="form-control input-sm" disabled/> -->
+                                                           <input id="chasis" name="chasis" class="form-control input-sm" />
+                                                        </div>
+                                                        <label class="col-sm-1 control-label">Año de fabricación</label>
+                                                        <div class="col-sm-2">
+                                                           <!-- <input id="anio_fabricacion" class="form-control input-sm" disabled/> -->
+                                                           <input id="anio_fabricacion" name="anio_fabricacion" class="form-control input-sm" />
+                                                        </div>
+                                                        <label class="col-sm-1 control-label">Color</label>
+                                                        <div class="col-sm-2">
+                                                           <!-- <input id="color" class="form-control input-sm" disabled /> -->
+                                                           <input id="color" name="color" class="form-control input-sm" />
+                                                        </div>
+                                                        <label class="col-sm-1 control-label">Motor</label>
+                                                        <div class="col-sm-2">
+                                                           <!-- <input id="motor" class="form-control input-sm" disabled /> -->
+                                                           <input id="motor" name="motor" class="form-control input-sm" />
+                                                        </div>
+                                                        
                                                     </div>
-                                                    <label class="col-sm-1 control-label">Kilometraje</label>
-                                                    <div class="col-sm-2">
-                                                        <input type="number" id="nKilometraje" 
-                                                                  class="form-control input-sm" min="1" />
-                                                    </div>
-                                                    <label class="col-sm-1 control-label">Marca</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="marca" class="form-control input-sm" disabled/>
-                                                    </div>
-                                                     <label class="col-sm-1 control-label">Modelo</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="modelo" class="form-control input-sm" disabled />
-                                                    </div>
-                                                </div>    
-                                                <div class="form-group">
-                                                    <label class="col-sm-1 control-label">Chasis</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="chasis" class="form-control input-sm" disabled/>
-                                                    </div>
-                                                    <label class="col-sm-1 control-label">Año de fabricación</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="anio_fabricacion" class="form-control input-sm" disabled/>
-                                                    </div>
-                                                    <label class="col-sm-1 control-label">Color</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="color" class="form-control input-sm" disabled />
-                                                    </div>
-                                                    <label class="col-sm-1 control-label">Motor</label>
-                                                    <div class="col-sm-2">
-                                                       <input id="motor" class="form-control input-sm" disabled />
+                                                    <div class="form-group">
+                                                       
+                                                        <label  class="col-sm-10 control-label"></label>
+                                                        <div class="col-sm-2">
+                                                             <button type="button" id="btn_editar_articulo" class="btn btn-danger-admin btn-sm ">
+                                                                  <span class="fa fa-save"></span>
+                                                                  Editar Articulo
+                                                              </button>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
                                     <h5 class="linea"><span>Mantenimientos</span></h5>
                                     <div class="form-horizontal">
@@ -726,7 +748,8 @@ h5.linea span {
                                 <input type="text" onkeypress="return soloNumeros(event)"  maxlength="4" class="form-control input-sm " id="anio_fabricacion_add">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <di
+                        v class="form-group">
                             <input type="hidden" class="form-control input-sm " id="tienda_id" >
                             <label class="col-sm-2 control-label">Color</label>
                             <div class="col-sm-4">
@@ -783,3 +806,4 @@ h5.linea span {
     </div>
   </div>
 </div>
+

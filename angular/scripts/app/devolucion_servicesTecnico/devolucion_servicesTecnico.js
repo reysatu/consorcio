@@ -2637,7 +2637,15 @@
             titlemodalMovimieto.html('Nueva Devolución');
             modalMovimieto.modal('show');
             var verProforma = 'CR';
-            cargar_proformas(verProforma);
+            RESTService.all('devolucion_servicesTecnicos/data_formProfor', '', function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    proformas_completas = response.proformas_entrega;
+                    cargar_proformas(verProforma);
+                }
+            }, function () {
+               
+            });
+          
 
             cargar_notas();
 
