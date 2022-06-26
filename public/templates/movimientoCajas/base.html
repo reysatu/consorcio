@@ -526,6 +526,8 @@
                                         <option value="EGR">EGRESO</option>
                                         <option value="BCO">DEPOSITO EN BANCO</option>
                                         <option value="SEP">SEPARACIÓN</option>
+                                        <option value="TPL">TAMITES DE PLACAS</option>
+                                        <option value="ALQ">ALQUILERES</option>
                                     </select>
                                 </div>
                                 <label class="col-sm-2 control-label negrita">Forma de pago</label>
@@ -550,6 +552,15 @@
 
                             </div>
                             <div class="form-group separacion" style="display: none;">
+                                <label class="col-sm-4 control-label negrita">Emitir Comprobante</label>
+                                <div class="col-sm-2">
+                                    <label class="checkbox-inline i-checks">
+                                        <input type="checkbox" id="emitir_comprobante" checked value="S">
+                                        <span id="text_emitir_comprobante">SI</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group separacion datos-comprobante" style="display: none;">
                                 <label class="col-sm-2 control-label negrita"> Tipo Doc.</label>
                                 <div class="col-sm-4">
                                     <select id="tipo_doc_venta" name="tipo_doc_venta"
@@ -610,6 +621,8 @@
                                     <input type="text" class="form-control input-sm" id="conceptoAdd">
                                 </div>
                             </div>
+                           
+                           
                             <br>
                         </div>
                     </div>

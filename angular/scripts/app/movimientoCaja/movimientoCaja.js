@@ -333,6 +333,23 @@ table_container_bancos.jtable('load');
                }
         });
 
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green'
+        }).on('ifChanged', function (event) {
+            $(event.target).click();
+            if(event.target.value == 'S'){
+                $("#emitir_comprobante").val("N");
+                $(".i-checks span").text("NO");
+                $(".datos-comprobante").hide();
+
+            }else{
+                $(".datos-comprobante").show();
+                $("#emitir_comprobante").val("S");
+                $(".i-checks span").text("SI");
+            };
+            
+        });
+
         tipoMovimientoAdd.change(function (e) {
             $(".separacion").hide();
             if (tipoMovimientoAdd.val() == 'BCO') {
@@ -348,8 +365,8 @@ table_container_bancos.jtable('load');
                 cuentaBancaria.val("");
             }
 
-            if (tipoMovimientoAdd.val() == 'SEP') {
-            
+            if (tipoMovimientoAdd.val() == 'SEP' || tipoMovimientoAdd.val() == 'TPL' || tipoMovimientoAdd.val() == 'ALQ') {
+                $('#emitir_comprobante').iCheck('check');
                 $(".separacion").show();
             }
 
@@ -844,6 +861,8 @@ table_container_bancos.jtable('load');
             modalAperturaCaja.modal('show');
         }
         $scope.saveAddMovimientoCaja = function () {
+            var emitir_comprobante = (($("#emitir_comprobante").prop('checked')) ? 'S' : 'N');
+
             var bval = true;
             bval = bval && tipoMovimientoAdd.required();
             bval = bval && idMonedaAdd.required();
@@ -858,7 +877,7 @@ table_container_bancos.jtable('load');
                 bval = bval && conceptoAdd.required();
             }
 
-            if (tipoMovimientoAdd.val() == 'SEP') {
+            if (tipoMovimientoAdd.val() == 'SEP' && emitir_comprobante == "S") {
                 bval = bval && $("#documento_cliente").required();
                 bval = bval && $("#tipo_doc_venta").required();
                 bval = bval && $("#serie_comprobante_m").required();
@@ -866,6 +885,7 @@ table_container_bancos.jtable('load');
             if (bval) {
                 var to = cuentaBancaria.val();
                 var toCuenta = to.split('*');
+              
                 var params = {
                     'tipoMovimientoAdd': tipoMovimientoAdd.val(),
                     'idMonedaAdd': idMonedaAdd.val(),
@@ -882,9 +902,14 @@ table_container_bancos.jtable('load');
                     'numero_comprobante': $("#numero_comprobante_m").val(),
                     'IdTipoDocumento': $("#tipo_doc_venta").val(),
                     'idcliente': $("#idcliente_m").val(),
+                    'emitir_comprobante': $("#emitir_comprobante").val(),
 
 
                 };
+                
+                // alert(emitir_comprobante);
+                // return false;
+
                 var id = idcajaMC.val();
                 RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {
                     if (!_.isUndefined(response.status) && response.status) {
@@ -898,20 +923,25 @@ table_container_bancos.jtable('load');
                         $('#table_container_movimientoCaja').jtable('reload');
                         LoadRecordsButtonComprobantes.click();
                         // alert(response.idventa+" "+response.tipoMovimientoAdd);
+                        var id = "";
                         if(response.idventa != "") {
-                            var id = "0|0|" + response.idventa;
+                            id = "0|0|" + response.idventa;
 
-                            if(response.tipoMovimientoAdd == "SEP") {
-                                window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            if(response.tipoMovimientoAdd == "SEP" || response.tipoMovimientoAdd == "TPL" || response.tipoMovimientoAdd == "ALQ") {
 
+                                if(emitir_comprobante == "S") {
 
-                                id =  "0|0|" + response.idventa_ticket;
-                                // alert(id);   
-                                window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
-                            } else {
-                                
-                                window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
-                            }
+                                    window.open("movimientoCajas/imprimir_comprobante/" + id);
+                                }
+
+                            } 
+                            
+                           
+                        }
+
+                        if(response.idventa_ticket != "") {
+                            id =  "0|0|" + response.idventa_ticket;
+                            window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
                         }
                        
 

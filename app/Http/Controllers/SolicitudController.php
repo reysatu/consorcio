@@ -496,7 +496,15 @@ class SolicitudController extends Controller
       
         try {
             DB::beginTransaction();
+            // print_r($data); exit;
             $data["estado"] = 10;
+
+            $sql_update = "
+            UPDATE ERP_OrdenServicio set cFacturado = 'N' where cCodConsecutivo = '{$data["cCodConsecutivo"]}' and nConsecutivo = {$data["nConsecutivo"]};
+            UPDATE ERP_Proforma set cFacturado = 'N' where cCodConsecutivoOs = '{$data["cCodConsecutivo"]}' and nConsecutivoOS = {$data["nConsecutivo"]};
+            ";
+            DB::statement($sql_update);
+
             $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
             DB::commit();
             return response()->json($result);
