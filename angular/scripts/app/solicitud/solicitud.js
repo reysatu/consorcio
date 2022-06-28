@@ -18,6 +18,7 @@
         var modalSolicitud = $('#modalSolicitud');
         var titlemodalSolicitud = $('#titleModalSolicitud');
         var redondeo;
+        var decimales_redondeo;
         var idsector=$("#idsector");
         var cambCan;
         var cambioChe;
@@ -206,7 +207,8 @@
                         // alert(response.parametro_igv[0].value);
                         $("#valor_igv").val(response.parametro_igv[0].value);
                     }
-                    redondeo = response.dataredondeo
+                    redondeo = response.dataredondeo;
+                    decimales_redondeo = response.decimales_redondeo;
                     // descuentos = response.descuentos;
                     var hoy = new Date();
                     var hAnio = hoy.getFullYear();
@@ -2130,12 +2132,12 @@
 
             // }
 
-            var td5 = $('<td><p>' + pretotal.toFixed(2) + '</p></td>');
+            var td5 = $('<td><p>' + pretotal.toFixed(decimales_redondeo) + '</p></td>');
             var tdpreT = $('<td><p></p></td>');
 
             var inp = $('<input type="hidden" class="m_articulo_id" name="idarticulo[]" posee-serie="' + posee_serie + '" value="' + idProducto + '"  cantidad="' + cantProducto + '" producto="' + desProducto + '" />');
 
-            var inp5 = $('<input type="hidden" cOperGrat="'+cOperGrat+'" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(2) + '" />');
+            var inp5 = $('<input type="hidden" cOperGrat="'+cOperGrat+'" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(decimales_redondeo) + '" />');
             var inpPreTo = $('<input type="hidden" class="m_articulo_montoDescuento" codigo="' + codigo + '"  name="monto_descuento[]" />');
 
             var html_list_series = "";
@@ -2205,13 +2207,13 @@
             // console.log(codigo+" => "+monto_subtotal);
 
             var html = '<td codigo="' + codigo + '" class="monto_descuento_prorrateado"><p>0</p><input type="hidden" codigo="' + codigo + '" name="monto_descuento_prorrateado[]" value="0"></td>';
-            html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(2) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_subtotal"><p>' + monto_subtotal.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_subtotal[]" value="' + monto_subtotal.toFixed(decimales_redondeo) + '"><input type="hidden" codigo="' + codigo + '" name="monto_subtotal_sin_descuento_prorrateado[]" value="' + monto_subtotal.toFixed(decimales_redondeo) + '"></td>';
 
-            html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(2) + '"></td>';
-            html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(2) + '"></td>';
-            html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(2) + '"></td>';
-            html += '<td codigo="' + codigo + '" class="impuestos"><p>' + impuestos.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="' + impuestos.toFixed(2) + '"></td>';
-            html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(2) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(2) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_exonerado"><p>' + monto_exonerado.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_exonerado[]" value="' + monto_exonerado.toFixed(decimales_redondeo) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_afecto"><p>' + monto_afecto.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_afecto[]" value="' + monto_afecto.toFixed(decimales_redondeo) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="monto_inafecto"><p>' + monto_inafecto.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_inafecto[]" value="' + monto_inafecto.toFixed(decimales_redondeo) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="impuestos"><p>' + impuestos.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="impuestos[]" value="' + impuestos.toFixed(decimales_redondeo) + '"></td>';
+            html += '<td codigo="' + codigo + '" class="total"><p>' + pretotal.toFixed(decimales_redondeo) + '</p><input type="hidden" codigo="' + codigo + '" name="monto_total[]" value="' + pretotal.toFixed(decimales_redondeo) + '"></td>';
 
             var check = "";
             var valor_cOperGrat = "N";
@@ -2315,44 +2317,44 @@
             //     var cantidap = $(this).val();
             //     var costo = $(this).closest("tr").find("td:eq(4)").children("input").val();
             //     var importe = Number(cantidap) * Number(costo);
-            //     $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-            //     $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+            //     $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(decimales_redondeo));
+            //     $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(decimales_redondeo));
             //     if (naturalezaGeneral == "S" || naturalezaGeneral == "A") {
             //         var preciUni = $(this).closest("tr").find("td:eq(6)").children("input").val();
             //         var precioTotal = Number(cantidap) * Number(preciUni);
-            //         $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-            //         $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+            //         $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(decimales_redondeo));
+            //         $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(decimales_redondeo));
             //     }
             // })
             $('.m_articulo_precio').keyup(function (e) {
                 var preciop = $(this).val();
                 var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
                 var precioTotal = Number(cantidad) * Number(preciop);
-                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(decimales_redondeo));
+                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(decimales_redondeo));
             })
 
             $('.m_articulo_precio').change(function (e) {
                 var preciop = $(this).val();
                 var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
                 var precioTotal = Number(cantidad) * Number(preciop);
-                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(2));
-                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(2));
+                $(this).closest("tr").find("td:eq(7)").children("p").text(precioTotal.toFixed(decimales_redondeo));
+                $(this).closest("tr").find("td:eq(7)").children("input").val(precioTotal.toFixed(decimales_redondeo));
             })
 
             $('.m_articulo_costo').keyup(function (e) {
                 var costop = $(this).val();
                 var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
                 var importe = Number(cantidad) * Number(costop);
-                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(decimales_redondeo));
+                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(decimales_redondeo));
             })
             $('#cosMs_' + codigo).change(function (e) {
                 var costop = $(this).val();
                 var cantidad = $(this).closest("tr").find("td:eq(3)").children("input").val();
                 var importe = Number(cantidad) * Number(costop);
-                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+                $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(decimales_redondeo));
+                $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(decimales_redondeo));
             })
 
             if (idAlmacen != "") {
@@ -2561,8 +2563,8 @@
 
             monto_descuento_prorrateado = precio_total * descuento_total / sum_precios;
             // alert(monto_descuento_prorrateado);
-            $("input[name='monto_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_descuento_prorrateado.toFixed(2));
-            $(".monto_descuento_prorrateado[codigo=" + codigo + "]").find("p").text(monto_descuento_prorrateado.toFixed(2));
+            $("input[name='monto_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_descuento_prorrateado.toFixed(decimales_redondeo));
+            $(".monto_descuento_prorrateado[codigo=" + codigo + "]").find("p").text(monto_descuento_prorrateado.toFixed(decimales_redondeo));
 
             var dom_descuento = $("#descuento_" + codigo);
 
@@ -2593,8 +2595,8 @@
             $("#preMs_" + codigo).val(porcentaje_descuento);
             $("#preMs_" + codigo).siblings("p").text(porcentaje_descuento.toString());
 
-            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(descuento.toFixed(2));
-            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(descuento.toFixed(2));
+            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").val(descuento.toFixed(decimales_redondeo));
+            $(".m_articulo_montoDescuento[codigo='" + codigo + "']").siblings("p").text(descuento.toFixed(decimales_redondeo));
 
             var nuevo_total = 0;
 
@@ -2623,27 +2625,27 @@
             }
             
 
-            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(monto_exonerado.toFixed(2));
-            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(monto_exonerado.toFixed(2));
+            $("input[name='monto_exonerado[]'][codigo=" + codigo + "]").val(monto_exonerado.toFixed(decimales_redondeo));
+            $(".monto_exonerado[codigo=" + codigo + "]").find("p").text(monto_exonerado.toFixed(decimales_redondeo));
 
-            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(2));
-            $("input[name='monto_subtotal_sin_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_subtotal_sin_descuento_prorrateado.toFixed(2));
+            $("input[name='monto_subtotal[]'][codigo=" + codigo + "]").val(monto_subtotal.toFixed(decimales_redondeo));
+            $("input[name='monto_subtotal_sin_descuento_prorrateado[]'][codigo=" + codigo + "]").val(monto_subtotal_sin_descuento_prorrateado.toFixed(decimales_redondeo));
 
             if (isNaN(monto_subtotal)) {
                 monto_subtotal = 0;
             }
 
 
-            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(2));
+            $(".monto_subtotal[codigo=" + codigo + "]").find("p").text(monto_subtotal.toFixed(decimales_redondeo));
 
-            $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(2));
-            $(".monto_afecto[codigo=" + codigo + "]").find("p").text(monto_afecto.toFixed(2));
+            $("input[name='monto_afecto[]'][codigo=" + codigo + "]").val(monto_afecto.toFixed(decimales_redondeo));
+            $(".monto_afecto[codigo=" + codigo + "]").find("p").text(monto_afecto.toFixed(decimales_redondeo));
 
-            $("input[name='impuestos[]'][codigo=" + codigo + "]").val(impuestos.toFixed(2));
-            $(".impuestos[codigo=" + codigo + "]").find("p").text(impuestos.toFixed(2));
+            $("input[name='impuestos[]'][codigo=" + codigo + "]").val(impuestos.toFixed(decimales_redondeo));
+            $(".impuestos[codigo=" + codigo + "]").find("p").text(impuestos.toFixed(decimales_redondeo));
 
-            $(".total[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(2));
-            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(2));
+            $(".total[codigo=" + codigo + "]").find("p").text(nuevo_total.toFixed(decimales_redondeo));
+            $("input[name='monto_total[]'][codigo=" + codigo + "]").val(nuevo_total.toFixed(decimales_redondeo));
 
         }
 
@@ -2696,16 +2698,16 @@
                 porTotal = mont;
             }
 
-            // alert("desc " + porTotal.toFixed(2));
+            // alert("desc " + porTotal.toFixed(decimales_redondeo));
             $("#porcentajeTotal").val(porc);
-            $("#t_monto_descuento").val(porTotal.toFixed(2));
+            $("#t_monto_descuento").val(porTotal.toFixed(decimales_redondeo));
 
             // var totalDes = parseFloat($("#desTotal").attr("importe_original"));
             // totalDes = Number(totalDes);
 
             // totalDes = totalDes - porTotal;
 
-            // desTotal.val(totalDes.toFixed(2));
+            // desTotal.val(totalDes.toFixed(decimales_redondeo));
             if($("#tipo_sol").val() == "N") {
                 calcular_totales();
             }
@@ -2730,8 +2732,8 @@
             var costo_total = cantidad * costo;
             // alert(precio_total);
             $("#costo_total_" + codigo).val(costo_total);
-            $(".m_articulo_precioTotal[codigo='" + codigo + "']").val(precio_total.toFixed(2));
-            $(".m_articulo_precioTotal[codigo='" + codigo + "']").siblings("p").text(precio_total.toFixed(2));
+            $(".m_articulo_precioTotal[codigo='" + codigo + "']").val(precio_total.toFixed(decimales_redondeo));
+            $(".m_articulo_precioTotal[codigo='" + codigo + "']").siblings("p").text(precio_total.toFixed(decimales_redondeo));
             $(".select_descuento").trigger("change");
         })
 
@@ -2819,30 +2821,30 @@
             var cuota_inicial = (!isNaN(parseFloat($("#cuota_inicial").val()))) ? parseFloat($("#cuota_inicial").val()) : 0;
             // alert(monto_venta);
             if ($("#tipo_solicitud").val() != "1") {
-                $("#monto_venta").val(monto_venta.toFixed(2));
-                $("#cuota_inicial").attr("max", monto_venta.toFixed(2));
+                $("#monto_venta").val(monto_venta.toFixed(decimales_redondeo));
+                $("#cuota_inicial").attr("max", monto_venta.toFixed(decimales_redondeo));
                 var total_financiado = monto_venta - cuota_inicial;
-                $("#total_financiado").val(total_financiado.toFixed(2));
+                $("#total_financiado").val(total_financiado.toFixed(decimales_redondeo));
             }
 
             // MONTOS TOTALES DEL DETALLE
-            $("#monto_descuento_detalle").val(t_monto_descuento.toFixed(2));
-            $("#subtotal_detalle").val(t_monto_subtotal.toFixed(2));
-            $("#monto_exonerado_detalle").val(t_monto_exonerado.toFixed(2));
-            $("#monto_afecto_detalle").val(t_monto_afecto.toFixed(2));
-            $("#monto_inafecto_detalle").val(t_monto_inafecto.toFixed(2));
-            $("#impuestos_detalle").val(t_impuestos.toFixed(2));
-            $("#monto_total_detalle").val(t_total.toFixed(2));
+            $("#monto_descuento_detalle").val(t_monto_descuento.toFixed(decimales_redondeo));
+            $("#subtotal_detalle").val(t_monto_subtotal.toFixed(decimales_redondeo));
+            $("#monto_exonerado_detalle").val(t_monto_exonerado.toFixed(decimales_redondeo));
+            $("#monto_afecto_detalle").val(t_monto_afecto.toFixed(decimales_redondeo));
+            $("#monto_inafecto_detalle").val(t_monto_inafecto.toFixed(decimales_redondeo));
+            $("#impuestos_detalle").val(t_impuestos.toFixed(decimales_redondeo));
+            $("#monto_total_detalle").val(t_total.toFixed(decimales_redondeo));
 
 
             // TOTALES FINALES
             var intereses = (!isNaN(parseFloat($("#intereses").val()))) ? parseFloat($("#intereses").val()) : 0;
 
             t_monto_subtotal = intereses + t_monto_subtotal;
-            $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2)); // antes
+            $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(decimales_redondeo)); // antes
             console.log(t_monto_subtotal);
             // alert("d" + t_monto_subtotal);
-            // $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(2));
+            // $("#t_monto_subtotal").val(t_monto_subtotal.toFixed(decimales_redondeo));
 
             var monto_exonerado = 0;
             var monto_afecto = 0;
@@ -2859,15 +2861,15 @@
             }
 
 
-            $("#t_monto_exonerado").val(monto_exonerado.toFixed(2));
-            $("#t_monto_afecto").val(monto_afecto.toFixed(2));
-            $("#t_monto_inafecto").val(t_monto_inafecto.toFixed(2));
-            $("#t_impuestos").val(impuestos.toFixed(2));
+            $("#t_monto_exonerado").val(monto_exonerado.toFixed(decimales_redondeo));
+            $("#t_monto_afecto").val(monto_afecto.toFixed(decimales_redondeo));
+            $("#t_monto_inafecto").val(t_monto_inafecto.toFixed(decimales_redondeo));
+            $("#t_impuestos").val(impuestos.toFixed(decimales_redondeo));
 
             total = monto_exonerado + monto_afecto + t_monto_inafecto + impuestos;
-            $("#desTotal").val(total.toFixed(2));
-            // $("#desTotal").attr("importe_original", total.toFixed(2));
-            $("#t_nOperGratuita").val(t_nOperGratuita.toFixed(2));
+            $("#desTotal").val(total.toFixed(decimales_redondeo));
+            // $("#desTotal").attr("importe_original", total.toFixed(decimales_redondeo));
+            $("#t_nOperGratuita").val(t_nOperGratuita.toFixed(decimales_redondeo));
             // console.log(t_monto_descuento, t_monto_subtotal, t_monto_exonerado, t_monto_afecto, t_monto_inafecto, t_impuestos, t_total);
 
 
@@ -3063,7 +3065,7 @@
             // }
 
             // var total_financiado = monto_venta - cuota_inicial;
-            // $("#total_financiado").val(total_financiado.toFixed(2));
+            // $("#total_financiado").val(total_financiado.toFixed(decimales_redondeo));
             $("#nro_cuotas").trigger("keyup");
         });
 
@@ -3116,11 +3118,11 @@
                     }
 
 
-                    $("#intereses").val(intereses.toFixed(2));
-                    $("#valor_cuota_final").val(valor_cuota_final.toFixed(2));
+                    $("#intereses").val(intereses.toFixed(decimales_redondeo));
+                    $("#valor_cuota_final").val(valor_cuota_final.toFixed(decimales_redondeo));
                     nuevo_total += intereses;
-                    $("#desTotal").val(nuevo_total.toFixed(2));
-                    // $("#desTotal").attr("importe_original", nuevo_total.toFixed(2));
+                    $("#desTotal").val(nuevo_total.toFixed(decimales_redondeo));
+                    // $("#desTotal").attr("importe_original", nuevo_total.toFixed(decimales_redondeo));
                     totalDescuento.trigger("change");
                 },
                 "json"

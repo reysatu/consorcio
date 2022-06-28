@@ -361,6 +361,7 @@ class Orden_servicioController extends Controller
         $usuario=auth()->id();
         $descuentos=$Repo->get_descuentos($usuario);
         $dataredondeo=$Repo->get_redondeo();
+        $decimales_redondeo = $Repo->get_decimales_redondeo();
         $modelo = parseSelectOnly($modeloRepo->allActive(), 'idModelo', 'descripcion');
         $marca = parseSelectOnly($brandRepo->all(), 'id', 'description');
         // print_r($dataredondeo); exit;
@@ -385,6 +386,7 @@ class Orden_servicioController extends Controller
             'usuario'=>$usuario,
             'modelo'=>$modelo,
             'marca'=>$marca,
+            'decimales_redondeo'=>(isset($decimales_redondeo[0]->value)) ? $decimales_redondeo[0]->value : 0,
         ]);
     }
 

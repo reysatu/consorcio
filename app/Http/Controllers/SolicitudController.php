@@ -281,6 +281,7 @@ class SolicitudController extends Controller
         $personas = $Repo->obtener_personas($usuario);
         $parametro_igv =  $Repo->get_parametro_igv();
         $dataredondeo = $repo_orden->get_redondeo();
+        $decimales_redondeo = $repo_orden->get_decimales_redondeo();
       
         // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
 
@@ -310,6 +311,7 @@ class SolicitudController extends Controller
             'parametro_igv'=>$parametro_igv,
           
             'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
+            'decimales_redondeo'=>(isset($decimales_redondeo[0]->value)) ? $decimales_redondeo[0]->value : 0,
         ]);
     }
 

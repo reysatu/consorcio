@@ -19,6 +19,7 @@
         var descuentosTotales;
         var dataServicioGeneral;
         var redondeo;
+        var decimales_redondeo;
         var cEstadoCivil=$("#cEstadoCivil");
         var acodigos=[];
         var totalMO=$("#totalMO");
@@ -1012,7 +1013,7 @@
         //     var producto=arrayRe[1];
         //     var precio=arrayRe[2];
         //     var impuesto=arrayRe[3];
-        //     var preci_t=Number(precio).toFixed(2);
+        //     var preci_t=Number(precio).toFixed(decimales_redondeo);
 
         //     if ($('#tr_b_' + code).length > 0) {
         //         AlertFactory.showWarning({
@@ -1046,35 +1047,35 @@
               
              
         //         var new_mor=Number(mo_r)+Number(precio);
-        //         mo_revision.val(new_mor.toFixed(2));
+        //         mo_revision.val(new_mor.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='2'){
         //         var mo_m=mo_mecanica.val();
         //         var new_mo_m=Number(mo_m)+Number(precio);
-        //         mo_mecanica.val(new_mo_m.toFixed(2));
+        //         mo_mecanica.val(new_mo_m.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='3'){
         //         var mo_tr=terceros.val();
         //         var new_mo_tr=Number(mo_tr)+Number(precio);
-        //         terceros.val(new_mo_tr.toFixed(2));
+        //         terceros.val(new_mo_tr.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='4'){
         //         var mo_otr=otros_mo.val();
         //         var new_mo_otr=Number(mo_otr)+Number(precio);
-        //         otros_mo.val(new_mo_otr.toFixed(2));
+        //         otros_mo.val(new_mo_otr.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='5'){
         //         var mo_rp=repuestos.val();
         //         var new_mo_rp=Number(mo_rp)+Number(precio);
-        //         repuestos.val(new_mo_rp.toFixed(2));
+        //         repuestos.val(new_mo_rp.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='6'){
         //         var mo_ac=accesorios.val();
         //         var new_mo_ac=Number(mo_ac)+Number(precio);
-        //         accesorios.val(new_mo_ac.toFixed(2));
+        //         accesorios.val(new_mo_ac.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='7'){
         //         var mo_lub=lubricantes.val();
         //         var new_mo_lub=Number(mo_lub)+Number(precio);
-        //         lubricantes.val(new_mo_lub.toFixed(2));
+        //         lubricantes.val(new_mo_lub.toFixed(decimales_redondeo));
         //      }else if(tipoTo=='8'){
         //         var mo_trp=otros_rep.val();
         //         var new_trp=Number(mo_trp)+Number(precio);
-        //         otros_rep.val(new_trp.toFixed(2));
+        //         otros_rep.val(new_trp.toFixed(decimales_redondeo));
         //      }
         //     sumar_key(); 
         //     servicios_select.val("").trigger("change");
@@ -1101,50 +1102,50 @@
         //                     var mo=mo_revision.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     mo_revision.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     mo_revision.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='2'){
         //                     var mo=mo_mecanica.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     mo_mecanica.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     mo_mecanica.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='3'){
         //                     var mo=terceros.val();
         //                      var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     terceros.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     terceros.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='4'){
         //                     var mo=otros_mo.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     otros_mo.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     otros_mo.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='5'){
         //                     var mo=repuestos.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     repuestos.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     repuestos.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='6'){
         //                     var mo=accesorios.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     accesorios.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     accesorios.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='7'){
         //                     var mo=lubricantes.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     lubricantes.val(mont.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     lubricantes.val(mont.toFixed(decimales_redondeo));
         //                  }else if(tipoTo=='8'){
         //                     var mo=otros_rep.val();
         //                     var precio_temp=Number(mo)-Number(precio_ant);
         //                     var mont=Number(precio_temp)+Number(precio_act);
-        //                     $(this).attr('data-precio',mont.toFixed(2));
-        //                     otros_rep.val(new_trp.toFixed(2));
+        //                     $(this).attr('data-precio',mont.toFixed(decimales_redondeo));
+        //                     otros_rep.val(new_trp.toFixed(decimales_redondeo));
         //                  }
         //                 sumar_key(); 
         //             }
@@ -1197,36 +1198,36 @@
         //         if(idTipo=='1'){
         //             var mo_r=mo_revision.val();
         //             var new_mor=Number(mo_r)-Number(precio_borrar);
-        //             mo_revision.val(new_mor.toFixed(2));
+        //             mo_revision.val(new_mor.toFixed(decimales_redondeo));
         //          }else if(idTipo=='2'){
         //             var mo_m=mo_mecanica.val();
         //             var new_mo_m=Number(mo_m)-Number(precio_borrar);
                     
-        //             mo_mecanica.val(new_mo_m.toFixed(2));
+        //             mo_mecanica.val(new_mo_m.toFixed(decimales_redondeo));
         //          }else if(idTipo=='3'){
         //             var mo_tr=terceros.val();
         //             var new_mo_tr=Number(mo_tr)-Number(precio_borrar);
-        //             terceros.val(new_mo_tr.toFixed(2));
+        //             terceros.val(new_mo_tr.toFixed(decimales_redondeo));
         //          }else if(idTipo=='4'){
         //             var mo_otr=otros_mo.val();
         //             var new_mo_otr=Number(mo_otr)-Number(precio_borrar);
-        //             otros_mo.val(new_mo_otr.toFixed(2));
+        //             otros_mo.val(new_mo_otr.toFixed(decimales_redondeo));
         //          }else if(idTipo=='5'){
         //             var mo_rp=repuestos.val();
         //             var new_mo_rp=Number(mo_rp)-Number(precio_borrar);
-        //             repuestos.val(new_mo_rp.toFixed(2));
+        //             repuestos.val(new_mo_rp.toFixed(decimales_redondeo));
         //          }else if(idTipo=='6'){
         //             var mo_ac=accesorios.val();
         //             var new_mo_ac=Number(mo_ac)-Number(precio_borrar);
-        //             accesorios.val(new_mo_ac.toFixed(2));
+        //             accesorios.val(new_mo_ac.toFixed(decimales_redondeo));
         //          }else if(idTipo=='7'){
         //             var mo_lub=lubricantes.val();
         //             var new_mo_lub=Number(mo_lub)-Number(precio_borrar);
-        //             lubricantes.val(new_mo_lub.toFixed(2));
+        //             lubricantes.val(new_mo_lub.toFixed(decimales_redondeo));
         //          }else if(idTipo=='8'){
         //             var mo_trp=otros_rep.val();
         //             var new_trp=Number(mo_trp)-Number(precio_borrar);
-        //             otros_rep.val(new_trp.toFixed(2));
+        //             otros_rep.val(new_trp.toFixed(decimales_redondeo));
         //          }
         //             sumar_key(); 
         //             $('#tr_b_' + code).remove();
@@ -1241,7 +1242,7 @@
         // }
           function calcular_impueso(precio,cantidad){
             var impu=(Number(precio)*Number(cantidad))*((Number(igv)/100));
-            impu=impu.toFixed(2);
+            impu=impu.toFixed(decimales_redondeo);
             return impu;
         }
          function calcular_precio_totales(precio_ant,precio_act,tipoTo,code,tr_pre,data_prec){
@@ -1254,51 +1255,51 @@
                             var precio_temp=Number(mo)-Number(precio_ant);
                             console.log(precio_temp);
                             var mont=Number(precio_temp)+Number(precio_act);
-                            $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            mo_revision.val(mont.toFixed(2));
+                            $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            mo_revision.val(mont.toFixed(decimales_redondeo));
                             console.log("********");
                          }else if(tipoTo=='2'){
                             var mo=mo_mecanica.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            mo_mecanica.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            mo_mecanica.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='3'){
                             var mo=terceros.val();
                              var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            terceros.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            terceros.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='4'){
                             var mo=otros_mo.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            otros_mo.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            otros_mo.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='5'){
                             var mo=repuestos.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            repuestos.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            repuestos.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='6'){
                             var mo=accesorios.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            accesorios.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            accesorios.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='7'){
                             var mo=lubricantes.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            lubricantes.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            lubricantes.val(mont.toFixed(decimales_redondeo));
                          }else if(tipoTo=='8'){
                             var mo=otros_rep.val();
                             var precio_temp=Number(mo)-Number(precio_ant);
                             var mont=Number(precio_temp)+Number(precio_act);
-                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(2));
-                            otros_rep.val(mont.toFixed(2));
+                           $("#"+tr_pre+code).attr(data_prec,mont.toFixed(decimales_redondeo));
+                            otros_rep.val(mont.toFixed(decimales_redondeo));
                          }
         }
           totalDescuento.change(function() { 
@@ -1320,7 +1321,7 @@
                     if(porc==0 || porc==""){
                            var porTotal=mont;
                     }
-                    $("#montoTotal").val(porTotal.toFixed(2));
+                    $("#montoTotal").val(porTotal.toFixed(decimales_redondeo));
                  
                     
                 }
@@ -1335,7 +1336,7 @@
                             totalDes=Number(totalDes)-Number(montoTotal.val());
                         }
                 }
-                desTotal.val(totalDes.toFixed(2));
+                desTotal.val(totalDes.toFixed(decimales_redondeo));
             });
 
          $.fn.modal.Constructor.prototype.enforceFocus = function () {};
@@ -1480,7 +1481,7 @@
             var producto=arrayRe[1];
             var precio=arrayRe[2];
             var impuesto=arrayRe[3];
-            var preci_t=Number(precio).toFixed(2);
+            var preci_t=Number(precio).toFixed(decimales_redondeo);
             var impuesto_can=Number(impuesTotal);
             var cantidad=cant;
             cantidad=Number(cantidad);
@@ -1515,7 +1516,7 @@
                 return false;
             }
             console.log("ver precio mal ");
-            console.log(subt.toFixed(2));
+            console.log(subt.toFixed(decimales_redondeo));
             acodigos.push(code);
              var tr = $('<tr id="tr_b_' + code + '"></tr>');
              var td1 = $('<td>' + producto + '</td>');
@@ -1539,7 +1540,7 @@
              var inpDes=$('<select id="id_desc_'+code+'" data-tipotoSe="'+tipoTo+'"  class="descuentosSelect form-control input-sm" data-desc="'+code+'"  style="width: 100%"  '+disab+' ></select>');
              var idRevision_input = $('<input type="hidden" class="idRevision_select form-control input-sm"  value="'+code+'"  />');
              var impuestoRe = $('<input type="number" class="totalImpuesto_servicio form-control input-sm" data-impuestoSer="'+impuesto+'"  id="tr_impSer' + code + '" data-imp="'+impuesto_can+'" value="'+impuesto_can+'" readonly/>');
-             var subtotal_input = $('<input type="number" class="subtotal_repuesto form-control input-sm" data-SubtotalSer="'+subt+'" data-precio="'+subt.toFixed(2)+'"  id="tr_subtotalSer'+code+'"  value="'+subt.toFixed(2)+'" readonly/>');
+             var subtotal_input = $('<input type="number" class="subtotal_repuesto form-control input-sm" data-SubtotalSer="'+subt+'" data-precio="'+subt.toFixed(decimales_redondeo)+'"  id="tr_subtotalSer'+code+'"  value="'+subt.toFixed(decimales_redondeo)+'" readonly/>');
              var idTipo_input = $('<input type="hidden" class="idTipo_select form-control input-sm"  value="'+tipoTo+'" />');
              var idGrupDe_input= $('<input type="hidden" class="idDetalleGrup form-control input-sm"  value="'+iddet+'" />');
              var idinput_modoser = $('<input type="hidden" class="modo_serDet form-control input-sm"  value="'+modo_ser+'" />');
@@ -1573,7 +1574,7 @@
                  }else{
                      console.log(cantidad,precio,impuesto_can,porcentajeid,montoid)
                     precio_actT=(Number(cant)*Number(precio))+Number(impuesto_can)-Number(porcentajeid)-Number(montoid);
-                    precio_actT=precio_actT.toFixed(2);
+                    precio_actT=precio_actT.toFixed(decimales_redondeo);
                  };
              }
             
@@ -1674,7 +1675,7 @@
                   // // var impuestoOri=$(this).closest("tr").find("td:eq(3)").children("input").attr('data-imp');
                   // // console.log("****");
                   // // var totalImp=Number(cantidap)*Number(impuestoOri);
-                  // // totalImp=totalImp.toFixed(2)
+                  // // totalImp=totalImp.toFixed(decimales_redondeo)
                   // //  $(this).closest("tr").find("td:eq(3)").children("input").val(totalImp);
                   // //  id_tipocli.data("prev",id_tipocli.val());
                   //   var data_prec='data-precio';
@@ -1698,7 +1699,7 @@
                   //           var porTotal=Number((Number(porc)*Number(subtota))/100);
                             
                         
-                  //           $(this).closest("tr").find("td:eq(6)").children("input").val(porTotal.toFixed(2));
+                  //           $(this).closest("tr").find("td:eq(6)").children("input").val(porTotal.toFixed(decimales_redondeo));
                   //           console.log($("#porc_"+code).val());
                   //             calcular_total_MO();
                   //       }
@@ -1852,36 +1853,36 @@
                 if(idTipo=='1'){
                     var mo_r=mo_revision.val();
                     var new_mor=Number(mo_r)-Number(precio_borrar);
-                    mo_revision.val(new_mor.toFixed(2));
+                    mo_revision.val(new_mor.toFixed(decimales_redondeo));
                  }else if(idTipo=='2'){
                     var mo_m=mo_mecanica.val();
                     var new_mo_m=Number(mo_m)-Number(precio_borrar);
                     
-                    mo_mecanica.val(new_mo_m.toFixed(2));
+                    mo_mecanica.val(new_mo_m.toFixed(decimales_redondeo));
                  }else if(idTipo=='3'){
                     var mo_tr=terceros.val();
                     var new_mo_tr=Number(mo_tr)-Number(precio_borrar);
-                    terceros.val(new_mo_tr.toFixed(2));
+                    terceros.val(new_mo_tr.toFixed(decimales_redondeo));
                  }else if(idTipo=='4'){
                     var mo_otr=otros_mo.val();
                     var new_mo_otr=Number(mo_otr)-Number(precio_borrar);
-                    otros_mo.val(new_mo_otr.toFixed(2));
+                    otros_mo.val(new_mo_otr.toFixed(decimales_redondeo));
                  }else if(idTipo=='5'){
                     var mo_rp=repuestos.val();
                     var new_mo_rp=Number(mo_rp)-Number(precio_borrar);
-                    repuestos.val(new_mo_rp.toFixed(2));
+                    repuestos.val(new_mo_rp.toFixed(decimales_redondeo));
                  }else if(idTipo=='6'){
                     var mo_ac=accesorios.val();
                     var new_mo_ac=Number(mo_ac)-Number(precio_borrar);
-                    accesorios.val(new_mo_ac.toFixed(2));
+                    accesorios.val(new_mo_ac.toFixed(decimales_redondeo));
                  }else if(idTipo=='7'){
                     var mo_lub=lubricantes.val();
                     var new_mo_lub=Number(mo_lub)-Number(precio_borrar);
-                    lubricantes.val(new_mo_lub.toFixed(2));
+                    lubricantes.val(new_mo_lub.toFixed(decimales_redondeo));
                  }else if(idTipo=='8'){
                     var mo_trp=otros_rep.val();
                     var new_trp=Number(mo_trp)-Number(precio_borrar);
-                    otros_rep.val(new_trp.toFixed(2));
+                    otros_rep.val(new_trp.toFixed(decimales_redondeo));
                  }
                  
                     $('#tr_b_' + code).remove();
@@ -1930,12 +1931,12 @@
 
                 var subtota=(cantidadt*preciot)+(impu);
 
-                $(this).find("td:eq(3)").children("input").val(impu.toFixed(2));
+                $(this).find("td:eq(3)").children("input").val(impu.toFixed(decimales_redondeo));
                   // $("#monto_"+codigo).val(0);
                 var codigo=$(this).find("td:eq(1)").children("input").attr('data-codigoC'); 
                
                     if($("#pOper"+codigo).prop('checked')){
-                         $("#grat"+codigo).val(subtota.toFixed(2));
+                         $("#grat"+codigo).val(subtota.toFixed(decimales_redondeo));
                          operacionGratuita=operacionGratuita+subtota;
                          subtota=0;
                     }else{
@@ -1943,7 +1944,7 @@
                             if(porce!='0'){
                                  var porcet=Number($(this).find("td:eq(6)").children("input").val());
                                  var montopor=subtota*porcet/100;
-                                 $("#monto_"+codigo).val(montopor.toFixed(2));
+                                 $("#monto_"+codigo).val(montopor.toFixed(decimales_redondeo));
                                  subtota=subtota-Number(montopor);
                             }else{
                                 subtota=subtota-Number(monto);
@@ -1953,16 +1954,16 @@
            
               
                 
-                $(this).find("td:eq(8)").children("input").val(subtota.toFixed(2));
+                $(this).find("td:eq(8)").children("input").val(subtota.toFixed(decimales_redondeo));
                 totalt=totalt+subtota;
             });
 
             totales_nuevo();
-            totalMO.val(totalt.toFixed(2));
+            totalMO.val(totalt.toFixed(decimales_redondeo));
             var totalDes=totalt;
             totalDes=Number(totalDes);
-            total.val(operacionGratuita.toFixed(2));
-            desTotal.val(totalDes.toFixed(2));
+            total.val(operacionGratuita.toFixed(decimales_redondeo));
+            desTotal.val(totalDes.toFixed(decimales_redondeo));
             totalDescuento.val("").trigger("change");
         }
         function addMante(total,modo_t) {
@@ -2117,12 +2118,12 @@
        function sumar_key(){
             var subA=Number(mo_revision.val())+Number(mo_mecanica.val())+Number(terceros.val())+Number(otros_mo.val());
             var subB=Number(repuestos.val())+Number(accesorios.val())+Number(lubricantes.val())+Number(otros_rep.val());
-            subtotal_moa.val(subA.toFixed(2));
-            subtotal_mob.val(subB.toFixed(2));
+            subtotal_moa.val(subA.toFixed(decimales_redondeo));
+            subtotal_mob.val(subB.toFixed(decimales_redondeo));
             var totalfin=Number(subtotal_moa.val())+Number(subtotal_mob.val());
-            // total.val(totalfin.toFixed(2));
+            // total.val(totalfin.toFixed(decimales_redondeo));
             
-            desTotal.val(totalfin.toFixed(2));
+            desTotal.val(totalfin.toFixed(decimales_redondeo));
             
         }
         function sumar(m1,m2,m3,m4,m5,m6,m7,m8){
@@ -3124,7 +3125,9 @@ function getDatosCliente(){
                 if (!_.isUndefined(response.status) && response.status) {
                     
                      descuentos=response.descuentos;
-                     redondeo=response.dataredondeo
+                     redondeo=response.dataredondeo;
+                     decimales_redondeo = response.decimales_redondeo;
+                     
                      console.log("redondeo");
                      console.log(redondeo);
 

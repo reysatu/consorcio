@@ -138,6 +138,12 @@ where IdTipoDocumento in ('01','03')");
       $mostrar3=DB::select("select * from ERP_Parametros where id='2'");
       return $mostrar3;
     }
+
+    public function get_decimales_redondeo()
+    { 
+      $mostrar3=DB::select("select * from ERP_Parametros where id='19'");
+      return $mostrar3;
+    }
     public function get_distrito_print($cod)
     { 
       $mostrar3=DB::select("select * from ERP_Ubigeo where cCodUbigeo='$cod'");
