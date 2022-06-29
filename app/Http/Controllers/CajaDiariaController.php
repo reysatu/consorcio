@@ -107,11 +107,15 @@ class CajaDiariaController extends Controller
         DB::beginTransaction();
         try {
 
-            // $comprobantes = $ventas_repo->obtener_comprobantes();
-            // // print_r($comprobantes );
-            // foreach ($comprobantes as $key => $value) {
-            //     $this->consultar_cdr("20450106357-03-B001-00000156");
-            // }
+            $comprobantes = $ventas_repo->obtener_comprobantes();
+            // print_r($comprobantes );
+            foreach ($comprobantes as $key => $value) {
+                $res = $this->consultar_cdr($value->documento_cpe);
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+                DB::statement($sql_update);
+                // print_r($sql_update);
+            }
             // exit;
 
             $data = $request->all();

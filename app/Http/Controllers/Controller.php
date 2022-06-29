@@ -591,6 +591,7 @@ class Controller extends BaseController
         }
 
         $pathRoot = base_path("public/CPE/"); //directorio local donde se generan los txt desde el sistema en PHP
+        
 
         $username = '20450106357EMISI355'; //RUC del emisor y usuario Sol concatenado
         $password = 'EysuUjdi33'; //clave sol
@@ -695,7 +696,7 @@ class Controller extends BaseController
         $json["invoice"]["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         $json["invoice"]["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         $json["invoice"]["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
-        // $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES DE EXPORTACION
+        $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
             $json["invoice"]["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
@@ -714,7 +715,7 @@ class Controller extends BaseController
             $json["invoice"]["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
         }
         // echo "holsa"; exit;
-        if ($venta[0]->condicion_pago == 1) { // contado
+        if ($venta[0]->codcondicionpago == 1) { // contado
             $json["invoice"]["forma_pago"]["descrip"] = "Contado";
         } else { // credito
             $json["invoice"]["forma_pago"]["descrip"] = "Crédito";
@@ -774,8 +775,11 @@ class Controller extends BaseController
 
             $json["invoice"]["leyen"][2]["leyen_descrip"] = "No se aceptan cambios ni devoluciones";
         } else {
-            $json["invoice"]["leyen"][1]["leyen_cod"] = "2001";
-            $json["invoice"]["leyen"][1]["leyen_descrip"] = "BIENES TRANSFERIDOS EN LA AMAZONIA REGION SELVA PARA SER CONSUMIDOS EN LA MISMA";
+            // if($venta[0]->t_monto_exonerado > 0) {
+            //     $json["invoice"]["leyen"][1]["leyen_cod"] = "2001";
+            //     $json["invoice"]["leyen"][1]["leyen_descrip"] = "BIENES TRANSFERIDOS EN LA AMAZONIA REGION SELVA PARA SER CONSUMIDOS EN LA MISMA";
+            // }
+           
         }
 
         $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -814,8 +818,7 @@ class Controller extends BaseController
         $parametros = array('fileName'=>$filename);
         $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
 
-        print_r($respuesta);
-        echo '<br>';
+   
 
         $_strFaultCode='';
         $_strFaultString='';
@@ -853,6 +856,8 @@ class Controller extends BaseController
         ############################
         #obtener codigo 
         ############################
+        // var_dump($_strFaultCode);
+        // var_dump($_strContentFile);
         if(!(!isset($_strFaultCode) || trim($_strFaultCode)==='')){
             echo $_strFaultCode.'<br>'; #codigo de error|
             echo $_strFaultString.'<br>'; #descripcion del error
@@ -860,9 +865,10 @@ class Controller extends BaseController
             #cuando devuelve cdr
             $doc = new \DOMDocument;
             $doc->loadXML(base64_decode($_strContentFile));
-            echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue;	#valor resumen del cdr
-            echo $_strStatusCode; #codigo de respuesta del cdr
+            // echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue;	#valor resumen del cdr
+            // echo $_strStatusCode; #codigo de respuesta del cdr
             #graba el archuvo CDR de respuesta de SUNAT
+
             file_put_contents("CDR/".'R-'.$filename, base64_decode($_strContentFile));
         }
 
