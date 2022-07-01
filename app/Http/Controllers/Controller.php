@@ -578,7 +578,14 @@ class Controller extends BaseController
 
     public function envio_json_cpe($ruta_json)
     {
-        $cliente = new  \nusoap_client("https://e-factura.tuscomprobantes.pe/wsseencpe/billService?wsdl", true);
+        $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
+        $url = DB::select($sql_url);
+
+        if(count($url) <= 0) {
+            throw new Exception("No existe el parametro URL CPE FE");
+        }
+        
+        $cliente = new  \nusoap_client($url[0]->value, true);
 
         $err = $cliente->getError();
         if ($err) {
@@ -591,10 +598,22 @@ class Controller extends BaseController
         }
 
         $pathRoot = base_path("public/CPE/"); //directorio local donde se generan los txt desde el sistema en PHP
-        
+        $sql_usuario = "SELECT * FROM ERP_Parametros WHERE id=20";
+        $usuario = DB::select($sql_usuario);
 
-        $username = '20450106357EMISI355'; //RUC del emisor y usuario Sol concatenado
-        $password = 'EysuUjdi33'; //clave sol
+        if(count($usuario) <= 0) {
+            throw new Exception("No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
+        }
+
+        $sql_pass = "SELECT * FROM ERP_Parametros WHERE id=21";
+        $password = DB::select($sql_pass);
+
+        if(count($password) <= 0) {
+            throw new Exception("No existe el parametro Clave FE");
+        }
+
+        $username = $usuario[0]->value; //RUC del emisor y usuario Sol concatenado
+        $password = $password[0]->value; //clave sol
         $contentfile = base64_encode(file_get_contents($pathRoot . $filename));
         $parametros = array('fileName' => $filename, 'contentFile' => $contentfile);
         $respuesta = $cliente->call("sendBill", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
@@ -799,8 +818,14 @@ class Controller extends BaseController
         // https://emite.tuscomprobantes.pe/
         // 20450106357
         // usuario: casociadmin  clave: 765419
-      
-        $cliente = new  \nusoap_client("https://e-factura.tuscomprobantes.pe/wsseencpe/billService?wsdl", true);
+        $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
+        $url = DB::select($sql_url);
+
+        if(count($url) <= 0) {
+            throw new Exception("No existe el parametro URL CPE FE");
+        }
+        
+        $cliente = new  \nusoap_client($url[0]->value, true);
 
         if (!file_exists(base_path("public/CDR/"))) {
             mkdir(base_path("public/CDR/"), 0777, true);
@@ -811,9 +836,24 @@ class Controller extends BaseController
             die('Error: '.$err);
         }
         $filename = $documento_cpe.'.xml'; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.xml
-        //$pathRoot = 'C:/Users/Javier/Documents/app/'; //directorio local donde se generan los xml del cdr desde el sistema en PHP
-        $username = '20450106357EMISI355'; //USUARIO DEL API por empresa, solicitar a jmariscal@seencorp.pe
-        $password = 'EysuUjdi33'; //CLAVE DEL API por empresa, solicitar a jmariscal@seencorp.pe
+        //$pathRoot = 'C:/Users/Javier/Documents/app/'; //directorio local donde se generan los xml del cdr desde el sistema en PHP 
+
+        $sql_usuario = "SELECT * FROM ERP_Parametros WHERE id=20";
+        $usuario = DB::select($sql_usuario);
+
+        if(count($usuario) <= 0) {
+            throw new Exception("No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
+        }
+
+        $sql_pass = "SELECT * FROM ERP_Parametros WHERE id=21";
+        $password = DB::select($sql_pass);
+
+        if(count($password) <= 0) {
+            throw new Exception("No existe el parametro Clave FE");
+        }
+
+        $username = $usuario[0]->value; //USUARIO DEL API por empresa, solicitar a jmariscal@seencorp.pe
+        $password = $password[0]->value; //CLAVE DEL API por empresa, solicitar a jmariscal@seencorp.pe
 
         $parametros = array('fileName'=>$filename);
         $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
