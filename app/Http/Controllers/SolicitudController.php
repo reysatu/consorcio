@@ -558,6 +558,7 @@ class SolicitudController extends Controller
             $idProducto=$valtodo[0];
             $idTipoCli=$valtodo[1];
             $idMoneda=$valtodo[2];
+            $cambio = 0;
             $val=$repo->get_precios_list($idProducto, $idTipoCli,$idMoneda);
             // var_dump($val);
              $newPrecio='';
@@ -570,6 +571,7 @@ class SolicitudController extends Controller
                 if(!empty($val)){
                     $fecha_actual=date("Y-m-d");
                     $cambio=$repo->cambio_tipo($parametro_moneda,$fecha_actual);
+
                     $newPrecio=floatval($val[0]->nPrecio)*floatval($cambio[0]->Mensaje);
                 }
             } else {
@@ -581,6 +583,7 @@ class SolicitudController extends Controller
                 'status' => true,
                 'data'=>$val,
                 'newPrecio'=>$newPrecio,
+                'cambio'=>$cambio,
             ]);
 
     }catch (\Exception $e) {
