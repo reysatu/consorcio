@@ -478,9 +478,13 @@ class SolicitudController extends Controller
         try {
             DB::beginTransaction();
 
-            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
-            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data));
-            $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data));
+            $sql_delete = "DELETE FROM dbo.ERP_SolicitudCredito WHERE  cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]};
+            DELETE FROM dbo.ERP_SolicitudDetalle WHERE  cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]};
+            DELETE FROM dbo.ERP_SolicitudArticulo WHERE  cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]};";
+            DB::statement($sql_delete);
+            // $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudCredito", $data));
+            // $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudDetalle", $data));
+            // $this->base_model->eliminar($this->preparar_datos("dbo.ERP_SolicitudArticulo", $data));
             $result = $this->base_model->eliminar($this->preparar_datos("dbo.ERP_Solicitud", $data));
         
             DB::commit();
