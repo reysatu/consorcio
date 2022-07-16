@@ -223,6 +223,8 @@
                  var data = {
                         id: id,        
                 };
+
+                // alert(id_tipo.val());
               if(id_tipo.val()=="3"){
                 $scope.loadOrdenServicioXpressPDF('orden_servicios/pdf', data);
               }else{

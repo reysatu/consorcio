@@ -2881,7 +2881,8 @@ function create_pdf_ordenServicio(response) {
             absolutePosition:{ x:172 , y: 790 },
         },
         {
-            text: fechEntrega,
+            // text: fechEntrega,
+            text: horaEnt,
             absolutePosition: { x:549 , y: 790 },
             bold: true,
             fontSize: 10,
