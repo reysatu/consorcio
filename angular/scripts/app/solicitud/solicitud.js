@@ -3561,6 +3561,7 @@
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
                     if (data.solicitud_credito.length > 0) {
                         Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
+                        $("#dia_vencimiento_cuota").val(data.solicitud_credito[0].dia_vencimiento_cuota);
                     }
 
                     $("#documento_or").val(data.solicitud[0].documento);

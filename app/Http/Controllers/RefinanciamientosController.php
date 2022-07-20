@@ -290,10 +290,10 @@ class RefinanciamientosController extends Controller
             if(!empty($dia_vencimiento_cuota) && $dia_vencimiento_cuota > 0) {
                 $arr_date = explode("-", $fecha);
                 $dia = $dia_vencimiento_cuota;
-                $mes = $arr_date[1];
-                if($dia < $arr_date[2]) {
-                    $mes = $arr_date[1] + 1;
-                }
+                $mes = $arr_date[1] + 1;
+                // if($dia < $arr_date[2]) {
+                //     $mes = $arr_date[1] + 1;
+                // }
                 $anio = $arr_date[0];
                 
             } 

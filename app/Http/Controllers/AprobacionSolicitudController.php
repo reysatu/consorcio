@@ -98,10 +98,10 @@ class AprobacionSolicitudController extends Controller
                 if(!empty($solicitud_credito[0]->dia_vencimiento_cuota) && $solicitud_credito[0]->dia_vencimiento_cuota > 0) {
                     $arr_date = explode("-", $fecha);
                     $dia = $solicitud_credito[0]->dia_vencimiento_cuota;
-                    $mes = $arr_date[1];
-                    if($dia < $arr_date[2]) {
-                        $mes = $arr_date[1] + 1;
-                    }
+                    $mes = $arr_date[1] + 1;
+                    // if($dia < $arr_date[2]) {
+                    //     $mes = $arr_date[1] + 1;
+                    // }
                     $anio = $arr_date[0];
                     
                 } 
