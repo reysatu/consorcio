@@ -769,16 +769,16 @@ update ERP_Proforma set cFacturado = 'N' where cCodConsecutivoOs = cCodConsecuti
 
 
 05/07/2022
-* no se muestra fecha de entrega y hroa de entrega en formato de orden de servicio, al lado derecho mostrar la hora de entrega porque ahora esta mostrando fecha de entrega
-* verificar en aprobacion de solicitud no imprime el cronograma de solicitudes a credito, solo duplica la pantalla.
+* no se muestra fecha de entrega y hroa de entrega en formato de orden de servicio, al lado derecho mostrar la hora de entrega porque ahora esta mostrando fecha de entrega *
+* verificar en aprobacion de solicitud no imprime el cronograma de solicitudes a credito, solo duplica la pantalla. *
 
 ------Nuevos:
 
 Orden de Servicio:
-- En la impresión no está mostrando la Hora de Entrega Ofrecida (los datos del pie al lado derecho, esta mostrando fecha)
+- En la impresión no está mostrando la Hora de Entrega Ofrecida (los datos del pie al lado derecho, esta mostrando fecha) * 
 
 Aprobación de Solicitudes
-- No se esta imprimiendo el cronograma
+- No se esta imprimiendo el cronograma * 
 
 Entrega a Servicio Técnico o Clientes
 - Al abrir el documento de tipo Remite no esta mostrando el check en Proforma y no está mostrando la proforma.
@@ -810,14 +810,9 @@ Nuevo Formato de Documento de Venta
 
 
 Solicitudes de venta
-- En fecha fija, para la primera cuota no está respetando que sea mayor a 30 días (si emito el 5 de julio la solicitud y pongo fecha fija 8 la primera cuota sale 8 de julio debiendo ser 8 de agosto).
+- En fecha fija, para la primera cuota no está respetando que sea mayor a 30 días (si emito el 5 de julio la solicitud y pongo fecha fija 8 la primera cuota sale 8 de julio debiendo ser 8 de agosto). *
 
 Movimientos de Caja / Solicitudes
-- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero, no debe mostrar el detalle como de un crédito directo, debe mostrar sólo condición de pago (mostrara el convenio elegido) y vendedor
+- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero, no debe mostrar el detalle como de un crédito directo, debe mostrar sólo condición de pago (mostrara el convenio elegido) y vendedor *
 
-
-JOAN MANUEL ZARRIA SINARAHUA - EJERCICIO 2 SPARK | API SQL / DATAFRAME - BCP UNIVERSITY - GRUPO 1
-
-
-JOAN MANUEL ZARRIA SINARAHUA - EJERCICIO CARGA DATA BCP - BCP UNIVERSITY - GRUPO 1
 
