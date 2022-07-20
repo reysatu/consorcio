@@ -1,7 +1,7 @@
 ALTER TABLE [dbo].[ERP_OrdenServicio] ADD [comentario_facturacion] text NULL;
 
-USE [Consorcio]
-GO
+--USE [Consorcio]
+--GO
 
 /****** Object:  StoredProcedure [dbo].[ST_ActualizaOrdenServicio]    Script Date: 09/06/2022 06:08:26 p.m. ******/
 SET ANSI_NULLS ON
@@ -162,7 +162,7 @@ begin
 end
 
 select @Mensaje as 'Mensaje'
-GO;
+GO
 
 
 /****** Object:  View [dbo].[ERP_view_proforma]    Script Date: 09/06/2022 06:49:59 p.m. ******/
@@ -172,7 +172,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE VIEW [dbo].[ERP_view_proforma] AS select p.cCodConsecutivo, p.nConsecutivo, p.cCodConsecutivoOS, p.nConsecutivoOS, p.dFechaRegistro, p.nTotalMO, p.nTotalDetalle, p.nSubTotal,p.nImpuesto, p.nTotal, p.iEstado,  p.cIdUsuCre, p.cIdUsuMod, c.razonsocial_cliente, p.dFecCre from ERP_Proforma AS p 
+ALTER VIEW [dbo].[ERP_view_proforma] AS select p.cCodConsecutivo, p.nConsecutivo, p.cCodConsecutivoOS, p.nConsecutivoOS, p.dFechaRegistro, p.nTotalMO, p.nTotalDetalle, p.nSubTotal,p.nImpuesto, p.nTotal, p.iEstado,  p.cIdUsuCre, p.cIdUsuMod, c.razonsocial_cliente, p.dFecCre from ERP_Proforma AS p 
 inner join ERP_Clientes AS c on(c.id=p.idCliente)
 GO
 
@@ -186,7 +186,7 @@ N -> solo se listara el descuento si el articulo esta asignado en el detalle del
 'SCHEMA', N'dbo',
 'TABLE', N'ERP_Descuentos',
 'COLUMN', N'todos_articulos';
-
+GO
 
 
 
