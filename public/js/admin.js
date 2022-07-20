@@ -2853,7 +2853,6 @@ function create_pdf_ordenServicio(response) {
         };
        
     });
-    
 
     var docDefinition = {
 
