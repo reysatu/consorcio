@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: JAIR
@@ -13,20 +14,21 @@ use Illuminate\Http\Request;
 use App\Http\Recopro\Compania\CompaniaInterface;
 use App\Http\Requests\CompaniaRequest;
 use DB;
+
 class CompaniaController extends Controller
 {
-     use CompaniaTrait;
+    use CompaniaTrait;
 
     public function __construct()
     {
-//        $this->middleware('json'); 
+        //        $this->middleware('json'); 
     }
 
     public function all(Request $request, CompaniaInterface $repo)
     {
 
         $s = $request->input('search', '');
-        $params = ['IdCompania', 'RutaData','RutaLog','FechaUltBackup','Estado','Base','Correo','Contacto','Telefono4','Telefono3','Telefono2','RazonSocial','NombreComercial','Direccion','Ruc','Telefono1'];
+        $params = ['IdCompania', 'RutaData', 'RutaLog', 'FechaUltBackup', 'Estado', 'Base', 'Correo', 'Contacto', 'Telefono4', 'Telefono3', 'Telefono2', 'RazonSocial', 'NombreComercial', 'Direccion', 'Ruc', 'Telefono1'];
         return parseList($repo->search($s), $request, 'IdCompania', $params);
     }
     public function createUpdate($id, CompaniaInterface $repo, Request $request)
@@ -38,14 +40,14 @@ class CompaniaController extends Controller
             $nombre = $data["RazonSocial"];
             $nombre = str_replace(" ", "_",  $nombre);
             $nombre = str_replace(".", "_",  $nombre);
-        
-            if(!empty($_FILES["file"]["name"])) {
+
+            if (!empty($_FILES["file"]["name"])) {
                 $response = $this->SubirArchivo($_FILES["file"],  base_path("public/logos/"), $nombre);
-                $datos["ruta_logo"] = "logos/".$response["NombreFile"];
+                $datos["ruta_logo"] = "logos/" . $response["NombreFile"];
             }
-           
-            $table="ERP_Compania";
-            $idt='IdCompania';
+
+            $table = "ERP_Compania";
+            $idt = 'IdCompania';
             $datos['RazonSocial'] = $data['RazonSocial'];
             $datos['direcciones_oficinas'] = $data['direcciones_oficinas'];
             $datos['Base'] = $data['Base'];
@@ -59,8 +61,8 @@ class CompaniaController extends Controller
             $datos['Telefono2'] = $data['Telefono2'];
             $datos['Telefono3'] = $data['Telefono3'];
             $datos['Telefono4'] = $data['Telefono4'];
-            $datos['Estado'] =$data['Estado'];
-            $datos['Contacto'] =$data['Contacto'];
+            $datos['Estado'] = $data['Estado'];
+            $datos['Contacto'] = $data['Contacto'];
             $datos['Correo'] = $data['Correo'];
             $datos['lema1'] = $data['lema1'];
             $datos['lema2'] = $data['lema2'];
@@ -68,18 +70,21 @@ class CompaniaController extends Controller
             $datos['departamento'] = $data['departamento'];
             $datos['provincia'] = $data['provincia'];
             $datos['distrito'] = $data['distrito'];
+            $datos['pie_1'] = $data['pie_1'];
+            $datos['pie_2'] = $data['pie_2'];
+            $datos['pie_3'] = $data['pie_3'];
             $w = $repo->findByCode($data['Ruc']);
-            if ($id !== '0') { 
+            if ($id !== '0') {
                 if ($w && $w->IdCompania != $id) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }
-                $repo->update($id, $datos); 
+                $repo->update($id, $datos);
             } else {
 
                 if ($w) {
                     throw new \Exception('Ya existe un documento con este Ruc. Por favor ingrese otro documento.');
                 }
-                $datos['IdCompania'] = $repo->get_consecutivo($table,$idt);
+                $datos['IdCompania'] = $repo->get_consecutivo($table, $idt);
                 $repo->create($datos);
             };
             DB::commit();
@@ -98,21 +103,21 @@ class CompaniaController extends Controller
     public function create(CompaniaInterface $repo, Request $request)
     {
         $data = $request->all();
-        $table="ERP_Compania";
-        $id='IdCompania';
-        $data['IdCompania'] = $repo->get_consecutivo($table,$id);
+        $table = "ERP_Compania";
+        $id = 'IdCompania';
+        $data['IdCompania'] = $repo->get_consecutivo($table, $id);
         $data['RazonSocial'] = strtoupper($data['RazonSocial']);
         $data['NombreComercial'] = strtoupper($data['NombreComercial']);
         $data['Direccion'] = strtoupper($data['Direccion']);
-       if(isset($data['FechaUltBackup'])){
-                $fecha = strval($data["FechaUltBackup"]);
-                $valores = explode("/", $fecha);
-                $fecha=$valores[2].'-'.$valores[1].'-'.$valores[0];
-                $data['FechaUltBackup'] =$fecha;
+        if (isset($data['FechaUltBackup'])) {
+            $fecha = strval($data["FechaUltBackup"]);
+            $valores = explode("/", $fecha);
+            $fecha = $valores[2] . '-' . $valores[1] . '-' . $valores[0];
+            $data['FechaUltBackup'] = $fecha;
         }
-        $estado='1';
-        if(!isset($data['Estado'])){
-            $estado='0';
+        $estado = '1';
+        if (!isset($data['Estado'])) {
+            $estado = '0';
         };
         $data['Estado'] =  $estado;
         $repo->create($data);
@@ -122,28 +127,27 @@ class CompaniaController extends Controller
             'Record' => []
         ]);
     }
-     public function find($id, CompaniaInterface $repo)
+    public function find($id, CompaniaInterface $repo)
     {
         try {
             $data = $repo->find($id);
             // $data['dFechacaducidad2']='';
-          
+
             // if($data[0]->dFechacaducidad!=null){
             //     $data['dFechacaducidad2']=date("Y-m-d", strtotime($data[0]->dFechacaducidad));
             // }
-           
+
             return response()->json([
                 'status' => true,
                 'data' => $data
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage()
             ]);
         }
-    } 
+    }
 
     public function update(CompaniaInterface $repo, Request $request)
     {
@@ -152,16 +156,16 @@ class CompaniaController extends Controller
         $data['RazonSocial'] = strtoupper($data['RazonSocial']);
         $data['NombreComercial'] = strtoupper($data['NombreComercial']);
         $data['Direccion'] = strtoupper($data['Direccion']);
-        if(isset($data['FechaUltBackup'])){
-                $fecha = strval($data["FechaUltBackup"]);
-                $valores = explode("/", $fecha);
-                $fecha=$valores[2].'-'.$valores[1].'-'.$valores[0];
-                $data['FechaUltBackup'] =$fecha;
+        if (isset($data['FechaUltBackup'])) {
+            $fecha = strval($data["FechaUltBackup"]);
+            $valores = explode("/", $fecha);
+            $fecha = $valores[2] . '-' . $valores[1] . '-' . $valores[0];
+            $data['FechaUltBackup'] = $fecha;
         }
-      
-        $estado='1';
-        if(!isset($data['Estado'])){
-            $estado='0';
+
+        $estado = '1';
+        if (!isset($data['Estado'])) {
+            $estado = '0';
         };
         $data['Estado'] =  $estado;
 

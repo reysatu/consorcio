@@ -526,6 +526,9 @@
                     'IdTipoDocumento': id_tipoDoc_Venta.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
                     'idsector':idsector.val(),
+                    'cNombres':$("#cNombres_c").val(),
+                    'cApepat':$("#cApepat_c").val(),
+                    'cApemat':$("#cApemat_c").val(),
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -1171,6 +1174,9 @@
                     if (data.nombres != null) {
                         var razon = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno;
                         razonsocial_cliente.val(razon);
+                        $("#cNombres_c").val(data.nombres);
+                        $("#cApepat_c").val(data.apellidoPaterno);
+                        $("#cApemat_c").val(data.apellidoMaterno);
                     } else if (data.razonSocial != null) {
                         var razon = data.razonSocial;
                         var direc = data.direccion;
@@ -1601,7 +1607,8 @@
             identiSelec = "A";
             var search_cc4 = getFormSearch('frm-search-cc4', 'search_cc4', 'LoadRecordsButtonCC4');
             table_container_cc4 = $("#table_container_Series_Articulo");
-            var url = 'getProductoSerie';
+            // var url = 'getProductoSerie';
+            var url = 'getProductoSerieStock';
             // if (naturalezaGeneral == "S") {
             //     url = 'getProductoSerieStock';
             // };
@@ -2095,7 +2102,7 @@
             //     var inp4 = $('<input type="number" id="cosMs_'+codigo+'" min="1" class="m_articulo_costo form-control input-sm" value="' + costonew + '" />');
             // }else{
             // alert("precio new " + precionew);      
-            var td4 = $('<td style="width: 40px !important;"><input style="width: 40px !important;" data-precioOrigen="' + precionew + '" impuesto_articulo="' + impuesto_articulo + '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text" codigo="' + codigo + '"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm" value="' + precionew + '" /></td>');
+            var td4 = $('<td style="width: 40px !important;"><input style="width: 60px !important;" data-precioOrigen="' + precionew + '" impuesto_articulo="' + impuesto_articulo + '" name="precio_unitario[]" onkeypress="return validDecimals(event, this, 2)" type="text" codigo="' + codigo + '"  id="precio_unitario_' + codigo + '" min="1" class="m_articulo_precio_unitario form-control input-sm"  value="' + precionew.toFixed(decimales_redondeo) + '" /></td>');
             var inp4 = $('<input name="costo[]"  id="costo_' + codigo + '" type="hidden"   value="' + costonew + '" /><input name="costo_total[]" id="costo_total_' + codigo + '"  type="hidden" value="' + impor + '" />');
             // }
 
@@ -2167,9 +2174,15 @@
             var td8 = $('<td class="text-center"></td>');
 
             var button_series = "";
-
+            // alert($("#estado").val());
+            var tipo_solicitud = $("#tipo_solicitud").val();
+            var estado = $("#estado").val();
+            
             if (posee_serie == "1") {
-                button_series = '&nbsp;&nbsp;<button data-cantidad="' + cantProducto + '" class="btn btn-success btn-xs agregar-series" data-tipo="' + tipo + '" title="Agregar Series" data-id="' + codigo + '" data-idarticulo="' + idProducto + '" data-articulo="' + desProducto + '" data-costo="' + costo + '"  data-posee-serie="' + posee_serie + '" type="button"><span class="fa fa-plus"></span>&nbsp;Agregar Series</button>';
+                if(tipo_solicitud == "1" || (tipo_solicitud == "2" && estado >= 4) || (tipo_solicitud == "3" && estado >= 4)) {
+                    button_series = '&nbsp;&nbsp;<button data-cantidad="' + cantProducto + '" class="btn btn-success btn-xs agregar-series" data-tipo="' + tipo + '" title="Agregar Series" data-id="' + codigo + '" data-idarticulo="' + idProducto + '" data-articulo="' + desProducto + '" data-costo="' + costo + '"  data-posee-serie="' + posee_serie + '" type="button"><span class="fa fa-plus"></span>&nbsp;Agregar Series</button>';
+                }
+               
             }
 
             var desactivar_del = "";

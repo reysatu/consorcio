@@ -312,6 +312,18 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
         return $result;
     }
 
+    public function get_parametro_alquiler() {
+        $sql = "SELECT * FROM ERP_Parametros WHERE id=24";
+        $result = DB::select($sql);
+        return $result;
+    }
+
+    public function get_parametro_tramite() {
+        $sql = "SELECT * FROM ERP_Parametros WHERE id=25";
+        $result = DB::select($sql);
+        return $result;
+    }
+
     public function get_parametro_articulo_movimiento_caja() {
         $sql = "SELECT * FROM ERP_Parametros WHERE id=14";
         $result = DB::select($sql);

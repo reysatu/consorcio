@@ -124,11 +124,39 @@ class MovimientoCajaController extends Controller
             $data_venta = array();
             $data_venta["idventa"] = "";
             if($data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ") {
-                $parametro_separacion = $repo->get_parametro_separacion();
+                
+                $idarticulo = "";
+                if($data["tipoMovimientoAdd"] == "SEP") {
+                    $parametro_separacion = $repo->get_parametro_separacion();
 
-                if(count($parametro_separacion) <= 0) {
-                    throw new Exception("Por favor cree el parametro con el id del producto de separación!");
+                    if(count($parametro_separacion) <= 0) {
+                        throw new Exception("Por favor cree el parametro con el id del producto de separación!");
+                    }
+
+                    $idarticulo = $parametro_separacion[0]->value;
                 }
+
+                if($data["tipoMovimientoAdd"] == "ALQ") {
+                    $parametro_alquiler = $repo->get_parametro_alquiler();
+
+                    if(count($parametro_alquiler) <= 0) {
+                        throw new Exception("Por favor cree el parametro con el id del producto de alquiler!");
+                    }
+
+                    $idarticulo = $parametro_alquiler[0]->value;
+                }
+
+                if($data["tipoMovimientoAdd"] == "TPL") {
+                    $parametro_tramite = $repo->get_parametro_tramite();
+
+                    if(count($parametro_tramite) <= 0) {
+                        throw new Exception("Por favor cree el parametro con el id del producto de tramite!");
+                    }
+
+                    $idarticulo = $parametro_tramite[0]->value;
+                }
+               
+               
                 
                 if($data["emitir_comprobante"] == "S") { // solo si hizo check en emitir comprobante
                     $data_venta = array();
@@ -156,7 +184,7 @@ class MovimientoCajaController extends Controller
                     $data_venta_detalle = array();
                     $data_venta_detalle["idventa"] = $data_venta["idventa"];
                     $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
-                    $data_venta_detalle["idarticulo"] = $parametro_separacion[0]->value;
+                    $data_venta_detalle["idarticulo"] = $idarticulo;
                     $data_venta_detalle["um_id"] = "07"; //codigo unidad
                     $data_venta_detalle["cantidad"] = 1;
                     $data_venta_detalle["precio_unitario"] = $data["montoAdd"];
@@ -166,7 +194,8 @@ class MovimientoCajaController extends Controller
                     $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
             
                     $data_venta_detalle["monto_total"] = $data["montoAdd"];
-                
+                    
+                    $data_venta_detalle['descripcion_articulo'] =strtoupper($data['conceptoAdd']); 
         
         
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
@@ -214,7 +243,7 @@ class MovimientoCajaController extends Controller
                 $data_ticket_detalle = array();
                 $data_ticket_detalle["idventa"] = $data_ticket["idventa"];
                 $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
-                $data_ticket_detalle["idarticulo"] = $parametro_separacion[0]->value;
+                $data_ticket_detalle["idarticulo"] = $idarticulo;
                 $data_ticket_detalle["um_id"] = "07"; //codigo unidad
                 $data_ticket_detalle["cantidad"] = 1;
                 $data_ticket_detalle["precio_unitario"] = $data["montoAdd"];
@@ -224,6 +253,8 @@ class MovimientoCajaController extends Controller
                 $data_ticket_detalle["monto_subtotal"] = $data["montoAdd"];
         
                 $data_ticket_detalle["monto_total"] = $data["montoAdd"];
+
+                $data_ticket_detalle['descripcion_articulo'] =strtoupper($data['conceptoAdd']); 
         
                 
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
@@ -287,6 +318,8 @@ class MovimientoCajaController extends Controller
                 $data_venta_detalle["monto_subtotal"] = $data["montoAdd"];
         
                 $data_venta_detalle["monto_total"] = $data["montoAdd"];
+
+                $data_venta_detalle['descripcion_articulo'] =strtoupper($data['conceptoAdd']); 
     
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                   
@@ -946,7 +979,7 @@ class MovimientoCajaController extends Controller
                     $data_venta["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
                     $data_venta["pagado"] = "0";
                     $data_venta["anticipo"] = $solicitud_credito[0]->cuota_inicial;
-                    if( $solicitud[0]->tipo_solicitud == 2) {
+                    if( $solicitud[0]->tipo_solicitud == 2 || $solicitud[0]->tipo_solicitud == 3) {
                         $data_venta["comprobante_x_saldo"] = "S"; // indica que es el comprobante por el saldo
                     } else {
                         $data_venta["comprobante_x_saldo"] = "N"; // indica que es el comprobante por el saldo

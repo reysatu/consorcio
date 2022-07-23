@@ -1,7 +1,7 @@
 /**
  * Created by JAIR on 4/5/2017.
  */
-  
+
 (function () {
     'use strict';
     angular.module('sys.app.companias')
@@ -9,119 +9,118 @@
         .controller('CompaniaCtrl', CompaniaCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
-    CompaniaCtrl.$inject = ['$scope', '_', 'RESTService','AlertFactory'];
+    CompaniaCtrl.$inject = ['$scope', '_', 'RESTService', 'AlertFactory'];
 
-    function CompaniaCtrl($scope,_, RESTService ,AlertFactory)
-    {
-       var modalCompania=$("#modalCompania");
-       var titleModalCompania=$("#titleModalCompania");
-       var  idCompania=$("#IdCompania");
-       var  ruc=$("#Ruc");
-       var  nombreComercial=$("#NombreComercial");
-       var  razonSocial=$("#RazonSocial");
-       var  direccion=$("#Direccion");
-       var  telefono1=$("#Telefono1");
-       var  telefono2=$("#Telefono2");
-       var  telefono3=$("#Telefono3");
-       var  telefono4=$("#Telefono4");
-       var  estado=$("#Estado");
-       var  contacto=$("#Contacto");
-       var correo=$("#Correo");
-       var base=$("#Base");
-       var rutaData=$("#RutaData");
-       var rutaData=$("#RutaData");
-       var rutaLog=$("#RutaLog");
-       var fechaUltBackup=$("#FechaUltBackup");
-       var state_text=$("#state_text");
-       var lema1=$("#lema1");
-       var lema2=$("#lema2");
-       var direcciones_oficinas=$("#direcciones_oficinas");
+    function CompaniaCtrl($scope, _, RESTService, AlertFactory) {
+        var modalCompania = $("#modalCompania");
+        var titleModalCompania = $("#titleModalCompania");
+        var idCompania = $("#IdCompania");
+        var ruc = $("#Ruc");
+        var nombreComercial = $("#NombreComercial");
+        var razonSocial = $("#RazonSocial");
+        var direccion = $("#Direccion");
+        var telefono1 = $("#Telefono1");
+        var telefono2 = $("#Telefono2");
+        var telefono3 = $("#Telefono3");
+        var telefono4 = $("#Telefono4");
+        var estado = $("#Estado");
+        var contacto = $("#Contacto");
+        var correo = $("#Correo");
+        var base = $("#Base");
+        var rutaData = $("#RutaData");
+        var rutaData = $("#RutaData");
+        var rutaLog = $("#RutaLog");
+        var fechaUltBackup = $("#FechaUltBackup");
+        var state_text = $("#state_text");
+        var lema1 = $("#lema1");
+        var lema2 = $("#lema2");
+        var direcciones_oficinas = $("#direcciones_oficinas");
 
-       var departamento = $('#departamento');
-       var provincia = $('#provincia');
-       var distrito = $('#distrito');
- 
+        var departamento = $('#departamento');
+        var provincia = $('#provincia');
+        var distrito = $('#distrito');
 
-       function getDepartamento(bandera) {
-           var id = "0";
-           RESTService.get('shops/TraerDepartamentos', id, function (response) {
-               if (!_.isUndefined(response.status) && response.status) {
-                   var data_p = response.data;
-                   departamento.html('');
-                   departamento.append('<option value="" >Seleccione</option>');
-                   _.each(response.data, function (item) {
-                       if (item.cDepartamento == bandera) {
-                           departamento.append('<option value="' + item.cDepartamento + '" selected >' + item.cDepartamento + '</option>');
-                       } else {
-                           departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
-                       };
 
-                   });
+        function getDepartamento(bandera) {
+            var id = "0";
+            RESTService.get('shops/TraerDepartamentos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    departamento.html('');
+                    departamento.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cDepartamento == bandera) {
+                            departamento.append('<option value="' + item.cDepartamento + '" selected >' + item.cDepartamento + '</option>');
+                        } else {
+                            departamento.append('<option value="' + item.cDepartamento + '" >' + item.cDepartamento + '</option>');
+                        };
 
-               } else {
-                   AlertFactory.textType({
-                       title: '',
-                       message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
-                       type: 'error'
-                   });
-               }
+                    });
 
-           });
-       }
-       function getProvincia(bandera, id) {
-           RESTService.get('shops/TraerProvincias', id, function (response) {
-               if (!_.isUndefined(response.status) && response.status) {
-                   var data_p = response.data;
-                   console.log(data_p);
-                   provincia.html('');
-                   provincia.append('<option value="" >Seleccione</option>');
-                   _.each(response.data, function (item) {
-                       if (item.cProvincia == bandera) {
-                           provincia.append('<option value="' + item.cProvincia + '" selected>' + item.cProvincia + '</option>');
-                       } else {
-                           provincia.append('<option value="' + item.cProvincia + '">' + item.cProvincia + '</option>');
-                       }
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
 
-                   });
+            });
+        }
+        function getProvincia(bandera, id) {
+            RESTService.get('shops/TraerProvincias', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                    provincia.html('');
+                    provincia.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cProvincia == bandera) {
+                            provincia.append('<option value="' + item.cProvincia + '" selected>' + item.cProvincia + '</option>');
+                        } else {
+                            provincia.append('<option value="' + item.cProvincia + '">' + item.cProvincia + '</option>');
+                        }
 
-               } else {
-                   AlertFactory.textType({
-                       title: '',
-                       message: 'Hubo un error . Intente nuevamente.',
-                       type: 'error'
-                   });
-               }
+                    });
 
-           });
-       }
-       function getDistrito(bandera, id) {
-           RESTService.get('shops/TraerDistritos', id, function (response) {
-               if (!_.isUndefined(response.status) && response.status) {
-                   var data_p = response.data;
-                   console.log(data_p);
-                   distrito.html('');
-                   distrito.append('<option value="" >Seleccione</option>');
-                   _.each(response.data, function (item) {
-                       if (item.cCodUbigeo == bandera) {
-                           distrito.append('<option value="' + item.cCodUbigeo + '" selected>' + item.cDistrito + '</option>');
-                       } else {
-                           distrito.append('<option value="' + item.cCodUbigeo + '">' + item.cDistrito + '</option>');
-                       }
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error . Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
 
-                   });
+            });
+        }
+        function getDistrito(bandera, id) {
+            RESTService.get('shops/TraerDistritos', id, function (response) {
+                if (!_.isUndefined(response.status) && response.status) {
+                    var data_p = response.data;
+                    console.log(data_p);
+                    distrito.html('');
+                    distrito.append('<option value="" >Seleccione</option>');
+                    _.each(response.data, function (item) {
+                        if (item.cCodUbigeo == bandera) {
+                            distrito.append('<option value="' + item.cCodUbigeo + '" selected>' + item.cDistrito + '</option>');
+                        } else {
+                            distrito.append('<option value="' + item.cCodUbigeo + '">' + item.cDistrito + '</option>');
+                        }
 
-               } else {
-                   AlertFactory.textType({
-                       title: '',
-                       message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
-                       type: 'error'
-                   });
-               }
+                    });
 
-           });
-       }
+                } else {
+                    AlertFactory.textType({
+                        title: '',
+                        message: 'Hubo un error al obtener el Artículo. Intente nuevamente.',
+                        type: 'error'
+                    });
+                }
 
-       departamento.change(function () {
+            });
+        }
+
+        departamento.change(function () {
             var bandera = 'xxxxxx';
             var id = departamento.val();
             getProvincia(bandera, id);
@@ -134,7 +133,7 @@
 
         });
 
-    
+
         var bandera = 'xxxxx';
         getDepartamento(bandera);
 
@@ -146,23 +145,22 @@
             $scope.chkState();
         });
 
-        $scope.chkState = function() {
+        $scope.chkState = function () {
             var txt = (estado.prop('checked')) ? 'Activo' : 'Inactivo';
             state_text.html(txt);
         };
-          function newCompania()
-        {
+        function newCompania() {
             titleModalCompania.html('Nueva Compania');
             modalCompania.modal('show');
         }
-        ruc.keypress(function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        if(code==13){
-              $('#show_loading').removeClass('ng-hide');
+        ruc.keypress(function (e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if (code == 13) {
+                $('#show_loading').removeClass('ng-hide');
                 getDatosCliente();
-        }
-    });
-    function cleanCompania () {
+            }
+        });
+        function cleanCompania() {
             cleanRequired();
             titleModalCompania.val("");
             idCompania.val("");
@@ -185,18 +183,19 @@
             lema2.val("");
             direcciones_oficinas.val("");
             fechaUltBackup.val("");
-             estado.prop('checked', true).iCheck('update');
-               $scope.chkState();
+            estado.prop('checked', true).iCheck('update');
+            $scope.chkState();
         }
         modalCompania.on('hidden.bs.modal', function (e) {
             cleanCompania();
-        });    
-  function findCompania(id) {
+        });
+        function findCompania(id) {
             titleModalCompania.html('Editar Compania');
             RESTService.get('companias/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    var data_p = response.data;
-                    var fec=moment(data_p.FechaUltBackup).format('YYYY-MM-DD');
+                    var data_p = response.data[0];
+                    // console.log(data_p);
+                    var fec = moment(data_p.FechaUltBackup).format('YYYY-MM-DD');
                     fechaUltBackup.val(fec);
                     idCompania.val(data_p.IdCompania);
                     ruc.val(data_p.Ruc);
@@ -216,16 +215,24 @@
                     rutaLog.val(data_p.RutaLog);
                     lema1.val(data_p.lema1);
                     lema2.val(data_p.lema2);
+                    $("#pie_1").val(data_p.pie_1);
+                    $("#pie_2").val(data_p.pie_2);
+                    $("#pie_3").val(data_p.pie_3);
                     $("#ruta_logo").val(data_p.ruta_logo);
                     direcciones_oficinas.val(data_p.direcciones_oficinas);
+                    // alert(data_p.cDepartamento);
+                    getDepartamento(data_p.cDepartamento);
+                     getProvincia(data_p.cProvincia,data_p.cDepartamento);
+                     getDistrito(data_p.cCodUbigeo,data_p.cProvincia);
+
                     var chk_state = (data_p.Estado == '1');
-                    
+
                     estado.prop('checked', chk_state).iCheck('update');
                     $scope.chkState();
-                   
+
                     modalCompania.modal('show');
+
                     
-                   
                 } else {
                     AlertFactory.textType({
                         title: '',
@@ -234,9 +241,8 @@
                     });
                 }
             });
-        }      
-  $scope.saveCompania = function()
-        {
+        }
+        $scope.saveCompania = function () {
             var bval = true;
             bval = bval && ruc.required();
             bval = bval && razonSocial.required();
@@ -248,17 +254,17 @@
             bval = bval && rutaData.required();
             bval = bval && rutaLog.required();
             bval = bval && fechaUltBackup.required();
-          console.log(razonSocial.val());
-          console.log("razon social");
-            if(ruc.val().length!=11){
+            console.log(razonSocial.val());
+            console.log("razon social");
+            if (ruc.val().length != 11) {
                 AlertFactory.textType({
-                            title: '',
-                            message: 'Longitud de RUC INCORRECTA',
-                            type: 'info'
+                    title: '',
+                    message: 'Longitud de RUC INCORRECTA',
+                    type: 'info'
                 });
-             bval = false;
+                bval = false;
             };
-            if(bval){
+            if (bval) {
                 //  var params = {
                 //     'Ruc':ruc.val(),
                 //     'NombreComercial':nombreComercial.val(),
@@ -297,11 +303,11 @@
                     cache: false,
                     contentType: false,
                     processData: false
-                }).done(function(response){
+                }).done(function (response) {
                     // console.log(res);
                     if (!_.isUndefined(response.status) && response.status) {
                         modalCompania.modal('hide');
-                            AlertFactory.textType({
+                        AlertFactory.textType({
                             title: '',
                             message: 'El registro se guardó correctamente',
                             type: 'success'
@@ -317,7 +323,7 @@
                         });
                     }
                 });
-                
+
                 //   RESTService.updated('companias/createCompania', idPe, params, function(response) {
                 //     if (!_.isUndefined(response.status) && response.status) {
                 //         modalCompania.modal('hide');
@@ -339,72 +345,72 @@
                 // });
             }
 
-        };       
-function getDatosCliente(){
-   
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      // Si nada da error
-      if (this.readyState == 4 && this.status == 200) {
-        // La respuesta, aunque sea JSON, viene en formato texto, por lo que tendremos que hace run parse
-        var data=JSON.parse(this.responseText);
-        console.log(data);
-        if(data.nombres!=null){
-            var razon=data.nombres+' '+data.apellidoPaterno+' '+data.apellidoMaterno;
-            // cApepat.val(data.apellidoPaterno);
-            // cApemat.val(data.apellidoMaterno);
-            razonSocial.val(razon);
-            // cNombres.val(data.nombres);
-        }else if(data.razonSocial!=null){
-             var razon=data.razonSocial;
-             var direc=data.direccion;
-            razonSocial.val(razon);
-            direccion.val(direc);
-        }else if(data.nombreComercial!=null){
-            var NCO=data.nombreComercial;
-            nombreComercial.val(NCO);
-        }else{
-            razonSocial.val("");
-              nombreComercial.val('');
-            direccion.val('');
-            AlertFactory.textType({
+        };
+        function getDatosCliente() {
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                // Si nada da error
+                if (this.readyState == 4 && this.status == 200) {
+                    // La respuesta, aunque sea JSON, viene en formato texto, por lo que tendremos que hace run parse
+                    var data = JSON.parse(this.responseText);
+                    console.log(data);
+                    if (data.nombres != null) {
+                        var razon = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno;
+                        // cApepat.val(data.apellidoPaterno);
+                        // cApemat.val(data.apellidoMaterno);
+                        razonSocial.val(razon);
+                        // cNombres.val(data.nombres);
+                    } else if (data.razonSocial != null) {
+                        var razon = data.razonSocial;
+                        var direc = data.direccion;
+                        razonSocial.val(razon);
+                        direccion.val(direc);
+                    } else if (data.nombreComercial != null) {
+                        var NCO = data.nombreComercial;
+                        nombreComercial.val(NCO);
+                    } else {
+                        razonSocial.val("");
+                        nombreComercial.val('');
+                        direccion.val('');
+                        AlertFactory.textType({
                             title: '',
                             message: 'No se encontró datos',
                             type: 'info'
-            });
-             $('#show_loading').addClass('ng-hide');
-        };
-        $('#show_loading').addClass('ng-hide');
-      }
-    };
-   
-        if(ruc.val().length==11){
-            xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/ruc/"+ruc.val()+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
-            xhttp.setRequestHeader("Content-type", "application/json");
-            xhttp.send();
-        }else{
-            AlertFactory.textType({
-                            title: '',
-                            message: 'dígitos del ruc estan incompletos',
-                            type: 'info'
-            });
-             nombreComercial.val('');
+                        });
+                        $('#show_loading').addClass('ng-hide');
+                    };
+                    $('#show_loading').addClass('ng-hide');
+                }
+            };
+
+            if (ruc.val().length == 11) {
+                xhttp.open("GET", "https://dniruc.apisperu.com/api/v1/ruc/" + ruc.val() + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJleXNhbmdhbWE3QGdtYWlsLmNvbSJ9.hfobQC8FM5IyKKSaa7usUXV0aY1Y8YthAhdN8LoMlMM", true);
+                xhttp.setRequestHeader("Content-type", "application/json");
+                xhttp.send();
+            } else {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'dígitos del ruc estan incompletos',
+                    type: 'info'
+                });
+                nombreComercial.val('');
                 direccion.val('');
-                  razonSocial.val("");
-            $('#show_loading').addClass('ng-hide');
+                razonSocial.val("");
+                $('#show_loading').addClass('ng-hide');
+
+            }
 
         }
-       
-}
-        
+
         var search = getFormSearch('frm-search-Compania', 'search_b', 'LoadRecordsButtonCompania');
 
         var table_container_Compania = $("#table_container_Compania");
         table_container_Compania.jtable({
             title: "Lista de Companias",
             paging: true,
-            sorting: true, 
-            actions: { 
+            sorting: true,
+            actions: {
                 listAction: base_url + '/companias/list',
                 deleteAction: base_url + '/companias/delete',
             },
@@ -416,13 +422,13 @@ function getDatosCliente(){
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
+                }, {
                     cssClass: 'btn-primary',
                     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
                     click: function () {
                         $scope.openDoc('companias/excel', {});
                     }
-                },{
+                }, {
                     cssClass: 'btn-danger-admin',
                     text: '<i class="fa fa-plus"></i> Nueva Compania',
                     click: function () {
@@ -450,37 +456,37 @@ function getDatosCliente(){
                     title: 'Ruc',
                 },
                 Telefono1: {
-                      title: 'Telefono 1',
+                    title: 'Telefono 1',
 
                 },
                 Telefono2: {
                     title: 'Telefono 2',
                     list: false,
                 },
-                 Telefono3: {
-                   title: 'Telefono 3',
-                   list: false,
+                Telefono3: {
+                    title: 'Telefono 3',
+                    list: false,
                 },
-                 Telefono4: {
-                     title: 'Telefono 4',
-                     list: false,
-                   
+                Telefono4: {
+                    title: 'Telefono 4',
+                    list: false,
+
                 },
-                 Contacto: {
+                Contacto: {
                     title: 'Contacto',
-                     list: false,
+                    list: false,
 
                 },
                 Correo: {
-                     title: 'Correo',
-                     list: false,
+                    title: 'Correo',
+                    list: false,
                 },
-                 Base: {
+                Base: {
                     title: 'Base',
                     list: false,
                 },
                 Estado: {
-                  title: 'Estado',
+                    title: 'Estado',
                     values: { '0': 'Inactivo', '1': 'Activo' },
                     type: 'checkbox',
                     defaultValue: '1',
@@ -494,12 +500,12 @@ function getDatosCliente(){
                     list: false,
                 },
                 FechaUltBackup: {
-                   title: 'Fecha Backup',
-                   type: 'date',
+                    title: 'Fecha Backup',
+                    type: 'date',
                     displayFormat: 'dd/mm/yy',
-                   list: false,
+                    list: false,
                 },
-                 edit: {
+                edit: {
                     width: '1%',
                     sorting: false,
                     edit: false,
@@ -509,34 +515,34 @@ function getDatosCliente(){
                         return '<a href="javascript:void(0)" title="Editar" class="edit_cont" data-code="' +
                             data.record.IdCompania + '"><i class="fa fa-pencil-square-o fa-1-5x fa-green"></i></a>';
                     }
-                }               
+                }
             },
-             recordsLoaded: function (event, data) {
+            recordsLoaded: function (event, data) {
                 $('.edit_cont').click(function (e) {
                     var id = $(this).attr('data-code');
                     findCompania(id);
                     e.preventDefault();
                 });
             },
-           
+
 
             formCreated: function (event, data) {
-                data.form.find('input[name="Categoria"]').attr('onkeypress','return soloLetras(event)');
-                $("#Edit-Ruc").attr('maxlength','11');
+                data.form.find('input[name="Categoria"]').attr('onkeypress', 'return soloLetras(event)');
+                $("#Edit-Ruc").attr('maxlength', '11');
                 $('#Edit-Estado').parent().addClass('i-checks');
-               
+
                 $('.i-checks').iCheck({
                     checkboxClass: 'icheckbox_square-green'
                 }).on('ifChanged', function (e) {
                     $(e.target).click();
-                     if(e.target.value=='1'){
+                    if (e.target.value == '1') {
                         $("#Edit-Estado").val("0");
                         $(".i-checks span").text("Inactivo");
 
-                     }else{
+                    } else {
                         $("#Edit-Estado").val("1");
                         $(".i-checks span").text("Activo");
-                     };
+                    };
                 });
             },
             formSubmitting: function (event, data) {
@@ -552,7 +558,7 @@ function getDatosCliente(){
             }
         });
 
-        generateSearchForm('frm-search-Compania', 'LoadRecordsButtonCompania', function(){
+        generateSearchForm('frm-search-Compania', 'LoadRecordsButtonCompania', function () {
             table_container_Compania.jtable('load', {
                 search: $('#search_b').val()
             });
@@ -571,4 +577,4 @@ function getDatosCliente(){
         $urlRouterProvider.otherwise('/');
     }
 })
-();
+    ();

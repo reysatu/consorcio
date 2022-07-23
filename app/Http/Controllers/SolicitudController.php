@@ -467,7 +467,9 @@ class SolicitudController extends Controller
         $datos["solicitud_articulo"] = $solicitud_articulo; 
         $datos["producto"] = $Repo->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
         $datos["segunda_venta"] = $repo_caja->get_segunda_venta_credito($cCodConsecutivo, $nConsecutivo); 
-
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
         $pdf = PDF::loadView("solicitud.clausula_solicitud", $datos);
         return $pdf->stream("clausula_solicitud.pdf"); // ver
     }

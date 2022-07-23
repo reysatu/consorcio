@@ -307,6 +307,10 @@
                 // agregar campo comentario facturacion
                 $comentario_facturacion = (count($solicitud) > 0 && isset($solicitud[0]->comentario_facturacion)) ? $solicitud[0]->comentario_facturacion : "";
                 
+                if($comentario_facturacion == "" && count($venta) > 0) {
+                    $comentario_facturacion == $venta[0]->descripcion;
+                }
+
                 echo '<tr>';
                 echo '  <td></td>';
                 echo '  <td></td>';
@@ -353,7 +357,8 @@
                         $importe_financiar = ($solicitud[0]->t_monto_total - $venta_anticipo[0]->t_monto_total);
                         echo '<tr>';
                         echo '  <td colspan="3">Precio de Venta '.$solicitud[0]->simbolo_moneda.' Solic.</td>';
-                        echo '  <td>'.number_format($venta[0]->t_monto_total, 2).'</td>';
+                        // echo '  <td>'.number_format($venta[0]->t_monto_total, 2).'</td>';
+                        echo '  <td>'.number_format($solicitud[0]->t_monto_total, 2).'</td>';
                         echo '</tr>';
 
                         echo '<tr>';

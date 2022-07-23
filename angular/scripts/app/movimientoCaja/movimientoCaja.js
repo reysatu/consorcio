@@ -877,11 +877,12 @@ table_container_bancos.jtable('load');
                 bval = bval && conceptoAdd.required();
             }
 
-            if (tipoMovimientoAdd.val() == 'SEP' && emitir_comprobante == "S") {
+            if ((tipoMovimientoAdd.val() == 'SEP' || tipoMovimientoAdd.val() == 'TPL' || tipoMovimientoAdd.val() == 'ALQ') && emitir_comprobante == "S") {
                 bval = bval && $("#documento_cliente").required();
                 bval = bval && $("#tipo_doc_venta").required();
                 bval = bval && $("#serie_comprobante_m").required();
             }
+            
             if (bval) {
                 var to = cuentaBancaria.val();
                 var toCuenta = to.split('*');

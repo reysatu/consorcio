@@ -50,6 +50,9 @@ class CustomerController extends Controller
             $dato['cEmail'] = strtoupper($data['correo_electronico']);
             $dato['cCelular'] = strtoupper($data['celular']);
             $dato['cEstadoCivil'] = strtoupper($data['cEstadoCivil']);
+            $dato['cNombres'] = strtoupper($data['cNombres']);
+            $dato['cApepat'] = strtoupper($data['cApepat']);
+            $dato['cApemat'] = strtoupper($data['cApemat']);
 
             $tip='06';
             $raz=strtoupper($data['razonsocial_cliente']);

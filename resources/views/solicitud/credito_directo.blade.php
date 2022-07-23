@@ -25,7 +25,8 @@
             top: 0.9cm;
             left: 0.5cm;
             right: 0.5cm;
-            height: 3cm;
+            height: 2.1cm;
+            /* border: 1px solid red; */
             /* text-align: center; */
             /* line-height: 0.8cm; */
             font-family: 'Times New Roman' !important;
@@ -456,16 +457,16 @@
            
         </table>
 
-        <table style="width: 100%;">
+        <table style="width: 100%; ">
             <tr>
                 <td style="border: none !important; text-align: center;"><strong>DECLARO BAJO JURAMENTO QUE LA INFORMACIÓN PROPORCIONADA ES VERDADERA AUTORIZO A QUE SE VERIFIQUE LOS DATOS CONSIGNADOS EN LA PRESENTE.</strong></td>
             </tr>>
         </table>
 
             
-        <br><br><br><br><br><br>
+       
             
-        <table style="width: 100%;">
+        <table style="width: 100%; margin-top: 130px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>

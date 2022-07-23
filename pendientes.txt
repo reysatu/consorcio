@@ -786,24 +786,24 @@ Entrega a Servicio Técnico o Clientes
 - En un documento procesado que tiene un artículo que maneja serie, al hacer clic en el botón ver series no se visualiza la serie entregada.
 
 Solicitud de Venta
-- En la lista para elegir las series se están mostrando series que no poseen stock.
-- Revisar el ajuste de decimales, el el campo precio no está tomando en cuenta el redondeo configurado.
-- Ampliar el campo precio (el campo que es modificable).
-- El registro de la serie debe habilitarse cuando: es al contado (en cualquier estado), es a crédito directo o financiero en el estado Aprobado hacia adelante.
-- En la pantalla de Datos de crédito no está jalando los datos del fiador al registrar el documento (Nombres y Apellidos).
-- La impresión de las solicitud de venta a crédito financiero procurar que haya espacio para firmar y que se visualice la linea del recuadro izquierdo.
-- En el formato de impresión de cláusula adicional: en condición de pago debe decir a contado o crédito (si es crédito directo o financiero), la fecha debe ser el de la boleta de venta que se visualiza en el documento, falta el campo para agregar una descripción adicional después de la condición de pago y quitar firma de concesionario.
+- En la lista para elegir las series se están mostrando series que no poseen stock. * 
+- Revisar el ajuste de decimales, el el campo precio no está tomando en cuenta el redondeo configurado. *
+- Ampliar el campo precio (el campo que es modificable). *
+- El registro de la serie debe habilitarse cuando: es al contado (en cualquier estado), es a crédito directo o financiero en el estado Aprobado hacia adelante. *
+- En la pantalla de Datos de crédito no está jalando los datos del fiador al registrar el documento (Nombres y Apellidos). *
+- La impresión de las solicitud de venta a crédito financiero procurar que haya espacio para firmar y que se visualice la linea del recuadro izquierdo. *
+- En el formato de impresión de cláusula adicional: en condición de pago debe decir a contado o crédito (si es crédito directo o financiero), la fecha debe ser el de la boleta de venta que se visualiza en el documento, falta el campo para agregar una descripción adicional después de la condición de pago y quitar firma de concesionario. *
 
 Movimientos de Caja / Movimientos de Caja (Alquileres y Tramite documentario)
-- Debe validar que se registre la serie del comprobante de venta.
-- Configurar parámetro del artículo que debe salir en el comprobante de venta y en el ticket.
-- El concepto que se registra debe mostrarse en el campo comentario del comprobante de venta.
+- Debe validar que se registre la serie del comprobante de venta. *
+- Configurar parámetro del artículo que debe salir en el comprobante de venta y en el ticket. *
+- El concepto que se registra debe mostrarse en el campo comentario del comprobante de venta. *
 
 
 Movimientos de Caja / Solicitudes
-- Al cobrar la inicial de una solicitud de crédito financiero, en el ticket se está imprimiendo el saldo pendiente y no la inicial.
-- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero, no se está mostrando en el detalle el anticipo de la cuota inicial.
-- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero o crédito directo en el campo Precio de Venta S/ Solic. está mostrando el saldo y no el valor total de la venta.
+- Al cobrar la inicial de una solicitud de crédito financiero, en el ticket se está imprimiendo el saldo pendiente y no la inicial. *
+- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero, no se está mostrando en el detalle el anticipo de la cuota inicial. *
+- En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero o crédito directo en el campo Precio de Venta S/ Solic. está mostrando el saldo y no el valor total de la venta. *
 
 Nuevo Formato de Documento de Venta
 - Agregar campo de datos de factura electrónica en el maestro de compañía
