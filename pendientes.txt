@@ -806,7 +806,7 @@ Movimientos de Caja / Solicitudes
 - En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero o crédito directo en el campo Precio de Venta S/ Solic. está mostrando el saldo y no el valor total de la venta. *
 
 Nuevo Formato de Documento de Venta
-- Agregar campo de datos de factura electrónica en el maestro de compañía
+- Agregar campo de datos de factura electrónica en el maestro de compañía * 
 
 
 Solicitudes de venta

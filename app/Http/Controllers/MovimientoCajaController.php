@@ -106,7 +106,7 @@ class MovimientoCajaController extends Controller
             $datoDet['descripcion'] =strtoupper($data['conceptoAdd']); 
             $datoDet['idCajaDiaria'] =$id;
             $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
-            if($data['tipoMovimientoAdd']=='ING' || $data["tipoMovimientoAdd"] == "SEP"){
+            if($data['tipoMovimientoAdd']=='ING' || $data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ"){
                 $datoDet['naturaleza'] ='E';
             } else {
                 $datoDet['naturaleza'] ='S';

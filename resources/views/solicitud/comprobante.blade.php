@@ -37,7 +37,7 @@
             bottom: -100px; 
             left: 1cm;
             right: 1cm;
-            height: 200px; 
+            height: 350px; 
             /* border: 1px solid black; */
 
             /** Extra personal styles **/
@@ -462,6 +462,7 @@
                         </tr>
                         <tr>
                             <td>18% I.G.V.</td>
+                
                             <td>{{ $venta[0]->Simbolo }}</td>
                             <td style="text-align: right; border: 1px solid black;"><?php echo number_format($venta[0]->t_impuestos, 2); ?></td>
                         </tr>
@@ -477,6 +478,18 @@
                             </td>
                         </tr>
                     </table>
+                </td>
+            </tr>
+            
+        </table>
+        <table>
+            <tr>
+                <td></td>
+                <td>
+                    <span id="pie_1" style="display: block;vtext-align: justify;"><?php echo $empresa[0]->pie_1; ?></span><br>
+                    <span id="pie_2" style="display: block; text-align: justify;"><?php echo $empresa[0]->pie_2; ?></span><br>
+                
+                    <span id="pie_3" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_3; ?> </span>
                 </td>
             </tr>
         </table>
