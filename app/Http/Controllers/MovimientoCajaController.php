@@ -146,6 +146,7 @@ class MovimientoCajaController extends Controller
                     $idarticulo = $parametro_alquiler[0]->value;
                 }
 
+
                 if($data["tipoMovimientoAdd"] == "TPL") {
                     $parametro_tramite = $repo->get_parametro_tramite();
 
@@ -156,6 +157,7 @@ class MovimientoCajaController extends Controller
                     $idarticulo = $parametro_tramite[0]->value;
                 }
                
+              
                
                 
                 if($data["emitir_comprobante"] == "S") { // solo si hizo check en emitir comprobante
@@ -177,7 +179,7 @@ class MovimientoCajaController extends Controller
                     $data_venta["idcajero"] = auth()->id();
                     $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
                     $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
-        
+                  
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
         
                    
@@ -197,17 +199,18 @@ class MovimientoCajaController extends Controller
                     
                     $data_venta_detalle['descripcion_articulo'] =strtoupper($data['conceptoAdd']); 
         
-        
+                 
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                       
-                    
+                
                     $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
+                       
                     $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
                 }
-                
+              
                
 
-
+              
                 // GUARDAR TAMBIEN UN TICKET
                 $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
                 if(count($ticket) <= 0) {
