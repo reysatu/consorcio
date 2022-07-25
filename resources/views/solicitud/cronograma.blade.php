@@ -27,7 +27,7 @@
             right: 2cm;
             height: 1.3cm;
             /* text-align: center; */
-            line-height: 0.8cm;
+            /* line-height: 0.8cm; */
             font-family: 'Times New Roman' !important;
         }
 
