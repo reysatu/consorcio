@@ -109,7 +109,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -147,7 +147,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;" ><strong>DATOS DEL AVAL</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:11px!important;" ><strong>DATOS DEL AVAL</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -190,7 +190,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL CREDITO</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL CREDITO</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -240,7 +240,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL BIEN</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL BIEN</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
