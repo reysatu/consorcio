@@ -57,3 +57,6 @@ Route::post('aprobacionSolicituds/totalesAproba', ['as' => 'aprobacionSolicituds
 Route::post('aprobacionSolicituds/listpendientesCobro', ['as' => 'aprobacionSolicituds.listpendientesCobro', 'uses' => 'AprobacionSolicitudController@listpendientesCobro']);
 
 Route::put('aprobacionSolicituds/updateComentarioAprobacion/{id}', ['as' => 'aprobacionSolicituds.updateComentarioAprobacion', 'uses' => 'AprobacionSolicitudController@updateComentarioAprobacion']);
+
+
+Route::get('aprobacionSolicituds/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
