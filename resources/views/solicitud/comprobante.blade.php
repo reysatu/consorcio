@@ -486,7 +486,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <span id="pie_1" style="display: block;vtext-align: center;"><?php echo $empresa[0]->pie_1; ?></span><br>
+                    <span id="pie_1" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_1; ?></span><br>
                     <span id="pie_2" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_2; ?></span><br>
                 
                     <span id="pie_3" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_3; ?> </span>
