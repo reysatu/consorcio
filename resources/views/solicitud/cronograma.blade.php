@@ -76,6 +76,9 @@
             /* padding-botton: 2px; */
 			
         }
+        hr {
+            border: none;
+        }
     </style>
    
 </head>
