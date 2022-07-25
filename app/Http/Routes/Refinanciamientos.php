@@ -31,3 +31,8 @@ Route::post('refinanciamientos/get_caja_tienda', 'RefinanciamientosController@ge
 Route::get('refinanciamientos/get_cliente/{id}', ['as' => 'refinanciamientos.get_cliente', 'uses' => 'CustomerController@get_cliente_documento']);
 
 Route::post('refinanciamientos/obtener_consecutivo_comprobante', 'RefinanciamientosController@obtener_consecutivo_comprobante');
+
+
+Route::get('refinanciamientos/imprimir_cronograma/{id}', 'MovimientoCajaController@imprimir_cronograma');
+
+Route::get('refinanciamientos/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
