@@ -14,7 +14,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 3cm;
+            margin-top: 2.9cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -25,7 +25,7 @@
             top: 0.9cm;
             left: 2cm;
             right: 2cm;
-            height: 3cm;
+            height: 2cm;
             /* text-align: center; */
             line-height: 0.8cm;
             font-family: 'Times New Roman' !important;
@@ -37,7 +37,7 @@
             font-family: 'Roboto', sans-serif;
             box-sizing: border-box;
             /* font-weight: bold; */
-            font-size: 10px;
+            font-size: 8px;
         }
         
     
@@ -76,9 +76,9 @@
             /* padding-botton: 2px; */
 			
         }
-        hr {
+        /* hr {
             border: none;
-        }
+        } */
     </style>
    
 </head>
@@ -112,7 +112,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -150,7 +150,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:11px!important;" ><strong>DATOS DEL AVAL</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;" ><strong>DATOS DEL AVAL</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -193,7 +193,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL CREDITO</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL CREDITO</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -243,7 +243,7 @@
                 <td style="width: 50%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:11px!important;"><strong>DATOS DEL BIEN</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL BIEN</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
