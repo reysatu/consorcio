@@ -153,6 +153,8 @@ class RefinanciamientosController extends Controller
                     $data_venta["t_impuestos"] = $t_impuestos;
                     $data_venta["pagado"] = "0";
                     $data_venta["saldo"] = $t_monto_total;
+
+                        
                     $data_venta["condicion_pago"] =  $comprobante_saldo[0]->idcondicionpago;
 
                     // print_r($data_venta);
