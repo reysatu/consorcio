@@ -14,7 +14,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 2.9cm;
+            margin-top: 1.9cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -25,7 +25,7 @@
             top: 0.9cm;
             left: 2cm;
             right: 2cm;
-            height: 2cm;
+            height: 1cm;
             /* text-align: center; */
             line-height: 0.8cm;
             font-family: 'Times New Roman' !important;
@@ -292,7 +292,7 @@
            
         </table>
         <hr>
-        <table style="width: 100%; border: 1px solid black !important; font-size: 10px !important;" >
+        <table style="width: 100%; border: 1px solid black !important; font-size: 8px !important;" >
             <tr style="">
                 <td style="border-bottom: 1px solid black;">F. VENCE</td>
                 <td style="border-bottom: 1px solid black;">CUOTA</td>
