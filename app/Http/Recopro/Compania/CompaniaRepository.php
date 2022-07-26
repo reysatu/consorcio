@@ -68,7 +68,7 @@ class CompaniaRepository implements CompaniaInterface
         left join ERP_Ubigeo as ub on c.ubigeo=ub.cCodUbigeo 
         
         where c.IdCompania=$id");
-        return $mostra;
+        return $mostra[0];
     }
     public function create(array $attributes)
     {

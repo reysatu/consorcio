@@ -1044,7 +1044,8 @@
 
                                 var id = response.conformidad[0].cCodConsecutivo + "|" + response.conformidad[0].nConsecutivo;
 
-                                window.open("movimientoCajas/imprimir_cronograma/" + id);
+                                // window.open("movimientoCajas/imprimir_cronograma/" + id);
+                                window.open("aprobacionSolicituds/imprimir_cronograma/" + id);
 
 
                             }

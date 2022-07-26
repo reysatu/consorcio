@@ -14,7 +14,7 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 3cm;
+            margin-top: 1.5cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
             margin-bottom: 2cm;
@@ -22,12 +22,12 @@
             
         header {
             position: fixed;
-            top: 0.9cm;
+            top: 0.2cm;
             left: 2cm;
             right: 2cm;
-            height: 3cm;
+            height: 1.3cm;
             /* text-align: center; */
-            line-height: 0.8cm;
+            /* line-height: 0.8cm; */
             font-family: 'Times New Roman' !important;
         }
 
@@ -37,7 +37,7 @@
             font-family: 'Roboto', sans-serif;
             box-sizing: border-box;
             /* font-weight: bold; */
-            font-size: 12px;
+            font-size: 8px;
         }
         
     
@@ -76,6 +76,9 @@
             /* padding-botton: 2px; */
 			
         }
+        /* hr {
+            border: none;
+        } */
     </style>
    
 </head>
@@ -106,10 +109,11 @@
         <hr>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 50%;">
+                <td style="width: 10%;"></td>
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -144,10 +148,10 @@
                         </tr>
                     </table>   
                 </td>
-                <td style="width: 50%;">
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;" ><strong>DATOS DEL AVAL</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;" ><strong>DATOS DEL AVAL</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -187,10 +191,11 @@
 
         <table style="width: 100%;">
             <tr>
-                <td style="width: 50%;">
+                <td style="width: 10%;"></td>
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL CREDITO</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL CREDITO</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -237,10 +242,10 @@
                         </tr>
                     </table>   
                 </td>
-                <td style="width: 50%;">
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
-                            <td colspan="2" style="width: 100%; font-size:14px!important;"><strong>DATOS DEL BIEN</strong></td>
+                            <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL BIEN</strong></td>
                         </tr>
                         <tr >
                             <td colspan="2" style="height: 5px;"> </td>
@@ -289,7 +294,7 @@
            
         </table>
         <hr>
-        <table style="width: 100%; border: 1px solid black !important; font-size: 10px !important;" >
+        <table style="width: 100%; border: 1px solid black !important; font-size: 8px !important;" >
             <tr style="">
                 <td style="border-bottom: 1px solid black;">F. VENCE</td>
                 <td style="border-bottom: 1px solid black;">CUOTA</td>
@@ -355,9 +360,9 @@
                 <td colspan="6" style="font-size: 15px;"><strong>IMPORTANTE</strong></td>
             </tr>
             <tr>
-                <td colspan="6" style="text-align: justify;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
+                <td colspan="6" style="text-align: justify; font-size: 9px !important;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
                 <!-- Los retrasos seran grabados con intereses. <strong>Señor cliente agradecemos realizar los pagos en caja ubicada en la oficina de la empresa, o a su gestor de cobranza de ninguna manera al vendedor y/o terceras personas, la empresa no se responsabiliza en caso omiso a esta aclaración.</strong><br>La tarjeta de propiedad no es una cortesía que otorgamos a nuestros clientes el mismo que se encuentra sujeta a los criterios autónomos de cada registrador público, por lo tanto nuestra empresa no se hace responsable por las demoras ocacionadas en el criterio del proceso registral, así como tampoco a demoras atribuidos a certificaciones, inscripciones de garantias y pagos atrasados. -->
-                <strong>Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración.<br>También puede realizar sus pagos en las siguientes cuentas:</strong>
+                <span style="">Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración. También puede realizar sus pagos en las siguientes cuentas:</span>
                 </td>
             </tr>
             <tr>

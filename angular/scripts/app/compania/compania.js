@@ -193,7 +193,7 @@
             titleModalCompania.html('Editar Compania');
             RESTService.get('companias/find', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    var data_p = response.data[0];
+                    var data_p = response.data;
                     // console.log(data_p);
                     var fec = moment(data_p.FechaUltBackup).format('YYYY-MM-DD');
                     fechaUltBackup.val(fec);

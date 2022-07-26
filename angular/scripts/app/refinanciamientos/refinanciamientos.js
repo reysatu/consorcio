@@ -779,19 +779,22 @@
                            
                             var id = data.datos[0].cCodConsecutivo_solicitud+ "|" + data.datos[0].nConsecutivo_solicitud;
 
-                            window.open("movimientoCajas/imprimir_cronograma/" + id);
+                            // window.open("movimientoCajas/imprimir_cronograma/" + id);
+                            window.open("refinanciamientos/imprimir_cronograma/" + id);
 
                              //NUEVA VENTA
                             var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
 
     
-                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            // window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            window.open("refinanciamientos/imprimir_comprobante/" + id);
 
                             // NOTA DE CREDITO
                             var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.idnota;
 
     
-                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            // window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            window.open("refinanciamientos/imprimir_comprobante/" + id);
 
 
                         } else {
