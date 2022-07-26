@@ -362,7 +362,7 @@
             <tr>
                 <td colspan="6" style="text-align: justify;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
                 <!-- Los retrasos seran grabados con intereses. <strong>Señor cliente agradecemos realizar los pagos en caja ubicada en la oficina de la empresa, o a su gestor de cobranza de ninguna manera al vendedor y/o terceras personas, la empresa no se responsabiliza en caso omiso a esta aclaración.</strong><br>La tarjeta de propiedad no es una cortesía que otorgamos a nuestros clientes el mismo que se encuentra sujeta a los criterios autónomos de cada registrador público, por lo tanto nuestra empresa no se hace responsable por las demoras ocacionadas en el criterio del proceso registral, así como tampoco a demoras atribuidos a certificaciones, inscripciones de garantias y pagos atrasados. -->
-                <span style="font-weigth: bold">Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración. También puede realizar sus pagos en las siguientes cuentas:</span>
+                <span style="font-weight: bold;">Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración. También puede realizar sus pagos en las siguientes cuentas:</span>
                 </td>
             </tr>
             <tr>
