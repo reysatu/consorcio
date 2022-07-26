@@ -109,8 +109,8 @@
         <hr>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 20%;"></td>
-                <td style="width: 40%;">
+                <td style="width: 10%;"></td>
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
                             <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL SOLICITANTE</strong></td>
@@ -148,7 +148,7 @@
                         </tr>
                     </table>   
                 </td>
-                <td style="width: 40%;">
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
                             <td colspan="2" style="width: 100%; font-size:9px!important;" ><strong>DATOS DEL AVAL</strong></td>
@@ -191,8 +191,8 @@
 
         <table style="width: 100%;">
             <tr>
-                <td style="width: 40%;"></td>
-                <td style="width: 40%;">
+                <td style="width: 10%;"></td>
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
                             <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL CREDITO</strong></td>
@@ -242,7 +242,7 @@
                         </tr>
                     </table>   
                 </td>
-                <td style="width: 40%;">
+                <td style="width: 45%;">
                     <table style="width: 100%;">
                         <tr>
                             <td colspan="2" style="width: 100%; font-size:9px!important;"><strong>DATOS DEL BIEN</strong></td>
@@ -360,7 +360,7 @@
                 <td colspan="6" style="font-size: 15px;"><strong>IMPORTANTE</strong></td>
             </tr>
             <tr>
-                <td colspan="6" style="text-align: justify;">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
+                <td colspan="6" style="">Señor cliente, se le recomienda pagar puntualmente para evitar cobro de interes y gastos.
                 <!-- Los retrasos seran grabados con intereses. <strong>Señor cliente agradecemos realizar los pagos en caja ubicada en la oficina de la empresa, o a su gestor de cobranza de ninguna manera al vendedor y/o terceras personas, la empresa no se responsabiliza en caso omiso a esta aclaración.</strong><br>La tarjeta de propiedad no es una cortesía que otorgamos a nuestros clientes el mismo que se encuentra sujeta a los criterios autónomos de cada registrador público, por lo tanto nuestra empresa no se hace responsable por las demoras ocacionadas en el criterio del proceso registral, así como tampoco a demoras atribuidos a certificaciones, inscripciones de garantias y pagos atrasados. -->
                 <strong>Agradeceremos realizar los pagos en caja ubicada en la oficina de la empresa, a su gestor de cobranza, de ninguna manera pagar al vendedor y/o terceras personas. La empresa nos responsabiliza en caso omiso a esta aclaración. También puede realizar sus pagos en las siguientes cuentas:</strong>
                 </td>
