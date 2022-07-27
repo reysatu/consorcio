@@ -1800,6 +1800,10 @@
                 <h4 class="modal-title" id="">Emitir Comprobante</h4>
             </div>
             <form id="formulario-emitir-comprobante">
+                <input type="hidden" name="idventa_separacion" id="idventa_separacion">
+                 
+                <input type="hidden" name="idventa_nota" id="idventa_nota">
+                <input type="hidden" name="devolucion_producto" id="devolucion_producto">
                 <div class="modal-body">
                     <div class="form-horizontal">
                         <div class="form-group">
@@ -1899,10 +1903,7 @@
             </div>
             <form id="formulario-formas-pago">
                 <div class="modal-body">
-                    <input type="hidden" name="idventa_separacion" id="idventa_separacion">
-                 
-                    <input type="hidden" name="idventa_nota" id="idventa_nota">
-                    <input type="hidden" name="devolucion_producto" id="devolucion_producto">
+                   
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="" class="control-label negrita col-md-4">Tipo de Forma de Pago</label>
