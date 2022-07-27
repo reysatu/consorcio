@@ -209,12 +209,12 @@
                 echo '  <td>' . number_format($value->precio_unitario, 2) . '</td>';
                 echo '  <td>' . $value->code_article . '</td>';
                 echo '  <td>' . $value->cantidad . '</td>';
-                if(empty($value->descripcion_articulo)) {
+                // if(empty($value->descripcion_articulo)) {
 
-                    echo '  <td>' . $value->producto . '</td>';
-                } else {
-                    echo '  <td>' . $value->descripcion_articulo . '</td>';
-                }
+                //     echo '  <td>' . $value->producto . '</td>';
+                // } else {
+                    echo '  <td>' . $value->producto. "-". $value->descripcion_articulo . '</td>';
+                // }
                 echo '</tr>';
             }
 
@@ -466,7 +466,7 @@
             
        
             
-        <table style="width: 100%; margin-top: 130px;">
+        <table style="width: 100%; margin-top: 120px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>
