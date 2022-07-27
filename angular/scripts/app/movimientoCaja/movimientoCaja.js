@@ -2096,7 +2096,7 @@ table_container_bancos.jtable('load');
             var tipo = $(this).attr("tipo");
             var monto_venta = parseFloat($(this).find("option[value="+idventa+"]").attr("t_monto_total"));
             var devolucion_producto = $(this).find("option[value="+idventa+"]").attr("devolucion_producto");
-            alert(idventa);
+            // alert(idventa);
            
           
             if(tipo == "separacion") {
