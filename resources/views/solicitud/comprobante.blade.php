@@ -216,7 +216,7 @@
 
                     //     echo '  <td>'.$value->producto.'-'.$value->code_article.'</td>';
                     // } else {
-                        echo '  <td>' . $value->descripcion_articulo."-". $value->producto .'-'.$value->code_article. '</td>';
+                        echo '  <td>' . $value->producto .'-'. $value->descripcion_articulo."-". $value->code_article. '</td>';
                     // }
                    
                     echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
