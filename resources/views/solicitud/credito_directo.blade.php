@@ -176,7 +176,7 @@
     </header>
     <main>
 
-        <table id="tabla" style="">
+        <table id="tabla" style="width: 100%;">
 
             <tr>
                 <td style="width: 22%;"><strong>Fecha Solicitud </strong>{{ $solicitud[0]->fecha_solicitud_user }}</td>
@@ -466,7 +466,7 @@
             
        
             
-        <table style="width: 100%; margin-top: 100px;">
+        <table style="width: 100%; margin-top: 110px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>
