@@ -38,6 +38,11 @@ class VentasRepository implements VentasInterface
         if(!empty($_REQUEST["id_tipo_doc"])) {
             $model = $model->where("IdTipoDocumento", $_REQUEST["id_tipo_doc"]);
         }
+
+         if(!empty($_REQUEST["estado_cpe"])) {
+            $model = $model->where("estado_cpe", $_REQUEST["estado_cpe"]);
+        } 
+
         return $model->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');

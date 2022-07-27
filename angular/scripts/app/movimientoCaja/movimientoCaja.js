@@ -3553,6 +3553,8 @@ table_container_bancos.jtable('load');
 
             },
             recordsLoaded: function (event, data) {
+                $("#table_container_comprobantes").find(".jtable-title-text").removeClass("col-md-4").addClass("col-md-2");
+                $("#table_container_comprobantes").find(".jtable-toolbar").removeClass("col-md-8").addClass("col-md-10");
                 $('.imprimir-comprobante').click(function (e) {
                     var id = $(this).attr('data-id');
                     var tipo_solicitud = $(this).attr('data-tipo_solicitud');
@@ -3587,6 +3589,7 @@ table_container_bancos.jtable('load');
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
                 idClienteFiltro: $('#idClienteFiltro').val(),
                 id_tipo_doc: $('#id_tipo_doc').val(),
+                estado_cpe: $('#estado_cpe').val(),
             });
         }, true);
 

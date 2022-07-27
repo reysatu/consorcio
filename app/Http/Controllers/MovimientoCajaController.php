@@ -66,7 +66,7 @@ class MovimientoCajaController extends Controller
             $totalOtrosI=0;
             $dataCajadia=[];
             if($data['idMonedaAdd']=='1'){
-                if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' ){
+                if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
                     $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresos);
                     $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
@@ -80,7 +80,7 @@ class MovimientoCajaController extends Controller
                 $dataCajadia['totalEfectivo'] =  $total;
                 $dataCajadia['totalEgresos'] =  $totalEgre;
             }else{
-                 if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' ){
+                 if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
                     $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
                     $totalEgre=floatval($dataCaja->totalEgresosDol);
                     $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);
@@ -183,6 +183,7 @@ class MovimientoCajaController extends Controller
                     $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
                     $data_venta["t_monto_subtotal"] = $data["montoAdd"];
                     $data_venta["t_monto_total"] = $data["montoAdd"];
+                    $data_venta["t_monto_exonerado"] = $data["montoAdd"];
                     $data_venta["saldo"] = "0";
                     $data_venta["pagado"] = $data["montoAdd"];
                     $data_venta["idmoneda"] = $data['idMonedaAdd'];
@@ -245,6 +246,7 @@ class MovimientoCajaController extends Controller
                 $data_ticket["IdTipoDocumento"] = 12;
                 $data_ticket["t_monto_subtotal"] = $data["montoAdd"];
                 $data_ticket["t_monto_total"] = $data["montoAdd"];
+                $data_ticket["t_monto_exonerado"] = $data["montoAdd"];
                 $data_ticket["saldo"] = "0";
                 $data_ticket["pagado"] = $data["montoAdd"];
                 $data_ticket["idmoneda"] = $data['idMonedaAdd'];
@@ -310,6 +312,8 @@ class MovimientoCajaController extends Controller
                 $data_venta["IdTipoDocumento"] = 12;
                 $data_venta["t_monto_subtotal"] = $data["montoAdd"];
                 $data_venta["t_monto_total"] = $data["montoAdd"];
+                $data_venta["t_monto_exonerado"] = $data["montoAdd"];
+                
                 $data_venta["saldo"] = "0";
                 $data_venta["pagado"] = $data["montoAdd"];
                 $data_venta["idmoneda"] = $data['idMonedaAdd'];
