@@ -176,7 +176,7 @@
     </header>
     <main>
 
-        <table id="tabla" style="width: 760px !important;">
+        <table id="tabla" style="width: 110%;">
 
             <tr>
                 <td style="width: 22%;"><strong>Fecha Solicitud </strong>{{ $solicitud[0]->fecha_solicitud_user }}</td>
@@ -191,7 +191,7 @@
 
 
 
-        <table id="tabla_2" style="width: 760px !important;">
+        <table id="tabla_2" style="width: 110%;">
             <tr style="">
                 <td style=""><strong>Lista de Precios</strong></td>
                 <td style=""><strong>Código</strong></td>
@@ -223,7 +223,7 @@
 
 
         <br>
-        <table id="tabla_3" style="width: 760px !important;">
+        <table id="tabla_3" style="width: 100%;">
             <tr>
                 <td colspan="6" style="font-weight: bold; width: 50%;">COMENTARIOS:</td>
                 <td colspan="6" style="font-weight: bold; text-align: center; width: 50%;">V°B° GERENCIA:</td>
