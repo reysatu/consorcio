@@ -3197,7 +3197,7 @@ function create_pdf_ordenServicio(response) {
         },
         {
             text: cPlacaVeh,
-            absolutePosition: { x:543 , y: 681 },
+            absolutePosition: { x:515 , y: 681 },
             bold: true,
             fontSize: 10,
         },
