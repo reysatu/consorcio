@@ -3533,6 +3533,11 @@ table_container_bancos.jtable('load');
 
 
                 },
+                estado_cpe: {
+                    title: 'Estado',
+
+
+                },
 
                 edit: {
                     width: '1%',
@@ -3581,6 +3586,7 @@ table_container_bancos.jtable('load');
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
                 FechaFinFiltro: $('#FechaFinFiltro').val(),
                 idClienteFiltro: $('#idClienteFiltro').val(),
+                id_tipo_doc: $('#id_tipo_doc').val(),
             });
         }, true);
 

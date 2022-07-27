@@ -9406,7 +9406,10 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
     return '<form class="form-inline" id="' + form_id + '" style="margin-bottom:-3px">' +
             '<div class="form-group">'+
               
-               
+                '<div class="col-md-2 " style="padding: 0;">'+
+                    '<label class="control-label">Tipo Documento</label>'+
+                    '<select id="id_tipo_doc"  style="width: 100%" name="id_tipo_doc" class="form-control input-sm "><option value="">TODOS</option><option value="03">BOLETAS</option><option value="01">FACTURAS</option><option value="07">NOTAS DE CRÉDITO</option><option value="08">NOTAS DE DÉBITO</option></select>'+
+                '</div>'+
                 '<div class="col-md-2">'+
                     '<label class="control-label">Fecha Inicio</label>'+
                         '<input type="date" class="form-control input-sm"  id="FechaInicioFiltro">'+
@@ -9416,11 +9419,11 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
                     '<label class="control-label">Fecha Fin</label>'+
                     '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
                 '</div>'+
-                '<div class="col-md-4 ">'+
+                '<div class="col-md-3 " style="padding-left: 10px; padding-right: 0px;">'+
                     '<label class="control-label">Cliente</label>'+
                     '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
                 '</div>'+
-                '<div class="col-md-4 "><br>'+
+                '<div class="col-md-3 " style="padding: 0;"><br>'+
                 '<div class="input-group input-group-sm">' +
                 '<input type="text" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
                 '<span class="input-group-btn">' +
