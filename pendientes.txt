@@ -816,3 +816,27 @@ Movimientos de Caja / Solicitudes
 - En la impresión del comprobante de venta por el saldo de una solicitud a crédito financiero, no debe mostrar el detalle como de un crédito directo, debe mostrar sólo condición de pago (mostrara el convenio elegido) y vendedor *
 
 
+
+
+
+--- 25/07/2022
+
+------ Crédito y Cobranza 
+Reporte de Cuentas por Cobrar
+//- El botón Lupa no funciona
+
+Asignación de cobradores
+- El botón Tarjeta debe imprimir la tarjeta en formato A5
+
+Refinanciamiento
+- La condición de pago de la nueva BV debe ser de acuerdo al nuevo cronograma
+
+Visita a Cliente
+- En el detalle cambiar la etiqueta de Fecha de Pago por Fecha Compromiso Pago
+
+Reporte de Ventas
+- Agruparlas por Tipo de Solicitud y Convenio, debe haber un total en cada grupo
+
+Opción nueva
+//- Cierre de cuentas por cobrar
+- Castigar solicitudes de crédito, cambiar a estado Castigado y sólo se vea para cancelar las cuotas, en Reporte de Cuentas por Cobrar debe haber un check para ver sólo estos tipos de crédito

@@ -673,14 +673,17 @@ class Controller extends BaseController
             $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
 
-        $empresa = $compania_repo->find("00000");
+	
 
+        $empresa = $compania_repo->find("00000");
+		
         $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
 
         if (count($parametro_igv) <= 0) {
             throw new Exception("Por favor cree el parametro IGV!");
         }
 
+		
         $json["invoice"]["tip_doc"] = $venta[0]->IdTipoDocumento;
         $json["invoice"]["serie"] = $venta[0]->serie_comprobante;
         $json["invoice"]["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
@@ -692,7 +695,7 @@ class Controller extends BaseController
         // $json["invoice"]["hora_emi"] = $venta[0]->hora_server;
         $json["invoice"]["ubl_version"] = "2.1";
         $json["invoice"]["customizacion"] = "2.0";
-
+	
         $json["invoice"]["emisor"]["tip_doc"] = "6";
         $json["invoice"]["emisor"]["num_doc"] = $empresa->Ruc;
         $json["invoice"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
@@ -709,7 +712,7 @@ class Controller extends BaseController
         $json["invoice"]["adquiriente"]["raz_soc"] = $venta[0]->razonsocial_cliente;
         $json["invoice"]["adquiriente"]["dir"] = $venta[0]->direccion;
         $json["invoice"]["adquiriente"]["cod_pais"] = "PE";
-
+		
         $json["invoice"]["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
         $json["invoice"]["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         $json["invoice"]["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
@@ -756,7 +759,7 @@ class Controller extends BaseController
             }
         }
 
-       
+		
 
         $json["invoice"]["det"] = array();
       
@@ -858,7 +861,7 @@ class Controller extends BaseController
         $parametros = array('fileName'=>$filename);
         $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
 
-   
+		// print_R($respuesta);
 
         $_strFaultCode='';
         $_strFaultString='';
@@ -911,7 +914,7 @@ class Controller extends BaseController
 
             file_put_contents("CDR/".'R-'.$filename, base64_decode($_strContentFile));
         }
-
+		// exit;
         return $respuesta;
 
     }

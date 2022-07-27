@@ -34,6 +34,10 @@ class VentasRepository implements VentasInterface
         if(!empty($_REQUEST["idClienteFiltro"])) {
             $model = $model->where("idcliente", $_REQUEST["idClienteFiltro"]);
         }
+
+        if(!empty($_REQUEST["id_tipo_doc"])) {
+            $model = $model->where("IdTipoDocumento", $_REQUEST["id_tipo_doc"]);
+        }
         return $model->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
@@ -246,7 +250,7 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
 
 
     public function obtener_comprobantes() {
-        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND (statusCode <> '0000' OR statusCode IS NULL)";
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND (statusCode <> '0000' OR statusCode IS NULL) /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
 
 
         return DB::select($sql);

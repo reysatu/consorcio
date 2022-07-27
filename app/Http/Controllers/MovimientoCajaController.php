@@ -59,6 +59,7 @@ class MovimientoCajaController extends Controller
             $idventa_ticket = "";
             $data = $request->all();
             $dataCaja = $recaj->find($id);
+            $empresa = $compania_repo->find("00000");
             $datoDet = [];
             $total=0;
             $totalEgre=0;
@@ -121,8 +122,13 @@ class MovimientoCajaController extends Controller
             $repo->create($datoDet);
 
             //GUARDAR VENTA POR SEPARACION
-            $data_venta = array();
-            $data_venta["idventa"] = "";
+        
+            $name_cpe = $empresa->Ruc . "-" . $data["IdTipoDocumento"] . "-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
+            // print_r($name); exit;
+
+      
+           
+            $tipo_comprobante = "";
             if($data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ") {
                 
                 $idarticulo = "";
@@ -134,6 +140,7 @@ class MovimientoCajaController extends Controller
                     }
 
                     $idarticulo = $parametro_separacion[0]->value;
+                    $tipo_comprobante = "1"; // anticipo
                 }
 
                 if($data["tipoMovimientoAdd"] == "ALQ") {
@@ -144,6 +151,7 @@ class MovimientoCajaController extends Controller
                     }
 
                     $idarticulo = $parametro_alquiler[0]->value;
+                    $tipo_comprobante = "0";
                 }
 
 
@@ -155,6 +163,7 @@ class MovimientoCajaController extends Controller
                     }
 
                     $idarticulo = $parametro_tramite[0]->value;
+                    $tipo_comprobante = "0";
                 }
                
               
@@ -164,12 +173,13 @@ class MovimientoCajaController extends Controller
                     $data_venta = array();
                
                     $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                    $data_venta["documento_cpe"] = $name_cpe;
                     $data_venta["serie_comprobante"] = $data["serie_comprobante"];
                     $data_venta["numero_comprobante"] = $data["numero_comprobante"];
                     $data_venta["condicion_pago"] = 1;
                     $data_venta["fecha_emision"] = date("Y-m-d H:i:s");
                     $data_venta["idcliente"] = $data["idcliente"];
-                    $data_venta["tipo_comprobante"] = "1"; // anticipo
+                    $data_venta["tipo_comprobante"] = $tipo_comprobante;
                     $data_venta["IdTipoDocumento"] = $data["IdTipoDocumento"];
                     $data_venta["t_monto_subtotal"] = $data["montoAdd"];
                     $data_venta["t_monto_total"] = $data["montoAdd"];
@@ -202,14 +212,15 @@ class MovimientoCajaController extends Controller
                  
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                       
-                
+                   
                     $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
+                   
                        
                     $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
                 }
               
                
-
+                
               
                 // GUARDAR TAMBIEN UN TICKET
                 $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
@@ -224,12 +235,13 @@ class MovimientoCajaController extends Controller
                 $data_ticket = array();
                
                 $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_ticket["documento_cpe"] = $name_cpe;
                 $data_ticket["serie_comprobante"] =  $serie_ticket;
                 $data_ticket["numero_comprobante"] = $consecutivo_ticket;
                 $data_ticket["condicion_pago"] = 1;
                 $data_ticket["fecha_emision"] = date("Y-m-d H:i:s");
                 $data_ticket["idcliente"] = $data["idcliente"];
-                $data_ticket["tipo_comprobante"] = "1"; // anticipo
+                $data_ticket["tipo_comprobante"] = $tipo_comprobante;
                 $data_ticket["IdTipoDocumento"] = 12;
                 $data_ticket["t_monto_subtotal"] = $data["montoAdd"];
                 $data_ticket["t_monto_total"] = $data["montoAdd"];
@@ -288,6 +300,7 @@ class MovimientoCajaController extends Controller
                 $data_venta = array();
                
                 $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_venta["documento_cpe"] = $name_cpe;
                 $data_venta["serie_comprobante"] = $serie_ticket;
                 $data_venta["numero_comprobante"] = $consecutivo_ticket;
                 $data_venta["condicion_pago"] = 1;
@@ -2231,7 +2244,7 @@ class MovimientoCajaController extends Controller
     public function list_comprobantes(Request $request, VentasInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 'cliente', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo'];
+        $params = ['idventa', 'serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 'cliente', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'estado_cpe'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search($s), $request, 'idventa', $params);
     }
