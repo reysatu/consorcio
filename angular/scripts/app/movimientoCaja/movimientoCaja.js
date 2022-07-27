@@ -2072,6 +2072,8 @@ table_container_bancos.jtable('load');
             $("#tarjeta").val("");
             $("#monto_aplicar").val(saldo.toFixed(2));
             $("#modal-formas-pago").modal("show");
+            $("#forma_pago").val("").trigger("change");
+           
 
         }
 

@@ -3411,7 +3411,7 @@
                         $("#estado").val(data.datos[0].estado);
                         AlertFactory.textType({
                             title: '',
-                            message: 'La solicitud se auló correctamente.',
+                            message: 'La solicitud se anuló correctamente.',
                             type: 'success'
                         });
                     

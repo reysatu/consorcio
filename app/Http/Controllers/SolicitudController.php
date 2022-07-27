@@ -509,7 +509,7 @@ class SolicitudController extends Controller
 
             $sql_update = "
             UPDATE ERP_OrdenServicio set cFacturado = 'N' where cCodConsecutivo = '{$data["cCodConsecutivo"]}' and nConsecutivo = {$data["nConsecutivo"]};
-            UPDATE ERP_Proforma set cFacturado = 'N' where cCodConsecutivoOs = '{$data["cCodConsecutivo"]}' and nConsecutivoOS = {$data["nConsecutivo"]};
+            UPDATE ERP_Proforma set cFacturado = 'N' where cCodConsecutivoOS = '{$data["cCodConsecutivo"]}' and nConsecutivoOS = {$data["nConsecutivo"]};
             ";
             DB::statement($sql_update);
 
