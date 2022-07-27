@@ -212,12 +212,12 @@
                     echo '  <td>'.number_format($value->cantidad, 2).'</td>';
                     echo '  <td>'.$value->unidad_medida.'</td>';
 
-                    if(empty($value->descripcion_articulo)) {
+                    // if(empty($value->descripcion_articulo)) {
 
-                        echo '  <td>'.$value->producto.'-'.$value->code_article.'</td>';
-                    } else {
-                        echo '  <td>' . $value->descripcion_articulo .'-'.$value->code_article. '</td>';
-                    }
+                    //     echo '  <td>'.$value->producto.'-'.$value->code_article.'</td>';
+                    // } else {
+                        echo '  <td>' . $value->descripcion_articulo."-". $value->producto .'-'.$value->code_article. '</td>';
+                    // }
                    
                     echo '  <td>'.number_format($value->precio_unitario, 2).'</td>';
                     if($value->cOperGrat != "S") {
