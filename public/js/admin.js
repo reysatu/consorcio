@@ -9419,7 +9419,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
                     '<label class="control-label">Fecha Fin</label>'+
                     '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
                 '</div>'+
-                '<div class="col-md-2 " style="padding-left: 10px; padding-right: 0px;">'+
+                '<div class="col-md-2 " style="padding-left: 5px; padding-right: 5px;">'+
                     '<label class="control-label">Cliente</label>'+
                     '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
                 '</div>'+
