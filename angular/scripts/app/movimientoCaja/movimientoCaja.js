@@ -2052,7 +2052,7 @@ table_container_bancos.jtable('load');
             }
 
             $("#monto_p").val(saldo.toFixed(2));
-            $("#forma_pago").val("EFE");
+            $("#forma_pago").val("EFE").trigger("change");
           
 
             if ($('#modalSolicitudCredito').is(':visible')) {
@@ -2071,9 +2071,7 @@ table_container_bancos.jtable('load');
             $("#noperacion").val("");
             $("#tarjeta").val("");
             $("#monto_aplicar").val(saldo.toFixed(2));
-            $("#modal-formas-pago").modal("show");
-            $("#forma_pago").val("").trigger("change");
-           
+            $("#modal-formas-pago").modal("show");           
 
         }
 
@@ -2096,7 +2094,7 @@ table_container_bancos.jtable('load');
             var tipo = $(this).attr("tipo");
             var monto_venta = parseFloat($(this).find("option[value="+idventa+"]").attr("t_monto_total"));
             var devolucion_producto = $(this).find("option[value="+idventa+"]").attr("devolucion_producto");
-            alert(idventa);
+            // alert(idventa);
            
           
             if(tipo == "separacion") {
