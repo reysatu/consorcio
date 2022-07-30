@@ -430,7 +430,7 @@
                     var data = response.data;
                     // console.log(response.val);
                     // console.log("datos");
-                    deshabilitar_inputs();
+                    // deshabilitar_inputs();
 
 
                     titlemodalOrdenServivio.html('Editar Orden ' + '[' + data[0].nConsecutivo + ']');
@@ -1553,6 +1553,9 @@
             var tipototal = $('<input class="total_revision form-control input-sm" data-idTipo="' + tipoTo + '" data-idS2="' + code + '"  value="' + tipoText + '" readonly/>');
             var precio = $('<input type="text" class="precio_m form-control input-sm"  data_idTipoPres="' + tipoTo + '" id="tr_prec_' + code + '" data-categoriaServicio="' + cat_servicio + '"   data-precioOrigen="' + preci_t + '" value="' + preci_t + '"  onkeypress="return validDecimals(event, this, 2)"/>');
             var btn = $('<button class="btn btn-danger btn-xs deltotal" data-idedet="' + iddet + '" data_idTipoDel="' + tipoTo + '" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
+            // if($("#estado").val() == "3") { // estado terminado
+            //     btn = "";
+            // }
             tdImpu.append(inpDes);
             tdOper.append(chek);
             tdPorcentaje.append(porc);
@@ -1993,6 +1996,12 @@
             var modo_mant = $('<input type="hidden" class="modo_mant" id="tr_' + code + '" value="' + modo_t + '" />');
             var codigo_mantenimiento = $('<input type="hidden" class="id_mantenimiento_group"  value="' + code + '"  />');
             var btn = $('<button class="btn btn-danger btn-xs delRevi" data-id="' + code + '" type="button"><span class="fa fa-trash"></span></button>');
+
+
+            // if($("#estado").val() == "3") { // estado terminado
+            //     btn = "";
+            // }
+
             td2.append(btn).append(codigo_mantenimiento).append(modo_mant);
             tr.append(td1).append(td2).append(inpcodigo);
             tabla_grupo_revision.append(tr);
