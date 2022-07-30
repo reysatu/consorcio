@@ -226,6 +226,8 @@ class CPETask extends Command
         $url = DB::select($sql_url);
 
         if(count($url) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro URL CPE FE");
             throw new Exception("No existe el parametro URL CPE FE");
         }
         
@@ -233,6 +235,8 @@ class CPETask extends Command
 
         $err = $cliente->getError();
         if ($err) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto.' Error: ' . $err);
             die('Error: ' . $err);
         }
         $filename = $ruta_json; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.txt
@@ -246,6 +250,8 @@ class CPETask extends Command
         $usuario = DB::select($sql_usuario);
 
         if(count($usuario) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
             throw new Exception("No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
         }
 
@@ -253,6 +259,8 @@ class CPETask extends Command
         $password = DB::select($sql_pass);
 
         if(count($password) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Clave FE");
             throw new Exception("No existe el parametro Clave FE");
         }
 
@@ -280,7 +288,10 @@ class CPETask extends Command
                     $_strContentFile = $value;
                     break;
                 default:
+                    $texto = date("Y-m-d H:i:s");
+                    Storage::append("log.txt", $texto." sin respuesta");
                     $_strFaultString = "sin respuesta";
+                   
                     // echo 'sin respuesta';
                     break;
             }
@@ -291,6 +302,8 @@ class CPETask extends Command
             // echo $_strFaultString;
             $response["status"] = "ei"; 
             $response["msg"] = $_strFaultCode.": ".$_strFaultString; 
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
             return response()->json($response);
 
         } else if (!(!isset($_strContentFile) || trim($_strContentFile) === '')) { //si esta todo correcto devuelve el xml firmado y puede extraer el valor resumen
@@ -327,6 +340,8 @@ class CPETask extends Command
         $parametro_igv =  $solicitud_repositorio->get_parametro_igv();
 
         if (count($parametro_igv) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto.' Por favor cree el parametro IGV!');
             throw new Exception("Por favor cree el parametro IGV!");
         }
 
@@ -478,6 +493,8 @@ class CPETask extends Command
         $url = DB::select($sql_url);
 
         if(count($url) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto.' No existe el parametro URL CPE FE');
             throw new Exception("No existe el parametro URL CPE FE");
         }
         
@@ -489,6 +506,8 @@ class CPETask extends Command
         
         $err = $cliente->getError();
         if($err){
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto.' Error: '.$err);
             die('Error: '.$err);
         }
         $filename = $documento_cpe.'.xml'; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.xml
@@ -498,6 +517,8 @@ class CPETask extends Command
         $usuario = DB::select($sql_usuario);
 
         if(count($usuario) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
             throw new Exception("No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
         }
         
@@ -505,6 +526,8 @@ class CPETask extends Command
         $password = DB::select($sql_pass);
 
         if(count($password) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Clave FE");
             throw new Exception("No existe el parametro Clave FE");
         }
 
@@ -544,7 +567,10 @@ class CPETask extends Command
                     }			
                 break;
                 default:		
-                    echo 'sin respuesta';
+                    $texto = date("Y-m-d H:i:s");
+                    Storage::append("log.txt", $texto." sin respuesta");
+                    // exit;
+                    // echo 'sin respuesta';
                 break;
                 
             }
@@ -561,6 +587,10 @@ class CPETask extends Command
            
             echo $_strFaultCode.'<br>'; #codigo de error|
             echo $_strFaultString.'<br>'; #descripcion del error
+
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
+            exit;
         }else if(!(!isset($_strContentFile) || trim($_strContentFile)==='')){
             #cuando devuelve cdr
             $doc = new \DOMDocument;
@@ -604,10 +634,12 @@ class CPETask extends Command
     
         foreach ($comprobantes as $key => $value) {
             $res = $this->consultar_cdr($value->documento_cpe);
+            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+                DB::statement($sql_update);
+            }
            
-            $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
-            $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
-            DB::statement($sql_update);
             // print_r($sql_update);
         }
       
