@@ -384,23 +384,23 @@
 
         generateSearchForm('frm-search-Cuentasxcobrar', 'LoadRecordsButtonCuentasxcobrar', function () {
             table_container_Cuentasxcobrar.jtable('load', {
-                // search: $('#search_b').val(),
-                // filtro_tienda: $('#filtro_tienda').val(),
-                // idInicio: $('#idInicio').val(),
-                // idFin: $('#idFin').val(),
-                // idClienteFiltro: $('#idClienteFiltro').val(),
-                // idCobradorFiltro: $('#idCobradorFiltro').val(),
-                // FechaInicioFiltro: $('#FechaInicioFiltro').val(),
-                // FechaFinFiltro: $('#FechaFinFiltro').val(),
+                search: $('#search_b').val(),
+                filtro_tienda: $('#filtro_tienda').val(),
+                idInicio: $('#idInicio').val(),
+                idFin: $('#idFin').val(),
+                idClienteFiltro: $('#idClienteFiltro').val(),
+                idCobradorFiltro: $('#idCobradorFiltro').val(),
+                FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                FechaFinFiltro: $('#FechaFinFiltro').val(),
 
-                // Departamento: $("#Departamento").val(),
-                // provincia: $("#provincia").val(),
-                // iddistrito: $("#distrito").val(),
-                // distrito: $("#distrito option:selected").text(),
-                // idsector: $('#idsector').val(),
+                Departamento: $("#Departamento").val(),
+                provincia: $("#provincia").val(),
+                iddistrito: $("#distrito").val(),
+                distrito: $("#distrito option:selected").text(),
+                idsector: $('#idsector').val(),
 
-                // idTipoSolicitud: $('#idTipoSolicitud').val(),
-                // idConvenio: $("#idConvenio").val(),
+                idTipoSolicitud: $('#idTipoSolicitud').val(),
+                idConvenio: $("#idConvenio").val(),
 
             });
         }, true);

@@ -417,6 +417,12 @@
                 });
         }
 
+        function deshabilitar_inputs() {
+            $("input").attr("readonly", "readonly");
+            $("select").attr("disabled", "disabled");
+            $("#idAsesor").prop("disabled", true);
+        }
+
         function findRegister_Orden(id)
         {
             
@@ -424,9 +430,9 @@
                 if (!_.isUndefined(response.status) && response.status) {
                     
                     var data=response.data;
-                    console.log(response.val);
-                    console.log("datos");
-                   
+                    // console.log(response.val);
+                    // console.log("datos");
+                    deshabilitar_inputs();
 
 
                     titlemodalOrdenServivio.html('Editar Orden '+'['+data[0].nConsecutivo+ ']');
@@ -2696,11 +2702,11 @@ function llenarTablas(Consecutivo){
     var id=cCodConsecutivo.val()+'_'+Consecutivo;
      RESTService.get('orden_servicios/find', id, function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
-                    console.log("entro");
+                    // console.log("entro");
                   articulo_dd_det.html("");
                   table_servicios.html("");
                   var data=response.data;
-                  console.log("borro");
+                //   console.log("borro");
                     var data_matenimiento=response.data_matenimiento;
                     _.each(data_matenimiento, function (b) {
                         var vto=b.idMantenimiento+'*'+b.nombre;

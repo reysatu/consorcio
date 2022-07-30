@@ -823,7 +823,7 @@ Movimientos de Caja / Solicitudes
 
 ------ Crédito y Cobranza 
 Reporte de Cuentas por Cobrar
-//- El botón Lupa no funciona
+//- El botón Lupa no funciona *
 
 Asignación de cobradores
 - El botón Tarjeta debe imprimir la tarjeta en formato A5

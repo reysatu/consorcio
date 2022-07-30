@@ -1463,8 +1463,6 @@ class MovimientoCajaController extends Controller
             $result["datos"][0]["idventa_ticket"] = $data_ticket["idventa"];
 
             // GENERAR JSON CPE
-
-           
             // $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
             DB::commit();
             return response()->json($result);
