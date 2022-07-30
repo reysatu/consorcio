@@ -52,7 +52,7 @@ class MovimientoCajaController extends Controller
             'bancos'=>$bancos,
         ]);
     }
-    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo, SolicitudInterface $solicitud_repositorio)
+    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $repo_cliente)
     {
         DB::beginTransaction();
         try {
@@ -216,7 +216,18 @@ class MovimientoCajaController extends Controller
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                       
                    
-                    $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
+                    // $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
+
+                    $cliente = $repo_cliente->find($data_venta["idcliente"]);
+                    $total_qr = str_replace(",", "", number_format($data_venta["t_monto_total"], 2));
+        
+                    $string_qr = $empresa->Ruc . "|" . $data["IdTipoDocumento"]. "|" .$data["serie_comprobante"]. "|" .str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT). "|0.00|" .$total_qr. "|" .date("Y-m-d"). "|" .$cliente[0]->tipodoc. "|" .$cliente[0]->documento;
+                    // GUARDAMOS IMAGEN DEL CODIGO QR
+                    // referencia: https://www.desarrollolibre.net/blog/laravel/generar-simples-codigos-qrs-con-laravel
+                    if (!file_exists(base_path("public/QR/"))) {
+                        mkdir(base_path("public/QR/"), 0777, true);
+                    }
+                    QrCode::format('png')->margin(0)->size(300)->color(0, 0, 0)->generate($string_qr, '../public/QR/'.$name_cpe.".png");
                    
                        
                     $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
