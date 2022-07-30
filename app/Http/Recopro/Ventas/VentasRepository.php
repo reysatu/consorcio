@@ -39,8 +39,41 @@ class VentasRepository implements VentasInterface
             $model = $model->where("IdTipoDocumento", $_REQUEST["id_tipo_doc"]);
         }
 
-         if(!empty($_REQUEST["estado_cpe"])) {
+        if(!empty($_REQUEST["estado_cpe"])) {
             $model = $model->where("estado_cpe", $_REQUEST["estado_cpe"]);
+        } 
+
+        return $model->where(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_emision', 'DESC');
+    }
+
+    public function search_comprobantes($filter)
+    {
+
+
+        // print_r($_REQUEST);
+        $model = $this->model;
+        $s = (isset($filter['search'])) ? $filter['search'] : '';
+        if(!empty($filter["FechaInicioFiltro"]) && !empty($filter["FechaFinFiltro"])) {
+           $model = $model->whereBetween('fecha_emision_server', [$filter["FechaInicioFiltro"] , $filter["FechaFinFiltro"]]); 
+
+        }
+
+        if(!empty($filter["idClienteFiltro"])) {
+            $model = $model->where("idcliente", $filter["idClienteFiltro"]);
+        }
+
+        if(!empty($filter["id_tipo_doc"])) {
+            $model = $model->where("IdTipoDocumento", $filter["id_tipo_doc"]);
+        }
+
+        if(!empty($filter["estado_cpe"])) {
+            $model = $model->where("estado_cpe", $filter["estado_cpe"]);
         } 
 
         return $model->where(function ($q) use ($s) {
@@ -66,7 +99,57 @@ class VentasRepository implements VentasInterface
 
     public function search_documentos($s)
     {
-        return $this->model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
+        $model = $this->model;
+        if(!empty($_REQUEST["FechaInicioFiltro"]) && !empty($_REQUEST["FechaFinFiltro"])) {
+           $model = $model->whereBetween('fecha_emision_server', [$_REQUEST["FechaInicioFiltro"] , $_REQUEST["FechaFinFiltro"]]); 
+
+        }
+
+        if(!empty($_REQUEST["idClienteFiltro"])) {
+            $model = $model->where("idcliente", $_REQUEST["idClienteFiltro"]);
+        }
+
+        if(!empty($_REQUEST["id_tipo_doc"])) {
+            $model = $model->where("IdTipoDocumento", $_REQUEST["id_tipo_doc"]);
+        }
+
+        if(!empty($_REQUEST["estado_cpe"])) {
+            $model = $model->where("estado_cpe", $_REQUEST["estado_cpe"]);
+        } 
+
+        return $model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
+            $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
+            $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
+            $q->orWhere('numero_documento', 'LIKE', '%' . $s . '%');
+            $q->orWhere('cliente', 'LIKE', '%' . $s . '%');
+        })->orderBy('fecha_emision', 'DESC');
+    }
+
+
+    public function search_documentos_excel($filter)
+    {
+        // print_r($_REQUEST);
+        $model = $this->model;
+        $s = (isset($filter['search'])) ? $filter['search'] : '';
+        if(!empty($filter["FechaInicioFiltro"]) && !empty($filter["FechaFinFiltro"])) {
+           $model = $model->whereBetween('fecha_emision_server', [$filter["FechaInicioFiltro"] , $filter["FechaFinFiltro"]]); 
+
+        }
+
+        if(!empty($filter["idClienteFiltro"])) {
+            $model = $model->where("idcliente", $filter["idClienteFiltro"]);
+        }
+
+        if(!empty($filter["id_tipo_doc"])) {
+            $model = $model->where("IdTipoDocumento", $filter["id_tipo_doc"]);
+        }
+
+        if(!empty($filter["estado_cpe"])) {
+            $model = $model->where("estado_cpe", $filter["estado_cpe"]);
+        } 
+
+        return $model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
@@ -255,7 +338,15 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
 
 
     public function obtener_comprobantes() {
-        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND (statusCode <> '0000' OR statusCode IS NULL) /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCode IS NULL /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+
+
+        return DB::select($sql);
+
+    }
+
+    public function obtener_comprobantes_pendientes_envio() {
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND enviado_cpe=0 /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
 
 
         return DB::select($sql);

@@ -9419,7 +9419,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
                     '<label class="control-label">Fecha Fin</label>'+
                     '<input type="date" class="form-control input-sm"  id="FechaFinFiltro">'+
                 '</div>'+
-                '<div class="col-md-2 " style="padding-left: 5px; padding-right: 5px;">'+
+                '<div class="col-md-2 " style="">'+
                     '<label class="control-label">Cliente</label>'+
                     '<select id="idClienteFiltro"  style="margin-right:5px;width: 100%" name="idClienteFiltro" class="form-control input-sm "></select>'+
                 '</div>'+
@@ -9427,7 +9427,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
                     '<label class="control-label">Estado</label>'+
                     '<select id="estado_cpe"  style="width: 100%" name="estado_cpe" class="form-control input-sm "><option value="">TODOS</option><option value="PENDIENTE">PENDIENTE</option><option value="EMITIDO">EMITIDO</option><option value="RECHAZADO">RECHAZADO</option></select>'+
                 '</div>'+
-                '<div class="col-md-3 " style="padding: 0;"><br>'+
+                '<div class="col-md-3 " style="padding-right: 0px;"><br>'+
                 '<div class="input-group input-group-sm">' +
                 '<input type="text" id="' + input_id + '" name="search" class="form-control" autocomplete="off" placeholder="Buscar..." />' +
                 '<span class="input-group-btn">' +

@@ -1,3 +1,4 @@
+
 /**
  * Created by JAIR on 4/5/2017.
  */
@@ -14,12 +15,13 @@
     function VentasCtrl($scope, AlertFactory, RESTService)
     {
 
-        var search = getFormSearch('frm-search-ventas', 'search_b_ventas', 'LoadRecordsButtonVentas');
+        // var search = getFormSearch('frm-search-ventas', 'search_b_ventas', 'LoadRecordsButtonVentas');
+        var search = getFormSearchComprobantes('frm-search-ventas', 'search_b_ventas', 'LoadRecordsButtonVentas');
 
         var table_container_ventas = $("#table_container_ventas");
 
         table_container_ventas.jtable({
-            title: "Lista de Documentos Emitidos",
+            title: "Documentos Emitidos",
             paging: true,
             sorting: true,
             actions: {
@@ -40,7 +42,19 @@
                     cssClass: 'btn-primary',
                     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
                     click: function () {
-                        $scope.openDoc('ventas/excel', {});
+                        var data_excel = {
+                            search: $('#search_b_comprobantes').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            id_tipo_doc: $('#id_tipo_doc').val(),
+                            estado_cpe: $('#estado_cpe').val(),
+                        };
+
+                        
+
+                        $scope.openDoc('ventas/excel', data_excel);
+                        
                     }
                 }]
             },
@@ -165,6 +179,12 @@
                     values: { 'S': 'SI', 'N': 'NO','null':'NO' },
                       type: 'checkbox',
                 },
+                estado_cpe: {
+                    title: 'Estado',
+
+
+                },
+                
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -192,7 +212,8 @@
             
             recordsLoaded: function (event, data) {
 
-
+                $("#table_container_ventas").find(".jtable-title-text").removeClass("col-md-4").addClass("col-md-2");
+                $("#table_container_ventas").find(".jtable-toolbar").removeClass("col-md-8").addClass("col-md-10");
                 $('.anular-nota').click(function (e) {
                 var code = $(this).attr('data-idventa');
                 AlertFactory.confirm({
@@ -300,7 +321,12 @@
 
         generateSearchForm('frm-search-ventas', 'LoadRecordsButtonVentas', function(){
             table_container_ventas.jtable('load', {
-                search: $('#search_b_ventas').val()
+                search: $('#search_b_ventas').val(),
+                FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                FechaFinFiltro: $('#FechaFinFiltro').val(),
+                idClienteFiltro: $('#idClienteFiltro').val(),
+                id_tipo_doc: $('#id_tipo_doc').val(),
+                estado_cpe: $('#estado_cpe').val(),
             });
         }, true);
 
@@ -316,6 +342,12 @@
                     _.each(response.motivos, function (item) {
                         $("#idmotivo").append('<option value="' + item.codigo + '">' + item.descripcion + '</option>');
                     });
+
+                    $("#idClienteFiltro").append('<option value="">Seleccionar</option>');
+                    _.each(response.clientes, function (item) {
+                        $("#idClienteFiltro").append('<option value="' + item.id + '">' + item.razonsocial_cliente + '</option>');
+                    });
+                    $("#idClienteFiltro").select2();
 
                 }
             }, function () {

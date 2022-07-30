@@ -37,7 +37,7 @@ class VentasController extends Controller
     {
 
         $s      = $request->input('search', '');
-        $params = ['idventa','cliente','anulado','serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia', 'tipo_comprobante'];
+        $params = ['idventa','cliente','anulado','serie_comprobante', 'numero_comprobante', 'fecha_emision', 'tipo_documento', 'numero_documento', 'moneda', 't_monto_total', 'pagado', 'saldo', 'cCodConsecutivo_solicitud', 'nConsecutivo_solicitud', 'tipo_solicitud', "estado", 'IdTipoDocumento', 'anticipo', 'idventa_referencia', 'tipo_comprobante', 'estado_cpe'];
         // print_r($repo->search($s)); exit;
         return parseList($repo->search_documentos($s), $request, 'idventa', $params);
     }
@@ -81,9 +81,11 @@ class VentasController extends Controller
         return parseSelect($repo->all(), 'idbanco', 'descripcion');
     }
 
-    public function excel(VentasInterface $repo)
+    public function excel(VentasInterface $repo, Request $request)
     {
-        return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE DOCUMENTOS EMITIDOS', 'Ventas');
+        $filter = $request->all();
+        $data = $repo->search_documentos_excel($filter)->get();
+        return generateExcel($this->generateDataExcel($data ), 'LISTA DE DOCUMENTOS EMITIDOS', 'Ventas');
     }
 
     public function excel_lista_cobranza_cuotas(VentasInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio)
@@ -182,16 +184,17 @@ class VentasController extends Controller
         return response()->json($response);
     }
 
-    public function data_form(VentasInterface $Repo)
+    public function data_form(VentasInterface $Repo, CajaDiariaDetalleInterface $caja_diaria_repo)
     {
 
         $motivos = $Repo->get_motivos();
+        $clientes = $caja_diaria_repo->get_clientes();
 
         // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
 
         return response()->json([
             'status'  => true,
-
+            'clientes' => $clientes,
             'motivos' => $motivos,
 
         ]);

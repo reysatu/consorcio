@@ -37,7 +37,7 @@
             bottom: -100px; 
             left: 1cm;
             right: 1cm;
-            height: 350px; 
+            height: 400px; 
             /* border: 1px solid black; */
 
             /** Extra personal styles **/
@@ -484,8 +484,8 @@
         </table>
         <table>
             <tr>
-                <td></td>
-                <td>
+                <td style=""> <center><img style="width: 25%;" src="<?php echo public_path("QR/".$venta[0]->documento_cpe).".png"; ?>" alt=""></center></td>
+                <td style="">
                     <span id="pie_1" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_1; ?></span><br>
                     <span id="pie_2" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_2; ?></span><br>
                 

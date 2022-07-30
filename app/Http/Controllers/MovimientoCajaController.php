@@ -30,6 +30,7 @@ use DateTimeZone;
 use DB;
 use Exception; 
 use PDF;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class MovimientoCajaController extends Controller
 {
@@ -174,6 +175,7 @@ class MovimientoCajaController extends Controller
                
                     $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
                     $data_venta["documento_cpe"] = $name_cpe;
+                    $data_venta["enviado_cpe"] = "0";
                     $data_venta["serie_comprobante"] = $data["serie_comprobante"];
                     $data_venta["numero_comprobante"] = $data["numero_comprobante"];
                     $data_venta["condicion_pago"] = 1;
@@ -236,7 +238,9 @@ class MovimientoCajaController extends Controller
                 $data_ticket = array();
                
                 $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
-                $data_ticket["documento_cpe"] = $name_cpe;
+                $data_ticket["documento_cpe"] = "";
+                $data_ticket["enviado_cpe"] = "";
+                
                 $data_ticket["serie_comprobante"] =  $serie_ticket;
                 $data_ticket["numero_comprobante"] = $consecutivo_ticket;
                 $data_ticket["condicion_pago"] = 1;
@@ -303,6 +307,7 @@ class MovimientoCajaController extends Controller
                
                 $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
                 $data_venta["documento_cpe"] = $name_cpe;
+                $data_venta["enviado_cpe"] = "0";
                 $data_venta["serie_comprobante"] = $serie_ticket;
                 $data_venta["numero_comprobante"] = $consecutivo_ticket;
                 $data_venta["condicion_pago"] = 1;
@@ -819,10 +824,24 @@ class MovimientoCajaController extends Controller
 
     public function excel(CajaDiariaDetalleInterface $repo)
     {
+        // echo "<pre>";
+        // print_r($repo->allExcel()); exit;
         return generateExcel($this->generateDataExcel($repo->allExcel()), 'LISTA DE MOVIMIENTOS DE CAJA', 'Movimientos de caja');
     }
 
-    public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio, VentasInterface $ventas_repo, CompaniaInterface $compania_repo) {
+    public function excel_comprobantes(VentasInterface $repo, Request $request)
+    {
+        $filter = $request->all();
+        $data = $repo->search_comprobantes($filter)->get();
+        // echo "<pre>";
+        // print_r($data); exit;
+        return generateExcel($this->generateDataComprobantesExcel($data), 'LISTA DE COMPROBANTES', 'Comprobantes');
+        // print_r($r);
+    }
+
+    public function guardar_comprobante(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio, VentasInterface $ventas_repo, CompaniaInterface $compania_repo,CustomerInterface $repo_cliente) {
+        
+        
         // ini_Set("display_errors", 1);
         // error_reporting(E_ALL);
         $data = $request->all();
@@ -877,8 +896,11 @@ class MovimientoCajaController extends Controller
             $name_cpe = $empresa->Ruc . "-" . $data["IdTipoDocumento"] . "-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
             // print_r($name); exit;
 
+           
+
             $data_venta = (array)$solicitud[0];
             $data_venta["documento_cpe"] = $name_cpe;
+            $data_venta["enviado_cpe"] = "0";
             $data_venta["descuento_id"] = explode("*", $solicitud[0]->descuento_id)[0];
             $data_venta["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_venta["serie_comprobante"] = $data["serie_comprobante"];
@@ -929,8 +951,7 @@ class MovimientoCajaController extends Controller
 
                 if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
 
-                   
-
+                
                     $data_venta["tipo_comprobante"] = "1"; // 1 anticipo, 0 normal
                     $data_venta["saldo"] = "0";
                     $data_venta["pagado"] = $solicitud_credito[0]->cuota_inicial;
@@ -1079,14 +1100,14 @@ class MovimientoCajaController extends Controller
             }
            
 
-         
-            
-           
+
 
             $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
             // PARA TICKET
             $data_ticket = $data_venta;
             $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
+            $data_ticket["documento_cpe"] = "";
+            $data_ticket["enviado_cpe"] = "";
             $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
             $data_ticket["IdTipoDocumento"] = "12"; // Ticket o cinta emitido por máquina registradora
             $data_ticket["serie_comprobante"] = $serie_ticket;
@@ -1419,8 +1440,17 @@ class MovimientoCajaController extends Controller
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago_ticket));
                 
             }
-           
+            
+            $cliente = $repo_cliente->find($data_venta["idcliente"]);
+            $total_qr = str_replace(",", "", number_format($data_venta["t_monto_total"], 2));
 
+            $string_qr = $empresa->Ruc . "|" . $data["IdTipoDocumento"]. "|" .$data["serie_comprobante"]. "|" .str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT). "|0.00|" .$total_qr. "|" .date("Y-m-d"). "|" .$cliente[0]->tipodoc. "|" .$cliente[0]->documento;
+            // GUARDAMOS IMAGEN DEL CODIGO QR
+            // referencia: https://www.desarrollolibre.net/blog/laravel/generar-simples-codigos-qrs-con-laravel
+            if (!file_exists(base_path("public/QR/"))) {
+                mkdir(base_path("public/QR/"), 0777, true);
+            }
+            QrCode::format('png')->margin(0)->size(300)->color(0, 0, 0)->generate($string_qr, '../public/QR/'.$name_cpe.".png");
 
             $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);
             $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
@@ -1435,7 +1465,7 @@ class MovimientoCajaController extends Controller
             // GENERAR JSON CPE
 
            
-            $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
+            // $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
             DB::commit();
             return response()->json($result);
         } catch (\Exception $e) {
@@ -1447,7 +1477,7 @@ class MovimientoCajaController extends Controller
 
     }
 
-    public function guardar_pago_cuotas_credito(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio) {
+    public function guardar_pago_cuotas_credito(CajaDiariaDetalleInterface $repo, Request $request, SolicitudInterface $solicitud_repositorio, ConsecutivosComprobantesInterface $repoCC, CajaDiariaInterface $caja_diaria_repositorio, CustomerInterface $repo_cliente) {
 
         $data = $request->all();
 
@@ -1937,19 +1967,7 @@ class MovimientoCajaController extends Controller
 
     }
 
-    public function subfijo($xx)
-    { // esta función regresa un subfijo para la cifra
-        $xx = trim($xx);
-        $xstrlen = strlen($xx);
-        if ($xstrlen == 1 || $xstrlen == 2 || $xstrlen == 3)
-            $xsub = "";
-        //
-        if ($xstrlen == 4 || $xstrlen == 5 || $xstrlen == 6)
-            $xsub = "MIL";
-        //
-        return $xsub;
-    }
-
+    
     
 
     

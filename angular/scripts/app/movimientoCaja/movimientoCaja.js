@@ -597,7 +597,7 @@ table_container_bancos.jtable('load');
         getDataFormDescuento();
         Fecha_actual();
         function getDataFormCajaDiaria() {
-            RESTService.all('movimientoCajas/data_form', '', function (response) {
+            RESTService.all('movimientoCajas/data_form_caja_diaria', '', function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     console.log(response.cajas);
 
@@ -3430,6 +3430,30 @@ table_container_bancos.jtable('load');
                 items: [{
                     cssClass: 'buscador',
                     text: search_comprobantes
+                },{
+                    cssClass: 'btn-primary',
+                    text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
+                    click: function () {
+                        var data_excel = {
+                            search: $('#search_b_comprobantes').val(),
+                            FechaInicioFiltro: $('#FechaInicioFiltro').val(),
+                            FechaFinFiltro: $('#FechaFinFiltro').val(),
+                            idClienteFiltro: $('#idClienteFiltro').val(),
+                            id_tipo_doc: $('#id_tipo_doc').val(),
+                            estado_cpe: $('#estado_cpe').val(),
+                        };
+
+                        // var string = Object.keys(data_excel).map(function (k) {
+                        //     return encodeURIComponent(k) + '=' + encodeURIComponent(data_excel[k])
+                        // }).join('&');
+                        // var datos = new URLSearchParams(string);
+                        // console.log(datos);
+                        // console.log(typeof datos);
+
+                        $scope.openDoc('movimientoCajas/excel_comprobantes', data_excel);
+                        // window.open("movimientoCajas/excel_comprobantes?"+string);
+                        // window.location();
+                    }
                 }]
             },
             fields: {

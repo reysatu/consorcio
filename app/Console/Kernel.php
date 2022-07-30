@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        Commands\CPETask::class
     ];
 
     /**
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('cpe:task')->everyMinute();
     }
 
     /**
@@ -35,6 +37,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
+
+       
         require base_path('routes/console.php');
     }
 }

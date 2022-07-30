@@ -47,4 +47,34 @@ trait CajaDiariaDetalleTrait
 
         return $data;
     }
+
+    public function generateDataComprobantesExcel($info)
+    {
+        $columns[] = ['SERIE','NÚMERO','FECHA','TIPO DOC','N° DOCUMENTO','CLIENTE','MONEDA','MONTO', 'PAGADO', 'SALDO', 'ESTADO'];
+
+        foreach ($info as $i) {
+            
+            $columns[] = [
+                ['left', $i->serie_comprobante],
+                ['left', $i->numero_comprobante],
+                ['left', $i->fecha_emision],
+                ['left', $i->tipo_documento],
+                ['left', $i->numero_documento],
+                ['left', $i->cliente],
+                ['left', $i->moneda],
+                ['left', $i->t_monto_total],
+                ['left', $i->pagado],
+                ['left', $i->saldo],
+                ['left', $i->estado_cpe],
+               
+            ];
+        }
+
+        $data = [
+            'data' => $columns,
+            'title' => 'LISTA DE COMPROBANTES'
+        ];
+
+        return $data;
+    }
 }

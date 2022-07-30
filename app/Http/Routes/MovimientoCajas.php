@@ -22,6 +22,8 @@ Route::post('movimientoCajas/create', ['as' => 'movimientoCajas.create', 'uses' 
 Route::post('movimientoCajas/delete', ['as' => 'movimientoCajas.delete', 'uses' => 'MovimientoCajaController@destroy']);
 Route::post('movimientoCajas/update', ['as' => 'movimientoCajas.update', 'uses' => 'MovimientoCajaController@update']);
 Route::get('movimientoCajas/excel', ['as' => 'movimientoCajas.excel', 'uses' => 'MovimientoCajaController@excel']); 
+
+Route::get('movimientoCajas/excel_comprobantes', ['as' => 'movimientoCajas.excel_comprobantes', 'uses' => 'MovimientoCajaController@excel_comprobantes']); 
 // Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']);
 Route::get('movimientoCajas/data_form/{id}', ['as' => 'movimientoCajas.data_form', 'uses' => 'MovimientoCajaController@data_form']); 
 
@@ -34,7 +36,7 @@ Route::get('movimientoCajas/getDenominaciones/{id}', ['as' => 'movimientoCajas.g
 
 Route::get('movimientoCajas/getDenominacionesView/{id}', ['as' => 'movimientoCajas.getDenominacionesView', 'uses' => 'CajaDiariaController@getDenominacionesView']);
  
-Route::get('movimientoCajas/data_form', ['as' => 'movimientoCajas.data_form', 'uses' => 'CajaDiariaController@data_form']);
+Route::get('movimientoCajas/data_form_caja_diaria', ['as' => 'movimientoCajas.data_form_caja_diaria', 'uses' => 'CajaDiariaController@data_form']);
 
 Route::get('movimientoCajas/data_formIncio', ['as' => 'movimientoCajas.data_formIncio', 'uses' => 'MovimientoCajaController@data_formIncio']);
 
