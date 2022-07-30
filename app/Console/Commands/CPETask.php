@@ -303,7 +303,7 @@ class CPETask extends Command
             $response["status"] = "ei"; 
             $response["msg"] = $_strFaultCode.": ".$_strFaultString; 
             $texto = date("Y-m-d H:i:s");
-            Storage::append("log.txt", $texto." ".$filename." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
+            Storage::append("log.txt", $texto." envio_json_cpe: ".$filename." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
             return response()->json($response);
 
         } else if (!(!isset($_strContentFile) || trim($_strContentFile) === '')) { //si esta todo correcto devuelve el xml firmado y puede extraer el valor resumen
@@ -620,8 +620,8 @@ class CPETask extends Command
             echo $_strFaultString.'<br>'; #descripcion del error
 
             $texto = date("Y-m-d H:i:s");
-            Storage::append("log.txt", $texto." ".$filename." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
-            exit;
+            Storage::append("log.txt", $texto." consultar_cdr: ".$filename." _strFaultCode: ". $_strFaultCode. " _strFaultString:".$_strFaultString);
+            // exit;
         }else if(!(!isset($_strContentFile) || trim($_strContentFile)==='')){
             #cuando devuelve cdr
             $doc = new \DOMDocument;
