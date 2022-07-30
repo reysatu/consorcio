@@ -321,7 +321,10 @@ class CPETask extends Command
     {
 
         $json["invoice"] = array();
+        $json["creditnote"] = array();
+        $json_array = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
+        $venta_referencia = $caja_diaria_detalle_repo->get_venta($venta[0]->idventa_referencia);
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
         $venta_anticipo = array();
         $solicitud_cronograma = array();
@@ -331,6 +334,8 @@ class CPETask extends Command
         if (!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
             $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+
+            $solicitud = $solicitud_repositorio->get_solicitud($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
 
 	
@@ -345,73 +350,91 @@ class CPETask extends Command
             throw new Exception("Por favor cree el parametro IGV!");
         }
 
-		
-        $json["invoice"]["tip_doc"] = $venta[0]->IdTipoDocumento;
-        $json["invoice"]["serie"] = $venta[0]->serie_comprobante;
-        $json["invoice"]["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
-        $json["invoice"]["fec_emi"] = $venta[0]->fecha_emision_server;
-        $json["invoice"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
-        $json["invoice"]["tip_oper"] = "0101";
-        $json["invoice"]["fec_ven"] = $venta[0]->fecha_emision_server;
         
-        // $json["invoice"]["hora_emi"] = $venta[0]->hora_server;
-        $json["invoice"]["ubl_version"] = "2.1";
-        $json["invoice"]["customizacion"] = "2.0";
-	
-        $json["invoice"]["emisor"]["tip_doc"] = "6";
-        $json["invoice"]["emisor"]["num_doc"] = $empresa->Ruc;
-        $json["invoice"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
-        $json["invoice"]["emisor"]["dir"] = $empresa->Direccion;
-        $json["invoice"]["emisor"]["cod_ubi"] = $empresa->ubigeo;
-        $json["invoice"]["emisor"]["dep"] = $empresa->departamento;
-        $json["invoice"]["emisor"]["prov"] = $empresa->provincia;
-        $json["invoice"]["emisor"]["dist"] = $empresa->distrito;
-        $json["invoice"]["emisor"]["cod_pais"] = "PE";
-        $json["invoice"]["emisor"]["cod_sucur"] = "0000";
 
-        $json["invoice"]["adquiriente"]["tip_doc"] = (string)(int)$venta[0]->tipodoc;
-        $json["invoice"]["adquiriente"]["num_doc"] = $venta[0]->documento;
-        $json["invoice"]["adquiriente"]["raz_soc"] = $venta[0]->razonsocial_cliente;
-        $json["invoice"]["adquiriente"]["dir"] = $venta[0]->direccion;
-        $json["invoice"]["adquiriente"]["cod_pais"] = "PE";
+        $json_array["tip_doc"] = $venta[0]->IdTipoDocumento;
+        $json_array["serie"] = $venta[0]->serie_comprobante;
+        $json_array["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
+        $json_array["fec_emi"] = $venta[0]->fecha_emision_server;
+        $json_array["cod_mon"] = $venta[0]->EquivalenciaSunat;
+
+        //BOLETAS Y FACTURAS
+		if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
+            $json_array["tip_oper"] = "0101";
+            
+            //PARA ANTICIPOS
+            if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { 
+                
+                $json_array["fec_venc"] = $solicitud[0]->fecha_vencimiento;
+            }
+        }
+        
+        // NOTAS DE CREDITO Y NOTAS DE DEBITO
+        if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08") {
+            $json_array["docmodif"]["tip_doc"] = $venta_referencia[0]->IdTipoDocumento;
+            $json_array["docmodif"]["serie_correl"] = $venta_referencia[0]->serie_comprobante."-".str_pad($venta_referencia[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
+            $json_array["docmodif"]["cod_ref"] = $venta_referencia[0]->idmotivo;
+            $json_array["docmodif"]["descrip_motiv"] = $venta_referencia[0]->motivo_descripcion;
+            $json_array["docmodif"]["fec_emi"] = $venta_referencia[0]->fecha_emision_server;
+        }
+        // $json_array["hora_emi"] = $venta[0]->hora_server;
+        $json_array["ubl_version"] = "2.1";
+        $json_array["customizacion"] = "2.0";
+	
+        $json_array["emisor"]["tip_doc"] = "6";
+        $json_array["emisor"]["num_doc"] = $empresa->Ruc;
+        $json_array["emisor"]["raz_soc"] = $empresa->RazonSocial;
+        $json_array["emisor"]["dir"] = $empresa->Direccion;
+        $json_array["emisor"]["cod_ubi"] = $empresa->ubigeo;
+        $json_array["emisor"]["dep"] = $empresa->departamento;
+        $json_array["emisor"]["prov"] = $empresa->provincia;
+        $json_array["emisor"]["dist"] = $empresa->distrito;
+        $json_array["emisor"]["cod_pais"] = "PE";
+        $json_array["emisor"]["cod_sucur"] = "0000";
+
+        $json_array["adquiriente"]["tip_doc"] = (string)(int)$venta[0]->tipodoc;
+        $json_array["adquiriente"]["num_doc"] = $venta[0]->documento;
+        $json_array["adquiriente"]["raz_soc"] = $venta[0]->razonsocial_cliente;
+        $json_array["adquiriente"]["dir"] = $venta[0]->direccion;
+        $json_array["adquiriente"]["cod_pais"] = "PE";
 
        
-        $json["invoice"]["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
-        $json["invoice"]["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-        $json["invoice"]["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-        $json["invoice"]["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-        $json["invoice"]["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
-        $json["invoice"]["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
+        $json_array["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
+        $json_array["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json_array["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json_array["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
+        $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-            $json["invoice"]["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
+            $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
-            // $json["invoice"]["cargo"][0]["cod_cd"] = "";
-            // $json["invoice"]["cargo"][0]["factor_cd"] = "";
-            // $json["invoice"]["cargo"][0]["monto_cd"] = "";
-            // $json["invoice"]["cargo"][0]["base_cd"] = "";
+            // $json_array["cargo"][0]["cod_cd"] = "";
+            // $json_array["cargo"][0]["factor_cd"] = "";
+            // $json_array["cargo"][0]["monto_cd"] = "";
+            // $json_array["cargo"][0]["base_cd"] = "";
 
-            $json["invoice"]["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
-            $json["invoice"]["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
-            $json["invoice"]["ant"][0]["serie_correl"] = $venta_anticipo[0]->serie_comprobante;
-            $json["invoice"]["ant"][0]["num_doc"] = $venta_anticipo[0]->numero_comprobante;
-            $json["invoice"]["ant"][0]["tip_doc"] = $venta_anticipo[0]->tipodoc;
-            $json["invoice"]["ant"][0]["moneda"] = $venta_anticipo[0]->EquivalenciaSunat;
-            $json["invoice"]["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
+            $json_array["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
+            $json_array["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
+            $json_array["ant"][0]["serie_correl"] = $venta_anticipo[0]->serie_comprobante;
+            $json_array["ant"][0]["num_doc"] = $venta_anticipo[0]->numero_comprobante;
+            $json_array["ant"][0]["tip_doc"] = $venta_anticipo[0]->tipodoc;
+            $json_array["ant"][0]["moneda"] = $venta_anticipo[0]->EquivalenciaSunat;
+            $json_array["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
         }
        
 		
         // echo "holsa"; exit;
         if ($venta[0]->codcondicionpago == 1) { // contado
-            $json["invoice"]["forma_pago"]["descrip"] = "Contado";
+            $json_array["forma_pago"]["descrip"] = "Contado";
            
         } else { // credito
-            $json["invoice"]["forma_pago"]["descrip"] = "Crédito";
-            $json["invoice"]["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-            $json["invoice"]["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
+            $json_array["forma_pago"]["descrip"] = "Crédito";
+            $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+            $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
             if(count($solicitud_cronograma) > 0) {
-                $json["invoice"]["cuota"] = array();
+                $json_array["cuota"] = array();
                 $cuotas = array();
             }
          
@@ -421,13 +444,13 @@ class CPETask extends Command
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
                 $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
 
-                array_push($json["invoice"]["cuota"], $cuotas);
+                array_push($json_array["cuota"], $cuotas);
             }
         }
        
      
 
-        $json["invoice"]["det"] = array();
+        $json_array["det"] = array();
       
         $detalle_venta = array();
         $cont = 1;
@@ -439,6 +462,7 @@ class CPETask extends Command
             $detalle_venta["descrip"] = $value->producto;
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+            $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
 
             $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
             $detalle_venta["igv_item"] = sprintf('%.2f', round($value->impuestos, 2));
@@ -449,28 +473,35 @@ class CPETask extends Command
             $detalle_venta["tasa_igv"] = sprintf('%.2f', round($parametro_igv[0]->value, 2));
 
             $cont++;
-            array_push($json["invoice"]["det"], $detalle_venta);
+            array_push($json_array["det"], $detalle_venta);
         }
 
        
-        $json["invoice"]["leyen"][0]["leyen_cod"] = "1000";
+        $json_array["leyen"][0]["leyen_cod"] = "1000";
        
        
-        $json["invoice"]["leyen"][0]["leyen_descrip"] = $this->convertir($venta[0]->t_monto_total);
+        $json_array["leyen"][0]["leyen_descrip"] = $this->convertir($venta[0]->t_monto_total);
        
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-            $json["invoice"]["leyen"][1]["leyen_cod"] = "2002";
-            $json["invoice"]["leyen"][1]["leyen_descrip"] = "SERVICIOS PRESTADOS EN LA AMAZONÍA  REGIÓN SELVA PARA SER CONSUMIDOS EN LA MISMA";
+            $json_array["leyen"][1]["leyen_cod"] = "2002";
+            $json_array["leyen"][1]["leyen_descrip"] = "SERVICIOS PRESTADOS EN LA AMAZONÍA  REGIÓN SELVA PARA SER CONSUMIDOS EN LA MISMA";
 
-            $json["invoice"]["leyen"][2]["leyen_descrip"] = "No se aceptan cambios ni devoluciones";
+            $json_array["leyen"][2]["leyen_descrip"] = "No se aceptan cambios ni devoluciones";
         } else {
             // if($venta[0]->t_monto_exonerado > 0) {
-            //     $json["invoice"]["leyen"][1]["leyen_cod"] = "2001";
-            //     $json["invoice"]["leyen"][1]["leyen_descrip"] = "BIENES TRANSFERIDOS EN LA AMAZONIA REGION SELVA PARA SER CONSUMIDOS EN LA MISMA";
+            //     $json_array["leyen"][1]["leyen_cod"] = "2001";
+            //     $json_array["leyen"][1]["leyen_descrip"] = "BIENES TRANSFERIDOS EN LA AMAZONIA REGION SELVA PARA SER CONSUMIDOS EN LA MISMA";
             // }
            
         }
-     
+        if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
+            $json["invoice"] = $json_array;
+        }
+
+        if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08") {
+            $json["creditnote"] = $json_array;
+        }
+        
         $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         if (!file_exists(base_path("public/CPE/"))) {

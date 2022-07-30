@@ -250,6 +250,7 @@ class Controller extends BaseController
 
         $data_venta                        = $data;
         $data_venta["por_aplicar"] = "N";
+        $data_venta["enviado_cpe"] = "0";
         $data_venta["idventa_referencia"]  = $data["idventa"];
         $data_venta["devolucion_producto"] = 0;
         $data_venta["devolucion_dinero"] = 0;

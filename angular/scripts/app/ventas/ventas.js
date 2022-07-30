@@ -3,17 +3,16 @@
  * Created by JAIR on 4/5/2017.
  */
 
- (function () {
-    'use strict'; 
-    angular.module('sys.app.ventas') 
+(function () {
+    'use strict';
+    angular.module('sys.app.ventas')
         .config(Config)
         .controller('VentasCtrl', VentasCtrl);
 
     Config.$inject = ['$stateProvider', '$urlRouterProvider'];
     VentasCtrl.$inject = ['$scope', 'AlertFactory', 'RESTService'];
 
-    function VentasCtrl($scope, AlertFactory, RESTService)
-    {
+    function VentasCtrl($scope, AlertFactory, RESTService) {
 
         // var search = getFormSearch('frm-search-ventas', 'search_b_ventas', 'LoadRecordsButtonVentas');
         var search = getFormSearchComprobantes('frm-search-ventas', 'search_b_ventas', 'LoadRecordsButtonVentas');
@@ -38,7 +37,7 @@
                 items: [{
                     cssClass: 'buscador',
                     text: search
-                },{
+                }, {
                     cssClass: 'btn-primary',
                     text: '<i class="fa fa-file-excel-o"></i> Exportar a Excel',
                     click: function () {
@@ -51,10 +50,10 @@
                             estado_cpe: $('#estado_cpe').val(),
                         };
 
-                        
+
 
                         $scope.openDoc('ventas/excel', data_excel);
-                        
+
                     }
                 }]
             },
@@ -176,15 +175,15 @@
                 },
                 anulado: {
                     title: 'Anulado',
-                    values: { 'S': 'SI', 'N': 'NO','null':'NO' },
-                      type: 'checkbox',
+                    values: { 'S': 'SI', 'N': 'NO', 'null': 'NO' },
+                    type: 'checkbox',
                 },
                 estado_cpe: {
                     title: 'Estado',
 
 
                 },
-                
+
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -192,7 +191,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="'+data.record.idventa+'" data-saldo="'+data.record.saldo+'" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="'+data.record.idventa_referencia+'" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
+                        return '<a href="javascript:void(0)" class="emitir-nota" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '"  data-tipo_comprobante="' + data.record.tipo_comprobante + '"  data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '" data-idventa="' + data.record.idventa + '" data-saldo="' + data.record.saldo + '" data-cCodConsecutivo="' + data.record.cCodConsecutivo_solicitud + '" data-nConsecutivo="' + data.record.nConsecutivo_solicitud + '"  data-idventa_referencia="' + data.record.idventa_referencia + '" title="Emitir Nota"><i class="fa fa-file-text fa-1-5x"></i></a>';
                     }
 
                 },
@@ -208,41 +207,41 @@
 
                 }
 
-            },  
-            
+            },
+
             recordsLoaded: function (event, data) {
 
                 $("#table_container_ventas").find(".jtable-title-text").removeClass("col-md-4").addClass("col-md-2");
                 $("#table_container_ventas").find(".jtable-toolbar").removeClass("col-md-8").addClass("col-md-10");
                 $('.anular-nota').click(function (e) {
-                var code = $(this).attr('data-idventa');
-                AlertFactory.confirm({
-                    title: '',
-                    message: '¿Está seguro que desea anular venta?',
-                    confirm: 'Si',
-                    cancel: 'No'
-                }, function () {
-                    RESTService.get('ventas/anularventa', code, function(response) {
-                        if (!_.isUndefined(response.status) && response.status) {
-                            AlertFactory.textType({
-                                title: '',
-                                message: 'El documento se anuló correctamente',
-                                type: 'success'
-                           });
-                           LoadRecordsButtonVentas.click(); 
-                    }else {
-                        var msg_ = (_.isUndefined(response.message)) ?
-                            'No se pudo eliminar. Intente nuevamente.' : response.message;
+                    var code = $(this).attr('data-idventa');
+                    AlertFactory.confirm({
+                        title: '',
+                        message: '¿Está seguro que desea anular venta?',
+                        confirm: 'Si',
+                        cancel: 'No'
+                    }, function () {
+                        RESTService.get('ventas/anularventa', code, function (response) {
+                            if (!_.isUndefined(response.status) && response.status) {
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'El documento se anuló correctamente',
+                                    type: 'success'
+                                });
+                                LoadRecordsButtonVentas.click();
+                            } else {
+                                var msg_ = (_.isUndefined(response.message)) ?
+                                    'No se pudo eliminar. Intente nuevamente.' : response.message;
                                 AlertFactory.textType({
                                     title: '',
                                     message: msg_,
                                     type: 'error'
-                            });
-                        }
+                                });
+                            }
+                        });
                     });
+                    e.preventDefault();
                 });
-                e.preventDefault();
-            });
                 $('.emitir-nota').click(function (e) {
                     var idventa = $(this).attr('data-idventa');
                     var idtipodocumento = $(this).attr('data-idtipodocumento');
@@ -252,12 +251,12 @@
                     var tipo_comprobante = $(this).attr('data-tipo_comprobante');
                     var saldo = parseFloat($(this).attr('data-saldo'));
                     // alert(idventa_referencia);
-                    if(idtipodocumento == "07") {
+                    if (idtipodocumento == "07") {
                         return false;
                     }
 
 
-                    if(idventa_referencia != "null" && idventa_referencia != "" && condicion_pago != 1 && saldo <= 0) {
+                    if (idventa_referencia != "null" && idventa_referencia != "" && condicion_pago != 1 && saldo <= 0) {
                         AlertFactory.textType({
                             title: '',
                             message: 'Ya se emitio una nota de este documento!',
@@ -270,11 +269,11 @@
                         function (data, textStatus, jqXHR) {
                             // console.log();
                             if (data.length > 0) {
-                                if(tipo_comprobante == 1) { // solo para anticipos la validacion
+                                if (tipo_comprobante == 1) { // solo para anticipos la validacion
                                     $.post("ventas/validar_venta_anticipo", { cCodConsecutivo: cCodConsecutivo, nConsecutivo: nConsecutivo },
                                         function (data, textStatus, jqXHR) {
 
-                                            if(data.length == 0) {
+                                            if (data.length == 0) {
 
                                                 find_documento(idventa);
                                             } else {
@@ -285,15 +284,15 @@
                                                 });
                                                 return false;
                                             }
-                                        },  
+                                        },
                                         "json"
                                     );
                                 } else {
                                     find_documento(idventa);
                                 }
-                               
 
-                                
+
+
                             } else {
                                 AlertFactory.textType({
                                     title: '',
@@ -307,7 +306,7 @@
                     );
                     e.preventDefault();
                 });
-               
+
             },
             formCreated: function (event, data) {
                 // data.form.find('input[name="banco"]').attr('onkeypress','return soloLetras(event)');
@@ -319,7 +318,7 @@
             }
         });
 
-        generateSearchForm('frm-search-ventas', 'LoadRecordsButtonVentas', function(){
+        generateSearchForm('frm-search-ventas', 'LoadRecordsButtonVentas', function () {
             table_container_ventas.jtable('load', {
                 search: $('#search_b_ventas').val(),
                 FechaInicioFiltro: $('#FechaInicioFiltro').val(),
@@ -337,7 +336,7 @@
                     //     // alert(response.parametro_igv[0].value);
                     //     // $("#valor_igv").val(response.parametro_igv[0].value);
                     // }
-                  
+
                     $("#idmotivo").append('<option value="">Seleccionar</option>');
                     _.each(response.motivos, function (item) {
                         $("#idmotivo").append('<option value="' + item.codigo + '">' + item.descripcion + '</option>');
@@ -399,7 +398,7 @@
                         $("#t_monto_total").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#condicion_pago").val(parseFloat(data.documento[0].condicion_pago).toFixed(2));
                         $("#saldo").val(parseFloat(data.documento[0].saldo).toFixed(2));
-                        if(data.documento[0].tipo_comprobante == "1") {
+                        if (data.documento[0].tipo_comprobante == "1") {
                             $("#monto").attr("readonly", "readonly");
                         } else {
                             $("#monto").removeAttr("readonly");
@@ -407,10 +406,10 @@
 
                         $("#monto").attr("max", parseFloat(data.documento[0].t_monto_total).toFixed(2));
                         $("#monto").val(parseFloat(data.documento[0].t_monto_total).toFixed(2));
-                      
+
                     }
 
-                    
+
                     $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
                         function (data, textStatus, jqXHR) {
                             select_comprobante(data);
@@ -423,15 +422,15 @@
                 },
                 "json"
             );
-    
-            
-    
-           
+
+
+
+
         }
 
         // $(document).on("keyup", "#monto", function () {
         //     var max_monto = parseFloat($(this).attr("monto"));
-            
+
         // });
 
         $scope.guardar_venta = function () {
@@ -441,56 +440,56 @@
             bval = bval && $("#idmotivo").required();
             bval = bval && $("#monto").required();
 
-            if(bval) {
+            if (bval) {
                 $.post("ventas/guardar_venta", $("#formulario-ventas").serialize(),
-                function (data, textStatus, jqXHR) {
+                    function (data, textStatus, jqXHR) {
 
-                    if (data.status == "i") {
+                        if (data.status == "i") {
 
-                   
-                        $("#modalVentas").modal("hide");
-                       
-                        $("#formulario-ventas").trigger("reset");
 
-                        var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+                            $("#modalVentas").modal("hide");
 
-                        window.open("movimientoCajas/imprimir_comprobante/" + id);
-                        
-                        LoadRecordsButtonVentas.click();
+                            $("#formulario-ventas").trigger("reset");
 
-                        // nota de credito por un anticipo
-                        var msg = "";
-                        if(data.datos[0].devolucion_dinero == "1") {
-                            msg += "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
+                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+
+                            LoadRecordsButtonVentas.click();
+
+                            // nota de credito por un anticipo
+                            var msg = "";
+                            if (data.datos[0].devolucion_dinero == "1") {
+                                msg += "Se registro un movimiento de devolución en movimientos de caja y se debe entregar el dinero al cliente."
+                            }
+
+                            if (data.datos[0].devolucion_producto == "1") {
+                                msg += " ¡Importante! Se debe ingresar a almacén los articulos devueltos de la Nota de Crédito emitida.";
+                            }
+
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'El documento se facturó correctamente. ' + msg,
+                                type: 'success'
+                            });
+
+
+
+
+
+
+
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data.msg,
+                                type: 'info'
+                            });
                         }
-
-                        if(data.datos[0].devolucion_producto == "1") {
-                            msg += " ¡Importante! Se debe ingresar a almacén los articulos devueltos de la Nota de Crédito emitida.";
-                        }
-
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'El documento se facturó correctamente. '+msg,
-                            type: 'success'
-                        });
-
-                        
-
-
-                        
-
-
-                    } else {
-                        AlertFactory.textType({
-                            title: '',
-                            message: data.msg,
-                            type: 'info'
-                        });
-                    }
-                    // console.log(data);
-                },
-                "json"
-            );
+                        // console.log(data);
+                    },
+                    "json"
+                );
             }
         }
     }
@@ -510,4 +509,4 @@
         $urlRouterProvider.otherwise('/');
     }
 })
-();
+    ();

@@ -127,8 +127,6 @@ class MovimientoCajaController extends Controller
             $name_cpe = $empresa->Ruc . "-" . $data["IdTipoDocumento"] . "-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
             // print_r($name); exit;
 
-      
-           
             $tipo_comprobante = "";
             if($data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ") {
                 
