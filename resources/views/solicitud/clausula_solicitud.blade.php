@@ -133,26 +133,26 @@
                     // var_dump($condicion_pago); exit;
                 ?>
                 <label for="">
-                    Por el Presente documento dejamos constancia que si se utilizó medio de pago, en el contrato de COMPRA - VENTA, de un vehículo automotor menor, Carroceria: {{ $producto[0]->carroceria }}, marca: {{ $producto[0]->marca }}, modelo: {{ $producto[0]->modelo }}, cuyas caracteristicas están señaladas en la {{ $comprobante }}, en donde la condicion de pago es: {{ $condicion_pago }}.
+                    Por el Presente documento dejamos constancia que si se utilizó medio de pago, en el contrato de COMPRA - VENTA, de un vehículo automotor menor, Carroceria: {{ $producto[0]->carroceria }}, marca: {{ $producto[0]->marca }}, modelo: {{ $producto[0]->modelo }}, cuyas caracteristicas están señaladas en la {{ $comprobante }}, en donde la condicion de pago es: {{ $condicion_pago }}, {{ $solicitud[0]->descripcion_adicional_clausula }}
                 </label>
             </div>
         </div>
-        <div class="clear"></div>
+        {{-- <div class="clear"></div>
         <br>
         <div class="row">
             <div class="col" style="width: 100%; border-bottom: 1px solid dashed;">
                
             </div>
            
-        </div>
-        <div class="clear"></div>
+        </div> --}}
+        {{-- <div class="clear"></div>
        
         <div class="row">
             <div class="col" style="width: 100%; border-bottom: 1px solid dashed;">
                
             </div>
            
-        </div>
+        </div> --}}
         <div class="clear"></div>
 
         <div class="row">

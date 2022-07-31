@@ -850,7 +850,7 @@ Orden de Servicio
 //- Campo Comentario de facturación, este se debe guardar o modificar en cualquier estado que se encuentre la orden a excepción del estado Terminado (emite mensaje de validación)
 - Acceso directo para modificar datos de vehículo debe habilitarse cuando se modifica algún campo, debería llamarse Editar Vehículo.
 - Cuando se intente registrar artículos duplicados, recargar los combos (como en la Proforma).
-//- La impresión del formato express no se visualizan datos
+//- La impresión del formato express no se visualizan datos *
 
 Formatos de impresión (Brayam)
 //- Revisar Orden de Servicio, Proforma y Control de Calidad

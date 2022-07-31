@@ -3654,14 +3654,19 @@
                     } else {
                         $(".imprimir-cronograma").hide();
                     }
-
                 
-                    if(data.solicitud[0].estado == "2") { // solo cuando es vigente se muestra
+                    if(data.solicitud[0].estado == "2") { // solo cuando es vigente se activa
                         $("#comentario_facturacion").removeAttr("readonly");
                        
                     } else {
                         $("#comentario_facturacion").attr("readonly", "readonly");
                        
+                    }
+
+                    if(data.solicitud[0].estado <= 8) { 
+                        $("#descripcion_adicional_clausula").removeAttr("readonly");
+                    } else {
+                        $("#descripcion_adicional_clausula").attr("readonly", "readonly");
                     }
 
                     $("#tipo_sol").val(data.solicitud[0].tipo);

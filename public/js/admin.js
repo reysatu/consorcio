@@ -3234,18 +3234,18 @@ function create_pdf_ordenServicio(response) {
 }
 function create_pdf_ordenServicioXpress(response) {
      var data=response.data;
-    console.log(response.data);
+    // console.log(response.data);
     var dataCli=response.data_cliente;
     var getClienteNuevo=response.getClienteNuevo;
     var horaReal=response.fechacAc;
-    console.log(getClienteNuevo);
-    console.log(dataCli);
-    console.log(response.data_matenimiento);
-    console.log(response.data_detalle);
-    console.log(response.con);
-    console.log(response.nr);
-    console.log(data.dFecRec2);
-    console.log(data.dFecEntrega2);
+    // console.log(getClienteNuevo);
+    // console.log(dataCli);
+    // console.log(response.data_matenimiento);
+    // console.log(response.data_detalle);
+    // console.log(response.con);
+    // console.log(response.nr);
+    // console.log(data.dFecRec2);
+    // console.log(data.dFecEntrega2);
     var data_dis=response.get_distrito;
     var get_vehiculo=response.get_vehiculo;
     var modelo=get_vehiculo[0].Modelo;
@@ -3373,11 +3373,13 @@ function create_pdf_ordenServicioXpress(response) {
 
     var docDefinition = {
         
-         pageOrientation: 'landscape',
-        pageSize: {
-    width: 800,
-    height: 'auto'
-  },
+        // pageOrientation: 'landscape',
+        // pageSize: {
+        //     width: 800,
+        //     height: 'auto'
+        // },
+        pageSize: "A4",
+        pageOrientation: 'portrait',
         pageMargins: [ 200, 200, 200, 200 ],
            content: [
         {
@@ -3418,7 +3420,8 @@ function create_pdf_ordenServicioXpress(response) {
             text: fechRecep,
             bold: true,
             fontSize: 10,
-            absolutePosition: { x:578 , y: 225 }///////esto
+            // absolutePosition: { x:578 , y: 225 }///////esto
+            absolutePosition: { x:500 , y: 225 }///////esto
         },
          {
             text: cChasis,
@@ -3440,7 +3443,8 @@ function create_pdf_ordenServicioXpress(response) {
         },
         {
             text:horaEnt,
-            absolutePosition: { x:595 , y: 248 },////esto
+            // absolutePosition: { x:595 , y: 248 },////esto
+            absolutePosition: { x:510 , y: 248 },////esto
             bold: true,
             fontSize: 10,
         },
@@ -3463,14 +3467,16 @@ function create_pdf_ordenServicioXpress(response) {
             fontSize: 10,
         },
         {
-            text: horaEntre,
-            absolutePosition: { x:571 , y: 272 },///esto
+            text:  horaEntre,
+            // absolutePosition: { x:571 , y: 272 },///esto
+            absolutePosition: { x:471 , y: 272 },///esto
             bold: true,
             fontSize: 10,
         },
         {
-            text: horaReal,
-            absolutePosition: { x:629 , y: 272 },///esto
+            text:  horaReal,
+            // absolutePosition: { x:629 , y: 272 },///esto
+            absolutePosition: { x:529 , y: 272 },///esto
             bold: true,
             fontSize: 10,
         },

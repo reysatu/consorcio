@@ -374,6 +374,8 @@ class SolicitudController extends Controller
         $response["solicitud_cronograma"] = $Repo->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
         $response["descuentos"] =$repo_orden->get_descuentos_all();
 
+        // $newString = mb_convert_encoding($response, "UTF-8", "auto");
+        // return json_encode($response);
         return response()->json($response);
     }
 

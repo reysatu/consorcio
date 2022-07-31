@@ -255,6 +255,7 @@ class SolicitudRepository implements SolicitudInterface
         LEFT JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
         LEFT JOIN ERP_Convenios AS conv ON(conv.idconvenio=s.idconvenio)
         WHERE s.cCodConsecutivo='{$cCodConsecutivo}' AND s.nConsecutivo={$nConsecutivo}";
+        // die($sql);
         $result = DB::select($sql);
 
         return $result;
