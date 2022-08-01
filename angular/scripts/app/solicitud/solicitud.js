@@ -1462,7 +1462,8 @@
                 $(".btn_guardarOrden").removeAttr("disabled");
             }
 
-            if ($("#estado").val() == "1" || $("#estado").val() == "2" || $("#estado").val() == "4" || $("#estado").val() == "") {
+
+            if ($("#estado").val() <= 8 || $("#estado").val() == "") {
                 // alert("hola manus");
                 $(".btn_guardarOrden").removeAttr("disabled");
             } else {
@@ -3570,7 +3571,7 @@
                         
                     });
 
-
+                    
                     Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
                     if (data.solicitud_credito.length > 0) {
                         Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);

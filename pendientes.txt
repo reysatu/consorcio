@@ -864,7 +864,7 @@ update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = 
 
 Movimiento de Caja / Solicitudes
 //- Al elegir la forma de pago Separación combinado con una forma de pago efectivo se emite el mensaje de error "SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]Incorrect syntax near '='. (SQL: UPDATE ERP_Venta SET aplicado_separacion = 'S'
-WHERE idventa=)" 
+WHERE idventa=)"  *
 - En la impresión del documento de venta por el saldo de una solicitud a crédito financiero incluir el dato de convenio 
 
 Entrega a Servicio Técnico o Clientes

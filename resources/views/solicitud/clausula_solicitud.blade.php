@@ -125,15 +125,19 @@
                         $date = explode("/", $segunda_venta[0]->fecha_emision_user);
                        
                         $dia_emision = $date[0];
-                        $mes_emision = $mes[intval($date[1])];
+                        $mes_emision = $mes[intval($date[1]) - 1];
                         $anio_emision = $date[2];
                         // var_dump($mes[intval($date[1])]); exit;
                     }
 
+                    $carroceria = (isset($producto[0]->carroceria)) ? $producto[0]->carroceria : "";
+                    $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
+                    $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
+
                     // var_dump($condicion_pago); exit;
                 ?>
                 <label for="">
-                    Por el Presente documento dejamos constancia que si se utilizó medio de pago, en el contrato de COMPRA - VENTA, de un vehículo automotor menor, Carroceria: {{ $producto[0]->carroceria }}, marca: {{ $producto[0]->marca }}, modelo: {{ $producto[0]->modelo }}, cuyas caracteristicas están señaladas en la {{ $comprobante }}, en donde la condicion de pago es: {{ $condicion_pago }}, {{ $solicitud[0]->descripcion_adicional_clausula }}
+                    Por el Presente documento dejamos constancia que si se utilizó medio de pago, en el contrato de COMPRA - VENTA, de un vehículo automotor menor, Carroceria: {{ $carroceria }}, marca: {{ $marca }}, modelo: {{ $modelo }}, cuyas caracteristicas están señaladas en la {{ $comprobante }}, en donde la condicion de pago es: {{ $condicion_pago }}, {{ $solicitud[0]->descripcion_adicional_clausula }}
                 </label>
             </div>
         </div>
