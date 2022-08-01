@@ -860,7 +860,7 @@ Solicitud de Venta
 update ERP_OrdenServicio set cFacturado = 'N', iEstado = 2 where cCodConsecutivo = cCodConsecutivoO_origen and nConsecutivo = cCodConsecutivoO_origen and iEstado not in (0,1,4)
 update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = cCodConsecutivoO_origen and nConsecutivoOS = cCodConsecutivoO_origen and iEstado not in (0,1,6)
 - El mensaje del botón cancelar dice aulo debe decir anuló
-//- En el formato de impresión de cláusula adicional: falta el campo para agregar una descripción_adicional_clausula después de la condición de pago
+//- En el formato de impresión de cláusula adicional: falta el campo para agregar una descripción_adicional_clausula después de la condición de pago *
 
 Movimiento de Caja / Solicitudes
 //- Al elegir la forma de pago Separación combinado con una forma de pago efectivo se emite el mensaje de error "SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]Incorrect syntax near '='. (SQL: UPDATE ERP_Venta SET aplicado_separacion = 'S'

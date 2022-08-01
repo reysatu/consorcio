@@ -320,16 +320,22 @@ class CPETask extends Command
     public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio)
     {
 
-        $json["invoice"] = array();
-        $json["creditnote"] = array();
+        $json = array();
+    
         $json_array = array();
+        $venta_referencia = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
-        $venta_referencia = $caja_diaria_detalle_repo->get_venta($venta[0]->idventa_referencia);
+        
+        if(!empty($venta[0]->idventa_referencia)) {
+            $venta_referencia = $caja_diaria_detalle_repo->get_venta($venta[0]->idventa_referencia);
+        }
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
         $venta_anticipo = array();
         $solicitud_cronograma = array();
 
-       
+        
+
+        
 
         if (!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
@@ -357,7 +363,7 @@ class CPETask extends Command
         $json_array["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         $json_array["fec_emi"] = $venta[0]->fecha_emision_server;
         $json_array["cod_mon"] = $venta[0]->EquivalenciaSunat;
-
+       
         //BOLETAS Y FACTURAS
 		if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
             $json_array["tip_oper"] = "0101";
@@ -370,7 +376,7 @@ class CPETask extends Command
         }
         
         // NOTAS DE CREDITO Y NOTAS DE DEBITO
-        if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08") {
+        if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08" && count($venta_referencia) > 0) {
             $json_array["docmodif"]["tip_doc"] = $venta_referencia[0]->IdTipoDocumento;
             $json_array["docmodif"]["serie_correl"] = $venta_referencia[0]->serie_comprobante."-".str_pad($venta_referencia[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
             $json_array["docmodif"]["cod_ref"] = $venta_referencia[0]->idmotivo;
@@ -501,6 +507,10 @@ class CPETask extends Command
         if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08") {
             $json["creditnote"] = $json_array;
         }
+
+        // $texto = date("Y-m-d H:i:s");
+        //     Storage::append("log.txt", json_encode($json));
+        //     exit;
         
         $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -652,9 +662,9 @@ class CPETask extends Command
         $comprobantes_pendientes_envio = $ventas_repo->obtener_comprobantes_pendientes_envio();
         
         foreach ($comprobantes_pendientes_envio as $key => $value) {
-         
-            $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
            
+            $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
+            
             $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$value->idventa}";
             DB::statement($sql_update);
            
