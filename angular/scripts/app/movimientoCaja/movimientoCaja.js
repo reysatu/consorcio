@@ -2191,9 +2191,20 @@ table_container_bancos.jtable('load');
                         "json"
                     );
                 } else {
-                    $("#idventa_separacion").val("");
-                    $("#idventa_nota").val("");
-                    $("#devolucion_producto").val("");
+                    var existe_sep = false;
+                    $.each($("input[name='codigo_formapago[]']"), function (indexInArray, valueOfElement) { 
+                        //  console.log(valueOfElement.value);
+                        if(valueOfElement.value == "SEP") {
+                            existe_sep = true;
+                        }
+                    });
+                    // alert(existe_sep);
+                    if(!existe_sep) {
+                        $("#idventa_separacion").val("");
+                        $("#idventa_nota").val("");
+                        $("#devolucion_producto").val("");
+                    }
+                   
                    
                     var total_pagar = parseFloat($("#total_pagar").val());
                     var subtotal_montos_pago = sumar_montos_formas_pago();
