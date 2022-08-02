@@ -268,7 +268,7 @@ class CajaDiariaDetalleRepository implements CajaDiariaDetalleInterface
   
 
     public function get_venta_detalle($idventa) {
-        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida, p.serie, p.code_article
+        $sql = "SELECT vd.*, p.description AS producto, um.Abreviatura AS unidad_medida, p.serie, p.code_article, p.id AS idproducto
         FROM ERP_Venta AS v 
         INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
         INNER JOIN ERP_Productos AS p ON(p.id=vd.idarticulo)
