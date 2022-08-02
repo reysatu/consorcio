@@ -52,7 +52,7 @@
 
         * {
             /* font-family: 'Roboto', sans-serif; */
-            font-family: 'Arial'
+            font-family: 'Arial' !important;
             box-sizing: border-box;
             /* font-weight: bold; */
             font-size: 12px;
