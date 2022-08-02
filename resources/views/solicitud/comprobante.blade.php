@@ -29,7 +29,8 @@
             height: 7.2cm;
             /* text-align: center; */
             line-height: 0.8cm;
-            font-family: 'Times New Roman' !important;
+            /* font-family: 'Times New Roman' !important; */
+            font-family: 'Arial' !important;
         }
 
         footer {
@@ -50,7 +51,8 @@
 
 
         * {
-            font-family: 'Roboto', sans-serif;
+            /* font-family: 'Roboto', sans-serif; */
+            font-family: 'Arial'
             box-sizing: border-box;
             /* font-weight: bold; */
             font-size: 12px;
@@ -99,10 +101,10 @@
 
     <header style="">
         <div class="row">
-            <div class="col" style="width: 35%; /*border: 1px solid black;*/ text-align: center;">
+            <div class="col" style="width: 23%; /*border: 1px solid black;*/ text-align: center;">
                 <img style="width: 100%; height: 123px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
             </div>
-            <div class="col" style="width: 65%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
+            <div class="col" style="width: 77%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
                 {{ $empresa[0]->RazonSocial }}
               
             </div>
@@ -134,7 +136,7 @@
                         <td style="border-bottom: 1px solid black;">R.U.C. {{ $empresa[0]->Ruc }}</td>
                     </tr>
                     <tr>
-                        <td style="border-bottom: 1px solid black;">{{ $venta[0]->tipo_documento }}</td>
+                        <td style="border-bottom: 1px solid black;"><?php echo strtoupper($venta[0]->tipo_documento); ?></td>
                     </tr>
                     <tr>
                         <td>{{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</td>
@@ -159,7 +161,7 @@
             <tr>
                 <td style="width: 20%;">DIRECCIÓN</td>
                 <td style="width: 55%;">{{ $cliente[0]->direccion }}</td>
-                <td style="width: 5%;">RI SUNAT</td>
+                <td style="width: 5%;">{{-- RI SUNAT --}}</td>
                 <td style="width: 20%;"></td>
             </tr>
             <tr>
@@ -484,7 +486,7 @@
         </table>
         <table>
             <tr>
-                <td style=""> <center><img style="width: 25%;" src="<?php echo public_path("QR/".$venta[0]->documento_cpe).".png"; ?>" alt=""></center></td>
+                <td style=""> <center><img style="width: 20%;" src="<?php echo public_path("QR/".$venta[0]->documento_cpe).".png"; ?>" alt=""></center></td>
                 <td style="">
                     <span id="pie_1" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_1; ?></span><br>
                     <span id="pie_2" style="display: block; text-align: center;"><?php echo $empresa[0]->pie_2; ?></span><br>
