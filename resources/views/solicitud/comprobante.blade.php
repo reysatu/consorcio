@@ -101,10 +101,10 @@
 
     <header style="">
         <div class="row">
-            <div class="col" style="width: 23%; /*border: 1px solid black;*/ text-align: center;">
+            <!-- <div class="col" style="width: 23%; /*border: 1px solid black;*/ text-align: center;">
                 <img style="width: 100%; height: 123px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
-            </div>
-            <div class="col" style="width: 77%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/ line-height: 60px;">
+            </div> -->
+            <div class="col" style="width: 100%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/">
                 {{ $empresa[0]->RazonSocial }}
               
             </div>
@@ -113,7 +113,7 @@
 
         </div>
         <div class="row">
-            <div class="col" style="width: 70%; text-align: center; line-height: 18px;">
+            <div class="col" style="width: 70%; text-align: center; line-height: 18px; margin-top: 30px;">
                <?php 
                     // foreach ($tiendas as $key => $value) {
                     //     echo $value->descripcion."-".$value->direccion."; ";
