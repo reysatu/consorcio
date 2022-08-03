@@ -364,7 +364,7 @@ class MovimientoCajaController extends Controller
             DB::commit();
             return response()->json([
                 'status' => true,
-                "idventa" => $data_venta["idventa"],
+                "idventa" => (isset($data_venta["idventa"])) ? $data_venta["idventa"] : "",
                 "tipoMovimientoAdd" => $data["tipoMovimientoAdd"],
                 "idventa_ticket" => $idventa_ticket,
                
