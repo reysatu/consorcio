@@ -52,7 +52,7 @@
 
         * {
             /* font-family: 'Roboto', sans-serif; */
-            font-family: 'Arial' !important;
+            font-family: 'Arial'
             box-sizing: border-box;
             /* font-weight: bold; */
             font-size: 12px;
@@ -101,10 +101,10 @@
 
     <header style="">
         <div class="row">
-            <!-- <div class="col" style="width: 23%; /*border: 1px solid black;*/ text-align: center;">
+            <div class="col" style="width: 23%; /*border: 1px solid black;*/ text-align: center;">
                 <img style="width: 100%; height: 123px;" src="<?php echo public_path($empresa[0]->ruta_logo); ?>" alt="">
-            </div> -->
-            <div class="col" style="width: 100%; text-align: center; font-weight: bold; font-size: 30px; /*border: 1px solid black;*/">
+            </div>
+            <div class="col" style="width: 77%; text-align: center; font-weight: bold; font-size: 28px; /*border: 1px solid black;*/ line-height: 60px;">
                 {{ $empresa[0]->RazonSocial }}
               
             </div>
@@ -113,7 +113,7 @@
 
         </div>
         <div class="row">
-            <div class="col" style="width: 70%; text-align: center; line-height: 18px; margin-top: 30px;">
+            <div class="col" style="width: 70%; text-align: center; line-height: 18px;">
                <?php 
                     // foreach ($tiendas as $key => $value) {
                     //     echo $value->descripcion."-".$value->direccion."; ";
@@ -127,8 +127,8 @@
             
                <br>
          
-               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema1 }}</label><br>
-               <label for="" style="font-weight: bold; font-size: 14px !important;">{{ $empresa[0]->lema2 }}</label>
+               <label for="" style="font-weight: bold; font-size: 16px !important;">{{ $empresa[0]->lema1 }}</label><br>
+               <label for="" style="font-weight: bold; font-size: 16px !important;">{{ $empresa[0]->lema2 }}</label>
             </div>
             <div class="col" style="width: 30%;">
                 <table style="width: 100%; border: 1px solid black; text-align: center; font-weight: bold; font-size: 18px !important; line-height: 25px;">
@@ -152,29 +152,31 @@
     <!-- <div class="clear"></div> -->
     
     <main>  
-        <br><br>
+        <br><br><br>
         <table style="width: 100%; ">
             <tr >
-                <td style="width: 20%;">CLIENTE</td>
+                <td style="width: 20%;">CLIENTE :</td>
                 <td colspan="2" style="width: 80%;">{{ $cliente[0]->razonsocial_cliente }}</td>
             </tr>
             <tr>
-                <td style="width: 20%;">DIRECCIÓN</td>
+                <td style="width: 20%;">DIRECCIÓN :</td>
                 <td style="width: 55%;">{{ $cliente[0]->direccion }}</td>
                 <td style="width: 5%;">{{-- RI SUNAT --}}</td>
                 <td style="width: 20%;"></td>
             </tr>
             <tr>
-                <td style="width: 20%;">DNI/RUC</td>
+                <td style="width: 20%;">DNI/RUC :</td>
                 <td style="width: 55%;">{{ $cliente[0]->documento }}</td>
-                <td style="width: 5%;">Fecha</td>
-                <td style="width: 20%;">
-                <?php 
+                <td style="width: 25%;">Fecha :
+                    <?php 
                     $arrd = explode("/", $venta[0]->fecha_emision_user);
               
                     echo $arrd[0]." / ".$mes[$arrd[1]-1]." / ".$arrd[2]; 
                    
                 ?>
+                </td>
+                <td style="width: 0%;">
+                
                 </td>
             </tr>
             <?php  if($venta[0]->IdTipoDocumento == "07") { ?>
@@ -192,7 +194,7 @@
         </table>
         
        
-        <table style="width: 100%; font-size: 10px !important;" >
+        <table style="width: 100%; font-size: 12px !important;" >
             <tr style="">
                 <td style="border-bottom: 1px solid black; border-right: 1px solid black; background: #adadad;">CANT.</td>
                 <td style="border-bottom: 1px solid black; border-right: 1px solid black; background: #adadad;">UND</td>
