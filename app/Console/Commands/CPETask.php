@@ -343,7 +343,7 @@ class CPETask extends Command
 
             $solicitud = $solicitud_repositorio->get_solicitud($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
 
-            $producto = $solicitud_repositorio->get_solicitud_articulo_vehiculo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud));
+            $producto = $solicitud_repositorio->get_solicitud_articulo_vehiculo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
 
 	
