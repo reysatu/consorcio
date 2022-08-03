@@ -466,7 +466,7 @@
             
        
             
-        <table style="width: 97.7%; margin-top: 115px;">
+        <table style="width: 97.7%; margin-top: 104px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>
