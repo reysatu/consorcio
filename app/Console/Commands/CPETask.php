@@ -339,7 +339,8 @@ class CPETask extends Command
 
         if (!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
-            $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+            // $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
+            $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma_pendientes($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
 
             $solicitud = $solicitud_repositorio->get_solicitud($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
 
@@ -447,9 +448,15 @@ class CPETask extends Command
            
         } else { // credito
             $json_array["forma_pago"]["descrip"] = "Credito";
-            $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-            $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
+            $total_credito = 0;
+            foreach ($solicitud_cronograma as $ksc => $vsc) {
+                $total_credito += floatval($vsc->saldo_cuota);
+            }
+
+            $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($total_credito, 2));
+            $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
+            
             if(count($solicitud_cronograma) > 0) {
                 $json_array["cuota"] = array();
                 $cuotas = array();
@@ -457,7 +464,8 @@ class CPETask extends Command
          
             foreach ($solicitud_cronograma as $key => $value) {
                 $cuotas["descrip"] = "Cuota" . str_pad($value->nrocuota, 3, "0", STR_PAD_LEFT);
-                $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
+                // $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
+                $cuotas["monto_neto"] = sprintf('%.2f', round($value->saldo_cuota, 2));
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
                 $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
 
@@ -538,7 +546,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
       
-        // $this->envio_json_cpe($name . ".json");
+        $this->envio_json_cpe($name . ".json");
         
     }
 
@@ -688,18 +696,18 @@ class CPETask extends Command
         }
 
     
-        // $comprobantes = $ventas_repo->obtener_comprobantes();
+        $comprobantes = $ventas_repo->obtener_comprobantes();
     
-        // foreach ($comprobantes as $key => $value) {
-        //     $res = $this->consultar_cdr($value->documento_cpe);
-        //     if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
-        //         $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
-        //         $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
-        //         DB::statement($sql_update);
-        //     }
+        foreach ($comprobantes as $key => $value) {
+            $res = $this->consultar_cdr($value->documento_cpe);
+            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+                DB::statement($sql_update);
+            }
            
            
-        // }
+        }
       
         $texto = date("Y-m-d H:i:s");
         Storage::append("log.txt", $texto);

@@ -355,6 +355,20 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
     }
 
+    public function get_solicitud_cronograma_pendientes($cCodConsecutivo, $nConsecutivo)
+    {
+
+        $sql = "SELECT sc.*, FORMAT(sc.fecha_vencimiento, 'dd/MM/yyyy') AS fecha_vencimiento,
+        CASE WHEN sc.saldo_cuota=0 THEN 'PAGADO' ELSE 'PENDIENTE' END AS estado, FORMAT(sc.fecha_vencimiento, 'yyyy-MM-dd') AS fecha_vencimiento_credito
+         FROM ERP_SolicitudCronograma AS sc
+        WHERE sc.cCodConsecutivo='{$cCodConsecutivo}' AND sc.nConsecutivo={$nConsecutivo} AND sc.saldo_cuota<>0";
+        $result = DB::select($sql);
+
+        return $result;
+    }
+
+ 
+
 
     public function get_formas_pago()
     {
