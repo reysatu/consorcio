@@ -223,7 +223,7 @@
 
 
         <br>
-        <table id="tabla_3" style="width: 97.7%;">
+        <table id="tabla_3" style="width: 100%;">
             <tr>
                 <td colspan="6" style="font-weight: bold; width: 50%;">COMENTARIOS:</td>
                 <td colspan="6" style="font-weight: bold; text-align: center; width: 50%;">V°B° GERENCIA:</td>
@@ -457,7 +457,7 @@
            
         </table>
 
-        <table style="width: 97.7%; ">
+        <table style="width: 100%; ">
             <tr>
                 <td style="border: none !important; text-align: center;"><strong>DECLARO BAJO JURAMENTO QUE LA INFORMACIÓN PROPORCIONADA ES VERDADERA AUTORIZO A QUE SE VERIFIQUE LOS DATOS CONSIGNADOS EN LA PRESENTE.</strong></td>
             </tr>>
@@ -466,7 +466,7 @@
             
        
             
-        <table style="width: 97.7%; margin-top: 104px;">
+        <table style="width: 100%; margin-top: 75px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>
