@@ -2760,9 +2760,9 @@ function create_pdf_ordenServicio(response) {
 
     var mcondicionPago='';
     if(data[0].idcCondicionPago=='1'){
-        mcondicionPago=405;
+        mcondicionPago=409;
     }else{
-         mcondicionPago=485;
+         mcondicionPago=489;
     };
     
     var tipoSer='';
@@ -2874,12 +2874,12 @@ function create_pdf_ordenServicio(response) {
             text: fechRecep,
             bold: true,
             fontSize: 10,
-            absolutePosition: { x:364 , y: 77 }
+            absolutePosition: { x:364 , y: 82 }
         },
         {
             //Fecha superior
             text: fechEntrega,
-            absolutePosition: { x:364 , y: 91 },
+            absolutePosition: { x:364 , y: 93 },
             bold: true,
             fontSize: 10,
         },
@@ -2913,7 +2913,7 @@ function create_pdf_ordenServicio(response) {
         }, */
         {
             text: razonsocial_cliente,
-            absolutePosition: { x:107 , y: 130 },
+            absolutePosition: { x:117 , y: 130 },
             bold: true,
             fontSize: 10,
         },
@@ -2943,13 +2943,13 @@ function create_pdf_ordenServicio(response) {
         },
         {
             text: dni,
-            absolutePosition: { x:81 , y: 222 },
+            absolutePosition: { x:100 , y: 222 },
             bold: true,
             fontSize: 10,
         },
         {
             text: correo_electronico,
-            absolutePosition: { x:172 , y: 222 },
+            absolutePosition: { x:175 , y: 222 },
             bold: true,
             fontSize: 10,
         },
@@ -3015,7 +3015,7 @@ function create_pdf_ordenServicio(response) {
             fontSize: 10,
         },
 
-        {
+        /* {
             text: mantenimiento_X,
             absolutePosition: { x:60 , y: 279 },
             bold: true,
@@ -3111,7 +3111,7 @@ function create_pdf_ordenServicio(response) {
             absolutePosition: { x:183 , y: 447 },
             bold: true,
             fontSize: 14,
-        },
+        }, */
 
 
         {
@@ -3160,44 +3160,44 @@ function create_pdf_ordenServicio(response) {
          {
             //
             text: lubricantes,
-            absolutePosition: { x:512 , y: 391 },
+            absolutePosition: { x:512 , y: 390 },
             bold: true,
             fontSize: 10,
         },
         {
             //
             text: otros_rep,
-            absolutePosition: { x:512 , y: 416 },
+            absolutePosition: { x:512 , y: 413 },
             bold: true,
             fontSize: 10,
         },
          {
             text: sub_re,
-            absolutePosition: { x:512 , y: 437 },
+            absolutePosition: { x:512 , y: 430 },
             bold: true,
             fontSize: 10,
         },
         {
             text: total,
-            absolutePosition: { x:512 , y: 459 },
+            absolutePosition: { x:512 , y: 450 },
             bold: true,
             fontSize: 10,
         },
         {
             text: cObservaciones ,
-            absolutePosition: { x:65 , y: 565 },
+            absolutePosition: { x:100 , y: 545 },
             bold: true,
             fontSize: 10,
         },
          {
             text: modelo ,
-            absolutePosition: { x:361 , y: 590 },
+            absolutePosition: { x:361 , y: 580 },
             bold: true,
             fontSize: 10,
         },
         {
             text: cPlacaVeh,
-            absolutePosition: { x:485 , y: 590 },
+            absolutePosition: { x:500 , y: 580 },
             bold: true,
             fontSize: 10,
         },
