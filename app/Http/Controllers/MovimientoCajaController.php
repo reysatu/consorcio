@@ -2262,9 +2262,9 @@ class MovimientoCajaController extends Controller
 
         $pdf = PDF::loadView("solicitud.comprobante", $datos);
       
-        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        return $pdf->save("comprobante.pdf"); // guardar
         // return $pdf->download("ficha_asociado.pdf"); // descargar
-        return $pdf->stream("comprobante.pdf"); // ver
+        // return $pdf->stream("comprobante.pdf"); // ver
 
     }
 

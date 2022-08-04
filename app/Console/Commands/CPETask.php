@@ -484,13 +484,15 @@ class CPETask extends Command
             $detalle_venta["nro_item"] = $cont;
             $detalle_venta["cod_prod"] = str_pad($value->idarticulo, 8, "0", STR_PAD_LEFT);
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
-            if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") {
+            // if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") {
                 if($value->idproducto == $producto[0]->idproducto) {
                     $detalle_venta["descrip"] = $value->producto." / SERIE: ".$producto[0]->serie." / MOTOR:". $producto[0]->motor." / COLOR:". $producto[0]->color ." / AÑO:". $producto[0]->anio_fabricacion;
+                } else {
+                    $detalle_venta["descrip"] = $value->producto;
                 }
-            } else {
-                $detalle_venta["descrip"] = $value->producto;
-            }
+            // } else {
+            //     $detalle_venta["descrip"] = $value->producto;
+            // }
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
             $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
