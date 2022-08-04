@@ -516,7 +516,85 @@
                                                 class="form-control input-sm"></textarea>
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="control-label">Comentarios de Aprobación</label>
+                                            public function imprimir_comprobante($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+                                                $array = explode("|", $id);
+                                                $cCodConsecutivo = $array[0];
+                                                $nConsecutivo = $array[1];
+                                                $idventa = $array[2];
+                                        
+                                                $datos = array();
+                                                $datos["venta_anticipo"] = array();
+                                                $datos["solicitud"] = array();
+                                                // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
+                                                // var_dump($bool);
+                                                if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
+                                             
+                                                    $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+                                                    $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+                                                    $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
+                                                    $datos["solicitud_credito"] = $solicitud_credito; 
+                                                    $datos["solicitud"] = $solicitud; 
+                                                    $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+                                                    $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+                                                    $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+                                            
+                                                    $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+                                                    $datos["fiador"] = $persona_repositorio->find($idfiador);
+                                                    $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+                                                    
+                                                }
+                                        
+                                             
+                                              
+                                        
+                                                $datos["empresa"] = $repo->get_empresa(); 
+                                                // $datos["tienda"] = $repo->get_tienda(); 
+                                                $datos["venta"] = $repo->get_venta($idventa); 
+                                                $datos["venta_anticipo_separacion"] = array();
+                                                if(!empty($datos["venta"][0]->idventa_separacion)) {
+                                                    $datos["venta_anticipo_separacion"] = $repo->get_venta_anticipo_separacion($datos["venta"][0]->idventa_separacion); 
+                                                }
+                                        
+                                                $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+                                               
+                                                if($datos["venta"][0]->idventa_referencia != "") {
+                                                    $datos["venta_referencia"] = $repo->get_venta($datos["venta"][0]->idventa_referencia); 
+                                                    
+                                        
+                                                }
+                                                // echo "<pre>";
+                                                // print_r($datos); exit;
+                                                
+                                               
+                                                $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+                                                // $datos["cajero"] = $repo->get_cajero(); 
+                                                $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+                                                $datos["tiendas"] = $repo->get_tiendas(); 
+                                                $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
+                                                // if($datos["venta_detalle"][0]->idarticulo != 1862) {
+                                                  
+                                                // }
+                                              
+                                                $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
+                                                $datos["cliente"] = $cliente_repositorio->find($datos["venta"][0]->idcliente);
+                                               
+                                           
+                                               
+                                                // echo "<pre>";
+                                                // print_r($datos);
+                                                // exit;
+                                        
+                                                $pdf = PDF::loadView("solicitud.comprobante", $datos);
+                                                $path = public_path('PDF/');
+                                                $fileName =  'comprobante.pdf' ;
+                                                $pdf->save($path . '/' . $fileName);
+                                                // return $pdf->download($fileName);
+                                                // Storage::put('public/PDF/invoice.pdf', $pdf->output());
+                                                //return $pdf->save("comprobante.pdf"); // guardar
+                                                // return $pdf->download("ficha_asociado.pdf"); // descargar
+                                                // return $pdf->stream("comprobante.pdf"); // ver
+                                        
+                                            }                   <label class="control-label">Comentarios de Aprobación</label>
                                             <textarea readonly="readonly" name="comentario_aprobacion" id="comentario_aprobacion" cols="30" rows="3"
                                                 class="form-control input-sm"></textarea>
                                         </div>
