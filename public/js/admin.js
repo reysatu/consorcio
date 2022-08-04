@@ -2760,9 +2760,9 @@ function create_pdf_ordenServicio(response) {
 
     var mcondicionPago='';
     if(data[0].idcCondicionPago=='1'){
-        mcondicionPago=420;
+        mcondicionPago=405;
     }else{
-         mcondicionPago=500;
+         mcondicionPago=485;
     };
     
     var tipoSer='';
@@ -2776,7 +2776,7 @@ function create_pdf_ordenServicio(response) {
         tipoSer=219;
         valorSer='X';
     }else{
-        tipoSer=223;
+        tipoSer=179;
     }
     var mantenimiento_X="";
     var cambioAciete_X="";
@@ -2874,12 +2874,12 @@ function create_pdf_ordenServicio(response) {
             text: fechRecep,
             bold: true,
             fontSize: 10,
-            absolutePosition: { x:364 , y: 78 }
+            absolutePosition: { x:364 , y: 74 }
         },
         {
             //Fecha superior
             text: fechEntrega,
-            absolutePosition: { x:364 , y: 92 },
+            absolutePosition: { x:364 , y: 88 },
             bold: true,
             fontSize: 10,
         },
@@ -2913,7 +2913,7 @@ function create_pdf_ordenServicio(response) {
         }, */
         {
             text: razonsocial_cliente,
-            absolutePosition: { x:107 , y: 125 },
+            absolutePosition: { x:107 , y: 120 },
             bold: true,
             fontSize: 10,
         },
@@ -2925,43 +2925,43 @@ function create_pdf_ordenServicio(response) {
         },
         {
             text: direccion,
-            absolutePosition: { x:107 , y: 169 },
+            absolutePosition: { x:107 , y: 164 },
             bold: true,
             fontSize: 10,
         },
         {
             text: distrito,
-            absolutePosition: { x:107 , y: 192 },
+            absolutePosition: { x:107 , y: 187 },
             bold: true,
             fontSize: 10,
         },
         {
             text: razonsocial_cliente,
-            absolutePosition: { x:107 , y: 209 },
+            absolutePosition: { x:107 , y: 205 },
             bold: true,
             fontSize: 10,
         },
         {
             text: dni,
-            absolutePosition: { x:81 , y: 232 },
+            absolutePosition: { x:81 , y: 222 },
             bold: true,
             fontSize: 10,
         },
         {
             text: correo_electronico,
-            absolutePosition: { x:172 , y: 232 },
+            absolutePosition: { x:172 , y: 222 },
             bold: true,
             fontSize: 10,
         },
         {
             text: telefono,
-            absolutePosition: { x:81 , y: 254 },
+            absolutePosition: { x:81 , y: 240 },
             bold: true,
             fontSize: 10,
         },
         {
             text: celular,
-            absolutePosition: { x:172 , y: 254 },
+            absolutePosition: { x:172 , y: 240 },
             bold: true,
             fontSize: 10,
         },
@@ -2974,7 +2974,7 @@ function create_pdf_ordenServicio(response) {
         },
         {
             text: modelo,
-            absolutePosition: { x:458 , y: 125 },
+            absolutePosition: { x:458 , y: 120 },
             bold: true,
             fontSize: 10,
         },
@@ -2992,123 +2992,123 @@ function create_pdf_ordenServicio(response) {
         },
          {
             text: iAnioFab,
-            absolutePosition: { x:473 , y: 192 },
+            absolutePosition: { x:473 , y: 187 },
             bold: true,
             fontSize: 10,
         },
          {
             text: cColor,
-            absolutePosition: { x:443 , y: 209 },
+            absolutePosition: { x:443 , y: 205 },
             bold: true,
             fontSize: 10,
         },
          {
             text: cPlacaVeh,
-            absolutePosition: { x:443 , y: 232 },
+            absolutePosition: { x:443 , y: 222 },
             bold: true,
             fontSize: 10,
         },
          {
             text: nKilometraje,
-            absolutePosition: { x:473 , y: 254 },
+            absolutePosition: { x:473 , y: 240 },
             bold: true,
             fontSize: 10,
         },
 
         {
             text: mantenimiento_X,
-            absolutePosition: { x:51 , y: 289 },
+            absolutePosition: { x:56 , y: 279 },
             bold: true,
             fontSize: 14,
         },
          {
             text: cambioAciete_X,
-            absolutePosition: { x:51 , y: 307 },
+            absolutePosition: { x:56 , y: 297 },
             bold: true,
             fontSize: 14,
         },
          {
             text: reparacioMotor_x,
-            absolutePosition: { x:51 , y: 332 },
+            absolutePosition: { x:56 , y: 322 },
             bold: true,
             fontSize: 14,
         },
          {
             text: descar_x,
-            absolutePosition: { x:51 , y: 357 },
+            absolutePosition: { x:56 , y: 350 },
             bold: true,
             fontSize: 14,
         },
          {
             text: embrague_x,
-            absolutePosition: { x:51 , y: 382 },
+            absolutePosition: { x:56 , y: 372 },
             bold: true,
             fontSize: 14,
         },
          {
             text: transmi_x,
-            absolutePosition: { x:51 , y: 407 },
+            absolutePosition: { x:56 , y: 397 },
             bold: true,
             fontSize: 14,
         },
          {
             text: sisArras_x,
-            absolutePosition: { x:51 , y: 432 },
+            absolutePosition: { x:56 , y: 422 },
             bold: true,
             fontSize: 14,
         },
          {
             text: fren_x,
-            absolutePosition: { x:51 , y: 457 },
+            absolutePosition: { x:56 , y: 447 },
             bold: true,
             fontSize: 14,
         },
 
          {
             text: bate_x,
-            absolutePosition: { x:177 , y: 289 },
+            absolutePosition: { x:183 , y: 279 },
             bold: true,
             fontSize: 14,
         },
          {
             text: revisitE_x,
-            absolutePosition: { x:177 , y: 307 },
+            absolutePosition: { x:183 , y: 297 },
             bold: true,
             fontSize: 14,
         },
          {
             text: revisitIN_x,
-            absolutePosition: { x:177 , y: 332 },
+            absolutePosition: { x:183 , y: 322 },
             bold: true,
             fontSize: 14,
         },
          {
             text: suspencio_x,
-            absolutePosition: { x:177 , y: 357 },
+            absolutePosition: { x:183 , y: 350 },
             bold: true,
             fontSize: 14,
         },
          {
             text: aroneu_x,
-            absolutePosition: { x:177 , y: 382 },
+            absolutePosition: { x:183 , y: 372 },
             bold: true,
             fontSize: 14,
         },
          {
             text: sistEsca_x,
-            absolutePosition: { x:177 , y: 407 },
+            absolutePosition: { x:183 , y: 397 },
             bold: true,
             fontSize: 14,
         },
          {
             text: sistDirecc_x,
-            absolutePosition: { x:177 , y: 432},
+            absolutePosition: { x:183 , y: 422},
             bold: true,
             fontSize: 14,
         },
          {
             text: otro_x,
-            absolutePosition: { x:177 , y: 457 },
+            absolutePosition: { x:183 , y: 447 },
             bold: true,
             fontSize: 14,
         },
@@ -3117,87 +3117,87 @@ function create_pdf_ordenServicio(response) {
         {
             //Montos de la orden
             text: mo_revision,
-            absolutePosition: { x:512 , y: 279 },
+            absolutePosition: { x:512 , y: 269 },
             bold: true,
             fontSize: 10,
         },
          {
             text: mo_mecanica,
-            absolutePosition: { x:512 , y: 296 },
+            absolutePosition: { x:512 , y: 286 },
             bold: true,
             fontSize: 10,
         },
         {
             text: terceros,
-            absolutePosition: { x:512 , y: 316 },
+            absolutePosition: { x:512 , y: 306 },
             bold: true,
             fontSize: 10,
         },
          {
             text: otros_mo,
-            absolutePosition: { x:512 , y: 336 },
+            absolutePosition: { x:512 , y: 326 },
             bold: true,
             fontSize: 10,
         },
         {
             text: sub_mo,
-            absolutePosition: { x:512 , y: 358 },
+            absolutePosition: { x:512 , y: 342 },
             bold: true,
             fontSize: 10,
         },
          {
             text: respuestos,
-            absolutePosition: { x:512 , y: 380 },
+            absolutePosition: { x:512 , y: 356 },
             bold: true,
             fontSize: 10,
         },
         {
             text: accesorios,
-            absolutePosition: { x:512 , y: 394 },
+            absolutePosition: { x:512 , y: 374 },
             bold: true,
             fontSize: 10,
         },
          {
             //
             text: lubricantes,
-            absolutePosition: { x:512 , y: 414 },
+            absolutePosition: { x:512 , y: 394 },
             bold: true,
             fontSize: 10,
         },
         {
             //
             text: otros_rep,
-            absolutePosition: { x:512 , y: 438 },
+            absolutePosition: { x:512 , y: 420 },
             bold: true,
             fontSize: 10,
         },
          {
             text: sub_re,
-            absolutePosition: { x:512 , y: 463 },
+            absolutePosition: { x:512 , y: 443 },
             bold: true,
             fontSize: 10,
         },
         {
             text: total,
-            absolutePosition: { x:512 , y: 485 },
+            absolutePosition: { x:512 , y: 465 },
             bold: true,
             fontSize: 10,
         },
         {
             text: cObservaciones ,
-            absolutePosition: { x:60 , y: 615 },
+            absolutePosition: { x:65 , y: 585 },
             bold: true,
             fontSize: 10,
         },
          {
             text: modelo ,
-            absolutePosition: { x:361 , y: 620 },
+            absolutePosition: { x:361 , y: 600 },
             bold: true,
             fontSize: 10,
         },
         {
             text: cPlacaVeh,
-            absolutePosition: { x:485 , y: 620 },
+            absolutePosition: { x:485 , y: 600 },
             bold: true,
             fontSize: 10,
         },
