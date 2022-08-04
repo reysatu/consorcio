@@ -1889,6 +1889,8 @@ table_container_bancos.jtable('load');
 
 
             if ($('#modalSolicitud').is(':visible')) {
+                $("#detalle-formas-pago").html("");
+                $("#numero_comprobante").val("");
                 var total = parseFloat($("#desTotal").val());
                 var cuota_inicial = parseFloat($("#cuota_inicial").val());
                 var saldo = parseFloat($("#saldo").val());
@@ -3028,6 +3030,9 @@ table_container_bancos.jtable('load');
                     'IdTipoDocumento': id_tipoDoc_Venta.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
                     'idsector':idsector.val(),
+                    'cNombres':$("#cNombres_c").val(),
+                    'cApepat':$("#cApepat_c").val(),
+                    'cApemat':$("#cApemat_c").val(),
 
                 };
                 var cli_id = (cliente_id.val() === '') ? 0 : cliente_id.val();
@@ -3118,6 +3123,9 @@ table_container_bancos.jtable('load');
                     if (data.nombres != null) {
                         var razon = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno;
                         razonsocial_cliente.val(razon);
+                        $("#cNombres_c").val(data.nombres);
+                        $("#cApepat_c").val(data.apellidoPaterno);
+                        $("#cApemat_c").val(data.apellidoMaterno);
                     } else if (data.razonSocial != null) {
                         var razon = data.razonSocial;
                         var direc = data.direccion;
