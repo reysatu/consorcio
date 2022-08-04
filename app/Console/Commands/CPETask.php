@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class CPETask extends Command
 {
@@ -405,7 +406,9 @@ class CPETask extends Command
         }
 
      
-      
+        // $texto = date("Y-m-d H:i:s");
+        // Storage::append("log.txt", $texto);
+        // exit;
 
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
@@ -519,6 +522,7 @@ class CPETask extends Command
         }
 
         if ($venta[0]->codcondicionpago == 1) { // contado
+        
             
            
         } else { // credito
@@ -526,6 +530,8 @@ class CPETask extends Command
                 $json_array["fec_venc"] = $solicitud_cronograma[count($solicitud_cronograma)-1]->fecha_vencimiento_credito;
             }
         }
+
+        
 
         // NOTAS DE CREDITO Y NOTAS DE DEBITO
         if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08" && count($venta_referencia) > 0) {
@@ -581,7 +587,7 @@ class CPETask extends Command
             $json_array["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
         }
        
-		
+      
        
         if ($venta[0]->codcondicionpago == 1) { // contado
             $json_array["forma_pago"]["descrip"] = "Contado";
@@ -612,20 +618,23 @@ class CPETask extends Command
                 array_push($json_array["cuota"], $cuotas);
             }
         }
-       
-     
+      
 
         $json_array["det"] = array();
       
         $detalle_venta = array();
         $cont = 1;
+
+     
+       
         foreach ($venta_detalle as $key => $value) {
 
             $detalle_venta["nro_item"] = $cont;
             $detalle_venta["cod_prod"] = str_pad($value->idarticulo, 8, "0", STR_PAD_LEFT);
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
+           
             // if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") {
-                if($value->idproducto == $producto[0]->idproducto) {
+                if(count($producto) > 0 && $value->idproducto == $producto[0]->idproducto) {
                     $detalle_venta["descrip"] = $value->producto." / SERIE: ".$producto[0]->serie." / MOTOR:". $producto[0]->motor." / COLOR:". $producto[0]->color ." / AÑO:". $producto[0]->anio_fabricacion;
                 } else {
                     $detalle_venta["descrip"] = $value->producto;
@@ -633,6 +642,7 @@ class CPETask extends Command
             // } else {
             //     $detalle_venta["descrip"] = $value->producto;
             // }
+          
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
             $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
@@ -650,8 +660,9 @@ class CPETask extends Command
         }
 
        
+         
         $json_array["leyen"][0]["leyen_cod"] = "1000";
-       
+        
        
         $json_array["leyen"][0]["leyen_descrip"] = $this->convertir($venta[0]->t_monto_total);
        
@@ -667,6 +678,9 @@ class CPETask extends Command
             // }
            
         }
+         
+       
+
         if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
             $json["invoice"] = $json_array;
         }
@@ -837,6 +851,7 @@ class CPETask extends Command
            
         }
 
+      
 
         $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
 
@@ -848,6 +863,7 @@ class CPETask extends Command
             DB::statement($sql_update);
 
         }
+       
     
         $comprobantes = $ventas_repo->obtener_comprobantes();
     
