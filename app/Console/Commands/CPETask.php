@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\Compania\CompaniaInterface;
+use App\Http\Recopro\Customer\CustomerInterface;
+use App\Http\Recopro\Persona\PersonaInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Ventas\VentasInterface;
 use Exception;
@@ -220,6 +222,62 @@ class CPETask extends Command
        return $headers;
     }
 
+
+    public function envio_pdf($ruta_pdf)
+    {
+        $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
+        $url = DB::select($sql_url);
+
+        if(count($url) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro URL CPE FE");
+            throw new Exception("No existe el parametro URL CPE FE");
+        }
+        
+        $cliente = new  \nusoap_client($url[0]->value, true);
+
+        $err = $cliente->getError();
+        if ($err) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto.' Error: ' . $err);
+            die('Error: ' . $err);
+        }
+        $filename = $ruta_pdf; //nombre del archivo txt formato [99999999999]-[99]-[A000]-99999999.txt
+       
+     
+
+        $pathRoot = base_path("public/PDF/"); //directorio local donde se generan los txt desde el sistema en PHP
+        $sql_usuario = "SELECT * FROM ERP_Parametros WHERE id=20";
+        $usuario = DB::select($sql_usuario);
+
+        if(count($usuario) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
+            throw new Exception("No existe el parametro Usuario FE (RUC del emisor y usuario Sol concatenado) !");
+        }
+
+        $sql_pass = "SELECT * FROM ERP_Parametros WHERE id=21";
+        $password = DB::select($sql_pass);
+
+        if(count($password) <= 0) {
+            $texto = date("Y-m-d H:i:s");
+            Storage::append("log.txt", $texto." No existe el parametro Clave FE");
+            throw new Exception("No existe el parametro Clave FE");
+        }
+
+        $username = $usuario[0]->value; //RUC del emisor y usuario Sol concatenado
+        $password = $password[0]->value; //clave sol
+        $contentfile = base64_encode(file_get_contents($pathRoot . $filename));
+        $parametros = array('fileName' => $filename, 'contentFile' => $contentfile);
+        $respuesta = $cliente->call("sendPdf", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
+
+
+        // print_r($respuesta); exit;
+        $texto = date("Y-m-d H:i:s");
+        Storage::append("log.txt", $texto." ".json_encode($respuesta));
+       
+    }
+
     public function envio_json_cpe($ruta_json)
     {
         $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
@@ -317,81 +375,87 @@ class CPETask extends Command
         }
     }
 
-    // public function generar_pdf($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
-    //     $array = explode("|", $id);
-    //     $cCodConsecutivo = $array[0];
-    //     $nConsecutivo = $array[1];
-    //     $idventa = $array[2];
+    public function generar_pdf($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+        $array = explode("|", $id);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+        $idventa = $array[2];
+        $name = $array[3];
 
-    //     $datos = array();
-    //     $datos["venta_anticipo"] = array();
-    //     $datos["solicitud"] = array();
-    //     // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
-    //     // var_dump($bool);
-    //     if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
+        $datos = array();
+        $datos["venta_anticipo"] = array();
+        $datos["solicitud"] = array();
+        // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
+        // var_dump($bool);
+        if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
      
-    //         $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
-    //         $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
-    //         $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
-    //         $datos["solicitud_credito"] = $solicitud_credito; 
-    //         $datos["solicitud"] = $solicitud; 
-    //         $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
-    //         $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
-    //         $datos["conyugue"] = $persona_repositorio->find($idconyugue);
+            $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+            $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+            $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
+            $datos["solicitud_credito"] = $solicitud_credito; 
+            $datos["solicitud"] = $solicitud; 
+            $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
+            $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+            $datos["conyugue"] = $persona_repositorio->find($idconyugue);
     
-    //         $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
-    //         $datos["fiador"] = $persona_repositorio->find($idfiador);
-    //         $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+            $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
+            $datos["fiador"] = $persona_repositorio->find($idfiador);
+            $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
             
-    //     }
+        }
 
      
       
 
-    //     $datos["empresa"] = $repo->get_empresa(); 
-    //     // $datos["tienda"] = $repo->get_tienda(); 
-    //     $datos["venta"] = $repo->get_venta($idventa); 
-    //     $datos["venta_anticipo_separacion"] = array();
-    //     if(!empty($datos["venta"][0]->idventa_separacion)) {
-    //         $datos["venta_anticipo_separacion"] = $repo->get_venta_anticipo_separacion($datos["venta"][0]->idventa_separacion); 
-    //     }
+        $datos["empresa"] = $repo->get_empresa(); 
+        // $datos["tienda"] = $repo->get_tienda(); 
+        $datos["venta"] = $repo->get_venta($idventa); 
+        $datos["venta_anticipo_separacion"] = array();
+        if(!empty($datos["venta"][0]->idventa_separacion)) {
+            $datos["venta_anticipo_separacion"] = $repo->get_venta_anticipo_separacion($datos["venta"][0]->idventa_separacion); 
+        }
 
-    //     $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+        $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
        
-    //     if($datos["venta"][0]->idventa_referencia != "") {
-    //         $datos["venta_referencia"] = $repo->get_venta($datos["venta"][0]->idventa_referencia); 
+        if($datos["venta"][0]->idventa_referencia != "") {
+            $datos["venta_referencia"] = $repo->get_venta($datos["venta"][0]->idventa_referencia); 
             
 
-    //     }
-    //     // echo "<pre>";
-    //     // print_r($datos); exit;
+        }
+        // echo "<pre>";
+        // print_r($datos); exit;
         
        
-    //     $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
-    //     // $datos["cajero"] = $repo->get_cajero(); 
-    //     $datos["caja_diaria"] = $repo->get_caja_diaria(); 
-    //     $datos["tiendas"] = $repo->get_tiendas(); 
-    //     $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
-    //     // if($datos["venta_detalle"][0]->idarticulo != 1862) {
+        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        // $datos["cajero"] = $repo->get_cajero(); 
+        $datos["caja_diaria"] = $repo->get_caja_diaria(); 
+        $datos["tiendas"] = $repo->get_tiendas(); 
+        $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
+        // if($datos["venta_detalle"][0]->idarticulo != 1862) {
           
-    //     // }
+        // }
       
-    //     $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
-    //     $datos["cliente"] = $cliente_repositorio->find($datos["venta"][0]->idcliente);
+        $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
+        $datos["cliente"] = $cliente_repositorio->find($datos["venta"][0]->idcliente);
        
    
        
-    //     // echo "<pre>";
-    //     // print_r($datos);
-    //     // exit;
+        // echo "<pre>";
+        // print_r($datos);
+        // exit;
 
-    //     $pdf = PDF::loadView("solicitud.comprobante", $datos);
-	// 	$path = public_path('PDF/');
-	// 	$fileName =  'comprobante.pdf' ;
-	// 	$pdf->save($path . '/' . $fileName);
-		
+        $pdf = PDF::loadView("solicitud.comprobante", $datos);
 
-    // }
+        if (!file_exists(base_path("public/PDF/"))) {
+            mkdir(base_path("public/PDF/"), 0777, true);
+        }
+
+		$path = public_path('PDF/');
+		$fileName =  $name.'.pdf' ;
+		$pdf->save($path . '/' . $fileName);
+
+        $this->envio_pdf($fileName);
+    }
 
     public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio)
     {
@@ -758,7 +822,7 @@ class CPETask extends Command
      *
      * @return mixed
      */
-    public function handle(VentasInterface $ventas_repo, SolicitudInterface $solicitud_repositorio, CompaniaInterface $compania_repo, CajaDiariaDetalleInterface $repo)
+    public function handle(VentasInterface $ventas_repo, SolicitudInterface $solicitud_repositorio, CompaniaInterface $compania_repo, CajaDiariaDetalleInterface $repo, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio)
     {
         // referencia: https://www.youtube.com/watch?v=0uG0B5HqiuA&ab_channel=JesusMatiz
         
@@ -773,6 +837,17 @@ class CPETask extends Command
            
         }
 
+
+        $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
+
+        foreach ($comprobantes_pendientes_envio_pdf as $kp=> $vp) {
+            $id = $vp->cCodConsecutivo_solicitud."|".$vp->nConsecutivo_solicitud."|".$vp->idventa."|".$vp->documento_cpe;
+            $this->generar_pdf($id, $repo, $solicitud_repositorio, $cliente_repositorio, $persona_repositorio);
+            
+            $sql_update = "UPDATE ERP_Venta SET enviado_pdf=1 WHERE idventa={$vp->idventa}";
+            DB::statement($sql_update);
+
+        }
     
         $comprobantes = $ventas_repo->obtener_comprobantes();
     
