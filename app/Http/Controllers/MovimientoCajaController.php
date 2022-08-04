@@ -1107,7 +1107,13 @@ class MovimientoCajaController extends Controller
             } else {
                 $data_venta["condicion_pago"] = "";
             }
-           
+            
+            // SI ES ANTICIPO, PRIMERA BOLETA, DEBE IR CONTADO
+            if(count($solicitud_credito) > 0) {
+                if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
+                    $data_venta["condicion_pago"] = 1;
+                }
+            }
 
 
 

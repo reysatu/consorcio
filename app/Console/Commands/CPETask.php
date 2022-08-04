@@ -371,12 +371,21 @@ class CPETask extends Command
             $json_array["tip_oper"] = "0101";
             
             //PARA ANTICIPOS
-            if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { 
+            // if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { 
                 
-                $json_array["fec_venc"] = $solicitud[0]->fecha_vencimiento;
+            //     $json_array["fec_venc"] = $solicitud[0]->fecha_vencimiento;
+            // }
+        }
+
+        if ($venta[0]->codcondicionpago == 1) { // contado
+            
+           
+        } else { // credito
+            if(count($solicitud_cronograma) > 0) {
+                $json_array["fec_venc"] = $solicitud_cronograma[count($solicitud_cronograma)-1]->fecha_vencimiento_credito;
             }
         }
-        
+
         // NOTAS DE CREDITO Y NOTAS DE DEBITO
         if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08" && count($venta_referencia) > 0) {
             $json_array["docmodif"]["tip_doc"] = $venta_referencia[0]->IdTipoDocumento;
@@ -432,12 +441,12 @@ class CPETask extends Command
         }
        
 		
-        // echo "holsa"; exit;
+       
         if ($venta[0]->codcondicionpago == 1) { // contado
             $json_array["forma_pago"]["descrip"] = "Contado";
            
         } else { // credito
-            $json_array["forma_pago"]["descrip"] = "Crédito";
+            $json_array["forma_pago"]["descrip"] = "Credito";
             $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
             $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
@@ -447,7 +456,7 @@ class CPETask extends Command
             }
          
             foreach ($solicitud_cronograma as $key => $value) {
-                $cuotas["descrip"] = "Cuota " . $value->nrocuota;
+                $cuotas["descrip"] = "Cuota" . str_pad($value->nrocuota, 3, "0", STR_PAD_LEFT);
                 $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
                 $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
@@ -529,7 +538,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
       
-        $this->envio_json_cpe($name . ".json");
+        // $this->envio_json_cpe($name . ".json");
         
     }
 
@@ -679,18 +688,18 @@ class CPETask extends Command
         }
 
     
-        $comprobantes = $ventas_repo->obtener_comprobantes();
+        // $comprobantes = $ventas_repo->obtener_comprobantes();
     
-        foreach ($comprobantes as $key => $value) {
-            $res = $this->consultar_cdr($value->documento_cpe);
-            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
-                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
-                $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
-                DB::statement($sql_update);
-            }
+        // foreach ($comprobantes as $key => $value) {
+        //     $res = $this->consultar_cdr($value->documento_cpe);
+        //     if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
+        //         $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+        //         $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+        //         DB::statement($sql_update);
+        //     }
            
-            // print_r($sql_update);
-        }
+           
+        // }
       
         $texto = date("Y-m-d H:i:s");
         Storage::append("log.txt", $texto);
