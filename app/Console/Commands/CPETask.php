@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class CPETask extends Command
 {
@@ -405,7 +406,9 @@ class CPETask extends Command
         }
 
      
-      
+        // $texto = date("Y-m-d H:i:s");
+        // Storage::append("log.txt", $texto);
+        // exit;
 
         $datos["empresa"] = $repo->get_empresa(); 
         // $datos["tienda"] = $repo->get_tienda(); 
@@ -860,9 +863,7 @@ class CPETask extends Command
             DB::statement($sql_update);
 
         }
-        $texto = date("Y-m-d H:i:s");
-        Storage::append("log.txt", $texto);
-        exit;
+       
     
         $comprobantes = $ventas_repo->obtener_comprobantes();
     
