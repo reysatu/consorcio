@@ -3167,25 +3167,25 @@ function create_pdf_ordenServicio(response) {
         {
             //
             text: otros_rep,
-            absolutePosition: { x:512 , y: 413 },
+            absolutePosition: { x:512 , y: 411 },
             bold: true,
             fontSize: 10,
         },
          {
             text: sub_re,
-            absolutePosition: { x:512 , y: 430 },
+            absolutePosition: { x:512 , y: 428 },
             bold: true,
             fontSize: 10,
         },
         {
             text: total,
-            absolutePosition: { x:512 , y: 450 },
+            absolutePosition: { x:512 , y: 445 },
             bold: true,
             fontSize: 10,
         },
         {
             text: cObservaciones ,
-            absolutePosition: { x:100 , y: 545 },
+            absolutePosition: { x:100 , y: 535 },
             bold: true,
             fontSize: 10,
         },
