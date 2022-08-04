@@ -15,3 +15,4 @@ composer.lock
 /public/XML
 /public/CDR
 /public/QR
+/public/PDF
