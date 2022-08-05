@@ -636,7 +636,7 @@ class CPETask extends Command
             if(count($solicitud_cronograma) > 0) {
                 $total_credito = 0;
                 foreach ($solicitud_cronograma as $ksc => $vsc) {
-                    $total_credito += (float)$vsc->saldo_cuota;
+                    $total_credito += floatval($vsc->saldo_cuota);
                 }
 
                 $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($total_credito, 2));
@@ -654,7 +654,7 @@ class CPETask extends Command
                 }
             } else {
 
-                $json_array["forma_pago"]["monto_neto"] = $venta[0]->t_monto_total;
+                $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
                 $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
 
                 $cuotas["descrip"] = "Cuota001" ;
@@ -752,7 +752,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
       
-        $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
+        // $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
         
     }
 
