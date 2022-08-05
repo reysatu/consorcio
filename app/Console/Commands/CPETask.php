@@ -298,7 +298,7 @@ class CPETask extends Command
        
     }
 
-    public function envio_json_cpe($ruta_json)
+    public function envio_json_cpe($ruta_json, $idventa)
     {
         $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
         $url = DB::select($sql_url);
@@ -393,7 +393,7 @@ class CPETask extends Command
             file_put_contents(base_path("public/XML/") .str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
             #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
 
-            $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$value->idventa}";
+            $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$idventa}";
             DB::statement($sql_update);
         }
     }
@@ -746,7 +746,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
       
-        $this->envio_json_cpe($name . ".json");
+        $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
         
     }
 
