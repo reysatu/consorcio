@@ -606,7 +606,7 @@ class CPETask extends Command
             $tip_doc_ant = "";
             if($venta_anticipo[0]->IdTipoDocumento == "01") {
                 $tip_doc_ant = "02";
-            } elseif($venta_anticipo[0]->IdTipoDocumento == "03") { {
+            } elseif($venta_anticipo[0]->IdTipoDocumento == "03") {
                 $tip_doc_ant = "03";
             }
             $json_array["ant"][0]["tip_doc_ant"] = $tip_doc_ant;
