@@ -603,8 +603,13 @@ class CPETask extends Command
             $json_array["cargo"][0]["base_cd"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
 
             $json_array["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
-         
-            $json_array["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
+            $tip_doc_ant = "";
+            if($venta_anticipo[0]->IdTipoDocumento == "01") {
+                $tip_doc_ant = "02";
+            } elseif($venta_anticipo[0]->IdTipoDocumento == "03") { {
+                $tip_doc_ant = "03";
+            }
+            $json_array["ant"][0]["tip_doc_ant"] = $tip_doc_ant;
             $json_array["ant"][0]["serie_correl"] = $venta_anticipo[0]->serie_comprobante."-".str_pad($venta_anticipo[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);;
             $json_array["ant"][0]["num_doc"] = $venta_anticipo[0]->documento;
             $json_array["ant"][0]["tip_doc"] = $venta_anticipo[0]->tipodoc;
