@@ -39,6 +39,25 @@ class CPETask extends Command
         parent::__construct();
     }
 
+     // $fecha en formato yyyy-mm-dd
+    public function sumar_restar_dias($fecha, $operacion, $dias)
+    {
+
+        $fecha = strtotime($operacion . $dias . " day", strtotime($fecha));
+        $fecha = date("Y-m-d", $fecha);
+        $date  = explode("-", $fecha);
+        $mes   = $date[1];
+        if ($date[1] < 0) {
+            $mes = "0" . $mes;
+        }
+
+        $dia = $date[2];
+        if ($date[2] < 0) {
+            $dia = "0" . $dia;
+        }
+
+        return $date[0] . "-" . $mes . "-" . $dia;
+    }
     public function subfijo($xx)
     { // esta función regresa un subfijo para la cifra
         $xx = trim($xx);
@@ -588,29 +607,43 @@ class CPETask extends Command
            
         } else { // credito
             $json_array["forma_pago"]["descrip"] = "Credito";
+            $json_array["cuota"] = array();
+            $cuotas = array();
 
-            $total_credito = 0;
-            foreach ($solicitud_cronograma as $ksc => $vsc) {
-                $total_credito += floatval($vsc->saldo_cuota);
-            }
-
-            $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($total_credito, 2));
-            $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
-            
             if(count($solicitud_cronograma) > 0) {
-                $json_array["cuota"] = array();
-                $cuotas = array();
-            }
-         
-            foreach ($solicitud_cronograma as $key => $value) {
-                $cuotas["descrip"] = "Cuota" . str_pad($value->nrocuota, 3, "0", STR_PAD_LEFT);
+                $total_credito = 0;
+                foreach ($solicitud_cronograma as $ksc => $vsc) {
+                    $total_credito += floatval($vsc->saldo_cuota);
+                }
+
+                $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($total_credito, 2));
+                $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
+
+            
+                foreach ($solicitud_cronograma as $key => $value) {
+                    $cuotas["descrip"] = "Cuota" . str_pad($value->nrocuota, 3, "0", STR_PAD_LEFT);
+                    // $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
+                    $cuotas["monto_neto"] = sprintf('%.2f', round($value->saldo_cuota, 2));
+                    $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
+                    $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
+
+                    array_push($json_array["cuota"], $cuotas);
+                }
+            } else {
+
+                $json_array["forma_pago"]["monto_neto"] = $venta[0]->t_monto_total;
+                $json_array["forma_pago"]["cod_mon"] = $venta[0]->EquivalenciaSunat;
+
+                $cuotas["descrip"] = "Cuota001" ;
                 // $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
-                $cuotas["monto_neto"] = sprintf('%.2f', round($value->saldo_cuota, 2));
+                $cuotas["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
-                $cuotas["fec_venc"] = $value->fecha_vencimiento_credito;
+                $fec_venc = $this->sumar_restar_dias($venta[0]->fecha_emision_server, "+", $venta[0]->dias);
+                $cuotas["fec_venc"] = $fec_venc;
 
                 array_push($json_array["cuota"], $cuotas);
             }
+            
         }
        
      
