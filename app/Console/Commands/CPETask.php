@@ -595,10 +595,12 @@ class CPETask extends Command
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
-            // $json_array["cargo"][0]["cod_cd"] = "";
-            // $json_array["cargo"][0]["factor_cd"] = "";
-            // $json_array["cargo"][0]["monto_cd"] = "";
-            // $json_array["cargo"][0]["base_cd"] = "";
+            $factor_cd = ($venta_anticipo[0]->t_monto_total / $venta[0]->t_monto_total);
+            $json_array["cargo"][0]["cod_cd"] = "05"; // Descuentos globales por anticipos exonerados
+
+            $json_array["cargo"][0]["factor_cd"] = sprintf('%.5f', round($factor_cd, 5));
+            $json_array["cargo"][0]["monto_cd"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
+            $json_array["cargo"][0]["base_cd"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
 
             $json_array["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
             $json_array["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
