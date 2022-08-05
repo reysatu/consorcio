@@ -392,6 +392,9 @@ class CPETask extends Command
            
             file_put_contents(base_path("public/XML/") .str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
             #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
+
+            $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$value->idventa}";
+            DB::statement($sql_update);
         }
     }
 
@@ -878,13 +881,8 @@ class CPETask extends Command
         foreach ($comprobantes_pendientes_envio as $key => $value) {
            
             $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
-            
-            $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$value->idventa}";
-            DB::statement($sql_update);
-           
-        }
 
-      
+        }
 
         $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
 
