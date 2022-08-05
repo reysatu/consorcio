@@ -585,21 +585,18 @@ class CPETask extends Command
         $json_array["adquiriente"]["cod_pais"] = "PE";
 
        
-       
-        $json_array["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
-       
-        $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        $json_array["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
+      
+        $json_array["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+        
         $json_array["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
         $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-            
-            $exonerado = floatval($solicitud[0]->t_monto_exonerado) - floatval($venta[0]->anticipo);
-            $imp_tot = $exonerado;
-            $json_array["tot"]["exo"] = sprintf('%.2f', round($exonerado, 2));
-            $json_array["tot"]["imp_tot"] = sprintf('%.2f', round($imp_tot, 2));
-
+            $json_array["tot"]["val_vent"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
+            $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
+
 
             $factor_cd = ($venta_anticipo[0]->t_monto_total / $venta[0]->t_monto_total);
             $json_array["cargo"][0]["cod_cd"] = "05"; // Descuentos globales por anticipos exonerados
@@ -622,10 +619,8 @@ class CPETask extends Command
             $json_array["ant"][0]["moneda"] = $venta_anticipo[0]->EquivalenciaSunat;
             $json_array["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
         } else {
-
-            $json_array["tot"]["exo"] = sprintf('%.2f', round($venta[0]->t_monto_exonerado, 2));
-
-            $json_array["tot"]["imp_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+            $json_array["tot"]["val_vent"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
+            $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         }
        
       
@@ -641,7 +636,7 @@ class CPETask extends Command
             if(count($solicitud_cronograma) > 0) {
                 $total_credito = 0;
                 foreach ($solicitud_cronograma as $ksc => $vsc) {
-                    $total_credito += floatval($vsc->saldo_cuota);
+                    $total_credito += (float)$vsc->saldo_cuota;
                 }
 
                 $json_array["forma_pago"]["monto_neto"] = sprintf('%.2f', round($total_credito, 2));
@@ -757,7 +752,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
       
-        // $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
+        $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
         
     }
 
