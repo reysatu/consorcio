@@ -606,7 +606,7 @@ class CPETask extends Command
          
             $json_array["ant"][0]["tip_doc_ant"] = $venta_anticipo[0]->IdTipoDocumento;
             $json_array["ant"][0]["serie_correl"] = $venta_anticipo[0]->serie_comprobante."-".str_pad($venta_anticipo[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);;
-            $json_array["ant"][0]["num_doc"] = $venta_anticipo[0]->numero_comprobante;
+            $json_array["ant"][0]["num_doc"] = $venta_anticipo[0]->documento;
             $json_array["ant"][0]["tip_doc"] = $venta_anticipo[0]->tipodoc;
             $json_array["ant"][0]["moneda"] = $venta_anticipo[0]->EquivalenciaSunat;
             $json_array["ant"][0]["fec_pago"] = $venta_anticipo[0]->fecha_emision_server;
