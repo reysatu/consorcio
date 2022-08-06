@@ -387,7 +387,7 @@
                 if (!_.isUndefined(response.status) && response.status) {
                     var data = response.data;
                     if (data[0].Mensaje == 'OK') {
-                        $(".btn_terminada").removeAttr("disabled");
+                       
                         AlertFactory.textType({
                             title: '',
                             message: 'La orden se registró correctamente',
@@ -567,6 +567,7 @@
             });
         }
         function newOrdenServicio() {
+            $(".btn_terminada").removeAttr("disabled");
             var hoy = new Date();
             var hAnio = hoy.getFullYear();
             var hmes = hoy.getMonth() + 1;
