@@ -708,12 +708,21 @@ class CPETask extends Command
             
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
-            $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
+            
 
             $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
             $detalle_venta["igv_item"] = sprintf('%.2f', round($value->impuestos, 2));
             $detalle_venta["prec_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
-            $detalle_venta["tip_afec_igv"] = "20"; // 10 con igv, 20 sin igv, catalogo 7
+            
+            if($value->cOperGrat == "S") {
+                $sub_tot = floatval($value->cantidad) * floatval($value->precio_unitario);
+                $detalle_venta["sub_tot"] = sprintf('%.2f', round($sub_tot, 2));
+                $detalle_venta["tip_afec_igv"] = "21"; // 10 con igv, 20 sin igv, 21 => Exonerado - Transferencia gratuita, catalogo 7
+            } else {
+                $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
+                $detalle_venta["tip_afec_igv"] = "20"; // 10 con igv, 20 sin igv, 21 => Exonerado - Transferencia gratuita, catalogo 7
+            }
+           
             $detalle_venta["impsto_tot"] = sprintf('%.2f', round($value->impuestos, 2));
             $detalle_venta["base_igv"] = sprintf('%.2f', round($value->precio_total, 2));
             $detalle_venta["tasa_igv"] = sprintf('%.2f', round($parametro_igv[0]->value, 2));
