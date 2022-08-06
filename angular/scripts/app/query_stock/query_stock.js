@@ -122,6 +122,21 @@
                     listClass:'text-right',
                     width: '3%'
                 },
+                Chasis: {
+                    title:'Chasis',
+                    listClass:'text-right',
+                    width: '3%'
+                },
+                Motor: {
+                    title:'Motor',
+                    listClass:'text-right',
+                    width: '3%'
+                },
+                Color: {
+                    title:'Color',
+                    listClass:'text-right',
+                    width: '3%'
+                },
 
             },
            
