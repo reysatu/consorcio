@@ -399,6 +399,7 @@ class CPETask extends Command
     }
 
     public function generar_pdf($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
+       
         $array = explode("|", $id);
         $cCodConsecutivo = $array[0];
         $nConsecutivo = $array[1];
@@ -408,25 +409,32 @@ class CPETask extends Command
         $datos = array();
         $datos["venta_anticipo"] = array();
         $datos["solicitud"] = array();
+        $datos["producto"] = array();
         // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
         // var_dump($bool);
-        if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
-     
+        if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0" && !empty($cCodConsecutivo) && !empty($nConsecutivo)) {
+          
             $solicitud = $solicitud_repositorio->get_solicitud($cCodConsecutivo, $nConsecutivo);
+           
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($cCodConsecutivo, $nConsecutivo);
+           
             $datos["venta_anticipo"] = $repo->get_venta_anticipo($cCodConsecutivo, $nConsecutivo); 
             $datos["solicitud_credito"] = $solicitud_credito; 
             $datos["solicitud"] = $solicitud; 
             $datos["solicitud_cronograma"] = $solicitud_repositorio->get_solicitud_cronograma($cCodConsecutivo, $nConsecutivo);
             $idconyugue = (!empty($solicitud_credito[0]->idconyugue)) ? $solicitud_credito[0]->idconyugue : "0";
+            
             $datos["conyugue"] = $persona_repositorio->find($idconyugue);
     
             $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
             $datos["fiador"] = $persona_repositorio->find($idfiador);
+           
+            $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
             $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
             
         }
 
+      
      
         // $texto = date("Y-m-d H:i:s");
         // Storage::append("log.txt", $texto);
@@ -439,7 +447,7 @@ class CPETask extends Command
         if(!empty($datos["venta"][0]->idventa_separacion)) {
             $datos["venta_anticipo_separacion"] = $repo->get_venta_anticipo_separacion($datos["venta"][0]->idventa_separacion); 
         }
-
+      
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
        
         if($datos["venta"][0]->idventa_referencia != "") {
@@ -447,11 +455,12 @@ class CPETask extends Command
             
 
         }
+       
         // echo "<pre>";
         // print_r($datos); exit;
         
        
-        $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+        
         // $datos["cajero"] = $repo->get_cajero(); 
         $datos["caja_diaria"] = $repo->get_caja_diaria(); 
         $datos["tiendas"] = $repo->get_tiendas(); 
@@ -474,11 +483,11 @@ class CPETask extends Command
         if (!file_exists(base_path("public/PDF/"))) {
             mkdir(base_path("public/PDF/"), 0777, true);
         }
-
+       
 		$path = public_path('PDF/');
 		$fileName =  $name.'.pdf' ;
 		$pdf->save($path . '/' . $fileName);
-
+       
         $this->envio_pdf($fileName);
     }
 
@@ -497,6 +506,7 @@ class CPETask extends Command
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($idventa);
         $venta_anticipo = array();
         $solicitud_cronograma = array();
+        $producto = array();
 
         
 
@@ -623,7 +633,7 @@ class CPETask extends Command
             $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
         }
        
-      
+       
        
         if ($venta[0]->codcondicionpago == 1) { // contado
             $json_array["forma_pago"]["descrip"] = "Contado";
@@ -668,7 +678,8 @@ class CPETask extends Command
             }
             
         }
-      
+       
+         
 
         $json_array["det"] = array();
       
@@ -676,23 +687,25 @@ class CPETask extends Command
         $cont = 1;
 
      
-       
+      
         foreach ($venta_detalle as $key => $value) {
-
+           
             $detalle_venta["nro_item"] = $cont;
             $detalle_venta["cod_prod"] = str_pad($value->idarticulo, 8, "0", STR_PAD_LEFT);
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
            
             // if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") {
                 if(count($producto) > 0 && $value->idproducto == $producto[0]->idproducto) {
+                 
                     $detalle_venta["descrip"] = $value->producto." / SERIE: ".$producto[0]->serie." / MOTOR:". $producto[0]->motor." / COLOR:". $producto[0]->color ." / AÑO:". $producto[0]->anio_fabricacion;
                 } else {
+                    
                     $detalle_venta["descrip"] = $value->producto;
                 }
             // } else {
             //     $detalle_venta["descrip"] = $value->producto;
             // }
-          
+            
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
             $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
             $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
@@ -707,9 +720,11 @@ class CPETask extends Command
 
             $cont++;
             array_push($json_array["det"], $detalle_venta);
+           
         }
 
        
+
          
         $json_array["leyen"][0]["leyen_cod"] = "1000";
         
@@ -730,7 +745,6 @@ class CPETask extends Command
         }
          
        
-
         if($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") {
             $json["invoice"] = $json_array;
         }
@@ -748,10 +762,10 @@ class CPETask extends Command
         if (!file_exists(base_path("public/CPE/"))) {
             mkdir(base_path("public/CPE/"), 0777, true);
         }
-
+       
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
-      
+       
         $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
         
     }
@@ -891,13 +905,14 @@ class CPETask extends Command
         // referencia: https://www.youtube.com/watch?v=0uG0B5HqiuA&ab_channel=JesusMatiz
         
         $comprobantes_pendientes_envio = $ventas_repo->obtener_comprobantes_pendientes_envio();
-        
+       
         foreach ($comprobantes_pendientes_envio as $key => $value) {
            
             $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
 
         }
 
+       
         $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
 
         foreach ($comprobantes_pendientes_envio_pdf as $kp=> $vp) {
@@ -909,7 +924,7 @@ class CPETask extends Command
 
         }
        
-    
+      
         $comprobantes = $ventas_repo->obtener_comprobantes();
     
         foreach ($comprobantes as $key => $value) {
