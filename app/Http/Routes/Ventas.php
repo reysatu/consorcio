@@ -29,4 +29,8 @@ Route::post('ventas/get_venta_separacion', ['as' => 'ventas.get_venta_separacion
 Route::post('ventas/get_venta_nota', ['as' => 'ventas.get_venta_nota', 'uses' => 'VentasController@get_venta_nota']);
 Route::post('ventas/validar_venta_anticipo', ['as' => 'ventas.validar_venta_anticipo', 'uses' => 'VentasController@validar_venta_anticipo']);
 
+Route::post('ventas/obtener_consecutivo_comprobante', 'ConsecutivosComprobantesController@obtener_consecutivo_comprobante');
+
+
+
 
