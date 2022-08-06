@@ -57,3 +57,6 @@ Route::post('register_movements/getAllOperationRegMov', 'OperationController@get
 Route::post('register_movements/getAllUserRegMov', 'UserController@getAll');
 
 Route::get('register_movements/archivoTxt', 'Register_movementController@archivoTxt');
+
+
+Route::get('register_movements/data_form_series', ['as' => 'series.data_form', 'uses' => 'SerieController@data_form']);
