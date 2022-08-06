@@ -382,11 +382,12 @@
             var params = {
                 'estado': 3,
             };
+            $(".btn_terminada").attr("disabled", "disabled");
             RESTService.updated('orden_servicios/cambiar_estado', id, params, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data = response.data;
                     if (data[0].Mensaje == 'OK') {
-
+                       
                         AlertFactory.textType({
                             title: '',
                             message: 'La orden se registró correctamente',
@@ -566,6 +567,7 @@
             });
         }
         function newOrdenServicio() {
+            $(".btn_terminada").removeAttr("disabled");
             var hoy = new Date();
             var hAnio = hoy.getFullYear();
             var hmes = hoy.getMonth() + 1;

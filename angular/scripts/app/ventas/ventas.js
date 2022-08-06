@@ -410,7 +410,7 @@
                     }
 
 
-                    $.post("consecutivos_comprobantes/obtener_consecutivo_comprobante", { tipo_documento: '07' },
+                    $.post("ventas/obtener_consecutivo_comprobante", { tipo_documento: '07' },
                         function (data, textStatus, jqXHR) {
                             select_comprobante(data);
                         },

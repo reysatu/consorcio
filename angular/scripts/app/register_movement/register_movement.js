@@ -2239,7 +2239,7 @@
         }
         getDataFormMovement();
         function getDataFormSerie () {
-            RESTService.all('series/data_form', '', function(response) {
+            RESTService.all('register_movements/data_form_series', '', function(response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     tipoCompra=response.tipoCompra
                     //  _.each(response.tipoCompra, function(item) {
