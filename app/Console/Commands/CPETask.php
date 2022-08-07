@@ -389,7 +389,9 @@ class CPETask extends Command
             $doc->loadXML(base64_decode(array_values($respuesta)[0]));
             // echo $doc->getElementsByTagName('DigestValue')->item(0)->nodeValue; //obtiene el valor resumen codigo unico por comprobante enviado
             //  print_R($filename); exit;
-           
+            if (!file_exists(base_path("public/XML/"))) {
+                mkdir(base_path("public/XML/"), 0777, true);
+            }
             file_put_contents(base_path("public/XML/") .str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
             #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
 
