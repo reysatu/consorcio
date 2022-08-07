@@ -499,6 +499,8 @@ class CPETask extends Command
         $json_array = array();
         $venta_referencia = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
+
+        $fec_venc = $this->sumar_restar_dias($venta[0]->fecha_emision_server, "+", $venta[0]->dias);
         
         if(!empty($venta[0]->idventa_referencia)) {
             $venta_referencia = $caja_diaria_detalle_repo->get_venta($venta[0]->idventa_referencia);
@@ -560,6 +562,8 @@ class CPETask extends Command
         } else { // credito
             if(count($solicitud_cronograma) > 0) {
                 $json_array["fec_venc"] = $solicitud_cronograma[count($solicitud_cronograma)-1]->fecha_vencimiento_credito;
+            } else {
+                $json_array["fec_venc"]  = $fec_venc;
             }
         }
 
@@ -603,6 +607,7 @@ class CPETask extends Command
         $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
+            $json_array["tot"]["grav"] = "0.00";
             $json_array["tot"]["val_vent"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
@@ -671,7 +676,7 @@ class CPETask extends Command
                 // $cuotas["monto_neto"] = sprintf('%.2f', round($value->valor_cuota, 2));
                 $cuotas["monto_neto"] = sprintf('%.2f', round($venta[0]->t_monto_total, 2));
                 $cuotas["cod_mon"] = $venta[0]->EquivalenciaSunat;
-                $fec_venc = $this->sumar_restar_dias($venta[0]->fecha_emision_server, "+", $venta[0]->dias);
+               
                 $cuotas["fec_venc"] = $fec_venc;
 
                 array_push($json_array["cuota"], $cuotas);
@@ -687,7 +692,7 @@ class CPETask extends Command
         $cont = 1;
 
      
-      
+        $total_gratuito = 0;
         foreach ($venta_detalle as $key => $value) {
            
             $detalle_venta["nro_item"] = $cont;
@@ -707,32 +712,46 @@ class CPETask extends Command
             // }
             
             $detalle_venta["cant"] = sprintf('%.2f', round($value->cantidad, 2));
-            $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+          
             
 
-            $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
+            
             $detalle_venta["igv_item"] = sprintf('%.2f', round($value->impuestos, 2));
-            $detalle_venta["prec_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+          
             
             if($value->cOperGrat == "S") {
+                
                 $sub_tot = floatval($value->cantidad) * floatval($value->precio_unitario);
                 $detalle_venta["sub_tot"] = sprintf('%.2f', round($sub_tot, 2));
                 $detalle_venta["tip_afec_igv"] = "21"; // 10 con igv, 20 sin igv, 21 => Exonerado - Transferencia gratuita, catalogo 7
+                $detalle_venta["val_unit_item"] = "0.00";
+                $detalle_venta["prec_unit_item"] = "0.00";
+                $detalle_venta["val_vta_item"] = sprintf('%.2f', round($sub_tot, 2));
+                $detalle_venta["base_igv"] = sprintf('%.2f', round($sub_tot, 2));
+                $total_gratuito += $sub_tot;
             } else {
+                $detalle_venta["val_vta_item"] = sprintf('%.2f', round($value->precio_total, 2));
                 $detalle_venta["sub_tot"] = sprintf('%.2f', round($value->monto_subtotal, 2));
                 $detalle_venta["tip_afec_igv"] = "20"; // 10 con igv, 20 sin igv, 21 => Exonerado - Transferencia gratuita, catalogo 7
+
+                $detalle_venta["val_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+                $detalle_venta["prec_unit_item"] = sprintf('%.2f', round($value->precio_unitario, 2));
+                $detalle_venta["base_igv"] = sprintf('%.2f', round($value->precio_total, 2));
             }
            
             $detalle_venta["impsto_tot"] = sprintf('%.2f', round($value->impuestos, 2));
-            $detalle_venta["base_igv"] = sprintf('%.2f', round($value->precio_total, 2));
+            
             $detalle_venta["tasa_igv"] = sprintf('%.2f', round($parametro_igv[0]->value, 2));
 
             $cont++;
             array_push($json_array["det"], $detalle_venta);
            
         }
+        
+        if($total_gratuito >0) {
 
-       
+            $json_array["tot"]["grat"] = sprintf('%.2f', round($total_gratuito, 2));
+        }
 
          
         $json_array["leyen"][0]["leyen_cod"] = "1000";
