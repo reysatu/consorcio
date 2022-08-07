@@ -139,7 +139,7 @@
                         <td style="border-bottom: 1px solid black;"><?php echo strtoupper($venta[0]->tipo_documento); ?></td>
                     </tr>
                     <tr>
-                        <td>{{ $venta[0]->serie_comprobante }}-{{ $venta[0]->numero_comprobante }}</td>
+                        <td><?php echo $venta[0]->serie_comprobante."-".str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT); ?> </td>
                     </tr>
                 </table>
                
