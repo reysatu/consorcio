@@ -797,7 +797,7 @@ class CPETask extends Command
         $name = $empresa->Ruc . "-" . $venta[0]->IdTipoDocumento . "-" . $venta[0]->serie_comprobante . "-" . str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
        
-        // $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
+        $this->envio_json_cpe($name . ".json", $venta[0]->idventa);
         
     }
 
