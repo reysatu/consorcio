@@ -356,14 +356,14 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
 
 
     public function obtener_comprobantes() {
-        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCode IS NULL AND ISNULL(anulado, 'N')<>'S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND ISNULL(statusCode, '')<>'0000' AND ISNULL(anulado, 'N')<>'S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
         return DB::select($sql);
 
     }
 
     
     public function obtener_comprobantes_anulados() {
-        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCodeBaja IS NULL AND ISNULL(anulado, 'N')='S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND ISNULL(statusCodeBaja, '')<>'0000' AND ISNULL(anulado, 'N')='S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
         return DB::select($sql);
 
     }
