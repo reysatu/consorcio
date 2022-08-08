@@ -25,14 +25,14 @@ class Stock_SerieRepository implements Stock_SerieInterface
     }
     public function searchMovi($s,$idProducto)
     {
-        return $this->model->where(function($q) use ($s,$idProducto){
-            $q->where('nombreSerie', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-            $q->orWhere('chasis', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-            $q->orWhere('motor', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-            $q->orWhere('anio_fabricacion', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-            $q->orWhere('anio_modelo', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-            $q->orWhere('color', 'LIKE', '%'.$s.'%')->where('idArticulo',$idProducto);
-
+        $model = $this->model->where('idArticulo',$idProducto);
+        return $model->where(function($q) use ($s){
+            $q->where('nombreSerie', 'LIKE', '%'.$s.'%');
+            $q->orWhere('chasis', 'LIKE', '%'.$s.'%');
+            $q->orWhere('motor', 'LIKE', '%'.$s.'%');
+            $q->orWhere('anio_fabricacion', 'LIKE', '%'.$s.'%');
+            $q->orWhere('anio_modelo', 'LIKE', '%'.$s.'%');
+            $q->orWhere('color', 'LIKE', '%'.$s.'%');
         });
 
     }
