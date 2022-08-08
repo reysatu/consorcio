@@ -614,10 +614,7 @@ class CPETask extends Command
         $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
         if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-            $json_array["tot"]["grav"] = "0.00";
-            $json_array["tot"]["igv"] = "0.00";
-            $json_array["tot"]["trib_exo"] = "0.00";
-            $json_array["tot"]["trib_grat"] = "0.00";
+           
             $json_array["tot"]["val_vent"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
@@ -759,7 +756,11 @@ class CPETask extends Command
            
         }
         
-        if($total_gratuito >0) {
+        if($total_gratuito > 0) {
+            $json_array["tot"]["grav"] = "0.00";
+            $json_array["tot"]["igv"] = "0.00";
+            $json_array["tot"]["trib_exo"] = "0.00";
+            $json_array["tot"]["trib_grat"] = "0.00";
 
             $json_array["tot"]["grat"] = sprintf('%.2f', round($total_gratuito, 2));
         }
