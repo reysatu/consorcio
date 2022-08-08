@@ -990,39 +990,39 @@ class CPETask extends Command
     {
         // referencia: https://www.youtube.com/watch?v=0uG0B5HqiuA&ab_channel=JesusMatiz
         
-        // $comprobantes_pendientes_envio = $ventas_repo->obtener_comprobantes_pendientes_envio();
+        $comprobantes_pendientes_envio = $ventas_repo->obtener_comprobantes_pendientes_envio();
        
-        // foreach ($comprobantes_pendientes_envio as $key => $value) {
+        foreach ($comprobantes_pendientes_envio as $key => $value) {
            
-        //     $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
+            $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
 
-        // }
+        }
 
        
-        // $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
+        $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
 
-        // foreach ($comprobantes_pendientes_envio_pdf as $kp=> $vp) {
-        //     $id = $vp->cCodConsecutivo_solicitud."|".$vp->nConsecutivo_solicitud."|".$vp->idventa."|".$vp->documento_cpe;
-        //     $this->generar_pdf($id, $repo, $solicitud_repositorio, $cliente_repositorio, $persona_repositorio);
+        foreach ($comprobantes_pendientes_envio_pdf as $kp=> $vp) {
+            $id = $vp->cCodConsecutivo_solicitud."|".$vp->nConsecutivo_solicitud."|".$vp->idventa."|".$vp->documento_cpe;
+            $this->generar_pdf($id, $repo, $solicitud_repositorio, $cliente_repositorio, $persona_repositorio);
             
-        //     $sql_update = "UPDATE ERP_Venta SET enviado_pdf=1 WHERE idventa={$vp->idventa}";
-        //     DB::statement($sql_update);
+            $sql_update = "UPDATE ERP_Venta SET enviado_pdf=1 WHERE idventa={$vp->idventa}";
+            DB::statement($sql_update);
 
-        // }
+        }
        
       
-        // $comprobantes = $ventas_repo->obtener_comprobantes();
+        $comprobantes = $ventas_repo->obtener_comprobantes();
     
-        // foreach ($comprobantes as $key => $value) {
-        //     $res = $this->consultar_cdr($value->documento_cpe);
-        //     if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
-        //         $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
-        //         $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
-        //         DB::statement($sql_update);
-        //     }
+        foreach ($comprobantes as $key => $value) {
+            $res = $this->consultar_cdr($value->documento_cpe);
+            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+                DB::statement($sql_update);
+            }
            
            
-        // }
+        }
 
         $comprobantes_anulados = $ventas_repo->obtener_comprobantes_anulados_pendientes();
     
