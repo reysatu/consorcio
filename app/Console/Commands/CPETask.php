@@ -298,7 +298,7 @@ class CPETask extends Command
        
     }
 
-    public function envio_json_cpe($ruta_json, $idventa)
+    public function envio_json_cpe($ruta_json, $idventa, $anulado = "N")
     {
         $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
         $url = DB::select($sql_url);
@@ -394,9 +394,14 @@ class CPETask extends Command
             }
             file_put_contents(base_path("public/XML/") .str_replace('.json', '.xml', $filename), base64_decode(array_values($respuesta)[0])); //grava en disco el archivo xml recepcionado
             #file_put_contents(str_replace('.txt','.xml',$filename), base64_decode(array_values($respuesta)[0]));
-
-            $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$idventa}";
-            DB::statement($sql_update);
+            if($anulado == "N") {
+                $sql_update = "UPDATE ERP_Venta SET enviado_cpe=1 WHERE idventa={$idventa}";
+                DB::statement($sql_update);
+            } else {
+                $sql_update = "UPDATE ERP_Venta SET enviado_anulado=1 WHERE idventa={$idventa}";
+                DB::statement($sql_update);
+            }
+           
         }
     }
 
@@ -804,7 +809,46 @@ class CPETask extends Command
         
     }
 
-    public function consultar_cdr($documento_cpe) {
+    public function generar_json_cpe_anulados($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio)
+    {
+
+     
+        $json["baja"] = array();
+
+        $empresa = $compania_repo->find("00000");
+        
+        $venta = $caja_diaria_detalle_repo->get_venta($idventa);
+        $date = explode("-", $venta[0]->fecha_anulacion_server);
+        $json["baja"]["fec_ref"] = $venta[0]->fecha_emision_server;
+        $json["baja"]["identificador"] = "RA-".$date[0].$date[1].$date[2]."-".$venta[0]->correlativo_anulado;
+        $json["baja"]["fec_gen"] = $venta[0]->fecha_anulacion_server;
+
+        $json["baja"]["emisor"]["tip_doc"] = "6";
+        $json["baja"]["emisor"]["num_doc"] = $empresa->Ruc;
+        $json["baja"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
+  
+
+        $json["baja"]["det"]["nro_item"] = 1;
+        $json["baja"]["det"]["tipo_doc"] = $venta[0]->IdTipoDocumento;
+        $json["baja"]["det"]["serie"] = $venta[0]->serie_documento;
+        $json["baja"]["det"]["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
+        $json["baja"]["det"]["motivo"] = "CANCELACION";
+
+    
+        $json_encode = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        if (!file_exists(base_path("public/CPE/"))) {
+            mkdir(base_path("public/CPE/"), 0777, true);
+        }
+       
+        $name = $empresa->Ruc . $json["baja"]["identificador"];
+        file_put_contents(base_path("public/CPE/") . $name . ".json", $json_encode);
+       
+        $this->envio_json_cpe($name . ".json", $venta[0]->idventa, "S");
+        
+    }
+
+    public function consultar_cdr($documento_cpe, $anulado="N") {
         // consultar comprobantes
         // https://emite.tuscomprobantes.pe/
         // 20450106357
@@ -855,7 +899,12 @@ class CPETask extends Command
         $password = $password[0]->value; //CLAVE DEL API por empresa, solicitar a jmariscal@seencorp.pe
 
         $parametros = array('fileName'=>$filename);
-        $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
+        if($anulado == "N") {
+            $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
+        } else {
+            $respuesta=$cliente->call("getStatusBaja ",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
+        }
+       
 
 		// print_R($respuesta);
 
@@ -966,6 +1015,26 @@ class CPETask extends Command
             if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
                 $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
                 $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
+                DB::statement($sql_update);
+            }
+           
+           
+        }
+
+        $comprobantes_anulados = $ventas_repo->obtener_comprobantes_anulados_pendientes();
+    
+        foreach ($comprobantes_anulados as $kan => $van) {
+            $this->generar_json_cpe_anulados($van->idventa, $repo, $compania_repo, $solicitud_repositorio);
+
+        }
+
+        $comprobantes_baja = $ventas_repo->obtener_comprobantes_anulados();
+    
+        foreach ($comprobantes_baja as $kb => $vb) {
+            $res = $this->consultar_cdr($vb->documento_cpe, "S");
+            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCodeBaja='{$res["statusCdr"]["statusCode"]}', statusMessageBaja='{$statusMessage}' WHERE idventa={$vb->idventa}";
                 DB::statement($sql_update);
             }
            

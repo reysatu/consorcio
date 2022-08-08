@@ -869,3 +869,8 @@ WHERE idventa=)"  *
 
 Entrega a Servicio Técnico o Clientes
 - Al abrir el documento de tipo Remite no esta mostrando el dato del cliente, pero cuando se abre una venta y luego una remisión se figura el check en Proforma.
+
+Pendientes 08/08/2022:
+1. En la pantalla de agregar series de solicitud de venta, corregir el buscar para que lo realice, por serie, chasis, motor.
+2. En Movimientos de Caja no debe permitir cobrar sin forma de pago si el monto es diferente a cero "0"
+3. En el reporte de excel y pdf de Consulta de stock, agregar los campos de chasis, motor y color .. En el exportable a pdf aumentar los totales a la columna Disponible, S. Total y un contar de Item

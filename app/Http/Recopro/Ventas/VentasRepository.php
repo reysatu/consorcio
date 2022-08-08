@@ -278,9 +278,27 @@ class VentasRepository implements VentasInterface
         return DB::select($sql);
     }
 
+    public function get_correlativo_anulacion()
+    {     
+        $mostrar=DB::select("select correlativo_anulacion from ERP_Venta 
+        WHERE FORMAT(fecha_anulacion, 'yyyy-MM-dd')='".date("Y-m-d")."'
+        order by correlativo_anulacion DESC");
+        $actu=0;
+        if(!$mostrar){
+            $actu=0;
+        }else{
+            $actu=intval($mostrar[0]->correlativo_anulacion);
+        };
+        $new=$actu+1;
+        return $new; 
+    }
+
+
      public function anular_venta($id) {
+        $correlativo_anulacion =  $this->get_correlativo_anulacion();
         $sql = "UPDATE ERP_Venta
-                SET anulado = 'S'
+                SET anulado = 'S', fecha_anulacion='".date("Y-m-d H:i:s")."', enviado_anulado=0,
+                correlativo_anulacion=".$correlativo_anulacion."
                 WHERE idventa='$id'";
 
         return DB::update($sql);
@@ -338,9 +356,14 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
 
 
     public function obtener_comprobantes() {
-        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCode IS NULL /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCode IS NULL AND anulado<>'S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
+        return DB::select($sql);
 
+    }
 
+    
+    public function obtener_comprobantes_anulados() {
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND documento_cpe IS NOT NULL AND statusCodeBaja IS NULL AND anulado='S'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
         return DB::select($sql);
 
     }
@@ -357,6 +380,12 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
         $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND enviado_pdf=0 /*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
 
 
+        return DB::select($sql);
+
+    }
+
+    public function obtener_comprobantes_anulados_pendientes() {
+        $sql = "SELECT * FROM ERP_Venta WHERE IdTipoDocumento IN('03', '01', '07', '08') AND enviado_anulado=0 AND anulado='S' AND statusCode='0000'/*AND FORMAT(fecha_emision, 'yyyy-MM-dd')='2022-07-26'*/";
         return DB::select($sql);
 
     }

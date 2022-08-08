@@ -183,7 +183,13 @@
 
 
                 },
+                dias_vencidos: {
+                    title: 'dias_vencidos',
+                    create: false,
+                    edit: false,
+                    list: false,
 
+                },
                 edit: {
                     width: '1%',
                     sorting: false,
@@ -202,7 +208,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="anular-nota" data-idventa="' + data.record.idventa + '"    title="Anular"><i class="fa fa-times fa-1-5x fa-red"></i></a>';
+                        return '<a href="javascript:void(0)" class="anular-nota" data-dias_vencidos="' + data.record.dias_vencidos + '" data-idventa="' + data.record.idventa + '"    title="Anular"><i class="fa fa-times fa-1-5x fa-red"></i></a>';
                     }
 
                 }
@@ -215,6 +221,15 @@
                 $("#table_container_ventas").find(".jtable-toolbar").removeClass("col-md-8").addClass("col-md-10");
                 $('.anular-nota').click(function (e) {
                     var code = $(this).attr('data-idventa');
+                    var dias_vencidos = $(this).attr('data-dias_vencidos');
+                    if(dias_vencidos > 7) {
+                        AlertFactory.textType({
+                            title: '',
+                            message: "Ya pasaron los 7 dias, ya no puede anular!",
+                            type: 'info'
+                        });
+                        return false
+                    }
                     AlertFactory.confirm({
                         title: '',
                         message: '¿Está seguro que desea anular venta?',
