@@ -824,14 +824,14 @@ class CPETask extends Command
         
         $json["baja"]["fec_gen"] = $venta[0]->fecha_anulacion_server;
 
-        $json["baja"]["emisor"]["tip_doc"] = 6;
+        $json["baja"]["emisor"]["tip_doc"] = "6";
         $json["baja"]["emisor"]["num_doc"] = $empresa->Ruc;
         $json["baja"]["emisor"]["raz_soc"] = $empresa->RazonSocial;
         
   
 
         $json["baja"]["det"][0]["nro_item"] = 1;
-        $json["baja"]["det"][0]["tipo_doc"] = $venta[0]->IdTipoDocumento;
+        $json["baja"]["det"][0]["tip_doc"] = $venta[0]->IdTipoDocumento;
         $json["baja"]["det"][0]["serie"] = $venta[0]->serie_comprobante;
         $json["baja"]["det"][0]["correl"] = str_pad($venta[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
         $json["baja"]["det"][0]["motivo"] = "CANCELACION";
