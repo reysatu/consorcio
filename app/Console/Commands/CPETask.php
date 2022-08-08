@@ -761,7 +761,6 @@ class CPETask extends Command
             $json_array["tot"]["igv"] = "0.00";
             $json_array["tot"]["trib_exo"] = "0.00";
             $json_array["tot"]["trib_grat"] = "0.00";
-
             $json_array["tot"]["grat"] = sprintf('%.2f', round($total_gratuito, 2));
         }
 
