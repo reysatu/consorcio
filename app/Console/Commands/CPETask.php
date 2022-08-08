@@ -905,7 +905,7 @@ class CPETask extends Command
         if($anulado == "N") {
             $respuesta=$cliente->call("getStatusCdr",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
         } else {
-            $respuesta=$cliente->call("getStatusBaja ",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
+            $respuesta=$cliente->call("getStatusBaja",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
         }
        
 
