@@ -94,7 +94,8 @@ class SerieController extends Controller
     }
     public function traerSeriesStock(Request $request, Stock_SerieInterface $repo){
         $idProducto = $request->input('idProducto');
-        $s = $request->input('search', '');
+        // $s = $request->input('search', '');
+        $s = $_REQUEST["postData"]["search"];
         $params = ['idSerie', 'nombreSerie as serie','chasis','motor','anio_fabricacion','anio_modelo','color','idArticulo', 'tipo_compra_venta'];
         return parseList($repo->searchMovi($s,$idProducto), $request, 'idSerie', $params);
     }
