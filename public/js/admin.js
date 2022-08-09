@@ -7617,6 +7617,7 @@ function create_pdf_transfer(response) {
 
 }
 function create_pdf_Querystock(response) {
+    // console.log(response);
     var filtro_art = response.filtro_art;
     var filtro_idAlm = response.filtro_idAlm;
     var filtro_idLoc = response.filtro_idLoc;
@@ -7625,9 +7626,9 @@ function create_pdf_Querystock(response) {
     var fechacA = response.fechacA;
     var simboloMoneda = response.simboloMoneda;
     var img = response.img;
-    console.log(data);
-    console.log(filtro_art);
-    console.log("jsjhsjsjhs");
+    // console.log(data);
+    // console.log(filtro_art);
+    // console.log("jsjhsjsjhs");
 
     if (!filtro_art) {
         filtro_art = 'TODOS'
@@ -7802,6 +7803,35 @@ function create_pdf_Querystock(response) {
             alignment: 'center'
 
         },
+        // {
+        //     text: 'Chasis',
+        //     fillColor: '#eeeeee',
+        //     fontSize: 8,
+        //     alignment: 'center'
+
+        // },
+        //  {
+        //     text: 'Motor',
+        //     fillColor: '#eeeeee',
+        //     fontSize: 8,
+        //     alignment: 'center'
+
+        // },
+        {
+            text: 'Color',
+            fillColor: '#eeeeee',
+            fontSize: 8,
+            alignment: 'center'
+
+        },
+        {
+            text: 'Año',
+            fillColor: '#eeeeee',
+            fontSize: 8,
+            alignment: 'center'
+
+        },
+       
     ];
 
 
@@ -7903,6 +7933,26 @@ function create_pdf_Querystock(response) {
                 fontSize: 7,
 
             },
+            // {
+            //     text: index.Chasis,
+            //     fontSize: 7,
+
+            // },
+            // {
+            //     text: index.Motor,
+            //     fontSize: 7,
+
+            // },
+            {
+                text: index.Color,
+                fontSize: 7,
+
+            },
+            {
+                text: index.Ano,
+                fontSize: 7,
+
+            },
         ];
         dataDolMovimienQuery.push(tituloDolFormQueryData);
     });
@@ -7991,6 +8041,26 @@ function create_pdf_Querystock(response) {
                     fontSize: 7,
                     border: [false, false, false, false],
                 },
+                {
+                    text: '',
+                    fontSize: 7,
+                    border: [false, false, false, false],
+                },
+                {
+                    text: '',
+                    fontSize: 7,
+                    border: [false, false, false, false],
+                },
+                // {
+                //     text: '',
+                //     fontSize: 7,
+                //     border: [false, false, false, false],
+                // },
+                // {
+                //     text: '',
+                //     fontSize: 7,
+                //     border: [false, false, false, false],
+                // },
                 {
                     text: 'Total costo inventario ' + simboloMoneda[0].Simbolo,
                     fontSize: 7,
@@ -8100,6 +8170,26 @@ function create_pdf_Querystock(response) {
                     fontSize: 7,
                     border: [false, false, false, false],
                 },
+                {
+                    text: '',
+                    fontSize: 7,
+                    border: [false, false, false, false],
+                },
+                {
+                    text: '',
+                    fontSize: 7,
+                    border: [false, false, false, false],
+                },
+                // {
+                //     text: '',
+                //     fontSize: 7,
+                //     border: [false, false, false, false],
+                // },
+                // {
+                //     text: '',
+                //     fontSize: 7,
+                //     border: [false, false, false, false],
+                // },
             ];
 
         }
