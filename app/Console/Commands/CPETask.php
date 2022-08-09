@@ -908,7 +908,7 @@ class CPETask extends Command
             $respuesta=$cliente->call("getStatusBaja",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
         }
        
-
+            
 		// print_R($respuesta);
 
         $_strFaultCode='';
@@ -927,6 +927,18 @@ class CPETask extends Command
                     $_strContentFile=$value;	
                 break;
                 case 'statusCdr':
+                    foreach ($value as $key2 => $value2){
+                        switch($key2){
+                            case 'content':
+                                $_strContentFile=$value2;	
+                            break;
+                            case 'statusCode':
+                                $_strStatusCode=$value2;	
+                            break;
+                        }
+                    }			
+                break;
+                case 'statusBaja':
                     foreach ($value as $key2 => $value2){
                         switch($key2){
                             case 'content':
@@ -1035,9 +1047,9 @@ class CPETask extends Command
     
         foreach ($comprobantes_baja as $kb => $vb) {
             $res = $this->consultar_cdr($vb->documento_cpe, "S");
-            if(isset($res["statusCdr"]["statusMessage"]) && isset($res["statusCdr"]["statusCode"])) {
-                $statusMessage = utf8_decode(str_replace("'", "", $res["statusCdr"]["statusMessage"]));
-                $sql_update = "UPDATE ERP_Venta SET statusCodeBaja='{$res["statusCdr"]["statusCode"]}', statusMessageBaja='{$statusMessage}' WHERE idventa={$vb->idventa}";
+            if(isset($res["statusBaja"]["statusMessage"]) && isset($res["statusBaja"]["statusCode"])) {
+                $statusMessage = utf8_decode(str_replace("'", "", $res["statusBaja"]["statusMessage"]));
+                $sql_update = "UPDATE ERP_Venta SET statusCodeBaja='{$res["statusBaja"]["statusCode"]}', statusMessageBaja='{$statusMessage}' WHERE idventa={$vb->idventa}";
                 DB::statement($sql_update);
             }
            
