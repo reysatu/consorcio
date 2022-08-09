@@ -137,7 +137,11 @@
                     listClass:'text-right',
                     width: '3%'
                 },
-
+                Ano: {
+                    title:'Año',
+                    listClass:'text-right',
+                    width: '3%'
+                }
             },
            
 

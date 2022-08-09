@@ -21,7 +21,7 @@ class Query_stock extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['tipoCompraVenta','code_article','id', 'Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Remitido','Total','Transito','Costo_Promedio_Unitario','Costo_Total', 'Chasis', 'Motor', 'Color'];
+    protected $fillable = ['tipoCompraVenta','code_article','id', 'Articulo','Categoria','Unidad','Almacen','Localizacion','Lote','Serie','Disponible','Remitido','Total','Transito','Costo_Promedio_Unitario','Costo_Total', 'Chasis', 'Motor', 'Color', 'Ano'];
     
      public function user_c()
     {
