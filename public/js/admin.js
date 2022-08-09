@@ -7837,15 +7837,21 @@ function create_pdf_Querystock(response) {
 
     dataDolMovimienQuery.push(tituloDolFormQuery);
     var todol = 0;
-    console.log(data);
-    console.log("FF1");
+    var total_disponible = 0;
+    var total_stotal = 0;
+    var cont = 0;
+    // console.log(data);
+    // console.log("FF1");
     data.map(function (index) {
+        cont ++;
         todol = Number(todol) + Number(index.Costo_Total);
         var tituloDolFormQueryData = [];
         var cu = Number(index.Costo_Promedio_Unitario).toFixed(2);
         var pu = Number(index.Costo_Total).toFixed(2);
         cu = addCommas(cu);
         pu = addCommas(pu);
+        total_disponible += Number(index.Disponible);
+        total_stotal += Number(index.Total);
         tituloDolFormQueryData = [
             {
                 text: index.id,
@@ -7959,19 +7965,28 @@ function create_pdf_Querystock(response) {
     console.log("FF3");
     var todolt = Number(todol).toFixed(2);
     todolt = addCommas(todolt);
+    total_disponible = Number(total_disponible).toFixed(2);
+    total_disponible = addCommas(total_disponible);
+
+    total_stotal = Number(total_stotal).toFixed(2);
+    total_stotal = addCommas(total_stotal);
+
+
     for (var i = 0; i < 5; i++) {
         var tituloDolFormQueryData = [];
         if (i == 4) {
             tituloDolFormQueryData = [
                 {
-                    text: '',
+                    text: 'Items',
+                    alignment: 'center',
                     fontSize: 7,
-                    border: [false, false, false, false],
+                    bold: true,
                 },
                 {
-                    text: '',
+                    alignment: 'center',
+                    text: cont,
                     fontSize: 7,
-                    border: [false, false, false, false],
+                    bold: true,
                 },
                 {
                     text: '',
@@ -8020,21 +8035,21 @@ function create_pdf_Querystock(response) {
                     border: [false, false, false, false],
                 },
                 {
-                    text: '',
+                    text: total_disponible,
                     fontSize: 7,
                     alignment: 'center',
-                    border: [false, false, false, false],
+                    bold: true,
                 },
                 {
                     text: '',
                     fontSize: 7,
-                    border: [false, false, false, false],
+                    bold: true,
                 },
                 {
-                    text: '',
+                    text: total_stotal,
                     fontSize: 7,
                     alignment: 'center',
-                    border: [false, false, false, false],
+                    bold: true,
                 },
                 {
                     text: '',

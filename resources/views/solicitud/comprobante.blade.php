@@ -391,6 +391,19 @@
                 
                     
                     echo '  </td>';
+                    echo '</tr>';
+                    
+                }
+
+                if(count($solicitud) > 0 && $solicitud[0]->tipo_solicitud == "3") {
+                    echo '<tr>';
+                    echo '  <td style="width: 15%;">Convenio:</td>';
+                    echo '  <td style="width: 20%;">';
+                
+                        echo $solicitud[0]->convenio;
+
+                    echo '  </td>';
+                    echo '</tr>';
                     
                 }
                 
