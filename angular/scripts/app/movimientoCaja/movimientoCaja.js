@@ -2491,9 +2491,18 @@ $scope.emitir = function () {
     bval = bval && $("#numero_comprobante").required();
     bval = bval && $("#correo_electronico").required();
     // alert($("#detalle-formas-pago").html());
-    
+   
     if (bval) {
         if ($('#modalSolicitud').is(':visible')) {
+            var monto = parseFloat($("#monto").val());
+            if(monto != 0 && $("#detalle-formas-pago").html() == "") {
+                AlertFactory.textType({
+                    title: '',
+                    message: 'Debe ingresar al menos 1 registro al detalle',
+                    type: 'info'
+                });
+                return false;
+            }
             guardar_comprobante();
         }
         
