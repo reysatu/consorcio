@@ -356,6 +356,7 @@
                                 type: 'success'
                             });
                             estado.val(2);
+                            $(".btn_terminada").removeAttr("disabled");
                         } else {
                             AlertFactory.textType({
                                 title: '',
@@ -605,6 +606,8 @@
                     btn_terminada.prop('disabled', false);
                 };
             }
+            $("#observaciones").removeAttr("readonly");
+            $("#comentario_facturacion").removeAttr("readonly");
             modalOrdenServivio.modal('show');
             titlemodalOrdenServivio.html('Nuevo Orden de Servicio');
         }
@@ -3280,6 +3283,7 @@
             },
             fields: {
                 cCodConsecutivo: {
+                    title: 'Código',
                     key: true,
                     create: false,
                     edit: false,
@@ -3297,9 +3301,13 @@
                     }
 
                 },
-                idCliente: {
+                // idCliente: {
+                //     title: 'Cliente',
+                //     options: base_url + '/orden_servicios/getCliente',
+                // },
+                cliente: {
                     title: 'Cliente',
-                    options: base_url + '/orden_servicios/getCliente',
+                  
                 },
                 iEstado: {
                     title: 'Estado',

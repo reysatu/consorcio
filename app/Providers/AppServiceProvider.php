@@ -41,6 +41,9 @@ use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraInterface;
 use App\Http\Recopro\View_OrdenCompra\View_OrdenCompraRepository;
 
 
+use App\Http\Recopro\View_OrdenServicio\View_OrdenServicio; 
+use App\Http\Recopro\View_OrdenServicio\View_OrdenServicioInterface;
+use App\Http\Recopro\View_OrdenServicio\View_OrdenServicioRepository;
 
 
 use App\Http\Recopro\Area\Area; 
@@ -832,6 +835,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerEmpresa();
         $this->registerView_Movimiento_Conformidad_Compra();
         $this->registerView_OrdenCompra();
+        $this->registerView_OrdenServicio();
         $this->registerSector();
         $this->registerViewScomprArticulo();
         $this->registerProveedorCuentaBanco();
@@ -1259,6 +1263,15 @@ class AppServiceProvider extends ServiceProvider
 
         $app->bind(View_OrdenCompraInterface::class, function ($app) {
             return new View_OrdenCompraRepository(new View_OrdenCompra());
+        });
+    }
+
+    public function registerView_OrdenServicio()
+    {
+        $app = $this->app;
+
+        $app->bind(View_OrdenServicioInterface::class, function ($app) {
+            return new View_OrdenServicioRepository(new View_OrdenServicio());
         });
     }
     public function registerView_Movimiento_Conformidad_Compra()

@@ -163,7 +163,7 @@ class SolicitudController extends Controller
 
                    
 
-                    if(isset($data["series_id"][$i])) {
+                    if(isset($data["series_id"][$i]) && !empty($data["series_id"][$i])) {
 
                         $idSeries = explode(",", $data["series_id"][$i]);
                         $idarticulos = explode(",", $data["articulos_id"][$i]);

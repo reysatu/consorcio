@@ -16,6 +16,7 @@ use App\Http\Requests\Orden_servicioRequest;
 
 use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Recopro\Modelo\ModeloInterface;
+use App\Http\Recopro\View_OrdenServicio\View_OrdenServicioInterface;
 use App\Models\BaseModel;
 use DB;
 class Orden_servicioController extends Controller
@@ -60,10 +61,11 @@ class Orden_servicioController extends Controller
             ]);
     }
 
-    public function all(Request $request, Orden_servicioInterface $repo)
+    // public function all(Request $request, Orden_servicioInterface $repo)
+    public function all(Request $request, View_OrdenServicioInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['cCodConsecutivo', 'nConsecutivo','dFecRec','cPlacaVeh','idCliente','iEstado'];
+        $params = ['cCodConsecutivo', 'nConsecutivo','dFecRec','cPlacaVeh','cliente','iEstado'];
         return parseList($repo->search($s), $request, 'cCodConsecutivo', $params);
     }
  

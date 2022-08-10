@@ -2148,7 +2148,7 @@
             var inp5 = $('<input type="hidden" cOperGrat="'+cOperGrat+'" class="m_articulo_precioTotal" name="precio_total[]" codigo="' + codigo + '"  value="' + pretotal.toFixed(decimales_redondeo) + '" />');
             var inpPreTo = $('<input type="hidden" class="m_articulo_montoDescuento" codigo="' + codigo + '"  name="monto_descuento[]" />');
 
-            var html_list_series = "";
+            var html_list_series = '<input type="hidden" name="series_id[]" value="" /><input type="hidden" name="articulos_id[]" value="" />';
             if(series_id_sd != "" && articulos_id_sd != "") {
                 html_list_series += '<input type="hidden" name="series_id[]" value="' + series_id_sd + '" />';
                 html_list_series += '<input type="hidden" name="articulos_id[]" value="' + articulos_id_sd + '" />';
