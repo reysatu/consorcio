@@ -728,7 +728,9 @@ class CPETask extends Command
             
             if($value->cOperGrat == "S") {
                 
-                $sub_tot = floatval($value->cantidad) * floatval($value->precio_unitario);
+                $precio_unitario = (floatval($value->precio_unitario) <= 0) ? 1 : floatval($value->precio_unitario);
+                $sub_tot = floatval($value->cantidad) * $precio_unitario;
+               
                 $detalle_venta["sub_tot"] = sprintf('%.2f', round($sub_tot, 2));
                 $detalle_venta["tip_afec_igv"] = "21"; // 10 con igv, 20 sin igv, 21 => Exonerado - Transferencia gratuita, catalogo 7
                 $detalle_venta["val_unit_item"] = "0.00";
