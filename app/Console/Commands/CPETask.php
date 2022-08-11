@@ -909,7 +909,9 @@ class CPETask extends Command
         } else {
             $respuesta=$cliente->call("getStatusBaja",$parametros,'http://service.sunat.gob.pe','',$this->get_header($username, $password));
         }
-       
+        // $texto = date("Y-m-d H:i:s");
+        // Storage::append("log.txt", $texto.json_encode($respuesta));
+        // exit;
             
 		// print_R($respuesta);
 
