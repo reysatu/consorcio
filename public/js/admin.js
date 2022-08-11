@@ -9686,7 +9686,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
 
         '<div class="col-md-2 " style="padding: 0;">' +
         '<label class="control-label">Tipo Documento</label>' +
-        '<select id="id_tipo_doc"  style="width: 100%" name="id_tipo_doc" class="form-control input-sm "><option value="">TODOS</option><option value="03">BOLETAS</option><option value="01">FACTURAS</option><option value="07">NOTAS DE CRÉDITO</option><option value="08">NOTAS DE DÉBITO</option></select>' +
+        '<select id="id_tipo_doc"  style="width: 100%" name="id_tipo_doc" class="form-control input-sm "><option value="">TODOS</option><option value="03">BOLETAS</option><option value="01">FACTURAS</option><option value="07">NOTAS DE CRÉDITO</option><option value="08">NOTAS DE DÉBITO</option><option value="12">TICKET</option></select>' +
         '</div>' +
         '<div class="col-md-2">' +
         '<label class="control-label">Fecha Inicio</label>' +

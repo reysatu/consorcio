@@ -2407,10 +2407,13 @@ function guardar_comprobante() {
 
 function guardar_pago_cuotas_credito() {
     // alert("hola");
-    
+    $("#emitir-comprobante").attr("disabled", "disabled");
+    $("#cerrar-emitir-comprobante").attr("disabled", "disabled");
     
     $.post("movimientoCajas/guardar_pago_cuotas_credito", $("#formulario-emitir-comprobante").serialize() + "&cCodConsecutivo=" + $("#cCodConsecutivo_credito").val() + "&nConsecutivo=" + $("#nConsecutivo_credito").val() + "&IdTipoDocumento=12&"+$("#formulario-solicitud-credito").serialize() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
     function (data, textStatus, jqXHR) {
+        $("#emitir-comprobante").removeAttr("disabled");
+        $("#cerrar-emitir-comprobante").removeAttr("disabled");
         if (data.status == "i") {
             $("#modal-emitir-comprobante").modal("hide");
             $("#modalSolicitudCredito").modal("hide");
@@ -2447,9 +2450,13 @@ function guardar_pago_cuotas_credito() {
 function guardar_pago_documentos_pendientes() {
     // alert("hola");
     
-    
+    $("#emitir-comprobante").attr("disabled", "disabled");
+    $("#cerrar-emitir-comprobante").attr("disabled", "disabled");
     $.post("movimientoCajas/guardar_pago_documentos_pendientes", $("#formulario-emitir-comprobante").serialize() + "&IdTipoDocumento=12&"+$("#formulario-documentos-pendientes").serialize() + "&idventa_separacion=" + $("#idventa_separacion").val()+ "&idventa_nota=" + $("#idventa_nota").val(),
     function (data, textStatus, jqXHR) {
+        $("#emitir-comprobante").removeAttr("disabled");
+        $("#cerrar-emitir-comprobante").removeAttr("disabled");
+
         if (data.status == "i") {
             $("#modal-emitir-comprobante").modal("hide");
             $("#modalDocumentosPendientes").modal("hide");
