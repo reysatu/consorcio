@@ -695,13 +695,13 @@ class CPETask extends Command
 
         $json_array["det"] = array();
       
-        $detalle_venta = array();
+       
         $cont = 1;
 
      
         $total_gratuito = 0;
         foreach ($venta_detalle as $key => $value) {
-           
+            $detalle_venta = array();
             $detalle_venta["nro_item"] = $cont;
             $detalle_venta["cod_prod"] = str_pad($value->idarticulo, 8, "0", STR_PAD_LEFT);
             $detalle_venta["cod_und_med"] =  $value->unidad_medida;
