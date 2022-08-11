@@ -508,10 +508,14 @@ class SolicitudController extends Controller
             DB::beginTransaction();
             // print_r($data); exit;
             $data["estado"] = 10;
+            // update ERP_OrdenServicio set cFacturado = 'N', iEstado = 2 where cCodConsecutivo = cCodConsecutivoO_origen and nConsecutivo = cCodConsecutivoO_origen and iEstado not in (0,1,4)
+            // update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = cCodConsecutivoO_origen and nConsecutivoOS = cCodConsecutivoO_origen and iEstado not in (0,1,6)
+
+            $solicitud = $solicitud_repositorio->get_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
 
             $sql_update = "
-            UPDATE ERP_OrdenServicio set cFacturado = 'N' where cCodConsecutivo = '{$data["cCodConsecutivo"]}' and nConsecutivo = {$data["nConsecutivo"]};
-            UPDATE ERP_Proforma set cFacturado = 'N' where cCodConsecutivoOS = '{$data["cCodConsecutivo"]}' and nConsecutivoOS = {$data["nConsecutivo"]};
+            UPDATE ERP_OrdenServicio set cFacturado = 'N', iEstado = 2 where cCodConsecutivo = '{$solicitud[0]->cCodConsecutivoO}' and nConsecutivo = {$solicitud[0]->nConsecutivoO} and iEstado not in (0,1,4);
+            UPDATE ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOS = '{$solicitud[0]->cCodConsecutivoO}' and nConsecutivoOS = {$solicitud[0]->nConsecutivoO} and iEstado not in (0,1,6);
             ";
             DB::statement($sql_update);
 

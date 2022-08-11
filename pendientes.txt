@@ -832,7 +832,7 @@ Refinanciamiento
 - La condición de pago de la nueva BV debe ser de acuerdo al nuevo cronograma
 
 Visita a Cliente
-- En el detalle cambiar la etiqueta de Fecha de Pago por Fecha Compromiso Pago
+- En el detalle cambiar la etiqueta de Fecha de Pago por Fecha Compromiso Pago *
 
 Reporte de Ventas
 - Agruparlas por Tipo de Solicitud y Convenio, debe haber un total en cada grupo
@@ -857,8 +857,7 @@ Formatos de impresión (Brayam)
 
 Solicitud de Venta
 - El botón Cancelar a demás de Anular la solicitud si esta es de Origen "O" debe obtener el consecutivo y correlativo origen de la Orden de Servicio y realizar el siguiente update en estas tablas:
-update ERP_OrdenServicio set cFacturado = 'N', iEstado = 2 where cCodConsecutivo = cCodConsecutivoO_origen and nConsecutivo = cCodConsecutivoO_origen and iEstado not in (0,1,4)
-update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = cCodConsecutivoO_origen and nConsecutivoOS = cCodConsecutivoO_origen and iEstado not in (0,1,6)
+v
 - El mensaje del botón cancelar dice aulo debe decir anuló *
 //- En el formato de impresión de cláusula adicional: falta el campo para agregar una descripción_adicional_clausula después de la condición de pago *
 
