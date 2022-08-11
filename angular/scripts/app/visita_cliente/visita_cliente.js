@@ -312,11 +312,12 @@
 
         $(document).on("change", "#idcliente", function (event, idsolicitud, id_visita, estado) {
             var idcliente = $(this).val();
+            // alert(idsolicitud);
             $("#idsolicitud").html("");
             if(idcliente == "") {
                 return false;
             }
-            $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente},
+            $.post("visita_cliente/obtener_solicitud", { idcliente: idcliente, idsolicitud: idsolicitud},
                 function (data, textStatus, jqXHR) {
                     // console.log(data);
                     if(data.length > 0) {

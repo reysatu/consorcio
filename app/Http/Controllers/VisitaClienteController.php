@@ -229,7 +229,7 @@ class VisitaClienteController extends Controller
     public function obtener_solicitud(VisitaClienteInterface $repo, Request $request) {
         $data = $request->all();    
 
-        $result = $repo->obtener_solicitud($data["idcliente"]);
+        $result = $repo->obtener_solicitud($data["idcliente"], $data["idsolicitud"]);
 
         return response()->json($result);
     }
@@ -250,8 +250,8 @@ class VisitaClienteController extends Controller
         $data = $request->all();    
 
         $arr = explode("_", $data["id"]);
-        $cCodConsecutivo = $arr[0];
-        $nConsecutivo = $arr[1];
+        $cCodConsecutivo = (isset($arr[0])) ? $arr[0] : "";
+        $nConsecutivo = (isset($arr[1])) ? $arr[1] : "";
         $idvisita = $data["idvisita"];
 
 
