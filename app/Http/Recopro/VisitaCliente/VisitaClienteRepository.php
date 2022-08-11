@@ -173,7 +173,7 @@ class VisitaClienteRepository implements VisitaClienteInterface
         return DB::select($sql);
     }
 
-    public function obtener_solicitud($idcliente) {
+    public function obtener_solicitud($idcliente, $idsolicitud) {
         $sql = "SELECT CONCAT(s.cCodConsecutivo, '_', s.nConsecutivo) AS id, CONCAT(s.cCodConsecutivo, '-', s.nConsecutivo, ' Saldo: ',  round(s.saldo, 2)) AS descripcion, s.saldo
         
         FROM ERP_Solicitud AS s
@@ -181,9 +181,9 @@ class VisitaClienteRepository implements VisitaClienteInterface
         INNER JOIN ERP_Clientes AS c ON(s.idcliente=c.id)
         INNER JOIN ERP_TABLASUNAT AS tc ON(cnombretabla = 'TIPO_DOCUMENTO' AND tc.cCodigo=c.tipodoc)
         INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=s.idmoneda)
-        WHERE s.estado IN(7, 8, 9) AND sc.saldo_cuota<>0 AND s.idcliente={$idcliente}
+        WHERE s.estado IN(7, 8, 9) AND sc.saldo_cuota<>0 AND s.idcliente={$idcliente} or (CONCAT(s.cCodConsecutivo, '_', s.nConsecutivo)='{$idsolicitud}')
         GROUP BY s.cCodConsecutivo, s.nConsecutivo, s.saldo ";
-
+        // die($sql);
         return DB::select($sql);
     }
 
