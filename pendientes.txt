@@ -865,7 +865,7 @@ update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = 
 Movimiento de Caja / Solicitudes
 //- Al elegir la forma de pago Separación combinado con una forma de pago efectivo se emite el mensaje de error "SQLSTATE[42000]: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]Incorrect syntax near '='. (SQL: UPDATE ERP_Venta SET aplicado_separacion = 'S'
 WHERE idventa=)"  *
-- En la impresión del documento de venta por el saldo de una solicitud a crédito financiero incluir el dato de convenio 
+- En la impresión del documento de venta por el saldo de una solicitud a crédito financiero incluir el dato de convenio *
 
 Entrega a Servicio Técnico o Clientes
 - Al abrir el documento de tipo Remite no esta mostrando el dato del cliente, pero cuando se abre una venta y luego una remisión se figura el check en Proforma.
@@ -873,4 +873,4 @@ Entrega a Servicio Técnico o Clientes
 Pendientes 08/08/2022:
 1. En la pantalla de agregar series de solicitud de venta, corregir el buscar para que lo realice, por serie, chasis, motor. *
 2. En Movimientos de Caja no debe permitir cobrar sin forma de pago si el monto es diferente a cero "0" * 
-3. En el reporte de excel y pdf de Consulta de stock, agregar los campos de chasis, motor y color .. En el exportable a pdf aumentar los totales a la columna Disponible, S. Total y un contar de Item
+3. En el reporte de excel y pdf de Consulta de stock, agregar los campos de chasis, motor y color .. En el exportable a pdf aumentar los totales a la columna Disponible, S. Total y un contar de Item*
