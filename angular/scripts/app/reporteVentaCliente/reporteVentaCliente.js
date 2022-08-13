@@ -216,7 +216,7 @@
                       });
                       $("#idVendedorFiltro").append('<option value="" selected>Vendedor</option>');
                       usuarios.map(function (index) {
-                         $("#idVendedorFiltro").append('<option value="'+index.id+'">'+index.name+'</option>');
+                         $("#idVendedorFiltro").append('<option value="'+index.idvendedor+'">'+index.descripcion+'</option>');
                       });
                        $("#idcategoria").append('<option value="" selected>Categoría</option>');
                       categorias.map(function (index) {

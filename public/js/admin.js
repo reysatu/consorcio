@@ -9686,7 +9686,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
 
         '<div class="col-md-2 " style="padding: 0;">' +
         '<label class="control-label">Tipo Documento</label>' +
-        '<select id="id_tipo_doc"  style="width: 100%" name="id_tipo_doc" class="form-control input-sm "><option value="">TODOS</option><option value="03">BOLETAS</option><option value="01">FACTURAS</option><option value="07">NOTAS DE CRÉDITO</option><option value="08">NOTAS DE DÉBITO</option></select>' +
+        '<select id="id_tipo_doc"  style="width: 100%" name="id_tipo_doc" class="form-control input-sm "><option value="">TODOS</option><option value="03">BOLETAS</option><option value="01">FACTURAS</option><option value="07">NOTAS DE CRÉDITO</option><option value="08">NOTAS DE DÉBITO</option><option value="12">TICKET</option></select>' +
         '</div>' +
         '<div class="col-md-2">' +
         '<label class="control-label">Fecha Inicio</label>' +
@@ -9703,7 +9703,7 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
         '</div>' +
         '<div class="col-md-1 " style="padding: 0;">' +
         '<label class="control-label">Estado</label>' +
-        '<select id="estado_cpe"  style="width: 100%" name="estado_cpe" class="form-control input-sm "><option value="">TODOS</option><option value="PENDIENTE">PENDIENTE</option><option value="EMITIDO">EMITIDO</option><option value="RECHAZADO">RECHAZADO</option></select>' +
+        '<select id="estado_cpe"  style="width: 100%" name="estado_cpe" class="form-control input-sm "><option value="">TODOS</option><option value="PENDIENTE">PENDIENTE</option><option value="EMITIDO">EMITIDO</option><option value="RECHAZADO">RECHAZADO</option><option value="BAJA EMITIDA">BAJA EMITIDA</option><option value="BAJA RECHAZADA">BAJA RECHAZADA</option></select>' +
         '</div>' +
         '<div class="col-md-3 " style="padding-right: 0px;"><br>' +
         '<div class="input-group input-group-sm">' +

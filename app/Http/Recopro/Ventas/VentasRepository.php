@@ -117,7 +117,7 @@ class VentasRepository implements VentasInterface
             $model = $model->where("estado_cpe", $_REQUEST["estado_cpe"]);
         } 
 
-        return $model->whereIn('IdTipoDocumento', ['01', '03', '07', '08'])->where(function ($q) use ($s) {
+        return $model->whereIn('IdTipoDocumento', ['01', '03', '07', '08', '12'])->where(function ($q) use ($s) {
             $q->where('serie_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('numero_comprobante', 'LIKE', '%' . $s . '%');
             $q->orWhere('fecha_emision', 'LIKE', '%' . $s . '%');
