@@ -698,5 +698,24 @@ class VentasController extends Controller
 
 
     }
+
+    public function validar_ticket_pago_cuota(Request $request, VentasInterface $repo, CajaDiariaDetalleInterface $repo_caja_diara_detalle) {
+        $data = $request->all();
+        $array = explode("|", $data["id"]);
+        $cCodConsecutivo = $array[0];
+        $nConsecutivo = $array[1];
+        $idventa = $array[2];
+
+       
+
+        $parametro_cuota = $repo_caja_diara_detalle->get_parametro_cuota();
+
+        if(count($parametro_cuota) <= 0) {
+            throw new Exception("Por favor cree el parametro con el id del producto de tipo cuota!");
+        }
+
+        $ticket_pago_cuota = $repo->obtener_ticket_pago_cuota($idventa, $parametro_cuota[0]->value);
+        return response()->json($ticket_pago_cuota);
+    }
   
 }

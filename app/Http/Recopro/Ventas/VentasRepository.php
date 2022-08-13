@@ -389,6 +389,13 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
         return DB::select($sql);
 
     }
+
+    public function obtener_ticket_pago_cuota($idventa, $idarticulo) {
+        $sql = "SELECT * FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS dv ON(v.idventa=dv.idventa)
+        WHERE v.idventa={$idventa} AND dv.idarticulo={$idarticulo}";
+        return DB::select($sql);
+    }
     
 
    

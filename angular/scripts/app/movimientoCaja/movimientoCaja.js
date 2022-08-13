@@ -3619,21 +3619,34 @@ table_container_comprobantes.jtable({
             var tipo_solicitud = $(this).attr('data-tipo_solicitud');
             var idtipodocumento = $(this).attr('data-idtipodocumento');
             var estado = $(this).attr('data-estado');
-            
-            if (idtipodocumento == "12") {
-                if(tipo_solicitud != "null") {
+            $.post("ventas/validar_ticket_pago_cuota", { id: id },
+                function (data, textStatus, jqXHR) {
+                    // console.log(data);
+                    if(data.length <= 0) {
+                        if (idtipodocumento == "12") {
+                            if(tipo_solicitud != "null") {
+                                
+                                window.open("movimientoCajas/imprimir_ticket/" + id);
+                            } else {
+                                window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                            }
+                        } else {
+                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            // if (tipo_solicitud != "1" && estado == "6") {
+                            //     window.open("movimientoCajas/imprimir_cronograma/" + id);
+                            // }
+                            
+                        }
+                    } else {
+                        
+                        window.open("movimientoCajas/imprimir_ticket_pago_cuota/" + id);
+                    }
                     
-                    window.open("movimientoCajas/imprimir_ticket/" + id);
-                } else {
-                    window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
-                }
-            } else {
-                window.open("movimientoCajas/imprimir_comprobante/" + id);
-                // if (tipo_solicitud != "1" && estado == "6") {
-                //     window.open("movimientoCajas/imprimir_cronograma/" + id);
-                // }
-                
-            }
+                },
+                "json"
+            );
+
+            
             
             e.preventDefault();
         });
