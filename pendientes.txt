@@ -846,8 +846,8 @@ Opción nueva
 ------- Nuevas observaciones
 
 Orden de Servicio
-- Campo Requerimiento del Cliente, permitir modificarlo en cualquier estado que se encuentre la orden a excepción del estado Terminado (emite mensaje de validación)
-//- Campo Comentario de facturación, este se debe guardar o modificar en cualquier estado que se encuentre la orden a excepción del estado Terminado (emite mensaje de validación)
+- Campo Requerimiento del Cliente, permitir modificarlo en cualquier estado que se encuentre la orden a excepción del estado Terminado (emite mensaje de validación) *
+//- Campo Comentario de facturación, este se debe guardar o modificar en cualquier estado que se encuentre la orden a excepción del estado Terminado (emite mensaje de validación) *
 - Acceso directo para modificar datos de vehículo debe habilitarse cuando se modifica algún campo, debería llamarse Editar Vehículo.
 - Cuando se intente registrar artículos duplicados, recargar los combos (como en la Proforma).
 //- La impresión del formato express no se visualizan datos *
@@ -857,7 +857,8 @@ Formatos de impresión (Brayam)
 
 Solicitud de Venta
 - El botón Cancelar a demás de Anular la solicitud si esta es de Origen "O" debe obtener el consecutivo y correlativo origen de la Orden de Servicio y realizar el siguiente update en estas tablas:
-v
+update ERP_OrdenServicio set cFacturado = 'N', iEstado = 2 where cCodConsecutivo = cCodConsecutivoO_origen and nConsecutivo = cCodConsecutivoO_origen and iEstado not in (0,1,4)
+update ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOs = cCodConsecutivoO_origen and nConsecutivoOS = cCodConsecutivoO_origen and iEstado not in (0,1,6) *
 - El mensaje del botón cancelar dice aulo debe decir anuló *
 //- En el formato de impresión de cláusula adicional: falta el campo para agregar una descripción_adicional_clausula después de la condición de pago *
 
@@ -873,3 +874,13 @@ Pendientes 08/08/2022:
 1. En la pantalla de agregar series de solicitud de venta, corregir el buscar para que lo realice, por serie, chasis, motor. *
 2. En Movimientos de Caja no debe permitir cobrar sin forma de pago si el monto es diferente a cero "0" * 
 3. En el reporte de excel y pdf de Consulta de stock, agregar los campos de chasis, motor y color .. En el exportable a pdf aumentar los totales a la columna Disponible, S. Total y un contar de Item*
+
+11/08/2022
+1. Habilitar las formas de pago porque no sólo es efectivo dicen y
+2. Los documentos de venta que se imprimen (en alquileres, trámites y separaciones) deben relacionarse con su ticket
+
+Créditos y Cobranzas / Documentos Emitidos
+- Incluir botón para reimpresión de documentos
+
+Movimientos de Caja / Comprobantes
+- La reimpresión de tickets por cuotas no esta imprimiendo el desglose de la cuota pagada (cuota y mora).

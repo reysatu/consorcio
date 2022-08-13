@@ -212,6 +212,18 @@
                     }
 
                 }
+                ,
+                reimprimir: {
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    listClass: 'text-center',
+                    display: function (data) {
+                        return '<a href="javascript:void(0)" class="reimprimir-comprobante" data-estado="' + data.record.estado + '"  data-tipo_solicitud="' + data.record.tipo_solicitud + '" data-idtipodocumento="' + data.record.IdTipoDocumento + '"  data-anticipo="' + data.record.anticipo + '" data-id="' + data.record.cCodConsecutivo_solicitud + '|' + data.record.nConsecutivo_solicitud + '|' + data.record.idventa + '"   title="Reimprimir Comprobante"><i class="fa fa-print fa-1-5x"></i></a>';
+                    }
+
+                }
 
             },
 
@@ -319,6 +331,42 @@
                         },
                         "json"
                     );
+                    e.preventDefault();
+                });
+
+                $('.reimprimir-comprobante').click(function (e) {
+                    var id = $(this).attr('data-id');
+                    var tipo_solicitud = $(this).attr('data-tipo_solicitud');
+                    var idtipodocumento = $(this).attr('data-idtipodocumento');
+                    var estado = $(this).attr('data-estado');
+                    $.post("ventas/validar_ticket_pago_cuota", { id: id },
+                        function (data, textStatus, jqXHR) {
+                            // console.log(data);
+                            if(data.length <= 0) {
+                                if (idtipodocumento == "12") {
+                                    if(tipo_solicitud != "null") {
+                                        
+                                        window.open("movimientoCajas/imprimir_ticket/" + id);
+                                    } else {
+                                        window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                                    }
+                                } else {
+                                    window.open("movimientoCajas/imprimir_comprobante/" + id);
+                                    // if (tipo_solicitud != "1" && estado == "6") {
+                                    //     window.open("movimientoCajas/imprimir_cronograma/" + id);
+                                    // }
+                                    
+                                }
+                            } else {
+                              
+                                window.open("movimientoCajas/imprimir_ticket_pago_cuota/" + id);
+                            }
+                           
+                        },
+                        "json"
+                    );
+                    
+                    
                     e.preventDefault();
                 });
 
