@@ -880,7 +880,7 @@ Pendientes 08/08/2022:
 2. Los documentos de venta que se imprimen (en alquileres, trámites y separaciones) deben relacionarse con su ticket
 
 Créditos y Cobranzas / Documentos Emitidos
-- Incluir botón para reimpresión de documentos
+- Incluir botón para reimpresión de documentos * 
 
 Movimientos de Caja / Comprobantes
-- La reimpresión de tickets por cuotas no esta imprimiendo el desglose de la cuota pagada (cuota y mora).
+- La reimpresión de tickets por cuotas no esta imprimiendo el desglose de la cuota pagada (cuota y mora). *

@@ -352,9 +352,6 @@
                                     }
                                 } else {
                                     window.open("movimientoCajas/imprimir_comprobante/" + id);
-                                    // if (tipo_solicitud != "1" && estado == "6") {
-                                    //     window.open("movimientoCajas/imprimir_cronograma/" + id);
-                                    // }
                                     
                                 }
                             } else {
