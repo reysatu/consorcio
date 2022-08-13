@@ -77,6 +77,7 @@ class AprobacionSolicitudController extends Controller
         try {
             $data = $request->all();
             $res = array("status" => "i");
+            $t_monto_total = 0;
             $data_update = array(); 
             $data_update["nCodConformidad"] = $data["nCodConformidad"];
             $data_update['aprobaComentario'] =$data['aprobaComentario'];
@@ -94,6 +95,8 @@ class AprobacionSolicitudController extends Controller
                 $solicitud = $solicitud_repositorio->get_solicitud($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
                 $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($conformidad[0]->cCodConsecutivo, $conformidad[0]->nConsecutivo);
                 $fecha = $solicitud[0]->fecha_solicitud;
+
+                $t_monto_total = (float)$solicitud_credito[0]->total_financiado + (float)$solicitud_credito[0]->intereses;
 
                 if(!empty($solicitud_credito[0]->dia_vencimiento_cuota) && $solicitud_credito[0]->dia_vencimiento_cuota > 0) {
                     $arr_date = explode("-", $fecha);
@@ -130,12 +133,23 @@ class AprobacionSolicitudController extends Controller
                     $data_cronograma["nConsecutivo"] = $conformidad[0]->nConsecutivo;
                     $data_cronograma["nrocuota"] = $c;
                     $data_cronograma["fecha_vencimiento"] = $fecha;
-                    $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota_final;
+
+                    if( $t_monto_total > $solicitud_credito[0]->valor_cuota_final) {
+
+                        $data_cronograma["valor_cuota"] =  $solicitud_credito[0]->valor_cuota_final;
+                        $data_cronograma["saldo_cuota"] =  $solicitud_credito[0]->valor_cuota_final;
+                    } else {
+                        $data_cronograma["valor_cuota"] = $t_monto_total;
+                        $data_cronograma["saldo_cuota"] =  $t_monto_total;
+                    }
+
+                    // $data_cronograma["valor_cuota"] = $solicitud_credito[0]->valor_cuota_final;
                     $data_cronograma["int_moratorio"] = "0";
-                    $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota_final;
+                    // $data_cronograma["saldo_cuota"] = $solicitud_credito[0]->valor_cuota_final;
                     $data_cronograma["monto_pago"] = "0";
                     // print_r($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
                     $res = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudCronograma", $data_cronograma));
+                    $t_monto_total -= (float)$solicitud_credito[0]->valor_cuota_final;
                     // print_r($res);   
                 }
             }
