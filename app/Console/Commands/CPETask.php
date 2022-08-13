@@ -243,7 +243,7 @@ class CPETask extends Command
     }
 
 
-    public function envio_pdf($ruta_pdf)
+    public function envio_pdf($ruta_pdf, $idventa)
     {
         $sql_url = "SELECT * FROM ERP_Parametros WHERE id=22";
         $url = DB::select($sql_url);
@@ -291,6 +291,10 @@ class CPETask extends Command
         $parametros = array('fileName' => $filename, 'contentFile' => $contentfile);
         $respuesta = $cliente->call("sendPdf", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
 
+        if(isset($respuesta["ticket"]) && !empty($respuesta["ticket"])) {
+            $sql_update = "UPDATE ERP_Venta SET enviado_pdf=1 WHERE idventa={$idventa}";
+            DB::statement($sql_update);
+        }
 
         // print_r($respuesta); exit;
         $texto = date("Y-m-d H:i:s");
@@ -495,7 +499,7 @@ class CPETask extends Command
 		$fileName =  $name.'.pdf' ;
 		$pdf->save($path . '/' . $fileName);
        
-        $this->envio_pdf($fileName);
+        $this->envio_pdf($fileName, $idventa);
     }
 
     public function generar_json_cpe($idventa, $caja_diaria_detalle_repo, $compania_repo, $solicitud_repositorio)
@@ -1021,8 +1025,7 @@ class CPETask extends Command
             $id = $vp->cCodConsecutivo_solicitud."|".$vp->nConsecutivo_solicitud."|".$vp->idventa."|".$vp->documento_cpe;
             $this->generar_pdf($id, $repo, $solicitud_repositorio, $cliente_repositorio, $persona_repositorio);
             
-            $sql_update = "UPDATE ERP_Venta SET enviado_pdf=1 WHERE idventa={$vp->idventa}";
-            DB::statement($sql_update);
+           
 
         }
        
