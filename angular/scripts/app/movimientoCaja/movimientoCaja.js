@@ -79,6 +79,7 @@
                 
                 if (data.length > 0) {
                     $(".separacion").hide();
+                    $("")
                     modalMovimientoCaja.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -549,6 +550,8 @@
             cargarCuentasBancarias();
         });
         idMonedaAdd.change(function (e) {
+            var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+            // alert(simbolo);
             cargarCuentasBancarias();
         });
         function cargarCuentasBancarias() {
