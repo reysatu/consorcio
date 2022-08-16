@@ -2251,7 +2251,7 @@ class MovimientoCajaController extends Controller
           
         // }
       
-        $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total); 
+        $datos["total_letras"] = $this->convertir($datos["venta"][0]->t_monto_total, $datos["venta"][0]->moneda); 
         $datos["cliente"] = $cliente_repositorio->find($datos["venta"][0]->idcliente);
        
    

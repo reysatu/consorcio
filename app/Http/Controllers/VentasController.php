@@ -380,7 +380,7 @@ class VentasController extends Controller
         INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
         INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
         INNER JOIN ERP_Clientes AS cc ON(cc.id=s.idcliente)
-        WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where}
+        WHERE FORMAT(v.fecha_emision, 'yyyy-MM-dd') BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where} AND ISNULL(v.anulado, 'N')<>'S'
         GROUP BY s.idCobrador, c.descripcion";
 
         $cobradores = DB::select($sql_cobradores);
@@ -394,7 +394,7 @@ class VentasController extends Controller
             INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
             INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
             INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
-            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador={$value->idCobrador}";
+            WHERE FORMAT(v.fecha_emision, 'yyyy-MM-dd') BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador={$value->idCobrador} AND ISNULL(v.anulado, 'N')<>'S'";
            
             $pagos = DB::select($sql);
             
