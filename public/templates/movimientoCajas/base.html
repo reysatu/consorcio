@@ -582,8 +582,8 @@
                                 <div class="col-sm-4">
                                     <select class="form-control input-sm" id="idMonedaAdd">
                                         <option value="">Seleccionar</option>
-                                        <option value="1">SOLES</option>
-                                        <option value="2">US DOLLAR</option>
+                                        <option value="1" data-simbolo="S/">SOLES</option>
+                                        <option value="2" data-simbolo="$">US DOLLAR</option>
                                     </select>
                                 </div>
                                 <label class="col-sm-2 control-label negrita">Monto</label>
@@ -624,6 +624,38 @@
                            
                            
                             <br>
+
+                            <div class="form-group">
+                                <label for="" class="control-label negrita col-md-3">Formas de Pago</label>
+                                
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-primary btn-sm" id="agregar-formas-pago" ng-click="agregar_formas_pago()">Agregar</button>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <thead>
+                                                <th>Moneda</th>
+                                                <th>Tipo</th>
+                                                <th>Nro Operación</th>
+                                                <!-- <th>Tarjeta/Concepto/Cuenta/Banco Ref.</th> -->
+                                                <th>Tarjeta</th>
+                                                <!-- <th>Serie y Número</th> -->
+                                                <th>Monto</th>
+                                                <th>T.C.</th>
+                                                <th>Monto Moneda Documento</th>
+                                                <th>Monto Aplicado Moneda Documento</th>
+                                                <th>Vuelto</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody id="detalle-formas-pago"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
