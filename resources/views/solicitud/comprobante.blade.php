@@ -258,7 +258,7 @@
                     echo '  <td>
                                 Marca              : '.$marca.'<br>
                                 Modelo             : '.$modelo.'<br>
-                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Año de Modelo : '.$anio_fabricacion.'<br>
                                 Color              : '.$color.'<br>
                                 # Serie            : '.$serie.'<br>
                                 # Motor            : '.$motor.'<br>
@@ -284,7 +284,7 @@
                     echo '  <td>
                                 Marca              : '.$marca.'<br>
                                 Modelo             : '.$modelo.'<br>
-                                Año de Fabricación : '.$anio_fabricacion.'<br>
+                                Año de Modelo : '.$anio_fabricacion.'<br>
                                 Color              : '.$color.'<br>
                                 # Serie            : '.$serie.'<br>
                                 # Motor            : '.$motor.'<br>
@@ -465,7 +465,7 @@
                         <tr>
                             <td>Valor de Venta</td>
                             <td>{{ $venta[0]->Simbolo }} </td>
-                            <td style="text-align: right; border: 1px solid black;">
+                            <td style="text-align: right; border: 1pfx solid black;">
                                 
                                 <?php 
                                     // if($venta[0]->t_impuestos > 0) {
