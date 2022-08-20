@@ -2501,10 +2501,22 @@ $scope.emitir = function () {
     bval = bval && $("#numero_comprobante").required();
     bval = bval && $("#correo_electronico").required();
     // alert($("#detalle-formas-pago").html());
+
+    var monto = parseFloat($("#monto").val());
+  
+    if(monto != 0) {
+        AlertFactory.textType({
+            title: '',
+            message: 'Las formas de pago no suman el monto total a pagar',
+            type: 'info'
+        });
+        return false;
+    }
    
     if (bval) {
         if ($('#modalSolicitud').is(':visible')) {
-            var monto = parseFloat($("#monto").val());
+          
+            
             if(monto != 0 && $("#detalle-formas-pago").html() == "") {
                 AlertFactory.textType({
                     title: '',
@@ -3454,7 +3466,7 @@ function find_solicitud(id) {
 
 var search_comprobantes = getFormSearchComprobantes('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
 
-var table_container_comprobantes = $("#table_container_comprobantes");
+var table_coemitir= $("#table_container_comprobantes");
 
 table_container_comprobantes.jtable({
     title: "Lista de Comprobantes",
