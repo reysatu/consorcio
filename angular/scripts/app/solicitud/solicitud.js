@@ -3217,43 +3217,47 @@
                         }
                     });
 
-                    var articulos_id = $("input[name='idarticulo[]']");
-                    var series_id = $("input[name='series_id[]']");
 
-                    for (var ar = 0; ar < articulos_id.length; ar++) {
-                        // console.log(articulos_id[ar]);
-                        var posee_serie = articulos_id[ar].getAttribute("posee-serie");
-                        var cantidad = articulos_id[ar].getAttribute("cantidad");
-                        var producto = articulos_id[ar].getAttribute("producto");
-                        if (posee_serie == "1") {
-                            console.log(series_id);
-                            console.log(ar, series_id[ar]);
-                            if (typeof series_id[ar] == "undefined") {
-                                // console.log(series_id[ar]);
-                                AlertFactory.textType({
-                                    title: '',
-                                    message: 'Por Favor Agregue las series del producto: ' + producto,
-                                    type: 'info'
-                                });
+                    // validacion de serie
+                    // var articulos_id = $("input[name='idarticulo[]']");
+                    // var series_id = $("input[name='series_id[]']");
+                    // // console.log(articulos_id);
+                    // for (var ar = 0; ar < articulos_id.length; ar++) {
+                    //     // console.log(articulos_id[ar]);
+                    //     var posee_serie = articulos_id[ar].getAttribute("posee-serie");
+                    //     var cantidad = articulos_id[ar].getAttribute("cantidad");
+                    //     var producto = articulos_id[ar].getAttribute("producto");
+                    //     if (posee_serie == "1") {
+                    //         // console.log(series_id);
+                    //         // console.log(ar, series_id[ar]);
+                    //         // alert(typeof series_id[ar] == "undefined");
+                    //         // alert(series_id[ar]);
+                    //         if (typeof series_id[ar] == "undefined" || series_id[ar].value == "0" || series_id[ar].value == "") {
+                    //             // console.log(series_id[ar]);
+                    //             AlertFactory.textType({
+                    //                 title: '',
+                    //                 message: 'Por Favor Agregue las series del producto: ' + producto,
+                    //                 type: 'info'
+                    //             });
 
-                                return false;
-                            } else {
+                    //             return false;
+                    //         } else {
 
-                                var cant = series_id[ar].value.split(",");
+                    //             var cant = series_id[ar].value.split(",");
 
-                                if (cant.length != cantidad) {
-                                    AlertFactory.textType({
-                                        title: '',
-                                        message: 'Por Favor Agregue la cantidad de ' + cantidad + ' series del producto: ' + producto,
-                                        type: 'info'
-                                    });
+                    //             if (cant.length != cantidad) {
+                    //                 AlertFactory.textType({
+                    //                     title: '',
+                    //                     message: 'Por Favor Agregue la cantidad de ' + cantidad + ' series del producto: ' + producto,
+                    //                     type: 'info'
+                    //                 });
 
-                                    return false;
-                                }
-                            }
-                        }
+                    //                 return false;
+                    //             }
+                    //         }
+                    //     }
 
-                    }
+                    // }
                     // return false;
                 }
                 // alert(cont);
@@ -3262,7 +3266,7 @@
                     return false;
                 }
 
-              
+       
                 if($("#nConsecutivo").val() != "" && $("#estado").val() != "4") {
                     $(".m_articulo_idAlm").removeAttr("disabled");
                     $(".m_articulo_idLoc").removeAttr("disabled");
@@ -3450,6 +3454,57 @@
 
 
             if (bval) {
+
+                
+                if ($("#tipo_solicitud").val() == "1") {
+                    var cont = 0;
+    
+                    var articulos_id = $("input[name='idarticulo[]']");
+                    var series_id = $("input[name='series_id[]']");
+                    // console.log(articulos_id);
+                    for (var ar = 0; ar < articulos_id.length; ar++) {
+                        // console.log(articulos_id[ar]);
+                        var posee_serie = articulos_id[ar].getAttribute("posee-serie");
+                        var cantidad = articulos_id[ar].getAttribute("cantidad");
+                        var producto = articulos_id[ar].getAttribute("producto");
+                        if (posee_serie == "1") {
+                            // console.log(series_id);
+                            // console.log(ar, series_id[ar]);
+                            // alert(typeof series_id[ar] == "undefined");
+                            // alert(series_id[ar]);
+                            if (typeof series_id[ar] == "undefined" || series_id[ar].value == "0" || series_id[ar].value == "") {
+                                // console.log(series_id[ar]);
+                                AlertFactory.textType({
+                                    title: '',
+                                    message: 'Por Favor Agregue las series del producto: ' + producto,
+                                    type: 'info'
+                                });
+
+                                return false;
+                            } else {
+
+                                var cant = series_id[ar].value.split(",");
+
+                                if (cant.length != cantidad) {
+                                    AlertFactory.textType({
+                                        title: '',
+                                        message: 'Por Favor Agregue la cantidad de ' + cantidad + ' series del producto: ' + producto,
+                                        type: 'info'
+                                    });
+
+                                    return false;
+                                }
+                            }
+                        }
+
+                    }
+                    // return false;
+                }
+                // alert(cont);
+                if (cont > 0) {
+
+                    return false;
+                }
                 // alert($("#estado").val());
                 $.post("solicitud/enviar_solicitud", $("#formulario-solicitud").serialize() + "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
