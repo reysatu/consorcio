@@ -3466,7 +3466,7 @@ function find_solicitud(id) {
 
 var search_comprobantes = getFormSearchComprobantes('frm-search-comprobantes', 'search_b_comprobantes', 'LoadRecordsButtonComprobantes');
 
-var table_coemitir= $("#table_container_comprobantes");
+var table_container_comprobantes= $("#table_container_comprobantes");
 
 table_container_comprobantes.jtable({
     title: "Lista de Comprobantes",
