@@ -884,3 +884,84 @@ Créditos y Cobranzas / Documentos Emitidos
 
 Movimientos de Caja / Comprobantes
 - La reimpresión de tickets por cuotas no esta imprimiendo el desglose de la cuota pagada (cuota y mora). *
+
+
+19/08/2022
+
+Solicitud de Venta
+- El botón Cancelar no está tomando en cuenta el origen de la solicitud (campo origen de la tabla), las sentencias de actualización de órdenes de servicio y proforma debe realizarse cuando el origen es "O" de lo contrario no. *
+- Validar que no permita guardar cuotas en negativo.
+- Al editar una solicitud no figura la serie marcada por más que la serie exista en el stock.
+- En la solicitud de Tipo Contado no está validando que al guardar este registrado la serie, aprovechando el incidente cambiar la validación para que se realice al momento de Enviar.
+- En la pantalla de agregar serie, mostrar el campo color del vehículo.
+- El sistema debe validar al guardar que se registre la fecha de vencimiento.
+- Agregar opción de copiar solicitud, se debe indicar el número de copiar que desea realizar, llamar al proceimiento VTA_CopiarSolicitudVenta (coordinar con Brayam).
+- Cuando es una solicitud con un cliente que posee documento RUC al editar la solicitud siempre sale el mensaje "Que el cliente tiene documento Tipo RUC".
+
+Impresión de Solicitud de Venta
+- En la impresión de solicitudes de venta de tipo Crédito Directo, en la columna del Comprador en los campos de Edad, Estado Civil, Fecha de Nacimiento y Teléfono son datos del Comprador.
+- En la impresión de solicitudes de venta de tipo Crédito Directo que calce en una hoja y no se pierda el lado derecho, ver solicitud SOL-1000048.
+
+Impresión de Comprobantes (Prioridad Alta)
+- Corregir la impresión de la factura FC11-56, es una lista de 50 items y se muestra descuadrado.
+- En la impresión de documentos por el saldo de solicitudes de tipo crédito financiero se tiene que desglosar el interes en un item, se creó el parámetro 26 donde se indica el código del item que debe ir en el detalle (similar al anticipo), el id de este artículo es 2350.
+- En la dirección del cliente concatenar el Distrito.
+- Mostrar las cuentas de banco (coordinar con Brayam)
+
+Documentos Emitidos
+- Agregar el filtro por el campo Anulado (Si/No)
+
+Movimiento de Caja / Solicitudes
+- Después de generar el documento de venta de una solicitud de tipo Crédito, el campo saldo de la solicitud queda en cero 0.00, debería tener el saldo del monto de la solicitud.
+
+Movimiento de Caja / Créditos
+- No está validando que la forma de pago sume el total a pagar, revisar también en la pestaña Documentos Pendientes.
+
+Movimiento de Caja / Caja
+- Corregir el reporte de Comprobantes que la información se extraiga de la vista VTA_ReporteComprobantes (coordinar con Brayam), esto también para la opcion de Caja Diaria.
+- En la grilla de dólares se muestra un error al hacer click en el botón +.
+
+Maestro de Clientes
+- Agregar campo Fecha de Nacimiento (tener en cuenta Solicitud, Orden de Servicio y Maestro)
+- Agregar el campo para asociar al Conyugue.
+
+Registro de Movimientos
+- Que permita filtrar por los campos Tipo Operación, Usuario, Estado
+- Agregar el campo Observaciones y que permita filtrar por este campo
+- Si se produce un error al grabar debería realizar un rollback de la transacción. (coordinar con Brayam)
+
+Entrega a Servicio Técnico o Cliente
+- Corregir el formato de impresión, el logo está demasiado grande.
+- Esta mostrando los documentos de venta que son de servicio, no debería mostrar.
+
+Orden de Servicio
+- Al registrar una placa se emite error, esto es porque no se ha dado acceso al maestro de artículos.
+- Permitir buscar el vehículo también por el número de chasis, actualmente sólo lo hace por placa (si se puede, realizar la busqueda ingresando un par de caracteres y el primero que encuentre que cargue la información (primero busca en tabla series y luego en tabla vehículo de terceros)).
+
+Reporte de Ventas
+- Agregar el buscar por las columnas que muestra la grilla.
+- Agregar filtro por tipo de documento.
+- El exportable a excel no está mostrando el tipo de cambio con los 4 decimales.
+
+Consulta de Movimientos
+- Agregar la columna OBS (coordinar con Brayam)
+
+Renegociación de Mora
+- Validar que la mora no quede en negativo.
+
+Nuevo:
+Agregar reporte de Separaciones, Trámites y Alquileres (coordinar con Brayam).
+Solicitud de Venta
+- El las solicitudes de venta de repuestos el combo de localización no está mostrando los que tienen stock.
+
+Consulta de Movimiento
+- El filtrar por el artículo que se realice por el código y no la descripcion
+
+Consulta de Stock
+- El filtrar por el artículo que se realice por el código y no la descripcion
+
+Solicitud de Venta
+- El botón Cancelar si es de origen "O" que el estado de la Orden de Servicio asociada sea "0" de Registrado.
+
+Registro Transferencias
+- El combo tipo operación está mostrando varias veces remite
