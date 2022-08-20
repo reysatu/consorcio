@@ -720,7 +720,10 @@ class MovimientoCajaController extends Controller
         $params = ['documento','razonsocial_cliente','serie_comprobante','numero_comprobante','monto', 'fecha','idcajero','idmoneda','comprobante','IdTipoDocumento'];
         return parseList($repo->searchComproMoviDetaSol($usuario,$fechacA,$IdTipoDocumento), $request, 'idcajero', $params);
     }
-    public function searchComproMoviDetaDol(Request $request, View_comprobantes_caja_detalleInterface $repo)
+    
+    // public function searchComproMoviDetaDol(Request $request, View_comprobantes_caja_detalleInterface $repo)
+    // {
+    public function allSearComMovDetaDol(Request $request, View_comprobantes_caja_detalleInterface $repo)
     {
         $usuario=auth()->id();
         $fechacA= date("Y-m-d"); 
