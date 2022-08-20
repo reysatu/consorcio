@@ -3074,12 +3074,21 @@
         }
 
         $(document).on("keyup", "#cuota_inicial", function () {
-            // var cuota_inicial = parseFloat($(this).val());
-            // var monto_venta = parseFloat($("#monto_venta").val());
-            // if (isNaN(cuota_inicial)) {
-            //     cuota_inicial = 0;
-            // }
+            var cuota_inicial = parseFloat($(this).val());
+            var monto_venta = parseFloat($("#monto_venta").val());
+            if (isNaN(cuota_inicial)) {
+                cuota_inicial = 0;
+            }
+            if(cuota_inicial >= monto_venta) {
+                $("#cuota_inicial").val("");
+                AlertFactory.textType({
+                    title: '',
+                    message: 'La cuota inicial no debe ser mayor que el monto de la venta!',
+                    type: 'info'
+                });
+                return false;
 
+            }
             // var total_financiado = monto_venta - cuota_inicial;
             // $("#total_financiado").val(total_financiado.toFixed(decimales_redondeo));
             $("#nro_cuotas").trigger("keyup");
