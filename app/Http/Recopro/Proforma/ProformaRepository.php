@@ -138,6 +138,10 @@ class ProformaRepository implements ProformaInterface
                 $nOperGratuita,
                 $modo,
                 $usuario){
+
+                  if($totaldetalle == "") {
+                        $totaldetalle = "0";
+                  }
          $pdo=DB::connection()->getPdo();
          $destroy=DB::select("SET NOCOUNT ON; EXEC ST_ActualizaProforma 
                 '$cCod',
