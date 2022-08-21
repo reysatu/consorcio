@@ -303,9 +303,12 @@ class VentasRepository implements VentasInterface
                 correlativo_anulacion=".$correlativo_anulacion."
                 WHERE idventa='$id'";
 
-        $sql_sp = "SET NOCOUNT ON; EXEC	@return_value = [dbo].[VT_Anulacion_Ventas]
+        $sql_sp = "DECLARE	@return_value int
+        SET NOCOUNT ON; EXEC @return_value = [dbo].[VT_Anulacion_Ventas]
 		@cSerie = N'{$venta[0]->serie_comprobante}',
-		@nNro = {$venta[0]->numero_comprobante}";
+		@nNro = {$venta[0]->numero_comprobante}
+
+        SELECT	'Return Value' = @return_value";
         DB::select($sql_sp);
 
         return DB::update($sql);
