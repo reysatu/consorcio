@@ -86,7 +86,7 @@
         #tabla,
         #tabla tr,
         #tabla td {
-            width: 100%;
+            /* width: 100%; */
             border: 1px solid black;
             border-collapse: collapse;
         }
@@ -94,7 +94,7 @@
         #tabla_3,
         #tabla_3 tr,
         #tabla_3 td {
-            width: 100%;
+            /* width: 100%; */
             border: 1px solid black;
             border-collapse: collapse;
         }
@@ -102,7 +102,7 @@
 
         #tabla_2,
         #tabla_2 td {
-            width: 100%;
+            /* width: 100%; */
             border-left: 1px solid black;
             border-right: 1px solid black;
             border-bottom: 1px solid black;
@@ -112,7 +112,7 @@
         #tabla_4,
         #tabla_4 tr,
         #tabla_4 td {
-            width: 100%;
+            /* width: 100%; */
             border: none;
             border-collapse: none;
         }
@@ -120,7 +120,7 @@
         #tabla_5,
         #tabla_5 tr,
         #tabla_5 td {
-            width: 100%;
+            /* width: 100%; */
             border: none;
             border-collapse: none;
         }
@@ -129,7 +129,7 @@
         #tabla_6,
         #tabla_6 tr,
         #tabla_6 td {
-            width: 100%;
+            /* width: 100%; */
             border: none;
             border-collapse: none;
         }
@@ -140,7 +140,7 @@
 <body>
 
     <header style="">
-        <table style="width: 100%;">
+        <table style="width: 730px !important;">
 
             <tr>
                 <td style="width: 15%;"><strong>Compañia </strong></td>
@@ -176,7 +176,7 @@
     </header>
     <main>
 
-        <table id="tabla" style="width: 100%;">
+        <table id="tabla" style="width: 776px !important;">
 
             <tr>
                 <td style="width: 22%;"><strong>Fecha Solicitud </strong>{{ $solicitud[0]->fecha_solicitud_user }}</td>
@@ -191,7 +191,7 @@
 
 
 
-        <table id="tabla_2" style="width: 100%;">
+        <table id="tabla_2" style="width: 776px !important;">
             <tr style="">
                 <td style=""><strong>Lista de Precios</strong></td>
                 <td style=""><strong>Código</strong></td>
@@ -223,7 +223,7 @@
 
 
         <br>
-        <table id="tabla_3" style="width: 100%;">
+        <table id="tabla_3" style="width: 730px !important;">
             <tr>
                 <td colspan="6" style="font-weight: bold; width: 50%;">COMENTARIOS:</td>
                 <td colspan="6" style="font-weight: bold; text-align: center; width: 50%;">V°B° GERENCIA:</td>
@@ -457,7 +457,7 @@
            
         </table>
 
-        <table style="width: 100%; ">
+        <table style="width: 730px !important; ">
             <tr>
                 <td style="border: none !important; text-align: center;"><strong>DECLARO BAJO JURAMENTO QUE LA INFORMACIÓN PROPORCIONADA ES VERDADERA AUTORIZO A QUE SE VERIFIQUE LOS DATOS CONSIGNADOS EN LA PRESENTE.</strong></td>
             </tr>>
@@ -466,7 +466,7 @@
             
        
             
-        <table style="width: 100%; margin-top: 75px;">
+        <table style="width: 730px !important; margin-top: 75px;">
             <tr>
                 <td style="text-align: center; border-top: 1px solid black;"><strong>Firma de Solicitante</strong></td>
                 <td></td>

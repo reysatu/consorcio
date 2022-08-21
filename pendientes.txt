@@ -890,17 +890,17 @@ Movimientos de Caja / Comprobantes
 
 Solicitud de Venta
 - El botón Cancelar no está tomando en cuenta el origen de la solicitud (campo origen de la tabla), las sentencias de actualización de órdenes de servicio y proforma debe realizarse cuando el origen es "O" de lo contrario no. *
-- Validar que no permita guardar cuotas en negativo.
+- Validar que no permita guardar cuotas en negativo. *
 - Al editar una solicitud no figura la serie marcada por más que la serie exista en el stock.
-- En la solicitud de Tipo Contado no está validando que al guardar este registrado la serie, aprovechando el incidente cambiar la validación para que se realice al momento de Enviar.
-- En la pantalla de agregar serie, mostrar el campo color del vehículo.
-- El sistema debe validar al guardar que se registre la fecha de vencimiento.
+- En la solicitud de Tipo Contado no está validando que al guardar este registrado la serie, aprovechando el incidente cambiar la validación para que se realice al momento de Enviar. *
+- En la pantalla de agregar serie, mostrar el campo color del vehículo. *
+- El sistema debe validar al guardar que se registre la fecha de vencimiento. *
 - Agregar opción de copiar solicitud, se debe indicar el número de copiar que desea realizar, llamar al proceimiento VTA_CopiarSolicitudVenta (coordinar con Brayam).
-- Cuando es una solicitud con un cliente que posee documento RUC al editar la solicitud siempre sale el mensaje "Que el cliente tiene documento Tipo RUC".
+- Cuando es una solicitud con un cliente que posee documento RUC al editar la solicitud siempre sale el mensaje "Que el cliente tiene documento Tipo RUC". *
 
 Impresión de Solicitud de Venta
 - En la impresión de solicitudes de venta de tipo Crédito Directo, en la columna del Comprador en los campos de Edad, Estado Civil, Fecha de Nacimiento y Teléfono son datos del Comprador.
-- En la impresión de solicitudes de venta de tipo Crédito Directo que calce en una hoja y no se pierda el lado derecho, ver solicitud SOL-1000048.
+- En la impresión de solicitudes de venta de tipo Crédito Directo que calce en una hoja y no se pierda el lado derecho, ver solicitud SOL-1000048. *
 
 Impresión de Comprobantes (Prioridad Alta)
 - Corregir la impresión de la factura FC11-56, es una lista de 50 items y se muestra descuadrado.

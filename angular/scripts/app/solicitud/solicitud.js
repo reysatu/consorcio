@@ -1451,7 +1451,9 @@
 
         $(document).on("change", "#id_tipoDoc_Venta_or, #id_tipoDoc_Venta", function () {
             var id_tipoDoc_Venta_or = $(this).val();
-            if (id_tipoDoc_Venta_or == "01" && idDocumentoCli.val() != "06") {
+
+            // alert(id_tipoDoc_Venta_or+" <=> "+idDocumentoCli.val().toString().length);
+            if ($("#cliente_id_or").val() != "" && id_tipoDoc_Venta_or == "01" && idDocumentoCli.val() != "06") {
                 AlertFactory.textType({
                     title: '',
                     message: 'El Tipo Documento del Cliente debe ser R.U.C.',
@@ -1663,7 +1665,6 @@
                         create: false,
                         edit: false,
                         title: 'Motor'
-
                     },
                     anio_fabricacion: {
                         title: 'Año de Fabricación'
@@ -1673,6 +1674,9 @@
                     },
                     tipo_compra_venta: {
                         title: 'Tipo Compra Venta'
+                    },
+                    color: {
+                        title: 'Color'
                     },
                     select: {
                         width: '1%',
@@ -3179,6 +3183,7 @@
                 });
                 return false;
             }
+            $("#fecha_vencimiento").required();
 
             if (bval) {
 
