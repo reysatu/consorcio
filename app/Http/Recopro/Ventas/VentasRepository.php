@@ -309,6 +309,7 @@ class VentasRepository implements VentasInterface
 		@nNro = {$venta[0]->numero_comprobante}
 
         SELECT	'Return Value' = @return_value";
+        // die($sql_sp);
         DB::select($sql_sp);
 
         return DB::update($sql);

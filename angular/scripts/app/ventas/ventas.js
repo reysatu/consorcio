@@ -208,7 +208,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="anular-nota" data-dias_vencidos="' + data.record.dias_vencidos + '" data-idventa="' + data.record.idventa + '"    title="Anular"><i class="fa fa-times fa-1-5x fa-red"></i></a>';
+                        return '<a href="javascript:void(0)" class="anular-nota" data-dias_vencidos="' + data.record.dias_vencidos + '" data-idventa="' + data.record.idventa + '"  data-anulado="' + data.record.anulado + '"   title="Anular"><i class="fa fa-times fa-1-5x fa-red"></i></a>';
                     }
 
                 }
@@ -233,11 +233,20 @@
                 $("#table_container_ventas").find(".jtable-toolbar").removeClass("col-md-8").addClass("col-md-10");
                 $('.anular-nota').click(function (e) {
                     var code = $(this).attr('data-idventa');
+                    var anulado = $(this).attr('data-anulado');
                     var dias_vencidos = $(this).attr('data-dias_vencidos');
-                    if(dias_vencidos > 7) {
+                    if(anulado == "S") {
                         AlertFactory.textType({
                             title: '',
-                            message: "Ya pasaron los 7 dias, ya no puede anular!",
+                            message: "Este comprobante ya ha sido anulado!",
+                            type: 'info'
+                        });
+                        return false
+                    }
+                    if(dias_vencidos > 3) {
+                        AlertFactory.textType({
+                            title: '',
+                            message: "Ya pasaron los 3 dias, ya no puede anular!",
                             type: 'info'
                         });
                         return false
