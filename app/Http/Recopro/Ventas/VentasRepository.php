@@ -9,7 +9,7 @@
 
 namespace App\Http\Recopro\Ventas;
 
-use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleRepository;
+
 use Illuminate\Support\Facades\DB;
 
 class VentasRepository implements VentasInterface
@@ -295,7 +295,7 @@ class VentasRepository implements VentasInterface
     }
 
 
-     public function anular_venta($id, CajaDiariaDetalleRepository $caja_repo) {
+     public function anular_venta($id, $caja_repo) {
         $venta = $caja_repo->get_venta($id);
         $correlativo_anulacion =  $this->get_correlativo_anulacion();
         $sql = "UPDATE ERP_Venta

@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleRepository;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Shop\ShopInterface;
@@ -300,10 +301,10 @@ class VentasController extends Controller
         }
     }
 
-    public function anularventa($id, VentasInterface $repo, Request $request)
+    public function anularventa($id, VentasInterface $repo, Request $request, CajaDiariaDetalleRepository $caja_repo)
     {
         try {
-           $response = $repo->anular_venta($id);
+           $response = $repo->anular_venta($id, $caja_repo);
             return response()->json([
                 'status' => true,
             ]);
