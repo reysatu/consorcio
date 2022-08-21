@@ -238,20 +238,24 @@
 
                 }
               
-                if(count($venta_anticipo) > 0 && $venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") && $venta[0]->comprobante_x_saldo == "S") {
+                if($venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") && $venta[0]->comprobante_x_saldo == "S" || (count($solicitud) > 0 && $solicitud[0]->tipo_solicitud == "3" && count($producto) > 0 && $venta[0]->tipo_comprobante == 0) ) {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
                     $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
                     $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
                     $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
-                    echo '<tr>';
-                    echo '  <td>1.00</td>';
-                    echo '  <td>UND</td>';
-                    echo '  <td>(-) ANTICIPO '.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
-                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
-                    echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
-                    echo '</tr>';
+
+                    if(count($venta_anticipo) > 0) {
+                        echo '<tr>';
+                        echo '  <td>1.00</td>';
+                        echo '  <td>UND</td>';
+                        echo '  <td>(-) ANTICIPO '.$venta_anticipo[0]->serie_comprobante.'-'.$venta_anticipo[0]->numero_comprobante.'</td>';
+                        echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                        echo '  <td>-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</td>';
+                        echo '</tr>';
+                    }
+                  
                     echo '<tr>';
                     echo '  <td></td>';
                     echo '  <td></td>';
@@ -270,7 +274,7 @@
 
                
 
-                if($venta[0]->condicion_pago == "CONTADO" && !empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud) && count($producto) > 0 && $venta[0]->tipo_comprobante == "0" || (count($solicitud) > 0 && $solicitud[0]->tipo_solicitud == "3"))  {
+                if(count($venta_anticipo) <= 0 && $venta[0]->condicion_pago == "CONTADO" && !empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud) && count($producto) > 0 && $venta[0]->tipo_comprobante == "0")  {
                     $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
                     $modelo = (isset($producto[0]->modelo)) ? $producto[0]->modelo : "";
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
