@@ -9,6 +9,7 @@
 
 namespace App\Http\Recopro\Ventas;
 
+use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleRepository;
 use Illuminate\Support\Facades\DB;
 
 class VentasRepository implements VentasInterface
@@ -294,12 +295,18 @@ class VentasRepository implements VentasInterface
     }
 
 
-     public function anular_venta($id) {
+     public function anular_venta($id, CajaDiariaDetalleRepository $caja_repo) {
+        $venta = $caja_repo->get_venta($id);
         $correlativo_anulacion =  $this->get_correlativo_anulacion();
         $sql = "UPDATE ERP_Venta
                 SET anulado = 'S', fecha_anulacion='".date("Y-m-d H:i:s")."', enviado_anulado=0,
                 correlativo_anulacion=".$correlativo_anulacion."
                 WHERE idventa='$id'";
+
+        $sql_sp = "SET NOCOUNT ON; EXEC	@return_value = [dbo].[VT_Anulacion_Ventas]
+		@cSerie = N'{$venta[0]->serie_comprobante}',
+		@nNro = {$venta[0]->numero_comprobante}";
+        DB::select($sql_sp);
 
         return DB::update($sql);
     }
