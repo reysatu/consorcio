@@ -50,8 +50,6 @@
                             estado_cpe: $('#estado_cpe').val(),
                         };
 
-
-
                         $scope.openDoc('ventas/excel', data_excel);
 
                     }
@@ -86,7 +84,6 @@
                     list: false,
 
                 },
-
                 estado: {
                     title: 'estado',
                     create: false,
