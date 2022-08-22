@@ -52,11 +52,17 @@ class Query_stockRepository implements Query_stockInterface
     }
      public function search($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate)
     {   
-        return $this->model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate) {
-            $q->where('Articulo', 'LIKE', '%'.$s.'%')->Where('Total','>',0)->orderByRaw('Articulo DESC');
-            if(!empty($filtro_art)){
-             $q->Where('Articulo',$filtro_art);
+
+        $model = $this->model;
+
+        if(!empty($filtro_art)){
+            //  $q->Where('Articulo',$filtro_art);
+            $model = $model->Where('code_article',$filtro_art);
             }
+        $model = $model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate) {
+            
+            // $q->where('Articulo', 'LIKE', '%'.$s.'%')->Where('Total','>',0)->orderByRaw('Articulo DESC');
+            $q->Where('Total','>',0)->orderByRaw('Articulo DESC');
             if(!empty($filtro_idAlm)){
              $q->Where('Almacen',$filtro_idAlm);
             }
@@ -69,7 +75,8 @@ class Query_stockRepository implements Query_stockInterface
             // $q->orWhere('Almacen', 'LIKE', '%'.$s.'%');
             // $q->orWhere('Categoria', 'LIKE', '%'.$s.'%');
         });
-
+        // echo $model->toSql();
+        return $model;
     }
     //  public function get_data_complete()
     // {
