@@ -219,7 +219,7 @@
                     });
                     filtro_art.append('<option value="">Artículo</option>');
                     _.each(response.d_articulo, function (item) {
-                        filtro_art.append('<option value="' + item.description + '">' + item.code_article + ' ' + item.description + '</option>');
+                        filtro_art.append('<option value="' + item.code_article + '">' + item.code_article + ' ' + item.description + '</option>');
                     });
                     // data_stock=response.data_complete;
                     // console.log(data_stock);
