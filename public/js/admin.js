@@ -9254,7 +9254,7 @@ function create_pdf_movimientoEntrega(response) {
             {
                 columns: [
                     {
-                        width: '25%',
+                        width: '30%',
 
                         // normally you could put image directly here, but since you're
                         // setting width to auto, we need an artificial wrapping-node
@@ -9262,7 +9262,7 @@ function create_pdf_movimientoEntrega(response) {
                         stack: [
                             {
                                 image: response.img,
-                                fit: [200, 200]
+                                fit: [100, 100]
                             }
                         ],
                         alignment: 'center',
