@@ -69,7 +69,8 @@ class Query_movementsRepository implements Query_movementsInterface
                 $q->whereDate('fecha_registro','<=',$fecha_fin);
             }
             if(!empty($filtro_art)){
-             $q->Where('Articulo',$filtro_art);
+            //  $q->Where('Articulo',$filtro_art);
+             $q->Where('code_article',$filtro_art);
             }
             if(!empty($filtro_idAlm)){
              $q->Where('Almacen',$filtro_idAlm);
