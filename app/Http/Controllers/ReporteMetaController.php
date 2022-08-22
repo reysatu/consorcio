@@ -100,6 +100,8 @@ class ReporteMetaController extends Controller
 
      public function excelMes(ReporteMetaInterface $repo,Request $request)
     { 
+        ini_set('max_execution_time', '3000');
+        set_time_limit(3000);
         $anio = $request->input('Anio','');
         $data_info=$repo->getDataAnio($anio);
         $data_tecnico=$repo->getTecnico($anio);
@@ -110,7 +112,10 @@ class ReporteMetaController extends Controller
         foreach ($data_meses as $row){
           array_push($mes,$row->mes);    
         }
+        
         if(count($data_info)>0){
+            // print_r($repo->all());
+            //  exit;
             return generateExcelMensual($this->generateDataExcelMes($repo->all()), 'REPORTE DE METAS DIARIAS', $mes,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos);
         }else{
             return 'N';

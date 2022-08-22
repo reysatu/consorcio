@@ -61,7 +61,7 @@ trait ReporteMetaTrait
             'data' => $columns,
             'title' => 'LISTA DE CATEGORÍAS'
         ];
-
+       
         return $data;
     }
 }
