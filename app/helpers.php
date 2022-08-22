@@ -339,7 +339,8 @@ function generateExcelMensualCompleto($data, $file_name, $sheet_name,$data_info,
 
 function generateExcelMensual($data, $file_name, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos)
 {
-    
+    ini_set('max_execution_time', '3000');
+    set_time_limit(3000);
     $file = Excel::create($file_name, function ($excel) use ($data, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas,$mantenimientos) {
          $name="XXX";
         foreach ($sheet_name as $valor) {
@@ -369,8 +370,19 @@ function generateExcelMensual($data, $file_name, $sheet_name,$data_info,$anio,$d
                  $name="DICIEMBRE";
               }
               $excel->sheet($name, function ($sheet) use ($data,$valor,$data_info,$anio,$name,$data_tecnico,$data_metas,$mantenimientos) {
+                // print_r($data);
+                // print_r($name);
+                // print_r($valor);
+                // print_r($data_info);
+                // print_r($anio);
+                // print_r($data_tecnico);
+                // print_r($data_metas);
+                // print_r($mantenimientos); 
+                // exit;
                  $sheet->loadView('excel.viewReporteMensual')->with('data', $data)->with('mesName',$name)->with('mes',$valor)->with('data_info',$data_info)->with('anio',$anio)->with('data_tecnico',$data_tecnico)->with('data_metas',$data_metas)->with('mantenimientos',$mantenimientos);
+           
               });    
+            
         }
         // for ($i = 0; $i < $sheet_name; ++$i){
               
@@ -380,15 +392,16 @@ function generateExcelMensual($data, $file_name, $sheet_name,$data_info,$anio,$d
         //  $excel->sheet($sheet_name, function ($sheet) use ($data) {
         //     $sheet->loadView('excel.viewReporteMensual')->with('data', $data);
         // });
-
+      
     });
 
     $file = $file->string('xlsx');
-
+    
     $response = [
         'name' => $file_name,
         'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($file)
     ];
+   
 
     return response()->json($response);
 }
