@@ -9254,7 +9254,7 @@ function create_pdf_movimientoEntrega(response) {
             {
                 columns: [
                     {
-                        width: '50%',
+                        width: '25%',
 
                         // normally you could put image directly here, but since you're
                         // setting width to auto, we need an artificial wrapping-node

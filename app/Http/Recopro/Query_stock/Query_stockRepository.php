@@ -57,7 +57,7 @@ class Query_stockRepository implements Query_stockInterface
 
         if(!empty($filtro_art)){
             //  $q->Where('Articulo',$filtro_art);
-            $model = $model->Where('code_article',$filtro_art);
+            $model = $model->Where('code_article', 'LIKE', '%'.$filtro_art.'%');
             }
         $model = $model->where(function($q) use ($s,$filtro_art,$filtro_idAlm,$filtro_idLoc,$filtro_cate) {
             

@@ -70,7 +70,7 @@ class Query_movementsRepository implements Query_movementsInterface
             }
             if(!empty($filtro_art)){
             //  $q->Where('Articulo',$filtro_art);
-             $q->Where('code_article',$filtro_art);
+             $q->Where('code_article', 'LIKE', '%'.$filtro_art.'%');
             }
             if(!empty($filtro_idAlm)){
              $q->Where('Almacen',$filtro_idAlm);
