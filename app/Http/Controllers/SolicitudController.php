@@ -520,7 +520,9 @@ class SolicitudController extends Controller
                 DB::statement($sql_update);
             }
            
-          
+            
+            $sql_delete = "DELETE FROM dbo.ERP_SolicitudDetalle WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]}";
+            DB::statement($sql_delete);
 
             $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
             DB::commit();
