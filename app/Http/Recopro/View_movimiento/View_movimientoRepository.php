@@ -44,6 +44,17 @@ class View_movimientoRepository implements View_movimientoInterface
         })->where('cCodConsecutivo','ORDC')->orderBy("created_at", "DESC");
 
     }
+
+    public function search($s)
+    {
+        return $this->model->where(function($q) use ($s){
+            $q->where('Id', 'LIKE', '%'.$s.'%')->orderByRaw('created_at DESC');
+            $q->orWhere('Usuario', 'LIKE', '%'.$s.'%');
+            $q->orWhere('Estado', 'LIKE', '%'.$s.'%');
+            $q->orWhere('Operacion', 'LIKE', '%'.$s.'%');
+        })->orderBy("created_at", "DESC");
+
+    }
    
     
 

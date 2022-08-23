@@ -20,6 +20,8 @@ use App\Http\Recopro\Localizacion\LocalizacionInterface;
 use App\Http\Requests\Register_movementRequest;
 use App\Http\Recopro\Serie\SerieInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
+
+use App\Http\Recopro\View_movimiento\View_movimientoInterface;
 use Carbon\Carbon;
 use DB;
 
@@ -33,12 +35,21 @@ class Register_movementController extends Controller
 //        $this->middleware('json');
     }
 
-    public function all(Request $request, Register_movementInterface $repo)
+    // public function all(Request $request, Register_movementInterface $repo)
+    // {
+    //     $s = $request->input('search', '');
+    //     $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
+    //     return parseList($repo->search($s), $request, 'idMovimiento', $params);
+    // }
+
+    public function all(Request $request, View_movimientoInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['idTipoOperacion','idUsuario','estado','idMovimiento'];
-        return parseList($repo->search($s), $request, 'idMovimiento', $params);
+        $params = ['Operacion','Usuario','Estado','Id'];
+        // print_r($repo); exit;
+        return parseList($repo->search($s), $request, 'Id', $params);
     }
+    
     public function deleteDetalleST($id, Register_movementInterface $repo, Request $request)
     {   try {
             $array=explode("_", $id);

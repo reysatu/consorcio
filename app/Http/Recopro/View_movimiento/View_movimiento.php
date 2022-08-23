@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class View_movimiento extends Model
 {
   
-    protected $table = 'ERP_view_movimiento';
+    // protected $table = 'ERP_view_movimiento';
+    protected $table = 'AL_Movimientos';
 
     public $timestamps = true;
 
@@ -22,7 +23,7 @@ class View_movimiento extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['idMovimiento','idTipoOperacion','usuario','idUsuario','consecutivo','estado','created_at','cCodConsecutivo','nConsecutivo','ident','operacion'];
+    protected $fillable = ['Id','Fecha','Usuario','Operacion','Estado'];
     
     //  public function user_c()
     // {

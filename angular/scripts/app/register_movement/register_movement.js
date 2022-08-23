@@ -2283,26 +2283,25 @@
                 }]
             },
             fields: {
-                idMovimiento: {
+                Id: {
                     title: '#',
                     key: true,
                     create: false,
                     listClass: 'text-center',
                 },
-                idTipoOperacion: {
+                Operacion: {
                     title: 'Tipo Operación',
-                    options: base_url + '/register_movements/getAllOperationRegMov' 
+                    // options: base_url + '/register_movements/getAllOperationRegMov' 
                 },
-                idUsuario: {
+                Usuario: {
                     title: 'Usuario',
-                    options: base_url + '/register_movements/getAllUserRegMov' 
+                    // options: base_url + '/register_movements/getAllUserRegMov' 
                 }, 
-                estado: {
+                Estado: {
                     title: 'Estado',
-                    values: { '0': 'Registrado', '1': 'Procesado' },
-                    type: 'checkbox',
-                    defaultValue: 'A',
-                   
+                    // values: { '0': 'Registrado', '1': 'Procesado' },
+                    // type: 'checkbox',
+                    // defaultValue: 'A',
                 },
                 edit: {
                     width: '1%',
