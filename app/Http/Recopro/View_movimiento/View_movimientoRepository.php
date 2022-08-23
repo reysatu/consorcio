@@ -52,6 +52,8 @@ class View_movimientoRepository implements View_movimientoInterface
             $q->orWhere('Usuario', 'LIKE', '%'.$s.'%');
             $q->orWhere('Estado', 'LIKE', '%'.$s.'%');
             $q->orWhere('Operacion', 'LIKE', '%'.$s.'%');
+            $q->orWhere('Fecha', 'LIKE', '%'.$s.'%');
+            $q->orWhere('Observacion', 'LIKE', '%'.$s.'%');
         })->orderBy("created_at", "DESC");
 
     }
