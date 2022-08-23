@@ -328,16 +328,16 @@
             </tr>
             <tr>
                 <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cNumerodocumento : ""; ?></td>
-                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->edad : ""; ?></td>
-                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cEstadoCivil : ""; ?></td>
+                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($cliente[0])) ? $cliente[0]->edad : ""; ?></td>
+                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($cliente[0])) ? $cliente[0]->cEstadoCivil : ""; ?></td>
                 <td colspan="1" style=""><strong>C.F.</strong></td>
-                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($conyugue[0])) ? $conyugue[0]->cCelular : ""; ?></td>
+                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($cliente[0])) ? $cliente[0]->cCelular : ""; ?></td>
 
                 <td colspan="1" style=""><strong>D.N.I. Conyugue</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cNumerodocumento : ""; ?></td>
-                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->edad : ""; ?></td>
-                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cEstadoCivil : ""; ?></td>
+                <td colspan="1" style=""><strong>Edad</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->edad : ""; ?></td>
+                <td colspan="1" style=""><strong>Est. Civil</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cEstadoCivil : ""; ?></td>
                 <td colspan="1" style=""><strong>C.F.</strong></td>
-                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($fiadorconyugue[0])) ? $fiadorconyugue[0]->cCelular : ""; ?></td>
+                <td colspan="2" style=""><strong>Teléfono</strong><br><?php echo (isset($fiador[0])) ? $fiador[0]->cCelular : ""; ?></td>
             </tr>
 
             <tr>

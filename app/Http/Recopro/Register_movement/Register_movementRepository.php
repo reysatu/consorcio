@@ -107,7 +107,10 @@ class Register_movementRepository implements Register_movementInterface
     public function get_ventas_entrega()
     {
         $sql = "
-select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa) inner join ERP_SolicitudArticulo as soa on (soa.cCodConsecutivo=so.cCodConsecutivo and soa.nConsecutivo=so.nConsecutivo) where ve.tipo_comprobante=0 and soa.nCantidadPendienteEntregar>0 and so.estado in (6,8) and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC";
+select vt.numero_comprobante as tiket, ve.idventa as idventa,ve.serie_comprobante as serie_comprobante,ve.numero_comprobante as numero_comprobante,m.Descripcion as moneda ,so.idmoneda as IdMoneda, so.cCodConsecutivo as cCodConsecutivo,so.nConsecutivo as nConsecutivo,cli.razonsocial_cliente as razonsocial_cliente,ve.idcliente as idCliente,cli.id_tipocli as idTipoCliente,cli.documento as documento from ERP_Venta as ve  inner join ERP_Solicitud as so on (so.cCodConsecutivo=ve.cCodConsecutivo_solicitud and so.nConsecutivo=ve.nConsecutivo_solicitud) INNER JOIN ERP_Clientes as cli on (ve.idcliente=cli.id) inner join ERP_Moneda as m on m.IdMoneda=so.idmoneda inner join erp_venta as vt on(vt.idventa_comprobante=ve.idventa) inner join ERP_SolicitudArticulo as soa on (soa.cCodConsecutivo=so.cCodConsecutivo and soa.nConsecutivo=so.nConsecutivo) 
+inner join ERP_Productos P on P.id = soa.idarticulo and p.idCategoria not in (6,7)
+where ve.tipo_comprobante=0 and soa.nCantidadPendienteEntregar>0 and so.estado in (6,8) and so.t_monto_total=so.facturado ORDER BY numero_comprobante DESC";
+// die($sql);
 
         return DB::select($sql);
 

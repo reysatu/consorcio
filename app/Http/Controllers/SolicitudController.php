@@ -434,7 +434,7 @@ class SolicitudController extends Controller
         // echo "<pre>";
         // print_r($datos);
         // exit;
-
+        
         if($solicitud[0]->tipo_solicitud != 2) {
 
             $pdf = PDF::loadView("solicitud.contado_financiado", $datos);

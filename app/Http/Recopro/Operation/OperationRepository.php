@@ -71,7 +71,9 @@ class OperationRepository implements OperationInterface
         return $this->model->find($id);
     }
     public function getOperationTranfer($usuario){
-        $mostrar=DB::select("select op.IdTipoOperacion,op.descripcion,op.idNaturaleza from ERP_TipoOperacion as op INNER JOIN ERP_TipoOperacionUsuario as opu on op.idTipoOperacion=opu.IdTipoOperacion where opu.idUsuario=$usuario  and op.estado='A' and  op.idNaturaleza='N' or  op.idNaturaleza='R'");
+        $sql = "select op.IdTipoOperacion,op.descripcion,op.idNaturaleza from ERP_TipoOperacion as op INNER JOIN ERP_TipoOperacionUsuario as opu on op.idTipoOperacion=opu.IdTipoOperacion and  opu.idUsuario=$usuario where op.estado='A' and  op.idNaturaleza='N' or  op.idNaturaleza='R'";
+        $mostrar=DB::select($sql);
+        // die($sql);
         return $mostrar;
     }
     public function getOperation($usuario){
