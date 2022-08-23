@@ -3183,7 +3183,7 @@
                 });
                 return false;
             }
-            $("#fecha_vencimiento").required();
+            bval = bval && $("#fecha_vencimiento").required();
 
             if (bval) {
 
