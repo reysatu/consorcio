@@ -3570,7 +3570,7 @@
             $(".condicion_pago").hide();
             // alert(fecha_actual);
             // alert("change " + tipo_solicitud);   
-            $("#fecha_vencimiento").val("");
+            // $("#fecha_vencimiento").val("");
             if(tipo_solicitud == "1") {
                 $("#fecha_vencimiento").val(fecha_actual);
             }
