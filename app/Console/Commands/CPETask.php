@@ -352,7 +352,7 @@ class CPETask extends Command
         $parametros = array('fileName' => $filename, 'contentFile' => $contentfile);
         $respuesta = $cliente->call("sendBill", $parametros, 'http://service.sunat.gob.pe', '', $this->get_header($username, $password));
 
-
+      
         // print_r($respuesta); exit;
 
         $_strFaultCode = '';
@@ -407,6 +407,7 @@ class CPETask extends Command
             }
            
         }
+      
     }
 
     public function generar_pdf($id, CajaDiariaDetalleInterface $repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $cliente_repositorio, PersonaInterface $persona_repositorio) {
@@ -523,8 +524,7 @@ class CPETask extends Command
 
         
 
-        
-
+     
         if (!empty($venta[0]->cCodConsecutivo_solicitud) && !empty($venta[0]->nConsecutivo_solicitud)) {
             $venta_anticipo = $caja_diaria_detalle_repo->get_venta_anticipo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
             // $solicitud_cronograma = $solicitud_repositorio->get_solicitud_cronograma($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
@@ -565,6 +565,7 @@ class CPETask extends Command
             //     $json_array["fec_venc"] = $solicitud[0]->fecha_vencimiento;
             // }
         }
+       
 
         if ($venta[0]->codcondicionpago == 1) { // contado
         
@@ -617,22 +618,25 @@ class CPETask extends Command
         $json_array["tot"]["impsto_tot"] = sprintf('%.2f', round($venta[0]->t_impuestos, 2));
         $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
-        if ($venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
+      
+        if (count($venta_anticipo) > 0 && $venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
            
             $json_array["tot"]["val_vent"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
-
+           
             $factor_cd = ($venta_anticipo[0]->t_monto_total / $solicitud[0]->t_monto_total);
+             
             $json_array["cargo"][0]["cod_cd"] = "05"; // Descuentos globales por anticipos exonerados
-
+           
             $json_array["cargo"][0]["factor_cd"] = sprintf('%.5f', round($factor_cd, 5));
             $json_array["cargo"][0]["monto_cd"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
             $json_array["cargo"][0]["base_cd"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
 
             $json_array["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
             $tip_doc_ant = "";
+           
             if($venta_anticipo[0]->IdTipoDocumento == "01") {
                 $tip_doc_ant = "02";
             } elseif($venta_anticipo[0]->IdTipoDocumento == "03") {
@@ -650,7 +654,7 @@ class CPETask extends Command
         }
        
        
-       
+      
         if ($venta[0]->codcondicionpago == 1) { // contado
             $json_array["forma_pago"]["descrip"] = "Contado";
            
@@ -702,7 +706,7 @@ class CPETask extends Command
        
         $cont = 1;
 
-     
+       
         $total_gratuito = 0;
         foreach ($venta_detalle as $key => $value) {
             $detalle_venta = array();
@@ -1017,7 +1021,7 @@ class CPETask extends Command
             $this->generar_json_cpe($value->idventa, $repo, $compania_repo, $solicitud_repositorio);
 
         }
-
+        
        
         $comprobantes_pendientes_envio_pdf = $ventas_repo->obtener_comprobantes_pendientes_envio_pdf();
 
@@ -1028,7 +1032,7 @@ class CPETask extends Command
            
 
         }
-       
+     
       
         $comprobantes = $ventas_repo->obtener_comprobantes();
     
@@ -1039,9 +1043,9 @@ class CPETask extends Command
                 $sql_update = "UPDATE ERP_Venta SET statusCode='{$res["statusCdr"]["statusCode"]}', statusMessage='{$statusMessage}' WHERE idventa={$value->idventa}";
                 DB::statement($sql_update);
             }
-           
-           
         }
+
+       
 
         $comprobantes_anulados = $ventas_repo->obtener_comprobantes_anulados_pendientes();
     
@@ -1049,7 +1053,7 @@ class CPETask extends Command
             $this->generar_json_cpe_anulados($van->idventa, $repo, $compania_repo, $solicitud_repositorio);
 
         }
-
+      
         $comprobantes_baja = $ventas_repo->obtener_comprobantes_anulados();
     
         foreach ($comprobantes_baja as $kb => $vb) {
@@ -1066,6 +1070,8 @@ class CPETask extends Command
         $texto = date("Y-m-d H:i:s");
         Storage::append("log.txt", $texto);
         // exit;
+
+        
     }
 
    
