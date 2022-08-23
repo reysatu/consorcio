@@ -517,9 +517,10 @@ class SolicitudController extends Controller
                 UPDATE ERP_OrdenServicio set cFacturado = 'N', iEstado = 0 where cCodConsecutivo = '{$solicitud[0]->cCodConsecutivoO}' and nConsecutivo = {$solicitud[0]->nConsecutivoO} and iEstado not in (0,1,4);
                 UPDATE ERP_Proforma set cFacturado = 'N', iEstado = 2 where cCodConsecutivoOS = '{$solicitud[0]->cCodConsecutivoO}' and nConsecutivoOS = {$solicitud[0]->nConsecutivoO} and iEstado not in (0,1,6);
                 ";
+                DB::statement($sql_update);
             }
            
-            DB::statement($sql_update);
+          
 
             $result = $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data));
             DB::commit();
