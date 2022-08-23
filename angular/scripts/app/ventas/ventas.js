@@ -119,13 +119,17 @@
                     list: false,
 
                 },
-                serie_comprobante: {
-                    title: 'Serie',
+                // serie_comprobante: {
+                //     title: 'Serie',
 
-                },
-                numero_comprobante: {
-                    title: 'Número',
+                // },
+                // numero_comprobante: {
+                //     title: 'Número',
 
+
+                // },
+                comprobante: {
+                    title: 'Comprobante',
 
                 },
                 fecha_emision: {
@@ -392,6 +396,7 @@
                 idClienteFiltro: $('#idClienteFiltro').val(),
                 id_tipo_doc: $('#id_tipo_doc').val(),
                 estado_cpe: $('#estado_cpe').val(),
+                anulado: $('#anulado').val(),
             });
         }, true);
 

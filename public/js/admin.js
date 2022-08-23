@@ -9719,6 +9719,12 @@ function getFormSearchComprobantes(form_id, input_id, btn_id) {
         '</div>' +
         '</div>' +
 
+        
+        '<div class="col-md-2" style="padding: 0;">' +
+        '<label class="control-label">Anulado</label>' +
+        '<select id="anulado"  style="width: 100%" name="anulado" class="form-control input-sm "><option value="">TODOS</option><option value="S">SI</option><option value="N">NO</option></select>' +
+        '</div>' +
+
         '</div>' +
 
         '</form>';
