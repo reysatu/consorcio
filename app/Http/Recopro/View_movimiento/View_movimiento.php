@@ -23,7 +23,7 @@ class View_movimiento extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['Id','Fecha','Usuario','Operacion','Estado'];
+    protected $fillable = ['Id','Fecha','Usuario','Operacion','Estado', 'Observacion'];
     
     //  public function user_c()
     // {

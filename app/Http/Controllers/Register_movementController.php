@@ -45,7 +45,7 @@ class Register_movementController extends Controller
     public function all(Request $request, View_movimientoInterface $repo)
     {
         $s = $request->input('search', '');
-        $params = ['Operacion','Usuario','Estado','Id'];
+        $params = ['Operacion','Usuario','Estado','Id', 'Fecha', 'Observacion'];
         // print_r($repo); exit;
         return parseList($repo->search($s), $request, 'Id', $params);
     }

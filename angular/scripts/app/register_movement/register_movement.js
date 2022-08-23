@@ -2303,6 +2303,14 @@
                     // type: 'checkbox',
                     // defaultValue: 'A',
                 },
+                Fecha: {
+                    title: 'Fecha',
+                
+                }, 
+                Observacion: {
+                    title: 'Observación',
+                
+                }, 
                 edit: {
                     width: '1%',
                     sorting: false,
