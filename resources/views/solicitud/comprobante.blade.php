@@ -244,7 +244,7 @@
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
                     $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
                     $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
-                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                    $anio_modelo = (isset($producto[0]->anio_modelo)) ? $producto[0]->anio_modelo : "";
 
                     if(count($venta_anticipo) > 0) {
                         echo '<tr>';
@@ -262,7 +262,7 @@
                     echo '  <td>
                                 Marca              : '.$marca.'<br>
                                 Modelo             : '.$modelo.'<br>
-                                Año de Modelo : '.$anio_fabricacion.'<br>
+                                Año de Modelo : '.$anio_modelo.'<br>
                                 Color              : '.$color.'<br>
                                 # Serie            : '.$serie.'<br>
                                 # Motor            : '.$motor.'<br>
@@ -280,7 +280,7 @@
                     $motor = (isset($producto[0]->motor)) ? $producto[0]->motor : "";
                     $color = (isset($producto[0]->color)) ? $producto[0]->color : "";
                     $serie = (isset($producto[0]->serie)) ? $producto[0]->serie : "";
-                    $anio_fabricacion = (isset($producto[0]->anio_fabricacion)) ? $producto[0]->anio_fabricacion : "";
+                    $anio_modelo = (isset($producto[0]->anio_modelo)) ? $producto[0]->anio_modelo : "";
                    
                     echo '<tr>';
                     echo '  <td></td>';
@@ -288,7 +288,7 @@
                     echo '  <td>
                                 Marca              : '.$marca.'<br>
                                 Modelo             : '.$modelo.'<br>
-                                Año de Modelo : '.$anio_fabricacion.'<br>
+                                Año de Modelo : '.$anio_modelo.'<br>
                                 Color              : '.$color.'<br>
                                 # Serie            : '.$serie.'<br>
                                 # Motor            : '.$motor.'<br>
