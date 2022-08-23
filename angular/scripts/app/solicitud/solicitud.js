@@ -3322,19 +3322,7 @@
                             $(".imprimir-clausula-solicitud").show();
 
                             if (data.datos[0].estado == "1" || data.datos[0].estado == "2" || data.datos[0].estado == "3" || data.datos[0].estado == "4") {
-                                var cuota_inicial = parseFloat($("#cuota_inicial").val());
-                                if(isNaN(cuota_inicial)) {
-                                    cuota_inicial = 0;
-                                }
-
-                                if((data.datos[0].estado == "3" || data.datos[0].estado == "4") && cuota_inicial > 0) {
-                                    AlertFactory.textType({
-                                        title: '',
-                                        message: "Debe anular el documento de venta de la cuota inicial!",
-                                        type: 'info'
-                                    });
-                                    return false;
-                                }
+                                
                                 
                                 $(".cancelar-solicitud").show();
                             } else {
@@ -3435,6 +3423,21 @@
 
             var cCodConsecutivo = $("#cCodConsecutivo").val();
             var nConsecutivo = $("#nConsecutivo").val();
+
+            var cuota_inicial = parseFloat($("#cuota_inicial").val());
+            var estado = $("#estado").val();
+            if(isNaN(cuota_inicial)) {
+                cuota_inicial = 0;
+            }
+
+            if((estado == "3" || estado == "4") && cuota_inicial > 0) {
+                AlertFactory.textType({
+                    title: '',
+                    message: "Debe anular el documento de venta de la cuota inicial!",
+                    type: 'info'
+                });
+                return false;
+            }
 
       
             $.post("solicitud/anular_solicitud", { cCodConsecutivo: cCodConsecutivo, nConsecutivo: nConsecutivo},
@@ -3721,19 +3724,7 @@
                     }
                     
                     if (data.solicitud[0].estado == "1" || data.solicitud[0].estado == "2" || data.solicitud[0].estado == "3" || data.solicitud[0].estado == "4"  ) {
-                        var cuota_inicial = parseFloat($("#cuota_inicial").val());
-                        if(isNaN(cuota_inicial)) {
-                            cuota_inicial = 0;
-                        }
-
-                        if((data.solicitud[0].estado == "3" || data.solicitud[0].estado == "4") && cuota_inicial > 0) {
-                            AlertFactory.textType({
-                                title: '',
-                                message: "Debe anular el documento de venta de la cuota inicial!",
-                                type: 'info'
-                            });
-                            return false;
-                        }
+                      
                         $(".cancelar-solicitud").show();
                     } else {
                         $(".cancelar-solicitud").hide();
