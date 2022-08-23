@@ -160,7 +160,7 @@
             </tr>
             <tr>
                 <td style="width: 20%;">DIRECCIÓN :</td>
-                <td style="width: 55%;">{{ $cliente[0]->direccion }}</td>
+                <td style="width: 55%;">{{ $cliente[0]->direccion_ubigeo }}</td>
                 <td style="width: 5%;">{{-- RI SUNAT --}}</td>
                 <td style="width: 20%;"></td>
             </tr>

@@ -102,12 +102,14 @@ where IdTipoDocumento in ('01','03')");
     }
     public function find($id) 
     {
-        $mostra=DB::select("SELECT ti.*, p.*, FORMAT(p.dFechanacimiento, 'dd/MM/yyyy') AS dFechanacimiento , ub.*, DATEDIFF(yy,p.dFechanacimiento, GETDATE()) AS edad,
-        CONCAT(ti.direccion,'-',ub.cDistrito) AS direccion
+        $sql = "SELECT ti.*, p.*, FORMAT(p.dFechanacimiento, 'dd/MM/yyyy') AS dFechanacimiento , ub.*, DATEDIFF(yy,p.dFechanacimiento, GETDATE()) AS edad,
+        CONCAT(ti.direccion,'-',ub.cDistrito) AS direccion_ubigeo
          FROM ERP_Clientes as ti
         left join ERP_Ubigeo as ub on ti.ubigeo=ub.cCodUbigeo 
         LEFT JOIN ERP_Persona AS p ON(p.idPersona=ti.idPersona)
-        where ti.id=$id");
+        where ti.id=$id";
+        // die($sql);
+        $mostra=DB::select($sql);
         return $mostra;
     }
     public function get_cliente_document($id)
