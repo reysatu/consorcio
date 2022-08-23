@@ -3321,7 +3321,7 @@
                             $(".imprimir-solicitud").show();
                             $(".imprimir-clausula-solicitud").show();
 
-                            if (data.datos[0].estado == "1" || data.datos[0].estado == "2") {
+                            if (data.datos[0].estado == "1" || data.datos[0].estado == "2" || data.datos[0].estado == "3" || data.datos[0].estado == "4") {
                                 $(".cancelar-solicitud").show();
                             } else {
                                 $(".cancelar-solicitud").hide();
@@ -3705,8 +3705,8 @@
                         }
 
                     }
-
-                    if (data.solicitud[0].estado == "1" || data.solicitud[0].estado == "2") {
+                    
+                    if (data.solicitud[0].estado == "1" || data.solicitud[0].estado == "2" || data.solicitud[0].estado == "3" || data.solicitud[0].estado == "4"  ) {
                         $(".cancelar-solicitud").show();
                     } else {
                         $(".cancelar-solicitud").hide();
