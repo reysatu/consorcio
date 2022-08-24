@@ -34,4 +34,11 @@ Route::post('ventas/validar_ticket_pago_cuota', 'VentasController@validar_ticket
 
 
 
+Route::get('ventas/imprimir_ticket/{id}', 'MovimientoCajaController@imprimir_ticket'); 
+Route::get('ventas/imprimir_ticket_movimiento_caja/{id}', 'MovimientoCajaController@imprimir_ticket_movimiento_caja'); 
+Route::get('ventas/imprimir_ticket_pago_cuota/{id}', 'MovimientoCajaController@imprimir_ticket_pago_cuota'); 
+Route::get('ventas/imprimir_ticket_pago_documento_pendiente/{id}', 'MovimientoCajaController@imprimir_ticket_pago_documento_pendiente'); 
+Route::get('ventas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
+
+
 
