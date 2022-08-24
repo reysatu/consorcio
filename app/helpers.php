@@ -230,7 +230,8 @@ function generateExcel($data, $file_name, $sheet_name)
         $excel->sheet($sheet_name, function ($sheet) use ($data) {
             $sheet->setColumnFormat(array(
                 'J' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00,
-                'K' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00
+                'K' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00,
+                'T' =>  \PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00
                
             ));
             $sheet->loadView('excel.view')->with('data', $data);
