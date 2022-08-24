@@ -958,6 +958,8 @@ class MovimientoCajaController extends Controller
                 $dias = 30;
                 
             }
+
+           
             // print_r($solicitud_credito);
             if(count($solicitud_credito) > 0) {
 
@@ -1068,6 +1070,11 @@ class MovimientoCajaController extends Controller
                     $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
                     $update_solicitud["facturado"] = $solicitud[0]->t_monto_total;
                     $update_solicitud["estado"] = "6"; // ESTADO FACTURADO DE LA SOLICITUD
+                    
+                    //CREDITO
+                    if($solicitud[0]->tipo_solicitud == "4") {
+                        $update_solicitud["saldo"] = $solicitud[0]->t_monto_subtotal - $solicitud_credito[0]->cuota_inicial;
+                    }
 
                     //GENERAMOS EL CRONOGRAMA DE PAGOS
                     // 31/03/2022 AHORA EL CRONOGRAMA SE GENERA EN EL MODULO DE APROBAR SOLICITUDES
