@@ -3172,6 +3172,8 @@
             if ($("#tipo_solicitud").val() == "2") {
                 bval = bval && $("#cuota_inicial").required();
                 bval = bval && $("#nro_cuotas").required();
+                bval = bval && $("#valor_cuota").required();
+                bval = bval && $("#valor_cuota_final").required();
                 
             }
 
@@ -3587,7 +3589,7 @@
 
                 $(".credito").show();
             }
-           
+        
             if (tipo_solicitud == "3") {
                 $(".convenio").show();
                 // $("#cuota_inicial").val("");
@@ -3660,7 +3662,7 @@
                     });
 
                     
-                   
+                    Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
                     if (data.solicitud_credito.length > 0) {
                         Helpers.set_datos_formulario("formulario-creditos", data.solicitud_credito[0]);
                         $("#dia_vencimiento_cuota").val(data.solicitud_credito[0].dia_vencimiento_cuota);
@@ -3758,7 +3760,7 @@
                     } else {
                         $("#descripcion_adicional_clausula").attr("readonly", "readonly");
                     }
-                    Helpers.set_datos_formulario("formulario-solicitud", data.solicitud[0]);
+                    
                     $("#tipo_sol").val(data.solicitud[0].tipo);
                     $(".aprobaciones").show();
                     $(".imprimir-solicitud").show();
