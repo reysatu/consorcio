@@ -2318,7 +2318,7 @@
                     create: false,
                     listClass: 'text-center',
                     display: function (data) {
-                        return '<a href="javascript:void(0)" class="edit-serie" data-id="'+data.record.idMovimiento
+                        return '<a href="javascript:void(0)" class="edit-serie" data-id="'+data.record.Id
                             +'" title="Editar"><i class="fa fa-edit fa-1-5x"></i></a>';
                     }
 
