@@ -37,7 +37,7 @@ trait ReporteVentaClienteTrait
                 ['left', number_format($i->saldo,2)],
                 ['left', $i->condicion_pago],
                 ['left', $i->Moneda],
-                ['left', $destroy[0]->Mensaje],
+                ['left', number_format($destroy[0]->Mensaje,4)],
                 ['left', $i->usuario],
             ];
         }
