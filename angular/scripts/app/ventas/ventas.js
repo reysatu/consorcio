@@ -302,7 +302,7 @@
                     //     return false;
                     // }
 
-                    $.post("movimientoCajas/get_caja_diaria", {},
+                    $.post("ventas/get_caja_diaria", {},
                         function (data, textStatus, jqXHR) {
                             // console.log();
                             if (data.length > 0) {
@@ -356,17 +356,17 @@
                                 if (idtipodocumento == "12") {
                                     if(tipo_solicitud != "null") {
                                         
-                                        window.open("movimientoCajas/imprimir_ticket/" + id);
+                                        window.open("ventas/imprimir_ticket/" + id);
                                     } else {
-                                        window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                                        window.open("ventas/imprimir_ticket_movimiento_caja/" + id);
                                     }
                                 } else {
-                                    window.open("movimientoCajas/imprimir_comprobante/" + id);
+                                    window.open("ventas/imprimir_comprobante/" + id);
                                     
                                 }
                             } else {
                               
-                                window.open("movimientoCajas/imprimir_ticket_pago_cuota/" + id);
+                                window.open("ventas/imprimir_ticket_pago_cuota/" + id);
                             }
                            
                         },
@@ -524,7 +524,7 @@
 
                             var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
 
-                            window.open("movimientoCajas/imprimir_comprobante/" + id);
+                            window.open("ventas/imprimir_comprobante/" + id);
 
                             LoadRecordsButtonVentas.click();
 
