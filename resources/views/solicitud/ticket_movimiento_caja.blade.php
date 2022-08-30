@@ -128,6 +128,41 @@
   
     <table style="width: 100%;">
         <tr >
+            <td style="border-bottom: 1px dashed black;">F.P.</td>
+            <td style="border-bottom: 1px dashed black;">MON.</td>
+            <td style="border-bottom: 1px dashed black;">DOCUMENTO</td>
+            <td style="border-bottom: 1px dashed black;">T.C.</td>
+            <td style="border-bottom: 1px dashed black;">MONTO</td>
+
+        </tr>
+        <?php 
+
+            $total = 0;
+            foreach ($venta_formas_pago as $key => $value) {
+                $serie = (isset($venta_comprobante[0]->serie_comprobante)) ? $venta_comprobante[0]->serie_comprobante : "°";
+                $numero = (isset($venta_comprobante[0]->numero_comprobante)) ? $venta_comprobante[0]->numero_comprobante : "°";
+
+                // $venta[0]->serie_comprobante.'-'.$venta[0]->numero_comprobante
+                echo '<tr>';
+                echo '  <td>'.$value->codigo_formapago.'</td>';
+                echo '  <td>'.$value->moneda.'</td>';
+                echo '  <td>'.$serie.'-'.$numero.'</td>';
+                echo '  <td>'.number_format($value->monto_tipo_cambio_soles, 2).'</td>';
+                echo '  <td>'.number_format($value->monto_aplicado_moneda_documento, 2).'</td>';
+                echo '</tr>';
+                $total += (float) $value->monto_aplicado_moneda_documento;
+            }
+        ?>
+        <tr>
+            <td style="border-top: 1px dashed black;" colspan="4">TOTAL ABONADO</td>
+            <td style="border-top: 1px dashed black;" colspan="1"><?php echo number_format($total, 2); ?></td>  
+        </tr>
+    </table>
+    
+    <br>
+  
+    <table style="width: 100%;">
+        <tr >
             <td style="border-bottom: 1px dashed black;">DESCRIPCION</td>
 
             <td style="border-bottom: 1px dashed black;">MONTO</td>

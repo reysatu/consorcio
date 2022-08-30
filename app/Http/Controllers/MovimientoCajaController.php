@@ -52,13 +52,143 @@ class MovimientoCajaController extends Controller
             'bancos'=>$bancos,
         ]);
     }
-    public function createUpdate($id, CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $repo_cliente)
+
+    public function guardar_detalle_forma_pago($data, $data_venta, $repo, $caja_diaria_repositorio, $idMonedaAdd, $totales_actualizados) {
+        // print_r($data);
+        foreach ($data as $key => $value) {
+            // echo $key."<br>";
+            $new_key = str_replace("_mov", "", $key);
+            unset($data[$key]);
+            $data[$new_key] = $value;
+        }
+        // print_r($data); exit;
+        if(isset($data["codigo_formapago"])) {
+            $data_formas_pago = $data;
+            // var_dump($data["codigo_formapago"]); exit;
+            $efectivo_soles = 0;
+            $no_efectivo_soles = 0;
+            $efectivo_dolares = 0;
+            $no_efectivo_dolares = 0;
+
+            for ($i=0; $i < count($data["codigo_formapago"]); $i++) { 
+                $data_formas_pago["idventa"][$i] = $data_venta["idventa"];
+                // actualizamos la venta por separacion
+                if($data["codigo_formapago"][$i] == "SEP") {
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_separacion = 'S'       
+                    WHERE idventa={$data["idventa_separacion"]}";
+            
+                    DB::statement($sql_update);
+                }
+
+                 // actualizamos la venta por nota
+                 if($data["codigo_formapago"][$i] == "NCR") {
+                    $sql_update = "UPDATE ERP_Venta SET aplicado_nota= 'S'       
+                    WHERE idventa={$data["idventa_nota"]}";
+            
+                    DB::statement($sql_update);
+                }
+
+                
+
+                if($i == 0) {
+
+                    $data_formas_pago["consecutivo"][$i] = $repo->get_consecutivo("ERP_VentaFormaPago", "consecutivo");
+                   
+                } else {
+                    $data_formas_pago["consecutivo"][$i] = $data_formas_pago["consecutivo"][$i-1] + 1;
+                }
+
+                if(!$totales_actualizados) {
+
+                    $data_caja_detalle = array();
+                    $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                    $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                    // $data_caja_detalle["codigoTipo"] = "VTA";
+                    $data_caja_detalle["codigoTipo"] = $data["tipoMovimientoAdd"];
+                    $data_caja_detalle["codigoFormaPago"] = $data["codigo_formapago"][$i];
+                    $data_caja_detalle["idMoneda"] = $data["IdMoneda"][$i];
+                    $data_caja_detalle["monto"] = $data["monto_pago"][$i];
+                    $data_caja_detalle["descripcion"] = "Ingreso por Movimiento de Caja";
+                    $data_caja_detalle["nroTarjeta"] = $data["nrotarjeta"][$i];
+                    $data_caja_detalle["nroOperacion"] = $data["nrooperacion"][$i];
+                    $data_caja_detalle["naturaleza"] = "E";
+
+                    $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+
+                    if($data["vuelto"][$i] > 0) {
+                        $data_caja_detalle = array();
+                        $data_caja_detalle["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                        $data_caja_detalle["consecutivo"] = $repo->get_consecutivo("ERP_CajaDiariaDetalle", "consecutivo");
+                        $data_caja_detalle["codigoTipo"] = "VTA";
+                        $data_caja_detalle["codigoFormaPago"] = "EFE";
+                        $data_caja_detalle["idMoneda"] = $idMonedaAdd;
+                        $data_caja_detalle["monto"] = $data["vuelto"][$i];
+                        $data_caja_detalle["descripcion"] = "Vuelto por Ventas";
+                        $data_caja_detalle["nroTarjeta"] = "";
+                        $data_caja_detalle["nroOperacion"] = "";
+                        $data_caja_detalle["naturaleza"] = "S";
+                        
+                        $this->base_model->insertar($this->preparar_datos("dbo.ERP_CajaDiariaDetalle", $data_caja_detalle));
+
+                        if($idMonedaAdd == "1") {
+                            $efectivo_soles -= $data["vuelto"][$i];
+                        }
+
+                        if($idMonedaAdd == "2") {
+                            $efectivo_dolares -= $data["vuelto"][$i];
+                        }
+                    }
+                }
+
+                if($data["IdMoneda"][$i] == "1") {
+                    if($data["codigo_formapago"][$i] == "EFE") {
+                        $efectivo_soles += (float)$data["monto_pago"][$i];
+                    } else {
+                        $no_efectivo_soles += (float)$data["monto_pago"][$i];
+                    }
+                }
+
+                if($data["IdMoneda"][$i] == "2") {
+                    if($data["codigo_formapago"][$i] == "EFE") {
+                        $efectivo_dolares += (float)$data["monto_pago"][$i];
+                    } else {
+                        $no_efectivo_dolares += (float)$data["monto_pago"][$i];
+                    }
+                }
+            }
+
+            if(!$totales_actualizados) {
+                //ACTUALIZAMOS MONTOS EN CAJA DIARIA
+                $update_caja_diaria = array();
+                $update_caja_diaria["idCajaDiaria"] = $repo->get_caja_diaria()[0]->idCajaDiaria; 
+                $update_caja_diaria["totalEfectivo"] = $efectivo_soles;
+                $update_caja_diaria["totalNoEfectivo"] = $no_efectivo_soles;
+                $update_caja_diaria["totalEfectivoDol"] = $efectivo_dolares;
+                $update_caja_diaria["totalNoEfectivoDol"] = $no_efectivo_dolares;
+
+                
+                $caja_diaria_repositorio->update_totales($update_caja_diaria);
+            }
+              
+            // exit;
+            // $this->base_model->modificar($this->preparar_datos("dbo.ERP_CajaDiaria", $update_caja_diaria));
+            // print_r($data_formas_pago);
+            $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaFormaPago", $data_formas_pago));
+            // print_R($r);
+        }
+    
+    }
+
+    public function createUpdate(CajaDiariaDetalleInterface $repo,request $request ,CajaDiariaInterface $recaj, ConsecutivosComprobantesInterface $repoCC, CompaniaInterface $compania_repo, SolicitudInterface $solicitud_repositorio, CustomerInterface $repo_cliente)
     {
+
         DB::beginTransaction();
         try {
           
             $idventa_ticket = "";
             $data = $request->all();
+            $id = $data["id"];
+            // print_r($data); exit;
             $dataCaja = $recaj->find($id);
             $empresa = $compania_repo->find("00000");
             $datoDet = [];
@@ -66,61 +196,70 @@ class MovimientoCajaController extends Controller
             $totalEgre=0;
             $totalOtrosI=0;
             $dataCajadia=[];
-            if($data['idMonedaAdd']=='1'){
-                if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
-                    $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
-                    $totalEgre=floatval($dataCaja->totalEgresos);
-                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
-                }else{
-                    $total=floatval($dataCaja->totalEfectivo)-floatval($data['montoAdd']);
-                    $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
-                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresos);
 
-                }
-                $dataCajadia['totalOtrosIngresos'] =  $totalOtrosI;
-                $dataCajadia['totalEfectivo'] =  $total;
-                $dataCajadia['totalEgresos'] =  $totalEgre;
-            }else{
-                 if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
-                    $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
-                    $totalEgre=floatval($dataCaja->totalEgresosDol);
-                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);
+            $formas_pago_permitidas_detalle = array("SEP", "TPL", "ALQ");
+            $totales_actualizados = false;
+            
+            if(!in_array($data['tipoMovimientoAdd'], $formas_pago_permitidas_detalle)) {
+                if($data['idMonedaAdd']=='1'){
+                    if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
+                        $total=floatval($dataCaja->totalEfectivo)+floatval($data['montoAdd']);
+                        $totalEgre=floatval($dataCaja->totalEgresos);
+                        $totalOtrosI=floatval($dataCaja->totalOtrosIngresos)+floatval($data['montoAdd']);
+                    }else{
+                        $total=floatval($dataCaja->totalEfectivo)-floatval($data['montoAdd']);
+                        $totalEgre=floatval($dataCaja->totalEgresos)+floatval($data['montoAdd']);
+                        $totalOtrosI=floatval($dataCaja->totalOtrosIngresos);
+    
+                    }
+                    $dataCajadia['totalOtrosIngresos'] =  $totalOtrosI;
+                    $dataCajadia['totalEfectivo'] =  $total;
+                    $dataCajadia['totalEgresos'] =  $totalEgre;
                 }else{
-                    $total=floatval($dataCaja->totalEfectivoDol)-floatval($data['montoAdd']);
-                    $totalEgre=floatval($dataCaja->totalEgresosDol)+floatval($data['montoAdd']);
-                    $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol);
+                     if($data['tipoMovimientoAdd']=='ING' || $data['tipoMovimientoAdd']=='SEP' || $data['tipoMovimientoAdd']=='TPL' || $data['tipoMovimientoAdd']=='ALQ'){
+                        $total=floatval($dataCaja->totalEfectivoDol)+floatval($data['montoAdd']);
+                        $totalEgre=floatval($dataCaja->totalEgresosDol);
+                        $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol)+floatval($data['montoAdd']);
+                    }else{
+                        $total=floatval($dataCaja->totalEfectivoDol)-floatval($data['montoAdd']);
+                        $totalEgre=floatval($dataCaja->totalEgresosDol)+floatval($data['montoAdd']);
+                        $totalOtrosI=floatval($dataCaja->totalOtrosIngresosDol);
+                    }
+                    $dataCajadia['totalOtrosIngresosDol'] =  $totalOtrosI;
+                    $dataCajadia['totalEfectivoDol'] =  $total;
+                    $dataCajadia['totalEgresosDol'] =  $totalEgre;
                 }
-                $dataCajadia['totalOtrosIngresosDol'] =  $totalOtrosI;
-                $dataCajadia['totalEfectivoDol'] =  $total;
-                $dataCajadia['totalEgresosDol'] =  $totalEgre;
+                
+    
+                
+                $recaj->update($id, $dataCajadia); 
+
+                $iddet = 'consecutivo';
+                $tabledet = "ERP_CajaDiariaDetalle";
+                $datoDet['codigoTipo'] =strtoupper($data['tipoMovimientoAdd']);
+                $datoDet['codigoFormaPago'] =strtoupper($data['formaPagoAdd']);
+                $datoDet['idMoneda'] =strtoupper($data['idMonedaAdd']);
+                $datoDet['monto'] =strtoupper($data['montoAdd']);
+                $datoDet['descripcion'] =strtoupper($data['conceptoAdd']); 
+                $datoDet['idCajaDiaria'] =$id;
+                $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
+                if($data['tipoMovimientoAdd']=='ING' || $data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ"){
+                    $datoDet['naturaleza'] ='E';
+                } else {
+                    $datoDet['naturaleza'] ='S';
+                }
+
+                if($data['tipoMovimientoAdd']=='BCO'){
+                    $datoDet['nroOperacion'] = (isset($data['nrOperacion'])) ? $data['nrOperacion'] : "";
+                    $datoDet['banco'] = (isset($data['idBanco'])) ? $data['idBanco'] : "";
+                    $datoDet['numero_cuenta'] = (isset($data['idCuenta'])) ? $data['idCuenta'] : "";
+                    $bancoText = (isset($data['bancoText'])) ? $data['bancoText'] : "";
+                    $numero_cuenta = (isset($data['numero_cuenta'])) ? $data['numero_cuenta'] : "";
+                    $datoDet['descripcion'] =$bancoText.','.$numero_cuenta; 
+                }
+                $repo->create($datoDet);
             }
             
-
-            
-            $recaj->update($id, $dataCajadia); 
-
-            $iddet = 'consecutivo';
-            $tabledet = "ERP_CajaDiariaDetalle";
-            $datoDet['codigoTipo'] =strtoupper($data['tipoMovimientoAdd']);
-            $datoDet['codigoFormaPago'] =strtoupper($data['formaPagoAdd']);
-            $datoDet['idMoneda'] =strtoupper($data['idMonedaAdd']);
-            $datoDet['monto'] =strtoupper($data['montoAdd']);
-            $datoDet['descripcion'] =strtoupper($data['conceptoAdd']); 
-            $datoDet['idCajaDiaria'] =$id;
-            $datoDet['consecutivo'] = $repo->get_consecutivo($tabledet, $iddet);
-            if($data['tipoMovimientoAdd']=='ING' || $data["tipoMovimientoAdd"] == "SEP" || $data["tipoMovimientoAdd"] == "TPL" || $data["tipoMovimientoAdd"] == "ALQ"){
-                $datoDet['naturaleza'] ='E';
-            } else {
-                $datoDet['naturaleza'] ='S';
-            }
-
-            if($data['tipoMovimientoAdd']=='BCO'){
-                 $datoDet['nroOperacion'] =$data['nrOperacion'];
-                 $datoDet['banco'] =$data['idBanco'];
-                 $datoDet['numero_cuenta'] =$data['idCuenta'];
-                 $datoDet['descripcion'] =$data['bancoText'].','.$data['numero_cuenta']; 
-            }
-            $repo->create($datoDet);
 
             //GUARDAR VENTA POR SEPARACION
         
@@ -164,10 +303,7 @@ class MovimientoCajaController extends Controller
                     $idarticulo = $parametro_tramite[0]->value;
                     $tipo_comprobante = "0";
                 }
-               
-              
-               
-                
+
                 if($data["emitir_comprobante"] == "S") { // solo si hizo check en emitir comprobante
                     $data_venta = array();
                
@@ -213,6 +349,8 @@ class MovimientoCajaController extends Controller
                  
                     $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
                       
+                    $this->guardar_detalle_forma_pago($data, $data_venta, $repo, $recaj, $data['idMonedaAdd'], $totales_actualizados);
+                    $totales_actualizados = true;
                    
                     // $this->generar_json_cpe($data_venta["idventa"], $repo, $compania_repo, $solicitud_repositorio);
 
@@ -247,6 +385,7 @@ class MovimientoCajaController extends Controller
                 $data_ticket = array();
                
                 $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
+                $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
                 $data_ticket["documento_cpe"] = "";
                 $data_ticket["enviado_cpe"] = "";
                 
@@ -288,7 +427,9 @@ class MovimientoCajaController extends Controller
         
                 
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
-                  
+                
+                $this->guardar_detalle_forma_pago($data, $data_ticket, $repo, $recaj, $data['idMonedaAdd'], $totales_actualizados);
+                $totales_actualizados = true;
                 
             
                 $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
@@ -356,7 +497,9 @@ class MovimientoCajaController extends Controller
                 $data_venta_detalle['descripcion_articulo'] =strtoupper($data['conceptoAdd']); 
     
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
-                  
+                
+                $this->guardar_detalle_forma_pago($data, $data_venta, $repo, $recaj, $data['idMonedaAdd'], $totales_actualizados);
+                $totales_actualizados = true;
                 $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
             }
            
@@ -2097,6 +2240,11 @@ class MovimientoCajaController extends Controller
         $datos["cliente"] = $cliente_repositorio->find($idcliente);
        
         $datos["venta_detalle"] = $repo->get_venta_detalle($idventa); 
+
+        $idventa_comprobante = (isset($datos["venta"][0]->idventa_comprobante)) ? $datos["venta"][0]->idventa_comprobante : "0";
+        $datos["venta_comprobante"] = $repo->get_venta($idventa_comprobante); 
+
+        $datos["venta_formas_pago"] = $repo->get_venta_formas_pago($idventa); 
         // echo "<pre>";
         // print_r($datos);
         // exit;

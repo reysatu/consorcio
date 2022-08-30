@@ -235,6 +235,7 @@ select sum(vd.monto_total) as total ,v.idmoneda from ERP_VentaDetalle as vd INNE
         totalEfectivoDol = totalEfectivoDol + {$data["totalEfectivoDol"]},
         totalNoEfectivoDol = totalNoEfectivoDol + {$data["totalNoEfectivoDol"]}
         WHERE idCajaDiaria={$data["idCajaDiaria"]}";
+        // die($sql_update);
 
         $result = DB::statement($sql_update);
         

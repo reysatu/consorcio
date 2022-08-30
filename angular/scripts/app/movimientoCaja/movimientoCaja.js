@@ -80,6 +80,10 @@
                 if (data.length > 0) {
                     $(".separacion").hide();
                     $("")
+                    $(".formas-pago-detalle").hide();
+                    $("#tipoMovimientoAdd").val("ING").trigger("change");
+                    $("#detalle-formas-pago-mov").html("");
+                    $("#formMovimientoCaja").trigger("reset");
                     modalMovimientoCaja.modal('show');
                 } else {
                     AlertFactory.textType({
@@ -287,6 +291,16 @@
         }, true);
         
         table_container_bancos.jtable('load');
+
+        montoAdd.keyup(function(e) {
+            var monto = parseFloat(montoAdd.val());
+            if(isNaN(monto)) {
+                monto = 0;
+            }
+            // console.log(monto);
+            $("#monto_mov").val(monto);
+        })
+        
         function cleanMovimientoCajaAdd() {
             cleanRequired();
             tipoMovimientoAdd.val("");
@@ -369,6 +383,9 @@
             if (tipoMovimientoAdd.val() == 'SEP' || tipoMovimientoAdd.val() == 'TPL' || tipoMovimientoAdd.val() == 'ALQ') {
                 $('#emitir_comprobante').iCheck('check');
                 $(".separacion").show();
+                $(".formas-pago-detalle").show();
+            } else {
+                $(".formas-pago-detalle").hide();
             }
             
             if (tipoMovimientoAdd.val() == 'ING' || tipoMovimientoAdd.val() == 'EGR') {
@@ -549,8 +566,12 @@
         banco.change(function (e) {
             cargarCuentasBancarias();
         });
+
         idMonedaAdd.change(function (e) {
             var simbolo = $(this).find("option[value=" + $(this).val() + "]").data("simbolo");
+            $(".simbolo-moneda-mov").text(simbolo);
+            $(".simbolo-moneda-2").text(simbolo);
+            $(".simbolo-moneda").text(simbolo);
             // alert(simbolo);
             cargarCuentasBancarias();
         });
@@ -913,66 +934,132 @@
                 
                 // alert(emitir_comprobante);
                 // return false;
-                
                 var id = idcajaMC.val();
-                RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {
-                    if (!_.isUndefined(response.status) && response.status) {
+
+                // +"&nrOperacion="+nrOperacion.val()+"&bancoText="+$("#banco option:selected").text()+"&idBanco="+banco.val()+"&idCuenta="+toCuenta[0]+"&numero_cuenta="+toCuenta[1]+"&serie_comprobante="+$("#serie_comprobante_m").val()+"&numero_comprobante="+$("#numero_comprobante_m").val()+"&IdTipoDocumento="+$("#tipo_doc_venta").val()+"&idcliente="+$("#idcliente_m").val()+"&emitir_comprobante="+$("#emitir_comprobante").val()
+                $.post('movimientoCajas/saveMovimientoCaja', $("#formMovimientoCaja").serialize()+"&id="+id+"&IdTipoDocumento="+$("#tipo_doc_venta").val()+"&serie_comprobante="+$("#serie_comprobante_m").val()+"&numero_comprobante="+$("#numero_comprobante_m").val()+"&idcliente="+$("#idcliente_m").val()+"&emitir_comprobante="+$("#emitir_comprobante").val()+"&formaPagoAdd="+formaPagoAdd.val(),
+                    function (data, textStatus, jqXHR) {
+                        console.log(data);
+                        var response = data;
+                        if (!_.isUndefined(response.status) && response.status) {
                         
-                        AlertFactory.textType({
-                            title: '',
-                            message: 'Se registró correctamente.',
-                            type: 'success'
-                        });
-                        getDataFormMovementCaja();
-                        $('#table_container_movimientoCaja').jtable('reload');
-                        LoadRecordsButtonComprobantes.click();
-                        // alert(response.idventa+" "+response.tipoMovimientoAdd);
-                        var id = "";
-                        if(response.idventa != "") {
-                            id = "0|0|" + response.idventa;
-                            
-                            if(response.tipoMovimientoAdd == "SEP" || response.tipoMovimientoAdd == "TPL" || response.tipoMovimientoAdd == "ALQ") {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'Se registró correctamente.',
+                                type: 'success'
+                            });
+                            getDataFormMovementCaja();
+                            $('#table_container_movimientoCaja').jtable('reload');
+                            LoadRecordsButtonComprobantes.click();
+                            // alert(response.idventa+" "+response.tipoMovimientoAdd);
+                            var id = "";
+                            if(response.idventa != "") {
+                                id = "0|0|" + response.idventa;
                                 
-                                if(emitir_comprobante == "S") {
+                                if(response.tipoMovimientoAdd == "SEP" || response.tipoMovimientoAdd == "TPL" || response.tipoMovimientoAdd == "ALQ") {
                                     
-                                    window.open("movimientoCajas/imprimir_comprobante/" + id);
-                                }
+                                    if(emitir_comprobante == "S") {
+                                        
+                                        window.open("movimientoCajas/imprimir_comprobante/" + id);
+                                    }
+                                    
+                                } 
                                 
-                            } 
+                                
+                            }
+                            
+                            if(response.idventa_ticket != "") {
+                                id =  "0|0|" + response.idventa_ticket;
+                                window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                            }
                             
                             
+                            // estadoMc.val(cajaGuar[0].estado);
+                            // caja_text.val(cajaGuar[0].nombre_caja);
+                            // if(cajaGuar[0].estado==1){
+                            //      btn_Mapertura.prop('disabled',true);
+                            // };
+                            // if(cajaGuar[0].estado==0){
+                            //      btn_Mapertura.prop('disabled',true);
+                            //      btn_Mcierra.prop('disabled',true);
+                            // };
+                            
+                            // idcajaMC.val(cajaGuar[0].idCajaDiaria);
+                            modalMovimientoCaja.modal('hide');
+                            
+                        } else {
+                            var msg_ = (_.isUndefined(response.message)) ?
+                            'No se pudo guardar . Intente nuevamente.' : response.message;
+                            AlertFactory.textType({
+                                title: '',
+                                message: msg_,
+                                type: 'info'
+                            });
                         }
+                    },
+                    "json"
+                );
+
+                // return false;
+
+                // RESTService.updated('movimientoCajas/saveMovimientoCaja', id, params, function (response) {
+                //     if (!_.isUndefined(response.status) && response.status) {
                         
-                        if(response.idventa_ticket != "") {
-                            id =  "0|0|" + response.idventa_ticket;
-                            window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
-                        }
+                //         AlertFactory.textType({
+                //             title: '',
+                //             message: 'Se registró correctamente.',
+                //             type: 'success'
+                //         });
+                //         getDataFormMovementCaja();
+                //         $('#table_container_movimientoCaja').jtable('reload');
+                //         LoadRecordsButtonComprobantes.click();
+                //         // alert(response.idventa+" "+response.tipoMovimientoAdd);
+                //         var id = "";
+                //         if(response.idventa != "") {
+                //             id = "0|0|" + response.idventa;
+                            
+                //             if(response.tipoMovimientoAdd == "SEP" || response.tipoMovimientoAdd == "TPL" || response.tipoMovimientoAdd == "ALQ") {
+                                
+                //                 if(emitir_comprobante == "S") {
+                                    
+                //                     window.open("movimientoCajas/imprimir_comprobante/" + id);
+                //                 }
+                                
+                //             } 
+                            
+                            
+                //         }
+                        
+                //         if(response.idventa_ticket != "") {
+                //             id =  "0|0|" + response.idventa_ticket;
+                //             window.open("movimientoCajas/imprimir_ticket_movimiento_caja/" + id);
+                //         }
                         
                         
-                        // estadoMc.val(cajaGuar[0].estado);
-                        // caja_text.val(cajaGuar[0].nombre_caja);
-                        // if(cajaGuar[0].estado==1){
-                        //      btn_Mapertura.prop('disabled',true);
-                        // };
-                        // if(cajaGuar[0].estado==0){
-                        //      btn_Mapertura.prop('disabled',true);
-                        //      btn_Mcierra.prop('disabled',true);
-                        // };
+                //         // estadoMc.val(cajaGuar[0].estado);
+                //         // caja_text.val(cajaGuar[0].nombre_caja);
+                //         // if(cajaGuar[0].estado==1){
+                //         //      btn_Mapertura.prop('disabled',true);
+                //         // };
+                //         // if(cajaGuar[0].estado==0){
+                //         //      btn_Mapertura.prop('disabled',true);
+                //         //      btn_Mcierra.prop('disabled',true);
+                //         // };
                         
-                        // idcajaMC.val(cajaGuar[0].idCajaDiaria);
-                        modalMovimientoCaja.modal('hide');
+                //         // idcajaMC.val(cajaGuar[0].idCajaDiaria);
+                //         modalMovimientoCaja.modal('hide');
                         
-                    } else {
-                        var msg_ = (_.isUndefined(response.message)) ?
-                        'No se pudo guardar . Intente nuevamente.' : response.message;
-                        AlertFactory.textType({
-                            title: '',
-                            message: msg_,
-                            type: 'info'
-                        });
-                    }
+                //     } else {
+                //         var msg_ = (_.isUndefined(response.message)) ?
+                //         'No se pudo guardar . Intente nuevamente.' : response.message;
+                //         AlertFactory.textType({
+                //             title: '',
+                //             message: msg_,
+                //             type: 'info'
+                //         });
+                //     }
                     
-                });
+                // });
             };
             
         }
@@ -2044,8 +2131,14 @@ $scope.agregar_formas_pago = function () {
     // $("#idconyugue").focus();
     // alert($("#desTotal").val());
     var total_pagar = parseFloat($("#total_pagar").val());
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        total_pagar = parseFloat(montoAdd.val());
+    }
+
     var subtotal_montos_pago = sumar_montos_formas_pago();
     var saldo = total_pagar - subtotal_montos_pago;
+    // alert(saldo);
+    var bval = true;
     // alert();
     if (saldo <= 0) {
         AlertFactory.textType({
@@ -2071,12 +2164,40 @@ $scope.agregar_formas_pago = function () {
     if ($('#modalDocumentosPendientes').is(':visible')) {
         $("#moneda").val($("#idmoneda_dp").val());
     }
+
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        // alert($("#idMonedaAdd").val());
+       
+        bval = bval && tipoMovimientoAdd.required();
+        bval = bval && idMonedaAdd.required();
+        bval = bval && montoAdd.required();
+        
+        if (tipoMovimientoAdd.val() == 'BCO') {
+            bval = bval && nrOperacion.required();
+            bval = bval && banco.required();
+            bval = bval && cuentaBancaria.required();
+        }
+        if (tipoMovimientoAdd.val() != 'BCO') {
+            bval = bval && conceptoAdd.required();
+        }
+        
+        if ((tipoMovimientoAdd.val() == 'SEP' || tipoMovimientoAdd.val() == 'TPL' || tipoMovimientoAdd.val() == 'ALQ') && emitir_comprobante == "S") {
+            bval = bval && $("#documento_cliente").required();
+            bval = bval && $("#tipo_doc_venta").required();
+            bval = bval && $("#serie_comprobante_m").required();
+        }
+
+        $("#moneda").val($("#idMonedaAdd").val());
+    }
     
-    $(".clean-monto").val(0);
-    $("#noperacion").val("");
-    $("#tarjeta").val("");
-    $("#monto_aplicar").val(saldo.toFixed(2));
-    $("#modal-formas-pago").modal("show");           
+    if(bval) {
+        $(".clean-monto").val(0);
+        $("#noperacion").val("");
+        $("#tarjeta").val("");
+        $("#monto_aplicar").val(saldo.toFixed(2));
+        $("#modal-formas-pago").modal("show");           
+    }
+   
     
 }
 
@@ -2212,8 +2333,12 @@ $(document).on("change", "#forma_pago", function (event) {
             
             
             var total_pagar = parseFloat($("#total_pagar").val());
+            if ($('#modalMovimientoCaja').is(':visible')) {
+                total_pagar = parseFloat(montoAdd.val());
+            }
             var subtotal_montos_pago = sumar_montos_formas_pago();
             var saldo = total_pagar - subtotal_montos_pago;
+            // alert(saldo+" <=> "+subtotal_montos_pago);
             $("#monto_aplicar").val(saldo.toFixed(2));
         }
         
@@ -2259,6 +2384,10 @@ $(document).on("change", "#serie_comprobante_m", function () {
 function sumar_montos_formas_pago() {
     // var montos_pago = $("input[name='monto_pago[]']");
     var montos_pago = $("input[name='monto_aplicado_moneda_documento[]']");
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        montos_pago = $("input[name='monto_aplicado_moneda_documento_mov[]']");
+    }
+    
     var subtotal_montos_pago = 0;
     
     for (var i = 0; i < montos_pago.length; i++) {
@@ -2313,37 +2442,77 @@ $scope.guardar_forma_pago = function () {
     var monto_local = (!isNaN(parseFloat($("#monto_local").val()))) ? parseFloat($("#monto_local").val()) : 0;
     var monto_aplicar = (!isNaN(parseFloat($("#monto_aplicar").val()))) ? parseFloat($("#monto_aplicar").val()) : 0;
     var monto_vuelto = (!isNaN(parseFloat($("#monto_vuelto").val()))) ? parseFloat($("#monto_vuelto").val()) : 0;
+
     var html = "<tr>";
-    html += '   <input type="hidden" name="IdMoneda[]" value="' + moneda + '" />';
-    html += '   <input type="hidden" name="codigo_formapago[]" value="' + forma_pago + '" />';
-    html += '   <input type="hidden" name="nrotarjeta[]" value="' + tarjeta + '" />';
-    html += '   <input type="hidden" name="nrooperacion[]" value="' + noperacion + '" />';
-    html += '   <input type="hidden" name="monto_pago[]" value="' + monto_p + '" />';
-    html += '   <input type="hidden" name="monto_moneda_documento[]" value="' + monto_local + '" />';
-    html += '   <input type="hidden" name="monto_aplicado_moneda_documento[]" value="' + monto_aplicar + '" />';
-    html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="' + tipo_cambio + '" />';
-    html += '   <input type="hidden" name="vuelto[]" value="' + monto_vuelto + '" />';
-    html += '   <td>' + moneda_text + '</td>';
-    html += '   <td>' + forma_pago_text + '</td>';
-    html += '   <td>' + noperacion + '</td>';
-    html += '   <td>' + tarjeta + '</td>';
-    // html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
-    html += '   <td>' + monto_p + '</td>';
-    html += '   <td>' + tipo_cambio + '</td>';
-    html += '   <td>' + monto_local + '</td>';
-    html += '   <td>' + monto_aplicar + '</td>';
-    html += '   <td>' + monto_vuelto + '</td>';
-    html += '   <td><button title="Eliminar Registro" class="btn btn-danger btn-xs eliminar-forma-pago" type="button"><i class="fa fa-trash"></i></button></td>';
-    html += '</tr>';
-    $("#detalle-formas-pago").append(html);
+
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        
+        html += '   <input type="hidden" name="IdMoneda_mov[]" value="' + moneda + '" />';
+        html += '   <input type="hidden" name="codigo_formapago_mov[]" value="' + forma_pago + '" />';
+        html += '   <input type="hidden" name="nrotarjeta_mov[]" value="' + tarjeta + '" />';
+        html += '   <input type="hidden" name="nrooperacion_mov[]" value="' + noperacion + '" />';
+        html += '   <input type="hidden" name="monto_pago_mov[]" value="' + monto_p + '" />';
+        html += '   <input type="hidden" name="monto_moneda_documento_mov[]" value="' + monto_local + '" />';
+        html += '   <input type="hidden" name="monto_aplicado_moneda_documento_mov[]" value="' + monto_aplicar + '" />';
+        html += '   <input type="hidden" name="monto_tipo_cambio_soles_mov[]" value="' + tipo_cambio + '" />';
+        html += '   <input type="hidden" name="vuelto_mov[]" value="' + monto_vuelto + '" />';
+        html += '   <td>' + moneda_text + '</td>';
+        html += '   <td>' + forma_pago_text + '</td>';
+        html += '   <td>' + noperacion + '</td>';
+        html += '   <td>' + tarjeta + '</td>';
+        // html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
+        html += '   <td>' + monto_p + '</td>';
+        html += '   <td>' + tipo_cambio + '</td>';
+        html += '   <td>' + monto_local + '</td>';
+        html += '   <td>' + monto_aplicar + '</td>';
+        html += '   <td>' + monto_vuelto + '</td>';
+        html += '   <td><button title="Eliminar Registro" class="btn btn-danger btn-xs eliminar-forma-pago" type="button"><i class="fa fa-trash"></i></button></td>';
+        html += '</tr>';
+        $("#detalle-formas-pago-mov").append(html);
+        
+    } else {
+      
+        html += '   <input type="hidden" name="IdMoneda[]" value="' + moneda + '" />';
+        html += '   <input type="hidden" name="codigo_formapago[]" value="' + forma_pago + '" />';
+        html += '   <input type="hidden" name="nrotarjeta[]" value="' + tarjeta + '" />';
+        html += '   <input type="hidden" name="nrooperacion[]" value="' + noperacion + '" />';
+        html += '   <input type="hidden" name="monto_pago[]" value="' + monto_p + '" />';
+        html += '   <input type="hidden" name="monto_moneda_documento[]" value="' + monto_local + '" />';
+        html += '   <input type="hidden" name="monto_aplicado_moneda_documento[]" value="' + monto_aplicar + '" />';
+        html += '   <input type="hidden" name="monto_tipo_cambio_soles[]" value="' + tipo_cambio + '" />';
+        html += '   <input type="hidden" name="vuelto[]" value="' + monto_vuelto + '" />';
+        html += '   <td>' + moneda_text + '</td>';
+        html += '   <td>' + forma_pago_text + '</td>';
+        html += '   <td>' + noperacion + '</td>';
+        html += '   <td>' + tarjeta + '</td>';
+        // html += '   <td>' + serie_comprobante + '-'+numero_comprobante+'</td>';
+        html += '   <td>' + monto_p + '</td>';
+        html += '   <td>' + tipo_cambio + '</td>';
+        html += '   <td>' + monto_local + '</td>';
+        html += '   <td>' + monto_aplicar + '</td>';
+        html += '   <td>' + monto_vuelto + '</td>';
+        html += '   <td><button title="Eliminar Registro" class="btn btn-danger btn-xs eliminar-forma-pago" type="button"><i class="fa fa-trash"></i></button></td>';
+        html += '</tr>';
+        $("#detalle-formas-pago").append(html);
+
+    }
+    
     
     var total_pagar = parseFloat($("#total_pagar").val());
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        total_pagar = parseFloat(montoAdd.val());
+    }
     var subtotal_montos_pago = sumar_montos_formas_pago();
     var saldo = total_pagar - subtotal_montos_pago;
-    
+
+    if ($('#modalMovimientoCaja').is(':visible')) {
+        $("#monto_mov").val(saldo);
+    } else {
+        $("#monto").val(saldo);
+    }
+
     // alert(saldo);
-    
-    $("#monto").val(saldo);
+
     $("#modal-formas-pago").modal("hide");
 }
 

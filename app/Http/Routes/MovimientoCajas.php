@@ -74,7 +74,9 @@ Route::post('movimientoCajas/list_comprobantes_pendientes', ['as' => 'movimiento
 Route::post('movimientoCajas/list_creditos', ['as' => 'movimientoCajas.list_creditos', 'uses' => 'SolicitudController@list_creditos']);
 Route::post('movimientoCajas/obtener_consecutivo_comprobante_mc', ['as' => 'movimientoCajas.obtener_consecutivo_comprobante_mc', 'uses' => 'MovimientoCajaController@obtener_consecutivo_comprobante_mc']);
 
-Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
+// Route::put('movimientoCajas/saveMovimientoCaja/{id}', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
+
+Route::post('movimientoCajas/saveMovimientoCaja', ['as' => 'movimientoCajas.saveMovimientoCaja', 'uses' => 'MovimientoCajaController@createUpdate']);
 
 Route::post('movimientoCajas/list_ventas', ['as' => 'movimientoCajas.list_ventas', 'uses' => 'SolicitudController@list_ventas']);
 

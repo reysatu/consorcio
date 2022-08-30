@@ -510,125 +510,169 @@
                 <h4 class="modal-title" id="titleModalGrupoContable">Agregar Movimiento</h4>
             </div>
             <div class="modal-body">
-                <div class="form-horizontal">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="alert alert-danger hide" role="alert" id="msg_cont">
-                                <span class="fa fa-warning"></span>
-                                Debe seleccionar un Artículo
+                <form action="#" id="formMovimientoCaja">
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger hide" role="alert" id="msg_cont">
+                                    <span class="fa fa-warning"></span>
+                                    Debe seleccionar un Artículo
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label negrita">Tipo</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control input-sm" id="tipoMovimientoAdd" name="tipoMovimientoAdd">
+                                            <option value="">Seleccionar</option>
+                                            <option value="ING">INGRESO</option>
+                                            <option value="EGR">EGRESO</option>
+                                            <option value="BCO">DEPOSITO EN BANCO</option>
+                                            <option value="SEP">SEPARACIÓN</option>
+                                            <option value="TPL">TRÁMITES DE PLACAS</option>
+                                            <option value="ALQ">ALQUILERES</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label negrita">Forma de pago</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control input-sm" id="formaPagoAdd" name="formaPagoAdd" disabled>
+                                            <option value="EFE">EFECTIVO</option>
+                                        </select>
+                                    </div>
+    
+                                </div>
+                                <div class="form-group separacion ingresos_egresos" style="display: none;">
+                                    <input type="hidden" name="idcliente_m" id="idcliente_m">
+                                    <label class="col-sm-2 control-label negrita"> Documento</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control input-sm" id="documento_cliente" name="documento_cliente">
+                                    </div>
+                                    <label class="col-sm-2 control-label negrita">Razón Social</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control input-sm" id="razonsocial_cliente_m" name="razonsocial_cliente_m"
+                                        readonly>
+                                    </div>
+    
+                                </div>
+                                <div class="form-group separacion" style="display: none;">
+                                    <label class="col-sm-4 control-label negrita">Emitir Comprobante</label>
+                                    <div class="col-sm-2">
+                                        <label class="checkbox-inline i-checks">
+                                            <input type="checkbox" id="emitir_comprobante" name="emitir_comprobante" checked value="S">
+                                            <span id="text_emitir_comprobante">SI</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group separacion datos-comprobante" style="display: none;">
+                                    <label class="col-sm-2 control-label negrita"> Tipo Doc.</label>
+                                    <div class="col-sm-4">
+                                        <select id="tipo_doc_venta" name="tipo_doc_venta"
+                                        class="form-control input-sm"></select>
+                                    </div>
+                                    <label for="" class="control-label negrita col-md-1">Serie </label>
+                                    <div class="col-md-2">
+                                     
+                                        <select id="serie_comprobante_m" name="serie_comprobante_m"class="form-control input-sm"></select>
+                                    </div>
+                                    <label for="" class="control-label negrita col-md-1">Número </label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="numero_comprobante_m" name="numero_comprobante_m" class="form-control input-sm" readonly="readonly">
+                                    </div>
+    
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label negrita">Moneda</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control input-sm" id="idMonedaAdd" name="idMonedaAdd">
+                                            <option value="">Seleccionar</option>
+                                            <option value="1" data-simbolo="S/">SOLES</option>
+                                            <option value="2" data-simbolo="$">US DOLLAR</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-sm-2 control-label negrita">Monto</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="montoAdd" class="form-control input-sm" id="montoAdd"
+                                            onkeypress="return validDecimals(event, this, 2)" placeholder="0.00">
+                                    </div>
+    
+                                </div>
+    
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label negrita">Nro de Operación</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" disabled class="form-control input-sm" id="nrOperacion" name="nrOperacion"
+                                         >
+                                    </div>
+                                    <label class="col-sm-2 control-label negrita">Banco</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control input-sm" id="banco" name="banco" disabled>
+                                          
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label negrita">Cuenta Bancaria</label>
+                                    <div class="col-sm-4">
+                                         <select class="form-control input-sm" name="cuentaBancaria" id="cuentaBancaria" disabled>
+                                           
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label negrita">Concepto</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="conceptoAdd" class="form-control input-sm" id="conceptoAdd">
+                                    </div>
+                                </div>
+                               
+                               
+                                <br>
+    
+                                <div class="form-group formas-pago-detalle">
+                                    <label for="" class="control-label negrita col-md-3">Formas de Pago</label>
+                                    <label for="" class="control-label negrita col-md-1">Total</label>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-addon input-sm">
+                                                <strong class="simbolo-moneda-mov"></strong>
+                                            </span>
+                                            <input type="text" id="monto_mov" name="monto_mov" class="form-control input-sm" readonly="readonly">
+                                        </div>
+                                    
+                                    
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-primary btn-sm" id="agregar-formas-pago" ng-click="agregar_formas_pago()">Agregar</button>
+                                    </div>
+                                </div>
+        
+                                <div class="row formas-pago-detalle">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                                <thead>
+                                                    <th>Moneda</th>
+                                                    <th>Tipo</th>
+                                                    <th>Nro Operación</th>
+                                                    <!-- <th>Tarjeta/Concepto/Cuenta/Banco Ref.</th> -->
+                                                    <th>Tarjeta</th>
+                                                    <!-- <th>Serie y Número</th> -->
+                                                    <th>Monto</th>
+                                                    <th>T.C.</th>
+                                                    <th>Monto Moneda Documento</th>
+                                                    <th>Monto Aplicado Moneda Documento</th>
+                                                    <th>Vuelto</th>
+                                                    <th></th>
+                                                </thead>
+                                                <tbody id="detalle-formas-pago-mov"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                               
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label negrita">Tipo</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control input-sm" id="tipoMovimientoAdd">
-                                        <option value="">Seleccionar</option>
-                                        <option value="ING">INGRESO</option>
-                                        <option value="EGR">EGRESO</option>
-                                        <option value="BCO">DEPOSITO EN BANCO</option>
-                                        <option value="SEP">SEPARACIÓN</option>
-                                        <option value="TPL">TRÁMITES DE PLACAS</option>
-                                        <option value="ALQ">ALQUILERES</option>
-                                    </select>
-                                </div>
-                                <label class="col-sm-2 control-label negrita">Forma de pago</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control input-sm" id="formaPagoAdd" disabled>
-                                        <option value="EFE">EFECTIVO</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                            <div class="form-group separacion ingresos_egresos" style="display: none;">
-                                <input type="hidden" name="idcliente_m" id="idcliente_m">
-                                <label class="col-sm-2 control-label negrita"> Documento</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control input-sm" id="documento_cliente">
-                                </div>
-                                <label class="col-sm-2 control-label negrita">Razón Social</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control input-sm" id="razonsocial_cliente_m"
-                                    readonly>
-                                </div>
-
-                            </div>
-                            <div class="form-group separacion" style="display: none;">
-                                <label class="col-sm-4 control-label negrita">Emitir Comprobante</label>
-                                <div class="col-sm-2">
-                                    <label class="checkbox-inline i-checks">
-                                        <input type="checkbox" id="emitir_comprobante" checked value="S">
-                                        <span id="text_emitir_comprobante">SI</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group separacion datos-comprobante" style="display: none;">
-                                <label class="col-sm-2 control-label negrita"> Tipo Doc.</label>
-                                <div class="col-sm-4">
-                                    <select id="tipo_doc_venta" name="tipo_doc_venta"
-                                    class="form-control input-sm"></select>
-                                </div>
-                                <label for="" class="control-label negrita col-md-1">Serie </label>
-                                <div class="col-md-2">
-                                 
-                                    <select id="serie_comprobante_m" name="serie_comprobante_m"class="form-control input-sm"></select>
-                                </div>
-                                <label for="" class="control-label negrita col-md-1">Número </label>
-                                <div class="col-md-2">
-                                    <input type="text" id="numero_comprobante_m" name="numero_comprobante_m" class="form-control input-sm" readonly="readonly">
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label negrita">Moneda</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control input-sm" id="idMonedaAdd">
-                                        <option value="">Seleccionar</option>
-                                        <option value="1" data-simbolo="S/">SOLES</option>
-                                        <option value="2" data-simbolo="$">US DOLLAR</option>
-                                    </select>
-                                </div>
-                                <label class="col-sm-2 control-label negrita">Monto</label>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control input-sm" id="montoAdd"
-                                        onkeypress="return validDecimals(event, this, 2)" placeholder="0.00">
-                                </div>
-
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label negrita">Nro de Operación</label>
-                                <div class="col-sm-4">
-                                    <input type="text" disabled class="form-control input-sm" id="nrOperacion"
-                                     >
-                                </div>
-                                <label class="col-sm-2 control-label negrita">Banco</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control input-sm" id="banco" disabled>
-                                      
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label negrita">Cuenta Bancaria</label>
-                                <div class="col-sm-4">
-                                     <select class="form-control input-sm" id="cuentaBancaria" disabled>
-                                       
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label negrita">Concepto</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control input-sm" id="conceptoAdd">
-                                </div>
-                            </div>
-                           
-                           
-                            <br>
-
-                           
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger-admin btn-sm"
