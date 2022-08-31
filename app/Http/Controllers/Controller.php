@@ -231,6 +231,8 @@ class Controller extends BaseController
 
         $result = array();
         $venta_ref = $caja_diaria_detalle_repo->get_venta($data["idventa"]);
+        $data["cCodConsecutivo"] = (!empty($data["cCodConsecutivo"])) ? $data["cCodConsecutivo"] : 0;
+        $data["nConsecutivo"] = (!empty($data["nConsecutivo"])) ? $data["nConsecutivo"] : 0;
 
         $parametro_igv =  $caja_diaria_detalle_repo->get_parametro_igv();
 

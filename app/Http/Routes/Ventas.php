@@ -40,5 +40,7 @@ Route::get('ventas/imprimir_ticket_pago_cuota/{id}', 'MovimientoCajaController@i
 Route::get('ventas/imprimir_ticket_pago_documento_pendiente/{id}', 'MovimientoCajaController@imprimir_ticket_pago_documento_pendiente'); 
 Route::get('ventas/imprimir_comprobante/{id}', 'MovimientoCajaController@imprimir_comprobante');
 
+Route::post('ventas/get_caja_diaria', 'MovimientoCajaController@get_caja_diaria');
+
 
 

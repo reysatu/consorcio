@@ -522,8 +522,10 @@
 
                             $("#formulario-ventas").trigger("reset");
 
-                            var id = data.datos[0].cCodConsecutivo_solicitud + "|" + data.datos[0].nConsecutivo_solicitud + "|" + data.datos[0].idventa;
-
+                            var cCodConsecutivo_solicitud = (typeof data.datos[0].cCodConsecutivo_solicitud != "undefined") ? data.datos[0].cCodConsecutivo_solicitud : "0";
+                            var nConsecutivo_solicitud = (typeof data.datos[0].nConsecutivo_solicitud != "undefined") ? data.datos[0].nConsecutivo_solicitud : "0";
+                            var id = cCodConsecutivo_solicitud + "|" + nConsecutivo_solicitud + "|" + data.datos[0].idventa;
+                            // console.log(id);
                             window.open("ventas/imprimir_comprobante/" + id);
 
                             LoadRecordsButtonVentas.click();

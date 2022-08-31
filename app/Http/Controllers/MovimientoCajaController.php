@@ -370,8 +370,7 @@ class MovimientoCajaController extends Controller
                 }
               
                
-                
-              
+               
                 // GUARDAR TAMBIEN UN TICKET
                 $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
                 if(count($ticket) <= 0) {
@@ -385,7 +384,7 @@ class MovimientoCajaController extends Controller
                 $data_ticket = array();
                
                 $data_ticket["idventa"] = $repo->get_consecutivo("ERP_Venta", "idventa");
-                $data_ticket["idventa_comprobante"] = $data_venta["idventa"];
+                $data_ticket["idventa_comprobante"] = (isset($data_venta["idventa"])) ? $data_venta["idventa"] : "";
                 $data_ticket["documento_cpe"] = "";
                 $data_ticket["enviado_cpe"] = "";
                 
@@ -407,7 +406,7 @@ class MovimientoCajaController extends Controller
                 $data_ticket["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
     
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_ticket));
-    
+                // echo "olas"; exit;
                
                 $data_ticket_detalle = array();
                 $data_ticket_detalle["idventa"] = $data_ticket["idventa"];
@@ -427,11 +426,12 @@ class MovimientoCajaController extends Controller
         
                 
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
+              
                 
                 $this->guardar_detalle_forma_pago($data, $data_ticket, $repo, $recaj, $data['idMonedaAdd'], $totales_actualizados);
                 $totales_actualizados = true;
                 
-            
+              
                 $repoCC->actualizar_correlativo($serie_ticket, $consecutivo_ticket);
                 $idventa_ticket = $data_ticket["idventa"];
 
