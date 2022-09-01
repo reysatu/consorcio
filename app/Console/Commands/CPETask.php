@@ -585,8 +585,8 @@ class CPETask extends Command
         if($venta[0]->IdTipoDocumento == "07" || $venta[0]->IdTipoDocumento == "08" && count($venta_referencia) > 0) {
             $json_array["docmodif"]["tip_doc"] = $venta_referencia[0]->IdTipoDocumento;
             $json_array["docmodif"]["serie_correl"] = $venta_referencia[0]->serie_comprobante."-".str_pad($venta_referencia[0]->numero_comprobante, 8, "0", STR_PAD_LEFT);
-            $json_array["docmodif"]["cod_ref"] = $venta_referencia[0]->idmotivo;
-            $json_array["docmodif"]["descrip_motiv"] = $venta_referencia[0]->motivo_descripcion;
+            $json_array["docmodif"]["cod_ref"] = $venta[0]->idmotivo;
+            $json_array["docmodif"]["descrip_motiv"] = $venta[0]->motivo_descripcion;
             $json_array["docmodif"]["fec_emi"] = $venta_referencia[0]->fecha_emision_server;
         }
         // $json_array["hora_emi"] = $venta[0]->hora_server;
