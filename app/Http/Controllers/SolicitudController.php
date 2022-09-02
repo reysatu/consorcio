@@ -20,6 +20,7 @@ use App\Http\Recopro\SolicitudCredito\SolicitudCreditoInterface;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\SolicitudRequest;
 use App\Models\BaseModel;
+use Exception;
 use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -336,13 +337,29 @@ class SolicitudController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $solicitud_articulo = $Repo->get_solicitud_articulo($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            if(count($solicitud_articulo) <= 0) {
+                throw new Exception("La solicitud no tiene un detalle de articulos!");
+            }
             
             if($data["tipo_solicitud"] == "1") {
-                $validar_series = $Repo->get_solicitud_detalle($data["cCodConsecutivo"], $data["nConsecutivo"]);
-                
-                if(count($validar_series) <= 0) {
-                    throw new Exception("Por Favor ingrese las series!");
+
+                for ($ii=0; $ii < count($solicitud_articulo); $ii++) { 
+                    if($solicitud_articulo[$ii]->serie == 1) {
+                        $res = $Repo->get_solicitud_detalle_series($solicitud_articulo[$ii]->cCodConsecutivo, $solicitud_articulo[$ii]->nConsecutivo, $solicitud_articulo[$ii]->id);
+
+                        if(count($res) <= 0 ) {
+                            throw new Exception("Por Favor ingrese la serie del producto: ". $solicitud_articulo[$ii]->producto." en el detalle de la solicitud!");
+                        }
+                    }
                 }
+
+                // $validar_series = $Repo->get_solicitud_detalle($data["cCodConsecutivo"], $data["nConsecutivo"]);
+                
+                // if(count($validar_series) <= 0) {
+                //     throw new Exception("Por Favor ingrese las series!");
+                // }
             }
 
             if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
@@ -355,6 +372,7 @@ class SolicitudController extends Controller
             
             
                 $result = $Repo->envio_aprobar_solicitud($data_update);
+                
                 if(isset($result[0]->msg) && $result[0]->msg != "OK") {
                     $res["msg"] = $result[0]->msg;
                 }
