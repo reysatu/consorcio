@@ -333,31 +333,53 @@ class SolicitudController extends Controller
         $data_update = array();
         $data_update["cCodConsecutivo"] = $data["cCodConsecutivo"];
         $data_update["nConsecutivo"] = $data["nConsecutivo"];
-        if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
-            $data_update["estado"] = "2"; // vigente
-   
 
-        } else {
-            $data_update["estado"] = "3"; // por aprobar
-           
-            $result = $Repo->envio_aprobar_solicitud($data_update);
-            if(isset($result[0]->msg) && $result[0]->msg != "OK") {
-                $res["msg"] = $result[0]->msg;
+        try {
+            DB::beginTransaction();
+            
+            if($data["tipo_solicitud"] == "1") {
+                $validar_series = $Repo->get_solicitud_detalle($data["cCodConsecutivo"], $data["nConsecutivo"]);
+                
+                if(count($validar_series) <= 0) {
+                    throw new Exception("Por Favor ingrese las series!");
+                }
             }
-        }
 
-        if(!empty($res["msg"])) {
-            $res["status"] = "ei";
-        }
+            if($data["tipo_solicitud"] == "1" || $data["cuota_inicial"] > 0) {
+                $data_update["estado"] = "2"; // vigente
+    
 
-        $res["datos"] = $data_update;
-        // exit;
-        // print_r($res); exit;
-        // print_R($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
-        $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+            } else {
+                $data_update["estado"] = "3"; // por aprobar
+
+            
+            
+                $result = $Repo->envio_aprobar_solicitud($data_update);
+                if(isset($result[0]->msg) && $result[0]->msg != "OK") {
+                    $res["msg"] = $result[0]->msg;
+                }
+            }
+
+            if(!empty($res["msg"])) {
+                $res["status"] = "ei";
+            }
+
+            $res["datos"] = $data_update;
+            // exit;
+            // print_r($res); exit;
+            // print_R($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
+            $this->base_model->modificar($this->preparar_datos("dbo.ERP_Solicitud", $data_update));
         // echo json_encode($res);
 
-        return response()->json($res);
+            DB::commit();
+            return response()->json($res);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response["status"] = "ei"; 
+            $response["msg"] = $e->getMessage(); 
+            return response()->json($response);
+        }
+       
     }
 
     public function find(SolicitudInterface $Repo, Request $request, Orden_servicioInterface $repo_orden) {

@@ -3177,6 +3177,10 @@
                 
             }
 
+            if ($("#tipo_solicitud").val() == "4") {
+                bval = bval && $("#condicion_pago").required();
+            }
+
             if ($("#tipo_solicitud").val() == "2" && $("#ingreso_neto_mensual").val() == "") {
                 AlertFactory.textType({
                     title: '',
