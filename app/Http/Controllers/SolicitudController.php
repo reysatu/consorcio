@@ -347,9 +347,9 @@ class SolicitudController extends Controller
 
                 for ($ii=0; $ii < count($solicitud_articulo); $ii++) { 
                     if($solicitud_articulo[$ii]->serie == 1) {
-                        $res = $Repo->get_solicitud_detalle_series($solicitud_articulo[$ii]->cCodConsecutivo, $solicitud_articulo[$ii]->nConsecutivo, $solicitud_articulo[$ii]->id);
+                        $r = $Repo->get_solicitud_detalle_series($solicitud_articulo[$ii]->cCodConsecutivo, $solicitud_articulo[$ii]->nConsecutivo, $solicitud_articulo[$ii]->id);
 
-                        if(count($res) <= 0 ) {
+                        if(count($r) <= 0 ) {
                             throw new Exception("Por Favor ingrese la serie del producto: ". $solicitud_articulo[$ii]->producto." en el detalle de la solicitud!");
                         }
                     }
