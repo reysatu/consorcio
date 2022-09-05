@@ -509,6 +509,7 @@ class CPETask extends Command
         $json = array();
     
         $json_array = array();
+        $cod_notas = array("07", "08");
         $venta_referencia = array();
         $venta = $caja_diaria_detalle_repo->get_venta($idventa);
 
@@ -655,10 +656,10 @@ class CPETask extends Command
        
        
       
-        if ($venta[0]->codcondicionpago == 1) { // contado
+        if ($venta[0]->codcondicionpago == 1 && !in_array($venta[0]->IdTipoDocumento, $cod_notas)) { // contado
             $json_array["forma_pago"]["descrip"] = "Contado";
            
-        } else { // credito
+        } elseif(!in_array($venta[0]->IdTipoDocumento, $cod_notas)) { // credito
             $json_array["forma_pago"]["descrip"] = "Credito";
             $json_array["cuota"] = array();
             $cuotas = array();
