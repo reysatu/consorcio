@@ -3799,6 +3799,7 @@
 
             $("#formulario-creditos").find("input").removeAttr("readonly");
             $("#formulario-creditos").find("select").removeAttr("disabled");
+            $("#condicion_pago").removeAttr("disabled");
             $(".datos-persona").attr("readonly", "readonly");
             $(".select-persona").attr("disabled", "disabled");
 

@@ -15,10 +15,11 @@
 
         /** Defina ahora los márgenes reales de cada página en el PDF **/
         body {
-            margin-top: 7.2cm;
+            margin-top: 7.9cm;
             margin-left: 0.5cm;
             margin-right: 0.5cm;
-            margin-bottom: 2cm;
+            margin-bottom: 7cm;
+           
         }
             
         header {
@@ -26,19 +27,30 @@
             top: 0.9cm;
             left: 1cm;
             right: 1cm;
-            height: 7.2cm;
+            height: 7cm;
             /* text-align: center; */
             line-height: 0.8cm;
             /* font-family: 'Times New Roman' !important; */
             font-family: 'Arial' !important;
+            /* border: 1px solid black; */
         }
 
+        main {
+            /* border: 1px solid blue; */
+        
+          
+            
+        
+          
+        }
         footer {
+            /* border: 1px solid red; */
             position: fixed; 
-            bottom: -100px; 
+           
             left: 1cm;
             right: 1cm;
-            height: 400px; 
+            height: 7cm;
+            bottom: 0cm;
             /* border: 1px solid black; */
 
             /** Extra personal styles **/
@@ -47,6 +59,8 @@
             /* text-align: center; */
             /* line-height: 35px; */
         }
+
+     
 
 
 
@@ -152,7 +166,7 @@
     <!-- <div class="clear"></div> -->
     
     <main>  
-        <br><br><br>
+       
         <table style="width: 100%; ">
             <tr >
                 <td style="width: 20%;">CLIENTE :</td>
@@ -182,7 +196,16 @@
             <?php  if($venta[0]->IdTipoDocumento == "07") { ?>
                 <tr>
                     <td style="width: 20%;">Doc. Que Modifica: </td>
-                    <td style="width: 55%;">{{ $venta_referencia[0]->tipo_documento }} {{ $venta_referencia[0]->serie_comprobante }}-{{ $venta_referencia[0]->numero_comprobante }}</td>
+                    <td style="width: 35%;">{{ $venta_referencia[0]->tipo_documento }} {{ $venta_referencia[0]->serie_comprobante }}-{{ $venta_referencia[0]->numero_comprobante }}</td>
+                    <td style="width: 45%;">Fecha Doc. Que Modifica: 
+                        <?php 
+                            $arrd_ref = explode("/", $venta_referencia[0]->fecha_emision_user);
+                    
+                            echo $arrd_ref[0]." / ".$mes[$arrd_ref[1]-1]." / ".$arrd_ref[2]; 
+                        
+                        ?>
+                    </td>
+                   
                    
                 </tr>
                 <tr>

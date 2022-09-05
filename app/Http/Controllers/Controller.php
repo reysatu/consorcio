@@ -290,6 +290,7 @@ class Controller extends BaseController
         }
 
         $data_venta["idventa"]                   = $Repo->get_consecutivo("ERP_Venta", "idventa");
+        $data_venta["documento_cpe"] = $data["name_cpe"];
         $data_venta["cCodConsecutivo_solicitud"] = $data["cCodConsecutivo"];
         $data_venta["nConsecutivo_solicitud"]    = $data["nConsecutivo"];
         $data_venta["condicion_pago"]            = 1;
@@ -302,6 +303,7 @@ class Controller extends BaseController
         $data_venta["t_monto_subtotal"] = $data["monto"];
 
         $data_venta["t_monto_total"] = $data["monto"];
+        $data_venta["t_monto_exonerado"] = $data["monto"];
 
         $data_venta["saldo"]  = "0";
         $data_venta["pagado"] = $data["monto"];
@@ -310,7 +312,7 @@ class Controller extends BaseController
         $data_venta["idcajero"] = auth()->id();
         $data_venta["idtienda"] = $caja_diaria_detalle_repo->get_caja_tienda()[0]->idtienda;
         $data_venta["idcaja"]   = $caja_diaria_detalle_repo->get_caja_tienda()[0]->idcaja;
-        // print_r($data_venta);
+        // print_r($data_venta); exit;
         $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_Venta", $data_venta));
 
         $venta_detalle = $caja_diaria_detalle_repo->get_venta_detalle($data["idventa"]);
@@ -404,6 +406,7 @@ class Controller extends BaseController
             // die($sql_update);
             DB::statement($sql_update);
         }
+
 
 
         $repoCC->actualizar_correlativo($data["serie_comprobante"], $data["numero_comprobante"]);

@@ -11,7 +11,9 @@ namespace App\Http\Controllers;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleInterface;
 use App\Http\Recopro\CajaDiaria\CajaDiariaInterface;
 use App\Http\Recopro\CajaDiariaDetalle\CajaDiariaDetalleRepository;
+use App\Http\Recopro\Compania\CompaniaInterface;
 use App\Http\Recopro\ConsecutivosComprobantes\ConsecutivosComprobantesInterface;
+use App\Http\Recopro\Customer\CustomerInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Recopro\Shop\ShopInterface;
 use App\Http\Recopro\Solicitud\SolicitudInterface;
@@ -23,6 +25,7 @@ use App\Models\BaseModel;
 use DB;
 use PDF;
 use Illuminate\Http\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class VentasController extends Controller 
 {
@@ -241,18 +244,40 @@ class VentasController extends Controller
 
     
 
-    public function guardar_venta(VentasInterface $Repo, Request $request, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC)
+    public function guardar_venta(VentasInterface $Repo, Request $request, CajaDiariaDetalleInterface $caja_diaria_detalle_repo, CajaDiariaInterface $caja_diaria_repositorio, ConsecutivosComprobantesInterface $repoCC, CustomerInterface $repo_cliente, CompaniaInterface $compania_repo)
     {
 
         $data = $request->all();
+
+        // print_r($data); exit;
+        // console.log("desprendimiento");
 
         $result = array();
 
         try {
             DB::beginTransaction();
             // $venta = $caja_diaria_detalle_repo->get_venta();
+            $cliente = $repo_cliente->find($data["idcliente"]);
+            $empresa = $compania_repo->find("00000");
             
+            $name_cpe = $empresa->Ruc . "-07-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
+
+            $data["name_cpe"] = $name_cpe;
             $result = $this->emitir_nota($data, $caja_diaria_detalle_repo, $caja_diaria_repositorio, $Repo, $repoCC);
+
+            
+            
+
+            $total_qr = str_replace(",", "", number_format($data["monto"], 2));
+
+            $string_qr = $empresa->Ruc . "|07|" .$data["serie_comprobante"]. "|" .str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT). "|0.00|" .$total_qr. "|" .date("Y-m-d"). "|" .$cliente[0]->tipodoc. "|" .$cliente[0]->documento;
+            // GUARDAMOS IMAGEN DEL CODIGO QR
+            // referencia: https://www.desarrollolibre.net/blog/laravel/generar-simples-codigos-qrs-con-laravel
+            if (!file_exists(base_path("public/QR/"))) {
+                mkdir(base_path("public/QR/"), 0777, true);
+            }
+            QrCode::format('png')->margin(0)->size(300)->color(0, 0, 0)->generate($string_qr, '../public/QR/'.$name_cpe.".png");
+
             DB::commit();
             return response()->json($result);
         } catch (\Exception $e) {
