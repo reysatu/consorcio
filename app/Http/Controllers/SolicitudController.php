@@ -103,7 +103,7 @@ class SolicitudController extends Controller
 
             // solo en estado regisstrado actualizara el saldo
             
-            if($data["estado"] == "1") { 
+            if($data["estado"] == "1" || $data["estado"] == "") { 
                 //SALDOS
                 $data["saldo"] = $data["t_monto_total"];
             }
@@ -661,6 +661,15 @@ class SolicitudController extends Controller
     public function validar_serie(Request $request, SolicitudInterface $repo) {
         $data = $request->all();
         $result = $repo->validar_serie($data["idserie"]);
+        return response()->json($result);
+    }
+
+    public function copiar_solicitud(Request $request, SolicitudInterface $repo) {
+        $data = $request->all();
+
+        for ($i=0; $i < $data["numero_solicitudes"]; $i++) { 
+            $result = $repo->copiar_solicitud($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        }
         return response()->json($result);
     }
  

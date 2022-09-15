@@ -35,5 +35,6 @@ Route::get('aperturaCajas/pdfdiar', 'MovimientoCajaController@pdfdiarioApert');
 Route::get('aperturaCajas/Cuadrepdfdiar', 'MovimientoCajaController@pdfCuadreApert');
 
 Route::get('aperturaCajas/EmisionComprpdfdiar', 'MovimientoCajaController@EmisionComprpdfApert');
+Route::get('aperturaCajas/reporte_EmisionComprpdf/{id}', 'MovimientoCajaController@reporte_EmisionComprpdf');
 
 // Route::get('aperturaCajas/deleteUsuario/{id}', ['as' => 'aperturaCajas.deleteUsuario', 'uses' => 'CajaDiariaController@deleteDetalle']); 

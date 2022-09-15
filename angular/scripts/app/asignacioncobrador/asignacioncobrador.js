@@ -51,7 +51,7 @@
                     cobradores[idx] =$(this).attr('data_idSolicitud');
                 });
                 cobradores = cobradores.join(',');
- 
+                // alert(idCobrador.val());
                 var params = {
                     'idCobrador':idCobrador.val(),
                     'cobradores':cobradores,
@@ -452,9 +452,11 @@
                          idCobrador.append('<option value="'+index.id+'">'+index.descripcion+'</option>');
                       });
                       $("#idCobradorFiltro").append('<option value="" selected>Cobradores</option>');
+                      $("#idCobradorFiltro").append('<option value="N">No Tienen Cobrador</option>');
                       cobradores.map(function (index) {
                          $("#idCobradorFiltro").append('<option value="'+index.id+'">'+index.descripcion+'</option>');
                       });
+                      
                       $("#idClienteFiltro").append('<option value="" selected>Clientes</option>');
                       clientes.map(function (index) {
                          $("#idClienteFiltro").append('<option value="'+index.id+'">'+index.razonsocial_cliente+'</option>');

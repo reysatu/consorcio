@@ -67,3 +67,5 @@ Route::post('solicitud/validar_parametro_categoria', ['as' => 'solicitud.validar
 
 Route::post('solicitud/validar_serie', ['as' => 'solicitud.validar_serie', 'uses' => 'SolicitudController@validar_serie']);
 
+Route::post('solicitud/copiar_solicitud', ['as' => 'solicitud.copiar_solicitud', 'uses' => 'SolicitudController@copiar_solicitud']);
+

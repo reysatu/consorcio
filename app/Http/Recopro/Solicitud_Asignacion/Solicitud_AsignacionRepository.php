@@ -117,8 +117,13 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
             if($idInicio!='' && $idFin!=''){
                   $q->whereIn('nConsecutivo',$solitud);
             }
-             if($idCobradorFiltro !='' ){
+             if($idCobradorFiltro !='' &&  $idCobradorFiltro !='N'){
                   $q->where('idCobrador',$idCobradorFiltro);
+            }
+         
+
+            if($idCobradorFiltro =='N'){
+                $q->whereNull("idCobrador");
             }
             if($idClienteFiltro !='' ){
                   $q->where('idCliente',$idClienteFiltro);
@@ -252,12 +257,17 @@ left join ERP_Cobrador as usc on usc.id=so.idCobrador
                 $dato=$dato->whereIn('nConsecutivo',$solitud);
             }
 
-             if($idCobradorFiltro !='' ){
+             if($idCobradorFiltro !='' &&  $idCobradorFiltro !='N'){
                 $dato=$dato->where('idCobrador',$idCobradorFiltro);
             }
             if($idClienteFiltro !='' ){
                 $dato=$dato->where('idCliente',$idClienteFiltro);
             }  
+
+            if($idCobradorFiltro =='N'){
+                $dato=$dato->whereNull("idCobrador");
+            }
+
             if($idTipoSolicitud !='' ){
             $dato=$dato->where('tipo_solicitud',$idTipoSolicitud);
         }

@@ -158,6 +158,7 @@ class AsignacioncobradorController extends Controller
             $idFin = $request->input('idFin', '');
             $idClienteFiltro = $request->input('idClienteFiltro', '');
             $idCobradorFiltro = $request->input('idCobradorFiltro', '');
+            $idCobrador = $request->input('idCobrador', '');
 
             $FechaInicioFiltro = $request->input('FechaInicioFiltro', '');
             $FechaFinFiltro = $request->input('FechaFinFiltro', '');
@@ -168,7 +169,8 @@ class AsignacioncobradorController extends Controller
             $distrito = $request->input('distrito', '');
 
             $idsector = $request->input('idsector', '');
-            $datafilcab =$repoas->allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito);
+            // $datafilcab =$repoas->allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobradorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito);
+            $datafilcab =$repoas->allFiltro_asignac($s,$filtro_tienda,$idInicio,$idFin,$idClienteFiltro,$idCobrador,$FechaInicioFiltro,$FechaFinFiltro,$Departamento,$provincia,$distrito,$idsector,$iddistrito);
 
             $cod=array(); 
             foreach ($datafilcab as $row) {
