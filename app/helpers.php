@@ -281,6 +281,8 @@ function generateExcelMovimientoCierre($data, $file_name, $sheet_name,$fechacA,$
 
     return response()->json($response);
 }
+
+
 function generateExcelMensualCompleto($data, $file_name, $sheet_name,$data_info,$anio,$data_tecnico,$data_metas)
 {
     
