@@ -48,11 +48,13 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
             if($idConvenio !='' ){
             $dato=$dato->where('idconvenio',$idConvenio);
         }
+
+        // echo $dato->Sql(); exit;
         return $dato->get();
     }
      public function search($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio)
     {
-        return $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio){
+        $result = $this->model->where(function($q) use ($s,$filtro_tienda,$idClienteFiltro,$idVendedorFiltro,$FechaInicioFiltro,$FechaFinFiltro,$idcategoria,$idTipoSolicitud,$idConvenio){
             if(!empty($FechaInicioFiltro) and !empty($FechaFinFiltro) ){
                  $q->whereDate('Fecha','>=',$FechaInicioFiltro);
                  $q->whereDate('Fecha','<=',$FechaFinFiltro);
@@ -78,7 +80,12 @@ class ReporteVentaClienteRepository implements ReporteVentaClienteInterface
             if($idConvenio !='' ){
                   $q->where('idconvenio',$idConvenio);
             }
-        })->whereNull('anulado')->orWhere('anulado','!=','S');
+        })->where(function ($query) {
+            $query->whereNull('anulado')->orWhere('anulado','!=','S');
+        });
+
+       
+        return $result;
 
     }
     public function allActive()
