@@ -939,9 +939,12 @@
                 var id = idcajaMC.val();
 
                 // +"&nrOperacion="+nrOperacion.val()+"&bancoText="+$("#banco option:selected").text()+"&idBanco="+banco.val()+"&idCuenta="+toCuenta[0]+"&numero_cuenta="+toCuenta[1]+"&serie_comprobante="+$("#serie_comprobante_m").val()+"&numero_comprobante="+$("#numero_comprobante_m").val()+"&IdTipoDocumento="+$("#tipo_doc_venta").val()+"&idcliente="+$("#idcliente_m").val()+"&emitir_comprobante="+$("#emitir_comprobante").val()
+
+                $("#btn_saveAddMovimientoCaja").attr("disabled", "disabled");
                 $.post('movimientoCajas/saveMovimientoCaja', $("#formMovimientoCaja").serialize()+"&id="+id+"&IdTipoDocumento="+$("#tipo_doc_venta").val()+"&serie_comprobante="+$("#serie_comprobante_m").val()+"&numero_comprobante="+$("#numero_comprobante_m").val()+"&idcliente="+$("#idcliente_m").val()+"&emitir_comprobante="+$("#emitir_comprobante").val()+"&formaPagoAdd="+formaPagoAdd.val(),
                     function (data, textStatus, jqXHR) {
                         console.log(data);
+                        $("#btn_saveAddMovimientoCaja").removeAttr("disabled");
                         var response = data;
                         if (!_.isUndefined(response.status) && response.status) {
                         
