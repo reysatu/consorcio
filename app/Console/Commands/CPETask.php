@@ -536,7 +536,9 @@ class CPETask extends Command
             $producto = $solicitud_repositorio->get_solicitud_articulo_vehiculo($venta[0]->cCodConsecutivo_solicitud, $venta[0]->nConsecutivo_solicitud);
         }
 
-	
+        if(count($venta_anticipo) <= 0 && !empty($venta[0]->idventa_separacion)) {
+            $venta_anticipo = $caja_diaria_detalle_repo->get_venta($venta[0]->idventa_separacion);
+        }
 
         $empresa = $compania_repo->find("00000");
 		
@@ -620,20 +622,23 @@ class CPETask extends Command
         $json_array["tot"]["trib_exo"] = "0.00"; //TRIBUTOS OPERACIONES EXONERADAS
         // echo $venta[0]->comprobante_x_saldo;
       
-        if (count($venta_anticipo) > 0 && $venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") { // por el saldo, segunda boleta
-           
-            $json_array["tot"]["val_vent"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
-            $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
+        if ((count($venta_anticipo) > 0 && $venta[0]->comprobante_x_saldo == "S" && $venta[0]->tipo_comprobante == "0") || $venta[0]->anticipo > 0) { // por el saldo, segunda boleta y tambien ventas que han sido pagadas aplicando alguna venta por separacion
+            $t_monto_total =  $solicitud[0]->t_monto_total;
+            if(!empty($venta[0]->idventa_separacion)) {
+                $t_monto_total = $venta[0]->t_monto_subtotal + $venta[0]->anticipo;
+            }
+            $json_array["tot"]["val_vent"] = sprintf('%.2f', round($t_monto_total, 2));
+            $json_array["tot"]["prec_tot"] = sprintf('%.2f', round($t_monto_total, 2));
             $json_array["tot"]["antic"] = sprintf('%.2f', round($venta[0]->anticipo, 2));
 
            
-            $factor_cd = ($venta_anticipo[0]->t_monto_total / $solicitud[0]->t_monto_total);
+            $factor_cd = ($venta_anticipo[0]->t_monto_total / $t_monto_total);
              
             $json_array["cargo"][0]["cod_cd"] = "05"; // Descuentos globales por anticipos exonerados
            
             $json_array["cargo"][0]["factor_cd"] = sprintf('%.5f', round($factor_cd, 5));
             $json_array["cargo"][0]["monto_cd"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
-            $json_array["cargo"][0]["base_cd"] = sprintf('%.2f', round($solicitud[0]->t_monto_total, 2));
+            $json_array["cargo"][0]["base_cd"] = sprintf('%.2f', round($t_monto_total, 2));
 
             $json_array["ant"][0]["imp_prepagado"] = sprintf('%.2f', round($venta_anticipo[0]->t_monto_total, 2));
             $tip_doc_ant = "";

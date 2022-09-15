@@ -58,7 +58,9 @@
                     }else if($("#estadReporte").val()==2){
                        $scope.loadMovimientoCuadreCajaPDF('aperturaCajas/Cuadrepdfdiar', data);
                     }else if($("#estadReporte").val()==3){
-                       $scope.loadMovimientoEmisionComproPDF('aperturaCajas/EmisionComprpdfdiar', data);
+                        // alert($("#idCajaDiaria").val());
+                        // $scope.loadMovimientoEmisionComproPDF('aperturaCajas/EmisionComprpdfdiar', data);
+                        window.open("aperturaCajas/reporte_EmisionComprpdf/"+$("#idCajaDiaria").val());
                     }
             
         });

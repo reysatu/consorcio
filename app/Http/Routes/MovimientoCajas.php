@@ -50,6 +50,7 @@ Route::get('movimientoCajas/pdf', 'MovimientoCajaController@pdf');
 Route::get('movimientoCajas/Cuadrepdf', 'MovimientoCajaController@Cuadrepdf');
 
 Route::get('movimientoCajas/EmisionComprpdf', 'MovimientoCajaController@EmisionComprpdf'); 
+Route::get('movimientoCajas/reporte_EmisionComprpdf/{id}', 'MovimientoCajaController@reporte_EmisionComprpdf'); 
 
 Route::get('movimientoCajas/pdf_diario', 'MovimientoCajaController@pdf_diario');
 

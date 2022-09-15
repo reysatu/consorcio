@@ -343,7 +343,9 @@
                 }else if($("#estadReporte").val()==2){
                     $scope.loadMovimientoCuadreCajaPDF('movimientoCajas/Cuadrepdf', data);
                 }else if($("#estadReporte").val()==3){
-                    $scope.loadMovimientoEmisionComproPDF('movimientoCajas/EmisionComprpdf', data);
+                    // $scope.loadMovimientoEmisionComproPDF('movimientoCajas/EmisionComprpdf', data);
+                    // alert($("#idCajaDiaria").val());
+                    window.open("movimientoCajas/reporte_EmisionComprpdf/-1");
                 }
             }
         });
@@ -2009,6 +2011,7 @@ $scope.emitir_comprobante = function () {
                 } else {
                     total = cuota_inicial;
                 }
+                
             } else {
                 total = t_monto_subtotal - cuota_inicial;
                 if (t_impuestos > 0) {
@@ -2878,8 +2881,9 @@ function obtener_data_for_solicitud() {
 
 
 function change_formas_pago(tipo) {
-    // tipo 1: contado
+    // tipo 1: contado 
     // tipo 2: credito
+    // tipo 3: cuota inicial
     // alert(tipo);
     // todas las formas de pago menos "a credito" y 'DSCTO PLANILLA'
     $("#forma_pago").html("");
@@ -2906,6 +2910,18 @@ function change_formas_pago(tipo) {
                 
             }
             
+            
+        });
+    }
+     // todo lo que tiene al contado pero sin separacion para la cuota inicial
+    if(tipo == 3) {
+        $("#forma_pago").append('<option value="">Seleccionar</option>');
+        _.each(data_formas_pago, function (item) {
+            if(item.codigo_formapago != "ACR" && item.codigo_formapago != "PLA" && item.codigo_formapago != "SEP") {
+                $("#forma_pago").append('<option value="' + item.codigo_formapago + '">' + item.descripcion_subtipo + '</option>');
+            } else {
+                
+            }
             
         });
     }
@@ -3587,10 +3603,15 @@ function find_solicitud(id) {
         }
         // alert(cuota_inicial+" "+pagado);
         
-        if((cuota_inicial > 0 && pagado == 0) || tipo_solicitud == 1) {
+        if(tipo_solicitud == 1) {
             change_formas_pago(1);
         } else {
-            change_formas_pago(2);
+            if(cuota_inicial > 0 && pagado == 0) {
+                change_formas_pago(3);
+            } else {
+
+                change_formas_pago(2);
+            }
         }
         
         if (data.solicitud_articulo.length > 0) {

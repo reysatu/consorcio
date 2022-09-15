@@ -460,4 +460,25 @@ class SolicitudRepository implements SolicitudInterface
         return $result;
         
     }
+
+    public function copiar_solicitud($cCodConsecutivo, $nConsecutivo) {
+        $sql = "
+        DECLARE	@return_value int,
+		@sMensaje varchar(250)
+        SELECT	@sMensaje = N''''''
+        DECLARE @cCodConsecutivo varchar(10)
+        DECLARE @nConsecutivoBase int
+
+        SET NOCOUNT ON; EXEC	@return_value = [dbo].[VTA_CopiarSolicitudVenta]
+                @cCodConsecutivo = N'{$cCodConsecutivo}',
+                @nConsecutivoBase = {$nConsecutivo}
+
+        SELECT	@return_value AS 'return_value', @sMensaje as 'msg'";
+
+        // echo $sql; exit;
+        $res = DB::select($sql);
+
+        // print_r($res);
+        return $res;
+    }
 }

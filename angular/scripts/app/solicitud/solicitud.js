@@ -3169,12 +3169,16 @@
             bval = bval && $("#tipo_solicitud").required();
             bval = bval && idvendedor.required();
             bval = bval && documento_or.required();
+
             if ($("#tipo_solicitud").val() == "2") {
                 bval = bval && $("#cuota_inicial").required();
                 bval = bval && $("#nro_cuotas").required();
                 bval = bval && $("#valor_cuota").required();
                 bval = bval && $("#valor_cuota_final").required();
-                
+            }
+            // alert($("#tipo_solicitud").val());
+            if ($("#tipo_solicitud").val() == "3") {
+                bval = bval && $("#idconvenio").required();
             }
 
             if ($("#tipo_solicitud").val() == "4") {
@@ -3227,7 +3231,6 @@
 
                         }
                     });
-
 
                     // validacion de serie
                     // var articulos_id = $("input[name='idarticulo[]']");
@@ -3324,6 +3327,7 @@
                             $("#estado").val(data.datos[0].estado);
                            
                             $(".enviar_solicitud").show();
+                            $(".copiar-solicitud").show();
                             $(".imprimir-solicitud").show();
                             $(".imprimir-clausula-solicitud").show();
 
@@ -3474,6 +3478,33 @@
 
         }
 
+        $scope.copy_solicitud = function () {
+            var bval = true;
+            bval = bval && $("#numero_solicitudes").required();
+            if(bval) {
+                // alert("copy_solicitud");
+                $.post("solicitud/copiar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val()+ "&numero_solicitudes=" + $("#numero_solicitudes").val(),
+                    function (data, textStatus, jqXHR) {
+                        // console.log(data);
+                        if(data[0].return_value == "0") {
+                            AlertFactory.textType({
+                                title: '',
+                                message: 'La solicitud se copió correctamente.',
+                                type: 'success'
+                            });
+                        } else {
+                            AlertFactory.textType({
+                                title: '',
+                                message: data[0].msg,
+                                type: 'info'
+                            });
+                        }
+                    },
+                    "json"
+                );
+            }
+        }
+        
         $scope.enviar_solicitud = function () {
             var bval = true;
             bval = bval && cCodConsecutivo.required();
@@ -3767,6 +3798,7 @@
                     
                     $("#tipo_sol").val(data.solicitud[0].tipo);
                     $(".aprobaciones").show();
+                    $(".copiar-solicitud").show();
                     $(".imprimir-solicitud").show();
                     $(".imprimir-clausula-solicitud").show();
                     $("#modalSolicitud").modal("show");
@@ -3805,6 +3837,7 @@
 
             $("#total_ingresos").attr("readonly", "readonly");
             $("#total_ingresos_fiador").attr("readonly", "readonly");
+            $("#numero_solicitudes").val("");
             // alert("hola 2");
         }
 
@@ -3829,6 +3862,9 @@
                 $(".m_articulo_idLoc").removeAttr("disabled");
                 // $(".select_lote").removeAttr("disabled");
             }
+
+            $("#numero_solicitudes").removeAttr("readonly");
+            $("#numero_solicitudes").val("");
 
         }
 

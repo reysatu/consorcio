@@ -95,7 +95,7 @@
                     <div class="tab-content">
                         <br>
                         <div>
-                            <div style="float:left">
+                            <div style="float:left; width: 60%;">
                                 <!-- <button type="button" id="" class="btn btn-primary btn-sm btn_ejecucion" disabled>
                                     <span class="fa fa-save"></span>
                                     En Ejecución
@@ -104,10 +104,25 @@
                                     <span class="fa fa-save"></span>
                                     Terminada
                                 </button> -->
-                                <button type="button" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm aprobaciones" style="display: none;" >
-                                    <span class="fa fa-check"></span>
-                                    Aprobaciones
-                                </button>
+                                <div class="row">
+                                    <div class="col-md-2 aprobaciones" style="display: none;">
+                                        <button type="button" ng-click="mostrar_aprobaciones()" class="btn btn-danger btn-sm "  >
+                                            <span class="fa fa-check"></span>
+                                            Aprobaciones
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2 copiar-solicitud" style="display: none; margin-top: -20px;">
+                                        <label for="" class="control-label">N° Solicitudes</label>
+                                        <input class="form-control input-sm" type="number" name="numero_solicitudes" id="numero_solicitudes" />
+                                    </div>
+                                    <div class="col-md-2 copiar-solicitud" style="display: none;">
+                                        <button type="button" ng-click="copy_solicitud()" class="btn btn-success btn-sm " style="" >
+                                            <span class="fa fa-book"></span>
+                                            Copiar Solicitud
+                                        </button>
+                                    </div>
+                                    
+                                </div>
                             </div>
                             <div style="float:right">
                                 <button type="button" ng-click="enviar_solicitud()"  style="display: none;" class="btn btn-success btn-sm enviar_solicitud">

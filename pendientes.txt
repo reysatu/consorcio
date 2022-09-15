@@ -971,25 +971,25 @@ Registro Transferencias
 
 ----------------------------------Críticos
 Impresión de Comprobantes
-- En la impresión de documentos por el saldeo de solicitudes de tipo crédito directo se tiene que desglosar el interes en un item, se creó el parámetro 26 donde se indica el código del item que debe ir en el detalle (similar al anticipo), el id de este artículo es 2350.
+- En la impresión de documentos por el saldeo de solicitudes de tipo crédito directo se tiene que desglosar el interes en un item, se creó el parámetro 26 donde se indica el código del item que debe ir en el detalle (similar al anticipo), el id de este artículo es 2350. *
 - En las notas de crédito mostrar la fecha de emisión del documento al cual se esta aplicando la nota de crédito *
 - En las notas de crédito no se está mostrando el QR. *
 
 Aplicaciones de anticipos
-- Anticipo con separaciones, no se envía el saldo correcto a Sunat bb11-545.
+- Anticipo con separaciones, no se envía el saldo correcto a Sunat bb11-545. * 
 - Revisar porque no se fue como aplicado el anticipo bb10-161 y bb11-47.
 
 Movimiento de Caja / Caja
-- Corregir el reporte de Comprobantes que la información se extraiga de la vista VTA_ReporteComprobantesCaja (coordinar con Brayam), esto también para la opcion de Caja Diaria.
+- Corregir el reporte de Comprobantes que la información se extraiga de la vista VTA_ReporteComprobantesCaja (coordinar con Brayam), esto también para la opcion de Caja Diaria. *
 
 Reporte de Metas y Objetivos / Reporte de Objetivos
-- En el reporte, sumar el campo nPrecioUnitario y que no filtre las gratuitas (coordinar con Brayam)  
+- En el reporte, sumar el campo nPrecioUnitario y que no filtre las gratuitas (coordinar con Brayam) * 
 
 
 ----------------------------------Urgentes
 Solicitud de Venta
-- Agregar opción de copiar solicitud, se debe indicar el número de copiar que desea realizar, llamar al proceimiento VTA_CopiarSolicitudVenta (enviar código y número de solicitud) (coordinar con Brayam).
-- La fecha fija de vencimiento no está respetando que sea mínimo 30 días para calcular el próximo vencimiento, por ejemplo si hoy es 25/08 y se indica fecha vencimineto los 5, la próxima fecha a pagar sale 05/09 debiendo ser 05/10. (Verificar)
+- Agregar opción de copiar solicitud, se debe indicar el número de copiar que desea realizar, llamar al proceimiento VTA_CopiarSolicitudVenta (enviar código y número de solicitud) (coordinar con Brayam). *
+- La fecha fija de vencimiento no está respetando que sea mínimo 30 días para calcular el próximo vencimiento, por ejemplo si hoy es 25/08 y se indica fecha vencimineto los 5, la próxima fecha a pagar sale 05/09 debiendo ser 05/10. (Verificar) *
 
 Reporte de Cuentas por Cobrar
 - El reporte a lo que es dólares le está registrando en soles (hay que convertir el dólares en soles) y luego el total en soles pasarlo tambien a dólares
@@ -1005,15 +1005,15 @@ Opción nueva:
 
 ----------------------------------Fácil
 Impresión de documentos de venta
-- Corregir la impresión de la factura FC11-56, es una lista de 50 items y se muestra descuadrado.
+- Corregir la impresión de la factura FC11-56, es una lista de 50 items y se muestra descuadrado. * 
 - Mostrar las cuentas de banco (coordinar con Brayam)(dejar al último)
 
 Orden de Servicio
-- Cuando es una orden de servicio con un cliente que posee documento RUC al editar la solicitud siempre sale el mensaje "Que el cliente tiene documento Tipo RUC".
-- Al registrar una placa se emite error, esto es porque no se ha dado acceso al maestro de artículos.
+- Cuando es una orden de servicio con un cliente que posee documento RUC al editar la solicitud siempre sale el mensaje "Que el cliente tiene documento Tipo RUC". * 
+- Al registrar una placa se emite error, esto es porque no se ha dado acceso al maestro de artículos. *
 
 Reporte de Cobranza
 - Porque si se emite antes del 04/08 se muestra el mensaje no hay datos
 
 Asignación de Cobrador
-- Poder filtrar los que no tienen cobrador
+- Poder filtrar los que no tienen cobrador *

@@ -99,7 +99,7 @@ class CajaDiariaRepository implements CajaDiariaInterface
         return $mostrar; 
     }
     public function getCajaDiario($id){
-        $mostrar=DB::select("select * from ERP_CajaDiaria as cd inner join ERP_Cajas as c on cd.idCaja=c.idcaja where cd.idCajaDiaria='$id'");
+        $mostrar=DB::select("select cd.*, FORMAT(cd.fechaCaja, 'yyyy-MM-dd') AS fechaCaja_server, FORMAT(cd.fechaCaja, 'dd/MM/yyyy') AS fechaCaja_user from ERP_CajaDiaria as cd inner join ERP_Cajas as c on cd.idCaja=c.idcaja where cd.idCajaDiaria='$id'");
         return $mostrar; 
     }
     public function get_cajaActual($date,$usuario){

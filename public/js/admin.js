@@ -3265,7 +3265,12 @@ function create_pdf_ordenServicio(response) {
                 bold: true,
                 fontSize: 10,
             },
-
+            {
+                text: razonsocial_cliente,
+                absolutePosition: { x: 361, y: 560 },
+                bold: true,
+                fontSize: 10,
+            },
 
         ],
         styles: {

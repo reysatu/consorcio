@@ -300,7 +300,7 @@
         });
 
         function getModelo(bandera, id) {
-            RESTService.get('articles/TraerModelos', id, function (response) {
+            RESTService.get('orden_servicios/TraerModelos', id, function (response) {
                 if (!_.isUndefined(response.status) && response.status) {
                     var data_p = response.data;
                     $("#idmodelo").html('');

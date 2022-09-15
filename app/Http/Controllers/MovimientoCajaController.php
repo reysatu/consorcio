@@ -704,6 +704,61 @@ class MovimientoCajaController extends Controller
                  'dataListDevolucion'=>$dataListDevolucion,
             ]);
     }
+
+    public function reporte_EmisionComprpdf($idCajaDiaria, Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj,Query_stockInterface $repoQs) {
+
+        $datos = array();
+        $usuario=auth()->id();
+        $nameuser=$repoQs->getUsuario($usuario);
+        date_default_timezone_set('America/Lima');
+           // date_default_timezone_set('UTC');
+        
+        $fechacAc= date("d/m/Y H:i:s");
+       
+        if($idCajaDiaria == "-1") {
+            $fechacA= date("Y-m-d");
+            $dataMc = $recaj->get_cajaActual($fechacA,$usuario);
+            $idCajaDiaria = $dataMc[0]->idCajaDiaria;
+
+        } 
+      
+      
+        $cajadiario = $recaj->getCajaDiario($idCajaDiaria);
+        $fechacA = $cajadiario[0]->fechaCaja_server;
+        $dataMc = $recaj->get_cajaActual($fechacA,$cajadiario[0]->idUsuario);
+      
+        // print_R($dataMc); exit;
+        $dataTienda=$recaj->get_tienda($dataMc[0]->idcaja);
+
+       
+        $sql = "SELECT fp.codigo_formapago, fp.descripcion_subtipo, v.Moneda FROM VTA_ReporteComprobantesCaja AS v 
+        INNER JOIN ERP_FormasPago AS fp ON(fp.descripcion_subtipo=v.FormaPago)
+        WHERE v.IdCaja={$dataTienda[0]->idcaja}  AND v.CajaNroOp={$idCajaDiaria}
+        GROUP BY fp.codigo_formapago, fp.descripcion_subtipo, v.Moneda";
+        $formas = DB::select($sql);
+
+        foreach ($formas as $key => $value) {
+            $sql_data = "SELECT * FROM VTA_ReporteComprobantesCaja  WHERE IdCaja={$dataTienda[0]->idcaja} AND FormaPago='{$value->descripcion_subtipo}' AND Moneda='{$value->Moneda}' AND CajaNroOp={$idCajaDiaria}";
+            $data = DB::select($sql_data);
+            $formas[$key]->data = $data;
+        }
+
+        $datos["dataTienda"] = $dataTienda;
+        $datos["formas"] = $formas;
+        $datos["nameuser"] = $nameuser;
+        $datos["fecha_apertura"] = $cajadiario[0]->fechaCaja_user;
+        // echo "<pre>";
+        // print_R($datos); exit;
+
+        
+        $pdf = PDF::loadView("MovimientoCajas.reporte_comprobantes", $datos);
+      
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("reporte_comprobantes.pdf"); // v
+
+    }
+
     public function pdf(Request $request, CajaDiariaDetalleInterface $repo,CajaDiariaInterface $recaj)
     {          
            
@@ -1019,6 +1074,14 @@ class MovimientoCajaController extends Controller
                 throw new Exception("Por favor cree el parametro con el id del producto de anticipo!");
             }
 
+            
+             // OBTENER PRODUCTO INTERES
+             $parametro_interes = $repo->get_parametro_interes();
+
+             if(count($parametro_interes) <= 0) {
+                 throw new Exception("Por favor cree el parametro con el id del producto de interes!");
+             }
+
 
             $ticket = $repoCC->obtener_consecutivo_comprobante(12,  $repo->get_caja_diaria()[0]->idtienda);
             if(count($ticket) <= 0) {
@@ -1043,9 +1106,14 @@ class MovimientoCajaController extends Controller
                     $suma_precio_total += (float)$solicitud_articulo[$sa]->precio_total;
                 }
             }
-
+            // print_r($suma_precio_total."<br>");
             $solicitud_credito = $solicitud_repositorio->get_solicitud_credito($data["cCodConsecutivo"], $data["nConsecutivo"]);
-            
+
+            // descontar el interes porque luego se va desglosa y se va insertar un producto que diga interes en el detalle de la venta.
+            if(count($solicitud_credito) > 0) {
+                $suma_precio_total = $suma_precio_total + $solicitud_credito[0]->intereses;
+            }
+            // print_r($suma_precio_total."<br>"); 
             $empresa = $compania_repo->find("00000");
 
             $name_cpe = $empresa->Ruc . "-" . $data["IdTipoDocumento"] . "-" . $data["serie_comprobante"] . "-" . str_pad($data["numero_comprobante"], 8, "0", STR_PAD_LEFT);
@@ -1069,7 +1137,17 @@ class MovimientoCajaController extends Controller
             $data_venta["idcajero"] = auth()->id();
             $data_venta["idtienda"] = $repo->get_caja_diaria()[0]->idtienda;
             $data_venta["idcaja"] = $repo->get_caja_diaria()[0]->idcaja;
+
+            if(isset($data["idventa_separacion"]) && !empty($data["idventa_separacion"])) {
+                $venta_separacion = $repo->get_venta($data["idventa_separacion"]);
+                $data_venta["anticipo"] = $venta_separacion[0]->t_monto_total;
+                $data_venta["t_monto_total"] = $solicitud[0]->t_monto_subtotal - $venta_separacion[0]->t_monto_total;
+                $data_venta["t_monto_subtotal"] = $solicitud[0]->t_monto_subtotal - $venta_separacion[0]->t_monto_total;
+                $data_venta["t_monto_exonerado"] = $solicitud[0]->t_monto_subtotal - $venta_separacion[0]->t_monto_total;
+            } 
+
             $data_venta["idventa_separacion"] = $data["idventa_separacion"];
+            
             $data_venta["idventa_nota"] = $data["idventa_nota"];
 
             $condicion_pago = array();
@@ -1316,9 +1394,11 @@ class MovimientoCajaController extends Controller
                         //SEGUNDA VENTA DEL CREDITO
                        
                        //PRORRATEAMOS
-
+                    //    print_r( $solicitud_articulo[$i]->precio_total."<br>");
                         $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
+                        // print_r( $porcentaje."<br>");
                         $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
+                        // print_r( $solicitud[0]->t_monto_subtotal."<br>");
 
                         $data_venta_detalle["precio_total"] = 0;
                         $data_venta_detalle["monto_descuento"] = 0;
@@ -1361,17 +1441,50 @@ class MovimientoCajaController extends Controller
 
                     }
                 }
-                
+            
                 $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
                 // print_r($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
-               
+            //    print_r($data_venta_detalle); exit;
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
 
               
                 // print_r($res);
             }
+            // echo "ola";
+           
+            if(count($solicitud_credito) > 0 && $solicitud_credito[0]->intereses > 0 && !($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0)) {
+                $data_venta_detalle = (array)$solicitud_articulo[count($solicitud_articulo)-1];
+                $data_venta_detalle["idventa"] = $data_venta["idventa"];
+                $data_venta_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                // print_R($solicitud_credito[0]->intereses);
+                // PRODUCTO PARA INTERESES
+                $data_venta_detalle["idarticulo"] = $parametro_interes[0]->value;
+                $data_venta_detalle["um_id"] = "07"; //codigo unidad
+                $data_venta_detalle["cantidad"] = 1;
+                $data_venta_detalle["precio_unitario"] = $solicitud_credito[0]->intereses;
+                $data_venta_detalle["iddescuento"] = "";
+                $data_venta_detalle["porcentaje_descuento"] = "";
+                $data_venta_detalle["precio_total"] = $solicitud_credito[0]->intereses;
+                $data_venta_detalle["monto_descuento"] = "";
+                $data_venta_detalle["monto_subtotal"] = "";
+                $data_venta_detalle["monto_exonerado"] = "";
+                if($solicitud[0]->t_impuestos > 0) {
+                    $data_venta_detalle["monto_afecto"] = $solicitud_credito[0]->intereses;
+                } else {
+                    $data_venta_detalle["monto_exonerado"] = $solicitud_credito[0]->intereses;
+                }
+               
+                $data_venta_detalle["monto_inafecto"] = "";
+                $data_venta_detalle["impuestos"] = "";
+                $data_venta_detalle["monto_total"] = $solicitud_credito[0]->intereses;
+                $data_venta_detalle["cOperGrat"] = "";
+                $data_venta_detalle["nOperGratuita"] = "";
+                // print_r($data_venta_detalle);
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_venta_detalle));
+                // print_r($r);
+            }
 
-
+            // exit;
             //PARA TICKET
 
             for ($i=0; $i < count($solicitud_articulo); $i++) { 
@@ -1420,6 +1533,7 @@ class MovimientoCajaController extends Controller
 
                         $porcentaje = $solicitud_articulo[$i]->precio_total / $suma_precio_total;
                         $subtotal = $solicitud[0]->t_monto_subtotal * $porcentaje;
+                        // print_r($subtotal."<br>"); exit;
 
                         $data_ticket_detalle["precio_total"] = 0;
                         $data_ticket_detalle["monto_descuento"] = 0;
@@ -1467,6 +1581,37 @@ class MovimientoCajaController extends Controller
                 $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
                 // print_r($res);
             }
+
+            if(count($solicitud_credito) > 0 && $solicitud_credito[0]->intereses > 0 && !($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0)) {
+                $data_ticket_detalle = (array)$solicitud_articulo[count($solicitud_articulo)-1];
+                $data_ticket_detalle["idventa"] = $data_ticket["idventa"];
+                $data_ticket_detalle["consecutivo"] = $repo->get_consecutivo("ERP_VentaDetalle", "consecutivo");
+                // PRODUCTO PARA INTERESES
+                $data_ticket_detalle["idarticulo"] = $parametro_interes[0]->value;
+                $data_ticket_detalle["um_id"] = "07"; //codigo unidad
+                $data_ticket_detalle["cantidad"] = 1;
+                $data_ticket_detalle["precio_unitario"] = $solicitud_credito[0]->intereses;
+                $data_ticket_detalle["iddescuento"] = "";
+                $data_ticket_detalle["porcentaje_descuento"] = "";
+                $data_ticket_detalle["precio_total"] = $solicitud_credito[0]->intereses;
+                $data_ticket_detalle["monto_descuento"] = "";
+                $data_ticket_detalle["monto_subtotal"] = "";
+                $data_ticket_detalle["monto_exonerado"] = "";
+                if($solicitud[0]->t_impuestos > 0) {
+                    $data_ticket_detalle["monto_afecto"] = $solicitud_credito[0]->intereses;
+                } else {
+                    $data_ticket_detalle["monto_exonerado"] = $solicitud_credito[0]->intereses;
+                }
+               
+                $data_ticket_detalle["monto_inafecto"] = "";
+                $data_ticket_detalle["impuestos"] = "";
+                $data_ticket_detalle["monto_total"] = $solicitud_credito[0]->intereses;
+                $data_ticket_detalle["cOperGrat"] = "";
+                $data_ticket_detalle["nOperGratuita"] = "";
+                $this->base_model->insertar($this->preparar_datos("dbo.ERP_VentaDetalle", $data_ticket_detalle));
+                // print_r($r);
+            }
+            // exit;
                 
           
             // GUARDAR FORMAS DE PAGO EN VENTA Y CAJA   
