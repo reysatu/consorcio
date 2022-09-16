@@ -32,7 +32,7 @@ trait Query_stockTrait
                 ['right', $i->Total],
                 ['right', $i->Transito],
                 ['right', number_format($i->Costo_Promedio_Unitario,2)],
-                ['right', number_format($i->Costo_Promedio_Unitario,2)],
+                ['right', number_format($i->Costo_Total,2)],
                 ['right', $i->Chasis],
                 ['right', $i->Motor],
                 ['right', $i->Color],

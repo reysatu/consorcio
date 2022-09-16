@@ -224,7 +224,7 @@
                 $cont ++;
                 $total_suma = 0;
                 foreach ($value->data as $kd => $vd) {
-                    $total_suma += floatval($vd->Total);
+                    $total_suma += floatval($vd->MontoPago);
                     echo '<div class="row" style="font-size: 10px !important;" >
             
                         <div class="col" style="width: 12%; border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent;">'.$vd->Documento.'</div>

@@ -150,7 +150,7 @@ class VentasController extends Controller
             INNER JOIN ERP_Clientes AS cl ON(cl.id=v.idcliente)
             INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
             INNER JOIN ERP_Moneda AS m ON(m.IdMoneda=v.idmoneda)
-            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' {$where}
+            WHERE v.fecha_emision BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND ISNULL(v.anulado, 'N')<>'S' {$where}
             ORDER BY c.descripcion ASC";
            
             $pagos = DB::select($sql);
@@ -403,9 +403,11 @@ class VentasController extends Controller
 
         $sql_cobradores = "SELECT s.idCobrador, c.descripcion AS cobrador  
         FROM ERP_Venta AS v
-        INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo)
-        INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id)
+        INNER JOIN ERP_VentaDetalle AS vd ON(vd.idventa=v.idventa)
+        INNER JOIN ERP_Solicitud AS s ON(v.cCodConsecutivo_solicitud=s.cCodConsecutivo AND v.nConsecutivo_solicitud=s.nConsecutivo) 
+        INNER JOIN ERP_Cobrador AS c ON(s.idCobrador=c.id) 
         INNER JOIN ERP_Clientes AS cc ON(cc.id=s.idcliente)
+        INNER JOIN ERP_SolicitudCronograma AS sc ON(sc.cCodConsecutivo=s.cCodConsecutivo AND sc.nConsecutivo=s.nConsecutivo AND vd.nrocuota=sc.nrocuota)
         WHERE FORMAT(v.fecha_emision, 'yyyy-MM-dd') BETWEEN '{$data["fecha_inicio"]}' AND '{$data["fecha_fin"]}' AND s.idCobrador IS NOT NULL {$where} AND ISNULL(v.anulado, 'N')<>'S'
         GROUP BY s.idCobrador, c.descripcion";
 

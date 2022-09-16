@@ -35,7 +35,7 @@
         // var t_monto_descuento = $("#t_monto_descuento");
         var valor_moneda;
         var btn_save_cliente = $("#btn_save_cliente");
-        var id_tipoDoc_Venta = $("#id_tipoDoc_Venta");
+        var id_tipoDoc_Venta_solicitud = $("#id_tipoDoc_Venta_solicitud");
         var modalDeleteDetalle = $("#modalDeleteDetalle");
         var id_tipomant = $("#id_tipomant");
         var tipo_totales_slec = $("#tipo_totales_slec");
@@ -86,7 +86,7 @@
         var contacto = $("#contacto");
         var direccion = $("#direccion");
         var correo_electronico = $("#correo_electronico");
-        var id_tipoDoc_Venta_or = $("#id_tipoDoc_Venta_or");
+        var id_tipoDoc_Venta_or_solicitud = $("#id_tipoDoc_Venta_or_solicitud");
         var celular = $("#celular");
         var telefono = $("#telefono");
         var cliente_id = $("#cliente_id");
@@ -251,13 +251,13 @@
                     _.each(response.tipo_document, function (item) {
                         idDocumentoCli.append('<option value="' + item.Codigo + '">' + item.TipoDocumento + '</option>');
                     });
-                    id_tipoDoc_Venta_or.append('<option value="">Seleccionar</option>');
+                    id_tipoDoc_Venta_or_solicitud.append('<option value="">Seleccionar</option>');
                     _.each(response.tipo_document_venta, function (item) {
-                        id_tipoDoc_Venta_or.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
+                        id_tipoDoc_Venta_or_solicitud.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
                     });
-                    id_tipoDoc_Venta.append('<option value="">Seleccionar</option>');
+                    id_tipoDoc_Venta_solicitud.append('<option value="">Seleccionar</option>');
                     _.each(response.tipo_document_venta, function (item) {
-                        id_tipoDoc_Venta.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
+                        id_tipoDoc_Venta_solicitud.append('<option value="' + item.IdTipoDocumento + '">' + item.Descripcion + '</option>');
                     });
                     // gru_revisiones.append('<option value="" selected>Seleccionar </option>');
                     // _.each(response.revisiones, function (item) {
@@ -358,7 +358,7 @@
                         cEstadoCivil.val(data_p[0].cEstadoCivil);
                         cliente_id.val(data_p[0].id);
                         id_tipocli.val(data_p[0].id_tipocli).trigger('change');
-                        id_tipoDoc_Venta.val(data_p[0].IdTipoDocumento).trigger("change");
+                        id_tipoDoc_Venta_solicitud.val(data_p[0].IdTipoDocumento).trigger("change");
                         console.log(data_p[0].cDepartamento,'departamento ob');
                         getDepartamento(data_p[0].cDepartamento); 
                         getProvincia(data_p[0].cProvincia, data_p[0].cDepartamento);
@@ -489,7 +489,7 @@
             bval = bval && tipodoc.required();
             bval = bval && documento.required();
             bval = bval && id_tipocli.required();
-            bval = bval && id_tipoDoc_Venta.required();
+            bval = bval && id_tipoDoc_Venta_solicitud.required();
             bval = bval && razonsocial_cliente.required();
             bval = bval && celular.required();
             bval = bval && distrito.required();
@@ -523,7 +523,7 @@
                     'telefono': telefono.val(),
                     'distrito': distrito.val(),
                     'id_tipocli': id_tipocli.val(),
-                    'IdTipoDocumento': id_tipoDoc_Venta.val(),
+                    'IdTipoDocumento': id_tipoDoc_Venta_solicitud.val(),
                     'cEstadoCivil': cEstadoCivil.val(),
                     'idsector':idsector.val(),
                     'cNombres':$("#cNombres_c").val(),
@@ -621,7 +621,7 @@
                             contacto_or.val("");
                             direccion_or.val("");
                             correo_electronico_or.val("");
-                            id_tipoDoc_Venta_or.val("").trigger('change');
+                            id_tipoDoc_Venta_or_solicitud.val("").trigger('change');
                             celular_or.val("");
                             telefono_or.val("");
                             cliente_id_or.val("");
@@ -647,9 +647,9 @@
                             tipoCliente_or.val(datos[0].tipo_cliente_descr).trigger('change');
                             id_cliente_tipo_or.val(datos[0].id_tipocli)
                             id_tipocli.data("prev", id_cliente_tipo_or.val());
-                            id_tipoDoc_Venta_or.val(datos[0].IdTipoDocumento).trigger("change");
+                            id_tipoDoc_Venta_or_solicitud.val(datos[0].IdTipoDocumento).trigger("change");
                             if (nConsecutivo.val() == "") {
-                                id_tipoDoc_Venta_or.focus();
+                                id_tipoDoc_Venta_or_solicitud.focus();
                             }
 
 
@@ -1449,11 +1449,11 @@
 
         }
 
-        $(document).on("change", "#id_tipoDoc_Venta_or, #id_tipoDoc_Venta", function () {
-            var id_tipoDoc_Venta_or = $(this).val();
+        $(document).on("change", "#id_tipoDoc_Venta_or_solicitud, #id_tipoDoc_Venta_solicitud", function () {
+            var id_tipoDoc_Venta_or_solicitud = $(this).val();
 
-            // alert(id_tipoDoc_Venta_or+" <=> "+idDocumentoCli.val().toString().length);
-            if ($("#cliente_id_or").val() != "" && id_tipoDoc_Venta_or == "01" && idDocumentoCli.val() != "06") {
+            // alert(id_tipoDoc_Venta_or_solicitud+" <=> "+idDocumentoCli.val().toString().length);
+            if ($("#cliente_id_or").val() != "" && id_tipoDoc_Venta_or_solicitud == "01" && idDocumentoCli.val() != "06") {
                 AlertFactory.textType({
                     title: '',
                     message: 'El Tipo Documento del Cliente debe ser R.U.C.',
@@ -1748,7 +1748,7 @@
                                     if(data.length > 0) {
                                         AlertFactory.textType({
                                             title: '',
-                                            message: 'La serie ya ha sido asignada a una solicitud anterior',
+                                            message: 'La serie ya ha sido asignada a una solicitud anterior: '+data[0].cCodConsecutivo+"-"+data[0].nConsecutivo,
                                             type: 'info'
                                         });
                                         $("#btn_serC").attr("disabled", "disabled");
@@ -3290,7 +3290,7 @@
                 
                 $(".btn_guardarOrden").attr("disabled", "disabled");
 
-                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val(),
+                $.post("solicitud/guardar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or_solicitud=" + $("#id_tipoDoc_Venta_or_solicitud").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val(),
                     function (data, textStatus, jqXHR) {
 
                         $(".btn_guardarOrden").removeAttr("disabled");
@@ -3483,7 +3483,7 @@
             bval = bval && $("#numero_solicitudes").required();
             if(bval) {
                 // alert("copy_solicitud");
-                $.post("solicitud/copiar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or=" + $("#id_tipoDoc_Venta_or").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val()+ "&numero_solicitudes=" + $("#numero_solicitudes").val(),
+                $.post("solicitud/copiar_solicitud", $("#formulario-solicitud").serialize() + "&" + $("#formulario-creditos").serialize() + "&cCodConsecutivo=" + cCodConsecutivo.val() + "&tipo_solicitud=" + $("#tipo_solicitud").val() + "&idmoneda=" + $("#IdMoneda").val() + "&id_tipoDoc_Venta_or_solicitud=" + $("#id_tipoDoc_Venta_or_solicitud").val() + "&idvendedor=" + $("#idvendedor").val() + "&descuento_id=" + $("#totalDescuento").val()+ "&estado=" + $("#estado").val()+ "&numero_solicitudes=" + $("#numero_solicitudes").val(),
                     function (data, textStatus, jqXHR) {
                         // console.log(data);
                         if(data[0].return_value == "0") {
@@ -3819,7 +3819,7 @@
 
             $("#cCodConsecutivo").removeAttr("disabled");
             $("#IdMoneda").removeAttr("disabled");
-            $("#id_tipoDoc_Venta_or").removeAttr("disabled");
+            $("#id_tipoDoc_Venta_or_solicitud").removeAttr("disabled");
             $("#tipo_solicitud").removeAttr("disabled");
             $("#idconvenio").removeAttr("disabled");
             $("#idvendedor").removeAttr("disabled");
