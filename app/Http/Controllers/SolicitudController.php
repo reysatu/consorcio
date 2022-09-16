@@ -99,7 +99,7 @@ class SolicitudController extends Controller
             $desc = explode("*", $data["descuento_id"]);
             $descuento_id = $desc[0];
             $data["descuento_id"] = $descuento_id;
-            $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or"];
+            $data["IdTipoDocumento"] = $data["id_tipoDoc_Venta_or_solicitud"];
 
             // solo en estado regisstrado actualizara el saldo
             
