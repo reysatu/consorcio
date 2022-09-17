@@ -18,3 +18,7 @@ Route::get('reporteMetas/excelMesComple', ['as' => 'reporteMetas.excelMesComple'
 Route::get('reporteMetas/pdf', ['as' => 'reporteMetas.pdf', 'uses' => 'ReporteMetaController@pdf']);
 
 Route::get('reporteMetas/data_form', ['as' => 'reporteMetas.data_form', 'uses' => 'ReporteMetaController@data_form']);
+
+
+
+Route::get('reporteMetas/reporte_objetivos/{data}', 'ReporteMetaController@reporte_objetivos');

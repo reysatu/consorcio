@@ -7,7 +7,7 @@
             <div class="col-md-12"> 
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Año</label>
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                        <input type="number" id="Anio" class="form-control input-sm" placeholder="AÑO"  required minlength="6" min="2010" value="2022" />
                     </div>
                     <!-- <div class="col-sm-3">
@@ -26,10 +26,14 @@
                         <option value="12">DICIEMBRE</option>
                       </select>
                     </div> -->
-                    <label class="col-sm-2 control-label">Tipo de Objetivo</label>
-                    <div class="col-sm-3">
+                    <label class="col-sm-2 control-label" style="padding: 0;">Tipo de Objetivo</label>
+                    <div class="col-sm-2">
                       <select id="tipoObjetivos" class="form-control input-sm">
                       </select>
+                    </div>
+                    <label class="col-sm-1 control-label">Fecha</label>
+                    <div class="col-sm-2" style="padding: 0;">
+                      <input type="date" name="fecha" id="fecha" class="form-control input-sm">
                     </div>
                     <div class="col-sm-2">
                         <div class="btn-group">
@@ -38,15 +42,17 @@
                                                   Reporte de Metas 
                              </button>
                         </div>
-                    </div>
-                    <div class="col-sm-2">
+                        <br><br>
                         <div class="btn-group">
-                             <button type="button" class="btn btn-primary btn-sm" id="btn_imprimirMes">
-                                    <span class="fa fa-file-excel-o"></span>
-                                                 Reporte de Objetivos
-                             </button>
-                        </div>
+                            <button type="button" class="btn btn-primary btn-sm" id="btn_imprimirMes">
+                                   <span class="fa fa-file-excel-o"></span>
+                                                Reporte de Objetivos
+                            </button>
+                       </div>
                     </div>
+                    <!-- <div class="col-sm-2">
+                        
+                    </div> -->
                 </div>
             </div>
         </div>

@@ -178,4 +178,11 @@ class ReporteMetaController extends Controller
 
 
     }
+
+    public function reporte_objetivos($data) {
+        $array = explode("|", $data);
+        $tipo_objetivo = $array[0];
+        $fecha = $array[1];
+        // $datos = 
+    }
 }
