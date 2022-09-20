@@ -435,6 +435,20 @@ class SolicitudRepository implements SolicitudInterface
         return $result; 
     }
 
+    public function update_reprogramacion($data) {
+        $sql_update = "UPDATE ERP_SolicitudCronograma SET 
+
+        fecha_vencimiento = '{$data["fecha_vencimiento"]}', 
+        valor_cuota = {$data["valor_cuota"]}, 
+        saldo_cuota = {$data["saldo_cuota"]}
+      
+        WHERE cCodConsecutivo='{$data["cCodConsecutivo"]}' AND nConsecutivo={$data["nConsecutivo"]} AND nrocuota={$data["nrocuota"]}";
+
+        $result = DB::statement($sql_update);
+        
+        return $result; 
+    }
+
 
     public function update_solicitud_cronograma($data) {
         $sql_update = "UPDATE ERP_SolicitudCronograma SET 

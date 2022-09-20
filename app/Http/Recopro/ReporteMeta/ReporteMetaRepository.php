@@ -114,4 +114,26 @@ where  p.idCategoria IN (3,4) GROUP BY prf.cCodConsecutivo, prf.nConsecutivo) as
      
     }
 
+    public function reporte_objetivos($tipo_objetivo, $fecha) {
+        $date = explode("-", $fecha);
+        $anio = intval($date[0]);
+        $mes = intval($date[1]);
+        $dia = intval($date[2]);
+
+        $data = array();
+        $sql = "select IdTec, Tecnico, AvanceUnd, MetaCant, PorcAvanceCant, AvanceSoles, MetaMonto, PorcAvanceMonto from STVW_Reporte_Objetivos
+        where Ano = {$anio} and Mes = {$mes} and TipoObj = {$tipo_objetivo}";
+        // echo $sql;
+        $data["data_1"] = DB::select($sql);
+        $data["mes_int"] = $mes;
+
+        $sql = "select Detalle, FORMAT(Fecha, 'dd/MM/yyyy') AS Fecha, Cantidad from STVW_Reporte_Objetivos_D
+        where Ano = {$anio} and Mes = {$mes} and Dia = {$dia}";
+
+        $data["data_2"] = DB::select($sql);
+        return $data;
+
+        // print_r($data);
+    }
+
 }

@@ -15,6 +15,8 @@ use App\Http\Recopro\Query_movements\Query_movementsInterface;
 use App\Http\Recopro\Solicitud_Asignacion\Solicitud_AsignacionInterface;
 use App\Http\Recopro\Orden_servicio\Orden_servicioInterface;
 use App\Http\Requests\ReporteMetaRequest;
+use PDF;
+
 class ReporteMetaController extends Controller
 {
      use ReporteMetaTrait;
@@ -179,10 +181,23 @@ class ReporteMetaController extends Controller
 
     }
 
-    public function reporte_objetivos($data) {
+    public function reporte_objetivos($data, ReporteMetaInterface $repo) {
+
+        //ST_Reporte_Objetivos 
         $array = explode("|", $data);
         $tipo_objetivo = $array[0];
         $fecha = $array[1];
+
+        $datos = $repo->reporte_objetivos($tipo_objetivo, $fecha);
+        
+        
+        $pdf = PDF::loadView("ReporteMeta.reporte_objetivos", $datos);
+      
+        // return $pdf->save("ficha_asociado.pdf"); // guardar
+        // return $pdf->download("ficha_asociado.pdf"); // descargar
+        return $pdf->stream("reporte_objetivos.pdf"); // v
+
+        
         // $datos = 
     }
 }

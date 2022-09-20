@@ -1000,7 +1000,7 @@ Reporte de Cobranza de cuotas
 - No muestra la misma información que el pdf, al parecer no filtra los documentos anulados.
 
 Opción nueva:
-- Reprogramación de fechas de créditos
+- Reprogramación de fechas de créditos *
 
 
 ----------------------------------Fácil
@@ -1013,7 +1013,7 @@ Orden de Servicio
 - Al registrar una placa se emite error, esto es porque no se ha dado acceso al maestro de artículos. *
 
 Reporte de Cobranza
-- Porque si se emite antes del 04/08 se muestra el mensaje no hay datos
+- Porque si se emite antes del 04/08 se muestra el mensaje no hay datos *
 
 Asignación de Cobrador
 - Poder filtrar los que no tienen cobrador *

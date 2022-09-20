@@ -69,6 +69,8 @@
                 search: $('#search_b').val()
             });
         }, true);
+
+        
     }
 
     function Config($stateProvider, $urlRouterProvider) {
