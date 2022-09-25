@@ -312,14 +312,15 @@
                     //     tipo_totales_slec.append('<option value="' + item.id + '">' + item.descripcion + '</option>');
                     // });
 
-
-
-
                     AlmacenesSele = response.almacen_usuario;
                     LotesSele = response.lotes;
                     DescuentosSele = response.descuentos;
 
-
+                    $("#idventa").append('<option value="">Seleccionar</option>');
+                    _.each(response.separaciones, function (item) {
+                        $("#idventa").append('<option value="' + item.idventa + '|'+item.serie_comprobante+'|'+item.numero_comprobante+'|'+item.t_monto_total+'">' + item.serie_comprobante + '-'+item.numero_comprobante+'</option>');
+                    });
+                    $("#idventa").select2();
 
                 }
             }, function () {
@@ -329,7 +330,7 @@
 
         obtener_data_for_solicitud();
 
-
+       
 
         // CLIENTES
         var btn_editar_cliente = $("#btn_editar_cliente");
@@ -3328,6 +3329,7 @@
                            
                             $(".enviar_solicitud").show();
                             $(".copiar-solicitud").show();
+                            $(".separaciones").show();
                             $(".imprimir-solicitud").show();
                             $(".imprimir-clausula-solicitud").show();
 
@@ -3477,6 +3479,117 @@
           
 
         }
+
+        $scope.agregar_separaciones = function () {
+            $(".agregar-separacion").attr("disabled", "disabled");
+            $(".guardar-separaciones").attr("disabled", "disabled");
+            $("#idventa").prop("disabled", true);
+            $.post("solicitud/obtener_separaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
+                function (data, textStatus, jqXHR) {
+                    $("#detalle-separaciones").empty();
+                    // console.log(data);
+                    if(data.length > 0) {
+                        var html = "";
+                        for (var index = 0; index < data.length; index++) {
+                            html = +'<tr>';
+                            html += '<td>'+data[index].serie_comprobante+'</td>';
+                            html += '<td>'+data[index].numero_comprobante+'</td>';
+                            html += '<td>'+data[index].t_monto_total+'</td>';
+                            html += '<td>-.-</td>';
+                         
+                            html += '</tr>';
+                            $("#detalle-separaciones").append(html);
+                            
+                        }
+                    } else {
+                        $(".agregar-separacion").removeAttr("disabled");
+                        $(".guardar-separaciones").removeAttr("disabled");
+                        $("#idventa").prop("disabled", false);
+                    }
+                   
+                },
+                "json"
+            );
+
+            $("#modal-separaciones").modal("show"); 
+
+        
+        }
+
+        $(document).on("change", "#idventa", function (e) {
+           
+        });
+
+        $scope.agregar_separacion = function () {
+            var bval = true;
+            bval = bval && $("#idventa").required();
+
+            if(bval) {
+
+                var valor = $("#idventa").val();
+                var array = valor.split("|");
+                var idventa = array[0];
+                var serie_comprobante = array[1];
+                var numero_comprobante = array[2];
+                var t_monto_total = array[3];
+
+                var cont = 0;
+                $.each($("input[name='idseparacion[]']"), function (indexInArray, valueOfElement) { 
+
+                    // console.log(valueOfElement.value +"=="+idventa);
+
+                    if(valueOfElement.value == idventa) {
+                       cont ++;
+                    }
+                    
+                });
+
+                // alert(cont);
+                if(cont > 0) {
+                 
+                    return false;
+                }
+                
+                var html = '<tr>';
+                html += '<td>'+serie_comprobante+'</td>';
+                html += '<td>'+numero_comprobante+'</td>';
+                html += '<td>'+t_monto_total+'</td>';
+                html += '<td><center><button title="Eliminar Separación" type="button" class="eliminar-separacion btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></center></td>';
+                html += '<input type="hidden" name="idseparacion[]" value="'+idventa+'" />';
+                html += '</tr>';
+                $("#detalle-separaciones").append(html);
+            }
+            
+        }
+
+        $scope.guardar_separaciones = function () {
+            // alert($("#formulario-separaciones").serialize());
+            $.post("solicitud/guardar_separaciones", $("#formulario-separaciones").serialize()+"&cCodConsecutivo="+cCodConsecutivo.val()+"&nConsecutivo="+nConsecutivo.val(),
+                function (data, textStatus, jqXHR) {
+                    if (data.status == "i") {
+                
+                        AlertFactory.textType({
+                            title: '',
+                            message: 'Las separaciones se guardaron correctamente!',
+                            type: 'success'
+                        });
+
+                    } else {
+                        AlertFactory.textType({
+                            title: '',
+                            message: data.msg,
+                            type: 'info'
+                        });
+                    }
+                },
+                "json"
+            );
+        }
+
+        $(document).on("click", ".eliminar-separacion", function (e) {
+            // console.log(e);
+            $(this).parent("center").parent("td").parent("tr").remove();
+        });
 
         $scope.copy_solicitud = function () {
             var bval = true;
@@ -3800,6 +3913,7 @@
                     $("#tipo_sol").val(data.solicitud[0].tipo);
                     $(".aprobaciones").show();
                     $(".copiar-solicitud").show();
+                    $(".separaciones").show();
                     $(".imprimir-solicitud").show();
                     $(".imprimir-clausula-solicitud").show();
                     $("#modalSolicitud").modal("show");

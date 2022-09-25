@@ -1099,6 +1099,10 @@ class MovimientoCajaController extends Controller
                 throw new Exception("La solicitud no tiene un detalle de articulos!");
             }
 
+            $separaciones = $solicitud_repositorio->obtener_totales_separaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
+            $total_separaciones = (float)$separaciones[0]->t_monto_total;
+
+
             // TOTALIZAMOS LOS PRECIOS TOTALES DEL DETALLA SOLICITUD ARTICULO
             $suma_precio_total = 0;
             for ($sa=0; $sa < count($solicitud_articulo); $sa++) { 
@@ -1184,21 +1188,21 @@ class MovimientoCajaController extends Controller
 
                 if($solicitud_credito[0]->cuota_inicial > 0 && $solicitud[0]->pagado == 0) {
 
-                
+                    $saldo = (float)$solicitud_credito[0]->cuota_inicial - $total_separaciones;
                     $data_venta["tipo_comprobante"] = "1"; // 1 anticipo, 0 normal
                     $data_venta["saldo"] = "0";
-                    $data_venta["pagado"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["pagado"] = $saldo;
 
                      //CAMBIAMOS DATOS DE LA VENTA PARA ANTICIPO
                     $data_venta["descuento_id"] = "";
                     $data_venta["t_porcentaje_descuento"] = "";
                     $data_venta["t_monto_descuento"] = "";
-                    $data_venta["t_monto_subtotal"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["t_monto_subtotal"] = $saldo;
                     $data_venta["t_monto_exonerado"] = "";
                     $data_venta["t_monto_afecto"] = "";
                     $data_venta["t_monto_inafecto"] = "";
                     $data_venta["t_impuestos"] = "";
-                    $data_venta["t_monto_total"] = $solicitud_credito[0]->cuota_inicial;
+                    $data_venta["t_monto_total"] = $saldo;
                     $data_venta["monto_descuento_detalle"] = "";
 
                     
@@ -1207,11 +1211,11 @@ class MovimientoCajaController extends Controller
                     if($solicitud[0]->t_impuestos > 0) {
                         // print_r($parametro_igv);
                         $igv = $parametro_igv[0]->value;
-                        $data_venta["t_impuestos"] = $solicitud_credito[0]->cuota_inicial * $igv / 100;
-                        $data_venta["t_monto_afecto"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta["t_impuestos"] = $saldo * $igv / 100;
+                        $data_venta["t_monto_afecto"] = $saldo;
                         $data_venta["t_monto_total"] = $data_venta["t_impuestos"] + $data_venta["t_monto_afecto"];
                     } else {
-                        $data_venta["t_monto_exonerado"] = $solicitud_credito[0]->cuota_inicial;
+                        $data_venta["t_monto_exonerado"] = $saldo;
                     }
 
                     
@@ -1221,8 +1225,8 @@ class MovimientoCajaController extends Controller
                     $update_solicitud["nConsecutivo"] = $data["nConsecutivo"];
                     $update_solicitud["estado"] = "3"; // ESTADO POR APROBAR DE LA SOLICITUD
                     $update_solicitud["saldo"] = $solicitud[0]->t_monto_total - $data_venta["t_monto_total"];
-                    $update_solicitud["pagado"] = $solicitud_credito[0]->cuota_inicial;
-                    $update_solicitud["facturado"] = $solicitud_credito[0]->cuota_inicial;
+                    $update_solicitud["pagado"] = $saldo;
+                    $update_solicitud["facturado"] = $saldo;
                     // print_r($this->preparar_datos("dbo.ERP_Solicitud", $update_solicitud));
 
                     // enviamos aprobar la solicitud cuando se hace la venta de la cuota inicial
@@ -2497,6 +2501,7 @@ class MovimientoCajaController extends Controller
         $datos = array();
         $datos["venta_anticipo"] = array();
         $datos["solicitud"] = array();
+        $datos["separaciones"] = array();
         // $bool = $cCodConsecutivo != "null" && $cCodConsecutivo != "0";
         // var_dump($bool);
         if($cCodConsecutivo != "null" && $cCodConsecutivo != "0" && $nConsecutivo != "null" && $nConsecutivo != "0") {
@@ -2513,6 +2518,8 @@ class MovimientoCajaController extends Controller
             $idfiador = (!empty($solicitud_credito[0]->idfiador)) ? $solicitud_credito[0]->idfiador : "0";
             $datos["fiador"] = $persona_repositorio->find($idfiador);
             $datos["producto"] = $solicitud_repositorio->get_solicitud_articulo_vehiculo($cCodConsecutivo, $nConsecutivo);
+
+            $datos["separaciones"] = $solicitud_repositorio->obtener_separaciones($cCodConsecutivo, $nConsecutivo); 
             
         }
 
@@ -2594,6 +2601,12 @@ class MovimientoCajaController extends Controller
         return response()->json($ticket);
     }
     
+
+    public function obtener_totales_separaciones(Request $request, VentasInterface $ventas_repo) {
+        $data = $request->all();
+        $result = $ventas_repo->obtener_totales_separaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        return response()->json($result);
+    }
 
    
 

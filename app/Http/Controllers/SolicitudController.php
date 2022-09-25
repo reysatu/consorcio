@@ -17,6 +17,7 @@ use App\Http\Recopro\Solicitud\SolicitudInterface;
 use App\Http\Recopro\Solicitud\SolicitudRepository;
 use App\Http\Recopro\Solicitud\SolicitudTrait;
 use App\Http\Recopro\SolicitudCredito\SolicitudCreditoInterface;
+use App\Http\Recopro\Ventas\VentasRepository;
 use App\Http\Recopro\Warehouse\WarehouseInterface;
 use App\Http\Requests\SolicitudRequest;
 use App\Models\BaseModel;
@@ -256,7 +257,7 @@ class SolicitudController extends Controller
         return generateExcel($this->generateDataExcel($repo->all()), 'LISTA DE Solicitud', 'Solicitud');
     }
 
-    public function data_form (SolicitudInterface $Repo, Orden_servicioInterface $repo_orden, WarehouseInterface $WareRepo)
+    public function data_form (SolicitudInterface $Repo, Orden_servicioInterface $repo_orden, WarehouseInterface $WareRepo, VentasRepository $ventas_repositorio)
     {
         
         $codigo = $Repo->getcodigo();
@@ -283,6 +284,7 @@ class SolicitudController extends Controller
         $parametro_igv =  $Repo->get_parametro_igv();
         $dataredondeo = $repo_orden->get_redondeo();
         $decimales_redondeo = $repo_orden->get_decimales_redondeo();
+        $separaciones = $ventas_repositorio->get_ventas_separacion();
       
         // $cambio_tipo = $repo_orden->cambio_tipo(2, date("Y-m-d"));
 
@@ -310,6 +312,7 @@ class SolicitudController extends Controller
             'vendedores'=>$vendedores,
             'personas'=>$personas,
             'parametro_igv'=>$parametro_igv,
+            'separaciones'=>$separaciones,
           
             'dataredondeo'=>(isset($dataredondeo[0]->value)) ? $dataredondeo[0]->value : 0,
             'decimales_redondeo'=>(isset($decimales_redondeo[0]->value)) ? $decimales_redondeo[0]->value : 0,
@@ -672,5 +675,30 @@ class SolicitudController extends Controller
         }
         return response()->json($result);
     }
- 
+    
+
+    public function guardar_separaciones(Request $request) {
+        $data = $request->all();
+        // print_r($data); exit;
+
+        for ($i=0; $i < count($data["idseparacion"]); $i++) { 
+            $datos = array();
+            $datos["idventa"] = $data["idseparacion"][$i];
+            $datos["cCodConsecutivo"] = $data["cCodConsecutivo"];
+            $datos["nConsecutivo"] = $data["nConsecutivo"];
+            $result = $this->base_model->insertar($this->preparar_datos("dbo.ERP_SolicitudSeparacion", $datos));
+        }
+
+        // $this->base_model->insertar();
+      
+        return response()->json($result);
+    }
+
+    public function obtener_separaciones(Request $request, SolicitudInterface $repo) {
+        $data = $request->all();
+        $result = $repo->obtener_separaciones($data["cCodConsecutivo"], $data["nConsecutivo"]);
+        return response()->json($result);
+    
+    }
+
 }

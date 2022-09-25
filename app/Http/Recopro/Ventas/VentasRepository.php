@@ -363,6 +363,14 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
         return DB::select($sql);
     }
 
+    public function get_ventas_separacion() {
+        $sql = "SELECT v.*, ISNULL(v.devolucion_producto, '') AS devolucion_producto FROM ERP_Venta AS v
+        INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
+        WHERE vd.idarticulo=1862 AND ISNULL(v.aplicado_separacion, 'N')<>'S' AND v.IdTipoDocumento IN('01', '03')";
+
+        return DB::select($sql);
+    }
+
     public function get_venta_nota($idcliente) {
         $sql = "SELECT v.*, ISNULL(v.devolucion_producto, '') AS devolucion_producto FROM ERP_Venta AS v
         INNER JOIN ERP_VentaDetalle AS vd ON(v.idventa=vd.idventa)
@@ -414,7 +422,14 @@ select pr.kit as kit,lot.Lote  as cod_lote,sa.idLote as idLote, pr.serie,pr.lote
         return DB::select($sql);
     }
     
+    public function obtener_totales_separaciones($cCodConsecutivo, $nConsecutivo) {
+        $sql = "SELECT SUM(ISNULL(v.t_monto_total, 0)) AS t_monto_total FROM ERP_SolicitudSeparacion AS ss  
+        INNER JOIN ERP_Venta AS v ON(ss.idventa=v.idventa)
+        WHERE ss.cCodConsecutivo='{$cCodConsecutivo}' AND ss.nConsecutivo={$nConsecutivo}";
+        // die($sql);
+        return DB::select($sql);
 
+    }
    
 
 }

@@ -106,3 +106,5 @@ Route::get('movimientoCajas/traerSectorOrd/{id}', ['as' => 'movimientoCajas.trae
 
 
 Route::post('movimientoCajas/find_solicitud', ['as' => 'movimientoCajas.find_solicitud', 'uses' => 'SolicitudController@find']);
+
+Route::post('movimientoCajas/obtener_totales_separaciones', 'MovimientoCajaController@obtener_totales_separaciones');

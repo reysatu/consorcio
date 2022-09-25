@@ -121,6 +121,13 @@
                                             Copiar Solicitud
                                         </button>
                                     </div>
+
+                                    <div class="col-md-2 separaciones" style="display: none;">
+                                        <button type="button" ng-click="agregar_separaciones()" class="btn btn-info btn-sm "  >
+                                            <span class="fa fa-plus"></span>
+                                            Separaciones
+                                        </button>
+                                    </div>
                                     
                                 </div>
                             </div>
@@ -1746,6 +1753,68 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal" id="modal-separaciones" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="">Separaciones</h4>
+            </div>
+            <form id="formulario-separaciones">
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="" class="control-label">Separación</label>
+                               
+                                <select name="idventa" id="idventa" class="form-control input-sm" style="width: 100%"></select>
+                            </div>
+                            <div class="col-md-4" style="margin-top: 21px;">
+                                <button type="button" class="btn btn-success btn-sm agregar-separacion" ng-click="agregar_separacion()">Agregar</button>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead >
+                                            
+                                            <th style="background-color: #ec1415 !important; color: white;">Serie</th>
+                                            <th style="background-color: #ec1415 !important; color: white;">Número</th>
+                                            <th style="background-color: #ec1415 !important; color: white;">Total</th>
+                                            <th style="background-color: #ec1415 !important; color: white;"></th>
+                                            
+                                          
+                                        </thead>
+                                        <tbody id="detalle-separaciones">
+    
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="" class="btn btn-danger-admin btn-sm guardar-separaciones"
+                        ng-click="guardar_separaciones()">
+                        <span class="fa fa-save"></span>
+                        Guardar
+                    </button>
                     <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">Cerrar</button>
                 </div>
             </form>

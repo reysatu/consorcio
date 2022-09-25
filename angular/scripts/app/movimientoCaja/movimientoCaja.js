@@ -2023,11 +2023,26 @@ $scope.emitir_comprobante = function () {
                 
             }
         }
-        $("#total_pagar").val(total.toFixed(2));
-        $("#monto").val(total.toFixed(2));
-        $("#id_tipoDoc_Venta_or").trigger("change");
+
+        $.post("movimientoCajas/obtener_totales_separaciones", { cCodConsecutivo: cCodConsecutivo.val(), nConsecutivo: nConsecutivo.val() },
+            function (data, textStatus, jqXHR) {
+                var t_monto_total = parseFloat(data[0].t_monto_total);
+                if(isNaN(t_monto_total)) {
+                    t_monto_total = 0;
+                }
+                
+                var nuevo_total = total - t_monto_total;
+
+                $("#total_pagar").val(nuevo_total.toFixed(2));
+                $("#monto").val(nuevo_total.toFixed(2));
+                $("#id_tipoDoc_Venta_or").trigger("change");
+                
+                $("#modal-emitir-comprobante").modal("show");
+            },
+            "json"
+        );
+
         
-        $("#modal-emitir-comprobante").modal("show");
     }
     
     

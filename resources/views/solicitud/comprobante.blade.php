@@ -360,17 +360,17 @@
 
             }
 
-            if(count($venta_anticipo_separacion) > 0 /*&& $venta[0]->tipo_comprobante == 1*/ && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
-                $venta[0]->t_monto_subtotal = $venta[0]->t_monto_subtotal - $venta_anticipo_separacion[0]->t_monto_total;
-                echo '<div class="row">';
-                echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">1.00</div>';
-                echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">UND</div>';
-                echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 52.5%;">(-) ANTICIPO SEPARACIÓN '.$venta_anticipo_separacion[0]->serie_comprobante.'-'.$venta_anticipo_separacion[0]->numero_comprobante.'</div>';
-                echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</div>';
-                echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</div>';
-                echo '</div>';
-                $cont ++;
-            }
+            // if(count($venta_anticipo_separacion) > 0 /*&& $venta[0]->tipo_comprobante == 1*/ && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03")) {
+            //     $venta[0]->t_monto_subtotal = $venta[0]->t_monto_subtotal - $venta_anticipo_separacion[0]->t_monto_total;
+            //     echo '<div class="row">';
+            //     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">1.00</div>';
+            //     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">UND</div>';
+            //     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 52.5%;">(-) ANTICIPO SEPARACIÓN '.$venta_anticipo_separacion[0]->serie_comprobante.'-'.$venta_anticipo_separacion[0]->numero_comprobante.'</div>';
+            //     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</div>';
+            //     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo_separacion[0]->t_monto_total, 2).'</div>';
+            //     echo '</div>';
+            //     $cont ++;
+            // }
             
             if($venta[0]->tipo_comprobante == 0 && ($venta[0]->IdTipoDocumento == "01" || $venta[0]->IdTipoDocumento == "03") && $venta[0]->comprobante_x_saldo == "S" || (count($solicitud) > 0 && $solicitud[0]->tipo_solicitud == "3" && count($producto) > 0 && $venta[0]->tipo_comprobante == 0) ) {
                 $marca = (isset($producto[0]->marca)) ? $producto[0]->marca : "";
@@ -388,6 +388,19 @@
                     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</div>';
                     echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($venta_anticipo[0]->t_monto_total, 2).'</div>';
                     echo '</div>';
+                }
+
+                if(count($separaciones) > 0) {
+                    foreach ($separaciones as $ks => $vs) {
+                        echo '<div class="row">';
+                            echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">1.00</div>';
+                            echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 8%;">UND</div>';
+                            echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 52.5%;">(-) ANTICIPO SEPARACIÓN '.$vs->serie_comprobante.'-'.$vs->numero_comprobante.'</div>';
+                            echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($vs->t_monto_total, 2).'</div>';
+                            echo '  <div class="col" style="border-left: 1px solid transparent; border-right: 1px solid transparent; border-bottom: 1px solid transparent; width: 15%;">-'.number_format($vs->t_monto_total, 2).'</div>';
+                        echo '</div>';
+                        $cont ++;
+                    }
                 }
                 
                 echo '<div class="row">';

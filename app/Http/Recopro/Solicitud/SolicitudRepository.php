@@ -495,4 +495,12 @@ class SolicitudRepository implements SolicitudInterface
         // print_r($res);
         return $res;
     }
+
+    public function obtener_separaciones($cCodConsecutivo, $nConsecutivo) {
+        $sql = "SELECT * FROM dbo.ERP_SolicitudSeparacion AS ss 
+        INNER JOIN dbo.ERP_Venta AS v ON(ss.idventa=v.idventa)
+        WHERE ss.cCodConsecutivo='{$cCodConsecutivo}' AND ss.nConsecutivo={$nConsecutivo}";
+        $result = DB::select($sql);
+        return $result;
+    }
 }

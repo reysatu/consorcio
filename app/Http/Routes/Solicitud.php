@@ -69,3 +69,5 @@ Route::post('solicitud/validar_serie', ['as' => 'solicitud.validar_serie', 'uses
 
 Route::post('solicitud/copiar_solicitud', ['as' => 'solicitud.copiar_solicitud', 'uses' => 'SolicitudController@copiar_solicitud']);
 
+Route::post('solicitud/guardar_separaciones', ['as' => 'solicitud.guardar_separaciones', 'uses' => 'SolicitudController@guardar_separaciones']);
+Route::post('solicitud/obtener_separaciones', ['as' => 'solicitud.obtener_separaciones', 'uses' => 'SolicitudController@obtener_separaciones']);
